@@ -1,6 +1,7 @@
 const crypto = require('crypto')
 const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
+const validator = require('validator')
 
 exports.creatSha256Str = function (str) {
     const sha256 = crypto.createHash('sha256')
@@ -66,4 +67,38 @@ exports.parseBase64 = (base64) => {
         data: matches[2],
         extension: matches[1].split('/')[1] || 'jpg',
     }
+}
+
+exports.checkForm = function (form, ruleArr) {
+    const result = []
+    ruleArr.forEach((rule) => {
+        const { key, label, type, required, options, errorMessage, reg } = rule
+        const value = form[key]
+        if (required && (!value && value !== 0)) {
+            result.push({
+                key,
+                message: `${label || key} 是必须项`
+            })
+        }
+        if (type) {
+            if (type === 'regCheck') {
+                if (!reg.test(value)) {
+                    result.push({
+                        key,
+                        message: errorMessage || `${label || key} 内容有误`
+                    })
+                }
+            } else {
+                const check = validator[type](String(value), options)
+                if (!check) {
+                    result.push({
+                        key,
+                        message: errorMessage || `${label || key} 内容有误`
+                    })
+                }
+            }
+
+        }
+    })
+    return result
 }
