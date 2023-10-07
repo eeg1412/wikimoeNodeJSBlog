@@ -54,6 +54,16 @@ module.exports = async function (req, res, next) {
         })
         return
     }
+    // 校验管理员disabled是否为true
+    if (admin.disabled) {
+        adminApiLog.warn(`admin:${username} is disabled`)
+        res.status(400).json({
+            errors: [{
+                message: '该账号已被禁用'
+            }]
+        })
+        return
+    }
     // 登录成功
     const jwt = utils.creatJWT({
         id: admin._id,

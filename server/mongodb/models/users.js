@@ -22,6 +22,10 @@ var users = new Schema({
   photo: String,
   email: String,
   description: String,
+  disabled: {
+    type: Boolean,
+    default: false
+  },
   IP: String,
 });
 
