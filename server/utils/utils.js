@@ -103,6 +103,16 @@ exports.checkForm = function (form, ruleArr) {
   return result
 }
 
+exports.getUserIp = function (req) {
+  let ip = req.headers['x-forwarded-for'] ||
+    req.connection.remoteAddress ||
+    req.socket.remoteAddress ||
+    req.connection.socket.remoteAddress || '';
+  ip = ip.match(/\d+.\d+.\d+.\d+/);
+  ip = ip ? ip.join('.') : 'No IP';
+  return ip;
+};
+
 // checkEnv
 exports.checkEnv = function () {
   const envArr = [

@@ -20,7 +20,10 @@ const checkAuth = async (req, res, next) => {
     } else {
       const admin = await userUtils.findOne({ _id: req.adminData.data.id })
       if (!admin) {
-        return res.status(401).json({ errors: [{ message: '认证失败' }] })
+        return res.status(403).json({ errors: [{ message: '该管理员账户已停止使用' }] })
+      }
+      if (admin.disabled) {
+        return res.status(403).json({ errors: [{ message: '该管理员账户已停止使用' }] })
       }
       req.admin = admin
       next()
