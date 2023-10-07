@@ -23,6 +23,15 @@ cd server
 npm run ci
 ```
 
+### 配置.env 文件
+
+文件内容如下：
+
+```
+PORT="填写运行端口号"
+DB_HOST="填写mongodb地址"
+```
+
 ### 运行
 
 ```
