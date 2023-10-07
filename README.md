@@ -30,6 +30,8 @@ npm run ci
 ```
 PORT="填写运行端口号"
 DB_HOST="填写mongodb地址"
+JSON_LIMT="JSON格式的大小限制如（50mb）"
+URLENCODED_LIMT="URL编码的大小限制如（50mb）"
 ```
 
 ### 运行
