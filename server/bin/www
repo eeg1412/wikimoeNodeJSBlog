@@ -3,6 +3,12 @@
 /**
  * Module dependencies.
  */
+const log4js = require('log4js')
+const logConfig = require('../config/log4js-config.js')
+log4js.configure(logConfig)
+
+const systemLog = log4js.getLogger('system')
+
 require('dotenv').config();
 var app = require('../app');
 var http = require('http');
@@ -52,6 +58,11 @@ function normalizePort (val) {
  */
 
 function onError (error) {
+  try {
+    systemLog.error(error)
+  } catch (error) {
+    console.error(error)
+  }
   if (error.syscall !== 'listen') {
     throw error;
   }
@@ -85,4 +96,15 @@ function onListening () {
     ? 'pipe ' + addr
     : 'port ' + addr.port;
   console.info('Listening on ' + bind);
+  systemLog.info('Listening on ' + bind)
 }
+
+process.on('uncaughtException', function (err) {
+  systemLog.error(err)
+  if (err.message === 'getaddrinfo ENOTFOUND mongo') {
+    // 如果是连不上 mongo，则退出进程
+    log4js.shutdown(() => {
+      process.exit(1)
+    })
+  }
+})
