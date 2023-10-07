@@ -3,13 +3,15 @@
 /**
  * Module dependencies.
  */
+require('dotenv').config();
+require('../utils/chalk')
+require('../utils/utils').checkEnv()
 const log4js = require('log4js')
 const logConfig = require('../config/log4js-config.js')
 log4js.configure(logConfig)
 
 const systemLog = log4js.getLogger('system')
 
-require('dotenv').config();
 var app = require('../app');
 var http = require('http');
 

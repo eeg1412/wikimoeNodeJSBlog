@@ -3,7 +3,6 @@ const log4js = require('log4js')
 var path = require('path');
 var cookieParser = require('cookie-parser');
 // var logger = require('morgan');
-require('./utils/chalk')
 require('./mongodb')
 
 var adminRouter = require('./routes/admin');
