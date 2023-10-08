@@ -24,7 +24,7 @@ app.use((err, req, res, next) => {
   }
   next();
 });
-app.use('/admin', adminRouter);
+app.use('/api/admin', adminRouter);
 
 
 module.exports = app;
