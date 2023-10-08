@@ -39,8 +39,22 @@ router.use((req, res, next) => {
   next()
 })
 
+const adminRouteSetting = [
+  {
+    path: '/login',
+    method: 'post',
+    middleware: [],
+    controller: require('../api/admin/login'),
+    roleType: null,
+    role: null
+  },
+]
+
 // 登录
 router.post('/login', require('../api/admin/login'))
+adminRouteSetting.forEach(item => {
+  router[item.method](item.path, ...item.middleware, item.controller)
+})
 // 改密码
 // router.patch('/password', checkAuth, require(''))
 

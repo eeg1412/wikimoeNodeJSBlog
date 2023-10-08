@@ -75,7 +75,7 @@ const creatAdmin = async () => {
         username: username,
         password: utils.creatBcryptStr(res.password),
         nickname: res.nickname,
-        role: hasAdmin ? 998 : 999,
+        role: hasAdmin ? 990 : 999,
     }
     await userUtils.save(params)
     console.log(
