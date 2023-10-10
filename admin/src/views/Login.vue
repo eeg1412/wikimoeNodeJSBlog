@@ -78,10 +78,16 @@ export default {
             })
           } else {
             // 需要一个默认跳转的页面
+            router.push({
+              name: 'Home',
+            })
           }
         } catch (error) {
           // 需要一个默认跳转的页面
           console.warn(error)
+          router.push({
+            name: 'Home',
+          })
         }
       })
     }
@@ -96,8 +102,7 @@ export default {
 .login-body {
   width: 100%;
   height: 100%;
-  /* background: linear-gradient(to left, #536976, #292e49); */
-  background: linear-gradient(320deg, #f27121, #e77a6e, #e78a7f);
+  background: #ffffff;
 }
 .we-login {
   width: 300px;
