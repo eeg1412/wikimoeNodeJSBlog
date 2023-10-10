@@ -13,9 +13,15 @@ const routes = [
         name: 'Home',
         component: () => import(/* webpackChunkName: "Home" */ '../views/index/home/Home.vue')
       },
+      // LoginUserEditor
+      {
+        path: '/loginuser/editor',
+        name: 'LoginUserEditor',
+        component: () => import(/* webpackChunkName: "LoginUserEditor" */ '../views/index/loginuser/LoginUserEditor.vue')
+      },
       // postlist
       {
-        path: '/postlist',
+        path: '/post/list',
         name: 'PostList',
         component: () => import(/* webpackChunkName: "PostList" */ '../views/index/post/PostList.vue')
       },

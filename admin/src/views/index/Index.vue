@@ -1,49 +1,74 @@
 <template>
   <div class="common-layout">
     <el-container>
-      <el-aside class="common-aside">
-        <div class="common-logo">
-          <div>博客管理后台</div>
+      <el-aside
+        class="common-aside"
+        :class="{ isCollapse: isCollapse, phoneMenuOpen: phoneMenuOpen }"
+      >
+        <div class="common-aside-body">
+          <div class="common-logo">
+            <div>博客管理后台</div>
+            <div class="common-logo-close-btn">
+              <el-button text :icon="Close" @click="switchOpenMenu"></el-button>
+            </div>
+          </div>
+          <el-menu :default-active="activeIndex" router>
+            <el-menu-item index="Home" :route="{ name: 'Home' }">
+              <i class="fas fa-home pr10"></i>
+              <template #title>面板</template>
+            </el-menu-item>
+            <el-menu-item
+              index="PostList"
+              @click="removeParam('PostList')"
+              :route="{ name: 'PostList' }"
+            >
+              <i class="fas fa-newspaper pr10"></i>
+              <template #title>文章</template>
+            </el-menu-item>
+          </el-menu>
         </div>
-        <el-menu :default-active="activeIndex" router>
-          <el-menu-item index="Home" :route="{ name: 'Home' }">
-            <i class="fas fa-home pr10"></i>
-            <template #title>面板</template>
-          </el-menu-item>
-          <el-menu-item
-            index="PostList"
-            @click="removeParam('PostList')"
-            :route="{ name: 'PostList' }"
-          >
-            <i class="fas fa-newspaper pr10"></i>
-            <template #title>文章</template>
-          </el-menu-item>
-        </el-menu>
       </el-aside>
       <el-container>
         <el-header class="common-header">
-          <div class="clearfix" v-if="adminInfo">
-            <div class="fr pt15">
+          <div class="clearfix">
+            <!-- 开关菜单 -->
+            <div class="fl pt15 switch-btn-body">
               <el-button
                 type="primary"
-                circle
-                text
-                :icon="SwitchButton"
-                @click="logout"
+                :icon="isCollapse ? DArrowRight : DArrowLeft"
+                @click="switchCollapse"
               ></el-button>
             </div>
-            <div class="fr pt15">
+            <div class="fl pt15 switch-btn-body-phone">
               <el-button
                 type="primary"
-                circle
-                text
-                :icon="Setting"
-                @click="goAdminEdit"
+                :icon="Grid"
+                @click="switchOpenMenu"
               ></el-button>
             </div>
-            <div class="fr pt20 mr10">
-              {{ adminInfo.nickname }}
-            </div>
+            <template v-if="adminInfo">
+              <div class="fr pt15">
+                <el-button
+                  type="primary"
+                  circle
+                  text
+                  :icon="SwitchButton"
+                  @click="logout"
+                ></el-button>
+              </div>
+              <div class="fr pt15">
+                <el-button
+                  type="primary"
+                  circle
+                  text
+                  :icon="Setting"
+                  @click="goLoginUserEditor"
+                ></el-button>
+              </div>
+              <div class="fr pt20 mr10">
+                {{ adminInfo.nickname }}
+              </div>
+            </template>
           </div>
         </el-header>
         <el-main>
@@ -57,7 +82,16 @@
 import { ref } from '@vue/reactivity'
 import { computed, onMounted } from '@vue/runtime-core'
 import { useRoute, useRouter } from 'vue-router'
-import { SwitchButton, Setting } from '@element-plus/icons-vue'
+import {
+  SwitchButton,
+  Setting,
+  Fold,
+  Expand,
+  DArrowRight,
+  DArrowLeft,
+  Grid,
+  Close,
+} from '@element-plus/icons-vue'
 import { authApi } from '@/api'
 import store from '@/store'
 
@@ -86,10 +120,19 @@ export default {
       return store.getters.adminInfo
     })
 
-    const goAdminEdit = () => {
+    const goLoginUserEditor = () => {
       router.push({
-        name: 'AdminEdit',
+        name: 'LoginUserEditor',
       })
+    }
+
+    const isCollapse = ref(false)
+    const switchCollapse = () => {
+      isCollapse.value = !isCollapse.value
+    }
+    const phoneMenuOpen = ref(false)
+    const switchOpenMenu = () => {
+      phoneMenuOpen.value = !phoneMenuOpen.value
     }
 
     onMounted(() => {
@@ -98,11 +141,21 @@ export default {
     return {
       SwitchButton,
       Setting,
+      Fold,
+      Expand,
+      DArrowRight,
+      DArrowLeft,
+      Grid,
+      Close,
       activeIndex,
       removeParam,
       logout,
       adminInfo,
-      goAdminEdit,
+      goLoginUserEditor,
+      isCollapse,
+      switchCollapse,
+      phoneMenuOpen,
+      switchOpenMenu,
     }
   },
 }
@@ -119,6 +172,14 @@ export default {
 .common-aside {
   width: 200px;
   border-right: 1px solid #dee2e6;
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+.common-aside.isCollapse {
+  width: 0px;
+}
+.common-aside-body {
+  width: 200px;
 }
 .common-layout .el-menu {
   border-right: 0px;
@@ -131,5 +192,57 @@ export default {
 }
 .common-logo img {
   width: 50%;
+}
+.switch-btn-body {
+  display: block;
+}
+.switch-btn-body-phone {
+  display: none;
+}
+.common-logo-close-btn {
+  display: none;
+}
+/* 媒体查询 手机模式 */
+@media (max-width: 767px) {
+  /* 在手机模式下应用以下样式 */
+  .switch-btn-body {
+    display: none;
+  }
+  .switch-btn-body-phone {
+    display: block;
+  }
+  .common-logo-close-btn {
+    display: block;
+  }
+  .common-aside {
+    width: 0px;
+    display: none;
+    border-right: none;
+    position: fixed;
+    z-index: 10;
+    top: 0;
+    left: 0;
+    height: 100%;
+    background: #fff;
+  }
+  .common-aside-body {
+    width: 100%;
+  }
+  .common-logo {
+    padding: 10px 0;
+    font-size: 14px;
+    position: relative;
+  }
+  .common-logo-close-btn {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+  }
+  /* phoneMenuOpen */
+  .common-aside.phoneMenuOpen {
+    display: block;
+    width: 100%;
+  }
 }
 </style>
