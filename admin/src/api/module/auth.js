@@ -9,5 +9,11 @@ export default function (api) {
         shouldAdminJWT: true
       })
     },
+    // put,loginuserinfo
+    updateLoginUserInfo (data) {
+      return api.put('/loginuserinfo', data, {
+        shouldAdminJWT: true
+      })
+    },
   }
 }

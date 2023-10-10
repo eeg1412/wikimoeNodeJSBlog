@@ -19,13 +19,13 @@ module.exports = async function (req, res, next) {
   const rule = [
     {
       key: 'username',
-      label: 'ユーザー名',
+      label: '用户名',
       type: null,
       required: true,
     },
     {
       key: 'password',
-      label: 'パスワード',
+      label: '密码',
       type: null,
       required: true,
     }

@@ -57,6 +57,15 @@ const adminRouteSetting = [
     roleType: null,
     role: null
   },
+  // put,updateLoginUserInfo
+  {
+    path: '/loginuserinfo',
+    method: 'put',
+    middleware: [checkAuth],
+    controller: require('../api/admin/user/updateLoginUserInfo'),
+    roleType: null,
+    role: null
+  },
 ]
 
 // 登录
