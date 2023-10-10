@@ -78,8 +78,8 @@ export default {
         name: 'Login',
       })
       // 清除token
-      localStorage.removeItem('token')
-      sessionStorage.removeItem('token')
+      localStorage.removeItem('adminToken')
+      sessionStorage.removeItem('adminToken')
     }
 
     const adminInfo = computed(() => {
@@ -93,7 +93,7 @@ export default {
     }
 
     onMounted(() => {
-      // store.dispatch('setAdminInfo')
+      store.dispatch('setAdminInfo')
     })
     return {
       SwitchButton,
@@ -126,6 +126,8 @@ export default {
 .common-logo {
   padding: 20px 0;
   text-align: center;
+  font-size: 16px;
+  font-weight: 600;
 }
 .common-logo img {
   width: 50%;

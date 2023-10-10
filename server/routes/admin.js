@@ -48,6 +48,15 @@ const adminRouteSetting = [
     roleType: null,
     role: null
   },
+  // get,loginuserinfo
+  {
+    path: '/loginuserinfo',
+    method: 'get',
+    middleware: [checkAuth],
+    controller: require('../api/admin/user/getLoginUserInfo'),
+    roleType: null,
+    role: null
+  },
 ]
 
 // 登录

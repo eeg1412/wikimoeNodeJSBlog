@@ -37,6 +37,7 @@ import { reactive } from '@vue/reactivity'
 import { authApi } from '@/api'
 import { ElMessage } from 'element-plus'
 import { useRoute, useRouter } from 'vue-router'
+import store from '@/store'
 
 export default {
   setup() {
@@ -57,39 +58,38 @@ export default {
         ElMessage.error('请输入密码')
         return
       }
-      authApi.login(form).then((res) => {
-        const { token } = res.data
-        if (form.remember) {
-          // 存入localStorage
-          localStorage.setItem('token', token)
-        } else {
-          // 存入sessionStorage
-          sessionStorage.setItem('token', token)
-        }
-        // 读取sessionStorage中的lastRoute,如果有信息则尝试跳转到lastRoute中的页面
-        const lastRoute = sessionStorage.getItem('lastRoute')
-        try {
-          if (lastRoute) {
-            const lastRouteObj = JSON.parse(lastRoute)
-            router.push({
-              name: lastRouteObj.name,
-              params: lastRouteObj.params,
-              query: lastRouteObj.query,
-            })
-          } else {
+      authApi
+        .login(form)
+        .then((res) => {
+          const { token } = res.data
+          store.dispatch('setAdminToken', token)
+          // 读取sessionStorage中的lastRoute,如果有信息则尝试跳转到lastRoute中的页面
+          const lastRoute = sessionStorage.getItem('lastRoute')
+          try {
+            if (lastRoute) {
+              const lastRouteObj = JSON.parse(lastRoute)
+              router.push({
+                name: lastRouteObj.name,
+                params: lastRouteObj.params,
+                query: lastRouteObj.query,
+              })
+            } else {
+              // 需要一个默认跳转的页面
+              router.push({
+                name: 'Home',
+              })
+            }
+          } catch (error) {
             // 需要一个默认跳转的页面
+            console.warn(error)
             router.push({
               name: 'Home',
             })
           }
-        } catch (error) {
-          // 需要一个默认跳转的页面
-          console.warn(error)
-          router.push({
-            name: 'Home',
-          })
-        }
-      })
+        })
+        .catch((err) => {
+          console.log(err)
+        })
     }
     return {
       form,

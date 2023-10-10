@@ -74,9 +74,8 @@ module.exports = async function (req, res, next) {
     const jwt = utils.creatJWT({
       id: admin._id,
       username: admin.username,
-      role: admin.role,
       version: 1
-    }, remember ? '365d' : '1d')
+    }, remember ? '365d' : '1h')
     adminApiLog.info(`admin:${username} login,IP:${IP}`)
     res.send({
       token: jwt
