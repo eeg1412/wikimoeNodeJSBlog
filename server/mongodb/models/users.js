@@ -26,6 +26,10 @@ var users = new Schema({
     type: Boolean,
     default: false
   },
+  pwversion: {
+    type: Number,
+    default: 0
+  },
   IP: String,
 });
 

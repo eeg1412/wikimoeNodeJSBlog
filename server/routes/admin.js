@@ -24,6 +24,8 @@ const checkAuth = async (req, res, next) => {
       }
       if (admin.disabled) {
         return res.status(403).json({ errors: [{ message: '该管理员账户已停止使用' }] })
+      } else if (admin.pwversion !== decoded.data.pwversion) {
+        return res.status(401).json({ errors: [{ message: '认证失败' }] })
       }
       req.admin = admin
       next()

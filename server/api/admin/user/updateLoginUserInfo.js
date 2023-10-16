@@ -52,6 +52,8 @@ module.exports = async function (req, res, next) {
     }
     // 校验通过
     updateData['password'] = utils.creatBcryptStr(password)
+    // pwversion + 1 
+    updateData['pwversion'] = req.admin.pwversion + 1
   }
 
   // 更新数据库
