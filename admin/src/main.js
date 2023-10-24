@@ -4,10 +4,14 @@ import router from './router'
 import store from './store'
 import ElementPlus from 'element-plus'
 import 'element-plus/dist/index.css'
+import 'cropperjs/dist/cropper.css';
 import '@/assets/css/common.css'
 import * as ElementPlusIconsVue from '@element-plus/icons-vue'
+import Cropper from '@/components/Cropper.vue'
+
 
 const app = createApp(App)
+app.component('Cropper', Cropper)
 for (const [key, component] of Object.entries(ElementPlusIconsVue)) {
   app.component(key, component)
 }

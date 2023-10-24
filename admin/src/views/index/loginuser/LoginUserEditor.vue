@@ -10,7 +10,13 @@
           <el-input v-model="form.email" placeholder="请输入邮箱"></el-input>
         </el-form-item>
         <el-form-item label="头像" prop="photo">
-          <el-input v-model="form.photo"></el-input>
+          <Cropper
+            :aspectRatio="1"
+            :width="256"
+            :height="256"
+            @crop="setPhoto"
+            :src="form.photo"
+          />
         </el-form-item>
         <el-form-item label="简介" prop="description">
           <el-input
@@ -194,6 +200,10 @@ export default {
       })
     }
 
+    const setPhoto = (base64) => {
+      form.photo = base64
+    }
+
     onMounted(() => {
       setForm()
     })
@@ -206,6 +216,7 @@ export default {
       rulesPassword,
       submit,
       submitPassword,
+      setPhoto,
     }
   },
 }
