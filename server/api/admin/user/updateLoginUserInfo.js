@@ -59,7 +59,9 @@ module.exports = async function (req, res, next) {
   updateData['IP'] = IP
 
   //照片上传
-  if (photo) {
+  //base64正则
+  const base64Reg = /^data:image\/\w+;base64,/
+  if (photo && base64Reg.test(photo)) {
     const path = './public/upload/avatar/'
     const fileName = req.admin._id
     try {
