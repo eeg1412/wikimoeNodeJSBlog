@@ -18,6 +18,14 @@
               <template #title>面板</template>
             </el-menu-item>
             <el-menu-item
+              index="SortList"
+              @click="removeParam('SortList')"
+              :route="{ name: 'SortList' }"
+            >
+              <i class="fas fa-folder pr10"></i>
+              <template #title>分类</template>
+            </el-menu-item>
+            <el-menu-item
               index="PostList"
               @click="removeParam('PostList')"
               :route="{ name: 'PostList' }"
