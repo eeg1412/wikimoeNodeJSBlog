@@ -16,6 +16,7 @@ app.use(express.json({ limit: process.env.JSON_LIMT || '10mb' }));
 app.use(express.urlencoded({ extended: false, limit: process.env.URLENCODED_LIMT || '10mb' }));
 app.use(cookieParser());
 app.use('/admin', express.static(path.join(__dirname, 'public/admin')));
+app.use('/upload', express.static(path.join(__dirname, 'public/upload')));
 // app.use(express.static(path.join(__dirname, 'public')));
 
 app.use((err, req, res, next) => {

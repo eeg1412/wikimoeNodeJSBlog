@@ -6,8 +6,6 @@ const adminApiLog = log4js.getLogger('adminApi')
 
 module.exports = async function (req, res, next) {
   const { nickname, photo, email, description, currentPassword, password } = req.body
-  // TODO:照片上传
-
 
   // 更新
   const id = req.admin._id
@@ -56,6 +54,27 @@ module.exports = async function (req, res, next) {
     updateData['pwversion'] = req.admin.pwversion + 1
   }
 
+  // IP
+  const IP = utils.getUserIp(req)
+  updateData['IP'] = IP
+
+  //照片上传
+  if (photo) {
+    const path = './public/upload/avatar/'
+    const fileName = req.admin._id
+    try {
+      const imgRes = utils.base64ToFile(photo, path, fileName)
+      updateData['photo'] = `/upload/avatar/${imgRes.fileNameAll}?v=${Date.now()}`
+    } catch (error) {
+      res.status(400).json({
+        errors: [{
+          message: '照片上传失败'
+        }]
+      })
+      throw new Error(error)
+    }
+  }
+
   // 更新数据库
   const __v = req.admin.__v
   const updateRes = await userUtils.updateOne({ _id: id, __v }, updateData)
@@ -67,6 +86,6 @@ module.exports = async function (req, res, next) {
     })
     return
   }
-
+  adminApiLog.info(`admin:${req.admin.nickname} - ${req.admin._id} update profile,IP:${IP}`)
   res.send({})
 }

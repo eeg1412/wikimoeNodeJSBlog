@@ -2,6 +2,8 @@ const crypto = require('crypto')
 const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
 const validator = require('validator')
+const fs = require('fs')
+const path = require('path');
 
 exports.creatSha256Str = function (str) {
   const sha256 = crypto.createHash('sha256')
@@ -129,5 +131,20 @@ exports.checkEnv = function () {
   if (result.length > 0) {
     console.error('请在根目录下创建.env文件，并添加以下环境变量：', result.join(','))
     process.exit(1)
+  }
+}
+
+// base64转图片文件
+exports.base64ToFile = function (base64, destpath, fileName) {
+  const base64Data = base64.replace(/^data:image\/\w+;base64,/, '')
+  const dataBuffer = Buffer.from(base64Data, 'base64')
+  // 文件名后缀
+  const extension = base64.match(/data:image\/(\w+);base64,/)[1]
+  const fileNameAll = `${fileName}.${extension}`
+  const filepath = path.join(destpath, fileNameAll)
+  fs.writeFileSync(filepath, dataBuffer)
+  return {
+    filepath,
+    fileNameAll
   }
 }

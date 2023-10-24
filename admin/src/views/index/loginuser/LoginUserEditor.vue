@@ -159,7 +159,7 @@ export default {
           authApi
             .updateLoginUserInfo(form)
             .then((res) => {
-              // setForm()
+              setForm()
               store.dispatch('setAdminInfo')
             })
             .catch((err) => {

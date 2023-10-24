@@ -12,6 +12,14 @@ module.exports = defineConfig({
           "/api": "",
         },
       },
+      // upload
+      "/upload": {
+        target: "http://127.0.0.1:3011/upload",
+        changeOrigin: true,
+        pathRewrite: {
+          "/upload": "",
+        },
+      },
     },
   }
 })
