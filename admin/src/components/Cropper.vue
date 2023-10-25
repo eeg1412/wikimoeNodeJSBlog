@@ -20,7 +20,7 @@
     <div class="cropper-body">
       <vue-cropper
         ref="cropper"
-        class="weshow-cropper"
+        class="com-cropper"
         :initialAspectRatio="initialAspectRatio"
         :aspect-ratio="aspectRatio"
         :src="imgSrc"
