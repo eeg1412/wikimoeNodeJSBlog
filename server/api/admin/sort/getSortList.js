@@ -9,7 +9,8 @@ module.exports = async function (req, res, next) {
   const sort = { taxis: 1 }
   sortUtils.find(params, sort).then((data) => {
     // 根据返回的data，配合parent字段，生成树形结构
-    const treeData = utils.generateTreeData(data)
+    const jsonData = data.map(doc => doc.toJSON())
+    const treeData = utils.generateTreeData(jsonData)
     res.send({
       data: treeData
     })
