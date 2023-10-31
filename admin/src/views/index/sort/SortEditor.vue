@@ -1,6 +1,14 @@
 <template>
   <div class="common-right-panel-form common-limit-width">
-    <h3 class="common-title">分类{{ id ? '编辑' : '追加' }}</h3>
+    <div class="pb20">
+      <el-breadcrumb separator="/">
+        <el-breadcrumb-item :to="{ name: 'SortList' }"
+          >分类列表</el-breadcrumb-item
+        >
+        <el-breadcrumb-item v-if="id">编辑</el-breadcrumb-item>
+        <el-breadcrumb-item v-else>追加</el-breadcrumb-item>
+      </el-breadcrumb>
+    </div>
     <div>
       <el-form :model="form" :rules="rules" ref="formRef" label-width="80px">
         <el-form-item label="分类名称" prop="sortname">
@@ -73,6 +81,7 @@ export default {
       taxis: 0,
       parent: null,
       description: '',
+      __v: null,
     })
     const rules = reactive({
       sortname: [
@@ -94,6 +103,16 @@ export default {
         }
         if (id.value) {
           // 编辑
+          data.id = id.value
+          data.__v = form.__v
+          authApi
+            .updateSort(data)
+            .then(() => {
+              router.push({
+                name: 'SortList',
+              })
+            })
+            .catch(() => {})
         } else {
           // 追加
           authApi
@@ -117,8 +136,27 @@ export default {
         })
         .catch(() => {})
     }
+    const getSortDetail = () => {
+      const params = {
+        id: id.value,
+      }
+      authApi
+        .getSortDetail(params)
+        .then((res) => {
+          form.sortname = res.data.data.sortname
+          form.alias = res.data.data.alias
+          form.taxis = res.data.data.taxis
+          form.parent = res.data.data.parent
+          form.description = res.data.data.description
+          form.__v = res.data.data.__v
+        })
+        .catch(() => {})
+    }
     onMounted(() => {
       getSortList()
+      if (id.value) {
+        getSortDetail()
+      }
     })
     return {
       id,

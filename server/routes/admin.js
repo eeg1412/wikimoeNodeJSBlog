@@ -88,6 +88,33 @@ const adminRouteSetting = [
     roleType: null,
     role: null
   },
+  // get /sort/detail
+  {
+    path: '/sort/detail',
+    method: 'get',
+    middleware: [checkAuth],
+    controller: require('../api/admin/sort/getSortDetail'),
+    roleType: null,
+    role: null
+  },
+  // put /sort/update
+  {
+    path: '/sort/update',
+    method: 'put',
+    middleware: [checkAuth],
+    controller: require('../api/admin/sort/updateSort'),
+    roleType: null,
+    role: null
+  },
+  // delete /sort/delete
+  {
+    path: '/sort/delete',
+    method: 'delete',
+    middleware: [checkAuth],
+    controller: require('../api/admin/sort/deleteSort'),
+    roleType: null,
+    role: null
+  },
 ]
 
 adminRouteSetting.forEach(item => {

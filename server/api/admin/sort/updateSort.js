@@ -10,8 +10,25 @@ module.exports = async function (req, res, next) {
   // taxis	Number	否	否	0	排序值
   // parent	ObjectId	否	否	无	父级分类 ID
   // description	String	否	否	无	分类描述
-  const { sortname, alias, taxis, description } = req.body
+  const { sortname, alias, taxis, description, id, __v } = req.body
   const parent = req.body.parent || null
+  if (!id) {
+    res.status(400).json({
+      errors: [{
+        message: 'id不能为空'
+      }]
+    })
+    return
+  }
+  // __v 可以为零，但不能为空/null/undefined
+  if (__v === undefined || __v === null) {
+    res.status(400).json({
+      errors: [{
+        message: '__v不能为空'
+      }]
+    })
+    return
+  }
   // 校验格式
   const params = {
     sortname: sortname,
@@ -33,19 +50,26 @@ module.exports = async function (req, res, next) {
     res.status(400).json({ errors })
     return
   }
-  // save
-  sortUtils.save(params).then((data) => {
+  // updateOne
+  sortUtils.updateOne({ _id: id, __v }, params).then((data) => {
+    if (data.modifiedCount === 0) {
+      res.status(400).json({
+        errors: [{
+          message: '更新失败'
+        }]
+      })
+      return
+    }
     res.send({
       data: data
     })
-    adminApiLog.info(`sort:${sortname} create success`)
+    adminApiLog.info(`sort:${sortname} update success`)
   }).catch((err) => {
     res.status(400).json({
       errors: [{
-        message: '分类创建失败'
+        message: '分类更新失败'
       }]
     })
-    adminApiLog.error(`sort:${sortname} create fail, ${JSON.stringify(err)}`)
+    adminApiLog.error(`sort:${sortname} update fail, ${JSON.stringify(err)}`)
   })
-
 }

@@ -27,5 +27,25 @@ export default function (api) {
         shouldAdminJWT: true
       })
     },
+    // get sort/detail
+    getSortDetail (data) {
+      return api.get('/sort/detail', {
+        params: data,
+        shouldAdminJWT: true
+      })
+    },
+    // put sort/update
+    updateSort (data) {
+      return api.put('/sort/update', data, {
+        shouldAdminJWT: true
+      })
+    },
+    // delete sort/delete
+    deleteSort (data) {
+      return api.delete('/sort/delete', {
+        params: data,
+        shouldAdminJWT: true
+      })
+    },
   }
 }

@@ -90,6 +90,7 @@ api.interceptors.response.use(
           message: "发生错误。code:" + status,
           'custom-class': "common-message-error"
         });
+        console.error(error);
         break;
     }
     return Promise.reject(error);

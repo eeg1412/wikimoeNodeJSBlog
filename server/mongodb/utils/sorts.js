@@ -24,3 +24,8 @@ exports.updateOne = async function (filters, parmas) {
   parmas.$inc = { __v: 1 }
   return await sortsModel.updateOne(filters, parmas);
 }
+// 删除
+exports.deleteOne = async function (filters) {
+  // document查询
+  return await sortsModel.deleteOne(filters);
+}

@@ -15,7 +15,7 @@ var sorts = new Schema({
     type: Number,
     default: 0
   },
-  // 父级分类
+  // 父级分类 ObjectId 或者null
   parent: {
     type: Schema.Types.ObjectId,
     ref: 'sorts'
