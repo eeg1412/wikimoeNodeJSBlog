@@ -25,6 +25,12 @@ const routes = [
         name: 'SortList',
         component: () => import(/* webpackChunkName: "SortList" */ '../views/index/sort/SortList.vue')
       },
+      // SortEditor
+      {
+        path: '/sort/add',
+        name: 'SortAdd',
+        component: () => import(/* webpackChunkName: "SortEditor" */ '../views/index/sort/SortEditor.vue')
+      },
       // postlist
       {
         path: '/post/list',

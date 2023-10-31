@@ -148,3 +148,21 @@ exports.base64ToFile = function (base64, destpath, fileName) {
     fileNameAll
   }
 }
+
+// 生成多层级的树状结构
+exports.generateTreeData = function (data, parentKey = 'parent') {
+  const treeData = []
+  const map = {}
+  data.forEach((item) => {
+    map[item._id] = item
+  })
+  data.forEach((item) => {
+    const parent = map[item[parentKey]]
+    if (parent) {
+      (parent.children || (parent.children = [])).push(item)
+    } else {
+      treeData.push(item)
+    }
+  })
+  return treeData
+}

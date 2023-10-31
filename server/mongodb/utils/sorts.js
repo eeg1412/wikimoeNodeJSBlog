@@ -14,9 +14,9 @@ exports.findOne = async function (parmas) {
 }
 
 // 查找所有
-exports.find = async function (parmas) {
+exports.find = async function (parmas, sort) {
   // document查询
-  return await sortsModel.find(parmas);
+  return await sortsModel.find(parmas).sort(sort);
 }
 
 exports.updateOne = async function (filters, parmas) {

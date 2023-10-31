@@ -4,6 +4,7 @@ var Schema = mongoose.Schema;
 var sorts = new Schema({
   sortname: {
     type: String,
+    required: true,
   },
   // alias 别名
   alias: {

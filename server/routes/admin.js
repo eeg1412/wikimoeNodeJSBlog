@@ -41,6 +41,8 @@ router.use((req, res, next) => {
   next()
 })
 
+// roleType 大于小于等于
+// role 管理员的等级，配合上面的roleType使用
 const adminRouteSetting = [
   {
     path: '/login',
@@ -68,14 +70,28 @@ const adminRouteSetting = [
     roleType: null,
     role: null
   },
+  // post /sort/create
+  {
+    path: '/sort/create',
+    method: 'post',
+    middleware: [checkAuth],
+    controller: require('../api/admin/sort/createSort'),
+    roleType: null,
+    role: null
+  },
+  // get /sort/list
+  {
+    path: '/sort/list',
+    method: 'get',
+    middleware: [checkAuth],
+    controller: require('../api/admin/sort/getSortList'),
+    roleType: null,
+    role: null
+  },
 ]
 
-// 登录
-router.post('/login', require('../api/admin/login'))
 adminRouteSetting.forEach(item => {
   router[item.method](item.path, ...item.middleware, item.controller)
 })
-// 改密码
-// router.patch('/password', checkAuth, require(''))
 
 module.exports = router

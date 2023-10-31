@@ -15,5 +15,17 @@ export default function (api) {
         shouldAdminJWT: true
       })
     },
+    // post sort/create
+    createSort (data) {
+      return api.post('/sort/create', data, {
+        shouldAdminJWT: true
+      })
+    },
+    // get sort/list
+    getSortList () {
+      return api.get('/sort/list', {
+        shouldAdminJWT: true
+      })
+    },
   }
 }

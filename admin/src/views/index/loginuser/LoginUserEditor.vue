@@ -1,5 +1,5 @@
 <template>
-  <div class="common-right-panel-form">
+  <div class="common-right-panel-form common-limit-width">
     <h3 class="common-title">用户设置</h3>
     <div>
       <el-form :model="form" :rules="rules" ref="formRef" label-width="80px">
