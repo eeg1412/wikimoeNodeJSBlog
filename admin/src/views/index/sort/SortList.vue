@@ -1,7 +1,11 @@
 <template>
   <div class="common-right-panel-form">
-    <h3 class="common-title">分类列表</h3>
-    <div class="clearfix pb20 pt10">
+    <div class="pb20">
+      <el-breadcrumb separator="/">
+        <el-breadcrumb-item>分类列表</el-breadcrumb-item>
+      </el-breadcrumb>
+    </div>
+    <div class="clearfix pb20">
       <div class="fl common-top-search-form-body">
         <!-- 检索用 -->
       </div>
