@@ -25,6 +25,15 @@
               <i class="fas fa-folder pr10"></i>
               <template #title>分类</template>
             </el-menu-item>
+            <!-- 标签 -->
+            <el-menu-item
+              index="TagList"
+              @click="removeParam('TagList')"
+              :route="{ name: 'TagList' }"
+            >
+              <i class="fas fa-tags pr10"></i>
+              <template #title>标签</template>
+            </el-menu-item>
             <el-menu-item
               index="PostList"
               @click="removeParam('PostList')"
