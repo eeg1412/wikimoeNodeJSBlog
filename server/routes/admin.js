@@ -160,6 +160,52 @@ const adminRouteSetting = [
     roleType: null,
     role: null
   },
+  // get /album/list
+  {
+    path: '/album/list',
+    method: 'get',
+    middleware: [checkAuth],
+    controller: require('../api/admin/album/getAlbumList'),
+    roleType: null,
+    role: null
+  },
+  // post /album/create
+  {
+    path: '/album/create',
+    method: 'post',
+    middleware: [checkAuth],
+    controller: require('../api/admin/album/createAlbum'),
+    roleType: null,
+    role: null
+  },
+  // get /album/detail
+  {
+    path: '/album/detail',
+    method: 'get',
+    middleware: [checkAuth],
+    controller: require('../api/admin/album/getAlbumDetail'),
+    roleType: null,
+    role: null
+  },
+  // put /album/update
+  {
+    path: '/album/update',
+    method: 'put',
+    middleware: [checkAuth],
+    controller: require('../api/admin/album/updateAlbum'),
+    roleType: null,
+    role: null
+  },
+  // delete /album/delete
+  {
+    path: '/album/delete',
+    method: 'delete',
+    middleware: [checkAuth],
+    controller: require('../api/admin/album/deleteAlbum'),
+    roleType: null,
+    role: null
+  },
+
 ]
 
 adminRouteSetting.forEach(item => {
