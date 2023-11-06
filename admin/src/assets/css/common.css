@@ -829,3 +829,7 @@ input[type='password'] {
 .common-right-panel-form.common-limit-width {
   max-width: 700px;
 }
+.common-top-search-form-body .el-form-item {
+  margin-right: 10px;
+  margin-bottom: 20px;
+}

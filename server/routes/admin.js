@@ -115,6 +115,51 @@ const adminRouteSetting = [
     roleType: null,
     role: null
   },
+  // get /tag/list
+  {
+    path: '/tag/list',
+    method: 'get',
+    middleware: [checkAuth],
+    controller: require('../api/admin/tag/getTagList'),
+    roleType: null,
+    role: null
+  },
+  // post /tag/create
+  {
+    path: '/tag/create',
+    method: 'post',
+    middleware: [checkAuth],
+    controller: require('../api/admin/tag/createTag'),
+    roleType: null,
+    role: null
+  },
+  // get /tag/detail
+  {
+    path: '/tag/detail',
+    method: 'get',
+    middleware: [checkAuth],
+    controller: require('../api/admin/tag/getTagDetail'),
+    roleType: null,
+    role: null
+  },
+  // put /tag/update
+  {
+    path: '/tag/update',
+    method: 'put',
+    middleware: [checkAuth],
+    controller: require('../api/admin/tag/updateTag'),
+    roleType: null,
+    role: null
+  },
+  // delete /tag/delete
+  {
+    path: '/tag/delete',
+    method: 'delete',
+    middleware: [checkAuth],
+    controller: require('../api/admin/tag/deleteTag'),
+    roleType: null,
+    role: null
+  },
 ]
 
 adminRouteSetting.forEach(item => {

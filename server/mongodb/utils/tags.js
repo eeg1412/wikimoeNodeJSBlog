@@ -19,6 +19,21 @@ exports.find = async function (parmas, sort) {
   return await tagsModel.find(parmas).sort(sort);
 }
 
+// 分页查询
+exports.findPage = async function (parmas, sort, page, limit) {
+  // document查询
+  const list = await tagsModel.find(parmas).sort(sort).skip((page - 1) * limit).limit(limit);
+  const total = await tagsModel.countDocuments(parmas);
+  // 查询失败
+  if (!list || total === undefined) {
+    throw new Error('查询失败')
+  }
+  return {
+    list,
+    total
+  }
+}
+
 exports.updateOne = async function (filters, parmas) {
   // document查询
   parmas.$inc = { __v: 1 }

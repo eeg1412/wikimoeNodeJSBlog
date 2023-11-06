@@ -47,5 +47,38 @@ export default function (api) {
         shouldAdminJWT: true
       })
     },
+    // get tag/list
+    getTagList (data) {
+      return api.get('/tag/list', {
+        params: data,
+        shouldAdminJWT: true
+      })
+    },
+    // get tag/detail
+    getTagDetail (data) {
+      return api.get('/tag/detail', {
+        params: data,
+        shouldAdminJWT: true
+      })
+    },
+    // post tag/create
+    createTag (data) {
+      return api.post('/tag/create', data, {
+        shouldAdminJWT: true
+      })
+    },
+    // put tag/update
+    updateTag (data) {
+      return api.put('/tag/update', data, {
+        shouldAdminJWT: true
+      })
+    },
+    // delete tag/delete
+    deleteTag (data) {
+      return api.delete('/tag/delete', {
+        params: data,
+        shouldAdminJWT: true
+      })
+    },
   }
 }
