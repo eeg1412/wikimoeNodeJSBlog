@@ -55,6 +55,12 @@ const routes = [
         name: 'TagEdit',
         component: () => import(/* webpackChunkName: "TagEditor" */ '../views/index/tag/TagEditor.vue')
       },
+      // AlbumList
+      {
+        path: '/album/list',
+        name: 'AlbumList',
+        component: () => import(/* webpackChunkName: "AlbumList" */ '../views/index/album/AlbumList.vue')
+      },
       // postlist
       {
         path: '/post/list',

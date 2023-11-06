@@ -80,5 +80,38 @@ export default function (api) {
         shouldAdminJWT: true
       })
     },
+    // get album/list
+    getAlbumList (data) {
+      return api.get('/album/list', {
+        params: data,
+        shouldAdminJWT: true
+      })
+    },
+    // get album/detail
+    getAlbumDetail (data) {
+      return api.get('/album/detail', {
+        params: data,
+        shouldAdminJWT: true
+      })
+    },
+    // post album/create
+    createAlbum (data) {
+      return api.post('/album/create', data, {
+        shouldAdminJWT: true
+      })
+    },
+    // put album/update
+    updateAlbum (data) {
+      return api.put('/album/update', data, {
+        shouldAdminJWT: true
+      })
+    },
+    // delete album/delete
+    deleteAlbum (data) {
+      return api.delete('/album/delete', {
+        params: data,
+        shouldAdminJWT: true
+      })
+    },
   }
 }

@@ -34,6 +34,15 @@
               <i class="fas fa-tags pr10"></i>
               <template #title>标签</template>
             </el-menu-item>
+            <!-- 媒体库 -->
+            <el-menu-item
+              index="AlbumList"
+              @click="removeParam('AlbumList')"
+              :route="{ name: 'AlbumList' }"
+            >
+              <i class="fas fa-images pr10"></i>
+              <template #title>媒体库</template>
+            </el-menu-item>
             <el-menu-item
               index="PostList"
               @click="removeParam('PostList')"
