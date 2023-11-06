@@ -42,7 +42,7 @@
             <el-button type="primary" size="small" @click="goEdit(row._id)"
               >编辑</el-button
             >
-            <el-button type="danger" size="small" @click="deleteSort(row._id)"
+            <el-button type="danger" size="small" @click="deleteTag(row._id)"
               >删除</el-button
             >
           </template>
@@ -114,7 +114,7 @@ export default {
         },
       })
     }
-    const deleteSort = (id) => {
+    const deleteTag = (id) => {
       ElMessageBox.confirm('确定要删除吗？', {
         confirmButtonText: '是',
         cancelButtonText: '否',
@@ -154,7 +154,7 @@ export default {
       getTagList,
       handleAdd,
       goEdit,
-      deleteSort,
+      deleteTag,
     }
   },
 }
