@@ -3,3 +3,4 @@ node_modules
 .env
 /server/log
 /server/public/upload/avatar/*
+/server/public/content/uploadfile/*
