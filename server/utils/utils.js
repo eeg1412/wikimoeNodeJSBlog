@@ -171,19 +171,3 @@ exports.generateTreeData = function (data, parentKey = 'parent') {
 exports.isNumber = function (value) {
   return typeof value === 'number' && isFinite(value)
 }
-
-export const setSessionParams = (key, data) => {
-  sessionStorage.setItem(key, JSON.stringify(data))
-}
-export const getSessionParams = (key) => {
-  let data = null
-  try {
-    const strData = sessionStorage.getItem(key)
-    if (strData) {
-      data = JSON.parse(strData)
-    }
-  } catch (error) {
-
-  }
-  return data
-}
