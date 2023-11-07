@@ -17,6 +17,7 @@ app.use(express.urlencoded({ extended: false, limit: process.env.URLENCODED_LIMT
 app.use(cookieParser());
 app.use('/admin', express.static(path.join(__dirname, 'public/admin')));
 app.use('/upload', express.static(path.join(__dirname, 'public/upload')));
+app.use('/content', express.static(path.join(__dirname, 'public/content')));
 // app.use(express.static(path.join(__dirname, 'public')));
 
 app.use((err, req, res, next) => {

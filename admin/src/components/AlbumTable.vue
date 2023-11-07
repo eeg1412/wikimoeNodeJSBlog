@@ -56,6 +56,11 @@
         v-model:current-page="params.page"
       />
     </div>
+    <AlbumEditorDialog
+      v-model:show="editorShow"
+      :id="id"
+      @success="onEditorSuccess"
+    />
   </div>
 </template>
 <script>
@@ -64,8 +69,12 @@ import { authApi } from '@/api'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { onMounted, reactive, ref, watch } from 'vue'
 import { setSessionParams, getSessionParams } from '@/utils/utils'
+import AlbumEditorDialog from '@/components/AlbumEditorDialog.vue'
 
 export default {
+  components: {
+    AlbumEditorDialog,
+  },
   props: {
     // params
     defaultParams: {
@@ -83,6 +92,7 @@ export default {
     const route = useRoute()
     const router = useRouter()
     const albumList = ref([])
+    const id = ref(null)
     const params = reactive({
       page: 1,
       size: 10,
@@ -104,7 +114,10 @@ export default {
           console.log(err)
         })
     }
-    const handleAdd = () => {}
+    const editorShow = ref(false)
+    const handleAdd = () => {
+      editorShow.value = true
+    }
     // 监听 params.page 的变化
     watch(
       () => params.page,
@@ -113,7 +126,10 @@ export default {
       }
     )
 
-    const goEdit = (id) => {}
+    const goEdit = (_id) => {
+      id.value = _id
+      editorShow.value = true
+    }
     const deleteAlbum = (id) => {
       ElMessageBox.confirm('确定要删除吗？', {
         confirmButtonText: '是',
@@ -142,18 +158,25 @@ export default {
         params.keyword = props.defaultParams.keyword
       }
     }
+
+    const onEditorSuccess = () => {
+      getAlbumList()
+    }
     onMounted(() => {
       initParams()
       getAlbumList()
     })
     return {
       albumList,
+      id,
       params,
       total,
       getAlbumList,
+      editorShow,
       handleAdd,
       goEdit,
       deleteAlbum,
+      onEditorSuccess,
     }
   },
 }
