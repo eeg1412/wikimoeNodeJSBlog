@@ -24,7 +24,9 @@ module.exports = async function (req, res, next) {
     params.tagname = new RegExp(keyword, 'i')
   }
 
-  const sort = {}
+  const sort = {
+    _id: -1
+  }
   tagUtils.findPage(params, sort, page, size).then((data) => {
     // 返回格式list,total
     res.send({
