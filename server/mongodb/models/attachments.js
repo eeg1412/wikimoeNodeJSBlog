@@ -42,6 +42,11 @@ var attachments = new Schema({
     type: Schema.Types.ObjectId,
     ref: 'albums'
   },
+  // 更新时间
+  updatetime: {
+    type: Date,
+    default: Date.now
+  },
 });
 
 module.exports = mongoose.model('attachments', attachments);
