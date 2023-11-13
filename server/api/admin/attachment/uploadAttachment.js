@@ -35,6 +35,10 @@ module.exports = async function (req, res, next) {
    }
    */
 
+  //  先将file.path的文件读取成buffer
+  const fileData = fs.readFileSync(file.path)
+
+
   // TODO:album暂时写死
   const filePath = path.join('./public/content/uploadfile/', 'album', file.filename)
 
@@ -45,7 +49,7 @@ module.exports = async function (req, res, next) {
       const { imgSettingThumbnailMaxSize } = config
       // 如果图片尺寸大于最长边
       // 读取图片信息
-      const imageInfo = await sharp(file.path).metadata()
+      const imageInfo = await sharp(fileData).metadata()
       const { width, height } = imageInfo
       const max = Math.max(width, height)
       if (max > imgSettingThumbnailMaxSize) {
@@ -55,17 +59,18 @@ module.exports = async function (req, res, next) {
         const newWidth = Math.round(width * scale)
         const newHeight = Math.round(height * scale)
         // 压缩图片为webp 保存到 filePath 路径下
-        await sharp(file.path).resize(newWidth, newHeight).webp({ quality: 80 }).toFile(filePath + '_thumbnail')
+        await sharp(fileData).resize(newWidth, newHeight).webp({ quality: 80 }).toFile(filePath + '_thumbnail')
       }
     }
 
-    if (config.imgSettingEnableImgCompress && file.mimetype !== 'image/gif') {
-      // 如果开启了图片压缩且图片不是gif
+    if (config.imgSettingEnableImgCompress) {
+      // 如果开启了图片压缩
       const { imgSettingCompressQuality, imgSettingCompressMaxSize } = config
       // 如果图片尺寸大于最长边
       // 读取图片信息
-      const imageInfo = await sharp(file.path).metadata()
+      const imageInfo = await sharp(fileData).metadata()
       const { width, height } = imageInfo
+      const animated = imageInfo.pages > 1
       const max = Math.max(width, height)
       if (max > imgSettingCompressMaxSize) {
         // 计算压缩比例
@@ -74,7 +79,14 @@ module.exports = async function (req, res, next) {
         const newWidth = Math.round(width * scale)
         const newHeight = Math.round(height * scale)
         // 压缩图片为webp 保存到 filePath 路径下
-        await sharp(file.path).resize(newWidth, newHeight).webp({ quality: imgSettingCompressQuality }).toFile(filePath)
+        await sharp(fileData, {
+          animated,
+        }).resize(newWidth, newHeight).webp({ quality: imgSettingCompressQuality }).toFile(filePath)
+      } else {
+        // 原尺寸压缩
+        await sharp(fileData, {
+          animated,
+        }).webp({ quality: imgSettingCompressQuality }).toFile(filePath)
       }
     } else {
       // 不压缩，直接将file.path的文件复制到filePath
@@ -90,11 +102,11 @@ module.exports = async function (req, res, next) {
   } catch (err) {
     console.error(err)
     // 删除缓存文件
-    fs.unlinkSync(file.path)
     res.status(400).json({
       errors: [{
         message: '文件上传失败'
       }]
     })
+    fs.unlinkSync(file.path)
   }
 }
