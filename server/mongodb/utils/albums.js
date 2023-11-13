@@ -37,7 +37,7 @@ exports.findPage = async function (parmas, sort, page, limit) {
 exports.updateOne = async function (filters, parmas) {
   // document查询
   parmas.$inc = { __v: 1 }
-  parmas.updateDate = new Date()
+  parmas.updatetime = new Date()
   return await albumsModel.updateOne(filters, parmas);
 }
 // 删除

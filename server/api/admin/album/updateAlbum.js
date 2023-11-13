@@ -41,16 +41,6 @@ module.exports = async function (req, res, next) {
     res.status(400).json({ errors })
     return
   }
-  // name 只能支持英文数字组合
-  const reg = /^[a-zA-Z0-9]+$/
-  if (!reg.test(name)) {
-    res.status(400).json({
-      errors: [{
-        message: '相册名称只能为英文数字组合'
-      }]
-    })
-    return
-  }
   // name不能重复
   const album = await albumUtils.findOne({ name })
   if (album) {
