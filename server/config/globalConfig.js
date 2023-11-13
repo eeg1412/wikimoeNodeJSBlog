@@ -5,15 +5,15 @@ const initGlobalConfig = () => {
   // 默认配置
   const config = {
     // 开启图片压缩
-    enableImgCompress: false,
+    imgSettingEnableImgCompress: false,
     // 图片压缩质量
-    imgCompressQuality: 80,
+    imgSettingCompressQuality: 80,
     // 图片压缩最长边
-    imgCompressMaxSize: 1920,
+    imgSettingCompressMaxSize: 1920,
     // 开启图片缩略图
-    enableImgThumbnail: false,
+    imgSettingEnableImgThumbnail: false,
     // 图片缩略图最长边
-    imgThumbnailMaxSize: 680,
+    imgSettingThumbnailMaxSize: 680,
   }
   // 尝试读取同目录下的globalConfig.json文件
   const globalConfigPath = path.join(__dirname, 'config/globalConfig.json');

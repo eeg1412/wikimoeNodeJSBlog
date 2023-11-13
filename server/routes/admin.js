@@ -205,6 +205,24 @@ const adminRouteSetting = [
     roleType: null,
     role: null
   },
+  // get /congfig
+  {
+    path: '/config',
+    method: 'get',
+    middleware: [checkAuth],
+    controller: require('../api/admin/config/getConfig'),
+    roleType: null,
+    role: null
+  },
+  // put /config
+  {
+    path: '/config',
+    method: 'put',
+    middleware: [checkAuth],
+    controller: require('../api/admin/config/updateConfig'),
+    roleType: null,
+    role: null
+  },
 
 ]
 
