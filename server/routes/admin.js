@@ -5,8 +5,8 @@ const { checkJWT } = require('../utils/utils')
 const userUtils = require('../mongodb/utils/users')
 
 const multer = require('multer')
-const path = require('path')
-const upload = multer({ dest: path.join('./uploadCache') })
+const storage = multer.memoryStorage()
+const upload = multer({ storage: storage })
 
 // jwt权限校验
 const checkAuth = async (req, res, next) => {

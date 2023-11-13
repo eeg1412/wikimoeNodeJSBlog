@@ -32,20 +32,25 @@ module.exports = async function (req, res, next) {
      filename: "3136fce19de1ccab50741c82acc62c4c",
      path: "uploadCache\\3136fce19de1ccab50741c82acc62c4c",
      size: 947083,
+     buffer: Buffer(947083) {}
    }
    */
 
-  //  先将file.path的文件读取成buffer
-  const fileData = fs.readFileSync(file.path)
+  //  赋值buffer
+  let fileData = file.buffer
 
 
   // TODO:album暂时写死
-  const filePath = path.join('./public/content/uploadfile/', 'album', file.filename)
+  const filePath = path.join('./public/content/uploadfile/', 'album', String(new Date().getTime()))
 
 
   try {
+    if (!file.mimetype.startsWith('image')) {
+      // 如果文件不是图片
+      throw new Error('文件不是图片')
+    }
     // 如果开启了图片缩略图
-    if (config.imgSettingEnableImgThumbnail && file.mimetype !== 'image/gif') {
+    if (config.imgSettingEnableImgThumbnail) {
       const { imgSettingThumbnailMaxSize } = config
       // 如果图片尺寸大于最长边
       // 读取图片信息
@@ -89,11 +94,13 @@ module.exports = async function (req, res, next) {
         }).webp({ quality: imgSettingCompressQuality }).toFile(filePath)
       }
     } else {
-      // 不压缩，直接将file.path的文件复制到filePath
-      fs.copyFileSync(file.path, filePath)
+      // 不压缩，直接将fileData保存到filePath
+      fs.writeFileSync(filePath, fileData)
     }
-    // 删除缓存文件
-    fs.unlinkSync(file.path)
+    // 释放内存
+    fileData = null
+    file.buffer = null
+
 
     // 发送响应
     res.send({
@@ -107,6 +114,8 @@ module.exports = async function (req, res, next) {
         message: '文件上传失败'
       }]
     })
-    fs.unlinkSync(file.path)
+    // 释放内存
+    fileData = null
+    file.buffer = null
   }
 }
