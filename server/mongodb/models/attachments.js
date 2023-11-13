@@ -20,7 +20,6 @@ var attachments = new Schema({
   },
   filepath: {
     type: String,
-    required: true,
   },
   addtime: {
     type: Date,
@@ -46,6 +45,11 @@ var attachments = new Schema({
   updatetime: {
     type: Date,
     default: Date.now
+  },
+  // 0还没压缩，1压缩成功
+  status: {
+    type: Number,
+    default: 0
   },
 });
 

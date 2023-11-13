@@ -25,7 +25,8 @@ module.exports = async function (req, res, next) {
   }
 
   const sort = {
-    _id: -1
+    _id: -1,
+    updatetime: -1
   }
   albumUtils.findPage(params, sort, page, size).then((data) => {
     // 返回格式list,total
