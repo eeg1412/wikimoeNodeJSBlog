@@ -32,9 +32,10 @@
       <el-upload
         class="upload-demo"
         drag
-        action="https://run.mocky.io/v3/9d059bf9-4660-45f2-925d-ce80ad6c4d15"
+        action="/api/admin/attachment/upload"
         multiple
         :accept="'image/*'"
+        :headers="headers"
       >
         <el-icon class="el-icon--upload"><upload-filled /></el-icon>
         <div class="el-upload__text">拖动文件或点击上传</div>
@@ -47,6 +48,7 @@ import { useRoute, useRouter } from 'vue-router'
 import { authApi } from '@/api'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { onMounted, reactive, ref, watch } from 'vue'
+import store from '@/store'
 
 export default {
   props: {
@@ -60,6 +62,7 @@ export default {
     const albumId = ref('')
     const open = () => {
       albumId.value = props.albumIdProp
+      updateHeaders()
       visible.value = true
     }
 
@@ -75,6 +78,14 @@ export default {
       })
     }
 
+    const headers = ref({})
+    const updateHeaders = () => {
+      headers.value = {
+        Authorization: `Bearer ${store.getters.adminToken}`,
+        AlbumId: albumId.value,
+      }
+    }
+
     onMounted(() => {
       getAlbumList()
     })
@@ -83,6 +94,7 @@ export default {
       albumId,
       open,
       albumList,
+      headers,
     }
   },
 }

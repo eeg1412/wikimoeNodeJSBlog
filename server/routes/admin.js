@@ -4,6 +4,10 @@ const { checkJWT } = require('../utils/utils')
 
 const userUtils = require('../mongodb/utils/users')
 
+const multer = require('multer')
+const path = require('path')
+const upload = multer({ dest: path.join('./uploadCache') })
+
 // jwt权限校验
 const checkAuth = async (req, res, next) => {
   const jwtVersion = 1
@@ -223,7 +227,15 @@ const adminRouteSetting = [
     roleType: null,
     role: null
   },
-
+  // post /attachment/upload
+  {
+    path: '/attachment/upload',
+    method: 'post',
+    middleware: [checkAuth, upload.single('file')],
+    controller: require('../api/admin/attachment/uploadAttachment'),
+    roleType: null,
+    role: null
+  },
 ]
 
 adminRouteSetting.forEach(item => {
