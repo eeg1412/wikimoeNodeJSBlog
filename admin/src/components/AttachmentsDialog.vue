@@ -9,7 +9,11 @@
     <template #header="{ close, titleId, titleClass }">
       <div class="my-header">
         <div :id="titleId" :class="titleClass">
-          <el-select v-model="albumId" placeholder="请选择相册">
+          <el-select
+            v-model="albumId"
+            placeholder="请选择相册"
+            @change="updateHeaders"
+          >
             <el-option
               v-for="item in albumList"
               :key="item._id"
@@ -47,7 +51,7 @@
 import { useRoute, useRouter } from 'vue-router'
 import { authApi } from '@/api'
 import { ElMessage, ElMessageBox } from 'element-plus'
-import { onMounted, reactive, ref, watch } from 'vue'
+import { nextTick, onMounted, reactive, ref, watch } from 'vue'
 import store from '@/store'
 
 export default {
@@ -64,7 +68,9 @@ export default {
       albumId.value = props.albumIdProp
       updateHeaders()
       getAlbumList()
-      visible.value = true
+      nextTick(() => {
+        visible.value = true
+      })
     }
 
     const albumList = ref([])
@@ -94,6 +100,7 @@ export default {
       open,
       albumList,
       headers,
+      updateHeaders,
     }
   },
 }
