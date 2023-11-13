@@ -51,6 +51,15 @@
               <i class="fas fa-newspaper pr10"></i>
               <template #title>文章</template>
             </el-menu-item>
+            <!-- 设置 -->
+            <el-menu-item
+              index="Config"
+              @click="removeParam('Config')"
+              :route="{ name: 'Config' }"
+            >
+              <i class="fas fa-cog pr10"></i>
+              <template #title>设置</template>
+            </el-menu-item>
           </el-menu>
         </div>
       </el-aside>

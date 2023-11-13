@@ -214,12 +214,12 @@ const adminRouteSetting = [
     roleType: null,
     role: null
   },
-  // put /config
+  // put /config/media
   {
-    path: '/config',
+    path: '/config/media',
     method: 'put',
     middleware: [checkAuth],
-    controller: require('../api/admin/config/updateConfig'),
+    controller: require('../api/admin/config/updateConfigMedia'),
     roleType: null,
     role: null
   },

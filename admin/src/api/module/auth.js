@@ -113,5 +113,17 @@ export default function (api) {
         shouldAdminJWT: true
       })
     },
+    // get /config
+    getConfig () {
+      return api.get('/config', {
+        shouldAdminJWT: true
+      })
+    },
+    // put /config/media
+    updateConfigMedia (data) {
+      return api.put('/config/media', data, {
+        shouldAdminJWT: true
+      })
+    },
   }
 }

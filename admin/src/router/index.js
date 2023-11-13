@@ -67,6 +67,12 @@ const routes = [
         name: 'PostList',
         component: () => import(/* webpackChunkName: "PostList" */ '../views/index/post/PostList.vue')
       },
+      // config
+      {
+        path: '/config',
+        name: 'Config',
+        component: () => import(/* webpackChunkName: "Config" */ '../views/index/config/Config.vue')
+      },
     ]
   },
   {

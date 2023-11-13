@@ -16,7 +16,7 @@ const initGlobalConfig = () => {
     imgSettingThumbnailMaxSize: 680,
   }
   // 尝试读取同目录下的globalConfig.json文件
-  const globalConfigPath = path.join(__dirname, 'config/globalConfig.json');
+  const globalConfigPath = path.join('./config/globalConfig.json');
   // 如果存在，就读取文件内容，覆盖默认配置
   if (fs.existsSync(globalConfigPath)) {
     try {
