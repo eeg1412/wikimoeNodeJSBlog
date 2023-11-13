@@ -49,13 +49,15 @@ module.exports = async function (req, res, next) {
       // 如果文件不是图片
       throw new Error('文件不是图片')
     }
+    const image = sharp(fileData)
+    const imageInfo = await image.metadata()
+    // 读取图片信息
+    const { width, height } = imageInfo
     // 如果开启了图片缩略图
     if (config.imgSettingEnableImgThumbnail) {
       const { imgSettingThumbnailMaxSize } = config
       // 如果图片尺寸大于最长边
-      // 读取图片信息
-      const imageInfo = await sharp(fileData).metadata()
-      const { width, height } = imageInfo
+
       const max = Math.max(width, height)
       if (max > imgSettingThumbnailMaxSize) {
         // 计算压缩比例
@@ -64,18 +66,16 @@ module.exports = async function (req, res, next) {
         const newWidth = Math.round(width * scale)
         const newHeight = Math.round(height * scale)
         // 压缩图片为webp 保存到 filePath 路径下
-        await sharp(fileData).resize(newWidth, newHeight).webp({ quality: 80 }).toFile(filePath + '_thumbnail')
+        await image.resize(newWidth, newHeight).webp({ quality: 80 }).toFile(filePath + '_thumbnail')
       }
     }
 
     if (config.imgSettingEnableImgCompress) {
       // 如果开启了图片压缩
       const { imgSettingCompressQuality, imgSettingCompressMaxSize } = config
-      // 如果图片尺寸大于最长边
-      // 读取图片信息
-      const imageInfo = await sharp(fileData).metadata()
-      const { width, height } = imageInfo
+
       const animated = imageInfo.pages > 1
+      // 如果图片尺寸大于最长边
       const max = Math.max(width, height)
       if (max > imgSettingCompressMaxSize) {
         // 计算压缩比例
