@@ -63,6 +63,7 @@ export default {
     const open = () => {
       albumId.value = props.albumIdProp
       updateHeaders()
+      getAlbumList()
       visible.value = true
     }
 
@@ -86,9 +87,7 @@ export default {
       }
     }
 
-    onMounted(() => {
-      getAlbumList()
-    })
+    onMounted(() => {})
     return {
       visible,
       albumId,

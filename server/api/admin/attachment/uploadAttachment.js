@@ -48,11 +48,10 @@ module.exports = async function (req, res, next) {
     })
     return
   }
-  // 相册name
-  const albumName = album.name
+
   // 数据库添加信息
   const attachment = {
-    filename: file.originalname,
+    filename: Buffer.from(file.originalname, 'latin1').toString('utf8'),
     filesize: file.size,
     filepath: '',
     width: 0,
@@ -63,7 +62,7 @@ module.exports = async function (req, res, next) {
   }
   // 保存到数据库
   const attachmentData = await attachmentsUtils.save(attachment)
-  const attachmentId = attachmentData._id
+  const attachmentId = attachmentData._id.toString()
 
   //  赋值buffer
   let fileData = file.buffer
@@ -108,7 +107,7 @@ module.exports = async function (req, res, next) {
         updateAttachment.width = newWidth
         updateAttachment.height = newHeight
         // 压缩图片为webp 保存到 filePath 路径下
-        const thumbnailPath = path.join('./public/content/uploadfile/', albumName, 'thum-' + attachmentId + '.webp')
+        const thumbnailPath = path.join('./public/content/uploadfile/', albumid, 'thum-' + attachmentId + '.webp')
         await image.resize(newWidth, newHeight).webp({ quality: 80 }).toFile(thumbnailPath)
         updateAttachment.thumfor = thumbnailPath
       }
@@ -116,7 +115,7 @@ module.exports = async function (req, res, next) {
 
     if (config.imgSettingEnableImgCompress) {
       // 开启压缩
-      filePath = path.join('./public/content/uploadfile/', albumName, attachmentId + '.webp')
+      filePath = path.join('./public/content/uploadfile/', albumid, attachmentId + '.webp')
       const { imgSettingCompressQuality, imgSettingCompressMaxSize } = config
 
       const animated = imageInfo.pages > 1
@@ -140,7 +139,7 @@ module.exports = async function (req, res, next) {
       }
       updateAttachment.filepath = filePath
     } else {
-      filePath = path.join('./public/content/uploadfile/', albumName, attachmentId + extname)
+      filePath = path.join('./public/content/uploadfile/', albumid, attachmentId + extname)
       // 不压缩，直接将fileData保存到filePath
       fs.writeFileSync(filePath, fileData)
       updateAttachment.filepath = filePath

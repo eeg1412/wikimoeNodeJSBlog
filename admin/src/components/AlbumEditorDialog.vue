@@ -8,12 +8,15 @@
     @closed="resetData"
   >
     <div>
-      <el-form :model="form" :rules="rules" ref="formRef" label-width="80px">
+      <el-form
+        :model="form"
+        :rules="rules"
+        ref="formRef"
+        label-width="80px"
+        @submit.prevent
+      >
         <el-form-item label="相册名称" prop="name">
-          <el-input
-            v-model="form.name"
-            placeholder="请输入相册名称，仅支持英文和数字"
-          ></el-input>
+          <el-input v-model="form.name" placeholder="请输入相册名称"></el-input>
         </el-form-item>
       </el-form>
     </div>
@@ -54,14 +57,7 @@ export default {
       __v: null,
     })
     const rules = reactive({
-      name: [
-        { required: true, message: '请输入相册名称', trigger: 'blur' },
-        {
-          pattern: /^[a-zA-Z0-9]+$/,
-          message: '仅支持英文和数字',
-          trigger: 'blur',
-        },
-      ],
+      name: [{ required: true, message: '请输入相册名称', trigger: 'blur' }],
     })
     const formRef = ref(null)
     const submit = () => {
