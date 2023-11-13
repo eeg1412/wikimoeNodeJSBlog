@@ -833,3 +833,6 @@ input[type='password'] {
   margin-right: 10px;
   margin-bottom: 20px;
 }
+.el-dialog {
+  min-width: 320px;
+}

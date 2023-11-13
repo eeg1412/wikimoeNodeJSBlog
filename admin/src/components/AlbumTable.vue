@@ -34,8 +34,12 @@
       <el-table :data="albumList" row-key="_id" border default-expand-all>
         <el-table-column prop="name" label="相册名称" />
 
-        <el-table-column label="操作" width="140">
+        <el-table-column label="操作" width="200">
           <template #default="{ row }">
+            <!-- 查看 -->
+            <el-button size="small" @click="openAttachementDialog(row._id)"
+              >查看</el-button
+            >
             <el-button type="primary" size="small" @click="goEdit(row._id)"
               >编辑</el-button
             >
@@ -62,18 +66,23 @@
       @success="onEditorSuccess"
     />
   </div>
+  <AttachmentsDialog
+    :albumIdProp="attachmentsAlbumId"
+    ref="attachmentsDialogRef"
+  />
 </template>
 <script>
 import { useRoute, useRouter } from 'vue-router'
 import { authApi } from '@/api'
 import { ElMessage, ElMessageBox } from 'element-plus'
-import { onMounted, reactive, ref, watch } from 'vue'
+import { nextTick, onMounted, reactive, ref, watch } from 'vue'
 import { setSessionParams, getSessionParams } from '@/utils/utils'
 import AlbumEditorDialog from '@/components/AlbumEditorDialog.vue'
-
+import AttachmentsDialog from '@/components/AttachmentsDialog.vue'
 export default {
   components: {
     AlbumEditorDialog,
+    AttachmentsDialog,
   },
   props: {
     // params
@@ -88,6 +97,7 @@ export default {
       },
     },
   },
+  emits: ['paramsChange'],
   setup(props, { emit }) {
     const route = useRoute()
     const router = useRouter()
@@ -162,6 +172,15 @@ export default {
     const onEditorSuccess = () => {
       getAlbumList()
     }
+
+    const attachmentsDialogRef = ref(null)
+    const attachmentsAlbumId = ref(null)
+    const openAttachementDialog = (_id) => {
+      attachmentsAlbumId.value = _id
+      nextTick(() => {
+        attachmentsDialogRef.value.open()
+      })
+    }
     onMounted(() => {
       initParams()
       getAlbumList()
@@ -177,6 +196,9 @@ export default {
       goEdit,
       deleteAlbum,
       onEditorSuccess,
+      attachmentsDialogRef,
+      attachmentsAlbumId,
+      openAttachementDialog,
     }
   },
 }
