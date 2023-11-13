@@ -108,7 +108,7 @@ module.exports = async function (req, res, next) {
         updateAttachment.height = newHeight
         // 压缩图片为webp 保存到 filePath 路径下
         const thumbnailPath = path.join('./public/content/uploadfile/', albumid, 'thum-' + attachmentId + '.webp')
-        await image.resize(newWidth, newHeight).webp({ quality: 80 }).toFile(thumbnailPath)
+        await image.resize(newWidth, newHeight).webp({ quality: 40 }).toFile(thumbnailPath)
         updateAttachment.thumfor = thumbnailPath
       }
     }
