@@ -125,5 +125,12 @@ export default function (api) {
         shouldAdminJWT: true
       })
     },
+    // get /attachment/list
+    getAttachmentList (data) {
+      return api.get('/attachment/list', {
+        params: data,
+        shouldAdminJWT: true
+      })
+    },
   }
 }

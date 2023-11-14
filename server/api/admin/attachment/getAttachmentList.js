@@ -5,7 +5,7 @@ const log4js = require('log4js')
 const adminApiLog = log4js.getLogger('adminApi')
 
 module.exports = async function (req, res, next) {
-  let { page, size, keyword } = req.query
+  let { page, size, keyword, album } = req.query
   page = parseInt(page)
   size = parseInt(size)
   // 判断page和size是否为数字
@@ -22,6 +22,9 @@ module.exports = async function (req, res, next) {
   // 如果keyword存在，就加入查询条件
   if (keyword) {
     params.name = new RegExp(keyword, 'i')
+  }
+  if (album) {
+    params.album = album
   }
 
   // updatetime越新越靠前，_id越新越靠前

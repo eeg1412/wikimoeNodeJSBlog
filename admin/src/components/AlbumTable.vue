@@ -69,6 +69,7 @@
   </div>
   <AttachmentsDialog
     :albumIdProp="attachmentsAlbumId"
+    @success="attachmentUploadSuccess"
     ref="attachmentsDialogRef"
   />
 </template>
@@ -76,7 +77,7 @@
 import { useRoute, useRouter } from 'vue-router'
 import { authApi } from '@/api'
 import { ElMessage, ElMessageBox } from 'element-plus'
-import { nextTick, onMounted, reactive, ref, watch } from 'vue'
+import { nextTick, onBeforeMount, onMounted, reactive, ref, watch } from 'vue'
 import { setSessionParams, getSessionParams } from '@/utils/utils'
 import AlbumEditorDialog from '@/components/AlbumEditorDialog.vue'
 import AttachmentsDialog from '@/components/AttachmentsDialog.vue'
@@ -182,9 +183,20 @@ export default {
         attachmentsDialogRef.value.open()
       })
     }
+
+    let getAlbumTimer = null
+    const attachmentUploadSuccess = () => {
+      clearTimeout(getAlbumTimer)
+      getAlbumTimer = setTimeout(() => {
+        getAlbumList()
+      }, 1000)
+    }
     onMounted(() => {
       initParams()
       getAlbumList()
+    })
+    onBeforeMount(() => {
+      clearTimeout(getAlbumTimer)
     })
     return {
       albumList,
@@ -200,6 +212,7 @@ export default {
       attachmentsDialogRef,
       attachmentsAlbumId,
       openAttachementDialog,
+      attachmentUploadSuccess,
     }
   },
 }

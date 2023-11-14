@@ -2,6 +2,9 @@ const { defineConfig } = require('@vue/cli-service')
 module.exports = defineConfig({
   transpileDependencies: true,
   devServer: {
+    client: {
+      overlay: false,
+    },
     https: false,
     port: 8079,
     proxy: {
@@ -10,6 +13,14 @@ module.exports = defineConfig({
         changeOrigin: true,
         pathRewrite: {
           "/api": "",
+        },
+      },
+      // content
+      "/content/uploadfile": {
+        target: "http://127.0.0.1:3011/content/uploadfile",
+        changeOrigin: true,
+        pathRewrite: {
+          "/content/uploadfile": "",
         },
       },
       // upload

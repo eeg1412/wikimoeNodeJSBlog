@@ -12,7 +12,7 @@
           <el-select
             v-model="albumId"
             placeholder="请选择相册"
-            @change="updateHeaders"
+            @change="changeAlbum"
           >
             <el-option
               v-for="item in albumList"
@@ -46,6 +46,21 @@
         <el-icon class="el-icon--upload"><upload-filled /></el-icon>
         <div class="el-upload__text">拖动文件或点击上传</div>
       </el-upload>
+      <div>
+        <div
+          class="dib"
+          v-for="(item, index) in attachmentList"
+          :key="item._id"
+        >
+          <el-image
+            :src="item.thumfor || item.filepath"
+            fit="cover"
+            loading="lazy"
+            :preview-src-list="[item.filepath]"
+            style="width: 100px; height: 100px"
+          />
+        </div>
+      </div>
     </div>
   </el-dialog>
 </template>
@@ -53,7 +68,7 @@
 import { useRoute, useRouter } from 'vue-router'
 import { authApi } from '@/api'
 import { ElMessage, ElMessageBox } from 'element-plus'
-import { nextTick, onMounted, reactive, ref, watch } from 'vue'
+import { nextTick, onBeforeMount, onMounted, reactive, ref, watch } from 'vue'
 import store from '@/store'
 
 export default {
@@ -63,13 +78,17 @@ export default {
       default: '',
     },
   },
+  emits: ['success', 'error', 'paramsChange'],
   setup(props, { emit }) {
     const visible = ref(false)
     const albumId = ref('')
     const open = () => {
+      attachmentList.value = []
       albumId.value = props.albumIdProp
       updateHeaders()
       getAlbumList()
+      params.album = albumId.value
+      getAttachmentList(true)
       nextTick(() => {
         visible.value = true
       })
@@ -90,14 +109,20 @@ export default {
     const headers = ref({})
     const updateHeaders = () => {
       headers.value = {
-        Authorization: `Bearer 123${store.getters.adminToken}`,
+        Authorization: `Bearer ${store.getters.adminToken}`,
         AlbumId: albumId.value,
       }
     }
 
+    let getAttachmentListTimer = null
+
     const handleSuccess = (res) => {
       console.log(res)
       emit('success', res)
+      clearTimeout(getAttachmentListTimer)
+      getAttachmentListTimer = setTimeout(() => {
+        getAttachmentList()
+      }, 1000)
     }
 
     const handleError = (err) => {
@@ -105,7 +130,40 @@ export default {
       emit('error')
     }
 
+    const attachmentList = ref([])
+    const params = reactive({
+      page: 1,
+      size: 10,
+      keyword: '',
+      album: albumId.value,
+    })
+    const total = ref(0)
+    const getAttachmentList = (resetPage) => {
+      if (resetPage) {
+        params.page = 1
+      }
+      authApi
+        .getAttachmentList(params)
+        .then((res) => {
+          attachmentList.value = res.data.list
+          total.value = res.data.total
+          emit('paramsChange', params)
+        })
+        .catch((err) => {
+          console.log(err)
+        })
+    }
+
+    const changeAlbum = () => {
+      params.album = albumId.value
+      getAttachmentList(true)
+      updateHeaders()
+    }
+
     onMounted(() => {})
+    onBeforeMount(() => {
+      clearTimeout(getAttachmentListTimer)
+    })
     return {
       visible,
       albumId,
@@ -115,6 +173,8 @@ export default {
       updateHeaders,
       handleSuccess,
       handleError,
+      changeAlbum,
+      attachmentList,
     }
   },
 }
