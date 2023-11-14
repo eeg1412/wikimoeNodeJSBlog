@@ -36,7 +36,7 @@ exports.findPage = async function (parmas, sort, page, limit) {
 
 exports.updateOne = async function (filters, parmas) {
   // document查询
-  parmas.$inc = { __v: 1 }
+  parmas.$inc = { __v: 1, ...parmas.$inc }
   return await tagsModel.updateOne(filters, parmas);
 }
 // 删除

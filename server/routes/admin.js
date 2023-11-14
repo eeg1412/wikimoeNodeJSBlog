@@ -236,6 +236,15 @@ const adminRouteSetting = [
     roleType: null,
     role: null
   },
+  // get /attachment/list
+  {
+    path: '/attachment/list',
+    method: 'get',
+    middleware: [checkAuth],
+    controller: require('../api/admin/attachment/getAttachmentList'),
+    roleType: null,
+    role: null
+  },
 ]
 
 adminRouteSetting.forEach(item => {

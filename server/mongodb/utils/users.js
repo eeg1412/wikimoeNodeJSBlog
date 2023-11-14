@@ -15,6 +15,6 @@ exports.findOne = async function (parmas) {
 
 exports.updateOne = async function (filters, parmas) {
     // document查询
-    parmas.$inc = { __v: 1 }
+    parmas.$inc = { __v: 1, ...parmas.$inc }
     return await usersModel.updateOne(filters, parmas);
 }

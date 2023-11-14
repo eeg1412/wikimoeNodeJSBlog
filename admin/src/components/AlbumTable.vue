@@ -33,12 +33,13 @@
     <div class="mb20">
       <el-table :data="albumList" row-key="_id" border default-expand-all>
         <el-table-column prop="name" label="相册名称" />
+        <el-table-column prop="count" label="媒体数" width="80" />
 
         <el-table-column label="操作" width="200">
           <template #default="{ row }">
             <!-- 查看 -->
             <el-button size="small" @click="openAttachementDialog(row._id)"
-              >查看</el-button
+              >媒体</el-button
             >
             <el-button type="primary" size="small" @click="goEdit(row._id)"
               >编辑</el-button

@@ -40,6 +40,8 @@
         multiple
         :accept="'image/*'"
         :headers="headers"
+        :on-success="handleSuccess"
+        :on-error="handleError"
       >
         <el-icon class="el-icon--upload"><upload-filled /></el-icon>
         <div class="el-upload__text">拖动文件或点击上传</div>
@@ -88,9 +90,19 @@ export default {
     const headers = ref({})
     const updateHeaders = () => {
       headers.value = {
-        Authorization: `Bearer ${store.getters.adminToken}`,
+        Authorization: `Bearer 123${store.getters.adminToken}`,
         AlbumId: albumId.value,
       }
+    }
+
+    const handleSuccess = (res) => {
+      console.log(res)
+      emit('success', res)
+    }
+
+    const handleError = (err) => {
+      ElMessage.error(err.message)
+      emit('error')
     }
 
     onMounted(() => {})
@@ -101,6 +113,8 @@ export default {
       albumList,
       headers,
       updateHeaders,
+      handleSuccess,
+      handleError,
     }
   },
 }

@@ -161,12 +161,15 @@ module.exports = async function (req, res, next) {
       })
       return
     }
+    // album的count+1
+    albumUtils.updateOne({ _id: albumid }, { $inc: { count: 1 } })
+
+    // 查询最新的附件信息
+    const attachmentData = await attachmentsUtils.findOne({ _id: attachmentId })
 
 
     // 发送响应
-    res.send({
-
-    })
+    res.send(attachmentData)
   } catch (err) {
     console.error(err)
     // 删除数据库 deleteOne

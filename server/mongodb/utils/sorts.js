@@ -21,7 +21,7 @@ exports.find = async function (parmas, sort) {
 
 exports.updateOne = async function (filters, parmas) {
   // document查询
-  parmas.$inc = { __v: 1 }
+  parmas.$inc = { __v: 1, ...parmas.$inc }
   return await sortsModel.updateOne(filters, parmas);
 }
 // 删除
