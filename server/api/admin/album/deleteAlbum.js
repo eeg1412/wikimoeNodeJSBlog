@@ -27,7 +27,7 @@ module.exports = async function (req, res, next) {
     })
     return
   }
-  const dir = path.join('./public/content/uploadfile', album.name)
+  const dir = path.join('./public/content/uploadfile', album._id.toString())
   const files = fs.readdirSync(dir)
   if (files.length > 0) {
     res.status(400).json({
