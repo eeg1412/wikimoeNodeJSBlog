@@ -132,5 +132,12 @@ export default function (api) {
         shouldAdminJWT: true
       })
     },
+    // delete /attachment/delete
+    deleteAttachment (data) {
+      return api.delete('/attachment/delete', {
+        params: data,
+        shouldAdminJWT: true
+      })
+    },
   }
 }

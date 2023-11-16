@@ -70,6 +70,7 @@
   <AttachmentsDialog
     :albumIdProp="attachmentsAlbumId"
     @success="attachmentUploadSuccess"
+    @onAttachmentsDelete="attachmentUploadSuccess"
     ref="attachmentsDialogRef"
   />
 </template>

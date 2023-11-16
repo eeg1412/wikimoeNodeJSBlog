@@ -49,9 +49,13 @@ module.exports = async function (req, res, next) {
     return
   }
 
+  const originalname = Buffer.from(file.originalname, 'latin1').toString('utf8')
+  // name去掉后缀名
+  const name = originalname.replace(/\.[^/.]+$/, "")
   // 数据库添加信息
   const attachment = {
-    filename: Buffer.from(file.originalname, 'latin1').toString('utf8'),
+    name: name,
+    filename: originalname,
     filesize: file.size,
     filepath: '',
     width: 0,

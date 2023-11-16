@@ -34,8 +34,40 @@
       </div>
     </template>
     <div class="attachments-dialog-body" v-loading="attachmentsLoading">
+      <div
+        v-show="selectedImageList.length > 0"
+        class="attachments-tool-bar-body"
+      >
+        <div class="w_10 tc">
+          <div>
+            已选中<span class="fb">{{ selectedImageList.length }}</span
+            >件媒体文件
+          </div>
+          <div class="mt10">
+            <!-- 删除按钮 -->
+            <el-button
+              type="danger"
+              :icon="Delete"
+              circle
+              @click="deleteAttachments"
+            />
+            <!-- 移动相册按钮 icon SetUp -->
+            <el-button type="info" :icon="SetUp" circle />
+            <!-- 确定按钮 Select -->
+            <el-button
+              type="primary"
+              :icon="Select"
+              circle
+              v-if="shouldSelectOk"
+            />
+            <!-- 关闭按钮 -->
+            <el-button :icon="Close" circle />
+          </div>
+        </div>
+      </div>
       <el-upload
-        class="upload-demo"
+        v-show="selectedImageList.length <= 0"
+        class="attachments-upload"
         drag
         action="/api/admin/attachment/upload"
         multiple
@@ -48,26 +80,22 @@
         <el-icon class="el-icon--upload"><upload-filled /></el-icon>
         <div class="el-upload__text">拖动文件或点击上传</div>
       </el-upload>
-      <div
-        class="mt15 custom-scroll scroll-not-hide attachments-list-body clearfix"
-      >
+      <div class="custom-scroll scroll-not-hide attachments-list-body clearfix">
         <template v-if="attachmentList.length > 0">
           <div
             class="fl attachment-item"
             v-for="(item, index) in attachmentList"
             :key="item._id"
           >
-            <el-image
-              :src="item.thumfor || item.filepath"
-              fit="cover"
-              loading="lazy"
-              :preview-src-list="[item.filepath]"
-              style="width: 100%; height: 100px"
+            <AttachmentImage
+              :item="item"
+              @onSelectorClick="onSelectorClick"
+              :isSelected="findImageInSelectedImageList(item._id) > -1"
             />
           </div>
         </template>
         <template v-else>
-          <div class="full-height dflex flexCenter">
+          <div class="dflex flexCenter attachments-list-empty-body">
             <el-empty description="暂无媒体文件，请选择其他相册" />
           </div>
         </template>
@@ -92,15 +120,25 @@ import { authApi } from '@/api'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { nextTick, onBeforeMount, onMounted, reactive, ref, watch } from 'vue'
 import store from '@/store'
+// AttachmentImage
+import AttachmentImage from '@/components/AttachmentImage.vue'
+import { Delete, Close, SetUp, Select } from '@element-plus/icons-vue'
 
 export default {
+  components: {
+    AttachmentImage,
+  },
   props: {
     albumIdProp: {
       type: String,
       default: '',
     },
+    shouldSelectOk: {
+      type: Boolean,
+      default: false,
+    },
   },
-  emits: ['success', 'error', 'paramsChange'],
+  emits: ['success', 'error', 'paramsChange', 'onAttachmentsDelete'],
   setup(props, { emit }) {
     const visible = ref(false)
     const fileList = ref([])
@@ -203,10 +241,86 @@ export default {
       clearTimeout(clearSuccessFileListTimer)
       clearSuccessFileListTimer = setTimeout(() => {
         // 清除掉status: "success" 的file
-        fileList.value = fileList.value.filter((item) => {
+        const filterList = fileList.value.filter((item) => {
           return item.status !== 'success'
         })
+        if (filterList.length !== fileList.value.length) {
+          fileList.value = filterList
+        }
       }, 500)
+    }
+
+    const selectedImageList = ref([])
+    const onSelectorClick = (item) => {
+      // 找到id
+      const id = item._id
+      // 如果selectedImageList中有这个id，就删除，否则就添加
+      const index = findImageInSelectedImageList(id)
+      if (index > -1) {
+        selectedImageList.value.splice(index, 1)
+      } else {
+        selectedImageList.value.push(id)
+      }
+    }
+    const findImageInSelectedImageList = (id) => {
+      const index = selectedImageList.value.findIndex((item) => {
+        return item === id
+      })
+      return index
+    }
+
+    const deleteAttachments = () => {
+      // 弹窗确认
+      ElMessageBox.confirm(
+        `确定要删除${selectedImageList.value.length}件媒体文件吗？`,
+        {
+          confirmButtonText: '是',
+          cancelButtonText: '否',
+          type: 'warning',
+        }
+      )
+        .then(() => {
+          // 删除
+          const promiseList = selectedImageList.value.map((item) => {
+            return new Promise((resolve, reject) => {
+              authApi
+                .deleteAttachment({ id: item })
+                .then(() => {
+                  resolve(true)
+                })
+                .catch(() => {
+                  resolve(false)
+                })
+            })
+          })
+          Promise.all(promiseList)
+            .then((res) => {
+              // 统计有多少个成功，多少个失败
+              let successCount = 0
+              let failCount = 0
+              res.forEach((item) => {
+                if (item) {
+                  successCount++
+                } else {
+                  failCount++
+                }
+              })
+              // 提示
+              if (failCount > 0) {
+                ElMessage(
+                  `成功删除${successCount}件媒体文件，失败${failCount}件`
+                )
+              } else {
+                ElMessage(`成功删除${successCount}件媒体文件`)
+              }
+              // 清空selectedImageList
+              selectedImageList.value = []
+              getAttachmentList()
+              emit('onAttachmentsDelete')
+            })
+            .catch(() => {})
+        })
+        .catch(() => {})
     }
 
     // 监听 params.page 的变化
@@ -222,6 +336,10 @@ export default {
       clearTimeout(getAttachmentListTimer)
     })
     return {
+      Delete,
+      Close,
+      SetUp,
+      Select,
       visible,
       fileList,
       albumId,
@@ -236,6 +354,10 @@ export default {
       changeAlbum,
       attachmentsLoading,
       attachmentList,
+      selectedImageList,
+      onSelectorClick,
+      findImageInSelectedImageList,
+      deleteAttachments,
     }
   },
 }
@@ -245,9 +367,22 @@ export default {
   width: 20%;
 }
 .attachments-list-body {
-  height: calc(100vh - 550px);
+  height: calc(100vh - 430px);
   min-height: 200px;
   overflow: auto;
+}
+.attachments-list-empty-body {
+  height: calc(100vh - 480px);
+}
+.attachments-upload {
+  overflow: hidden;
+}
+.attachments-tool-bar-body {
+  height: 97px;
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 /* 小于500 */
 @media screen and (max-width: 500px) {
@@ -261,6 +396,15 @@ export default {
 .attachments-dialog {
   width: 800px;
 }
+.attachments-dialog .el-upload-dragger {
+  height: 97px;
+  overflow: hidden;
+}
+.attachments-dialog .el-icon--upload {
+  font-size: 30px;
+  margin-bottom: 6px;
+  line-height: 42px;
+}
 .attachments-dialog .el-dialog__body {
   padding-top: 0;
 }
@@ -268,6 +412,10 @@ export default {
   max-height: 100px;
   overflow-y: auto;
   overflow-x: hidden;
+  margin: 10px 0;
+}
+.attachments-dialog .el-upload-list__item.is-uploading {
+  padding-bottom: 15px;
 }
 .attachments-dialog .el-upload-list::-webkit-scrollbar {
   width: 6px;

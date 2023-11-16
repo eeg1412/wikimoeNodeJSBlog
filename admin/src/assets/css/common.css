@@ -828,6 +828,9 @@ input[type='password'] {
   justify-content: center;
   align-items: center;
 }
+.pointer {
+  cursor: pointer;
+}
 .common-title {
   font-size: 16px;
   color: #333;

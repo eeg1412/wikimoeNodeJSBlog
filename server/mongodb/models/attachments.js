@@ -11,6 +11,9 @@ var attachments = new Schema({
   // - mimetype	MIME类型字段
   // - thumfor	缩略图标识字段
   // - 相册id	album
+  name: {
+    type: String,
+  },
   filename: {
     type: String,
     required: true,
