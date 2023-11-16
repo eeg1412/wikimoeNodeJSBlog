@@ -10,7 +10,12 @@
         style="width: 100%; height: 100%"
       />
     </div>
-    <div class="attachment-filename">{{ item.name || '未命名' }}</div>
+    <div class="attachment-filename pointer" @click="toEditName">
+      <span>{{ item.name || '未命名' }}</span>
+      <div class="attachment-filename-edit-icon">
+        <el-icon><EditPen /></el-icon>
+      </div>
+    </div>
     <div class="attachment-selector-body pointer" @click="onSelectorClick">
       <i class="far fa-circle" v-show="!isSelected"></i>
       <i class="fas fa-check-circle" v-show="isSelected"></i>
@@ -36,8 +41,13 @@ export default {
     const onSelectorClick = () => {
       emit('onSelectorClick', props.item)
     }
+    const toEditName = () => {
+      // TODO: 编辑名称
+      console.log('toEditName')
+    }
     return {
       onSelectorClick,
+      toEditName,
     }
   },
 }
@@ -67,10 +77,17 @@ export default {
   left: 0;
   right: 0;
   padding: 5px;
+  padding-right: 20px;
   background-color: rgba(0, 0, 0, 0.5);
   font-size: 12px;
   color: #fff;
   z-index: 2;
+}
+.attachment-filename-edit-icon {
+  position: absolute;
+  z-index: 2;
+  right: 5px;
+  bottom: 3px;
 }
 .attachment-selector-body {
   /* 左上角 */

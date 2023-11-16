@@ -52,7 +52,12 @@
               @click="deleteAttachments"
             />
             <!-- 移动相册按钮 icon SetUp -->
-            <el-button type="info" :icon="SetUp" circle />
+            <el-button
+              type="info"
+              :icon="SetUp"
+              circle
+              @click="changeAttachmentsAlbum"
+            />
             <!-- 确定按钮 Select -->
             <el-button
               type="primary"
@@ -61,7 +66,7 @@
               v-if="shouldSelectOk"
             />
             <!-- 关闭按钮 -->
-            <el-button :icon="Close" circle />
+            <el-button :icon="Close" circle @click="clearSelectedImageList" />
           </div>
         </div>
       </div>
@@ -314,13 +319,22 @@ export default {
                 ElMessage(`成功删除${successCount}件媒体文件`)
               }
               // 清空selectedImageList
-              selectedImageList.value = []
+              clearSelectedImageList()
               getAttachmentList()
               emit('onAttachmentsDelete')
             })
             .catch(() => {})
         })
         .catch(() => {})
+    }
+
+    const changeAttachmentsAlbum = () => {
+      // TODO: 移动相册
+      console.log('changeAttachmentsAlbum')
+    }
+    // 清空selectedImageList
+    const clearSelectedImageList = () => {
+      selectedImageList.value = []
     }
 
     // 监听 params.page 的变化
@@ -358,6 +372,8 @@ export default {
       onSelectorClick,
       findImageInSelectedImageList,
       deleteAttachments,
+      clearSelectedImageList,
+      changeAttachmentsAlbum,
     }
   },
 }
