@@ -254,6 +254,24 @@ const adminRouteSetting = [
     roleType: null,
     role: null
   },
+  // put /attachment/update/name
+  {
+    path: '/attachment/update/name',
+    method: 'put',
+    middleware: [checkAuth],
+    controller: require('../api/admin/attachment/updateAttachmentName'),
+    roleType: null,
+    role: null
+  },
+  // put /attachment/update/album
+  {
+    path: '/attachment/update/album',
+    method: 'put',
+    middleware: [checkAuth],
+    controller: require('../api/admin/attachment/updateAttachmentAlbum'),
+    roleType: null,
+    role: null
+  },
 ]
 
 adminRouteSetting.forEach(item => {

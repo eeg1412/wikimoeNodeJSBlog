@@ -139,5 +139,17 @@ export default function (api) {
         shouldAdminJWT: true
       })
     },
+    // put /attachment/update/name
+    updateAttachmentName (data) {
+      return api.put('/attachment/update/name', data, {
+        shouldAdminJWT: true
+      })
+    },
+    // put /attachment/update/album
+    updateAttachmentAlbum (data) {
+      return api.put('/attachment/update/album', data, {
+        shouldAdminJWT: true
+      })
+    },
   }
 }

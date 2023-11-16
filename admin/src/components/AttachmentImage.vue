@@ -21,8 +21,41 @@
       <i class="fas fa-check-circle" v-show="isSelected"></i>
     </div>
   </div>
+  <!-- 更改名称dialog -->
+  <el-dialog
+    title="更改名称"
+    v-model="showNameDialog"
+    destroy-on-close
+    :close-on-click-modal="false"
+    align-center
+  >
+    <div>
+      <el-form
+        :model="formName"
+        :rules="rulesName"
+        ref="formNameRef"
+        label-width="80px"
+        @submit.prevent
+      >
+        <el-form-item label="媒体名称" prop="name">
+          <el-input
+            v-model="formName.name"
+            placeholder="请输入媒体名称"
+          ></el-input>
+        </el-form-item>
+      </el-form>
+    </div>
+    <template #footer>
+      <span class="dialog-footer">
+        <el-button @click="showNameDialog = false">取消</el-button>
+        <el-button type="primary" @click="submitName"> 提交 </el-button>
+      </span>
+    </template>
+  </el-dialog>
 </template>
 <script>
+import { computed, reactive, ref, watch } from 'vue'
+import { authApi } from '@/api'
 export default {
   props: {
     item: {
@@ -36,17 +69,47 @@ export default {
       default: false,
     },
   },
-  emits: ['onSelectorClick'],
+  emits: ['onSelectorClick', 'onUpdateName'],
   setup(props, { emit }) {
     const onSelectorClick = () => {
       emit('onSelectorClick', props.item)
     }
+
+    const showNameDialog = ref(false)
+    const formNameRef = ref(null)
+    const formName = reactive({
+      name: '',
+    })
+    const rulesName = reactive({
+      name: [{ required: true, message: '请输入媒体名称', trigger: 'blur' }],
+    })
+    const submitName = () => {
+      formNameRef.value.validate(async (valid) => {
+        if (!valid) {
+          return false
+        }
+        const params = {
+          id: props.item._id,
+          name: formName.name,
+          __v: props.item.__v,
+        }
+        authApi.updateAttachmentName(params).then(() => {
+          showNameDialog.value = false
+          emit('onUpdateName', formName.name)
+        })
+      })
+    }
     const toEditName = () => {
-      // TODO: 编辑名称
-      console.log('toEditName')
+      formName.name = props.item.name || ''
+      showNameDialog.value = true
     }
     return {
       onSelectorClick,
+      showNameDialog,
+      formNameRef,
+      formName,
+      rulesName,
+      submitName,
       toEditName,
     }
   },

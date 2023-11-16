@@ -6,6 +6,7 @@
     :close-on-click-modal="false"
     align-center
     class="attachments-dialog"
+    @closed="clearSelectedImageList"
   >
     <template #header="{ close, titleId, titleClass }">
       <div class="my-header">
@@ -96,6 +97,7 @@
               :item="item"
               @onSelectorClick="onSelectorClick"
               :isSelected="findImageInSelectedImageList(item._id) > -1"
+              @onUpdateName="getAttachmentList"
             />
           </div>
         </template>
@@ -227,6 +229,7 @@ export default {
 
     const changeAlbum = () => {
       params.album = albumId.value
+      clearSelectedImageList()
       getAttachmentList(true)
       updateHeaders()
     }
@@ -361,6 +364,7 @@ export default {
       albumList,
       params,
       total,
+      getAttachmentList,
       headers,
       updateHeaders,
       handleSuccess,
@@ -374,6 +378,7 @@ export default {
       deleteAttachments,
       clearSelectedImageList,
       changeAttachmentsAlbum,
+      clearSelectedImageList,
     }
   },
 }

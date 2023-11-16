@@ -41,6 +41,14 @@ exports.updateOne = async function (filters, parmas) {
 
   return await attachmentsModel.updateOne(filters, parmas);
 }
+// 更新多个
+exports.updateMany = async function (filters, parmas) {
+  // document查询
+  parmas.$inc = { __v: 1, ...parmas.$inc }
+  parmas.updatetime = new Date()
+
+  return await attachmentsModel.updateMany(filters, parmas);
+}
 // 删除
 exports.deleteOne = async function (filters) {
   // document查询
