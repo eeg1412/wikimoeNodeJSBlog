@@ -820,6 +820,14 @@ input[type='password'] {
 .bdBottomC9 {
   border-bottom: 1px solid #c9c9c9;
 }
+/* flex */
+.dflex {
+  display: flex;
+}
+.flexCenter {
+  justify-content: center;
+  align-items: center;
+}
 .common-title {
   font-size: 16px;
   color: #333;
@@ -835,4 +843,31 @@ input[type='password'] {
 }
 .el-dialog {
   min-width: 320px;
+}
+.custom-scroll::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+.custom-scroll::-webkit-scrollbar-thumb {
+  height: 40px;
+  border-radius: 4px;
+  background-color: rgba(255, 255, 255, 0);
+}
+.custom-scroll:hover::-webkit-scrollbar-thumb {
+  height: 40px;
+  border-radius: 4px;
+  background-color: #bbb;
+}
+
+.custom-scroll::-webkit-scrollbar-thumb:hover {
+  background-color: #bbb;
+}
+.custom-scroll.scroll-not-hide::-webkit-scrollbar-thumb {
+  height: 40px;
+  border-radius: 4px;
+  background-color: #bbb;
+}
+.el-upload-dragger {
+  padding: 20px;
 }
