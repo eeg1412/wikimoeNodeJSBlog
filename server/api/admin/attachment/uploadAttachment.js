@@ -69,7 +69,6 @@ module.exports = async function (req, res, next) {
 
 
   let filePath = ''
-  // path.join('./public/content/uploadfile/', albumName, attachmentId)
   // 获取后缀名
   let extname = path.extname(file.originalname)
   const updateAttachment = {
@@ -80,11 +79,32 @@ module.exports = async function (req, res, next) {
     status: 1,
   }
 
+
+
+
   try {
     if (!file.mimetype.startsWith('image')) {
       // 如果文件不是图片
       throw new Error('文件不是图片')
     }
+
+    // 获取当前的年月，并拼接成202301这种格式
+    const date = new Date()
+    const year = date.getFullYear()
+    let month = date.getMonth() + 1
+    // 如果月份小于10，就在前面加个0
+    if (month < 10) {
+      month = '0' + month
+    }
+
+    // 拼接成202301这种格式
+    const yearMonth = String(year) + String(month)
+    // 如果不存在，就创建目录
+    const yearMonthPath = path.join('./public/content/uploadfile/', yearMonth)
+    if (!fs.existsSync(yearMonthPath)) {
+      fs.mkdirSync(yearMonthPath)
+    }
+
     const image = sharp(fileData)
     const imageInfo = await image.metadata()
     // 读取图片信息
@@ -107,7 +127,7 @@ module.exports = async function (req, res, next) {
         updateAttachment.width = newWidth
         updateAttachment.height = newHeight
         // 压缩图片为webp 保存到 filePath 路径下
-        const thumbnailPath = path.join('./public/content/uploadfile/', albumid, 'thum-' + attachmentId + '.webp')
+        const thumbnailPath = path.join(yearMonthPath, 'thum-' + attachmentId + '.webp')
         await image.resize(newWidth, newHeight).webp({ quality: 40 }).toFile(thumbnailPath)
         updateAttachment.thumfor = thumbnailPath
       }
@@ -115,7 +135,7 @@ module.exports = async function (req, res, next) {
 
     if (config.imgSettingEnableImgCompress) {
       // 开启压缩
-      filePath = path.join('./public/content/uploadfile/', albumid, attachmentId + '.webp')
+      filePath = path.join(yearMonthPath, attachmentId + '.webp')
       const { imgSettingCompressQuality, imgSettingCompressMaxSize } = config
 
       const animated = imageInfo.pages > 1
@@ -139,7 +159,7 @@ module.exports = async function (req, res, next) {
       }
       updateAttachment.filepath = filePath
     } else {
-      filePath = path.join('./public/content/uploadfile/', albumid, attachmentId + extname)
+      filePath = path.join(yearMonthPath, attachmentId + extname)
       // 不压缩，直接将fileData保存到filePath
       fs.writeFileSync(filePath, fileData)
       updateAttachment.filepath = filePath

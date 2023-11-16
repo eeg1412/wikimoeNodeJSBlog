@@ -1,10 +1,6 @@
-const chalk = require('chalk')
 const albumUtils = require('../../../mongodb/utils/albums')
-const utils = require('../../../utils/utils')
 const log4js = require('log4js')
 const adminApiLog = log4js.getLogger('adminApi')
-const fs = require('fs')
-const path = require('path');
 
 module.exports = async function (req, res, next) {
   const id = req.query.id
@@ -22,17 +18,7 @@ module.exports = async function (req, res, next) {
   if (album.count > 0) {
     res.status(400).json({
       errors: [{
-        message: '相册下面存在文件，不能删除'
-      }]
-    })
-    return
-  }
-  const dir = path.join('./public/content/uploadfile', album._id.toString())
-  const files = fs.readdirSync(dir)
-  if (files.length > 0) {
-    res.status(400).json({
-      errors: [{
-        message: '相册下面存在文件，不能删除'
+        message: '相册下存在媒体，不能删除'
       }]
     })
     return
@@ -48,8 +34,6 @@ module.exports = async function (req, res, next) {
       })
       return
     }
-    // 删除相册文件夹 /public/content/uploadfile/${id}
-    fs.rmdirSync(dir)
 
     res.send({
       data: {

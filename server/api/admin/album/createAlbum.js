@@ -1,10 +1,8 @@
-const chalk = require('chalk')
 const albumUtils = require('../../../mongodb/utils/albums')
 const utils = require('../../../utils/utils')
 const log4js = require('log4js')
 const adminApiLog = log4js.getLogger('adminApi')
-const fs = require('fs')
-const path = require('path');
+
 
 module.exports = async function (req, res, next) {
 
@@ -38,11 +36,6 @@ module.exports = async function (req, res, next) {
   }
   // save
   albumUtils.save(params).then((data) => {
-    // 创建相册文件夹 /public/content/uploadfile/${id}
-    const id = data._id.toString()
-    const dir = path.join('./public/content/uploadfile', id)
-    fs.mkdirSync(dir)
-
     res.send({
       data: data
     })
