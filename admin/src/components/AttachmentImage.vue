@@ -10,7 +10,11 @@
         style="width: 100%; height: 100%"
       />
     </div>
-    <div class="attachment-filename pointer" @click="toEditName">
+    <div
+      class="attachment-filename pointer"
+      @click="toEditName"
+      :title="item.name || '未命名'"
+    >
       <span>{{ item.name || '未命名' }}</span>
       <div class="attachment-filename-edit-icon">
         <el-icon><EditPen /></el-icon>

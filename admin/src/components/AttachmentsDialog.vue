@@ -51,6 +51,7 @@
               :icon="Delete"
               circle
               @click="deleteAttachments"
+              :title="`删除${selectedImageList.length}件媒体文件`"
             />
             <!-- 移动相册按钮 icon SetUp -->
             <el-button
@@ -58,16 +59,23 @@
               :icon="SetUp"
               circle
               @click="changeAttachmentsAlbum"
+              :title="`移动${selectedImageList.length}件媒体文件`"
             />
             <!-- 确定按钮 Select -->
             <el-button
               type="primary"
               :icon="Select"
               circle
+              :title="`确定选择`"
               v-if="shouldSelectOk"
             />
             <!-- 关闭按钮 -->
-            <el-button :icon="Close" circle @click="clearSelectedImageList" />
+            <el-button
+              :icon="Close"
+              circle
+              :title="`取消选择`"
+              @click="clearSelectedImageList"
+            />
           </div>
         </div>
       </div>
