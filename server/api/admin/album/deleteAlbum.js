@@ -48,7 +48,7 @@ module.exports = async function (req, res, next) {
       })
       return
     }
-    // 删除相册文件夹 /public/content/uploadfile/${name}
+    // 删除相册文件夹 /public/content/uploadfile/${id}
     fs.rmdirSync(dir)
 
     res.send({
