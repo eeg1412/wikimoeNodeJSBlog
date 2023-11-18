@@ -7,6 +7,8 @@ const path = require('path');
 module.exports = async function (req, res, next) {
   // // 开启图片压缩
   // imgSettingEnableImgCompress: false,
+  // // 图片压缩为webp格式
+  // imgSettingEnableImgCompressWebp: false,
   // // 图片压缩质量
   // imgSettingCompressQuality: 80,
   // // 图片压缩最长边
@@ -15,10 +17,11 @@ module.exports = async function (req, res, next) {
   // imgSettingEnableImgThumbnail: false,
   // // 图片缩略图最长边
   // imgSettingThumbnailMaxSize: 680,
-  let { imgSettingEnableImgCompress, imgSettingCompressQuality, imgSettingCompressMaxSize, imgSettingEnableImgThumbnail, imgSettingThumbnailMaxSize } = req.body
+  let { imgSettingEnableImgCompress, imgSettingEnableImgCompressWebp, imgSettingCompressQuality, imgSettingCompressMaxSize, imgSettingEnableImgThumbnail, imgSettingThumbnailMaxSize } = req.body
   // 校验格式
   const params = {
     imgSettingEnableImgCompress: imgSettingEnableImgCompress,
+    imgSettingEnableImgCompressWebp: imgSettingEnableImgCompressWebp,
     imgSettingCompressQuality: imgSettingCompressQuality,
     imgSettingCompressMaxSize: imgSettingCompressMaxSize,
     imgSettingEnableImgThumbnail: imgSettingEnableImgThumbnail,
@@ -28,6 +31,11 @@ module.exports = async function (req, res, next) {
     {
       key: 'imgSettingEnableImgCompress',
       label: '开启图片压缩',
+      type: 'isBoolean',
+    },
+    {
+      key: 'imgSettingEnableImgCompressWebp',
+      label: '图片压缩为webp格式',
       type: 'isBoolean',
     },
     {

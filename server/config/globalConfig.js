@@ -6,6 +6,8 @@ const initGlobalConfig = () => {
   const config = {
     // 开启图片压缩
     imgSettingEnableImgCompress: false,
+    // 图片压缩为webp格式
+    imgSettingEnableImgCompressWebp: false,
     // 图片压缩质量
     imgSettingCompressQuality: 80,
     // 图片压缩最长边

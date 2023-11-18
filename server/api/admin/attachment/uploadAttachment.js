@@ -4,6 +4,29 @@ const fs = require('fs')
 const albumUtils = require('../../../mongodb/utils/albums')
 const attachmentsUtils = require('../../../mongodb/utils/attachments')
 
+const imageCompress = async (toExtname, fileData, animated = false, newWidth, newHeight, imgSettingCompressQuality, filePath) => {
+  const imageData = sharp(fileData, {
+    animated,
+  })
+  if (newWidth && newHeight) {
+    imageData.resize(newWidth, newHeight)
+  }
+  switch (toExtname) {
+    case '.webp':
+      await imageData.webp({ quality: imgSettingCompressQuality }).toFile(filePath)
+      break;
+    case '.jpg':
+    case '.jpeg':
+      await imageData.jpeg({ quality: imgSettingCompressQuality }).toFile(filePath)
+      break;
+    case '.png':
+      await imageData.png({ quality: imgSettingCompressQuality }).toFile(filePath)
+      break;
+    default:
+      await imageData.toFile(filePath)
+      break;
+  }
+}
 
 module.exports = async function (req, res, next) {
   const { file } = req
@@ -13,6 +36,8 @@ module.exports = async function (req, res, next) {
   const config = global.$globalConfig;
   // // 开启图片压缩
   // imgSettingEnableImgCompress: false,
+  // // 图片压缩为webp格式
+  // imgSettingEnableImgCompressWebp: false,
   // // 图片压缩质量
   // imgSettingCompressQuality: 80,
   // // 图片压缩最长边
@@ -137,10 +162,15 @@ module.exports = async function (req, res, next) {
       }
     }
 
-    if (config.imgSettingEnableImgCompress) {
+    const { imgSettingCompressQuality, imgSettingCompressMaxSize, imgSettingEnableImgCompressWebp, imgSettingEnableImgCompress } = config
+
+    if (imgSettingEnableImgCompress) {
       // 开启压缩
-      filePath = path.join(yearMonthPath, attachmentId + '.webp')
-      const { imgSettingCompressQuality, imgSettingCompressMaxSize } = config
+      if (imgSettingEnableImgCompressWebp) {
+        filePath = path.join(yearMonthPath, attachmentId + '.webp')
+      } else {
+        filePath = path.join(yearMonthPath, attachmentId + extname)
+      }
 
       const animated = imageInfo.pages > 1
       // 如果图片尺寸大于最长边
@@ -152,14 +182,12 @@ module.exports = async function (req, res, next) {
         const newWidth = Math.round(width * scale)
         const newHeight = Math.round(height * scale)
         // 压缩图片为webp 保存到 filePath 路径下
-        await sharp(fileData, {
-          animated,
-        }).resize(newWidth, newHeight).webp({ quality: imgSettingCompressQuality }).toFile(filePath)
+        await imageCompress(imgSettingEnableImgCompressWebp ? '.webp' : extname, fileData, animated, newWidth, newHeight, imgSettingCompressQuality, filePath)
+
+
       } else {
         // 原尺寸压缩
-        await sharp(fileData, {
-          animated,
-        }).webp({ quality: imgSettingCompressQuality }).toFile(filePath)
+        await imageCompress(imgSettingEnableImgCompressWebp ? '.webp' : extname, fileData, animated, null, null, imgSettingCompressQuality, filePath)
       }
       updateAttachment.filepath = filePath
     } else {
