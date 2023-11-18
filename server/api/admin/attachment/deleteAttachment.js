@@ -56,7 +56,9 @@ module.exports = async function (req, res, next) {
       const thumforDir = path.join('./public', attachmentData.thumfor)
       try {
         fs.unlinkSync(dir)
-        fs.unlinkSync(thumforDir)
+        if (attachmentData.thumfor) {
+          fs.unlinkSync(thumforDir)
+        }
       } catch (error) {
         res.status(400).json({
           errors: [{

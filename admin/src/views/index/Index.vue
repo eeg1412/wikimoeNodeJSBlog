@@ -13,13 +13,18 @@
             </div>
           </div>
           <el-menu :default-active="activeIndex" router>
-            <el-menu-item index="Home" :route="{ name: 'Home' }">
+            <el-menu-item
+              index="Home"
+              @click.middle="openNewTab('Home')"
+              :route="{ name: 'Home' }"
+            >
               <i class="fas fa-home pr10"></i>
               <template #title>面板</template>
             </el-menu-item>
             <el-menu-item
               index="SortList"
               @click="removeParam('SortList')"
+              @click.middle="openNewTab('SortList')"
               :route="{ name: 'SortList' }"
             >
               <i class="fas fa-folder pr10"></i>
@@ -29,6 +34,7 @@
             <el-menu-item
               index="TagList"
               @click="removeParam('TagList')"
+              @click.middle="openNewTab('TagList')"
               :route="{ name: 'TagList' }"
             >
               <i class="fas fa-tags pr10"></i>
@@ -38,6 +44,7 @@
             <el-menu-item
               index="AlbumList"
               @click="removeParam('AlbumList')"
+              @click.middle="openNewTab('AlbumList')"
               :route="{ name: 'AlbumList' }"
             >
               <i class="fas fa-images pr10"></i>
@@ -46,6 +53,7 @@
             <el-menu-item
               index="PostList"
               @click="removeParam('PostList')"
+              @click.middle="openNewTab('PostList')"
               :route="{ name: 'PostList' }"
             >
               <i class="fas fa-newspaper pr10"></i>
@@ -55,6 +63,7 @@
             <el-menu-item
               index="Config"
               @click="removeParam('Config')"
+              @click.middle="openNewTab('Config')"
               :route="{ name: 'Config' }"
             >
               <i class="fas fa-cog pr10"></i>
@@ -140,6 +149,7 @@ export default {
     })
 
     const removeParam = (key) => {
+      debugger
       sessionStorage.removeItem(key)
     }
     const logout = () => {
@@ -170,6 +180,13 @@ export default {
       phoneMenuOpen.value = !phoneMenuOpen.value
     }
 
+    const openNewTab = (name) => {
+      const routeData = router.resolve({
+        name: name,
+      })
+      window.open(routeData.href, '_blank')
+    }
+
     onMounted(() => {
       store.dispatch('setAdminInfo')
     })
@@ -191,6 +208,7 @@ export default {
       switchCollapse,
       phoneMenuOpen,
       switchOpenMenu,
+      openNewTab,
     }
   },
 }

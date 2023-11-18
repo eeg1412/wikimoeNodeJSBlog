@@ -140,6 +140,7 @@ module.exports = async function (req, res, next) {
     const { width, height } = imageInfo
     updateAttachment.width = width
     updateAttachment.height = height
+    const animated = imageInfo.pages > 1
     // 如果开启了图片缩略图
     if (config.imgSettingEnableImgThumbnail) {
       // 开启缩略图
@@ -157,7 +158,7 @@ module.exports = async function (req, res, next) {
         updateAttachment.height = newHeight
         // 压缩图片为webp 保存到 filePath 路径下
         const thumbnailPath = path.join(yearMonthPath, 'thum-' + attachmentId + '.webp')
-        await image.resize(newWidth, newHeight).webp({ quality: 40 }).toFile(thumbnailPath)
+        await imageCompress('.webp', fileData, animated, newWidth, newHeight, 40, thumbnailPath)
         updateAttachment.thumfor = thumbnailPath
       }
     }
@@ -172,7 +173,6 @@ module.exports = async function (req, res, next) {
         filePath = path.join(yearMonthPath, attachmentId + extname)
       }
 
-      const animated = imageInfo.pages > 1
       // 如果图片尺寸大于最长边
       const max = Math.max(width, height)
       if (max > imgSettingCompressMaxSize) {
