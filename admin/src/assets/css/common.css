@@ -871,6 +871,8 @@ input[type='password'] {
   border-radius: 4px;
   background-color: #bbb;
 }
-.el-upload-dragger {
+.el-upload-dragger,
+.el-upload-dragger.is-dragover {
   padding: 20px;
+  border-width: 1px;
 }

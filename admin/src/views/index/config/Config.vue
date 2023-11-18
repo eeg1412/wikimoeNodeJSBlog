@@ -14,25 +14,44 @@
               v-model="mediaForm.imgSettingEnableImgCompress"
             ></el-switch>
           </el-form-item>
-          <el-form-item label="图片压缩质量" prop="imgSettingCompressQuality">
-            <!-- 数字 1-100 -->
-            <el-input-number
-              v-model="mediaForm.imgSettingCompressQuality"
-              controls-position="right"
-              :min="1"
-              :max="100"
-              :step="1"
-            ></el-input-number>
-          </el-form-item>
-          <el-form-item label="图片压缩最长边" prop="imgSettingCompressMaxSize">
-            <!-- 数字 1-4096 -->
-            <el-input-number
-              v-model="mediaForm.imgSettingCompressMaxSize"
-              controls-position="right"
-              :min="1"
-              :step="1"
-            ></el-input-number>
-          </el-form-item>
+          <div class="config-border-item">
+            <div class="config-border-item-title">
+              图片压缩设置<span class="config-border-item-tip"
+                >※当开启图片压缩时生效</span
+              >
+            </div>
+
+            <el-form-item
+              label="压缩为webp格式"
+              prop="imgSettingEnableImgCompressWebp"
+            >
+              <el-switch
+                v-model="mediaForm.imgSettingEnableImgCompressWebp"
+              ></el-switch>
+            </el-form-item>
+            <el-form-item label="图片压缩质量" prop="imgSettingCompressQuality">
+              <!-- 数字 1-100 -->
+              <el-input-number
+                v-model="mediaForm.imgSettingCompressQuality"
+                controls-position="right"
+                :min="1"
+                :max="100"
+                :step="1"
+              ></el-input-number>
+            </el-form-item>
+            <el-form-item
+              label="图片压缩最长边"
+              prop="imgSettingCompressMaxSize"
+            >
+              <!-- 数字 1-4096 -->
+              <el-input-number
+                v-model="mediaForm.imgSettingCompressMaxSize"
+                controls-position="right"
+                :min="1"
+                :step="1"
+              ></el-input-number>
+            </el-form-item>
+          </div>
           <el-form-item
             label="开启图片缩略图"
             prop="imgSettingEnableImgThumbnail"
@@ -41,18 +60,25 @@
               v-model="mediaForm.imgSettingEnableImgThumbnail"
             ></el-switch>
           </el-form-item>
-          <el-form-item
-            label="图片缩略图最长边"
-            prop="imgSettingThumbnailMaxSize"
-          >
-            <!-- 数字 1-4096 -->
-            <el-input-number
-              v-model="mediaForm.imgSettingThumbnailMaxSize"
-              controls-position="right"
-              :min="1"
-              :step="1"
-            ></el-input-number>
-          </el-form-item>
+          <div class="config-border-item">
+            <div class="config-border-item-title">
+              缩略图设置<span class="config-border-item-tip"
+                >※当开启缩略图时生效</span
+              >
+            </div>
+            <el-form-item
+              label="图片缩略图最长边"
+              prop="imgSettingThumbnailMaxSize"
+            >
+              <!-- 数字 1-4096 -->
+              <el-input-number
+                v-model="mediaForm.imgSettingThumbnailMaxSize"
+                controls-position="right"
+                :min="1"
+                :step="1"
+              ></el-input-number>
+            </el-form-item>
+          </div>
           <el-form-item>
             <el-button type="primary" @click="mediaSubmit">提交</el-button>
           </el-form-item>
@@ -75,6 +101,8 @@ export default {
     const mediaFormRef = ref(null)
     // // 开启图片压缩
     // imgSettingEnableImgCompress: false,
+    // // 图片压缩为webp格式
+    // imgSettingEnableImgCompressWebp: false,
     // // 图片压缩质量
     // imgSettingCompressQuality: 80,
     // // 图片压缩最长边
@@ -85,6 +113,7 @@ export default {
     // imgSettingThumbnailMaxSize: 680,
     const mediaForm = reactive({
       imgSettingEnableImgCompress: false,
+      imgSettingEnableImgCompressWebp: false,
       imgSettingCompressQuality: 80,
       imgSettingCompressMaxSize: 1920,
       imgSettingEnableImgThumbnail: false,
@@ -143,4 +172,21 @@ export default {
   },
 }
 </script>
-<style scoped></style>
+<style scoped>
+.config-border-item {
+  border: 1px solid #ebeef5;
+  padding: 20px;
+  margin-bottom: 20px;
+  border-radius: 10px;
+}
+.config-border-item-title {
+  font-weight: 600;
+  margin-bottom: 10px;
+}
+.config-border-item-tip {
+  font-size: 12px;
+  color: #909399;
+  margin-bottom: 10px;
+  padding-left: 10px;
+}
+</style>
