@@ -14,6 +14,8 @@ const initGlobalConfig = () => {
     imgSettingCompressMaxSize: 1920,
     // 开启图片缩略图
     imgSettingEnableImgThumbnail: false,
+    // 缩略图质量
+    imgSettingThumbnailQuality: 40,
     // 图片缩略图最长边
     imgSettingThumbnailMaxSize: 680,
   }

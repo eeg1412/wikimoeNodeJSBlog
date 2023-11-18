@@ -15,9 +15,11 @@ module.exports = async function (req, res, next) {
   // imgSettingCompressMaxSize: 1920,
   // // 开启图片缩略图
   // imgSettingEnableImgThumbnail: false,
+  // // 图片缩略图质量
+  // imgSettingThumbnailQuality: 40,
   // // 图片缩略图最长边
   // imgSettingThumbnailMaxSize: 680,
-  let { imgSettingEnableImgCompress, imgSettingEnableImgCompressWebp, imgSettingCompressQuality, imgSettingCompressMaxSize, imgSettingEnableImgThumbnail, imgSettingThumbnailMaxSize } = req.body
+  let { imgSettingEnableImgCompress, imgSettingEnableImgCompressWebp, imgSettingCompressQuality, imgSettingCompressMaxSize, imgSettingEnableImgThumbnail, imgSettingThumbnailQuality, imgSettingThumbnailMaxSize } = req.body
   // 校验格式
   const params = {
     imgSettingEnableImgCompress: imgSettingEnableImgCompress,
@@ -25,6 +27,7 @@ module.exports = async function (req, res, next) {
     imgSettingCompressQuality: imgSettingCompressQuality,
     imgSettingCompressMaxSize: imgSettingCompressMaxSize,
     imgSettingEnableImgThumbnail: imgSettingEnableImgThumbnail,
+    imgSettingThumbnailQuality: imgSettingThumbnailQuality,
     imgSettingThumbnailMaxSize: imgSettingThumbnailMaxSize,
   }
   const rule = [
@@ -56,6 +59,12 @@ module.exports = async function (req, res, next) {
       type: 'isBoolean',
     },
     {
+      key: 'imgSettingThumbnailQuality',
+      label: '图片缩略图质量',
+      type: 'isInt',
+      required: true,
+    },
+    {
       key: 'imgSettingThumbnailMaxSize',
       label: '图片缩略图最长边',
       type: 'isInt',
@@ -75,6 +84,7 @@ module.exports = async function (req, res, next) {
   Object.assign(global.$globalConfig, params)
   // 写入日志
   adminApiLog.info(`更新全局配置:${JSON.stringify(params)}`)
+  console.info(`当前全局配置:`, global.$globalConfig)
   res.send({
     data: global.$globalConfig
   })

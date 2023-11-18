@@ -67,6 +67,19 @@
               >
             </div>
             <el-form-item
+              label="图片缩略图质量"
+              prop="imgSettingThumbnailQuality"
+            >
+              <!-- 数字 1-100 -->
+              <el-input-number
+                v-model="mediaForm.imgSettingThumbnailQuality"
+                controls-position="right"
+                :min="1"
+                :max="100"
+                :step="1"
+              ></el-input-number>
+            </el-form-item>
+            <el-form-item
               label="图片缩略图最长边"
               prop="imgSettingThumbnailMaxSize"
             >
@@ -109,6 +122,8 @@ export default {
     // imgSettingCompressMaxSize: 1920,
     // // 开启图片缩略图
     // imgSettingEnableImgThumbnail: false,
+    // // 图片缩略图质量
+    // imgSettingThumbnailQuality: 40,
     // // 图片缩略图最长边
     // imgSettingThumbnailMaxSize: 680,
     const mediaForm = reactive({
@@ -117,6 +132,7 @@ export default {
       imgSettingCompressQuality: 80,
       imgSettingCompressMaxSize: 1920,
       imgSettingEnableImgThumbnail: false,
+      imgSettingThumbnailQuality: 40,
       imgSettingThumbnailMaxSize: 680,
     })
     const mediaRules = {
@@ -125,6 +141,13 @@ export default {
       ],
       imgSettingCompressMaxSize: [
         { required: true, message: '请输入图片压缩最长边', trigger: 'blur' },
+      ],
+      imgSettingThumbnailQuality: [
+        {
+          required: true,
+          message: '请输入图片缩略图质量',
+          trigger: 'blur',
+        },
       ],
       imgSettingThumbnailMaxSize: [
         {
