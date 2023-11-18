@@ -149,7 +149,6 @@ export default {
     })
 
     const removeParam = (key) => {
-      debugger
       sessionStorage.removeItem(key)
     }
     const logout = () => {
