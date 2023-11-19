@@ -151,5 +151,11 @@ export default function (api) {
         shouldAdminJWT: true
       })
     },
+    // post /post/create
+    createPost (data) {
+      return api.post('/post/create', data, {
+        shouldAdminJWT: true
+      })
+    },
   }
 }

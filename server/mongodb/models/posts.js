@@ -39,9 +39,7 @@ var posts = new Schema({
   },
   alias: {
     type: String,
-    default: '',
-    // 唯一
-    unique: true
+    default: null,
   },
   author: {
     type: Schema.Types.ObjectId,
@@ -49,7 +47,8 @@ var posts = new Schema({
   },
   sort: {
     type: Schema.Types.ObjectId,
-    ref: 'sorts'
+    ref: 'sorts',
+    default: null
   },
   type: {
     type: Number,
