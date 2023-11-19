@@ -71,6 +71,7 @@
     :albumIdProp="attachmentsAlbumId"
     @success="attachmentUploadSuccess"
     @onAttachmentsDelete="attachmentUploadSuccess"
+    @onAttachmentsAlbumChange="attachmentUploadSuccess"
     ref="attachmentsDialogRef"
   />
 </template>

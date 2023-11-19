@@ -128,6 +128,45 @@
       </div>
     </div>
   </el-dialog>
+  <!-- 转移相册弹窗 -->
+  <el-dialog
+    v-model="toAlbumDialogVisible"
+    destroy-on-close
+    :close-on-click-modal="false"
+    align-center
+    title="转移相册"
+  >
+    <div class="dflex flexCenter">
+      <el-select v-model="albumId" placeholder="请选择相册" disabled>
+        <el-option
+          v-for="item in albumList"
+          :key="item._id"
+          :label="item.name"
+          :value="item._id"
+        />
+      </el-select>
+      <div class="pl10 pr10">
+        <el-icon><DArrowRight /></el-icon>
+      </div>
+      <el-select v-model="toAlbumId" placeholder="请选择相册">
+        <el-option
+          v-for="item in albumList"
+          :key="item._id"
+          :label="item.name"
+          :value="item._id"
+          v-show="item._id !== albumId"
+        />
+      </el-select>
+    </div>
+    <template #footer>
+      <span class="dialog-footer">
+        <el-button @click="toAlbumDialogVisible = false">取消</el-button>
+        <el-button type="primary" @click="toChangeAttachmentsAlbum"
+          >确定</el-button
+        >
+      </span>
+    </template>
+  </el-dialog>
 </template>
 <script>
 import { useRoute, useRouter } from 'vue-router'
@@ -153,7 +192,13 @@ export default {
       default: false,
     },
   },
-  emits: ['success', 'error', 'paramsChange', 'onAttachmentsDelete'],
+  emits: [
+    'success',
+    'error',
+    'paramsChange',
+    'onAttachmentsDelete',
+    'onAttachmentsAlbumChange',
+  ],
   setup(props, { emit }) {
     const visible = ref(false)
     const fileList = ref([])
@@ -339,9 +384,27 @@ export default {
         .catch(() => {})
     }
 
+    const toAlbumDialogVisible = ref(false)
+    const toAlbumId = ref('')
     const changeAttachmentsAlbum = () => {
-      // TODO: 移动相册
-      console.log('changeAttachmentsAlbum')
+      toAlbumId.value = ''
+      toAlbumDialogVisible.value = true
+    }
+    const toChangeAttachmentsAlbum = () => {
+      const params = {
+        ids: selectedImageList.value,
+        albumId: toAlbumId.value,
+      }
+      authApi
+        .updateAttachmentAlbum(params)
+        .then(() => {
+          ElMessage.success('转移成功')
+          toAlbumDialogVisible.value = false
+          clearSelectedImageList()
+          getAttachmentList()
+          emit('onAttachmentsAlbumChange')
+        })
+        .catch(() => {})
     }
     // 清空selectedImageList
     const clearSelectedImageList = () => {
@@ -385,7 +448,10 @@ export default {
       findImageInSelectedImageList,
       deleteAttachments,
       clearSelectedImageList,
+      toAlbumDialogVisible,
+      toAlbumId,
       changeAttachmentsAlbum,
+      toChangeAttachmentsAlbum,
       clearSelectedImageList,
     }
   },
