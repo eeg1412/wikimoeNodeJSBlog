@@ -15,6 +15,7 @@
             v-model="albumId"
             placeholder="请选择相册"
             @change="changeAlbum"
+            class="attachments-form-item"
           >
             <el-option
               v-for="item in albumList"
@@ -23,6 +24,19 @@
               :value="item._id"
             />
           </el-select>
+          <!-- 关键词 -->
+          <el-input
+            v-model="params.keyword"
+            placeholder="关键词搜索"
+            @keyup.enter="getAttachmentList(true)"
+            @clear="getAttachmentList(true)"
+            clearable
+            class="attachments-form-item ml5"
+          >
+            <template #append>
+              <el-button :icon="Search" @click="getAttachmentList(true)" />
+            </template>
+          </el-input>
         </div>
         <button
           aria-label="Close this dialog"
@@ -176,7 +190,7 @@ import { nextTick, onBeforeMount, onMounted, reactive, ref, watch } from 'vue'
 import store from '@/store'
 // AttachmentImage
 import AttachmentImage from '@/components/AttachmentImage.vue'
-import { Delete, Close, SetUp, Select } from '@element-plus/icons-vue'
+import { Delete, Close, SetUp, Select, Search } from '@element-plus/icons-vue'
 
 export default {
   components: {
@@ -209,7 +223,7 @@ export default {
       updateHeaders()
       getAlbumList()
       params.album = albumId.value
-      getAttachmentList(true)
+      getAttachmentList(true, true)
       nextTick(() => {
         visible.value = true
       })
@@ -260,10 +274,13 @@ export default {
       album: albumId.value,
     })
     const total = ref(0)
-    const getAttachmentList = (resetPage) => {
+    const getAttachmentList = (resetPage, resetKeyword) => {
       attachmentsLoading.value = true
       if (resetPage) {
         params.page = 1
+      }
+      if (resetKeyword) {
+        params.keyword = ''
       }
       authApi
         .getAttachmentList(params)
@@ -283,7 +300,7 @@ export default {
     const changeAlbum = () => {
       params.album = albumId.value
       clearSelectedImageList()
-      getAttachmentList(true)
+      getAttachmentList(true, true)
       updateHeaders()
     }
 
@@ -428,6 +445,7 @@ export default {
       Close,
       SetUp,
       Select,
+      Search,
       visible,
       fileList,
       albumId,
@@ -479,10 +497,22 @@ export default {
   align-items: center;
   justify-content: center;
 }
+.attachments-form-item {
+  width: 200px;
+}
 /* 小于500 */
 @media screen and (max-width: 500px) {
   .attachment-item {
     width: 50%;
+  }
+  .attachments-form-item {
+    width: 145px;
+  }
+}
+/* 小于375 */
+@media screen and (max-width: 375px) {
+  .attachments-form-item {
+    width: 120px;
   }
 }
 </style>
