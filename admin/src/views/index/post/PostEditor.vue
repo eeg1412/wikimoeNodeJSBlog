@@ -5,7 +5,7 @@
         <el-breadcrumb-item :to="{ name: 'PostList' }"
           >文章列表</el-breadcrumb-item
         >
-        <el-breadcrumb-item>编辑</el-breadcrumb-item>
+        <el-breadcrumb-item>编辑{{ typeTitle }}</el-breadcrumb-item>
       </el-breadcrumb>
     </div>
     <div>
@@ -183,6 +183,18 @@ export default {
     const route = useRoute()
     const id = ref(route.params.id)
     const type = ref(null)
+    const typeTitle = computed(() => {
+      switch (type.value) {
+        case 1:
+          return '博客'
+        case 2:
+          return '推文'
+        case 3:
+          return '页面'
+        default:
+          return ''
+      }
+    })
     const getPostDetail = () => {
       authApi
         .getPostDetail({ id: id.value })
@@ -350,6 +362,7 @@ export default {
     })
     return {
       type,
+      typeTitle,
       maxCoverLength,
       // form
       form,
