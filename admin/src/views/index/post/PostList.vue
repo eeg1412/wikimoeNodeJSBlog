@@ -60,7 +60,7 @@
           </template>
         </el-table-column>
         <el-table-column prop="title" label="标题" width="320" />
-        <el-table-column prop="date" label="创建日期" width="180">
+        <el-table-column prop="date" label="发表时间" width="180">
           <template #default="{ row }">
             {{ $formatDate(row.date) }}
           </template>
