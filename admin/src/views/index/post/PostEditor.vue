@@ -131,7 +131,6 @@
             v-model="form.date"
             type="datetime"
             placeholder="选择日期时间"
-            value-format="yyyy-MM-dd HH:mm:ss"
             style="width: 100%"
           ></el-date-picker>
         </el-form-item>
@@ -201,6 +200,11 @@ export default {
         .then((res) => {
           Object.keys(form).forEach((key) => {
             switch (key) {
+              case 'date':
+                if (res.data.data[key]) {
+                  form[key] = new Date(res.data.data[key])
+                }
+                break
               case 'sort':
                 form[key] = res.data.data[key]?._id || null
                 break

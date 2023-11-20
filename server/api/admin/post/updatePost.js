@@ -25,7 +25,7 @@ module.exports = async function (req, res, next) {
   // - coverImages  博客时是封面图片字段，页面时是页面图片字段
   // - __v  版本号字段
   const id = req.body.id
-  let { title, content, excerpt, alias, sort, tags, top, sortop, status, allowRemark, template, code, coverImages, __v } = req.body
+  let { title, date, content, excerpt, alias, sort, tags, top, sortop, status, allowRemark, template, code, coverImages, __v } = req.body
   // 校验id是否存在
   if (!id) {
     res.status(400).json({
@@ -61,6 +61,7 @@ module.exports = async function (req, res, next) {
   const type = post.type
   const params = {
     title: title,
+    date: date,
     content: content,
     excerpt: excerpt,
     alias: alias,
@@ -75,7 +76,11 @@ module.exports = async function (req, res, next) {
     coverImages: coverImages,
   }
   const rules = [
-
+    {
+      key: 'date',
+      label: '发布日期',
+      type: 'isISO8601',
+    }
   ]
   if (sort) {
     rules.push({
