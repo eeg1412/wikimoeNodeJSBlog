@@ -56,7 +56,7 @@
             <div
               class="post-cover-image-item"
               v-for="(item, index) in coverImagesDataList"
-              :key="index"
+              :key="item._id"
             >
               <el-image
                 :src="item.thumfor || item.filepath"
@@ -324,10 +324,8 @@ export default {
     const selectAttachments = (attachments) => {
       console.log(attachments)
       attachments.forEach((item) => {
-        if (!coverImageListObj[item._id]) {
-          coverImageListObj[item._id] = item
-          form.coverImages.push(item._id)
-        }
+        coverImageListObj[item._id] = item
+        form.coverImages.push(item._id)
       })
     }
     const getAttachmentById = (id) => {
