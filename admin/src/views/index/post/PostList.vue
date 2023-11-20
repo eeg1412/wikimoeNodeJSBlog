@@ -59,13 +59,13 @@
             <el-tag v-else-if="row.status === 99" type="danger">回收站</el-tag>
           </template>
         </el-table-column>
-        <el-table-column prop="title" label="标题" width="200" />
+        <el-table-column prop="title" label="标题" width="320" />
         <el-table-column prop="date" label="创建日期" width="180">
           <template #default="{ row }">
             {{ $formatDate(row.date) }}
           </template>
         </el-table-column>
-        <el-table-column prop="alias" label="别名" width="180" />
+        <el-table-column prop="alias" label="别名" />
         <el-table-column prop="author" label="作者" width="100">
           <template #default="{ row }">
             {{ row.author.nickname }}
@@ -73,7 +73,7 @@
         </el-table-column>
         <el-table-column prop="sort.sortname" label="分类" />
 
-        <el-table-column prop="tags" label="标签">
+        <el-table-column prop="tags" label="标签" width="200">
           <template #default="{ row }">
             <el-tag
               v-for="tag in row.tags"
@@ -111,14 +111,14 @@
             {{ $formatDate(row.updatetime) }}
           </template>
         </el-table-column>
-        <el-table-column label="操作" width="180" fixed="right">
+        <el-table-column label="操作" width="120" fixed="right">
           <template #default="{ row }">
             <el-button type="primary" size="small" @click="goEdit(row._id)"
-              >编辑</el-button
-            >
+              ><el-icon><Edit /></el-icon
+            ></el-button>
             <el-button type="danger" size="small" @click="deletePost(row._id)"
-              >移至回收站</el-button
-            >
+              ><el-icon><Delete /></el-icon
+            ></el-button>
           </template>
         </el-table-column>
       </el-table>
