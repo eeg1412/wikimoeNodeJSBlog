@@ -32,7 +32,7 @@ module.exports = async function (req, res, next) {
   }).catch((err) => {
     res.status(400).json({
       errors: [{
-        message: '相册文章失败'
+        message: '创建文章失败'
       }]
     })
     adminApiLog.error(`post create fail, ${JSON.stringify(err)}`)
