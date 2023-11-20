@@ -14,7 +14,9 @@
           <el-select
             v-model="albumId"
             placeholder="请选择相册"
+            clearable
             @change="changeAlbum"
+            @clear="changeAlbum"
             class="attachments-form-item"
           >
             <el-option
@@ -81,6 +83,7 @@
               :icon="Select"
               circle
               :title="`确定选择`"
+              @click="selectAttachmentsOk"
               v-if="shouldSelectOk"
             />
             <!-- 关闭按钮 -->
@@ -104,9 +107,12 @@
         :headers="headers"
         :on-success="handleSuccess"
         :on-error="handleError"
+        :disabled="!albumId"
+        :class="albumId ? '' : 'attachments-upload-disabled'"
       >
         <el-icon class="el-icon--upload"><upload-filled /></el-icon>
-        <div class="el-upload__text">拖动文件或点击上传</div>
+        <div class="el-upload__text" v-show="albumId">拖动文件或点击上传</div>
+        <div class="el-upload__text" v-show="!albumId">请选择相册后上传</div>
       </el-upload>
       <div class="custom-scroll scroll-not-hide attachments-list-body clearfix">
         <template v-if="attachmentList.length > 0">
@@ -186,7 +192,15 @@
 import { useRoute, useRouter } from 'vue-router'
 import { authApi } from '@/api'
 import { ElMessage, ElMessageBox } from 'element-plus'
-import { nextTick, onBeforeMount, onMounted, reactive, ref, watch } from 'vue'
+import {
+  computed,
+  nextTick,
+  onBeforeMount,
+  onMounted,
+  reactive,
+  ref,
+  watch,
+} from 'vue'
 import store from '@/store'
 // AttachmentImage
 import AttachmentImage from '@/components/AttachmentImage.vue'
@@ -205,6 +219,11 @@ export default {
       type: Boolean,
       default: false,
     },
+    // 选择上限
+    selectLimit: {
+      type: Number,
+      default: null,
+    },
   },
   emits: [
     'success',
@@ -212,16 +231,20 @@ export default {
     'paramsChange',
     'onAttachmentsDelete',
     'onAttachmentsAlbumChange',
+    'selectAttachments',
   ],
   setup(props, { emit }) {
     const visible = ref(false)
     const fileList = ref([])
     const albumId = ref('')
-    const open = () => {
+    const open = async () => {
       attachmentList.value = []
       albumId.value = props.albumIdProp
       updateHeaders()
-      getAlbumList()
+      await getAlbumList()
+      if (!albumId.value) {
+        albumId.value = albumList.value[0]._id || ''
+      }
       params.album = albumId.value
       getAttachmentList(true, true)
       nextTick(() => {
@@ -230,13 +253,13 @@ export default {
     }
 
     const albumList = ref([])
-    const getAlbumList = () => {
+    const getAlbumList = async () => {
       const params = {
         page: 1,
         size: 999999,
         keyword: '',
       }
-      authApi.getAlbumList(params).then((res) => {
+      await authApi.getAlbumList(params).then((res) => {
         albumList.value = res.data.list
       })
     }
@@ -261,7 +284,15 @@ export default {
     }
 
     const handleError = (err) => {
-      ElMessage.error(err.message)
+      try {
+        const obj = JSON.parse(err.message)
+        const errors = obj.errors
+        errors.forEach((item) => {
+          ElMessage.error(item.message)
+        })
+      } catch (error) {
+        ElMessage.error(err.message)
+      }
       emit('error')
     }
 
@@ -328,16 +359,27 @@ export default {
       }, 500)
     }
 
-    const selectedImageList = ref([])
+    const selectedImageList = computed(() => {
+      return selectedImageObjList.value.map((item) => {
+        return item._id
+      })
+    })
+    const selectedImageObjList = ref([])
     const onSelectorClick = (item) => {
       // 找到id
       const id = item._id
       // 如果selectedImageList中有这个id，就删除，否则就添加
       const index = findImageInSelectedImageList(id)
       if (index > -1) {
-        selectedImageList.value.splice(index, 1)
+        selectedImageObjList.value.splice(index, 1)
       } else {
-        selectedImageList.value.push(id)
+        if (props.selectLimit) {
+          if (selectedImageList.value.length >= props.selectLimit) {
+            ElMessage.error(`最多只能选择${props.selectLimit}件媒体文件`)
+            return
+          }
+        }
+        selectedImageObjList.value.push(item)
       }
     }
     const findImageInSelectedImageList = (id) => {
@@ -425,7 +467,12 @@ export default {
     }
     // 清空selectedImageList
     const clearSelectedImageList = () => {
-      selectedImageList.value = []
+      selectedImageObjList.value = []
+    }
+
+    const selectAttachmentsOk = () => {
+      emit('selectAttachments', selectedImageObjList.value)
+      visible.value = false
     }
 
     // 监听 params.page 的变化
@@ -471,6 +518,7 @@ export default {
       changeAttachmentsAlbum,
       toChangeAttachmentsAlbum,
       clearSelectedImageList,
+      selectAttachmentsOk,
     }
   },
 }
@@ -499,6 +547,9 @@ export default {
 }
 .attachments-form-item {
   width: 200px;
+}
+.attachments-upload-disabled {
+  opacity: 0.3;
 }
 /* 小于500 */
 @media screen and (max-width: 500px) {

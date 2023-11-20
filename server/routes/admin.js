@@ -290,6 +290,15 @@ const adminRouteSetting = [
     roleType: null,
     role: null
   },
+  // get /post/detail
+  {
+    path: '/post/detail',
+    method: 'get',
+    middleware: [checkAuth],
+    controller: require('../api/admin/post/getPostDetail'),
+    roleType: null,
+    role: null
+  },
 ]
 
 adminRouteSetting.forEach(item => {

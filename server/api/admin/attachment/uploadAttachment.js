@@ -66,6 +66,14 @@ module.exports = async function (req, res, next) {
    */
 
   //  查询相册是否存在
+  if (!albumid) {
+    res.status(400).json({
+      errors: [{
+        message: '请指定相册'
+      }]
+    })
+    return
+  }
   const album = await albumUtils.findOne({ _id: albumid })
   if (!album) {
     res.status(400).json({
@@ -89,6 +97,8 @@ module.exports = async function (req, res, next) {
     height: 0,
     mimetype: file.mimetype,
     thumfor: '',
+    thumWidth: 0,
+    thumHeight: 0,
     album: albumid,
   }
   // 保存到数据库
@@ -158,8 +168,10 @@ module.exports = async function (req, res, next) {
         // 计算压缩后的宽高
         const newWidth = Math.round(width * scale)
         const newHeight = Math.round(height * scale)
-        updateAttachment.width = newWidth
-        updateAttachment.height = newHeight
+
+        updateAttachment.thumWidth = newWidth
+        updateAttachment.thumHeight = newHeight
+
         // 压缩图片为webp 保存到 filePath 路径下
         const thumbnailPath = path.join(yearMonthPath, 'thum-' + attachmentId + '.webp')
         await imageCompress('.webp', fileData, animated, newWidth, newHeight, imgSettingThumbnailQuality, thumbnailPath)
@@ -183,6 +195,9 @@ module.exports = async function (req, res, next) {
         // 计算压缩后的宽高
         const newWidth = Math.round(width * scale)
         const newHeight = Math.round(height * scale)
+
+        updateAttachment.width = newWidth
+        updateAttachment.height = newHeight
         // 压缩图片为webp 保存到 filePath 路径下
         await imageCompress(imgSettingEnableImgCompressWebp ? '.webp' : extname, fileData, animated, newWidth, newHeight, imgSettingCompressQuality, filePath)
 

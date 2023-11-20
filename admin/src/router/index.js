@@ -67,6 +67,12 @@ const routes = [
         name: 'PostList',
         component: () => import(/* webpackChunkName: "PostList" */ '../views/index/post/PostList.vue')
       },
+      // posteditor
+      {
+        path: '/post/editor/:id',
+        name: 'PostEdit',
+        component: () => import(/* webpackChunkName: "PostEditor" */ '../views/index/post/PostEditor.vue')
+      },
       // config
       {
         path: '/config',

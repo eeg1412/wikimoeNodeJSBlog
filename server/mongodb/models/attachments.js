@@ -40,6 +40,12 @@ var attachments = new Schema({
   thumfor: {
     type: String,
   },
+  thumWidth: {
+    type: Number,
+  },
+  thumHeight: {
+    type: Number,
+  },
   album: {
     type: Schema.Types.ObjectId,
     ref: 'albums'

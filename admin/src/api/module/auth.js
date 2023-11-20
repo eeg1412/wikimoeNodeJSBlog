@@ -48,10 +48,11 @@ export default function (api) {
       })
     },
     // get tag/list
-    getTagList (data) {
+    getTagList (data, noLoading = false) {
       return api.get('/tag/list', {
         params: data,
-        shouldAdminJWT: true
+        shouldAdminJWT: true,
+        noLoading
       })
     },
     // get tag/detail
@@ -160,6 +161,13 @@ export default function (api) {
     // get /post/list
     getPostList (data) {
       return api.get('/post/list', {
+        params: data,
+        shouldAdminJWT: true
+      })
+    },
+    // get /post/detail
+    getPostDetail (data) {
+      return api.get('/post/detail', {
         params: data,
         shouldAdminJWT: true
       })

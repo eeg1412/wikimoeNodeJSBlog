@@ -12,15 +12,18 @@
       <div class="fr">
         <!-- 按钮用 -->
         <!-- 追加 -->
-        <el-button type="primary" @click="handleAdd(1)"
-          ><el-icon><Tickets /></el-icon>发表博客</el-button
-        >
-        <el-button type="primary" @click="handleAdd(2)"
-          ><el-icon><ChatLineRound /></el-icon>发表推文</el-button
-        >
-        <el-button type="primary" @click="handleAdd(3)"
-          ><el-icon><Document /></el-icon>发表页面</el-button
-        >
+        <el-dropdown trigger="click" @command="handlePostCommand">
+          <el-button type="primary">
+            发表<el-icon class="el-icon--right"><arrow-down /></el-icon>
+          </el-button>
+          <template #dropdown>
+            <el-dropdown-menu>
+              <el-dropdown-item :command="1">博客</el-dropdown-item>
+              <el-dropdown-item :command="2">推文</el-dropdown-item>
+              <el-dropdown-item :command="3">页面</el-dropdown-item>
+            </el-dropdown-menu>
+          </template>
+        </el-dropdown>
       </div>
     </div>
     <div class="mb20">
@@ -168,7 +171,14 @@ export default {
       }
     }
     const list = ref([])
-    const goEdit = (id) => {}
+    const goEdit = (id) => {
+      router.push({
+        name: 'PostEdit',
+        params: {
+          id,
+        },
+      })
+    }
     const deletePost = (id) => {}
     const getPostList = (resetPage, resetKeyword) => {
       if (resetPage) {
@@ -185,8 +195,17 @@ export default {
     }
     const handleAdd = (type) => {
       authApi.createPost({ type }).then((res) => {
-        // TODO: 去编辑页面
+        router.push({
+          name: 'PostEdit',
+          params: {
+            id: res.data.data._id,
+          },
+        })
       })
+    }
+
+    const handlePostCommand = (command) => {
+      handleAdd(command)
     }
 
     // 监听 params.page 的变化
@@ -208,6 +227,7 @@ export default {
       goEdit,
       deletePost,
       handleAdd,
+      handlePostCommand,
     }
   },
 }
