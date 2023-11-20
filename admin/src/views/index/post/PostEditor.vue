@@ -202,7 +202,7 @@ export default {
           Object.keys(form).forEach((key) => {
             switch (key) {
               case 'sort':
-                form[key] = res.data.data[key]._id
+                form[key] = res.data.data[key]?._id || null
                 break
               case 'tags':
                 form[key] = res.data.data[key].map((item) => item._id)
@@ -224,6 +224,7 @@ export default {
           form.id = res.data.data._id
         })
         .catch((err) => {
+          console.error(err)
           // 获取http code
           const code = err.response?.status
           if (code === 404) {
