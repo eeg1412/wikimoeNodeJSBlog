@@ -299,6 +299,15 @@ const adminRouteSetting = [
     roleType: null,
     role: null
   },
+  // put /post/update
+  {
+    path: '/post/update',
+    method: 'put',
+    middleware: [checkAuth],
+    controller: require('../api/admin/post/updatePost'),
+    roleType: null,
+    role: null
+  },
 ]
 
 adminRouteSetting.forEach(item => {

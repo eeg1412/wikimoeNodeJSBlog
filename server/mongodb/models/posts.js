@@ -53,11 +53,7 @@ var posts = new Schema({
   type: {
     type: Number,
   },
-  tags: {
-    // tag的id
-    type: Array,
-    default: []
-  },
+  tags: [{ type: Schema.ObjectId, ref: 'tags' }],
   views: {
     type: Number,
     default: 0
@@ -90,10 +86,7 @@ var posts = new Schema({
     type: String,
     default: ''
   },
-  coverImages: {
-    type: Array,
-    default: []
-  },
+  coverImages: [{ type: Schema.ObjectId, ref: 'attachments' }],
   updatetime: {
     type: Date,
     default: Date.now

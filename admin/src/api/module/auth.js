@@ -172,5 +172,11 @@ export default function (api) {
         shouldAdminJWT: true
       })
     },
+    // put /post/update
+    updatePost (data) {
+      return api.put('/post/update', data, {
+        shouldAdminJWT: true
+      })
+    },
   }
 }

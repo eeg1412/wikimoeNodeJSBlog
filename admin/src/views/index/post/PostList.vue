@@ -71,7 +71,7 @@
             {{ row.author.nickname }}
           </template>
         </el-table-column>
-        <el-table-column prop="sort" label="分类" />
+        <el-table-column prop="sort.sortname" label="分类" />
 
         <el-table-column prop="tags" label="标签">
           <template #default="{ row }">
@@ -79,7 +79,7 @@
               v-for="tag in row.tags"
               :key="tag._id"
               type="success"
-              size="mini"
+              size="small"
               style="margin-right: 5px"
               >{{ tag.tagname }}</el-tag
             >

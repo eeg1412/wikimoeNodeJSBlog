@@ -240,12 +240,12 @@ export default {
     const open = async () => {
       attachmentList.value = []
       albumId.value = props.albumIdProp
-      updateHeaders()
       await getAlbumList()
       if (!albumId.value) {
         albumId.value = albumList.value[0]._id || ''
       }
       params.album = albumId.value
+      updateHeaders()
       getAttachmentList(true, true)
       nextTick(() => {
         visible.value = true

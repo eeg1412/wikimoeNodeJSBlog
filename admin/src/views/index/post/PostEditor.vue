@@ -201,6 +201,9 @@ export default {
         .then((res) => {
           Object.keys(form).forEach((key) => {
             switch (key) {
+              case 'sort':
+                form[key] = res.data.data[key]._id
+                break
               case 'tags':
                 form[key] = res.data.data[key].map((item) => item._id)
                 tagList.value = res.data.data[key]
@@ -218,6 +221,7 @@ export default {
             }
           })
           type.value = res.data.data.type
+          form.id = res.data.data._id
         })
         .catch((err) => {
           // 获取http code
@@ -273,12 +277,20 @@ export default {
       template: '',
       code: '',
       coverImages: [],
+      __v: null,
+      id: null,
     })
 
     const rules = reactive({})
     const formRef = ref(null)
     const submit = () => {
-      // TODO:后台拿到tags时判断是否是id，如果不是id，就创建tag，然后把tag的id放到tags里面，记得不要重复创建
+      authApi.updatePost(form).then(() => {
+        // 成功消息
+        ElMessage.success('保存成功')
+        router.push({
+          name: 'PostList',
+        })
+      })
     }
 
     // tags
