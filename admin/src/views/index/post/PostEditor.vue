@@ -76,7 +76,6 @@
             <div
               class="post-cover-image-item type-add"
               @click="openAttachmentsDialog"
-              v-show="form.coverImages.length < maxCoverLength"
             >
               <div class="dflex flexCenter w_10 full-height">
                 <el-icon size="32px"><Plus /></el-icon>
@@ -163,7 +162,6 @@
       :shouldSelectOk="true"
       ref="attachmentsDialogRef"
       @selectAttachments="selectAttachments"
-      :selectLimit="maxCoverLength - form.coverImages.length"
     />
   </div>
 </template>
@@ -244,12 +242,7 @@ export default {
           }
         })
     }
-    const maxCoverLength = computed(() => {
-      if (type.value === 2) {
-        return 9
-      }
-      return 1
-    })
+
     const form = reactive({
       // - title	标题字段
       // - date	日期字段
@@ -380,7 +373,6 @@ export default {
     return {
       type,
       typeTitle,
-      maxCoverLength,
       // form
       form,
       rules,
