@@ -1,5 +1,6 @@
 import store from "@/store";
 import { ElLoading } from 'element-plus'
+import moment from "moment";
 
 let loading = null
 
@@ -130,4 +131,11 @@ export const startEndTimeCheck = (rule, value, callback, start, end) => {
         callback()
     }
 
+}
+
+export const formatDate = (value, format = 'YYYY/MM/DD HH:mm:ss') => {
+    if (!value) {
+        return ''
+    }
+    return moment(value).format(format);
 }

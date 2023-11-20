@@ -157,5 +157,12 @@ export default function (api) {
         shouldAdminJWT: true
       })
     },
+    // get /post/list
+    getPostList (data) {
+      return api.get('/post/list', {
+        params: data,
+        shouldAdminJWT: true
+      })
+    },
   }
 }
