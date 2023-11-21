@@ -112,22 +112,7 @@ module.exports = async function (req, res, next) {
   }
   const filter = '-excerpt'
   postUtils.findPage(params, filter, sort, page, size).then((data) => {
-    // 将data转换成json
-    data = JSON.parse(JSON.stringify(data))
-    // 遍历data.list
-    data.list.forEach((item) => {
-      const type = item.type
-      if (type === 2) {
-        // tweet的处理
-        // title 根据content，裁切前20个字符，后面加上...
-        item.title = item.content || ''
-        if (item.content.length > 20) {
-          item.title = item.content.slice(0, 20) + '...'
-        }
-      }
-      // 删除content字段
-      delete item.content
-    })
+
     // 返回格式list,total
     res.send({
       list: data.list,

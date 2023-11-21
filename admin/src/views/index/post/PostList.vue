@@ -88,7 +88,11 @@
             <el-tag v-else-if="row.status === 99" type="danger">回收站</el-tag>
           </template>
         </el-table-column>
-        <el-table-column prop="title" label="标题/推文" width="320" />
+        <el-table-column prop="title" label="标题/推文" width="320">
+          <template #default="{ row }">
+            <div :title="row.title">{{ titleLimit(row.title) }}</div>
+          </template>
+        </el-table-column>
         <el-table-column
           prop="date"
           label="发表时间"
@@ -267,6 +271,14 @@ export default {
     }
     const defaultSort = { prop: 'date', order: 'descending' }
 
+    const titleLimit = (title) => {
+      let title_ = title || ''
+      if (title_.length > 20) {
+        title_ = title_.slice(0, 20) + '...'
+      }
+      return title_
+    }
+
     // 监听 params.page 的变化
     watch(
       () => params.page,
@@ -290,6 +302,7 @@ export default {
       handlePostCommand,
       tableSortChange,
       defaultSort,
+      titleLimit,
     }
   },
 }

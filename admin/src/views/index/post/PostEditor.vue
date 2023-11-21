@@ -20,10 +20,10 @@
         </template>
         <template v-if="type === 2">
           <!-- 内容 textarea -->
-          <el-form-item label="内容" prop="content">
+          <el-form-item label="内容" prop="title">
             <el-input
               type="textarea"
-              v-model="form.content"
+              v-model="form.title"
               rows="10"
               placeholder="请输入内容"
             ></el-input>
