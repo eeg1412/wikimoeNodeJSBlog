@@ -86,6 +86,10 @@ var posts = new Schema({
     type: String,
     default: ''
   },
+  editorVersion: {
+    type: Number,
+    default: 5
+  },
   coverImages: [{ type: Schema.ObjectId, ref: 'attachments' }],
   updatetime: {
     type: Date,

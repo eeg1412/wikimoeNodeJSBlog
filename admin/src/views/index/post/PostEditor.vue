@@ -32,7 +32,32 @@
         <template v-else>
           <!-- TODO:富文本内容 -->
           <el-form-item label="文章内容" prop="content">
-            <RichEditor v-model:content="form.content" />
+            <el-tabs
+              v-model="contentTab"
+              type="border-card"
+              class="w_10 post-editor-body"
+            >
+              <el-tab-pane label="富文本" name="richText">
+                <template v-if="contentTab === 'richText'">
+                  <RichEditor4
+                    v-model:content="form.content"
+                    v-if="postEditorVersion === 4"
+                  />
+                  <RichEditor5
+                    v-model:content="form.content"
+                    v-else-if="postEditorVersion === 5"
+                  />
+                </template>
+              </el-tab-pane>
+              <el-tab-pane label="源代码" name="sourceCode">
+                <el-input
+                  type="textarea"
+                  v-model="form.content"
+                  rows="30"
+                  placeholder="请输入源代码"
+                ></el-input>
+              </el-tab-pane>
+            </el-tabs>
           </el-form-item>
 
           <!-- 摘要 -->
@@ -177,17 +202,21 @@ import { useRouter, useRoute } from 'vue-router'
 import { authApi } from '@/api'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import AttachmentsDialog from '@/components/AttachmentsDialog'
-import RichEditor from '@/components/RichEditor'
+import RichEditor4 from '@/components/RichEditor4'
+import RichEditor5 from '@/components/RichEditor5'
 export default {
   components: {
     AttachmentsDialog,
-    RichEditor,
+    RichEditor4,
+    RichEditor5,
   },
   setup() {
     const router = useRouter()
     const route = useRoute()
     const id = ref(route.params.id)
     const type = ref(null)
+    const postEditorVersion = ref(null)
+    const contentTab = ref('richText')
     const typeTitle = computed(() => {
       switch (type.value) {
         case 1:
@@ -237,6 +266,8 @@ export default {
             }
           })
           type.value = res.data.data.type
+          // TODO: 旧文章采用v4富文本编辑器，新文章采用v5富文本编辑器
+          postEditorVersion.value = res.data.data.editorVersion || 5
           form.id = res.data.data._id
         })
         .catch((err) => {
@@ -387,6 +418,8 @@ export default {
     })
     return {
       type,
+      postEditorVersion,
+      contentTab,
       typeTitle,
       maxCoverLength,
       // form
@@ -441,5 +474,11 @@ export default {
 }
 .post-cover-image-item.type-add {
   border: 1px dashed #ccc;
+}
+</style>
+<style>
+.post-editor-body .el-tabs__content {
+  overflow: visible;
+  z-index: 1;
 }
 </style>

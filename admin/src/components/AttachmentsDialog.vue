@@ -7,6 +7,7 @@
     align-center
     class="attachments-dialog"
     @closed="clearSelectedImageList"
+    append-to-body
   >
     <template #header="{ close, titleId, titleClass }">
       <div class="my-header">
