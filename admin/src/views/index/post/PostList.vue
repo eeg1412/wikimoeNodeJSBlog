@@ -44,6 +44,43 @@
               <!-- <el-option label="回收站" value="99"></el-option> -->
             </el-select>
           </el-form-item>
+          <!-- 分类 -->
+          <el-form-item>
+            <el-select
+              v-model="params.sort"
+              placeholder="请选择分类"
+              clearable
+              style="width: 120px"
+            >
+              <el-option
+                v-for="item in sortList"
+                :key="item._id"
+                :label="item.sortname"
+                :value="item._id"
+              ></el-option>
+            </el-select>
+          </el-form-item>
+          <!-- tags -->
+          <el-form-item>
+            <el-select
+              v-model="params.tags"
+              placeholder="请选择标签"
+              clearable
+              style="width: 200px"
+              multiple
+              filterable
+              remote
+              :remote-method="queryTags"
+              :loading="tagsIsLoading"
+            >
+              <el-option
+                v-for="item in tagList"
+                :key="item._id"
+                :label="item.tagname"
+                :value="item._id"
+              ></el-option>
+            </el-select>
+          </el-form-item>
           <el-form-item>
             <el-input
               v-model="params.keyword"
@@ -245,6 +282,8 @@ export default {
       keyword: '',
       type: null,
       sorttype: null,
+      sort: null,
+      tags: [],
     })
     const total = ref(0)
     const initParams = () => {
@@ -255,6 +294,8 @@ export default {
         params.keyword = sessionParams.keyword
         params.type = sessionParams.type
         params.sorttype = sessionParams.sorttype
+        params.sort = sessionParams.sort
+        params.tags = sessionParams.tags || []
       }
     }
     const list = ref([])
@@ -343,6 +384,53 @@ export default {
       },
     ]
 
+    // 获取文章分类
+    const sortList = ref([])
+    const getSortList = () => {
+      authApi.getSortList().then((res) => {
+        const list = res.data.data
+        // 循环list，查找里面有没有children，如果有，就把children里面的sortname前面加上'--',然后把children push到newlist里面
+        const newlist = []
+        list.forEach((item) => {
+          newlist.push(item)
+          if (item.children && item.children.length) {
+            item.children.forEach((child) => {
+              child.sortname = '└─ ' + child.sortname
+            })
+            newlist.push(...item.children)
+          }
+        })
+        sortList.value = newlist
+      })
+    }
+
+    // tags
+    const tagList = ref([])
+    const tagsIsLoading = ref(false)
+    const getTagList = (tagKeyword = null) => {
+      if (tagsIsLoading.value) {
+        return
+      }
+      tagsIsLoading.value = true
+      authApi
+        .getTagList({ keyword: tagKeyword, size: 100, page: 1 }, true)
+        .then((res) => {
+          tagList.value = res.data.list
+        })
+        .finally(() => {
+          tagsIsLoading.value = false
+        })
+    }
+    let queryTagsTimer = null
+    const queryTags = (query) => {
+      if (queryTagsTimer) {
+        clearTimeout(queryTagsTimer)
+      }
+      queryTagsTimer = setTimeout(() => {
+        getTagList(query)
+      }, 50)
+    }
+
     // 监听 params.page 的变化
     watch(
       () => params.page,
@@ -354,6 +442,8 @@ export default {
     onMounted(() => {
       initParams()
       getPostList()
+      getSortList()
+      getTagList()
     })
     return {
       params,
@@ -368,6 +458,12 @@ export default {
       defaultSort,
       titleLimit,
       typeOptions,
+      sortList,
+      getSortList,
+      tagList,
+      tagsIsLoading,
+      getTagList,
+      queryTags,
     }
   },
 }

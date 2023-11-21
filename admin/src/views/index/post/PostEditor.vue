@@ -300,7 +300,7 @@ export default {
       }
       tagsIsLoading.value = true
       authApi
-        .getTagList({ keyword: tagKeyword, size: 999, page: 1 }, true)
+        .getTagList({ keyword: tagKeyword, size: 100, page: 1 }, true)
         .then((res) => {
           tagList.value = res.data.list
         })

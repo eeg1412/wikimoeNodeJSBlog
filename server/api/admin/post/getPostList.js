@@ -5,7 +5,7 @@ const log4js = require('log4js')
 const adminApiLog = log4js.getLogger('adminApi')
 
 module.exports = async function (req, res, next) {
-  let { page, size, keyword, type, sorttype, status } = req.query
+  let { page, size, keyword, type, sorttype, status, sort, tags } = req.query
   page = parseInt(page)
   size = parseInt(size)
   // 判断page和size是否为数字
@@ -49,9 +49,20 @@ module.exports = async function (req, res, next) {
   if (status) {
     params.status = status
   }
+  // 如果sort存在，就加入查询条件
+  if (sort) {
+    params.sort = sort
+  }
+  // 如果tags存在，就加入查询条件
+  if (tags) {
+    // tags是数组
+    params.tags = {
+      $in: tags
+    }
+  }
 
   // updatetime越新越靠前，_id越新越靠前
-  let sort = {
+  let postSorting = {
     date: -1,
     _id: -1
   }
@@ -59,49 +70,49 @@ module.exports = async function (req, res, next) {
     switch (sorttype) {
       // 1: 按照创建时间date升序
       case 'date_ascending':
-        sort = {
+        postSorting = {
           date: 1
         }
         break;
       // 2: 按照创建时间date降序
       case 'date_descending':
-        sort = {
+        postSorting = {
           date: -1
         }
         break;
       // 按照点击数views升序
       case 'views_ascending':
-        sort = {
+        postSorting = {
           views: 1
         }
         break;
       // 按照点击数views降序
       case 'views_descending':
-        sort = {
+        postSorting = {
           views: -1
         }
         break;
       // 按照评论数comnum升序
       case 'comnum_ascending':
-        sort = {
+        postSorting = {
           comnum: 1
         }
         break;
       // 按照评论数comnum降序
       case 'comnum_descending':
-        sort = {
+        postSorting = {
           comnum: -1
         }
         break;
       // 按照更新时间updatetime升序
       case 'updatetime_ascending':
-        sort = {
+        postSorting = {
           updatetime: 1
         }
         break;
       // 按照更新时间updatetime降序
       case 'updatetime_descending':
-        sort = {
+        postSorting = {
           updatetime: -1
         }
         break;
@@ -111,7 +122,7 @@ module.exports = async function (req, res, next) {
     }
   }
   const filter = '-excerpt'
-  postUtils.findPage(params, filter, sort, page, size).then((data) => {
+  postUtils.findPage(params, filter, postSorting, page, size).then((data) => {
 
     // 返回格式list,total
     res.send({
