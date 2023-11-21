@@ -15,9 +15,40 @@
           class="demo-form-inline"
           @keypress.enter="getPostList(true)"
         >
+          <!-- 类型 -->
+          <el-form-item>
+            <el-select
+              v-model="params.type"
+              placeholder="请选择类型"
+              clearable
+              style="width: 120px"
+            >
+              <el-option
+                v-for="item in typeOptions"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value"
+              ></el-option>
+            </el-select>
+          </el-form-item>
+          <!-- 状态 -->
+          <el-form-item>
+            <el-select
+              v-model="params.status"
+              placeholder="请选择状态"
+              clearable
+              style="width: 120px"
+            >
+              <el-option label="草稿" value="0"></el-option>
+              <el-option label="发布" value="1"></el-option>
+              <!-- <el-option label="回收站" value="99"></el-option> -->
+            </el-select>
+          </el-form-item>
           <el-form-item>
             <el-input
               v-model="params.keyword"
+              clearable
+              style="width: 180px"
               placeholder="检索关键词"
             ></el-input>
           </el-form-item>
@@ -37,9 +68,13 @@
           </el-button>
           <template #dropdown>
             <el-dropdown-menu>
-              <el-dropdown-item :command="1">博客</el-dropdown-item>
-              <el-dropdown-item :command="2">推文</el-dropdown-item>
-              <el-dropdown-item :command="3">页面</el-dropdown-item>
+              <!-- 用typeOptions v-for -->
+              <el-dropdown-item
+                v-for="(item, index) in typeOptions"
+                :key="item.value"
+                :command="item.value"
+                >{{ item.label }}</el-dropdown-item
+              >
             </el-dropdown-menu>
           </template>
         </el-dropdown>
@@ -279,6 +314,21 @@ export default {
       return title_
     }
 
+    const typeOptions = [
+      {
+        value: 1,
+        label: '博客',
+      },
+      {
+        value: 2,
+        label: '推文',
+      },
+      {
+        value: 3,
+        label: '页面',
+      },
+    ]
+
     // 监听 params.page 的变化
     watch(
       () => params.page,
@@ -303,6 +353,7 @@ export default {
       tableSortChange,
       defaultSort,
       titleLimit,
+      typeOptions,
     }
   },
 }

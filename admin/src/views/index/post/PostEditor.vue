@@ -8,7 +8,7 @@
         <el-breadcrumb-item>编辑{{ typeTitle }}</el-breadcrumb-item>
       </el-breadcrumb>
     </div>
-    <div>
+    <div v-if="type">
       <el-form :model="form" :rules="rules" ref="formRef" label-width="80px">
         <template v-if="type === 2">
           <!-- 推文不需要标题 -->
