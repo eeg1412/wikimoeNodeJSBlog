@@ -1,5 +1,5 @@
 <template>
-  <div class="common-right-panel-form common-limit-width">
+  <div class="common-right-panel-form">
     <div class="pb20">
       <el-breadcrumb separator="/">
         <el-breadcrumb-item :to="{ name: 'PostList' }"
@@ -31,6 +31,10 @@
         </template>
         <template v-else>
           <!-- TODO:富文本内容 -->
+          <el-form-item label="文章内容" prop="content">
+            <RichEditor v-model:content="form.content" />
+          </el-form-item>
+
           <!-- 摘要 -->
           <el-form-item label="摘要" prop="excerpt">
             <el-input
@@ -76,6 +80,7 @@
             <div
               class="post-cover-image-item type-add"
               @click="openAttachmentsDialog"
+              v-show="form.coverImages.length < maxCoverLength"
             >
               <div class="dflex flexCenter w_10 full-height">
                 <el-icon size="32px"><Plus /></el-icon>
@@ -161,6 +166,7 @@
     <AttachmentsDialog
       :shouldSelectOk="true"
       ref="attachmentsDialogRef"
+      :selectLimit="maxCoverLength - form.coverImages.length"
       @selectAttachments="selectAttachments"
     />
   </div>
@@ -171,9 +177,11 @@ import { useRouter, useRoute } from 'vue-router'
 import { authApi } from '@/api'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import AttachmentsDialog from '@/components/AttachmentsDialog'
+import RichEditor from '@/components/RichEditor'
 export default {
   components: {
     AttachmentsDialog,
+    RichEditor,
   },
   setup() {
     const router = useRouter()
@@ -191,6 +199,12 @@ export default {
         default:
           return ''
       }
+    })
+    const maxCoverLength = computed(() => {
+      if (type.value === 2) {
+        return null
+      }
+      return 1
     })
     const getPostDetail = () => {
       authApi
@@ -365,6 +379,7 @@ export default {
       })
       return list
     })
+
     onMounted(() => {
       getPostDetail()
       getTagList()
@@ -373,6 +388,7 @@ export default {
     return {
       type,
       typeTitle,
+      maxCoverLength,
       // form
       form,
       rules,
