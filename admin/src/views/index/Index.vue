@@ -80,6 +80,7 @@
               <el-button
                 type="primary"
                 :icon="isCollapse ? DArrowRight : DArrowLeft"
+                size="small"
                 @click="switchCollapse"
               ></el-button>
             </div>
