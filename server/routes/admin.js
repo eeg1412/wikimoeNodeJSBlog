@@ -308,6 +308,15 @@ const adminRouteSetting = [
     roleType: null,
     role: null
   },
+  // delete /post/delete
+  {
+    path: '/post/delete',
+    method: 'delete',
+    middleware: [checkAuth],
+    controller: require('../api/admin/post/deletePost'),
+    roleType: null,
+    role: null
+  },
 ]
 
 adminRouteSetting.forEach(item => {

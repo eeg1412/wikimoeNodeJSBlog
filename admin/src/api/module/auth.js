@@ -178,5 +178,12 @@ export default function (api) {
         shouldAdminJWT: true
       })
     },
+    // delete /post/delete
+    deletePost (data) {
+      return api.delete('/post/delete', {
+        params: data,
+        shouldAdminJWT: true
+      })
+    },
   }
 }
