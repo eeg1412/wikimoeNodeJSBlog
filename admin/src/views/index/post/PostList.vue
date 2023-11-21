@@ -8,6 +8,25 @@
     <div class="clearfix pb20">
       <div class="fl common-top-search-form-body">
         <!-- 检索用 -->
+        <el-form
+          :inline="true"
+          :model="params"
+          @submit.prevent
+          class="demo-form-inline"
+          @keypress.enter="getPostList(true)"
+        >
+          <el-form-item>
+            <el-input
+              v-model="params.keyword"
+              placeholder="检索标题/推文关键词"
+            ></el-input>
+          </el-form-item>
+          <el-form-item>
+            <el-button type="primary" @click="getPostList(true)"
+              >搜索</el-button
+            >
+          </el-form-item>
+        </el-form>
       </div>
       <div class="fr">
         <!-- 按钮用 -->
@@ -27,7 +46,13 @@
       </div>
     </div>
     <div class="mb20">
-      <el-table :data="list" row-key="_id" border default-expand-all>
+      <el-table
+        :data="list"
+        row-key="_id"
+        border
+        @sort-change="tableSortChange"
+        :default-sort="defaultSort"
+      >
         <!-- //   - title	标题字段
           // - date	日期字段
           // - content	内容字段
@@ -64,7 +89,12 @@
           </template>
         </el-table-column>
         <el-table-column prop="title" label="标题/推文" width="320" />
-        <el-table-column prop="date" label="发表时间" width="180">
+        <el-table-column
+          prop="date"
+          label="发表时间"
+          sortable="custom"
+          width="180"
+        >
           <template #default="{ row }">
             {{ $formatDate(row.date) }}
           </template>
@@ -88,8 +118,18 @@
             >
           </template>
         </el-table-column>
-        <el-table-column prop="views" label="查看数" />
-        <el-table-column prop="comnum" label="评论数" />
+        <el-table-column
+          prop="views"
+          label="查看数"
+          width="100"
+          sortable="custom"
+        />
+        <el-table-column
+          prop="comnum"
+          label="评论数"
+          width="100"
+          sortable="custom"
+        />
         <el-table-column prop="top" label="置顶">
           <template #default="{ row }">
             <el-tag v-if="row.top" type="success">是</el-tag>
@@ -109,7 +149,12 @@
           </template>
         </el-table-column>
         <!-- 更新时间 -->
-        <el-table-column prop="updatetime" label="更新日期" width="180">
+        <el-table-column
+          prop="updatetime"
+          label="更新日期"
+          sortable="custom"
+          width="180"
+        >
           <template #default="{ row }">
             {{ $formatDate(row.updatetime) }}
           </template>
@@ -211,6 +256,17 @@ export default {
       handleAdd(command)
     }
 
+    const tableSortChange = ({ column, prop, order }) => {
+      console.log(column, prop, order)
+      if (order) {
+        params.sorttype = `${prop}_${order}`
+      } else {
+        params.sorttype = null
+      }
+      getPostList()
+    }
+    const defaultSort = { prop: 'date', order: 'descending' }
+
     // 监听 params.page 的变化
     watch(
       () => params.page,
@@ -229,8 +285,11 @@ export default {
       list,
       goEdit,
       deletePost,
+      getPostList,
       handleAdd,
       handlePostCommand,
+      tableSortChange,
+      defaultSort,
     }
   },
 }

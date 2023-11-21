@@ -25,7 +25,21 @@ module.exports = async function (req, res, next) {
   }
   // 如果keyword存在，就加入查询条件
   if (keyword) {
-    params.name = new RegExp(keyword, 'i')
+    // 检索title和content
+    params.$or = [
+      {
+        title: {
+          $regex: keyword,
+          $options: 'i'
+        }
+      },
+      {
+        content: {
+          $regex: keyword,
+          $options: 'i'
+        }
+      }
+    ]
   }
   // 如果type存在，就加入查询条件
   if (type) {
@@ -38,45 +52,57 @@ module.exports = async function (req, res, next) {
 
   // updatetime越新越靠前，_id越新越靠前
   let sort = {
-    updatetime: -1,
+    date: -1,
     _id: -1
   }
   if (sorttype) {
     switch (sorttype) {
       // 1: 按照创建时间date升序
-      case '1':
+      case 'date_ascending':
         sort = {
           date: 1
         }
         break;
       // 2: 按照创建时间date降序
-      case '2':
+      case 'date_descending':
         sort = {
           date: -1
         }
         break;
       // 按照点击数views升序
-      case '3':
+      case 'views_ascending':
         sort = {
           views: 1
         }
         break;
       // 按照点击数views降序
-      case '4':
+      case 'views_descending':
         sort = {
           views: -1
         }
         break;
       // 按照评论数comnum升序
-      case '5':
+      case 'comnum_ascending':
         sort = {
           comnum: 1
         }
         break;
       // 按照评论数comnum降序
-      case '6':
+      case 'comnum_descending':
         sort = {
           comnum: -1
+        }
+        break;
+      // 按照更新时间updatetime升序
+      case 'updatetime_ascending':
+        sort = {
+          updatetime: 1
+        }
+        break;
+      // 按照更新时间updatetime降序
+      case 'updatetime_descending':
+        sort = {
+          updatetime: -1
         }
         break;
 
@@ -98,10 +124,9 @@ module.exports = async function (req, res, next) {
         if (item.content.length > 20) {
           item.title = item.content.slice(0, 20) + '...'
         }
-      } else {
-        // 清空content
-        item.content = ''
       }
+      // 删除content字段
+      delete item.content
     })
     // 返回格式list,total
     res.send({
