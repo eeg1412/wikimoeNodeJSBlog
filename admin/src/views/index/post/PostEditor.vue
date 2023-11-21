@@ -150,7 +150,7 @@
           <el-radio-group v-model="form.status">
             <el-radio :label="0">草稿</el-radio>
             <el-radio :label="1">发布</el-radio>
-            <el-radio :label="99">回收站</el-radio>
+            <!-- <el-radio :label="99">回收站</el-radio> -->
           </el-radio-group>
         </el-form-item>
         <el-form-item>

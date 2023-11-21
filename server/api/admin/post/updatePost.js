@@ -112,14 +112,14 @@ module.exports = async function (req, res, next) {
     coverImagesIdArr.push(coverImageId)
   }
 
-  if (type === 2) {
-    // tweet的处理
-    // title 根据content，裁切前20个字符，后面加上...
-    params.title = content || ''
-    if (content.length > 20) {
-      params.title = content.slice(0, 20) + '...'
-    }
-  }
+  // if (type === 2) {
+  //   // tweet的处理
+  //   // title 根据content，裁切前20个字符，后面加上...
+  //   params.title = content || ''
+  //   if (content.length > 20) {
+  //     params.title = content.slice(0, 20) + '...'
+  //   }
+  // }
   // 后台拿到tags时判断是否是id，如果不是id，就创建tag，然后把tag的id放到tags里面，记得不要重复创建tag
   const tags_ = tags || []
   let tagsIdArr = []

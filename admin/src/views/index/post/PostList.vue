@@ -46,9 +46,13 @@
         <el-table-column prop="type" label="类型">
           <!-- 1blog,2tweet,3page -->
           <template #default="{ row }">
-            <el-tag v-if="row.type === 1" type="success">博客</el-tag>
-            <el-tag v-else-if="row.type === 2" type="warning">推文</el-tag>
-            <el-tag v-else-if="row.type === 3" type="info">页面</el-tag>
+            <el-tag v-if="row.type === 1" effect="plain" type="success"
+              >博客</el-tag
+            >
+            <el-tag v-else-if="row.type === 2" effect="plain">推文</el-tag>
+            <el-tag v-else-if="row.type === 3" effect="plain" type="info"
+              >页面</el-tag
+            >
           </template>
         </el-table-column>
         <el-table-column prop="status" label="状态">
@@ -59,7 +63,7 @@
             <el-tag v-else-if="row.status === 99" type="danger">回收站</el-tag>
           </template>
         </el-table-column>
-        <el-table-column prop="title" label="标题" width="320" />
+        <el-table-column prop="title" label="标题/推文" width="320" />
         <el-table-column prop="date" label="发表时间" width="180">
           <template #default="{ row }">
             {{ $formatDate(row.date) }}
@@ -78,7 +82,6 @@
             <el-tag
               v-for="tag in row.tags"
               :key="tag._id"
-              type="success"
               size="small"
               style="margin-right: 5px"
               >{{ tag.tagname }}</el-tag
