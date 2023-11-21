@@ -231,7 +231,7 @@ export default {
     })
     const maxCoverLength = computed(() => {
       if (type.value === 2) {
-        return null
+        return 9999
       }
       return 1
     })
