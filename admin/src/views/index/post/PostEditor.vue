@@ -20,12 +20,12 @@
         </template>
         <template v-if="type === 2">
           <!-- 内容 textarea -->
-          <el-form-item label="内容" prop="title">
+          <el-form-item label="推文" prop="title">
             <el-input
               type="textarea"
               v-model="form.title"
               rows="10"
-              placeholder="请输入内容"
+              placeholder="请输入推文"
             ></el-input>
           </el-form-item>
         </template>
@@ -315,7 +315,7 @@ export default {
       }
       queryTagsTimer = setTimeout(() => {
         getTagList(query)
-      }, 300)
+      }, 50)
     }
     // sorts
     const sortList = ref([])
