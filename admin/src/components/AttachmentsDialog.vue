@@ -157,17 +157,7 @@
     title="转移相册"
   >
     <div class="dflex flexCenter">
-      <el-select v-model="albumId" placeholder="请选择相册" disabled>
-        <el-option
-          v-for="item in albumList"
-          :key="item._id"
-          :label="item.name"
-          :value="item._id"
-        />
-      </el-select>
-      <div class="pl10 pr10">
-        <el-icon><DArrowRight /></el-icon>
-      </div>
+      <div class="pl10 pr10">转移至：</div>
       <el-select v-model="toAlbumId" placeholder="请选择相册">
         <el-option
           v-for="item in albumList"
