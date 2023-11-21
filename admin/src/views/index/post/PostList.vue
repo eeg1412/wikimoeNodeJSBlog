@@ -18,7 +18,7 @@
           <el-form-item>
             <el-input
               v-model="params.keyword"
-              placeholder="检索标题/推文关键词"
+              placeholder="检索关键词"
             ></el-input>
           </el-form-item>
           <el-form-item>
