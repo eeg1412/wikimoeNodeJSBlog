@@ -111,6 +111,27 @@ module.exports = async function (req, res, next) {
     }
     coverImagesIdArr.push(coverImageId)
   }
+  // 校验alias是否存在
+  if (alias) {
+    const aliasPost = await postUtils.findOne({ alias: alias }).catch((err) => {
+      return 500
+    })
+    if (aliasPost) {
+      res.status(400).json({
+        errors: [{
+          message: '别名已存在'
+        }]
+      })
+      return
+    } else if (aliasPost === 500) {
+      res.status(500).json({
+        errors: [{
+          message: '服务器错误'
+        }]
+      })
+      return
+    }
+  }
 
   // if (type === 2) {
   //   // tweet的处理
