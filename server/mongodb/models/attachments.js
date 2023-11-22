@@ -50,6 +50,11 @@ var attachments = new Schema({
     type: Schema.Types.ObjectId,
     ref: 'albums'
   },
+  // 描述
+  description: {
+    type: String,
+    default: ''
+  },
   // 更新时间
   updatetime: {
     type: Date,

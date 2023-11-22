@@ -254,12 +254,12 @@ const adminRouteSetting = [
     roleType: null,
     role: null
   },
-  // put /attachment/update/name
+  // put /attachment/update/info
   {
-    path: '/attachment/update/name',
+    path: '/attachment/update/info',
     method: 'put',
     middleware: [checkAuth],
-    controller: require('../api/admin/attachment/updateAttachmentName'),
+    controller: require('../api/admin/attachment/updateAttachmentInfo'),
     roleType: null,
     role: null
   },

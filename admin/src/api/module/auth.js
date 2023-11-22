@@ -141,8 +141,8 @@ export default function (api) {
       })
     },
     // put /attachment/update/name
-    updateAttachmentName (data) {
-      return api.put('/attachment/update/name', data, {
+    updateAttachmentInfo (data) {
+      return api.put('/attachment/update/info', data, {
         shouldAdminJWT: true
       })
     },

@@ -47,6 +47,15 @@
             placeholder="请输入媒体名称"
           ></el-input>
         </el-form-item>
+        <!-- description -->
+        <el-form-item label="描述" prop="description">
+          <el-input
+            type="textarea"
+            v-model="formName.description"
+            rows="5"
+            placeholder="请输入描述"
+          ></el-input>
+        </el-form-item>
       </el-form>
     </div>
     <template #footer>
@@ -83,6 +92,7 @@ export default {
     const formNameRef = ref(null)
     const formName = reactive({
       name: '',
+      description: '',
     })
     const rulesName = reactive({
       name: [{ required: true, message: '请输入媒体名称', trigger: 'blur' }],
@@ -95,9 +105,10 @@ export default {
         const params = {
           id: props.item._id,
           name: formName.name,
+          description: formName.description,
           __v: props.item.__v,
         }
-        authApi.updateAttachmentName(params).then(() => {
+        authApi.updateAttachmentInfo(params).then(() => {
           showNameDialog.value = false
           emit('onUpdateName', formName.name)
         })
