@@ -27,7 +27,7 @@
   </div>
   <!-- 更改名称dialog -->
   <el-dialog
-    title="更改名称"
+    title="更改信息"
     v-model="showNameDialog"
     destroy-on-close
     :close-on-click-modal="false"
