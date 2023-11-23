@@ -80,7 +80,11 @@
           </el-form-item>
         </template>
         <!-- coverImages 选择封面图 -->
-        <el-form-item label="文章图片" prop="coverImages">
+        <el-form-item
+          label="文章图片"
+          prop="coverImages"
+          class="blok-form-item"
+        >
           <div class="clearfix">
             <draggable
               class="fl"
@@ -119,6 +123,7 @@
               </div>
             </div>
           </div>
+          <div v-if="coverImagesDataList.length > 1">※可以拖动改变顺序</div>
         </el-form-item>
         <!-- 分类 -->
         <el-form-item label="分类" prop="sort">

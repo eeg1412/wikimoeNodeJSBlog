@@ -876,3 +876,6 @@ input[type='password'] {
   padding: 20px;
   border-width: 1px;
 }
+.blok-form-item .el-form-item__content {
+  display: block;
+}
