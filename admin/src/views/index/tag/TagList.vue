@@ -36,6 +36,12 @@
     <div class="mb20">
       <el-table :data="tagList" row-key="_id" border default-expand-all>
         <el-table-column prop="tagname" label="标签名称" />
+        <!-- 最后一次使用时间 -->
+        <el-table-column prop="last_use_time" label="最终使用时间">
+          <template #default="{ row }">
+            {{ $formatDate(row.lastusetime) }}
+          </template>
+        </el-table-column>
 
         <el-table-column label="操作" width="140">
           <template #default="{ row }">

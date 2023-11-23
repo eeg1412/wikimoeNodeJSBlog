@@ -30,7 +30,7 @@
           </el-form-item>
         </template>
         <template v-else>
-          <!-- TODO:富文本内容 -->
+          <!-- 富文本内容 -->
           <el-form-item label="文章内容" prop="content">
             <el-tabs
               v-model="contentTab"
@@ -113,6 +113,17 @@
             </div>
           </div>
         </el-form-item>
+        <!-- 分类 -->
+        <el-form-item label="分类" prop="sort">
+          <el-select v-model="form.sort" placeholder="请选择分类">
+            <el-option
+              v-for="item in sortList"
+              :key="item._id"
+              :label="item.sortname"
+              :value="item._id"
+            ></el-option>
+          </el-select>
+        </el-form-item>
         <!-- tags -->
         <el-form-item label="标签" prop="tags">
           <el-select
@@ -121,7 +132,6 @@
             filterable
             remote
             :remote-method="queryTags"
-            allow-create
             default-first-option
             :reserve-keyword="false"
             :loading="tagsIsLoading"
@@ -133,18 +143,11 @@
               :key="item._id"
               :label="item.tagname"
               :value="item._id"
-            ></el-option>
-          </el-select>
-        </el-form-item>
-        <!-- 分类 -->
-        <el-form-item label="分类" prop="sort">
-          <el-select v-model="form.sort" placeholder="请选择分类">
-            <el-option
-              v-for="item in sortList"
-              :key="item._id"
-              :label="item.sortname"
-              :value="item._id"
-            ></el-option>
+            >
+              <template v-if="item.isNew">
+                {{ `创建新标签「${item.tagname}」` }}
+              </template>
+            </el-option>
           </el-select>
         </el-form-item>
         <!-- 文章别名 -->
@@ -235,6 +238,7 @@ export default {
       }
       return 1
     })
+    let isIniting = ref(true)
     const getPostDetail = () => {
       authApi
         .getPostDetail({ id: id.value })
@@ -285,6 +289,9 @@ export default {
               },
             })
           }
+        })
+        .finally(() => {
+          isIniting.value = false
         })
     }
 
@@ -345,8 +352,22 @@ export default {
       }
       tagsIsLoading.value = true
       authApi
-        .getTagList({ keyword: tagKeyword, size: 100, page: 1 }, true)
+        .getTagList({ keyword: tagKeyword, size: 10, page: 1 }, true)
         .then((res) => {
+          const list = res.data.list
+          if (tagKeyword) {
+            // 如果tagkeyword没有在list里面，就把tagkeyword push到list里面
+            const hasTagKeyword = list.some(
+              (item) => item.tagname === tagKeyword
+            )
+            if (!hasTagKeyword) {
+              list.push({
+                _id: tagKeyword,
+                tagname: tagKeyword,
+                isNew: true,
+              })
+            }
+          }
           tagList.value = res.data.list
         })
         .finally(() => {
@@ -362,6 +383,30 @@ export default {
         getTagList(query)
       }, 50)
     }
+    const updateTagLastUseTime = (newTagIdList, oldTagIdList) => {
+      // 对比newTagIdList对比oldTagIdList，多了哪些ID
+      const addTagIdList = newTagIdList.filter(
+        (item) => !oldTagIdList.includes(item)
+      )
+      // 从addTagIdList中筛选出mongodbId格式的数据，用正则
+      const addTagMongoIdList = addTagIdList.filter((item) => {
+        const reg = /^[0-9a-fA-F]{24}$/
+        return reg.test(item)
+      })
+      // 遍历addTagMongoIdList，把这些ID的tag的lastUseTime更新为当前时间
+      addTagMongoIdList.forEach((id) => {
+        authApi.updateTagLastUseTime({ id })
+      })
+    }
+    // watch form.tags
+    watch(
+      () => form.tags,
+      (newVal, oldVal) => {
+        if (!isIniting.value) {
+          updateTagLastUseTime(newVal, oldVal)
+        }
+      }
+    )
     // sorts
     const sortList = ref([])
     const getSortList = () => {

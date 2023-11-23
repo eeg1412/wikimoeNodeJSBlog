@@ -25,6 +25,7 @@ module.exports = async function (req, res, next) {
   }
 
   const sort = {
+    lastusetime: -1,
     _id: -1
   }
   tagUtils.findPage(params, sort, page, size).then((data) => {

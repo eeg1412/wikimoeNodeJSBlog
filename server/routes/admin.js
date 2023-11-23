@@ -155,6 +155,15 @@ const adminRouteSetting = [
     roleType: null,
     role: null
   },
+  // put /tag/update/lastusetime
+  {
+    path: '/tag/update/lastusetime',
+    method: 'put',
+    middleware: [checkAuth],
+    controller: require('../api/admin/tag/updateTagLastusetime'),
+    roleType: null,
+    role: null
+  },
   // delete /tag/delete
   {
     path: '/tag/delete',

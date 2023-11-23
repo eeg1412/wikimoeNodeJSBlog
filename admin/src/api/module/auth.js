@@ -74,6 +74,13 @@ export default function (api) {
         shouldAdminJWT: true
       })
     },
+    // put /tag/update/lastusetime
+    updateTagLastUseTime (data) {
+      return api.put('/tag/update/lastusetime', data, {
+        shouldAdminJWT: true,
+        noLoading: true
+      })
+    },
     // delete tag/delete
     deleteTag (data) {
       return api.delete('/tag/delete', {
