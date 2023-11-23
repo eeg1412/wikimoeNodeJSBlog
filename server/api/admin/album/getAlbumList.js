@@ -24,9 +24,9 @@ module.exports = async function (req, res, next) {
     params.name = new RegExp(keyword, 'i')
   }
 
-  // updatetime越新越靠前，_id越新越靠前
+  // updatedAt越新越靠前，_id越新越靠前
   const sort = {
-    updatetime: -1,
+    updatedAt: -1,
     _id: -1
   }
   albumUtils.findPage(params, sort, page, size).then((data) => {

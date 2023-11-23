@@ -37,7 +37,6 @@ exports.findPage = async function (parmas, sort, page, limit) {
 exports.updateOne = async function (filters, parmas) {
   // document查询
   parmas.$inc = { __v: 1, ...parmas.$inc }
-  parmas.updatetime = new Date()
 
   return await attachmentsModel.updateOne(filters, parmas);
 }
@@ -45,7 +44,6 @@ exports.updateOne = async function (filters, parmas) {
 exports.updateMany = async function (filters, parmas) {
   // document查询
   parmas.$inc = { __v: 1, ...parmas.$inc }
-  parmas.updatetime = new Date()
 
   return await attachmentsModel.updateMany(filters, parmas);
 }

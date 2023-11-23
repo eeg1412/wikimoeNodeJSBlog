@@ -61,6 +61,16 @@ api.interceptors.response.use(
             });
           });
         }
+        if (status === 403) {
+          clearTimeout(goLoginFlagTimer);
+          goLoginFlagTimer = setTimeout(() => {
+            ElMessage.error({
+              message: '请重新登录',
+              'custom-class': "common-message-error"
+            });
+            router.replace({ name: "Login" });
+          }, 200);
+        }
         break;
       case 401:
         const routeName = router.currentRoute.value.name;

@@ -177,6 +177,7 @@ export default {
             .then((res) => {
               setForm()
               store.dispatch('setAdminInfo')
+              ElMessage.success('资料修改成功')
             })
             .catch((err) => {
               console.log(err)

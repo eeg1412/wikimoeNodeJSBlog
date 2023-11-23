@@ -226,13 +226,13 @@
         </el-table-column>
         <!-- 更新时间 -->
         <el-table-column
-          prop="updatetime"
+          prop="updatedAt"
           label="更新日期"
           sortable="custom"
           width="180"
         >
           <template #default="{ row }">
-            {{ $formatDate(row.updatetime) }}
+            {{ $formatDate(row.updatedAt) }}
           </template>
         </el-table-column>
         <el-table-column label="操作" width="120" fixed="right">

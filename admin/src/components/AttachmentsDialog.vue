@@ -232,7 +232,7 @@ export default {
       attachmentList.value = []
       albumId.value = props.albumIdProp
       await getAlbumList()
-      if (!albumId.value) {
+      if (!albumId.value && albumList.value.length > 0) {
         albumId.value = albumList.value[0]._id || ''
       }
       params.album = albumId.value

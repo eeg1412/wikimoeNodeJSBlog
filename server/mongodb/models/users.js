@@ -31,6 +31,6 @@ var users = new Schema({
     default: 0
   },
   IP: String,
-});
+}, { timestamps: true });
 
 module.exports = mongoose.model('users', users);

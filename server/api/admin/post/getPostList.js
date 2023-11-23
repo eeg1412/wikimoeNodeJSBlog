@@ -61,7 +61,7 @@ module.exports = async function (req, res, next) {
     }
   }
 
-  // updatetime越新越靠前，_id越新越靠前
+  // date越新越靠前，_id越新越靠前
   let postSorting = {
     date: -1,
     _id: -1
@@ -104,16 +104,16 @@ module.exports = async function (req, res, next) {
           comnum: -1
         }
         break;
-      // 按照更新时间updatetime升序
-      case 'updatetime_ascending':
+      // 按照更新时间updatedAt升序
+      case 'updatedAt_ascending':
         postSorting = {
-          updatetime: 1
+          updatedAt: 1
         }
         break;
-      // 按照更新时间updatetime降序
-      case 'updatetime_descending':
+      // 按照更新时间updatedAt降序
+      case 'updatedAt_descending':
         postSorting = {
-          updatetime: -1
+          updatedAt: -1
         }
         break;
 

@@ -55,16 +55,11 @@ var attachments = new Schema({
     type: String,
     default: ''
   },
-  // 更新时间
-  updatetime: {
-    type: Date,
-    default: Date.now
-  },
   // 0还没压缩，1压缩成功
   status: {
     type: Number,
     default: 0
   },
-});
+}, { timestamps: true });
 
 module.exports = mongoose.model('attachments', attachments);

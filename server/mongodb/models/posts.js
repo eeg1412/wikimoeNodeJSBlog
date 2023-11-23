@@ -95,10 +95,6 @@ var posts = new Schema({
     default: 5
   },
   coverImages: [{ type: Schema.ObjectId, ref: 'attachments' }],
-  updatetime: {
-    type: Date,
-    default: Date.now
-  },
-});
+}, { timestamps: true });
 
 module.exports = mongoose.model('posts', posts);

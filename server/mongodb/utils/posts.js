@@ -37,7 +37,6 @@ exports.findPage = async function (parmas, filter, sort, page, limit) {
 exports.updateOne = async function (filters, parmas) {
   // document查询
   parmas.$inc = { __v: 1, ...parmas.$inc }
-  parmas.updatetime = new Date()
   return await postsModel.updateOne(filters, parmas);
 }
 // 删除

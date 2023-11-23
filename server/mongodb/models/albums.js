@@ -13,11 +13,6 @@ var albums = new Schema({
     type: Number,
     default: 0
   },
-  // 相册的更新时间
-  updatetime: {
-    type: Date,
-    default: Date.now
-  },
-});
+}, { timestamps: true });
 
 module.exports = mongoose.model('albums', albums);

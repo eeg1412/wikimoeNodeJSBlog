@@ -28,6 +28,6 @@ var sorts = new Schema({
   template: {
     type: String,
   },
-});
+}, { timestamps: true });
 
 module.exports = mongoose.model('sorts', sorts);
