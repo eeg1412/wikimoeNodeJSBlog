@@ -10,13 +10,15 @@ module.exports = {
             type: 'dateFile',
             filename: 'log/system/info/info.log',
             pattern: 'yyyy-MM-dd',
-            keepFileExt: true
+            keepFileExt: true,
+            alwaysIncludePattern: true
         },
         systemErrorLogFile: {
             type: 'dateFile',
             filename: 'log/system/error/error.log',
             pattern: 'yyyy-MM-dd',
-            keepFileExt: true
+            keepFileExt: true,
+            alwaysIncludePattern: true
         },
         systemLog: {
             type: 'logLevelFilter',
@@ -33,13 +35,15 @@ module.exports = {
             type: 'dateFile',
             filename: 'log/access/info/info.log',
             pattern: 'yyyy-MM-dd',
-            keepFileExt: true
+            keepFileExt: true,
+            alwaysIncludePattern: true
         },
         accessErrorLogFile: {
             type: 'dateFile',
             filename: 'log/access/error/error.log',
             pattern: 'yyyy-MM-dd',
-            keepFileExt: true
+            keepFileExt: true,
+            alwaysIncludePattern: true
         },
         accessLog: {
             type: 'logLevelFilter',
@@ -56,13 +60,15 @@ module.exports = {
             type: 'dateFile',
             filename: 'log/user/info/info.log',
             pattern: 'yyyy-MM-dd',
-            keepFileExt: true
+            keepFileExt: true,
+            alwaysIncludePattern: true
         },
         userApiErrorLogFile: {
             type: 'dateFile',
             filename: 'log/user/error/error.log',
             pattern: 'yyyy-MM-dd',
-            keepFileExt: true
+            keepFileExt: true,
+            alwaysIncludePattern: true
         },
         userApiLog: {
             type: 'logLevelFilter',
@@ -79,13 +85,15 @@ module.exports = {
             type: 'dateFile',
             filename: 'log/admin/info/info.log',
             pattern: 'yyyy-MM-dd',
-            keepFileExt: true
+            keepFileExt: true,
+            alwaysIncludePattern: true
         },
         adminApiErrorLogFile: {
             type: 'dateFile',
             filename: 'log/admin/error/error.log',
             pattern: 'yyyy-MM-dd',
-            keepFileExt: true
+            keepFileExt: true,
+            alwaysIncludePattern: true
         },
         adminApiLog: {
             type: 'logLevelFilter',
