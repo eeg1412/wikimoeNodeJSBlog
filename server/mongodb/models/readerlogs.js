@@ -12,6 +12,12 @@ var readerlogs = new Schema({
     type: String,
     required: true,
   },
+  // data
+  data: {
+    // object
+    type: Object,
+    default: {}
+  },
   // ip
   ip: {
     type: String,
