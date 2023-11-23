@@ -169,6 +169,17 @@
             placeholder="请输入文章别名（用于别名访问）"
           ></el-input>
         </el-form-item>
+        <!-- 模板选择 -->
+        <el-form-item label="模板选择" prop="template" v-if="type === 3">
+          <el-select v-model="form.template" clearable placeholder="请选择模板">
+            <el-option
+              v-for="item in templateList"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value"
+            ></el-option>
+          </el-select>
+        </el-form-item>
         <!-- 发布时间 -->
         <el-form-item label="发布时间" prop="date">
           <el-date-picker
@@ -476,6 +487,22 @@ export default {
       },
     })
     const attachmentDrag = ref(false)
+    // template
+    // 模板选项 about:关于页面, link: 友情链接页面, almanac:程序员老黄历
+    const templateList = ref([
+      {
+        label: '关于',
+        value: 'about',
+      },
+      {
+        label: '友情链接',
+        value: 'link',
+      },
+      {
+        label: '程序员老黄历',
+        value: 'almanac',
+      },
+    ])
 
     onMounted(() => {
       getPostDetail()
@@ -506,6 +533,8 @@ export default {
       selectAttachments,
       coverImagesDataList,
       attachmentDrag,
+      // template
+      templateList,
     }
   },
 }
