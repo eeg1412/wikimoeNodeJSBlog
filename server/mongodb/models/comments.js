@@ -22,6 +22,16 @@ var comments = new Schema({
     type: String,
     default: ''
   },
+  // user
+  user: {
+    type: Schema.Types.ObjectId,
+    ref: 'users'
+  },
+  // 是否置顶
+  top: {
+    type: Boolean,
+    default: false
+  },
   // 评论者昵称,对应emlog的poster
   nickname: {
     type: String,
