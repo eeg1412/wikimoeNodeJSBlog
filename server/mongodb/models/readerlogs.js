@@ -12,7 +12,13 @@ var readerlogs = new Schema({
     type: String,
     required: true,
   },
+  // ip
+  ip: {
+    type: String,
+  },
 
 }, { capped: 15728640, timestamps: true });
-
+// timestamps:
+// createdAt
+// updatedAt
 module.exports = mongoose.model('readerlogs', readerlogs);
