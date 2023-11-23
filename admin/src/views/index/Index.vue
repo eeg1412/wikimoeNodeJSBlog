@@ -6,6 +6,13 @@
         :class="{ isCollapse: isCollapse, phoneMenuOpen: phoneMenuOpen }"
       >
         <div class="common-aside-body">
+          <div
+            class="common-aside-collapse-btn dflex flexCenter"
+            @click="switchCollapse"
+          >
+            <el-icon v-if="isCollapse"><ArrowRight /></el-icon>
+            <el-icon v-else><ArrowLeft /></el-icon>
+          </div>
           <div class="common-logo">
             <div>博客管理后台</div>
             <div class="common-logo-close-btn">
@@ -15,6 +22,7 @@
           <el-menu :default-active="activeIndex" router>
             <el-menu-item
               index="Home"
+              @click="removeParam(null)"
               @click.middle="openNewTab('Home')"
               :route="{ name: 'Home' }"
             >
@@ -75,15 +83,6 @@
       <el-container>
         <el-header class="common-header">
           <div class="clearfix">
-            <!-- 开关菜单 -->
-            <div class="fl pt15 switch-btn-body">
-              <el-button
-                type="primary"
-                :icon="isCollapse ? DArrowRight : DArrowLeft"
-                size="small"
-                @click="switchCollapse"
-              ></el-button>
-            </div>
             <div class="fl pt15 switch-btn-body-phone">
               <el-button
                 type="primary"
@@ -150,7 +149,10 @@ export default {
     })
 
     const removeParam = (key) => {
-      sessionStorage.removeItem(key)
+      if (key) {
+        sessionStorage.removeItem(key)
+      }
+      phoneMenuOpen.value = false
     }
     const logout = () => {
       router.replace({
@@ -227,9 +229,10 @@ export default {
   border-right: 1px solid #dee2e6;
   overflow-x: hidden;
   overflow-y: auto;
+  position: relative;
 }
 .common-aside.isCollapse {
-  width: 0px;
+  width: 8px;
 }
 .common-aside-body {
   width: 200px;
@@ -254,6 +257,21 @@ export default {
 }
 .common-logo-close-btn {
   display: none;
+}
+.common-aside-collapse-btn {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 2;
+  width: 8px;
+  cursor: pointer;
+  background-color: #fdfdfd;
+  color: #979797;
+  font-size: 10px;
+}
+.common-aside-collapse-btn:hover {
+  background-color: #f9f9f9;
 }
 /* 媒体查询 手机模式 */
 @media (max-width: 767px) {
@@ -291,6 +309,9 @@ export default {
     right: 10px;
     top: 50%;
     transform: translateY(-50%);
+  }
+  .common-aside-collapse-btn {
+    display: none;
   }
   /* phoneMenuOpen */
   .common-aside.phoneMenuOpen {
