@@ -47,6 +47,10 @@ var comments = new Schema({
     type: String,
     default: ''
   },
+  likes: {
+    type: Number,
+    default: 0
+  },
   // 评论者ip
   ip: {
     type: String,
