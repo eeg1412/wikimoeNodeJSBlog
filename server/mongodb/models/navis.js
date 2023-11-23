@@ -34,6 +34,12 @@ var navis = new Schema({
     type: Boolean,
     default: false
   },
+  // query
+  query: {
+    // object
+    type: Object,
+    default: {}
+  },
 }, { timestamps: true });
 
 module.exports = mongoose.model('navis', navis);
