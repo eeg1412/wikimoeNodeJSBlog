@@ -26,6 +26,10 @@ var readerlogs = new Schema({
     type: Object,
     default: {}
   },
+  deviceInfo: {
+    type: Object,
+    default: {}
+  },
 
 }, { capped: 15728640, timestamps: true });
 // timestamps:
