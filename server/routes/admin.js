@@ -326,6 +326,15 @@ const adminRouteSetting = [
     roleType: null,
     role: null
   },
+  // post /comment/create
+  {
+    path: '/comment/create',
+    method: 'post',
+    middleware: [checkAuth],
+    controller: require('../api/admin/comment/createComment'),
+    roleType: null,
+    role: null
+  },
 ]
 
 adminRouteSetting.forEach(item => {
