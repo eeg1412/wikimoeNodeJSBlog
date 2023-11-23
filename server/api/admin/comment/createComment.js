@@ -3,6 +3,7 @@ const commentUtils = require('../../../mongodb/utils/comments')
 const utils = require('../../../utils/utils')
 const log4js = require('log4js')
 const adminApiLog = log4js.getLogger('adminApi')
+const parser = require('ua-parser-js');
 
 module.exports = async function (req, res, next) {
 
@@ -46,6 +47,7 @@ module.exports = async function (req, res, next) {
   }
   // TODO:获取IP信息
   // TODO:获取设备信息
+  const ua = parser(req.get('user-agent'))
   // save
   commentUtils.save(params).then((data) => {
     res.send({
