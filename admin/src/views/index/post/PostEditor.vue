@@ -82,26 +82,33 @@
         <!-- coverImages 选择封面图 -->
         <el-form-item label="文章图片" prop="coverImages">
           <div class="clearfix">
-            <div
-              class="post-cover-image-item"
-              v-for="(item, index) in coverImagesDataList"
-              :key="item._id"
+            <draggable
+              class="fl"
+              v-model="coverImagesDataList"
+              group="attachments"
+              @start="attachmentDrag = true"
+              @end="attachmentDrag = false"
+              item-key="_id"
             >
-              <el-image
-                :src="item.thumfor || item.filepath"
-                fit="cover"
-                :preview-src-list="[item.filepath]"
-                :preview-teleported="true"
-                style="width: 100%; height: 100%"
-              />
-              <!-- 删除按钮 -->
-              <div
-                class="post-cover-image-item-delete"
-                @click="form.coverImages.splice(index, 1)"
-              >
-                <el-icon><Close /></el-icon>
-              </div>
-            </div>
+              <template #item="{ element }">
+                <div class="post-cover-image-item">
+                  <el-image
+                    :src="element.thumfor || element.filepath"
+                    fit="cover"
+                    :preview-src-list="[element.filepath]"
+                    :preview-teleported="true"
+                    style="width: 100%; height: 100%"
+                  />
+                  <!-- 删除按钮 -->
+                  <div
+                    class="post-cover-image-item-delete"
+                    @click="form.coverImages.splice(index, 1)"
+                  >
+                    <el-icon><Close /></el-icon>
+                  </div>
+                </div>
+              </template>
+            </draggable>
             <div
               class="post-cover-image-item type-add"
               @click="openAttachmentsDialog"
@@ -207,11 +214,14 @@ import { ElMessage, ElMessageBox } from 'element-plus'
 import AttachmentsDialog from '@/components/AttachmentsDialog'
 import RichEditor4 from '@/components/RichEditor4'
 import RichEditor5 from '@/components/RichEditor5'
+import draggable from 'vuedraggable'
+
 export default {
   components: {
     AttachmentsDialog,
     RichEditor4,
     RichEditor5,
+    draggable,
   },
   setup() {
     const router = useRouter()
@@ -444,17 +454,23 @@ export default {
       const data = coverImageListObj[id]
       return data
     }
-    const coverImagesDataList = computed(() => {
-      const list = []
-      const coverImages = form.coverImages
-      coverImages.forEach((id) => {
-        const data = getAttachmentById(id)
-        if (data) {
-          list.push(data)
-        }
-      })
-      return list
+    const coverImagesDataList = computed({
+      get() {
+        const list = []
+        const coverImages = form.coverImages
+        coverImages.forEach((id) => {
+          const data = getAttachmentById(id)
+          if (data) {
+            list.push(data)
+          }
+        })
+        return list
+      },
+      set(val) {
+        form.coverImages = val.map((item) => item._id)
+      },
     })
+    const attachmentDrag = ref(false)
 
     onMounted(() => {
       getPostDetail()
@@ -484,6 +500,7 @@ export default {
       openAttachmentsDialog,
       selectAttachments,
       coverImagesDataList,
+      attachmentDrag,
     }
   },
 }

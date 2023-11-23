@@ -116,7 +116,7 @@ module.exports = async function (req, res, next) {
     const aliasPost = await postUtils.findOne({ alias: alias }).catch((err) => {
       return 500
     })
-    if (aliasPost) {
+    if (aliasPost && aliasPost._id.toString() !== id) {
       res.status(400).json({
         errors: [{
           message: '别名已存在'
