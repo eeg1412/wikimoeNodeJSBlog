@@ -22,6 +22,10 @@ var readerlogs = new Schema({
   ip: {
     type: String,
   },
+  ipInfo: {
+    type: Object,
+    default: {}
+  },
 
 }, { capped: 15728640, timestamps: true });
 // timestamps:

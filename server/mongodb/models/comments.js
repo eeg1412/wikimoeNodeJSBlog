@@ -52,6 +52,10 @@ var comments = new Schema({
     type: String,
     default: ''
   },
+  ipInfo: {
+    type: Object,
+    default: {}
+  },
   // 评论状态,0待审核,1已审核,2未通过,查询评论时注意父级评论的状态
   status: {
     type: Number,
