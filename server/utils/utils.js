@@ -177,7 +177,7 @@ exports.IP2LocationUtils = function (ip, id, modelUtils) {
       let ip2location = new IP2Location();
       try {
         if (!fs.existsSync(binFilePath)) {
-          console.log(chalk.warn('ip2location文件不存在,如果需要IP解析请先从：https://lite.ip2location.com 下载BIN文件，然后放到utils/ip2location目录下'))
+          console.error(('ip2location文件不存在,如果需要IP解析请先从：https://lite.ip2location.com 下载BIN文件，然后放到utils/ip2location目录下'))
           return
         }
         ip2location.open(binFilePath);

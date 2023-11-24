@@ -1,4 +1,4 @@
-const chalk = require('chalk')
+
 const sortUtils = require('../../../mongodb/utils/sorts')
 const utils = require('../../../utils/utils')
 const log4js = require('log4js')
