@@ -69,6 +69,7 @@ module.exports = async function (req, res, next) {
     // 异步更新ip信息
     utils.IP2LocationUtils(ip, data._id, commentUtils)
   }).catch((err) => {
+    console.error(err)
     res.status(400).json({
       errors: [{
         message: '评论创建失败'

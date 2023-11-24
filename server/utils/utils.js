@@ -170,33 +170,40 @@ exports.generateTreeData = function (data, parentKey = 'parent') {
 }
 
 exports.IP2LocationUtils = function (ip, id, modelUtils) {
-  const promise = new Promise((resolve, reject) => {
-    console.time('ip2location')
-    const binFilePath = path.join('./utils/ip2location/IP2LOCATION-LITE-DB1.BIN')
-    let ip2location = new IP2Location();
-    try {
-      if (!fs.existsSync(binFilePath)) {
-        console.log(chalk.warn('ip2location文件不存在,如果需要IP解析请先从：https://lite.ip2location.com 下载IP2LOCATION-LITE-DB1.BIN文件，然后放到utils/ip2location目录下'))
-        return
+  if (process.env.IP2LOCATION === '1') {
+    const promise = new Promise((resolve, reject) => {
+      console.time('ip2location')
+      const binFilePath = path.join('./utils/ip2location/', process.env.IP2LOCATION_FILE_NAME)
+      let ip2location = new IP2Location();
+      try {
+        if (!fs.existsSync(binFilePath)) {
+          console.log(chalk.warn('ip2location文件不存在,如果需要IP解析请先从：https://lite.ip2location.com 下载BIN文件，然后放到utils/ip2location目录下'))
+          return
+        }
+        ip2location.open(binFilePath);
+        const ipInfoAll = ip2location.getAll(ip);
+        const ipInfo = {
+          countryLong: ipInfoAll.countryLong,
+        }
+        console.timeEnd('ip2location')
+        modelUtils.updateOne({ _id: id }, {
+          ipInfo: ipInfo
+        })
+        resolve(ipInfo)
+      } catch (err) {
+        console.error('ip2location解析失败', err)
+        reject(err)
+      } finally {
+        ip2location.close();
       }
-      ip2location.open(binFilePath);
-      const ipInfoAll = ip2location.getAll(ip);
-      const ipInfo = {
-        countryLong: ipInfoAll.countryLong,
-      }
-      console.timeEnd('ip2location')
-      modelUtils.updateOne({ _id: id }, {
-        ipInfo: ipInfo
-      })
-      resolve(ipInfo)
-    } catch (err) {
-      console.error('ip2location解析失败', err)
-      reject(err)
-    } finally {
-      ip2location.close();
-    }
+    })
+    return promise
+  }
+  console.log('ip2location未开启,跳过ip解析')
+  return new Promise((resolve) => {
+    resolve(null)
   })
-  return promise
+
 }
 exports.deviceUtils = function (req, id, modelUtils) {
   const ua = parser(req.get('user-agent'))
