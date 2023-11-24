@@ -192,5 +192,11 @@ export default function (api) {
         shouldAdminJWT: true
       })
     },
+    // post /comment/create
+    createComment (data) {
+      return api.post('/comment/create', data, {
+        shouldAdminJWT: true
+      })
+    },
   }
 }

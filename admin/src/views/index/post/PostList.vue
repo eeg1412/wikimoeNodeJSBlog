@@ -235,8 +235,11 @@
             {{ $formatDate(row.updatedAt) }}
           </template>
         </el-table-column>
-        <el-table-column label="操作" width="120" fixed="right">
+        <el-table-column label="操作" width="170" fixed="right">
           <template #default="{ row }">
+            <el-button size="small" @click="openCommentForm(row._id, row.title)"
+              ><el-icon><ChatLineSquare /></el-icon
+            ></el-button>
             <el-button type="primary" size="small" @click="goEdit(row._id)"
               ><el-icon><Edit /></el-icon
             ></el-button>
@@ -257,6 +260,41 @@
         v-model:current-page="params.page"
       />
     </div>
+    <!-- 添加评论弹窗 -->
+    <el-dialog
+      v-model="commentFormVisible"
+      :show-close="false"
+      destroy-on-close
+      :close-on-click-modal="false"
+      align-center
+      append-to-body
+      :title="commentFormTitle"
+    >
+      <el-form
+        :model="commentForm"
+        :rules="commentFormRules"
+        ref="commentFormRef"
+        label-width="100px"
+        @submit.prevent="submitCommentForm"
+      >
+        <el-form-item label="内容" prop="content">
+          <el-input
+            type="textarea"
+            v-model="commentForm.content"
+            rows="5"
+          ></el-input>
+        </el-form-item>
+        <el-form-item label="置顶" prop="top">
+          <el-switch v-model="commentForm.top" active-color="#13ce66" />
+        </el-form-item>
+      </el-form>
+      <template #footer>
+        <span class="dialog-footer">
+          <el-button type="primary" @click="submitCommentForm">提交</el-button>
+          <el-button @click="closeCommentForm">取消</el-button>
+        </span>
+      </template>
+    </el-dialog>
   </div>
 </template>
 <script>
@@ -431,6 +469,46 @@ export default {
       }, 50)
     }
 
+    // 添加评论
+    const commentForm = reactive({
+      post: '',
+      content: '',
+      top: false,
+    })
+    const commentFormRef = ref(null)
+    const commentFormRules = {
+      content: [{ required: true, message: '请输入评论内容', trigger: 'blur' }],
+    }
+    const commentFormVisible = ref(false)
+    const commentFormTitle = ref('添加评论')
+    const openCommentForm = (postId, title) => {
+      // 重置表单
+      commentForm.content = ''
+      commentForm.top = false
+      commentForm.post = postId
+      if (title) {
+        commentFormTitle.value = title
+      } else {
+        commentFormTitle.value = '添加评论'
+      }
+      commentFormVisible.value = true
+    }
+    const closeCommentForm = () => {
+      commentFormVisible.value = false
+    }
+    const submitCommentForm = () => {
+      commentFormRef.value.validate((valid) => {
+        if (valid) {
+          authApi.createComment(commentForm).then((res) => {
+            ElMessage.success('评论成功')
+            closeCommentForm()
+          })
+        } else {
+          return false
+        }
+      })
+    }
+
     // 监听 params.page 的变化
     watch(
       () => params.page,
@@ -464,6 +542,15 @@ export default {
       tagsIsLoading,
       getTagList,
       queryTags,
+      // 添加评论
+      commentForm,
+      commentFormRef,
+      commentFormRules,
+      commentFormVisible,
+      commentFormTitle,
+      openCommentForm,
+      closeCommentForm,
+      submitCommentForm,
     }
   },
 }

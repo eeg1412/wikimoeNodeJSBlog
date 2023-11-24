@@ -4,6 +4,8 @@ const jwt = require('jsonwebtoken')
 const validator = require('validator')
 const fs = require('fs')
 const path = require('path');
+const { IP2Location } = require("ip2location-nodejs");
+const parser = require('ua-parser-js');
 
 exports.creatSha256Str = function (str) {
   const sha256 = crypto.createHash('sha256')
@@ -167,6 +169,42 @@ exports.generateTreeData = function (data, parentKey = 'parent') {
   return treeData
 }
 
+exports.IP2LocationUtils = function (ip, id, modelUtils) {
+  const promise = new Promise((resolve, reject) => {
+    console.time('ip2location')
+    const binFilePath = path.join('./utils/ip2location/IP2LOCATION-LITE-DB1.BIN')
+    let ip2location = new IP2Location();
+    try {
+      if (!fs.existsSync(binFilePath)) {
+        console.log(chalk.warn('ip2location文件不存在,如果需要IP解析请先从：https://lite.ip2location.com 下载IP2LOCATION-LITE-DB1.BIN文件，然后放到utils/ip2location目录下'))
+        return
+      }
+      ip2location.open(binFilePath);
+      const ipInfoAll = ip2location.getAll(ip);
+      const ipInfo = {
+        countryLong: ipInfoAll.countryLong,
+      }
+      console.timeEnd('ip2location')
+      modelUtils.updateOne({ _id: id }, {
+        ipInfo: ipInfo
+      })
+      resolve(ipInfo)
+    } catch (err) {
+      console.error('ip2location解析失败', err)
+      reject(err)
+    } finally {
+      ip2location.close();
+    }
+  })
+  return promise
+}
+exports.deviceUtils = function (req, id, modelUtils) {
+  const ua = parser(req.get('user-agent'))
+  const result = modelUtils.updateOne({ _id: id }, {
+    deviceInfo: ua
+  })
+  return result
+}
 // isNumber
 exports.isNumber = function (value) {
   return typeof value === 'number' && isFinite(value)

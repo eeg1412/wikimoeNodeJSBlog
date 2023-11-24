@@ -1,13 +1,15 @@
 const chalk = require('chalk')
 const commentUtils = require('../../../mongodb/utils/comments')
+const postUtils = require('../../../mongodb/utils/posts')
 const utils = require('../../../utils/utils')
 const log4js = require('log4js')
 const adminApiLog = log4js.getLogger('adminApi')
-const parser = require('ua-parser-js');
+
 
 module.exports = async function (req, res, next) {
 
-  const { post, parent, content, user, top } = req.body
+  const { post, parent, content, top } = req.body
+  const user = req.admin.id
   const ip = utils.getUserIp(req)
   // 校验格式
   const params = {
@@ -45,22 +47,34 @@ module.exports = async function (req, res, next) {
     res.status(400).json({ errors })
     return
   }
-  // TODO:获取IP信息
-  // TODO:获取设备信息
-  const ua = parser(req.get('user-agent'))
+  // 获取文章信息
+  const postInfo = await postUtils.findOne({ _id: post })
+  if (!postInfo) {
+    res.status(400).json({
+      errors: [{
+        message: '文章不存在'
+      }]
+    })
+    return
+  }
+
   // save
   commentUtils.save(params).then((data) => {
     res.send({
       data: data
     })
-    adminApiLog.info(`comment:${commentname} create success`)
+    adminApiLog.info(`comment:${content} create success`)
+    // 异步更新设备信息
+    utils.deviceUtils(req, data._id, commentUtils)
+    // 异步更新ip信息
+    utils.IP2LocationUtils(ip, data._id, commentUtils)
   }).catch((err) => {
     res.status(400).json({
       errors: [{
         message: '评论创建失败'
       }]
     })
-    adminApiLog.error(`comment:${commentname} create fail, ${JSON.stringify(err)}`)
+    adminApiLog.error(`comment:${content} create fail, ${JSON.stringify(err)}`)
   })
 
 }
