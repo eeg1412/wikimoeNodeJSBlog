@@ -6,3 +6,4 @@ node_modules
 /server/public/content/uploadfile/*
 /server/config/globalConfig.json
 /server/uploadCache/*
+/server/utils/ip2location/*
