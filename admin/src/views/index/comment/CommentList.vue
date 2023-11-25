@@ -18,8 +18,17 @@
           <el-form-item>
             <el-input
               v-model="params.keyword"
-              placeholder="请输入评论名称"
+              clearable
+              placeholder="请输入评论内容"
             ></el-input>
+          </el-form-item>
+          <!-- 状态 -->
+          <el-form-item>
+            <el-select v-model="params.status" placeholder="请选择状态">
+              <el-option label="待审核" :value="0"></el-option>
+              <el-option label="通过" :value="1"></el-option>
+              <el-option label="未通过" :value="2"></el-option>
+            </el-select>
           </el-form-item>
           <el-form-item>
             <el-button type="primary" @click="getCommentList(true)"
@@ -51,6 +60,14 @@
             </div>
           </template>
         </el-table-column>
+        <!-- 状态 0未审核，1通过，2未通过 -->
+        <el-table-column prop="status" label="状态" width="90">
+          <template #default="{ row }">
+            <el-tag v-if="row.status === 0" type="info">待审核</el-tag>
+            <el-tag v-else-if="row.status === 1" type="success">通过</el-tag>
+            <el-tag v-else-if="row.status === 2" type="danger">未通过</el-tag>
+          </template>
+        </el-table-column>
         <!-- 点赞 -->
         <el-table-column prop="likes" label="点赞" width="80" />
         <el-table-column label="评论者" width="180">
@@ -76,14 +93,6 @@
           <template #default="{ row }">
             <el-tag v-if="row.top" type="success">是</el-tag>
             <el-tag v-else type="info">否</el-tag>
-          </template>
-        </el-table-column>
-        <!-- 状态 0未审核，1通过，2未通过 -->
-        <el-table-column prop="status" label="状态" width="90">
-          <template #default="{ row }">
-            <el-tag v-if="row.status === 0" type="info">待审核</el-tag>
-            <el-tag v-else-if="row.status === 1" type="success">通过</el-tag>
-            <el-tag v-else-if="row.status === 2" type="danger">未通过</el-tag>
           </template>
         </el-table-column>
         <!-- IP信息 -->
@@ -202,6 +211,7 @@ export default {
       page: 1,
       size: 10,
       keyword: '',
+      status: '',
     })
     const total = ref(0)
     const getCommentList = (resetPage) => {
