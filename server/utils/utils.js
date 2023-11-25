@@ -169,32 +169,41 @@ exports.generateTreeData = function (data, parentKey = 'parent') {
   return treeData
 }
 
+
+exports.initIp2location = function () {
+  const binFilePath = path.join('./utils/ip2location/', process.env.IP2LOCATION_FILE_NAME)
+  if (!fs.existsSync(binFilePath)) {
+    console.error(('ip2location文件不存在,如果需要IP解析请先从：https://lite.ip2location.com 下载BIN文件，然后放到utils/ip2location目录下'))
+    return
+  }
+  ip2location = new IP2Location();
+  ip2location.open(binFilePath);
+}
+let ip2location = null
+if (process.env.IP2LOCATION === '1') {
+  this.initIp2location()
+}
 exports.IP2LocationUtils = function (ip, id, modelUtils) {
   if (process.env.IP2LOCATION === '1') {
     const promise = new Promise((resolve, reject) => {
       console.time('ip2location')
-      const binFilePath = path.join('./utils/ip2location/', process.env.IP2LOCATION_FILE_NAME)
-      let ip2location = new IP2Location();
       try {
-        if (!fs.existsSync(binFilePath)) {
-          console.error(('ip2location文件不存在,如果需要IP解析请先从：https://lite.ip2location.com 下载BIN文件，然后放到utils/ip2location目录下'))
-          return
-        }
-        ip2location.open(binFilePath);
         const ipInfoAll = ip2location.getAll(ip);
-        const ipInfo = {
-          countryLong: ipInfoAll.countryLong,
-        }
+        // 遍历ipInfoAll，如果包含字符串This method is 就改写成null
+        Object.keys(ipInfoAll).forEach((key) => {
+          if (ipInfoAll[key].includes('This method is not')) {
+            ipInfoAll[key] = null
+          }
+        })
+
         console.timeEnd('ip2location')
         modelUtils.updateOne({ _id: id }, {
-          ipInfo: ipInfo
+          ipInfo: ipInfoAll
         })
-        resolve(ipInfo)
+        resolve(ipInfoAll)
       } catch (err) {
         console.error('ip2location解析失败', err)
         reject(err)
-      } finally {
-        ip2location.close();
       }
     })
     return promise
