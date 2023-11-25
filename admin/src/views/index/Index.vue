@@ -93,7 +93,7 @@
       <el-container>
         <el-header class="common-header">
           <div class="clearfix">
-            <div class="fl pt15 switch-btn-body-phone">
+            <div class="fl pt5 switch-btn-body-phone">
               <el-button
                 type="primary"
                 :icon="Grid"
@@ -101,7 +101,7 @@
               ></el-button>
             </div>
             <template v-if="adminInfo">
-              <div class="fr pt15">
+              <div class="fr pt5">
                 <el-button
                   type="primary"
                   circle
@@ -110,7 +110,7 @@
                   @click="logout"
                 ></el-button>
               </div>
-              <div class="fr pt15">
+              <div class="fr pt5">
                 <el-button
                   type="primary"
                   circle
@@ -119,7 +119,7 @@
                   @click="goLoginUserEditor"
                 ></el-button>
               </div>
-              <div class="fr pt20 mr10">
+              <div class="fr pt10 mr10">
                 {{ adminInfo.nickname }}
               </div>
             </template>
@@ -233,6 +233,7 @@ export default {
 .common-header {
   border-bottom: 1px solid #dee2e6;
   background: #f8f9fa;
+  height: 45px;
 }
 .common-aside {
   width: 200px;
