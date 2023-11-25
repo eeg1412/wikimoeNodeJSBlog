@@ -255,7 +255,7 @@
       <el-pagination
         class="fr"
         background
-        layout="prev, pager, next"
+        layout="total, prev, pager, next"
         :total="total"
         v-model:current-page="params.page"
       />
