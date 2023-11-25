@@ -879,3 +879,12 @@ input[type='password'] {
 .blok-form-item .el-form-item__content {
   display: block;
 }
+.common-blockquote {
+  margin: 0;
+  border: none;
+  border-left: 5px solid #eee;
+  padding: 0 5px;
+  margin-bottom: 4px;
+  color: #979797;
+  font-size: 12px;
+}

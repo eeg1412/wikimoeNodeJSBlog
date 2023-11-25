@@ -64,7 +64,7 @@ var comments = new Schema({
     type: Object,
     default: {}
   },
-  // 评论状态,0待审核,1已审核,2未通过,查询评论时注意父级评论的状态
+  // 评论状态,0待审核,1审核通过,2未通过,查询评论时注意父级评论的状态
   status: {
     type: Number,
     default: 0

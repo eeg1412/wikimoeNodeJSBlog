@@ -67,6 +67,16 @@
               <i class="fas fa-newspaper pr10"></i>
               <template #title>文章</template>
             </el-menu-item>
+            <!-- 评论 -->
+            <el-menu-item
+              index="CommentList"
+              @click="removeParam('CommentList')"
+              @click.middle="openNewTab('CommentList')"
+              :route="{ name: 'CommentList' }"
+            >
+              <i class="fas fa-comments pr10"></i>
+              <template #title>评论</template>
+            </el-menu-item>
             <!-- 设置 -->
             <el-menu-item
               index="Config"

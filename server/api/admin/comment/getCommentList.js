@@ -1,0 +1,42 @@
+const commentUtils = require('../../../mongodb/utils/comments')
+const utils = require('../../../utils/utils')
+const log4js = require('log4js')
+const adminApiLog = log4js.getLogger('adminApi')
+
+module.exports = async function (req, res, next) {
+  let { page, size, keyword } = req.query
+  page = parseInt(page)
+  size = parseInt(size)
+  // 判断page和size是否为数字
+  if (!utils.isNumber(page) || !utils.isNumber(size)) {
+    res.status(400).json({
+      errors: [{
+        message: '参数错误'
+      }]
+    })
+    return
+  }
+  const params = {
+  }
+  if (keyword) {
+    params.content = new RegExp(keyword, 'i')
+  }
+  const sort = {
+    _id: -1
+  }
+  commentUtils.findPage(params, sort, page, size).then((data) => {
+    // 返回格式list,total
+    res.send({
+      list: data.list,
+      total: data.total
+    })
+
+  }).catch((err) => {
+    res.status(400).json({
+      errors: [{
+        message: '评论列表获取失败'
+      }]
+    })
+    adminApiLog.error(`comment list get fail, ${JSON.stringify(err)}`)
+  })
+}

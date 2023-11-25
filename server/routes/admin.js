@@ -335,6 +335,42 @@ const adminRouteSetting = [
     roleType: null,
     role: null
   },
+  // get /comment/list
+  {
+    path: '/comment/list',
+    method: 'get',
+    middleware: [checkAuth],
+    controller: require('../api/admin/comment/getCommentList'),
+    roleType: null,
+    role: null
+  },
+  // get /comment/detail
+  {
+    path: '/comment/detail',
+    method: 'get',
+    middleware: [checkAuth],
+    controller: require('../api/admin/comment/getCommentDetail'),
+    roleType: null,
+    role: null
+  },
+  // put /comment/update
+  {
+    path: '/comment/update',
+    method: 'put',
+    middleware: [checkAuth],
+    controller: require('../api/admin/comment/updateComment'),
+    roleType: null,
+    role: null
+  },
+  // delete /comment/delete
+  {
+    path: '/comment/delete',
+    method: 'delete',
+    middleware: [checkAuth],
+    controller: require('../api/admin/comment/deleteComment'),
+    roleType: null,
+    role: null
+  },
 ]
 
 adminRouteSetting.forEach(item => {

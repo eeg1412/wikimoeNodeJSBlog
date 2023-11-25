@@ -198,5 +198,32 @@ export default function (api) {
         shouldAdminJWT: true
       })
     },
+    // get /comment/list
+    getCommentList (data) {
+      return api.get('/comment/list', {
+        params: data,
+        shouldAdminJWT: true
+      })
+    },
+    // get /comment/detail
+    getCommentDetail (data) {
+      return api.get('/comment/detail', {
+        params: data,
+        shouldAdminJWT: true
+      })
+    },
+    // put /comment/update
+    updateComment (data) {
+      return api.put('/comment/update', data, {
+        shouldAdminJWT: true
+      })
+    },
+    // delete /comment/delete
+    deleteComment (data) {
+      return api.delete('/comment/delete', {
+        params: data,
+        shouldAdminJWT: true
+      })
+    },
   }
 }

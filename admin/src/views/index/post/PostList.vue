@@ -285,7 +285,7 @@
           ></el-input>
         </el-form-item>
         <el-form-item label="置顶" prop="top">
-          <el-switch v-model="commentForm.top" active-color="#13ce66" />
+          <el-switch v-model="commentForm.top" />
         </el-form-item>
       </el-form>
       <template #footer>

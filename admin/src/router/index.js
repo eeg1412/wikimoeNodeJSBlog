@@ -73,6 +73,18 @@ const routes = [
         name: 'PostEdit',
         component: () => import(/* webpackChunkName: "PostEditor" */ '../views/index/post/PostEditor.vue')
       },
+      // CommentList
+      {
+        path: '/comment/list',
+        name: 'CommentList',
+        component: () => import(/* webpackChunkName: "CommentList" */ '../views/index/comment/CommentList.vue')
+      },
+      // CommentEditor
+      {
+        path: '/comment/editor/:id',
+        name: 'CommentEdit',
+        component: () => import(/* webpackChunkName: "CommentEditor" */ '../views/index/comment/CommentEditor.vue')
+      },
       // config
       {
         path: '/config',

@@ -189,10 +189,10 @@ exports.IP2LocationUtils = function (ip, id, modelUtils) {
       console.time('ip2location')
       try {
         const ipInfoAll = ip2location.getAll(ip);
-        // 遍历ipInfoAll，如果包含字符串This method is 就改写成null
+        // 遍历ipInfoAll，如果包含字符串This method is 就删除该属性
         Object.keys(ipInfoAll).forEach((key) => {
           if (ipInfoAll[key].includes('This method is not')) {
-            ipInfoAll[key] = null
+            delete ipInfoAll[key]
           }
         })
 
