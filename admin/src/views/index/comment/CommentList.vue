@@ -24,7 +24,11 @@
           </el-form-item>
           <!-- 状态 -->
           <el-form-item>
-            <el-select v-model="params.status" placeholder="请选择状态">
+            <el-select
+              v-model="params.status"
+              clearable
+              placeholder="请选择状态"
+            >
               <el-option label="待审核" :value="0"></el-option>
               <el-option label="通过" :value="1"></el-option>
               <el-option label="未通过" :value="2"></el-option>
