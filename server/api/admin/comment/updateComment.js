@@ -48,6 +48,16 @@ module.exports = async function (req, res, next) {
     params.url = url
   }
   if (typeof email === 'string') {
+    // 正则校验email
+    const emailReg = /^(\w-*\.*)+@(\w-?)+(\.\w{2,})+$/
+    if (!emailReg.test(email)) {
+      res.status(400).json({
+        errors: [{
+          message: '邮箱格式不正确'
+        }]
+      })
+      return
+    }
     params.email = email
   }
 
