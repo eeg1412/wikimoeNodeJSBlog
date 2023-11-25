@@ -81,9 +81,17 @@ export default {
           { required: true, message: '请输入评论内容', trigger: 'blur' },
         ],
       }
-      if (detailData.user) {
+      if (!detailData.user) {
         ruleList.nickname = [
           { required: true, message: '请输入昵称', trigger: 'blur' },
+        ]
+        // 校验邮箱
+        ruleList.email = [
+          {
+            type: 'email',
+            message: '请输入正确的邮箱地址',
+            trigger: ['blur', 'change'],
+          },
         ]
       }
       return ruleList
