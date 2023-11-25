@@ -110,8 +110,8 @@
             </div>
           </template>
         </el-table-column>
-        <!-- 硬件信息 -->
-        <el-table-column label="硬件信息" width="180">
+        <!-- UA信息 -->
+        <el-table-column label="UA信息" width="180">
           <template #default="{ row }">
             <div>
               {{ row.deviceInfo?.os?.name }} {{ row.deviceInfo?.os?.version }}
