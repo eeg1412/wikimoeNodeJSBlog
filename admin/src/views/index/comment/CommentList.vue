@@ -100,13 +100,16 @@
           </template>
         </el-table-column>
         <!-- IP信息 -->
-        <el-table-column prop="ip" label="IP信息" width="250">
+        <el-table-column prop="ip" label="IP信息" width="200">
           <template #default="{ row }">
             <div>
-              {{ row.ip }}({{ row.ipInfo?.countryLong }} {{ row.ipInfo?.city
+              {{ row.ip }}
+            </div>
+            <div>
+              {{ row.ipInfo?.countryLong }} {{ row.ipInfo?.city
               }}<template v-if="row.ipInfo?.region !== row.ipInfo?.city">
                 {{ ' ' + row.ipInfo?.region }}</template
-              >)
+              >
             </div>
           </template>
         </el-table-column>
