@@ -108,6 +108,12 @@ export default {
         // 编辑
         data.id = id.value
         data.__v = form.__v
+        // 如果有user，删除nickname, url, email
+        if (detailData.value.user) {
+          delete data.nickname
+          delete data.url
+          delete data.email
+        }
         authApi
           .updateComment(data)
           .then(() => {
