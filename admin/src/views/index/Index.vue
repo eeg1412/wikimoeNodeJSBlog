@@ -87,6 +87,16 @@
               <i class="fas fa-link pr10"></i>
               <template #title>友链</template>
             </el-menu-item>
+            <!-- 导航 -->
+            <el-menu-item
+              index="NaviList"
+              @click="removeParam('NaviList')"
+              @click.middle="openNewTab('NaviList')"
+              :route="{ name: 'NaviList' }"
+            >
+              <i class="fas fa-compass pr10"></i>
+              <template #title>导航</template>
+            </el-menu-item>
             <!-- 设置 -->
             <el-menu-item
               index="Config"

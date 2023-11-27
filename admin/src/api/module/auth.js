@@ -259,5 +259,31 @@ export default function (api) {
         shouldAdminJWT: true
       })
     },
+    // get /navi/list
+    getNaviList (data) {
+      return api.get('/navi/list', {
+        params: data,
+        shouldAdminJWT: true
+      })
+    },
+    // get /navi/detail
+    getNaviDetail (data) {
+      return api.get('/navi/detail', {
+        params: data,
+        shouldAdminJWT: true
+      })
+    },
+    // post /navi/create
+    createNavi (data) {
+      return api.post('/navi/create', data, {
+        shouldAdminJWT: true
+      })
+    },
+    // put /navi/update
+    updateNavi (data) {
+      return api.put('/navi/update', data, {
+        shouldAdminJWT: true
+      })
+    },
   }
 }

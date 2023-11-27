@@ -416,6 +416,51 @@ const adminRouteSetting = [
     roleType: null,
     role: null
   },
+  // get /navi/list
+  {
+    path: '/navi/list',
+    method: 'get',
+    middleware: [checkAuth],
+    controller: require('../api/admin/navi/getNaviList'),
+    roleType: null,
+    role: null
+  },
+  // post /navi/create
+  {
+    path: '/navi/create',
+    method: 'post',
+    middleware: [checkAuth],
+    controller: require('../api/admin/navi/createNavi'),
+    roleType: null,
+    role: null
+  },
+  // get /navi/detail
+  {
+    path: '/navi/detail',
+    method: 'get',
+    middleware: [checkAuth],
+    controller: require('../api/admin/navi/getNaviDetail'),
+    roleType: null,
+    role: null
+  },
+  // put /navi/update
+  {
+    path: '/navi/update',
+    method: 'put',
+    middleware: [checkAuth],
+    controller: require('../api/admin/navi/updateNavi'),
+    roleType: null,
+    role: null
+  },
+  // delete /navi/delete
+  {
+    path: '/navi/delete',
+    method: 'delete',
+    middleware: [checkAuth],
+    controller: require('../api/admin/navi/deleteNavi'),
+    roleType: null,
+    role: null
+  },
 ]
 
 adminRouteSetting.forEach(item => {

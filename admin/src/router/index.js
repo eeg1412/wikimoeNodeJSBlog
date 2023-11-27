@@ -73,6 +73,24 @@ const routes = [
         name: 'LinkEdit',
         component: () => import(/* webpackChunkName: "LinkEditor" */ '../views/index/link/LinkEditor.vue')
       },
+      // NaviList
+      {
+        path: '/navi/list',
+        name: 'NaviList',
+        component: () => import(/* webpackChunkName: "NaviList" */ '../views/index/navi/NaviList.vue')
+      },
+      // NaviEditor
+      {
+        path: '/navi/add',
+        name: 'NaviAdd',
+        component: () => import(/* webpackChunkName: "NaviEditor" */ '../views/index/navi/NaviEditor.vue')
+      },
+      // NaviEditor
+      {
+        path: '/navi/editor/:id',
+        name: 'NaviEdit',
+        component: () => import(/* webpackChunkName: "NaviEditor" */ '../views/index/navi/NaviEditor.vue')
+      },
       // AlbumList
       {
         path: '/album/list',
