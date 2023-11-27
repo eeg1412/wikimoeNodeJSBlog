@@ -222,6 +222,60 @@
           </el-form-item>
         </el-form>
       </el-tab-pane>
+      <!-- 邮件设置 -->
+      <el-tab-pane label="邮件设置" name="email">
+        <el-form
+          :model="emailSettingsForm"
+          :rules="emailSettingsRules"
+          ref="emailSettingsFormRef"
+          label-width="120px"
+        >
+          <el-form-item label="开启邮件通知" prop="emailEnable">
+            <el-switch v-model="emailSettingsForm.emailEnable"></el-switch>
+          </el-form-item>
+          <div class="config-border-item">
+            <div class="config-border-item-title">
+              SMTP设置<span class="config-border-item-tip"
+                >※当开启邮件通知时生效</span
+              >
+            </div>
+            <el-form-item label="SMTP服务器" prop="emailSmtpHost">
+              <el-input v-model="emailSettingsForm.emailSmtpHost"></el-input>
+            </el-form-item>
+            <el-form-item label="SMTP端口" prop="emailSmtpPort">
+              <el-input v-model="emailSettingsForm.emailSmtpPort"></el-input>
+            </el-form-item>
+            <el-form-item label="发信邮箱" prop="emailSender">
+              <el-input v-model="emailSettingsForm.emailSender"></el-input>
+            </el-form-item>
+            <el-form-item label="发信密码" prop="emailPassword">
+              <el-input
+                v-model="emailSettingsForm.emailPassword"
+                type="password"
+                show-password
+              ></el-input>
+            </el-form-item>
+            <el-form-item label="收信邮箱" prop="emailReceiver">
+              <el-input v-model="emailSettingsForm.emailReceiver"></el-input>
+            </el-form-item>
+
+            <el-form-item label="发送选项" prop="emailSendOptions">
+              <el-checkbox-group v-model="emailSettingsForm.emailSendOptions">
+                <el-checkbox
+                  v-for="item in emailSendOptions"
+                  :key="item.value"
+                  :label="item.value"
+                  :name="item.value"
+                  >{{ item.label }}</el-checkbox
+                >
+              </el-checkbox-group>
+            </el-form-item>
+          </div>
+          <el-form-item>
+            <el-button type="primary" @click="mediaSubmit">提交</el-button>
+          </el-form-item>
+        </el-form>
+      </el-tab-pane>
     </el-tabs>
   </div>
 </template>
@@ -486,6 +540,58 @@ export default {
         value: 'Pacific/Auckland',
       },
     ])
+    // 邮件设置
+    const emailSettingsFormRef = ref(null)
+    const emailSettingsForm = reactive({
+      // 开启邮件通知
+      emailEnable: false,
+      // smtp服务器
+      emailSmtpHost: '',
+      // smtp端口
+      emailSmtpPort: '',
+      // 发信邮箱
+      emailSender: '',
+      // 发信密码
+      emailPassword: '',
+      // 收信邮箱
+      emailReceiver: '',
+      // 发送选项
+      // 收到评论时通知自己,回复评论时通知评论者
+      emailSendOptions: [],
+    })
+    const emailSendOptions = ref([
+      {
+        label: '收到评论时通知自己',
+        value: 'receiveComment',
+      },
+      {
+        label: '回复评论时通知评论者',
+        value: 'replyComment',
+      },
+    ])
+    const emailSettingsRules = computed(() => {
+      if (emailSettingsForm.emailEnable) {
+        return {
+          emailSmtpHost: [
+            { required: true, message: '请输入smtp服务器', trigger: 'blur' },
+          ],
+          emailSmtpPort: [
+            { required: true, message: '请输入smtp端口', trigger: 'blur' },
+          ],
+          emailSender: [
+            { required: true, message: '请输入发信邮箱', trigger: 'blur' },
+          ],
+          emailPassword: [
+            { required: true, message: '请输入发信密码', trigger: 'blur' },
+          ],
+          emailReceiver: [
+            { required: true, message: '请输入收信邮箱', trigger: 'blur' },
+          ],
+        }
+      } else {
+        return {}
+      }
+    })
 
     onMounted(() => {
       getConfig()
@@ -510,6 +616,11 @@ export default {
       rssSettingsRules,
       // 时区列表
       timeZones,
+      // 邮件设置
+      emailSettingsFormRef,
+      emailSettingsForm,
+      emailSettingsRules,
+      emailSendOptions,
     }
   },
 }
