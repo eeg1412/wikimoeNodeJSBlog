@@ -55,6 +55,24 @@ const routes = [
         name: 'TagEdit',
         component: () => import(/* webpackChunkName: "TagEditor" */ '../views/index/tag/TagEditor.vue')
       },
+      // LinkList
+      {
+        path: '/link/list',
+        name: 'LinkList',
+        component: () => import(/* webpackChunkName: "LinkList" */ '../views/index/link/LinkList.vue')
+      },
+      // LinkEditor
+      {
+        path: '/link/add',
+        name: 'LinkAdd',
+        component: () => import(/* webpackChunkName: "LinkEditor" */ '../views/index/link/LinkEditor.vue')
+      },
+      // LinkEditor
+      {
+        path: '/link/editor/:id',
+        name: 'LinkEdit',
+        component: () => import(/* webpackChunkName: "LinkEditor" */ '../views/index/link/LinkEditor.vue')
+      },
       // AlbumList
       {
         path: '/album/list',

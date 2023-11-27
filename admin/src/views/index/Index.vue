@@ -77,6 +77,16 @@
               <i class="fas fa-comments pr10"></i>
               <template #title>评论</template>
             </el-menu-item>
+            <!-- 友链 -->
+            <el-menu-item
+              index="LinkList"
+              @click="removeParam('LinkList')"
+              @click.middle="openNewTab('LinkList')"
+              :route="{ name: 'LinkList' }"
+            >
+              <i class="fas fa-link pr10"></i>
+              <template #title>友链</template>
+            </el-menu-item>
             <!-- 设置 -->
             <el-menu-item
               index="Config"

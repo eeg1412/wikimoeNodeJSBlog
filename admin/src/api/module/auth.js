@@ -225,5 +225,38 @@ export default function (api) {
         shouldAdminJWT: true
       })
     },
+    // get /link/list
+    getLinkList (data) {
+      return api.get('/link/list', {
+        params: data,
+        shouldAdminJWT: true
+      })
+    },
+    // get /link/detail
+    getLinkDetail (data) {
+      return api.get('/link/detail', {
+        params: data,
+        shouldAdminJWT: true
+      })
+    },
+    // post /link/create
+    createLink (data) {
+      return api.post('/link/create', data, {
+        shouldAdminJWT: true
+      })
+    },
+    // put /link/update
+    updateLink (data) {
+      return api.put('/link/update', data, {
+        shouldAdminJWT: true
+      })
+    },
+    // delete /link/delete
+    deleteLink (data) {
+      return api.delete('/link/delete', {
+        params: data,
+        shouldAdminJWT: true
+      })
+    },
   }
 }
