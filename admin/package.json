@@ -4,7 +4,8 @@
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",
-    "build": "vue-cli-service build"
+    "build": "vue-cli-service build",
+    "createCRUD": "node ./tools/createCRUD"
   },
   "dependencies": {
     "@wangeditor/editor": "^5.1.23",
