@@ -5,7 +5,7 @@ const adminApiLog = log4js.getLogger('adminApi')
 
 module.exports = async function (req, res, next) {
 
-  const {  } = req.body
+  const { } = req.body
   // 校验格式
   const params = {
   }
@@ -26,7 +26,7 @@ module.exports = async function (req, res, next) {
   }).catch((err) => {
     res.status(400).json({
       errors: [{
-        message: '友联创建失败'
+        message: '友链创建失败'
       }]
     })
     adminApiLog.error(`link create fail, ${JSON.stringify(err)}`)

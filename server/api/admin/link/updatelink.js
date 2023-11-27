@@ -4,7 +4,7 @@ const log4js = require('log4js')
 const adminApiLog = log4js.getLogger('adminApi')
 
 module.exports = async function (req, res, next) {
-  // linkname	String	是	否	无	友联名称
+  // linkname	String	是	否	无	友链名称
   const { linkname, id, __v } = req.body
   if (!id) {
     res.status(400).json({
@@ -30,7 +30,7 @@ module.exports = async function (req, res, next) {
   const rule = [
     {
       key: 'linkname',
-      label: '友联名称',
+      label: '友链名称',
       type: null,
       required: true,
     },
@@ -57,7 +57,7 @@ module.exports = async function (req, res, next) {
   }).catch((err) => {
     res.status(400).json({
       errors: [{
-        message: '友联更新失败'
+        message: '友链更新失败'
       }]
     })
     adminApiLog.error(`link update fail, ${JSON.stringify(err)}`)

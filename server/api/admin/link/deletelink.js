@@ -13,7 +13,7 @@ module.exports = async function (req, res, next) {
     })
     return
   }
-  //  删除友联
+  //  删除友链
   linkUtils.deleteOne({ _id: id }).then((data) => {
     if (data.deletedCount === 0) {
       res.status(400).json({
