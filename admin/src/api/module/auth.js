@@ -180,9 +180,10 @@ export default function (api) {
       })
     },
     // put /post/update
-    updatePost (data) {
+    updatePost (data, noLoading = false) {
       return api.put('/post/update', data, {
-        shouldAdminJWT: true
+        shouldAdminJWT: true,
+        noLoading
       })
     },
     // delete /post/delete

@@ -223,7 +223,7 @@
   </div>
 </template>
 <script>
-import { onMounted, ref, reactive, watch, computed } from 'vue'
+import { onMounted, ref, reactive, watch, computed, onUnmounted } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import { authApi } from '@/api'
 import { ElMessage, ElMessageBox } from 'element-plus'
@@ -504,10 +504,39 @@ export default {
       },
     ])
 
+    // auto save
+    let autoSaveError = false
+
+    const autoSave = () => {
+      // 如果是草稿状态，就自动保存
+      if (form.status === 0 && !autoSaveError) {
+        authApi
+          .updatePost(form, true)
+          .then((res) => {
+            // 成功消息
+            form.__v = form.__v + 1
+          })
+          .catch(() => {
+            autoSaveError = true
+          })
+      }
+    }
+
+    let autoSaveTimer = null
+    const setAutoSaveTimer = () => {
+      autoSaveTimer = setInterval(() => {
+        autoSave()
+      }, 1000 * 60 * 2)
+    }
+
     onMounted(() => {
       getPostDetail()
       getTagList()
       getSortList()
+      setAutoSaveTimer()
+    })
+    onUnmounted(() => {
+      clearInterval(autoSaveTimer)
     })
     return {
       type,
