@@ -8,23 +8,6 @@
     <div class="clearfix pb20">
       <div class="fl common-top-search-form-body">
         <!-- 检索用 -->
-        <el-form
-          :inline="true"
-          :model="params"
-          @submit.prevent
-          class="demo-form-inline"
-          @keypress.enter="getNaviList(true)"
-        >
-          <el-form-item>
-            <el-input
-              v-model="params.keyword"
-              placeholder="请输入导航名称"
-            ></el-input>
-          </el-form-item>
-          <el-form-item>
-            <el-button type="primary" @click="getNaviList(true)">搜索</el-button>
-          </el-form-item>
-        </el-form>
       </div>
       <div class="fr">
         <!-- 按钮用 -->
@@ -34,7 +17,30 @@
     </div>
     <!-- 导航 -->
     <div class="mb20">
-      <el-table :data="导航List" row-key="_id" border>
+      <el-table :data="naviList" row-key="_id" border default-expand-all>
+        <el-table-column prop="naviname" label="导航名称" min-width="100px" />
+        <el-table-column prop="url" label="导航URL" min-width="250px" />
+        <el-table-column prop="newtab" label="新标签打开" width="110px">
+          <template #default="{ row }">
+            <el-tag v-if="row.newtab" type="success">是</el-tag>
+            <el-tag v-else type="danger">否</el-tag>
+          </template>
+        </el-table-column>
+        <el-table-column prop="status" label="状态" width="90px">
+          <template #default="{ row }">
+            <el-tag v-if="row.status === 1" type="success">显示</el-tag>
+            <el-tag v-else type="danger">不显示</el-tag>
+          </template>
+        </el-table-column>
+        <el-table-column prop="taxis" label="排序" width="80px" />
+
+        <el-table-column prop="isdefault" label="本站链接" width="110px">
+          <template #default="{ row }">
+            <el-tag v-if="row.isdefault" type="success">是</el-tag>
+            <el-tag v-else type="danger">否</el-tag>
+          </template>
+        </el-table-column>
+        <el-table-column prop="query" label="参数" min-width="150px" />
         <el-table-column label="操作" width="140" fixed="right">
           <template #default="{ row }">
             <el-button type="primary" size="small" @click="goEdit(row._id)"
@@ -46,16 +52,6 @@
           </template>
         </el-table-column>
       </el-table>
-    </div>
-    <!-- 分页 -->
-    <div class="clearfix">
-      <el-pagination
-        class="fr"
-        background
-        layout="total, prev, pager, next"
-        :total="total"
-        v-model:current-page="params.page"
-      />
     </div>
   </div>
 </template>
@@ -69,22 +65,14 @@ export default {
   setup() {
     const route = useRoute()
     const router = useRouter()
-    const 导航List = ref([])
-    const params = reactive({
-      page: 1,
-      size: 10,
-      keyword: '',
-    })
+    const naviList = ref([])
+    const params = reactive({})
     const total = ref(0)
-    const getNaviList = (resetPage) => {
-      if (resetPage) {
-        params.page = 1
-      }
+    const getNaviList = () => {
       authApi
         .getNaviList(params)
         .then((res) => {
-          导航List.value = res.data.list
-          total.value = res.data.total
+          naviList.value = res.data.data
           setSessionParams(route.name, params)
         })
         .catch((err) => {
@@ -146,7 +134,7 @@ export default {
       getNaviList()
     })
     return {
-      导航List,
+      naviList,
       params,
       total,
       getNaviList,

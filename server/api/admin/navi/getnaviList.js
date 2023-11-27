@@ -1,46 +1,27 @@
 const naviUtils = require('../../../mongodb/utils/navis')
-  const utils = require('../../../utils/utils')
-  const log4js = require('log4js')
-  const adminApiLog = log4js.getLogger('adminApi')
-  
-  module.exports = async function (req, res, next) {
-    let { page, size, keyword } = req.query
-    page = parseInt(page)
-    size = parseInt(size)
-    // 判断page和size是否为数字
-    if (!utils.isNumber(page) || !utils.isNumber(size)) {
-      res.status(400).json({
-        errors: [{
-          message: '参数错误'
-        }]
-      })
-      return
-    }
-    const params = {
-    }
-    // 如果keyword存在，就加入查询条件
-    if (keyword) {
-      params.naviname = new RegExp(keyword, 'i')
-    }
-  
-    const sort = {
-      lastusetime: -1,
-      _id: -1
-    }
-    naviUtils.findPage(params, sort, page, size).then((data) => {
-      // 返回格式list,total
-      res.send({
-        list: data.list,
-        total: data.total
-      })
-  
-    }).catch((err) => {
-      res.status(400).json({
-        errors: [{
-          message: '导航列表获取失败'
-        }]
-      })
-      adminApiLog.error(`navi list get fail, ${JSON.stringify(err)
-    }`)
-    })
+const utils = require('../../../utils/utils')
+const log4js = require('log4js')
+const adminApiLog = log4js.getLogger('adminApi')
+
+module.exports = async function (req, res, next) {
+  const sort = {
+    taxis: -1,
+    _id: -1
   }
+  naviUtils.find({}, sort).then((data) => {
+    // 根据返回的data，配合parent字段，生成树形结构
+    const jsonData = data.map(doc => doc.toJSON())
+    const treeData = utils.generateTreeData(jsonData)
+    res.send({
+      data: treeData
+    })
+  }).catch((err) => {
+    res.status(400).json({
+      errors: [{
+        message: '导航列表获取失败'
+      }]
+    })
+    adminApiLog.error(`navi list get fail, ${JSON.stringify(err)
+      }`)
+  })
+}

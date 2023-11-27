@@ -36,7 +36,7 @@
     </div>
     <!-- 友链 -->
     <div class="mb20">
-      <el-table :data="友链List" row-key="_id" border>
+      <el-table :data="linkList" row-key="_id" border>
         <!-- 图标 -->
         <el-table-column label="图标" width="90">
           <template #default="{ row }">
@@ -94,7 +94,7 @@ export default {
   setup() {
     const route = useRoute()
     const router = useRouter()
-    const 友链List = ref([])
+    const linkList = ref([])
     const params = reactive({
       page: 1,
       size: 10,
@@ -108,7 +108,7 @@ export default {
       authApi
         .getLinkList(params)
         .then((res) => {
-          友链List.value = res.data.list
+          linkList.value = res.data.list
           total.value = res.data.total
           setSessionParams(route.name, params)
         })
@@ -171,7 +171,7 @@ export default {
       getLinkList()
     })
     return {
-      友链List,
+      linkList,
       params,
       total,
       getLinkList,

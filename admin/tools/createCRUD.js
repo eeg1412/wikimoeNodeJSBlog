@@ -54,7 +54,7 @@ const listTemplate = (tableName, chineseName) => {
     </div>
     <!-- ${chineseName} -->
     <div class="mb20">
-      <el-table :data="${chineseName}List" row-key="_id" border>
+      <el-table :data="${tableName}List" row-key="_id" border>
         <el-table-column label="操作" width="140" fixed="right">
           <template #default="{ row }">
             <el-button type="primary" size="small" @click="goEdit(row._id)"
@@ -89,7 +89,7 @@ export default {
   setup() {
     const route = useRoute()
     const router = useRouter()
-    const ${chineseName}List = ref([])
+    const ${tableName}List = ref([])
     const params = reactive({
       page: 1,
       size: 10,
@@ -103,7 +103,7 @@ export default {
       authApi
         .get${tableNameFirstLetter}List(params)
         .then((res) => {
-          ${chineseName}List.value = res.data.list
+          ${tableName}List.value = res.data.list
           total.value = res.data.total
           setSessionParams(route.name, params)
         })
@@ -166,7 +166,7 @@ export default {
       get${tableNameFirstLetter}List()
     })
     return {
-      ${chineseName}List,
+      ${tableName}List,
       params,
       total,
       get${tableNameFirstLetter}List,

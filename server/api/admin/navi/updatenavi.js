@@ -4,8 +4,17 @@ const log4js = require('log4js')
 const adminApiLog = log4js.getLogger('adminApi')
 
 module.exports = async function (req, res, next) {
-  // naviname	String	是	否	无	导航名称
-  const { naviname, id, __v } = req.body
+  const { id, __v } = req.body
+  const {
+    naviname,
+    url,
+    newtab,
+    status,
+    taxis,
+    parent,
+    isdefault,
+    query
+  } = req.body
   if (!id) {
     res.status(400).json({
       errors: [{
@@ -26,6 +35,13 @@ module.exports = async function (req, res, next) {
   // 校验格式
   const params = {
     naviname: naviname,
+    url,
+    newtab: newtab || false,
+    status: status || 0,
+    taxis: taxis || 0,
+    parent: parent || null,
+    isdefault: isdefault || false,
+    query: query || {}
   }
   const rule = [
     {

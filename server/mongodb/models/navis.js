@@ -8,7 +8,6 @@ var navis = new Schema({
   },
   url: {
     type: String,
-    required: true,
   },
   newtab: {
     type: Boolean,
