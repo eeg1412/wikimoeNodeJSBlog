@@ -7,7 +7,7 @@ const args = process.argv.slice(2);
 const tableName = args[0];
 const chineseName = args[1];
 
-const viewPath = path.join('./src/views')
+const viewPath = path.join('./src/views/index')
 
 // 创建tableName文件夹
 const tableNamePath = path.join(viewPath, tableName)
