@@ -56,10 +56,8 @@
         <el-table-column prop="taxis" label="排序" width="100px" />
         <el-table-column prop="status" label="状态" width="80px">
           <template #default="{ row }">
-            <el-tag v-if="row.status === 1" type="success" size="mini"
-              >显示</el-tag
-            >
-            <el-tag v-else type="danger" size="mini">不显示</el-tag>
+            <el-tag v-if="row.status === 1" type="success">显示</el-tag>
+            <el-tag v-else type="danger">不显示</el-tag>
           </template>
         </el-table-column>
         <el-table-column label="操作" width="140" fixed="right">
