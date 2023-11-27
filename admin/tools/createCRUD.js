@@ -14,8 +14,8 @@ const tableNamePath = path.join(viewPath, tableName)
 if (!fs.existsSync(tableNamePath)) {
   fs.mkdirSync(tableNamePath)
 }
-// 将tableName首字母大写
-const tableNameFirstLetter = tableName.slice(0, 1).toUpperCase()
+// 将tableName首字母替换为大写
+const tableNameFirstLetter = tableName.replace(tableName[0], tableName[0].toUpperCase())
 
 const listTemplate = (tableName, chineseName) => {
   const template = `<template>
