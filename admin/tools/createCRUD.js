@@ -286,6 +286,15 @@ setup() {
 }
 </script>
 <style scoped></style>`
+  // 写入文件
+  const filePath = path.join(tableNamePath, `${tableNameFirstLetter}Editor.vue`)
+  fs.writeFile(filePath, template, (err) => {
+    if (err) {
+      console.log(err)
+    } else {
+      console.log(`create ${tableName} success`)
+    }
+  })
 }
 
 // 运行
