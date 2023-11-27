@@ -28,6 +28,11 @@ var ${tableName}s = new Schema({
 module.exports = mongoose.model('${tableName}s', ${tableName}s);`
   // 写入文件
   const filePath = path.resolve(mongodbPath, 'models', `${tableName}s.js`)
+  // 文件存在就不创建
+  if (fs.existsSync(filePath)) {
+    console.log(`${tableName}s.js is exist`)
+    return
+  }
   fs.writeFile(filePath, template, (err) => {
     if (err) {
       console.log(err)
@@ -85,6 +90,11 @@ exports.deleteOne = async function (filters) {
 }`
   // 写入文件
   const filePath = path.resolve(mongodbPath, 'utils', `${tableName}s.js`)
+  // 文件存在就不创建
+  if (fs.existsSync(filePath)) {
+    console.log(`${tableName}s.js is exist`)
+    return
+  }
   fs.writeFile(filePath, template, (err) => {
     if (err) {
       console.log(err)
@@ -133,7 +143,11 @@ module.exports = async function (req, res, next) {
 `
   // 写入文件
   const filePath = path.resolve(tableNamePath, `create${tableName}.js`)
-
+  // 文件存在就不创建
+  if (fs.existsSync(filePath)) {
+    console.log(`${tableName}s.js is exist`)
+    return
+  }
   fs.writeFile(filePath, template, (err) => {
     if (err) {
       console.log(err)
@@ -186,7 +200,11 @@ module.exports = async function (req, res, next) {
 }`
   // 写入文件
   const filePath = path.resolve(tableNamePath, `delete${tableName}.js`)
-
+  // 文件存在就不创建
+  if (fs.existsSync(filePath)) {
+    console.log(`${tableName}s.js is exist`)
+    return
+  }
   fs.writeFile(filePath, template, (err) => {
     if (err) {
       console.log(err)
@@ -267,6 +285,11 @@ module.exports = async function (req, res, next) {
   // 写入文件
 
   const filePath = path.resolve(tableNamePath, `update${tableName}.js`)
+  // 文件存在就不创建
+  if (fs.existsSync(filePath)) {
+    console.log(`${tableName}s.js is exist`)
+    return
+  }
   fs.writeFile(filePath, template, (err) => {
     if (err) {
       console.log(err)
@@ -327,6 +350,11 @@ const findTemplate = (tableName, chineseName) => {
   // 写入文件
 
   const filePath = path.resolve(tableNamePath, `get${tableName}List.js`)
+  // 文件存在就不创建
+  if (fs.existsSync(filePath)) {
+    console.log(`${tableName}s.js is exist`)
+    return
+  }
   fs.writeFile(filePath, template, (err) => {
     if (err) {
       console.log(err)
@@ -378,6 +406,11 @@ const findOneTemplate = (tableName, chineseName) => {
   // 写入文件
 
   const filePath = path.resolve(tableNamePath, `get${tableName}Detail.js`)
+  // 文件存在就不创建
+  if (fs.existsSync(filePath)) {
+    console.log(`${tableName}s.js is exist`)
+    return
+  }
   fs.writeFile(filePath, template, (err) => {
     if (err) {
       console.log(err)

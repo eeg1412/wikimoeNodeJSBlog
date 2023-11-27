@@ -180,6 +180,11 @@ export default {
 <style lang=""></style>`
   // 写入文件
   const filePath = path.join(tableNamePath, `${tableNameFirstLetter}List.vue`)
+  // 文件存在就不创建
+  if (fs.existsSync(filePath)) {
+    console.log(`${tableName}s.js is exist`)
+    return
+  }
   fs.writeFile(filePath, template, (err) => {
     if (err) {
       console.log(err)
@@ -288,6 +293,11 @@ setup() {
 <style scoped></style>`
   // 写入文件
   const filePath = path.join(tableNamePath, `${tableNameFirstLetter}Editor.vue`)
+  // 文件存在就不创建
+  if (fs.existsSync(filePath)) {
+    console.log(`${tableName}s.js is exist`)
+    return
+  }
   fs.writeFile(filePath, template, (err) => {
     if (err) {
       console.log(err)
