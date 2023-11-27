@@ -22,7 +22,9 @@
             ></el-input>
           </el-form-item>
           <el-form-item>
-            <el-button type="primary" @click="getLinkList(true)">搜索</el-button>
+            <el-button type="primary" @click="getLinkList(true)"
+              >搜索</el-button
+            >
           </el-form-item>
         </el-form>
       </div>
@@ -32,9 +34,34 @@
         <el-button type="primary" @click="handleAdd">追加</el-button>
       </div>
     </div>
-    <!-- 友链s -->
+    <!-- 友链 -->
     <div class="mb20">
-      <el-table :data="友链List" row-key="_id" border default-expand-all>
+      <el-table :data="友链List" row-key="_id" border>
+        <!-- 图标 -->
+        <el-table-column label="图标" width="90">
+          <template #default="{ row }">
+            <!-- el-image -->
+            <el-image
+              v-if="row.icon"
+              style="width: 64px; height: 64px"
+              :src="row.icon"
+              fit="cover"
+            ></el-image>
+          </template>
+        </el-table-column>
+        <el-table-column prop="sitename" label="网站名称" min-width="100px" />
+        <el-table-column prop="siteurl" label="网站URL" min-width="250px" />
+        <el-table-column prop="rss" label="RSS地址" min-width="250px" />
+        <el-table-column prop="description" label="描述" min-width="250px" />
+        <el-table-column prop="taxis" label="排序" width="100px" />
+        <el-table-column prop="status" label="状态" width="80px">
+          <template #default="{ row }">
+            <el-tag v-if="row.status === 1" type="success" size="mini"
+              >显示</el-tag
+            >
+            <el-tag v-else type="danger" size="mini">不显示</el-tag>
+          </template>
+        </el-table-column>
         <el-table-column label="操作" width="140" fixed="right">
           <template #default="{ row }">
             <el-button type="primary" size="small" @click="goEdit(row._id)"

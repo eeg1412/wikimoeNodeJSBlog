@@ -4,8 +4,16 @@ const log4js = require('log4js')
 const adminApiLog = log4js.getLogger('adminApi')
 
 module.exports = async function (req, res, next) {
-  // linkname	String	是	否	无	友链名称
-  const { linkname, id, __v } = req.body
+  const { id, __v } = req.body
+  const {
+    icon,
+    sitename,
+    siteurl,
+    description,
+    taxis,
+    status,
+    rss
+  } = req.body
   if (!id) {
     res.status(400).json({
       errors: [{
@@ -25,12 +33,23 @@ module.exports = async function (req, res, next) {
   }
   // 校验格式
   const params = {
-    linkname: linkname,
+    sitename,
+    siteurl,
+    description: description || '',
+    taxis: taxis || 0,
+    status: status || 0,
+    rss: rss || ''
   }
   const rule = [
     {
-      key: 'linkname',
-      label: '友链名称',
+      key: 'sitename',
+      label: '网站名称',
+      type: null,
+      required: true,
+    },
+    {
+      key: 'siteurl',
+      label: '网站URL',
       type: null,
       required: true,
     },
@@ -39,6 +58,25 @@ module.exports = async function (req, res, next) {
   if (errors.length > 0) {
     res.status(400).json({ errors })
     return
+  }
+
+  //图标上传
+  //base64正则
+  const base64Reg = /^data:image\/\w+;base64,/
+  if (icon && base64Reg.test(icon)) {
+    const path = './public/upload/linkicon/'
+    const fileName = id
+    try {
+      const imgRes = utils.base64ToFile(icon, path, fileName)
+      params['icon'] = `/upload/linkicon/${imgRes.fileNameAll}?v=${Date.now()}`
+    } catch (error) {
+      res.status(400).json({
+        errors: [{
+          message: '照片上传失败'
+        }]
+      })
+      throw new Error(error)
+    }
   }
   // updateOne
   linkUtils.updateOne({ _id: id, __v }, params).then((data) => {

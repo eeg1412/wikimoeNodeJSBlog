@@ -87,7 +87,11 @@ export default {
     },
     putImageType: {
       type: String,
-      default: 'image/jpeg',
+      default: 'image/webp',
+    },
+    putImageQuality: {
+      type: Number,
+      default: 0.8,
     },
   },
   setup(props, { emit }) {
@@ -125,8 +129,13 @@ export default {
         const ctx = canvas.getContext('2d')
         canvas.width = props.width
         canvas.height = props.height
+        ctx.imageSmoothingEnabled = true
+        ctx.imageSmoothingQuality = 'high'
         ctx.drawImage(img, 0, 0, props.width, props.height)
-        const base64Resize = canvas.toDataURL(props.putImageType, 0.95)
+        const base64Resize = canvas.toDataURL(
+          props.putImageType,
+          props.putImageQuality
+        )
         emit('crop', base64Resize)
         cropperDialogOpen.value = false
       }

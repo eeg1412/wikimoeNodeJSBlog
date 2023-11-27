@@ -20,12 +20,11 @@ module.exports = async function (req, res, next) {
   }
   // 如果keyword存在，就加入查询条件
   if (keyword) {
-    params.linkname = new RegExp(keyword, 'i')
+    params.sitename = new RegExp(keyword, 'i')
   }
 
   const sort = {
-    lastusetime: -1,
-    _id: -1
+    taxis: -1,
   }
   linkUtils.findPage(params, sort, page, size).then((data) => {
     // 返回格式list,total

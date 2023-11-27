@@ -52,9 +52,9 @@ const listTemplate = (tableName, chineseName) => {
         <el-button type="primary" @click="handleAdd">追加</el-button>
       </div>
     </div>
-    <!-- ${chineseName}s -->
+    <!-- ${chineseName} -->
     <div class="mb20">
-      <el-table :data="${chineseName}List" row-key="_id" border default-expand-all>
+      <el-table :data="${chineseName}List" row-key="_id" border>
         <el-table-column label="操作" width="140" fixed="right">
           <template #default="{ row }">
             <el-button type="primary" size="small" @click="goEdit(row._id)"
