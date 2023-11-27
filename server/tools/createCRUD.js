@@ -16,6 +16,83 @@ if (!fs.existsSync(tableNamePath)) {
   fs.mkdirSync(tableNamePath)
 }
 
+const mongodbPath = path.resolve('./mongodb')
+// model
+const modelTemplate = (tableName, chineseName) => {
+  const template = `var mongoose = require('mongoose');
+var Schema = mongoose.Schema;
+// Schema
+var ${tableName}s = new Schema({
+}, { timestamps: true });
+
+module.exports = mongoose.model('${tableName}s', ${tableName}s);`
+  // 写入文件
+  const filePath = path.resolve(mongodbPath, 'models', `${tableName}s.js`)
+  fs.writeFile(filePath, template, (err) => {
+    if (err) {
+      console.log(err)
+    } else {
+      console.log(`create ${tableName} success`)
+    }
+  })
+}
+const modelUtilsTemplate = (tableName, chineseName) => {
+  const template = `const ${tableName}sModel = require('../models/${tableName}s');
+
+exports.save = async function (parmas) {
+  // document作成
+  const ${tableName}s = new ${tableName}sModel(parmas);
+  // document保存
+  return await ${tableName}s.save()
+}
+
+
+exports.findOne = async function (parmas) {
+  // document查询
+  return await ${tableName}sModel.findOne(parmas);
+}
+
+// 查找所有
+exports.find = async function (parmas, sort) {
+  // document查询
+  return await ${tableName}sModel.find(parmas).sort(sort);
+}
+
+// 分页查询
+exports.findPage = async function (parmas, sort, page, limit) {
+  // document查询
+  const list = await ${tableName}sModel.find(parmas).sort(sort).skip((page - 1) * limit).limit(limit);
+  const total = await ${tableName}sModel.countDocuments(parmas);
+  // 查询失败
+  if (!list || total === undefined) {
+    throw new Error('查询失败')
+  }
+  return {
+    list,
+    total
+  }
+}
+
+exports.updateOne = async function (filters, parmas) {
+  // document查询
+  parmas.$inc = { __v: 1, ...parmas.$inc }
+  return await ${tableName}sModel.updateOne(filters, parmas);
+}
+// 删除
+exports.deleteOne = async function (filters) {
+  // document查询
+  return await ${tableName}sModel.deleteOne(filters);
+}`
+  // 写入文件
+  const filePath = path.resolve(mongodbPath, 'utils', `${tableName}s.js`)
+  fs.writeFile(filePath, template, (err) => {
+    if (err) {
+      console.log(err)
+    } else {
+      console.log(`create ${tableName} success`)
+    }
+  })
+}
 
 const createTemplate = (tableName, chineseName) => {
   const template = `const ${tableName}Utils = require('../../../mongodb/utils/${tableName}s')
@@ -310,6 +387,8 @@ const findOneTemplate = (tableName, chineseName) => {
   })
 }
 
+modelTemplate(tableName, chineseName)
+modelUtilsTemplate(tableName, chineseName)
 createTemplate(tableName, chineseName)
 deleteTemplate(tableName, chineseName)
 updateTemplate(tableName, chineseName)
