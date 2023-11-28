@@ -258,6 +258,34 @@
             <el-form-item label="收信邮箱" prop="emailReceiver">
               <el-input v-model="emailSettingsForm.emailReceiver"></el-input>
             </el-form-item>
+            <!-- 通知自己模板 -->
+            <el-form-item
+              label="通知自己模板"
+              prop="emailSendToMeTemplate"
+              class="blok-form-item"
+            >
+              <el-input
+                v-model="emailSettingsForm.emailSendToMeTemplate"
+                type="textarea"
+                rows="5"
+                placeholder="请输入通知自己模板"
+              ></el-input>
+              <div>${comment}为评论内容</div>
+            </el-form-item>
+            <!-- 通知评论者模板 -->
+            <el-form-item
+              label="通知评论者模板"
+              prop="emailSendToCommenterTemplate"
+              class="blok-form-item"
+            >
+              <el-input
+                v-model="emailSettingsForm.emailSendToCommenterTemplate"
+                type="textarea"
+                rows="5"
+                placeholder="请输入通知评论者模板"
+              ></el-input>
+              <div>${comment}为评论内容</div>
+            </el-form-item>
 
             <el-form-item label="发送选项" prop="emailSendOptions">
               <el-checkbox-group v-model="emailSettingsForm.emailSendOptions">
@@ -558,6 +586,10 @@ export default {
       // 发送选项
       // 收到评论时通知自己,回复评论时通知评论者
       emailSendOptions: [],
+      // 通知自己模板
+      emailSendToMeTemplate: '',
+      // 通知评论者模板
+      emailSendToCommenterTemplate: '',
     })
     const emailSendOptions = ref([
       {
