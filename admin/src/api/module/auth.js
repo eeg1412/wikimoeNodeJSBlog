@@ -285,5 +285,18 @@ export default function (api) {
         shouldAdminJWT: true
       })
     },
+    // put /option/update
+    updateOption (data) {
+      return api.put('/option/update', data, {
+        shouldAdminJWT: true
+      })
+    },
+    // get /option/list
+    getOptionList (data) {
+      return api.get('/option/list', {
+        params: data,
+        shouldAdminJWT: true
+      })
+    },
   }
 }

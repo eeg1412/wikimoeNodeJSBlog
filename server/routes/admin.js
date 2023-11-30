@@ -376,7 +376,7 @@ const adminRouteSetting = [
     path: '/link/list',
     method: 'get',
     middleware: [checkAuth],
-    controller: require('../api/admin/link/getLinkList'),
+    controller: require('../api/admin/link/getLinklist'),
     roleType: null,
     role: null
   },
@@ -385,7 +385,7 @@ const adminRouteSetting = [
     path: '/link/create',
     method: 'post',
     middleware: [checkAuth],
-    controller: require('../api/admin/link/createLink'),
+    controller: require('../api/admin/link/createlink'),
     roleType: null,
     role: null
   },
@@ -394,7 +394,7 @@ const adminRouteSetting = [
     path: '/link/detail',
     method: 'get',
     middleware: [checkAuth],
-    controller: require('../api/admin/link/getLinkDetail'),
+    controller: require('../api/admin/link/getlinkDetail'),
     roleType: null,
     role: null
   },
@@ -403,7 +403,7 @@ const adminRouteSetting = [
     path: '/link/update',
     method: 'put',
     middleware: [checkAuth],
-    controller: require('../api/admin/link/updateLink'),
+    controller: require('../api/admin/link/updatelink'),
     roleType: null,
     role: null
   },
@@ -412,7 +412,7 @@ const adminRouteSetting = [
     path: '/link/delete',
     method: 'delete',
     middleware: [checkAuth],
-    controller: require('../api/admin/link/deleteLink'),
+    controller: require('../api/admin/link/deletelink'),
     roleType: null,
     role: null
   },
@@ -421,7 +421,7 @@ const adminRouteSetting = [
     path: '/navi/list',
     method: 'get',
     middleware: [checkAuth],
-    controller: require('../api/admin/navi/getNaviList'),
+    controller: require('../api/admin/navi/getnaviList'),
     roleType: null,
     role: null
   },
@@ -430,7 +430,7 @@ const adminRouteSetting = [
     path: '/navi/create',
     method: 'post',
     middleware: [checkAuth],
-    controller: require('../api/admin/navi/createNavi'),
+    controller: require('../api/admin/navi/createnavi'),
     roleType: null,
     role: null
   },
@@ -439,7 +439,7 @@ const adminRouteSetting = [
     path: '/navi/detail',
     method: 'get',
     middleware: [checkAuth],
-    controller: require('../api/admin/navi/getNaviDetail'),
+    controller: require('../api/admin/navi/getnaviDetail'),
     roleType: null,
     role: null
   },
@@ -448,7 +448,7 @@ const adminRouteSetting = [
     path: '/navi/update',
     method: 'put',
     middleware: [checkAuth],
-    controller: require('../api/admin/navi/updateNavi'),
+    controller: require('../api/admin/navi/updatenavi'),
     roleType: null,
     role: null
   },
@@ -457,7 +457,25 @@ const adminRouteSetting = [
     path: '/navi/delete',
     method: 'delete',
     middleware: [checkAuth],
-    controller: require('../api/admin/navi/deleteNavi'),
+    controller: require('../api/admin/navi/deletenavi'),
+    roleType: null,
+    role: null
+  },
+  // put /option/update
+  {
+    path: '/option/update',
+    method: 'put',
+    middleware: [checkAuth],
+    controller: require('../api/admin/option/updateoption'),
+    roleType: null,
+    role: null
+  },
+  // get /option/list
+  {
+    path: '/option/list',
+    method: 'get',
+    middleware: [checkAuth],
+    controller: require('../api/admin/option/getoptionlist'),
     roleType: null,
     role: null
   },

@@ -44,3 +44,10 @@ exports.deleteOne = async function (filters) {
   // document查询
   return await optionsModel.deleteOne(filters);
 }
+
+// findoneAndUpdate
+exports.findOneAndUpdate = async function (filters, parmas, options = {}) {
+  // document查询
+  parmas.$inc = { __v: 1, ...parmas.$inc }
+  return await optionsModel.findOneAndUpdate(filters, parmas, options);
+}

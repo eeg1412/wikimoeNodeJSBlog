@@ -46,7 +46,9 @@
           </el-form-item>
 
           <el-form-item>
-            <el-button type="primary" @click="mediaSubmit">提交</el-button>
+            <el-button type="primary" @click="siteSettingsSubmit"
+              >提交</el-button
+            >
           </el-form-item>
         </el-form>
       </el-tab-pane>
@@ -92,7 +94,9 @@
           </el-form-item>
 
           <el-form-item>
-            <el-button type="primary" @click="mediaSubmit">提交</el-button>
+            <el-button type="primary" @click="commentSettingsSubmit"
+              >提交</el-button
+            >
           </el-form-item>
         </el-form>
       </el-tab-pane>
@@ -123,7 +127,9 @@
           </el-form-item>
 
           <el-form-item>
-            <el-button type="primary" @click="mediaSubmit">提交</el-button>
+            <el-button type="primary" @click="rssSettingsSubmit"
+              >提交</el-button
+            >
           </el-form-item>
         </el-form>
       </el-tab-pane>
@@ -300,7 +306,9 @@
             </el-form-item>
           </div>
           <el-form-item>
-            <el-button type="primary" @click="mediaSubmit">提交</el-button>
+            <el-button type="primary" @click="emailSettingsSubmit"
+              >提交</el-button
+            >
           </el-form-item>
         </el-form>
       </el-tab-pane>
@@ -372,6 +380,72 @@ export default {
         })
       })
     }
+    const getOptionList = () => {
+      authApi.getOptionList().then((res) => {
+        // res.data.data是数组，需要转换为对象
+        const obj = {}
+        res.data.data.forEach((item) => {
+          obj[item.name] = item.value
+        })
+
+        Object.keys(siteSettingsForm).forEach((key) => {
+          if (obj[key]) {
+            // 判断form[key]的类型，有数字，字符串，布尔，数组，但是value只有字符串，所以需要转换
+            if (typeof siteSettingsForm[key] === 'number') {
+              siteSettingsForm[key] = Number(obj[key])
+            } else if (typeof siteSettingsForm[key] === 'boolean') {
+              siteSettingsForm[key] = obj[key] === 'true'
+            } else if (Array.isArray(siteSettingsForm[key])) {
+              siteSettingsForm[key] = obj[key].split(',')
+            } else {
+              siteSettingsForm[key] = obj[key]
+            }
+          }
+        })
+        Object.keys(commentSettingsForm).forEach((key) => {
+          if (obj[key]) {
+            // 判断form[key]的类型，有数字，字符串，布尔，数组，但是value只有字符串，所以需要转换
+            if (typeof commentSettingsForm[key] === 'number') {
+              commentSettingsForm[key] = Number(obj[key])
+            } else if (typeof commentSettingsForm[key] === 'boolean') {
+              commentSettingsForm[key] = obj[key] === 'true'
+            } else if (Array.isArray(commentSettingsForm[key])) {
+              commentSettingsForm[key] = obj[key].split(',')
+            } else {
+              commentSettingsForm[key] = obj[key]
+            }
+          }
+        })
+        Object.keys(rssSettingsForm).forEach((key) => {
+          if (obj[key]) {
+            // 判断form[key]的类型，有数字，字符串，布尔，数组，但是value只有字符串，所以需要转换
+            if (typeof rssSettingsForm[key] === 'number') {
+              rssSettingsForm[key] = Number(obj[key])
+            } else if (typeof rssSettingsForm[key] === 'boolean') {
+              rssSettingsForm[key] = obj[key] === 'true'
+            } else if (Array.isArray(rssSettingsForm[key])) {
+              rssSettingsForm[key] = obj[key].split(',')
+            } else {
+              rssSettingsForm[key] = obj[key]
+            }
+          }
+        })
+        Object.keys(emailSettingsForm).forEach((key) => {
+          if (obj[key]) {
+            // 判断form[key]的类型，有数字，字符串，布尔，数组，但是value只有字符串，所以需要转换
+            if (typeof emailSettingsForm[key] === 'number') {
+              emailSettingsForm[key] = Number(obj[key])
+            } else if (typeof emailSettingsForm[key] === 'boolean') {
+              emailSettingsForm[key] = obj[key] === 'true'
+            } else if (Array.isArray(emailSettingsForm[key])) {
+              emailSettingsForm[key] = obj[key].split(',')
+            } else {
+              emailSettingsForm[key] = obj[key]
+            }
+          }
+        })
+      })
+    }
     const mediaSubmit = () => {
       mediaFormRef.value.validate((valid) => {
         if (valid) {
@@ -411,15 +485,6 @@ export default {
       siteTitle: [
         { required: true, message: '请输入站点标题', trigger: 'blur' },
       ],
-      siteSubTitle: [
-        { required: true, message: '请输入站点副标题', trigger: 'blur' },
-      ],
-      siteDescription: [
-        { required: true, message: '请输入站点描述', trigger: 'blur' },
-      ],
-      siteKeywords: [
-        { required: true, message: '请输入站点关键词', trigger: 'blur' },
-      ],
       siteUrl: [{ required: true, message: '请输入站点地址', trigger: 'blur' }],
       sitePageSize: [
         { required: true, message: '请输入每页显示', trigger: 'blur' },
@@ -427,6 +492,29 @@ export default {
       siteTimeZone: [
         { required: true, message: '请选择你所在时区', trigger: 'blur' },
       ],
+    }
+    const siteSettingsSubmit = () => {
+      siteSettingsFormRef.value.validate((valid) => {
+        if (valid) {
+          const params = []
+          Object.keys(siteSettingsForm).forEach((key) => {
+            params.push({
+              name: key,
+              value: siteSettingsForm[key],
+            })
+          })
+          authApi
+            .updateOption({ optionList: params })
+            .then((res) => {
+              ElMessage.success('更新成功')
+            })
+            .catch((err) => {
+              console.log(err)
+            })
+        } else {
+          return false
+        }
+      })
     }
 
     // 评论设置
@@ -449,6 +537,29 @@ export default {
         { required: true, message: '请输入评论分页', trigger: 'blur' },
       ],
     }
+    const commentSettingsSubmit = () => {
+      commentSettingsFormRef.value.validate((valid) => {
+        if (valid) {
+          const params = []
+          Object.keys(commentSettingsForm).forEach((key) => {
+            params.push({
+              name: key,
+              value: commentSettingsForm[key],
+            })
+          })
+          authApi
+            .updateOption({ optionList: params })
+            .then((res) => {
+              ElMessage.success('更新成功')
+            })
+            .catch((err) => {
+              console.log(err)
+            })
+        } else {
+          return false
+        }
+      })
+    }
 
     // RSS设置
     const rssSettingsFormRef = ref(null)
@@ -465,6 +576,118 @@ export default {
         { required: true, message: '请输入RSS显示条数', trigger: 'blur' },
       ],
     }
+    const rssSettingsSubmit = () => {
+      rssSettingsFormRef.value.validate((valid) => {
+        if (valid) {
+          const params = []
+          Object.keys(rssSettingsForm).forEach((key) => {
+            params.push({
+              name: key,
+              value: rssSettingsForm[key],
+            })
+          })
+          authApi
+            .updateOption({ optionList: params })
+            .then((res) => {
+              ElMessage.success('更新成功')
+            })
+            .catch((err) => {
+              console.log(err)
+            })
+        } else {
+          return false
+        }
+      })
+    }
+    // 邮件设置
+    const emailSettingsFormRef = ref(null)
+    const emailSettingsForm = reactive({
+      // 开启邮件通知
+      emailEnable: false,
+      // smtp服务器
+      emailSmtpHost: '',
+      // smtp端口
+      emailSmtpPort: '',
+      // 发信邮箱
+      emailSender: '',
+      // 发信密码
+      emailPassword: '',
+      // 收信邮箱
+      emailReceiver: '',
+      // 发送选项
+      // 收到评论时通知自己,回复评论时通知评论者
+      emailSendOptions: [],
+      // 通知自己模板
+      emailSendToMeTemplate: '',
+      // 通知评论者模板
+      emailSendToCommenterTemplate: '',
+    })
+    const emailSendOptions = ref([
+      {
+        label: '收到评论时通知自己',
+        value: 'receiveComment',
+      },
+      {
+        label: '回复评论时通知评论者',
+        value: 'replyComment',
+      },
+    ])
+    const emailSettingsRules = computed(() => {
+      if (emailSettingsForm.emailEnable) {
+        return {
+          emailSmtpHost: [
+            { required: true, message: '请输入smtp服务器', trigger: 'blur' },
+          ],
+          emailSmtpPort: [
+            { required: true, message: '请输入smtp端口', trigger: 'blur' },
+          ],
+          emailSender: [
+            { required: true, message: '请输入发信邮箱', trigger: 'blur' },
+          ],
+          emailPassword: [
+            { required: true, message: '请输入发信密码', trigger: 'blur' },
+          ],
+          emailReceiver: [
+            { required: true, message: '请输入收信邮箱', trigger: 'blur' },
+          ],
+        }
+      } else {
+        return {}
+      }
+    })
+    const emailSettingsSubmit = () => {
+      emailSettingsFormRef.value.validate((valid) => {
+        if (valid) {
+          const params = []
+          Object.keys(emailSettingsForm).forEach((key) => {
+            if (key === 'emailSendOptions') {
+              // emailSendOptions 为数组，需要转换为字符串，以逗号分隔
+              params.push({
+                name: key,
+                value: emailSettingsForm[key].join(','),
+              })
+            } else {
+              params.push({
+                name: key,
+                value: emailSettingsForm[key],
+              })
+            }
+          })
+
+          authApi
+            .updateOption({ optionList: params })
+            .then((res) => {
+              ElMessage.success('更新成功')
+            })
+            .catch((err) => {
+              console.log(err)
+            })
+        } else {
+          return false
+        }
+      })
+    }
+
     const timeZones = ref([
       // 时区列表
       {
@@ -568,65 +791,10 @@ export default {
         value: 'Pacific/Auckland',
       },
     ])
-    // 邮件设置
-    const emailSettingsFormRef = ref(null)
-    const emailSettingsForm = reactive({
-      // 开启邮件通知
-      emailEnable: false,
-      // smtp服务器
-      emailSmtpHost: '',
-      // smtp端口
-      emailSmtpPort: '',
-      // 发信邮箱
-      emailSender: '',
-      // 发信密码
-      emailPassword: '',
-      // 收信邮箱
-      emailReceiver: '',
-      // 发送选项
-      // 收到评论时通知自己,回复评论时通知评论者
-      emailSendOptions: [],
-      // 通知自己模板
-      emailSendToMeTemplate: '',
-      // 通知评论者模板
-      emailSendToCommenterTemplate: '',
-    })
-    const emailSendOptions = ref([
-      {
-        label: '收到评论时通知自己',
-        value: 'receiveComment',
-      },
-      {
-        label: '回复评论时通知评论者',
-        value: 'replyComment',
-      },
-    ])
-    const emailSettingsRules = computed(() => {
-      if (emailSettingsForm.emailEnable) {
-        return {
-          emailSmtpHost: [
-            { required: true, message: '请输入smtp服务器', trigger: 'blur' },
-          ],
-          emailSmtpPort: [
-            { required: true, message: '请输入smtp端口', trigger: 'blur' },
-          ],
-          emailSender: [
-            { required: true, message: '请输入发信邮箱', trigger: 'blur' },
-          ],
-          emailPassword: [
-            { required: true, message: '请输入发信密码', trigger: 'blur' },
-          ],
-          emailReceiver: [
-            { required: true, message: '请输入收信邮箱', trigger: 'blur' },
-          ],
-        }
-      } else {
-        return {}
-      }
-    })
 
     onMounted(() => {
       getConfig()
+      getOptionList()
     })
     return {
       activeName,
@@ -638,14 +806,17 @@ export default {
       siteSettingsFormRef,
       siteSettingsForm,
       siteSettingsRules,
+      siteSettingsSubmit,
       // 评论设置
       commentSettingsFormRef,
       commentSettingsForm,
       commentSettingsRules,
+      commentSettingsSubmit,
       // RSS设置
       rssSettingsFormRef,
       rssSettingsForm,
       rssSettingsRules,
+      rssSettingsSubmit,
       // 时区列表
       timeZones,
       // 邮件设置
@@ -653,6 +824,7 @@ export default {
       emailSettingsForm,
       emailSettingsRules,
       emailSendOptions,
+      emailSettingsSubmit,
     }
   },
 }
