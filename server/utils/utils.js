@@ -108,7 +108,7 @@ exports.checkForm = function (form, ruleArr) {
 }
 
 exports.getUserIp = function (req) {
-  let ip = req.headers['x-forwarded-for'] ||
+  let ip = (req.headers['x-forwarded-for'] || '').split(',')[0] ||
     req.connection.remoteAddress ||
     req.socket.remoteAddress ||
     req.connection.socket.remoteAddress || '';
@@ -189,7 +189,15 @@ exports.IP2LocationUtils = function (ip, id, modelUtils) {
     const promise = new Promise((resolve, reject) => {
       console.time('ip2location')
       try {
-        const ipInfoAll = ip2location.getAll(ip);
+        // 判断ip是否是ipv6
+        const isIPV6 = ip.includes(':')
+        // 如果是ipv6，ip2location只能解析ipv4，所以不对ipv6进行解析
+        if (isIPV6) {
+          console.log('ip2location不支持ipv6解析')
+          resolve(null)
+          return
+        }
+        const ipInfoAll = ip2location.getAll(String(ip).trim());
         // 遍历ipInfoAll，如果包含字符串This method is 就删除该属性
         Object.keys(ipInfoAll).forEach((key) => {
           if (ipInfoAll[key].includes('This method is not')) {
