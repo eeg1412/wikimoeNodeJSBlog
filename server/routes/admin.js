@@ -479,6 +479,15 @@ const adminRouteSetting = [
     roleType: null,
     role: null
   },
+  // get dashboard
+  {
+    path: '/dashboard',
+    method: 'get',
+    middleware: [checkAuth],
+    controller: require('../api/admin/dashboard/getDashboard'),
+    roleType: null,
+    role: null
+  },
 ]
 
 adminRouteSetting.forEach(item => {

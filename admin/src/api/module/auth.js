@@ -298,5 +298,11 @@ export default function (api) {
         shouldAdminJWT: true
       })
     },
+    // get dashboard
+    getDashboard () {
+      return api.get('/dashboard', {
+        shouldAdminJWT: true
+      })
+    },
   }
 }

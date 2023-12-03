@@ -888,3 +888,6 @@ input[type='password'] {
   color: #979797;
   font-size: 12px;
 }
+.el-statistic__suffix {
+  vertical-align: baseline;
+}

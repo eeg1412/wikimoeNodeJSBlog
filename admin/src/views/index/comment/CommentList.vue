@@ -279,7 +279,8 @@ export default {
       if (sessionParams) {
         params.page = sessionParams.page
         params.size = sessionParams.size
-        params.keyword = sessionParams.keyword
+        ;(params.keyword = sessionParams.keyword),
+          (params.status = sessionParams.status)
       }
     }
 
