@@ -197,6 +197,15 @@ exports.IP2LocationUtils = function (ip, id, modelUtils) {
           resolve(null)
           return
         }
+        // 判断ip是否是ipv4
+        const ipV4Reg = /^(\d+)\.(\d+)\.(\d+)\.(\d+)$/
+        const isIPV4 = ipV4Reg.test(ip)
+        // 如果不是ipv4，直接返回null
+        if (!isIPV4) {
+          console.log('不是ipv4，跳过ip解析')
+          resolve(null)
+          return
+        }
         const ipInfoAll = ip2location.getAll(String(ip).trim());
         // 遍历ipInfoAll，如果包含字符串This method is 就删除该属性
         Object.keys(ipInfoAll).forEach((key) => {
