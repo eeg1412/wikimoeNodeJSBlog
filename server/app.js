@@ -5,6 +5,7 @@ var cookieParser = require('cookie-parser');
 // var logger = require('morgan');
 require('./mongodb')
 require('./config/globalConfig')
+var history = require('connect-history-api-fallback');
 
 var adminRouter = require('./routes/admin');
 
@@ -16,7 +17,6 @@ app.use(log4js.connectLogger(log4js.getLogger('access'), { level: 'auto' }))
 app.use(express.json({ limit: process.env.JSON_LIMT || '10mb' }));
 app.use(express.urlencoded({ extended: false, limit: process.env.URLENCODED_LIMT || '10mb' }));
 app.use(cookieParser());
-app.use('/admin', express.static(path.join(__dirname, 'public/admin')));
 app.use('/upload', express.static(path.join(__dirname, 'public/upload')));
 app.use('/content', express.static(path.join(__dirname, 'public/content')));
 // app.use(express.static(path.join(__dirname, 'public')));
@@ -29,6 +29,11 @@ app.use((err, req, res, next) => {
   next();
 });
 app.use('/api/admin', adminRouter);
+
+app.use(history({
+  index: '/admin/index.html'
+}));
+app.use('/admin', express.static(path.join(__dirname, 'public/admin')));
 
 
 module.exports = app;

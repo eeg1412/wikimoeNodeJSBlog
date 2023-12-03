@@ -1,6 +1,11 @@
 const { defineConfig } = require('@vue/cli-service')
 module.exports = defineConfig({
   transpileDependencies: true,
+  // 打包目录到../server/public/admin/
+  outputDir: "../server/public/admin/",
+  publicPath: process.env.NODE_ENV === "production" ? "/admin/" : "/",
+  // 不生成map文件，根据build还是dev环境来
+  productionSourceMap: process.env.NODE_ENV === "production" ? false : true,
   devServer: {
     client: {
       overlay: false,
