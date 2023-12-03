@@ -376,7 +376,7 @@ const adminRouteSetting = [
     path: '/link/list',
     method: 'get',
     middleware: [checkAuth],
-    controller: require('../api/admin/link/getLinklist'),
+    controller: require('../api/admin/link/getlinkList'),
     roleType: null,
     role: null
   },
@@ -475,7 +475,7 @@ const adminRouteSetting = [
     path: '/option/list',
     method: 'get',
     middleware: [checkAuth],
-    controller: require('../api/admin/option/getoptionlist'),
+    controller: require('../api/admin/option/getoptionList'),
     roleType: null,
     role: null
   },
