@@ -39,14 +39,16 @@ module.exports = async function (req, res, next) {
       })
       return
     }
-    const passwordReg = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{4,}$/
+    // 密码必须4位以上且包含大小写、数字和符号
+    const passwordReg = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*])[a-zA-Z\d!@#$%^&*]{4,}$/
     if (!passwordReg.test(password)) {
-      // 密码必须4位以上且包含大小写和数字
+      // 密码必须4位以上且包含大小写、数字和符号
       res.status(400).json({
         errors: [{
-          message: '密码必须4位以上且包含大小写和数字'
+          message: '密码必须4位以上且包含大小写、数字和符号'
         }]
       })
+      return
     }
     // 校验通过
     updateData['password'] = utils.creatBcryptStr(password)

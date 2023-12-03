@@ -124,19 +124,13 @@ export default {
       return rules
     })
     const rulesPassword = computed(() => {
-      const passwordReg = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{4,}$/
+      const passwordReg =
+        /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*])[a-zA-Z\d!@#$%^&*]{4,}$/
       const rules = {
         currentPassword: [
           { required: true, message: '请输入原密码', trigger: 'blur' },
         ],
-        password: [
-          { required: true, message: '请输入密码', trigger: 'blur' },
-          {
-            pattern: passwordReg,
-            message: '密码必须4位以上且包含大小写和数字',
-            trigger: 'blur',
-          },
-        ],
+        password: [{ required: true, message: '请输入密码', trigger: 'blur' }],
         confirmPassword: [
           { required: true, message: '请再次输入新密码', trigger: 'blur' },
           {
