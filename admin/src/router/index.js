@@ -127,6 +127,12 @@ const routes = [
         name: 'SidebarList',
         component: () => import(/* webpackChunkName: "SidebarList" */ '../views/index/sidebar/SidebarList.vue')
       },
+      // BannerList
+      {
+        path: '/banner/list',
+        name: 'BannerList',
+        component: () => import(/* webpackChunkName: "BannerList" */ '../views/index/banner/BannerList.vue')
+      },
       // config
       {
         path: '/config',

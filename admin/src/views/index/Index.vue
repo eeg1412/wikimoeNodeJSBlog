@@ -107,6 +107,16 @@
               <i class="fas fa-columns pr10"></i>
               <template #title>侧边栏</template>
             </el-menu-item>
+            <!-- 横幅 -->
+            <el-menu-item
+              index="BannerList"
+              @click="removeParam('BannerList')"
+              @click.middle="openNewTab('BannerList')"
+              :route="{ name: 'BannerList' }"
+            >
+              <i class="fas fa-image pr10"></i>
+              <template #title>横幅</template>
+            </el-menu-item>
             <!-- 设置 -->
             <el-menu-item
               index="Config"

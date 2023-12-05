@@ -330,5 +330,37 @@ export default function (api) {
         shouldAdminJWT: true
       })
     },
+    // get /banner/list
+    getBannerList (data) {
+      return api.get('/banner/list', {
+        params: data,
+        shouldAdminJWT: true
+      })
+    },
+    // post /banner/create
+    createBanner (data) {
+      return api.post('/banner/create', data, {
+        shouldAdminJWT: true
+      })
+    },
+    // put /banner/update
+    updateBanner (data) {
+      return api.put('/banner/update', data, {
+        shouldAdminJWT: true
+      })
+    },
+    // delete /banner/delete
+    deleteBanner (data) {
+      return api.delete('/banner/delete', {
+        params: data,
+        shouldAdminJWT: true
+      })
+    },
+    // put /banner/update/img
+    updateBannerImg (data) {
+      return api.put('/banner/update/img', data, {
+        shouldAdminJWT: true
+      })
+    },
   }
 }
