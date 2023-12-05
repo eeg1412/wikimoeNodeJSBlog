@@ -150,7 +150,7 @@ export default {
     const sidebarSettingsFormRef = ref(null)
     const sidebarSettingsForm = ref([])
     const sidebarSettingsTemplate = [
-      // 1:自定义 2:热门文章 3:最新评论 4:标签云 5:随机文章 6:热门文章 7:搜索 8:分类
+      // 1:自定义 2:热门文章 3:最新评论 4:标签云 5:随机文章 6:热门文章 7:搜索 8:分类 9:归档
       {
         title: '自定义',
         content: '',
@@ -212,6 +212,14 @@ export default {
         content: '',
         count: 1,
         type: 8,
+        taxis: 0,
+        status: 0,
+      },
+      {
+        title: '归档',
+        content: '',
+        count: 1,
+        type: 9,
         taxis: 0,
         status: 0,
       },
