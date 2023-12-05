@@ -121,6 +121,12 @@ const routes = [
         name: 'CommentEdit',
         component: () => import(/* webpackChunkName: "CommentEditor" */ '../views/index/comment/CommentEditor.vue')
       },
+      // SidebarList
+      {
+        path: '/sidebar/list',
+        name: 'SidebarList',
+        component: () => import(/* webpackChunkName: "SidebarList" */ '../views/index/sidebar/SidebarList.vue')
+      },
       // config
       {
         path: '/config',

@@ -97,6 +97,16 @@
               <i class="fas fa-compass pr10"></i>
               <template #title>导航</template>
             </el-menu-item>
+            <!-- 侧边栏 -->
+            <el-menu-item
+              index="SidebarList"
+              @click="removeParam('SidebarList')"
+              @click.middle="openNewTab('SidebarList')"
+              :route="{ name: 'SidebarList' }"
+            >
+              <i class="fas fa-columns pr10"></i>
+              <template #title>侧边栏</template>
+            </el-menu-item>
             <!-- 设置 -->
             <el-menu-item
               index="Config"

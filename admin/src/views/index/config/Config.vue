@@ -312,97 +312,6 @@
           </el-form-item>
         </el-form>
       </el-tab-pane>
-      <!-- 侧边栏设置 -->
-      <el-tab-pane label="侧边栏设置" name="sidebar">
-        <div class="clearfix">
-          <div class="fr">
-            <!-- 追加 -->
-            <el-dropdown trigger="click" @command="handleSideBarCommand">
-              <el-button type="primary">
-                追加<el-icon class="el-icon--right"><arrow-down /></el-icon>
-              </el-button>
-              <template #dropdown>
-                <el-dropdown-menu>
-                  <!-- 用typeOptions v-for -->
-                  <el-dropdown-item
-                    v-for="(item, index) in sidebarSettingsTemplate"
-                    :key="item.type"
-                    :command="item.type"
-                    >{{ item.title }}</el-dropdown-item
-                  >
-                </el-dropdown-menu>
-              </template>
-            </el-dropdown>
-          </div>
-        </div>
-        <div class="mt10">
-          <!-- sidebar list -->
-          <draggable
-            v-model="sidebarSettingsForm"
-            group="sidebarSettings"
-            item-key="_id"
-            handle=".handle"
-          >
-            <template #item="{ element }">
-              <div>
-                <div class="config-border-item">
-                  <div class="config-border-item-title handle clearfix">
-                    <el-icon><Rank /></el-icon> {{ element.title }}
-                    <el-button
-                      type="danger"
-                      size="small"
-                      class="fr"
-                      @click="sidebarSettingsDelete(element._id)"
-                      >删除</el-button
-                    >
-                  </div>
-                  <el-form
-                    :model="element"
-                    label-width="120px"
-                    label-position="left"
-                  >
-                    <!-- title -->
-                    <el-form-item label="标题" prop="title">
-                      <el-input v-model="element.title"></el-input>
-                    </el-form-item>
-                    <!-- content -->
-                    <el-form-item label="内容" prop="content">
-                      <el-input
-                        v-model="element.content"
-                        type="textarea"
-                      ></el-input>
-                    </el-form-item>
-                    <el-form-item label="显示条数" prop="count">
-                      <!-- 数字 1-100 -->
-                      <el-input-number
-                        v-model="element.count"
-                        controls-position="right"
-                        :min="1"
-                        :max="100"
-                        :step="1"
-                      ></el-input-number>
-                    </el-form-item>
-                    <el-form-item label="状态" prop="status">
-                      <!-- 0显示 1不显示 -->
-                      <el-switch
-                        v-model="element.status"
-                        :active-value="1"
-                        :inactive-value="0"
-                      ></el-switch>
-                    </el-form-item>
-                  </el-form>
-                </div>
-              </div>
-            </template>
-          </draggable>
-          <!-- 提交按钮 -->
-          <div class="mt10 clearfix">
-            <el-button type="primary" class="fr" @click="sidebarSettingsSubmit"
-              >提交</el-button
-            >
-          </div>
-        </div>
-      </el-tab-pane>
     </el-tabs>
   </div>
 </template>
@@ -413,14 +322,8 @@ import { useRoute, useRouter } from 'vue-router'
 import { authApi } from '@/api'
 // ElMessage
 import { ElMessage, ElMessageBox } from 'element-plus'
-import draggable from 'vuedraggable'
-import RichEditor5 from '@/components/RichEditor5'
 
 export default {
-  components: {
-    RichEditor5,
-    draggable,
-  },
   setup() {
     const activeName = ref('site')
     const mediaFormRef = ref(null)
@@ -784,129 +687,6 @@ export default {
         }
       })
     }
-    // 侧边栏设置
-    const sidebarSettingsFormRef = ref(null)
-    const sidebarSettingsForm = ref([])
-    const sidebarSettingsTemplate = [
-      // 1:自定义 2:热门文章 3:最新评论 4:标签云 5:随机文章 6:热门文章 7:搜索 8:分类
-      {
-        title: '自定义',
-        content: '',
-        count: 1,
-        type: 1,
-        taxis: 0,
-        status: 0,
-      },
-      {
-        title: '热门文章',
-        content: '',
-        count: 10,
-        type: 2,
-        taxis: 0,
-        status: 0,
-      },
-      {
-        title: '最新评论',
-        content: '',
-        count: 10,
-        type: 3,
-        taxis: 0,
-        status: 0,
-      },
-      {
-        title: '标签云',
-        content: '',
-        count: 10,
-        type: 4,
-        taxis: 0,
-        status: 0,
-      },
-      {
-        title: '随机文章',
-        content: '',
-        count: 10,
-        type: 5,
-        taxis: 0,
-        status: 0,
-      },
-      {
-        title: '热门文章',
-        content: '',
-        count: 10,
-        type: 6,
-        taxis: 0,
-        status: 0,
-      },
-      {
-        title: '搜索',
-        content: '',
-        count: 1,
-        type: 7,
-        taxis: 0,
-        status: 0,
-      },
-      {
-        title: '分类',
-        content: '',
-        count: 1,
-        type: 8,
-        taxis: 0,
-        status: 0,
-      },
-    ]
-    const getSidebarList = () => {
-      authApi.getSidebarList().then((res) => {
-        sidebarSettingsForm.value = res.data.list
-      })
-    }
-    const handleSideBarCommand = (command) => {
-      const item = sidebarSettingsTemplate.find((item) => item.type === command)
-      authApi
-        .createSidebar(item)
-        .then((res) => {
-          // 在前面插入
-          sidebarSettingsForm.value.unshift(res.data.data)
-        })
-        .catch((err) => {
-          console.log(err)
-        })
-    }
-    const sidebarSettingsSubmit = () => {
-      // 将sidebarSettingsForm的taxis更换为index
-      const params = sidebarSettingsForm.value.map((item, index) => {
-        return {
-          ...item,
-          taxis: index,
-        }
-      })
-      authApi
-        .updateSidebar({
-          sidebarList: params,
-        })
-        .then((res) => {
-          ElMessage.success('更新成功')
-        })
-        .catch((err) => {
-          console.log(err)
-        })
-    }
-    const sidebarSettingsDelete = (id) => {
-      // 询问是否删除
-      ElMessageBox.confirm('此操作将永久删除该侧边栏设置, 是否继续?', '提示', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning',
-      })
-        .then(() => {
-          // 删除
-          authApi.deleteSidebar({ id: id }).then((res) => {
-            sidebarSettingsForm.value = sidebarSettingsForm.value.filter(
-              (item) => item._id !== id
-            )
-          })
-        })
-        .catch(() => {})
-    }
 
     const timeZones = ref([
       // 时区列表
@@ -1015,7 +795,6 @@ export default {
     onMounted(() => {
       getConfig()
       getOptionList()
-      getSidebarList()
     })
     return {
       activeName,
@@ -1046,13 +825,6 @@ export default {
       emailSettingsRules,
       emailSendOptions,
       emailSettingsSubmit,
-      // 侧边栏设置
-      sidebarSettingsFormRef,
-      sidebarSettingsForm,
-      sidebarSettingsTemplate,
-      handleSideBarCommand,
-      sidebarSettingsSubmit,
-      sidebarSettingsDelete,
     }
   },
 }
@@ -1073,8 +845,5 @@ export default {
   color: #909399;
   margin-bottom: 10px;
   padding-left: 10px;
-}
-.handle {
-  cursor: move;
 }
 </style>
