@@ -16,6 +16,9 @@ if (!fs.existsSync(tableNamePath)) {
   fs.mkdirSync(tableNamePath)
 }
 
+// 将tableName首字母替换为大写
+const tableNameFirstLetter = tableName.replace(tableName[0], tableName[0].toUpperCase())
+
 const mongodbPath = path.resolve('./mongodb')
 // model
 const modelTemplate = (tableName, chineseName) => {
@@ -142,7 +145,7 @@ module.exports = async function (req, res, next) {
 }
 `
   // 写入文件
-  const filePath = path.resolve(tableNamePath, `create${tableName}.js`)
+  const filePath = path.resolve(tableNamePath, `create${tableNameFirstLetter}.js`)
   // 文件存在就不创建
   if (fs.existsSync(filePath)) {
     console.log(`${tableName}s.js is exist`)
@@ -199,7 +202,7 @@ module.exports = async function (req, res, next) {
   })
 }`
   // 写入文件
-  const filePath = path.resolve(tableNamePath, `delete${tableName}.js`)
+  const filePath = path.resolve(tableNamePath, `delete${tableNameFirstLetter}.js`)
   // 文件存在就不创建
   if (fs.existsSync(filePath)) {
     console.log(`${tableName}s.js is exist`)
@@ -284,7 +287,7 @@ module.exports = async function (req, res, next) {
 `
   // 写入文件
 
-  const filePath = path.resolve(tableNamePath, `update${tableName}.js`)
+  const filePath = path.resolve(tableNamePath, `update${tableNameFirstLetter}.js`)
   // 文件存在就不创建
   if (fs.existsSync(filePath)) {
     console.log(`${tableName}s.js is exist`)
@@ -349,7 +352,7 @@ const findTemplate = (tableName, chineseName) => {
 `
   // 写入文件
 
-  const filePath = path.resolve(tableNamePath, `get${tableName}List.js`)
+  const filePath = path.resolve(tableNamePath, `get${tableNameFirstLetter}List.js`)
   // 文件存在就不创建
   if (fs.existsSync(filePath)) {
     console.log(`${tableName}s.js is exist`)
@@ -405,7 +408,7 @@ const findOneTemplate = (tableName, chineseName) => {
 `
   // 写入文件
 
-  const filePath = path.resolve(tableNamePath, `get${tableName}Detail.js`)
+  const filePath = path.resolve(tableNamePath, `get${tableNameFirstLetter}Detail.js`)
   // 文件存在就不创建
   if (fs.existsSync(filePath)) {
     console.log(`${tableName}s.js is exist`)
