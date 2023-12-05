@@ -9,6 +9,7 @@ var sorts = new Schema({
   // alias 别名
   alias: {
     type: String,
+    index: true
   },
   // taxis 排序
   taxis: {

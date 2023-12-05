@@ -40,6 +40,7 @@ var posts = new Schema({
   alias: {
     type: String,
     default: null,
+    index: true
   },
   author: {
     type: Schema.Types.ObjectId,

@@ -5,6 +5,7 @@ var options = new Schema({
   name: {
     type: String,
     required: true,
+    index: true
   },
   // value
   value: {
