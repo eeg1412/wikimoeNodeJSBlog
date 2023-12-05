@@ -524,6 +524,51 @@ const adminRouteSetting = [
     roleType: null,
     role: null
   },
+  // get /banner/list
+  {
+    path: '/banner/list',
+    method: 'get',
+    middleware: [checkAuth],
+    controller: require('../api/admin/banner/getBannerList'),
+    roleType: null,
+    role: null
+  },
+  // post /banner/create
+  {
+    path: '/banner/create',
+    method: 'post',
+    middleware: [checkAuth],
+    controller: require('../api/admin/banner/createBanner'),
+    roleType: null,
+    role: null
+  },
+  // put /banner/update
+  {
+    path: '/banner/update',
+    method: 'put',
+    middleware: [checkAuth],
+    controller: require('../api/admin/banner/updateBanner'),
+    roleType: null,
+    role: null
+  },
+  // put /banner/update/img
+  {
+    path: '/banner/update/img',
+    method: 'put',
+    middleware: [checkAuth],
+    controller: require('../api/admin/banner/updateBannerImg'),
+    roleType: null,
+    role: null
+  },
+  // delete /banner/delete
+  {
+    path: '/banner/delete',
+    method: 'delete',
+    middleware: [checkAuth],
+    controller: require('../api/admin/banner/deleteBanner'),
+    roleType: null,
+    role: null
+  },
 ]
 
 adminRouteSetting.forEach(item => {
