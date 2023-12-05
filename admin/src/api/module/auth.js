@@ -304,5 +304,31 @@ export default function (api) {
         shouldAdminJWT: true
       })
     },
+    // get /sidebar/list
+    getSidebarList (data) {
+      return api.get('/sidebar/list', {
+        params: data,
+        shouldAdminJWT: true
+      })
+    },
+    // post /sidebar/create
+    createSidebar (data) {
+      return api.post('/sidebar/create', data, {
+        shouldAdminJWT: true
+      })
+    },
+    // put /sidebar/update
+    updateSidebar (data) {
+      return api.put('/sidebar/update', data, {
+        shouldAdminJWT: true
+      })
+    },
+    // delete /sidebar/delete
+    deleteSidebar (data) {
+      return api.delete('/sidebar/delete', {
+        params: data,
+        shouldAdminJWT: true
+      })
+    },
   }
 }

@@ -6,9 +6,11 @@ const adminApiLog = log4js.getLogger('adminApi')
 module.exports = async function (req, res, next) {
   const sort = {
     // 排序
-    taxis: -1,
+    taxis: 1,
+    // id
+    _id: -1
   }
-  sidebarUtils.find(params, sort).then((data) => {
+  sidebarUtils.find({}, sort).then((data) => {
     // 返回格式list,total
     res.send({
       list: data,

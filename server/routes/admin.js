@@ -488,6 +488,42 @@ const adminRouteSetting = [
     roleType: null,
     role: null
   },
+  // get /sidebar/list
+  {
+    path: '/sidebar/list',
+    method: 'get',
+    middleware: [checkAuth],
+    controller: require('../api/admin/sidebar/getSidebarList'),
+    roleType: null,
+    role: null
+  },
+  // post /sidebar/create
+  {
+    path: '/sidebar/create',
+    method: 'post',
+    middleware: [checkAuth],
+    controller: require('../api/admin/sidebar/createSidebar'),
+    roleType: null,
+    role: null
+  },
+  // put /sidebar/update
+  {
+    path: '/sidebar/update',
+    method: 'put',
+    middleware: [checkAuth],
+    controller: require('../api/admin/sidebar/updateSidebar'),
+    roleType: null,
+    role: null
+  },
+  // delete /sidebar/delete
+  {
+    path: '/sidebar/delete',
+    method: 'delete',
+    middleware: [checkAuth],
+    controller: require('../api/admin/sidebar/deleteSidebar'),
+    roleType: null,
+    role: null
+  },
 ]
 
 adminRouteSetting.forEach(item => {
