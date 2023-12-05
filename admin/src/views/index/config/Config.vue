@@ -270,12 +270,10 @@
               prop="emailSendToMeTemplate"
               class="blok-form-item"
             >
-              <el-input
-                v-model="emailSettingsForm.emailSendToMeTemplate"
-                type="textarea"
-                rows="5"
-                placeholder="请输入通知自己模板"
-              ></el-input>
+              <RichEditor5
+                v-model:content="emailSettingsForm.emailSendToMeTemplate"
+                v-if="activeName === 'email'"
+              />
               <div>${comment}为评论内容</div>
             </el-form-item>
             <!-- 通知评论者模板 -->
@@ -284,12 +282,10 @@
               prop="emailSendToCommenterTemplate"
               class="blok-form-item"
             >
-              <el-input
-                v-model="emailSettingsForm.emailSendToCommenterTemplate"
-                type="textarea"
-                rows="5"
-                placeholder="请输入通知评论者模板"
-              ></el-input>
+              <RichEditor5
+                v-model:content="emailSettingsForm.emailSendToCommenterTemplate"
+                v-if="activeName === 'email'"
+              />
               <div>${comment}为评论内容</div>
             </el-form-item>
 
@@ -322,8 +318,12 @@ import { useRoute, useRouter } from 'vue-router'
 import { authApi } from '@/api'
 // ElMessage
 import { ElMessage, ElMessageBox } from 'element-plus'
+import RichEditor5 from '@/components/RichEditor5'
 
 export default {
+  components: {
+    RichEditor5,
+  },
   setup() {
     const activeName = ref('site')
     const mediaFormRef = ref(null)
