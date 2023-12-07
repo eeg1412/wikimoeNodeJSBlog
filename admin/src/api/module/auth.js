@@ -323,6 +323,12 @@ export default function (api) {
         shouldAdminJWT: true
       })
     },
+    // put /sidebar/update/taxis
+    updateSidebarTaxis (data) {
+      return api.put('/sidebar/update/taxis', data, {
+        shouldAdminJWT: true
+      })
+    },
     // delete /sidebar/delete
     deleteSidebar (data) {
       return api.delete('/sidebar/delete', {

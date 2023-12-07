@@ -515,6 +515,15 @@ const adminRouteSetting = [
     roleType: null,
     role: null
   },
+  // put /sidebar/update/taxis
+  {
+    path: '/sidebar/update/taxis',
+    method: 'put',
+    middleware: [checkAuth],
+    controller: require('../api/admin/sidebar/updateSidebarTaxis'),
+    roleType: null,
+    role: null
+  },
   // delete /sidebar/delete
   {
     path: '/sidebar/delete',

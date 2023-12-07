@@ -9,6 +9,10 @@
       <div class="fl common-top-search-form-body"></div>
       <div class="fr">
         <!-- 按钮用 -->
+        <!-- 排序 -->
+        <el-button @click="onDragBtnClick" class="mr10">{{
+          canDrag ? '完成排序' : '排序'
+        }}</el-button>
         <!-- 追加 -->
         <el-dropdown trigger="click" @command="handleSideBarCommand">
           <el-button type="primary">
@@ -39,8 +43,13 @@
         <template #item="{ element }">
           <div>
             <div class="config-border-item">
-              <div class="config-border-item-title handle clearfix">
+              <div
+                class="config-border-item-title clearfix"
+                :class="{ handle: canDrag }"
+              >
                 <div class="fl pr10">
+                  <!-- up-down-left-right -->
+                  <i class="fas fa-arrows-alt-v" v-show="canDrag"></i>
                   <span class="pl5 dib">{{ element.title }}</span>
                 </div>
 
@@ -116,17 +125,26 @@
                     :inactive-value="0"
                   ></el-switch>
                 </el-form-item>
+                <!-- 提交按钮 -->
+                <div class="mt10 clearfix">
+                  <el-button
+                    type="primary"
+                    class="fr"
+                    @click="sidebarSettingsSubmit(element)"
+                    >提交更改</el-button
+                  >
+                </div>
               </el-form>
             </div>
           </div>
         </template>
       </draggable>
       <!-- 提交按钮 -->
-      <div class="mt10 clearfix">
+      <!-- <div class="mt10 clearfix">
         <el-button type="primary" class="fr" @click="sidebarSettingsSubmit"
           >提交更改</el-button
         >
-      </div>
+      </div> -->
     </div>
   </div>
 </template>
@@ -137,6 +155,7 @@ import { ElMessage, ElMessageBox } from 'element-plus'
 import { onMounted, reactive, ref, watch } from 'vue'
 import draggable from 'vuedraggable'
 import RichEditor5 from '@/components/RichEditor5'
+import { t } from '@wangeditor/editor'
 
 export default {
   components: {
@@ -245,18 +264,9 @@ export default {
           console.log(err)
         })
     }
-    const sidebarSettingsSubmit = () => {
-      // 将sidebarSettingsForm的taxis更换为index
-      const params = sidebarSettingsForm.value.map((item, index) => {
-        return {
-          ...item,
-          taxis: index,
-        }
-      })
+    const sidebarSettingsSubmit = (item) => {
       authApi
-        .updateSidebar({
-          sidebarList: params,
-        })
+        .updateSidebar(item)
         .then((res) => {
           ElMessage.success('更新成功')
         })
@@ -284,6 +294,31 @@ export default {
 
     const showIdList = ref([])
 
+    const canDrag = ref(false)
+    const onDragBtnClick = () => {
+      if (canDrag.value) {
+        const params = sidebarSettingsForm.value.map((item, index) => {
+          return {
+            _id: item._id,
+            taxis: index,
+          }
+        })
+        updateSidebarTaxis({
+          sidebarList: params,
+        }).then((res) => {
+          canDrag.value = false
+          getSidebarList()
+        })
+      } else {
+        canDrag.value = true
+      }
+    }
+    const updateSidebarTaxis = (params) => {
+      return authApi.updateSidebarTaxis(params).then((res) => {
+        ElMessage.success('更新成功')
+      })
+    }
+
     onMounted(() => {
       getSidebarList()
     })
@@ -298,6 +333,8 @@ export default {
       sidebarSettingsSubmit,
       sidebarSettingsDelete,
       showIdList,
+      canDrag,
+      onDragBtnClick,
     }
   },
 }
