@@ -8,6 +8,7 @@
     class="attachments-dialog"
     @closed="clearSelectedImageList"
     append-to-body
+    @paste="handlePaste"
   >
     <template #header="{ close, titleId, titleClass }">
       <div class="my-header">
@@ -196,6 +197,8 @@ import store from '@/store'
 // AttachmentImage
 import AttachmentImage from '@/components/AttachmentImage.vue'
 import { Delete, Close, SetUp, Select, Search } from '@element-plus/icons-vue'
+import axios from 'axios'
+import { showLoading, hideLoading } from '@/utils/utils'
 
 export default {
   components: {
@@ -466,6 +469,44 @@ export default {
       visible.value = false
     }
 
+    const handlePaste = (event) => {
+      const items = (event.clipboardData || event.originalEvent.clipboardData)
+        .items
+      console.log(items)
+      for (let index in items) {
+        const item = items[index]
+        if (item.kind === 'file') {
+          const blob = item.getAsFile()
+          if (blob.type.startsWith('image/')) {
+            if (!albumId.value) {
+              ElMessage.error('请先选择相册')
+              return
+            }
+            const formData = new FormData()
+            formData.append('file', blob, 'image.png') // 'image' 是字段名，'image.png' 是文件名
+            showLoading()
+            axios
+              .post('/api/admin/attachment/upload', formData, {
+                headers: {
+                  'Content-Type': 'multipart/form-data',
+                  ...headers.value,
+                },
+              })
+              .then((response) => {
+                console.log(response.data)
+                handleSuccess(response.data)
+              })
+              .catch((error) => {
+                console.error(error)
+              })
+              .finally(() => {
+                hideLoading()
+              })
+          }
+        }
+      }
+    }
+
     // 监听 params.page 的变化
     watch(
       () => params.page,
@@ -510,6 +551,7 @@ export default {
       toChangeAttachmentsAlbum,
       clearSelectedImageList,
       selectAttachmentsOk,
+      handlePaste,
     }
   },
 }
