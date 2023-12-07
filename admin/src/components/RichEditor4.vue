@@ -71,6 +71,11 @@ export default {
       }
     }
 
+    // 重置编辑器内容
+    const resetContent = () => {
+      editor.txt.html(props.content)
+    }
+
     onMounted(() => {
       initEditor()
     })
@@ -89,6 +94,7 @@ export default {
       attachmentsDialogRef,
       openAttachmentsDialog,
       selectAttachments,
+      resetContent,
     }
   },
 }

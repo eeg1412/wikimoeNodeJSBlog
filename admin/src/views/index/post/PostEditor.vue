@@ -34,26 +34,27 @@
           <el-form-item label="文章内容" prop="content">
             <el-tabs
               v-model="contentTab"
+              @tab-change="contentTabChange"
               type="border-card"
               class="w_10 post-editor-body"
             >
               <el-tab-pane label="富文本" name="richText">
-                <template v-if="contentTab === 'richText'">
-                  <RichEditor4
-                    v-model:content="form.content"
-                    v-if="postEditorVersion === 4"
-                  />
-                  <RichEditor5
-                    v-model:content="form.content"
-                    v-else-if="postEditorVersion === 5"
-                  />
-                </template>
+                <RichEditor4
+                  v-model:content="form.content"
+                  ref="editor4Ref"
+                  v-if="postEditorVersion === 4"
+                />
+                <RichEditor5
+                  v-model:content="form.content"
+                  v-else-if="postEditorVersion === 5"
+                />
               </el-tab-pane>
               <el-tab-pane label="源代码" name="sourceCode">
                 <el-input
                   type="textarea"
-                  v-model="form.content"
+                  v-model="contentSource"
                   rows="30"
+                  @blur="resetRichEditor"
                   placeholder="请输入源代码"
                 ></el-input>
               </el-tab-pane>
@@ -223,7 +224,15 @@
   </div>
 </template>
 <script>
-import { onMounted, ref, reactive, watch, computed, onUnmounted } from 'vue'
+import {
+  onMounted,
+  ref,
+  reactive,
+  watch,
+  computed,
+  onUnmounted,
+  nextTick,
+} from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import { authApi } from '@/api'
 import { ElMessage, ElMessageBox } from 'element-plus'
@@ -366,6 +375,23 @@ export default {
         router.push({
           name: 'PostList',
         })
+      })
+    }
+    const contentSource = ref('')
+    const contentTabChange = (tab) => {
+      if (tab === 'richText') {
+        resetRichEditor()
+      } else {
+        contentSource.value = form.content
+      }
+    }
+    const editor4Ref = ref(null)
+    const resetRichEditor = () => {
+      form.content = contentSource.value
+      nextTick(() => {
+        if (postEditorVersion.value === 4 && editor4Ref.value) {
+          editor4Ref.value.resetContent()
+        }
       })
     }
 
@@ -549,6 +575,10 @@ export default {
       rules,
       formRef,
       submit,
+      contentSource,
+      contentTabChange,
+      editor4Ref,
+      resetRichEditor,
       // tags
       tagList,
       tagsIsLoading,
