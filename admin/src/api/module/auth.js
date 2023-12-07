@@ -368,5 +368,11 @@ export default function (api) {
         shouldAdminJWT: true
       })
     },
+    // put /banner/update/taxis
+    updateBannerTaxis (data) {
+      return api.put('/banner/update/taxis', data, {
+        shouldAdminJWT: true
+      })
+    },
   }
 }

@@ -5,8 +5,8 @@ const adminApiLog = log4js.getLogger('adminApi')
 
 module.exports = async function (req, res, next) {
   // bannername	String	是	否	无	横幅名称
-  const { img, id } = req.body
-  if (!id) {
+  const { img, _id } = req.body
+  if (!_id) {
     res.status(400).json({
       errors: [{
         message: 'id不能为空'
@@ -44,7 +44,7 @@ module.exports = async function (req, res, next) {
   }
   // img是base64，需要转换成图片并储存
   const path = './public/upload/banner/'
-  const fileName = id
+  const fileName = _id
   try {
     const imgRes = utils.base64ToFile(img, path, fileName)
     params['img'] = `/upload/banner/${imgRes.fileNameAll}?v=${Date.now()}`
@@ -58,7 +58,7 @@ module.exports = async function (req, res, next) {
   }
 
   // updateOne
-  bannerUtils.updateOne({ _id: id }, params).then((data) => {
+  bannerUtils.updateOne({ _id: _id }, params).then((data) => {
     if (data.modifiedCount === 0) {
       res.status(400).json({
         errors: [{
@@ -68,7 +68,9 @@ module.exports = async function (req, res, next) {
       return
     }
     res.send({
-      data: data
+      data: {
+        img: params.img
+      }
     })
     adminApiLog.info(`banner update success`)
   }).catch((err) => {

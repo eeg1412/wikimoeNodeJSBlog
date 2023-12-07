@@ -8,6 +8,8 @@ var banners = new Schema({
   taxis: { type: Number, default: 0 },
   // banner图片
   img: { type: String },
+  // link
+  link: { type: String },
   // 0:不可见 1:可见
   status: { type: Number, default: 0 },
 }, { timestamps: true });

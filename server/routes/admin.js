@@ -569,6 +569,15 @@ const adminRouteSetting = [
     roleType: null,
     role: null
   },
+  // put /banner/update/taxis
+  {
+    path: '/banner/update/taxis',
+    method: 'put',
+    middleware: [checkAuth],
+    controller: require('../api/admin/banner/updateBannerTaxis'),
+    roleType: null,
+    role: null
+  },
   // delete /banner/delete
   {
     path: '/banner/delete',

@@ -1,5 +1,5 @@
 <template>
-  <div class="common-right-panel-form">
+  <div class="common-right-panel-form common-limit-width">
     <div class="pb20">
       <el-breadcrumb separator="/">
         <el-breadcrumb-item>侧边栏</el-breadcrumb-item>

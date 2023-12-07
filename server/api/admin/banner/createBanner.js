@@ -5,12 +5,13 @@ const adminApiLog = log4js.getLogger('adminApi')
 
 module.exports = async function (req, res, next) {
 
-  const { title, taxis, img } = req.body
+  const { title, taxis, img, link } = req.body
   // 校验格式
   const params = {
     title: title || '',
     taxis: taxis || 0,
     img: img || '',
+    link: link || '',
   }
   // save
   bannerUtils.save(params).then((data) => {
