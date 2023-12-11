@@ -24,10 +24,6 @@ var attachments = new Schema({
   filepath: {
     type: String,
   },
-  addtime: {
-    type: Date,
-    default: Date.now
-  },
   width: {
     type: Number,
   },

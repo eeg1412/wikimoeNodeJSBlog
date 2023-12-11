@@ -123,6 +123,7 @@ module.exports = async function (req, res, next) {
   let extname = path.extname(file.originalname)
   const updateAttachment = {
     filepath: '',
+    filesize: file.size,
     width: 0,
     height: 0,
     thumfor: '',
@@ -226,10 +227,15 @@ module.exports = async function (req, res, next) {
     fileData = null
     file.buffer = null
     // 更新数据库
+    // 获取文件的filesize
+    const stats = fs.statSync(filePath)
+    updateAttachment.filesize = stats.size
+
     // 将updateAttachment的filepath和thumfor前面的public去掉，并将\替换为/
     updateAttachment.filepath = updateAttachment.filepath.replace('public', '').replace(/\\/g, '/')
     updateAttachment.thumfor = updateAttachment.thumfor.replace('public', '').replace(/\\/g, '/')
     // TODO: emlog的filepath前面多了./，thumfor指向附件的id，而不是缩略图的路径
+
     const updateRes = await attachmentsUtils.updateOne({ _id: attachmentId }, updateAttachment)
     if (updateRes.modifiedCount === 0) {
       res.status(400).json({
