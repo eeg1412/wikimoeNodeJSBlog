@@ -162,7 +162,9 @@
         </el-table-column>
         <el-table-column prop="title" label="标题/推文" width="320">
           <template #default="{ row }">
-            <div :title="row.title">{{ titleLimit(row.title) }}</div>
+            <div :title="row.title || row.excerpt">
+              {{ titleLimit(row.title || row.excerpt) }}
+            </div>
           </template>
         </el-table-column>
         <el-table-column

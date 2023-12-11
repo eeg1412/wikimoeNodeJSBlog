@@ -51,6 +51,7 @@ var posts = new Schema({
     ref: 'sorts',
     default: null
   },
+  // 1blog,2tweet,3page
   type: {
     type: Number,
   },

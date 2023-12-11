@@ -23,7 +23,7 @@
           <el-form-item label="推文" prop="title">
             <el-input
               type="textarea"
-              v-model="form.title"
+              v-model="form.excerpt"
               rows="10"
               placeholder="请输入推文"
             ></el-input>

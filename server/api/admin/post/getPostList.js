@@ -121,7 +121,7 @@ module.exports = async function (req, res, next) {
         break;
     }
   }
-  const filter = '-excerpt'
+  const filter = '-content'
   postUtils.findPage(params, filter, postSorting, page, size).then((data) => {
 
     // 返回格式list,total
