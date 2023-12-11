@@ -5,7 +5,8 @@
   "scripts": {
     "start": "node ./bin/www",
     "create": "node ./tools/createUser",
-    "createCRUD": "node ./tools/createCRUD"
+    "createCRUD": "node ./tools/createCRUD",
+    "backupFromEmlogJSON": "node ./tools/backupFromEmlogJSON"
   },
   "dependencies": {
     "bcryptjs": "^2.4.3",
