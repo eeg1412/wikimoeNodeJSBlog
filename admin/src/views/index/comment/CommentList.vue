@@ -49,9 +49,11 @@
     <div class="mb20">
       <el-table :data="commentList" row-key="_id" border>
         <!-- 评论文章 -->
-        <el-table-column label="评论文章" width="180">
+        <el-table-column label="评论文章/推文" width="180">
           <template #default="{ row }">
-            <div>{{ row.post?.title }}</div>
+            <div :title="row.post.title || row.post.excerpt">
+              {{ titleLimit(row.post.title || row.post.excerpt) }}
+            </div>
           </template>
         </el-table-column>
         <el-table-column prop="content" label="内容" min-width="300">
@@ -274,6 +276,14 @@ export default {
         .catch(() => {})
     }
 
+    const titleLimit = (title) => {
+      let title_ = title || ''
+      if (title_.length > 20) {
+        title_ = title_.slice(0, 20) + '...'
+      }
+      return title_
+    }
+
     const initParams = () => {
       const sessionParams = getSessionParams(route.name)
       if (sessionParams) {
@@ -335,6 +345,7 @@ export default {
       getCommentList,
       goEdit,
       deleteComment,
+      titleLimit,
       // 添加评论
       commentForm,
       commentFormRef,

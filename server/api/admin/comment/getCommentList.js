@@ -26,7 +26,7 @@ module.exports = async function (req, res, next) {
     params.status = Number(status)
   }
   const sort = {
-    _id: -1
+    date: -1
   }
   commentUtils.findPage(params, sort, page, size).then((data) => {
     // 返回格式list,total
