@@ -9,7 +9,7 @@ module.exports = async function (req, res, next) {
   // optionList 为name 和 value 的数组,name是必须的
   // for await 遍历数组
   for await (const item of optionList) {
-    const { name, value } = item
+    let { name, value } = item
     // 如果name不存在,则跳过
     if (!name) continue
     const base64Reg = /^data:image\/\w+;base64,/
@@ -22,7 +22,7 @@ module.exports = async function (req, res, next) {
           const fileName = 'logo'
           try {
             const imgRes = utils.base64ToFile(value, path, fileName)
-            item['value'] = `/upload/logo/${imgRes.fileNameAll}?v=${Date.now()}`
+            value = `/upload/logo/${imgRes.fileNameAll}?v=${Date.now()}`
           } catch (error) {
             res.status(400).json({
               errors: [{

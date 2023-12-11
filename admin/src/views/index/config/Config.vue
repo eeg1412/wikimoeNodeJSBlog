@@ -399,67 +399,36 @@ export default {
     const getOptionList = () => {
       authApi.getOptionList().then((res) => {
         // res.data.data是数组，需要转换为对象
-        const obj = {}
-        res.data.data.forEach((item) => {
-          obj[item.name] = item.value
-        })
-
-        Object.keys(siteSettingsForm).forEach((key) => {
-          if (obj[key]) {
-            // 判断form[key]的类型，有数字，字符串，布尔，数组，但是value只有字符串，所以需要转换
-            if (typeof siteSettingsForm[key] === 'number') {
-              siteSettingsForm[key] = Number(obj[key])
-            } else if (typeof siteSettingsForm[key] === 'boolean') {
-              siteSettingsForm[key] = obj[key] === 'true'
-            } else if (Array.isArray(siteSettingsForm[key])) {
-              siteSettingsForm[key] = obj[key].split(',')
-            } else {
-              siteSettingsForm[key] = obj[key]
-            }
+        const obj = formatResToObj(res.data.data)
+        formatResToForm(siteSettingsForm, obj)
+        formatResToForm(commentSettingsForm, obj)
+        formatResToForm(rssSettingsForm, obj)
+        formatResToForm(emailSettingsForm, obj)
+      })
+    }
+    // 写一个函数将res的data转换为obj
+    const formatResToObj = (data) => {
+      const obj = {}
+      data.forEach((item) => {
+        obj[item.name] = item.value
+      })
+      return obj
+    }
+    // 写一个函数，先判断原始类型，再将字符串转换为对应的类型
+    const formatResToForm = (form, obj) => {
+      Object.keys(form).forEach((key) => {
+        if (obj[key]) {
+          // 判断form[key]的类型，有数字，字符串，布尔，数组，但是value只有字符串，所以需要转换
+          if (typeof form[key] === 'number') {
+            form[key] = Number(obj[key])
+          } else if (typeof form[key] === 'boolean') {
+            form[key] = obj[key] === 'true'
+          } else if (Array.isArray(form[key])) {
+            form[key] = obj[key].split(',')
+          } else {
+            form[key] = obj[key]
           }
-        })
-        Object.keys(commentSettingsForm).forEach((key) => {
-          if (obj[key]) {
-            // 判断form[key]的类型，有数字，字符串，布尔，数组，但是value只有字符串，所以需要转换
-            if (typeof commentSettingsForm[key] === 'number') {
-              commentSettingsForm[key] = Number(obj[key])
-            } else if (typeof commentSettingsForm[key] === 'boolean') {
-              commentSettingsForm[key] = obj[key] === 'true'
-            } else if (Array.isArray(commentSettingsForm[key])) {
-              commentSettingsForm[key] = obj[key].split(',')
-            } else {
-              commentSettingsForm[key] = obj[key]
-            }
-          }
-        })
-        Object.keys(rssSettingsForm).forEach((key) => {
-          if (obj[key]) {
-            // 判断form[key]的类型，有数字，字符串，布尔，数组，但是value只有字符串，所以需要转换
-            if (typeof rssSettingsForm[key] === 'number') {
-              rssSettingsForm[key] = Number(obj[key])
-            } else if (typeof rssSettingsForm[key] === 'boolean') {
-              rssSettingsForm[key] = obj[key] === 'true'
-            } else if (Array.isArray(rssSettingsForm[key])) {
-              rssSettingsForm[key] = obj[key].split(',')
-            } else {
-              rssSettingsForm[key] = obj[key]
-            }
-          }
-        })
-        Object.keys(emailSettingsForm).forEach((key) => {
-          if (obj[key]) {
-            // 判断form[key]的类型，有数字，字符串，布尔，数组，但是value只有字符串，所以需要转换
-            if (typeof emailSettingsForm[key] === 'number') {
-              emailSettingsForm[key] = Number(obj[key])
-            } else if (typeof emailSettingsForm[key] === 'boolean') {
-              emailSettingsForm[key] = obj[key] === 'true'
-            } else if (Array.isArray(emailSettingsForm[key])) {
-              emailSettingsForm[key] = obj[key].split(',')
-            } else {
-              emailSettingsForm[key] = obj[key]
-            }
-          }
-        })
+        }
       })
     }
     const mediaSubmit = () => {
@@ -503,6 +472,10 @@ export default {
       siteTitle: [
         { required: true, message: '请输入站点标题', trigger: 'blur' },
       ],
+      // logo
+      siteLogo: [
+        { required: true, message: '请上传站点LOGO', trigger: 'blur' },
+      ],
       siteUrl: [{ required: true, message: '请输入站点地址', trigger: 'blur' }],
       sitePageSize: [
         { required: true, message: '请输入每页显示', trigger: 'blur' },
@@ -543,6 +516,8 @@ export default {
           authApi
             .updateOption({ optionList: params })
             .then((res) => {
+              const obj = formatResToObj(res.data.data)
+              formatResToForm(siteSettingsForm, obj)
               ElMessage.success('更新成功')
             })
             .catch((err) => {
@@ -587,6 +562,8 @@ export default {
           authApi
             .updateOption({ optionList: params })
             .then((res) => {
+              const obj = formatResToObj(res.data.data)
+              formatResToForm(commentSettingsForm, obj)
               ElMessage.success('更新成功')
             })
             .catch((err) => {
@@ -626,6 +603,8 @@ export default {
           authApi
             .updateOption({ optionList: params })
             .then((res) => {
+              const obj = formatResToObj(res.data.data)
+              formatResToForm(rssSettingsForm, obj)
               ElMessage.success('更新成功')
             })
             .catch((err) => {
@@ -714,6 +693,8 @@ export default {
           authApi
             .updateOption({ optionList: params })
             .then((res) => {
+              const obj = formatResToObj(res.data.data)
+              formatResToForm(emailSettingsForm, obj)
               ElMessage.success('更新成功')
             })
             .catch((err) => {
