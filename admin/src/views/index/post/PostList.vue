@@ -504,6 +504,8 @@ export default {
           authApi.createComment(commentForm).then((res) => {
             ElMessage.success('评论成功')
             closeCommentForm()
+            // 重新获取文章列表
+            getPostList()
           })
         } else {
           return false

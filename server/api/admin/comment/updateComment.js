@@ -1,4 +1,5 @@
 const commentUtils = require('../../../mongodb/utils/comments')
+const postUtils = require('../../../mongodb/utils/posts')
 const utils = require('../../../utils/utils')
 const log4js = require('log4js')
 const adminApiLog = log4js.getLogger('adminApi')
@@ -61,6 +62,16 @@ module.exports = async function (req, res, next) {
     params.email = email
   }
 
+  // 获取评论信息
+  const commentInfo = await commentUtils.findOne({ _id: id })
+  if (!commentInfo) {
+    res.status(400).json({
+      errors: [{
+        message: '评论不存在'
+      }]
+    })
+    return
+  }
 
 
 
@@ -78,6 +89,22 @@ module.exports = async function (req, res, next) {
       data: data
     })
     adminApiLog.info(`comment:${id} update success`)
+    // 判断是否更新了评论状态
+    const oldStatus = commentInfo.status
+    const newStatus = params.status
+    // 评论状态,0待审核,1审核通过,2未通过
+    // 如果更新了评论状态，那么就更新文章评论数
+    if (oldStatus !== newStatus) {
+      // 如果是审核通过，那么就更新文章评论数+1
+      if (newStatus === 1) {
+        postUtils.updateOne({ _id: commentInfo.post }, { $inc: { comnum: 1 } })
+      }
+      // 如果是审核未通过或者待评论，那么就更新文章评论数-1
+      if ((newStatus === 2 || newStatus === 0) && oldStatus === 1) {
+        postUtils.updateOne({ _id: commentInfo.post }, { $inc: { comnum: -1 } })
+      }
+    }
+
   }).catch((err) => {
     res.status(400).json({
       errors: [{
