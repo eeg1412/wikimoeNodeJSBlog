@@ -5,6 +5,7 @@ node_modules
 /server/public/upload/avatar/*
 /server/public/upload/linkicon/*
 /server/public/upload/banner/*
+/server/public/upload/logo/*
 /server/public/content/uploadfile/*
 /server/public/admin/*
 /server/config/globalConfig.json
