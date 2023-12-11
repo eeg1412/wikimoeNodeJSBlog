@@ -1,4 +1,5 @@
 const commentUtils = require('../../../mongodb/utils/comments')
+const postUtils = require('../../../mongodb/utils/posts')
 const utils = require('../../../utils/utils')
 const log4js = require('log4js')
 const adminApiLog = log4js.getLogger('adminApi')
@@ -13,7 +14,17 @@ module.exports = async function (req, res, next) {
     })
     return
   }
-  //  删除分类
+  // 查询评论
+  const commentInfo = await commentUtils.findOne({ _id: id })
+  if (!commentInfo) {
+    res.status(400).json({
+      errors: [{
+        message: '评论不存在'
+      }]
+    })
+    return
+  }
+  //  删除评论
   commentUtils.deleteOne({ _id: id }).then((data) => {
     if (data.deletedCount === 0) {
       res.status(400).json({
@@ -28,6 +39,10 @@ module.exports = async function (req, res, next) {
         message: '删除成功'
       }
     })
+    // 记录
+    adminApiLog.info(`comment delete success`)
+    // 更新文章评论数
+    postUtils.updateOne({ _id: commentInfo.post }, { $inc: { comnum: -1 } })
   }).catch((err) => {
     res.status(400).json({
       errors: [{
