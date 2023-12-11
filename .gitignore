@@ -11,3 +11,4 @@ node_modules
 /server/config/globalConfig.json
 /server/uploadCache/*
 /server/utils/ip2location/*
+/server/tools/backupFromEmlogJson/*
