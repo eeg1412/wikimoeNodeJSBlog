@@ -12,6 +12,33 @@ module.exports = async function (req, res, next) {
     const { name, value } = item
     // 如果name不存在,则跳过
     if (!name) continue
+    const base64Reg = /^data:image\/\w+;base64,/
+    switch (name) {
+      case 'siteLogo':
+        // 判断value是否是base64
+        if (base64Reg.test(value)) {
+          // 转换成图片并储存
+          const path = './public/upload/logo/'
+          const fileName = 'logo'
+          try {
+            const imgRes = utils.base64ToFile(value, path, fileName)
+            item['value'] = `/upload/logo/${imgRes.fileNameAll}?v=${Date.now()}`
+          } catch (error) {
+            res.status(400).json({
+              errors: [{
+                message: '照片上传失败'
+              }]
+            })
+            // 写入日志
+            adminApiLog.error(`logo update fail, ${JSON.stringify(error)}`)
+            throw new Error(error)
+          }
+        }
+        break;
+
+      default:
+        break;
+    }
     // findoneAndUpdate
     const dbOptions = { upsert: true, new: true };
     await optionUtils.findOneAndUpdate({ name }, { value }, dbOptions).then((data) => {

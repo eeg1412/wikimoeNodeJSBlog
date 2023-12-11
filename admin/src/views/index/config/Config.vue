@@ -15,6 +15,22 @@
           <el-form-item label="站点副标题" prop="siteSubTitle">
             <el-input v-model="siteSettingsForm.siteSubTitle"></el-input>
           </el-form-item>
+          <el-form-item label="站点LOGO" prop="siteLogo">
+            <el-upload
+              class="avatar-uploader"
+              :show-file-list="false"
+              :auto-upload="false"
+              :on-change="setSiteLogo"
+              accept="image/*"
+            >
+              <img
+                v-if="siteSettingsForm.siteLogo"
+                :src="siteSettingsForm.siteLogo"
+                class="avatar"
+              />
+              <el-icon v-else class="avatar-uploader-icon"><Plus /></el-icon>
+            </el-upload>
+          </el-form-item>
           <el-form-item label="站点描述" prop="siteDescription">
             <el-input v-model="siteSettingsForm.siteDescription"></el-input>
           </el-form-item>
@@ -470,6 +486,8 @@ export default {
       siteTitle: '',
       // 站点副标题
       siteSubTitle: '',
+      // 站点LOGO
+      siteLogo: '',
       // 站点描述
       siteDescription: '',
       // 站点关键词
@@ -492,6 +510,25 @@ export default {
       siteTimeZone: [
         { required: true, message: '请选择你所在时区', trigger: 'blur' },
       ],
+    }
+    const setSiteLogo = (file) => {
+      // file to base64
+      const reader = new FileReader()
+      reader.readAsDataURL(file.raw)
+      reader.onload = (e) => {
+        // base64转webp 0.8质量
+        const img = new Image()
+        img.src = e.target.result
+        img.onload = () => {
+          const canvas = document.createElement('canvas')
+          const ctx = canvas.getContext('2d')
+          canvas.width = img.width
+          canvas.height = img.height
+          ctx.drawImage(img, 0, 0, img.width, img.height)
+          const base64 = canvas.toDataURL('image/webp', 0.8)
+          siteSettingsForm.siteLogo = base64
+        }
+      }
     }
     const siteSettingsSubmit = () => {
       siteSettingsFormRef.value.validate((valid) => {
@@ -811,6 +848,7 @@ export default {
       commentSettingsFormRef,
       commentSettingsForm,
       commentSettingsRules,
+      setSiteLogo,
       commentSettingsSubmit,
       // RSS设置
       rssSettingsFormRef,
