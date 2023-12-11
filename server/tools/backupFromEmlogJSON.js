@@ -58,20 +58,28 @@ const init = async () => {
   const sortListMongoDBList = []
   // 优先将没用parent的插入数据库并记录id
   const sortIdMap = {} // key: emlog的sid, value: mongodb的_id
+  const sortWithoutParentPromiseList = []
   for (let i = 0; i < sortListWithoutParent.length; i++) {
     const sort = sortListWithoutParent[i]
-    const sortData = await sortUtils.save(sort)
-    sortIdMap[sort.sid] = sortData._id
-    sortListMongoDBList.push(sortData)
+    const promise = sortUtils.save(sort).then((sortData) => {
+      sortIdMap[sort.sid] = sortData._id
+      sortListMongoDBList.push(sortData)
+    })
+    sortWithoutParentPromiseList.push(promise)
   }
+  await Promise.all(sortWithoutParentPromiseList)
   // 将有parent的插入数据库并记录id
+  const sortWithParentPromiseList = []
   for (let i = 0; i < sortListWithParent.length; i++) {
     const sort = sortListWithParent[i]
     sort.parent = sortIdMap[sort.pid]
-    const sortData = await sortUtils.save(sort)
-    sortIdMap[sort.sid] = sortData._id
-    sortListMongoDBList.push(sortData)
+    const promise = sortUtils.save(sort).then((sortData) => {
+      sortIdMap[sort.sid] = sortData._id
+      sortListMongoDBList.push(sortData)
+    })
+    sortWithParentPromiseList.push(promise)
   }
+  await Promise.all(sortWithParentPromiseList)
   console.log('分类写入完毕')
 
   // 转换tag表
@@ -97,17 +105,22 @@ const init = async () => {
     tagList.push(tag)
   })
   // 将tagList插入数据库并记录id
+  const tagPromiseList = []
   for (let i = 0; i < tagList.length; i++) {
     const tag = tagList[i]
-    const tagData = await tagUtils.save(tag)
-    // gid是数组
-    tag.gid.forEach(gid => {
-      const GIDList = tagGIDMap[gid] || []
-      GIDList.push(tagData._id)
-      tagGIDMap[gid] = GIDList
+    const promise = tagUtils.save(tag).then((tagData) => {
+      // gid是数组
+      tag.gid.forEach(gid => {
+        const GIDList = tagGIDMap[gid] || []
+        GIDList.push(tagData._id)
+        tagGIDMap[gid] = GIDList
+      })
+
     })
+    tagPromiseList.push(promise)
 
   }
+  await Promise.all(tagPromiseList)
   console.log('标签写入完毕')
 
   // 转换attachment表
@@ -176,12 +189,16 @@ const init = async () => {
 
   // 将attachmentList插入数据库，记录id,key是filepath去掉/,value是mongodb的_id
   const attachmentFilepathMap = {}
+  const attachmentPromiseList = []
   for (let i = 0; i < attachmentList.length; i++) {
     const attachment = attachmentList[i]
-    const attachmentData = await attachmentsUtils.save(attachment)
-    attachmentFilepathMap[attachment.filepath.replace(/^\//, '')] = attachmentData._id
-    albumAttachmentCount++
+    const promise = attachmentsUtils.save(attachment).then((attachmentData) => {
+      attachmentFilepathMap[attachment.filepath.replace(/^\//, '')] = attachmentData._id
+      albumAttachmentCount++
+    })
+    attachmentPromiseList.push(promise)
   }
+  await Promise.all(attachmentPromiseList)
   // 更新相册的附件数量
   albumUtils.updateOne({ _id: albumData._id }, { count: albumAttachmentCount })
   console.log('附件写入完毕')
@@ -234,18 +251,24 @@ const init = async () => {
   })
   // 写入数据库，保存idMap
   const postIdMap = {} // key: emlog的gid, value: mongodb的_id
+  const postPromiseList = []
   for (let i = 0; i < postList.length; i++) {
     const post = postList[i]
-    const postData = await postUtils.save(post)
-    postIdMap[post.gid] = postData._id
+    const promise = postUtils.save(post).then((postData) => {
+      postIdMap[post.gid] = postData._id
+    })
+    postPromiseList.push(promise)
   }
+  await Promise.all(postPromiseList)
   console.log('文章写入完毕')
 
   // 转换twitter表
   const twitterList = []
   const twitterEmlogList = data[tablePrefix + 'twitter']
   // 遍历twitterEmlogList,转换格式
-  twitterEmlogList.forEach(async twitterEmlog => {
+  const twitterAttachPromiseList = []
+  for (let i = 0; i < twitterEmlogList.length; i++) {
+    const twitterEmlog = twitterEmlogList[i]
     const date = new Date(twitterEmlog.date * 1000)
     const coverImages = []
     // img 去掉 thum-
@@ -274,9 +297,12 @@ const init = async () => {
         status: 1,
         createdAt: date,
       }
-      const imgData = await attachmentsUtils.save(imgParam)
-      coverImages.push(imgData._id)
+      const promise = attachmentsUtils.save(imgParam).then((imgData) => {
+        coverImages.push(imgData._id)
+      })
+      twitterAttachPromiseList.push(promise)
     }
+    await Promise.all(twitterAttachPromiseList)
 
     const twitter = {
       tid: twitterEmlog.id,
@@ -289,14 +315,18 @@ const init = async () => {
       coverImages: coverImages,
     }
     twitterList.push(twitter)
-  })
+  }
   // 写入数据库，保存idMap
   const twitterIdMap = {} // key: emlog的id, value: mongodb的_id
+  const twitterPromiseList = []
   for (let i = 0; i < twitterList.length; i++) {
     const twitter = twitterList[i]
-    const twitterData = await postUtils.save(twitter)
-    twitterIdMap[twitter.tid] = twitterData._id
+    const promise = postUtils.save(twitter).then((twitterData) => {
+      twitterIdMap[twitter.tid] = twitterData._id
+    })
+    twitterPromiseList.push(promise)
   }
+  await Promise.all(twitterPromiseList)
   console.log('微语写入完毕')
 
   // 转换comment表
@@ -309,6 +339,8 @@ const init = async () => {
     const comment = {
       post: postIdMap[commentEmlog.gid],
       parent: null,//暂时不处理
+      pid: commentEmlog.pid,
+      cid: commentEmlog.cid,
       date: date,
       content: commentEmlog.comment,
       top: false,
@@ -322,21 +354,28 @@ const init = async () => {
     commentList.push(comment)
   })
   // 写入数据库
+  const commentPromiseList = []
   for (let i = 0; i < commentList.length; i++) {
     const comment = commentList[i]
-    const commentData = await commentUtils.save(comment)
-    commentList[i]['commentData'] = commentData
-    commentMap[comment.cid] = commentData._id
+    const promise = commentUtils.save(comment).then((commentData) => {
+      commentList[i]['commentData'] = commentData
+      commentMap[comment.cid] = commentData._id
+    })
+    commentPromiseList.push(promise)
   }
+  await Promise.all(commentPromiseList)
   // 更新评论的parent
+  const commentUpdatePromiseList = []
   for (let i = 0; i < commentList.length; i++) {
     const comment = commentList[i]
     const commentData = comment.commentData
     const pid = comment.pid
-    if (pid && commentMap[pid]) {
-      await commentUtils.updateOne({ _id: commentData._id }, { parent: commentMap[pid] })
+    if (pid !== '0' && commentMap[pid]) {
+      const promise = commentUtils.updateOne({ _id: commentData._id }, { parent: commentMap[pid] })
+      commentUpdatePromiseList.push(promise)
     }
   }
+  await Promise.all(commentUpdatePromiseList)
   console.log('评论写入完毕')
 
   // 转换reply表
@@ -358,10 +397,13 @@ const init = async () => {
     replyList.push(reply)
   })
   // 写入数据库
+  const replyPromiseList = []
   for (let i = 0; i < replyList.length; i++) {
     const reply = replyList[i]
-    await commentUtils.save(reply)
+    const promise = commentUtils.save(reply)
+    replyPromiseList.push(promise)
   }
+  await Promise.all(replyPromiseList)
   console.log('推文回复写入完毕')
 
   // 退出
