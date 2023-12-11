@@ -2,6 +2,7 @@ const optionUtils = require('../../../mongodb/utils/options')
 const utils = require('../../../utils/utils')
 const log4js = require('log4js')
 const adminApiLog = log4js.getLogger('adminApi')
+const globalConfigUtils = require('../../../config/globalConfig')
 
 module.exports = async function (req, res, next) {
   const optionList = req.body.optionList || []
@@ -48,6 +49,7 @@ module.exports = async function (req, res, next) {
       adminApiLog.error(`option update fail, ${JSON.stringify(err)}`)
     })
   }
+  globalConfigUtils.initGlobalConfig()
   // 返回结果
   res.send({
     data: resList

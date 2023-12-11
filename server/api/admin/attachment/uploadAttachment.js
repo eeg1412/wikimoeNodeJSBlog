@@ -32,8 +32,17 @@ module.exports = async function (req, res, next) {
   const { file } = req
   const headers = req.headers
   const albumid = headers['albumid']
+  if (!global.$globalConfig) {
+    // 报错500
+    res.status(500).json({
+      errors: [{
+        message: '配置项未初始化'
+      }]
+    })
+    return
+  }
   // 读取全局配置
-  const config = global.$globalConfig;
+  const config = global.$globalConfig.imgSettings;
   // // 开启图片压缩
   // imgSettingEnableImgCompress: false,
   // // 图片压缩为webp格式

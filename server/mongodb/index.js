@@ -1,4 +1,5 @@
 var mongoose = require('mongoose');
+const globalConfigUtils = require('../config/globalConfig')
 console.info('数据库连接中...');
 // console.log('数据库地址：', process.env.DB_HOST);
 if (!process.env.DB_HOST) {
@@ -10,6 +11,7 @@ var db = mongoose.connection;
 
 db.once('open', () => {
   console.info('数据库连接成功！');
+  globalConfigUtils.initGlobalConfig()
 })
 
 db.on('error', function (error) {

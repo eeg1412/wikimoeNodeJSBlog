@@ -218,24 +218,6 @@ const adminRouteSetting = [
     roleType: null,
     role: null
   },
-  // get /congfig
-  {
-    path: '/config',
-    method: 'get',
-    middleware: [checkAuth],
-    controller: require('../api/admin/config/getConfig'),
-    roleType: null,
-    role: null
-  },
-  // put /config/media
-  {
-    path: '/config/media',
-    method: 'put',
-    middleware: [checkAuth],
-    controller: require('../api/admin/config/updateConfigMedia'),
-    roleType: null,
-    role: null
-  },
   // post /attachment/upload
   {
     path: '/attachment/upload',

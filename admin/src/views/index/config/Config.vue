@@ -389,17 +389,11 @@ export default {
       ],
     }
 
-    const getConfig = () => {
-      authApi.getConfig().then((res) => {
-        Object.keys(mediaForm).forEach((key) => {
-          mediaForm[key] = res.data.data[key]
-        })
-      })
-    }
     const getOptionList = () => {
       authApi.getOptionList().then((res) => {
         // res.data.data是数组，需要转换为对象
         const obj = formatResToObj(res.data.data)
+        formatResToForm(mediaForm, obj)
         formatResToForm(siteSettingsForm, obj)
         formatResToForm(commentSettingsForm, obj)
         formatResToForm(rssSettingsForm, obj)
@@ -434,9 +428,18 @@ export default {
     const mediaSubmit = () => {
       mediaFormRef.value.validate((valid) => {
         if (valid) {
+          const params = []
+          Object.keys(mediaForm).forEach((key) => {
+            params.push({
+              name: key,
+              value: mediaForm[key],
+            })
+          })
           authApi
-            .updateConfigMedia(mediaForm)
+            .updateOption({ optionList: params })
             .then((res) => {
+              const obj = formatResToObj(res.data.data)
+              formatResToForm(mediaForm, obj)
               ElMessage.success('更新成功')
             })
             .catch((err) => {
@@ -811,7 +814,6 @@ export default {
     ])
 
     onMounted(() => {
-      getConfig()
       getOptionList()
     })
     return {
