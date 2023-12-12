@@ -5,11 +5,10 @@ export default defineNuxtConfig({
   devServer: {
     port: 8078,
   },
+  modules: ['@pinia/nuxt'],
+  css: ['~/assets/css/common.css'],
   runtimeConfig: {
     apiDomain: '',
-    public: {
-      apiBase: '/api/blog',
-    },
   },
   routeRules: {
     '/api/admin/**': {
@@ -23,6 +22,9 @@ export default defineNuxtConfig({
     },
     '/upload/**': {
       proxy: `${process.env.NUXT_API_API_DOMAIN}/upload/**`,
+    },
+    '/api/blog/**': {
+      proxy: `${process.env.NUXT_API_API_DOMAIN}/api/blog/**`,
     },
   },
 })

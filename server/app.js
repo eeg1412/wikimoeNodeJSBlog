@@ -7,6 +7,7 @@ require('./mongodb')
 var history = require('connect-history-api-fallback');
 
 var adminRouter = require('./routes/admin');
+const blogRouter = require('./routes/blog');
 const rssRouter = require('./routes/rss/index');
 
 var app = express();
@@ -29,6 +30,7 @@ app.use((err, req, res, next) => {
   next();
 });
 app.use('/api/admin', adminRouter);
+app.use('/api/blog', blogRouter);
 app.use('/rss', rssRouter);
 
 app.use(history({

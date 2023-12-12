@@ -40,11 +40,6 @@ const checkAuth = async (req, res, next) => {
 }
 
 
-router.use((req, res, next) => {
-  // api 中间件，用于一些统一处理
-  next()
-})
-
 // roleType 大于小于等于
 // role 管理员的等级，配合上面的roleType使用
 const adminRouteSetting = [

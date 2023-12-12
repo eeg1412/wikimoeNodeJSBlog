@@ -27,3 +27,8 @@ onMounted(() => {
   console.log('mounted')
 })
 </script>
+<style scoped>
+img {
+  max-width: 100%;
+}
+</style>
