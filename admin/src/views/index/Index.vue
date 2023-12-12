@@ -241,6 +241,7 @@ export default {
 
     onMounted(() => {
       store.dispatch('setAdminInfo')
+      store.dispatch('setOptions')
     })
     return {
       SwitchButton,

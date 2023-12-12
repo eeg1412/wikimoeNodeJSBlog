@@ -440,6 +440,8 @@ export default {
             .then((res) => {
               const obj = formatResToObj(res.data.data)
               formatResToForm(mediaForm, obj)
+              store.dispatch('setOptions')
+
               ElMessage.success('更新成功')
             })
             .catch((err) => {
@@ -521,6 +523,8 @@ export default {
             .then((res) => {
               const obj = formatResToObj(res.data.data)
               formatResToForm(siteSettingsForm, obj)
+              store.dispatch('setOptions')
+
               ElMessage.success('更新成功')
             })
             .catch((err) => {
@@ -567,6 +571,8 @@ export default {
             .then((res) => {
               const obj = formatResToObj(res.data.data)
               formatResToForm(commentSettingsForm, obj)
+              store.dispatch('setOptions')
+
               ElMessage.success('更新成功')
             })
             .catch((err) => {
@@ -608,6 +614,8 @@ export default {
             .then((res) => {
               const obj = formatResToObj(res.data.data)
               formatResToForm(rssSettingsForm, obj)
+              store.dispatch('setOptions')
+
               ElMessage.success('更新成功')
             })
             .catch((err) => {
@@ -698,6 +706,8 @@ export default {
             .then((res) => {
               const obj = formatResToObj(res.data.data)
               formatResToForm(emailSettingsForm, obj)
+              store.dispatch('setOptions')
+
               ElMessage.success('更新成功')
             })
             .catch((err) => {

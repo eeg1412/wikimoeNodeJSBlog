@@ -28,6 +28,7 @@ import { onBeforeUnmount, ref, shallowRef, onMounted, computed } from 'vue'
 import { Editor, Toolbar } from '@wangeditor/editor-for-vue'
 import AttachmentsDialog from '@/components/AttachmentsDialog'
 import { DomEditor } from '@wangeditor/editor'
+import store from '@/store'
 
 export default {
   props: {
@@ -172,13 +173,21 @@ export default {
     const openAttachmentsDialog = () => {
       attachmentsDialogRef.value.open()
     }
+    const siteUrl = computed(() => {
+      return store.state.siteUrl
+    })
     const selectAttachments = (attachments) => {
       console.log(attachments)
       attachments.forEach((item) => {
-        // TODO: 此处需要加上博客域名
         if (insertFn_) {
           // insertFn(url, alt, href)
-          insertFn_(item.thumfor || item.filepath, item.filename, item.filepath)
+          insertFn_(
+            item.thumfor
+              ? siteUrl.value + item.thumfor
+              : siteUrl.value + item.filepath,
+            item.filename,
+            siteUrl.value + item.filepath
+          )
         }
       })
     }

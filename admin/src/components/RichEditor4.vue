@@ -20,6 +20,7 @@ import {
 } from 'vue'
 import AttachmentsDialog from '@/components/AttachmentsDialog'
 import E from 'wangeditor'
+import store from '@/store'
 
 export default {
   props: {
@@ -37,16 +38,18 @@ export default {
     const openAttachmentsDialog = () => {
       attachmentsDialogRef.value.open()
     }
+    const siteUrl = computed(() => {
+      return store.state.siteUrl
+    })
     const selectAttachments = (attachments) => {
       console.log(attachments)
       attachments.forEach((item) => {
-        // TODO: 此处需要加上博客域名
         // TODO: v4版本的data-href需要uri解码
         editor.cmd.do(
           'insertHTML',
-          `<img src="${item.thumfor || item.filepath}" data-href="${
-            item.filepath
-          }" />`
+          `<img src="${siteUrl.value}${
+            item.thumfor || item.filepath
+          }" data-href="${siteUrl.value}${item.filepath}" />`
         )
       })
     }
