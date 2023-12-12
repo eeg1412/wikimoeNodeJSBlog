@@ -33,7 +33,7 @@
       </div>
     </div>
     <!-- 侧边栏 -->
-    <div class="mb20">
+    <div class="mb20" v-if="sidebarSettingsForm.length > 0">
       <draggable
         v-model="sidebarSettingsForm"
         group="sidebarSettings"
@@ -146,6 +146,7 @@
         >
       </div> -->
     </div>
+    <div class="mt30" v-else><el-empty description="暂无数据" /></div>
   </div>
 </template>
 <script>

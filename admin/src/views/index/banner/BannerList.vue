@@ -18,7 +18,7 @@
       </div>
     </div>
     <!-- 横幅 -->
-    <div class="mb20">
+    <div class="mb20" v-if="bannerSettingsForm.length > 0">
       <draggable
         v-model="bannerSettingsForm"
         group="bannerSettings"
@@ -109,6 +109,7 @@
         >
       </div> -->
     </div>
+    <div class="mt30" v-else><el-empty description="暂无数据" /></div>
   </div>
 </template>
 <script>
