@@ -57,7 +57,7 @@ const initGlobalConfig = async () => {
     // RSS显示条数
     siteRssMaxCount: 10,
     // RSS输出全文
-    siteRssFullText: false,
+    // siteRssFullText: false,
   }
 
   const emailSettingsConfig = {
