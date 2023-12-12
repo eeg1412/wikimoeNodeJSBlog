@@ -138,9 +138,9 @@
               :step="1"
             ></el-input-number>
           </el-form-item>
-          <el-form-item label="RSS输出全文" prop="siteRssFullText">
+          <!-- <el-form-item label="RSS输出全文" prop="siteRssFullText">
             <el-switch v-model="rssSettingsForm.siteRssFullText"></el-switch>
-          </el-form-item>
+          </el-form-item> -->
 
           <el-form-item>
             <el-button type="primary" @click="rssSettingsSubmit"
@@ -586,7 +586,7 @@ export default {
       // RSS显示条数
       siteRssMaxCount: 10,
       // RSS输出全文
-      siteRssFullText: false,
+      // siteRssFullText: false,
     })
     const rssSettingsRules = {
       siteRssMaxCount: [
