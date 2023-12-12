@@ -3,7 +3,9 @@
     <div class="blog-layout-left-body">
       <!-- logo -->
       <div>
-        <img class="blog-layout-sitelogo" :src="options.siteLogo" />
+        <nuxt-link to="/">
+          <img class="blog-layout-sitelogo" :src="options.siteLogo" />
+        </nuxt-link>
       </div>
       <!-- siteDescription -->
       <div class="blog-layout-desc">
