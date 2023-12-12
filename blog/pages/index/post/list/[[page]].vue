@@ -2,6 +2,7 @@
   <div>
     <h1>post list Page</h1>
     <p>This is page {{ page }}</p>
+    <img :src="'/content/uploadfile/202309/79db1694053919.jpg'" />
     <!-- 跳转下一页 -->
     <nuxt-link :to="`/post/list/${page + 1}`">Next page</nuxt-link>
   </div>
@@ -18,6 +19,10 @@ const route = useRoute()
 const page = route.params.page ? Number(route.params.page) : 1
 console.log(page)
 console.log(route.name)
+
+// const { data } = await useFetch('/rss', { method: 'GET' })
+// console.log(data)
+
 onMounted(() => {
   console.log('mounted')
 })
