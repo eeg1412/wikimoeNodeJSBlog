@@ -16,10 +16,10 @@
         <li v-for="(item, index) in naviList" :key="index">
           <nuxt-link
             class="blog-layout-sidebar-item"
-            :class="{ active: item.path === currentPath }"
-            :to="item.path"
+            :class="{ active: item.url === currentPath }"
+            :to="item.url"
           >
-            <span>{{ item.title }}</span>
+            <span>{{ item.naviname }}</span>
           </nuxt-link>
         </li>
       </ul>
@@ -34,16 +34,30 @@
 <script setup>
 import { useOptionStore } from '@/store/options'
 import { storeToRefs } from 'pinia'
+import { getNaviListApi } from '@/api/navi'
 const route = useRoute()
 const optionStore = useOptionStore()
 const { options } = storeToRefs(optionStore)
 // sidebar
-const naviList = ref([
-  {
-    title: '首页',
-    path: '/',
-  },
-])
+// const naviList = ref([
+//   {
+//     title: '首页',
+//     path: '/',
+//   },
+// ])
+const { data: naviListData } = await getNaviListApi()
+const naviList = computed(() => {
+  const list = naviListData.value.data
+  const newList = [
+    {
+      naviname: '首页',
+      url: '/',
+      isdefault: true,
+    },
+    ...list,
+  ]
+  return newList
+})
 // 当前路由的path
 const currentPath = computed(() => {
   return route.path
@@ -104,13 +118,18 @@ const currentPath = computed(() => {
   display: flex;
   box-sizing: border-box;
   border-radius: 40px;
+  margin-bottom: 10px;
   /* 垂直居中 */
   align-items: center;
   /* 动画 */
   transition: all 0.3s;
 }
-.blog-layout-sidebar-item:hover,
 .blog-layout-sidebar-item.active {
+  color: #ef90a7;
+  /* font-weight: 700; */
+}
+
+.blog-layout-sidebar-item:hover {
   background: #ef90a7;
   color: #ffffff;
 }

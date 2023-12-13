@@ -9,6 +9,13 @@ const blogRouteSetting = [
     middleware: [],
     controller: require('../api/blog/option/getoptionList'),
   },
+  // getnaviList
+  {
+    path: '/navi/list',
+    method: 'get',
+    middleware: [],
+    controller: require('../api/blog/navi/getnaviList'),
+  },
 
 ]
 
