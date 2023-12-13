@@ -13,7 +13,7 @@
       </div>
       <!-- 导航 -->
       <ul class="blog-layout-sidebar-body">
-        <li v-for="(item, index) in sidebarList" :key="index">
+        <li v-for="(item, index) in naviList" :key="index">
           <nuxt-link
             class="blog-layout-sidebar-item"
             :class="{ active: item.path === currentPath }"
@@ -38,7 +38,7 @@ const route = useRoute()
 const optionStore = useOptionStore()
 const { options } = storeToRefs(optionStore)
 // sidebar
-const sidebarList = ref([
+const naviList = ref([
   {
     title: '首页',
     path: '/',

@@ -2,7 +2,7 @@ import type { UseFetchOptions } from 'nuxt/app'
 
 type Methods = 'GET' | 'POST' | 'DELETE' | 'PUT'
 
-const BASE_URL = ''
+const BASE_URL = '/api/blog'
 
 export interface IResultData<T> {
   code: number
