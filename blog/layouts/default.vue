@@ -1,27 +1,36 @@
 <template>
-  <div class="blog-layout-body" v-if="options">
-    <div class="blog-layout-left-body">
-      <!-- logo -->
-      <div>
-        <nuxt-link to="/">
-          <img class="blog-layout-sitelogo" :src="options.siteLogo" />
-        </nuxt-link>
+  <div>
+    <div class="blog-layout-body" v-if="options">
+      <div class="blog-layout-left-body">
+        <!-- logo -->
+        <div>
+          <nuxt-link to="/">
+            <img class="blog-layout-sitelogo" :src="options.siteLogo" />
+          </nuxt-link>
+        </div>
+        <!-- siteDescription -->
+        <div class="blog-layout-desc">
+          <p>{{ options.siteDescription }}</p>
+        </div>
+        <!-- 导航 -->
+        <ul class="blog-layout-sidebar-body">
+          <template v-for="(item, index) in naviList" :key="index">
+            <NaviItem :item="item" :currentPath="currentPath" />
+          </template>
+        </ul>
       </div>
-      <!-- siteDescription -->
-      <div class="blog-layout-desc">
-        <p>{{ options.siteDescription }}</p>
+      <div class="blog-layout-content-body">
+        <slot></slot>
       </div>
-      <!-- 导航 -->
-      <ul class="blog-layout-sidebar-body">
-        <template v-for="(item, index) in naviList" :key="index">
-          <NaviItem :item="item" :currentPath="currentPath" />
-        </template>
-      </ul>
+      <div class="blog-layout-right-body">{{ options }}{{ currentPath }}</div>
     </div>
-    <div class="blog-layout-content-body">
-      <slot></slot>
+    <!-- footer Powered by wikimoeBlog -->
+    <div class="blog-footer-body">
+      <div class="blog-footer-content-body">
+        <span>Powered by</span>
+        <a href="https://www.wikimoe.com/" target="_blank">wikimoeBlog</a>
+      </div>
     </div>
-    <div class="blog-layout-right-body">{{ options }}{{ currentPath }}</div>
   </div>
 </template>
 <script setup>
@@ -67,6 +76,7 @@ const currentPath = computed(() => {
   margin: 10px;
   width: 1220px;
   margin: 0 auto;
+  margin-bottom: 20px;
   padding-top: 15px;
 }
 .blog-layout-left-body {
@@ -102,5 +112,17 @@ const currentPath = computed(() => {
 }
 .blog-layout-sidebar-body {
   padding-top: 18px;
+}
+.blog-footer-body {
+  width: 100%;
+  height: 105px;
+  background: #171717;
+}
+.blog-footer-content-body {
+  max-width: 1220px;
+  padding: 0 20px;
+  padding-top: 35px;
+  margin: 0 auto;
+  color: #ffffff;
 }
 </style>
