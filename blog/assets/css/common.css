@@ -787,6 +787,9 @@ input[type='password'] {
 .cGray999 {
   color: #999999;
 }
+.cGray94 {
+  color: #949494;
+}
 .cGray666 {
   color: #666666;
 }
@@ -878,4 +881,7 @@ input[type='password'] {
   margin-bottom: 4px;
   color: #979797;
   font-size: 12px;
+}
+.tenten {
+  padding: 0 3px;
 }

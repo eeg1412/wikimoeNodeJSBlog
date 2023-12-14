@@ -19,10 +19,9 @@
       </ul>
     </div>
     <div class="blog-layout-content-body">
-      {{ options }}
       <slot></slot>
     </div>
-    <div class="blog-layout-right-body">{{ currentPath }}</div>
+    <div class="blog-layout-right-body">{{ options }}{{ currentPath }}</div>
   </div>
 </template>
 <script setup>
@@ -82,6 +81,8 @@ const currentPath = computed(() => {
 .blog-layout-content-body {
   background-color: #ffffff;
   border-radius: 20px;
+  /* 撑开剩余空间 */
+  flex: 1;
 }
 .blog-layout-right-body {
   width: 300px;

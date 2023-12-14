@@ -1,14 +1,29 @@
 <template>
   <div>
-    <h1>post list Page</h1>
-    <p>This is page {{ page }}</p>
-    <img :src="'/content/uploadfile/202309/79db1694053919.jpg'" />
-    <!-- 跳转下一页 -->
-    <nuxt-link :to="`/post/list/${page + 1}`">Next page</nuxt-link>
+    <div v-if="postsData" class="post-list-body">
+      <div
+        v-for="(item, index) in postsData.list"
+        :key="item._id"
+        class="post-list-body-item"
+      >
+        <!-- 作者 时间 分类名 -->
+        <div class="post-list-info-body">
+          <span>{{ item.author?.nickname }}</span
+          ><span class="tenten">·</span
+          ><span class="cGray94">{{ item.date }}</span
+          ><span class="tenten">·</span
+          ><span class="cGray94">{{ item.sort?.sortname }}</span>
+        </div>
+        <!-- 简介/推文 -->
+        <!-- tags -->
+        <!-- 图片 -->
+      </div>
+    </div>
   </div>
 </template>
 <script setup>
 import { useRoute } from 'vue-router'
+import { getPostsApi } from '@/api/post'
 
 definePageMeta({
   alias: '/',
@@ -18,10 +33,12 @@ definePageMeta({
 const route = useRoute()
 const page = route.params.page ? Number(route.params.page) : 1
 console.log(page)
-console.log(route.name)
 
-// const { data } = await useFetch('/rss', { method: 'GET' })
-// console.log(data)
+const { data: postsData } = await getPostsApi({
+  page,
+})
+
+console.log(postsData)
 
 onMounted(() => {
   console.log('mounted')
@@ -30,5 +47,8 @@ onMounted(() => {
 <style scoped>
 img {
   max-width: 100%;
+}
+.post-list-body {
+  padding: 15px;
 }
 </style>
