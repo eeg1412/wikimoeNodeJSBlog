@@ -5,7 +5,7 @@ export default defineNuxtConfig({
   devServer: {
     port: 8078,
   },
-  modules: ['@pinia/nuxt'],
+  modules: ['@pinia/nuxt', '@nuxt/ui'],
   css: ['~/assets/css/common.css'],
   runtimeConfig: {
     apiDomain: '',
@@ -26,5 +26,8 @@ export default defineNuxtConfig({
     '/api/blog/**': {
       proxy: `${process.env.NUXT_API_API_DOMAIN}/api/blog/**`,
     },
+  },
+  colorMode: {
+    preference: 'light',
   },
 })

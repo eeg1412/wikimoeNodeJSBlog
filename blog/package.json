@@ -16,6 +16,7 @@
     "vue-router": "^4.2.5"
   },
   "dependencies": {
+    "@nuxt/ui": "^2.11.1",
     "@pinia/nuxt": "^0.5.1"
   }
 }

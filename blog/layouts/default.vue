@@ -13,15 +13,9 @@
       </div>
       <!-- 导航 -->
       <ul class="blog-layout-sidebar-body">
-        <li v-for="(item, index) in naviList" :key="index">
-          <nuxt-link
-            class="blog-layout-sidebar-item"
-            :class="{ active: item.url === currentPath }"
-            :to="item.url"
-          >
-            <span>{{ item.naviname }}</span>
-          </nuxt-link>
-        </li>
+        <template v-for="(item, index) in naviList" :key="index">
+          <NaviItem :item="item" :currentPath="currentPath" />
+        </template>
       </ul>
     </div>
     <div class="blog-layout-content-body">
@@ -56,6 +50,7 @@ const naviList = computed(() => {
     },
     ...list,
   ]
+  console.log(newList)
   return newList
 })
 // 当前路由的path
@@ -106,31 +101,5 @@ const currentPath = computed(() => {
 }
 .blog-layout-sidebar-body {
   padding-top: 18px;
-}
-.blog-layout-sidebar-item {
-  width: 100%;
-  height: 40px;
-  padding: 0 20px;
-  font-size: 20px;
-  font-style: normal;
-  font-weight: 400;
-  color: #171717;
-  display: flex;
-  box-sizing: border-box;
-  border-radius: 40px;
-  margin-bottom: 10px;
-  /* 垂直居中 */
-  align-items: center;
-  /* 动画 */
-  transition: all 0.3s;
-}
-.blog-layout-sidebar-item.active {
-  color: #ef90a7;
-  /* font-weight: 700; */
-}
-
-.blog-layout-sidebar-item:hover {
-  background: #ef90a7;
-  color: #ffffff;
 }
 </style>
