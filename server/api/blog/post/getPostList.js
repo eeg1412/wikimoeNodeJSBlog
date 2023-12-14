@@ -5,6 +5,7 @@ const log4js = require('log4js')
 const adminApiLog = log4js.getLogger('adminApi')
 
 module.exports = async function (req, res, next) {
+  // TODO:置顶
   let { page, keyword, type, sorttype, sort, tags } = req.query
   page = parseInt(page)
   const size = global.$globalConfig?.siteSettings?.sitePageSize || 1

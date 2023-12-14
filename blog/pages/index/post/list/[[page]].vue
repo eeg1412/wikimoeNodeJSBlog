@@ -17,14 +17,17 @@
           >
         </div>
         <!-- 简介/推文 -->
-        <div class="post-list-excerpt-body">{{ item.excerpt }}</div>
-        <!-- tags -->
-        <div class="post-list-tags-body" v-if="item.tags.length > 0">
-          <template v-for="(tag, index) in item.tags" :key="index">
-            <!-- TODO:到时候是链接 -->
-            <span class="post-list-tag-item">#{{ tag.tagname }}</span>
-          </template>
+        <div class="post-list-excerpt-body">
+          <div>{{ item.excerpt }}</div>
+          <!-- tags -->
+          <div class="post-list-tags-body" v-if="item.tags.length > 0">
+            <template v-for="(tag, index) in item.tags" :key="index">
+              <!-- TODO:到时候是链接 -->
+              <span class="post-list-tag-item">#{{ tag.tagname }}</span>
+            </template>
+          </div>
         </div>
+
         <!-- 图片 -->
         <template v-if="item.type === 1">
           <div class="post-list-blog-panel">
@@ -51,6 +54,9 @@
             </div>
           </div>
         </template>
+        <div v-else-if="item.type === 2" class="post-list-tweet-cover-body">
+          <TweetImgList :coverImages="item.coverImages" />
+        </div>
         <!-- 统计信息左边阅读数 右边点赞数 -->
         <div class="post-list-info-bottom-body cGray94">
           <div class="dflex flexCenter">
@@ -74,28 +80,45 @@
       </div>
     </div>
     <!-- 分页 上一页 1/20 下一页 -->
-    <div class="dflex flexCenter post-list-page-body">
-      <div class="mr15">
+    <div class="dflex post-list-page-body">
+      <div class="dflex mr15 page-link-body">
+        <!-- 去第一页 -->
         <NuxtLink
-          class="dflex flexCenter"
+          class="dflex flexCenter page-link"
+          :to="`/post/list/1`"
+          v-if="page > 1"
+        >
+          <UIcon class="mr5" name="i-heroicons-chevron-double-left" />
+        </NuxtLink>
+
+        <!-- 去上一页 -->
+        <NuxtLink
+          class="dflex flexCenter page-link"
           :to="`/post/list/${page - 1}`"
           v-if="page > 1"
         >
           <UIcon class="mr5" name="i-heroicons-chevron-left" />
-          <span>上一页</span>
         </NuxtLink>
       </div>
       <div class="mr15">
         <span>{{ page }}/{{ totalPage }}</span>
       </div>
-      <div>
+      <div class="dflex page-link-body">
+        <!-- 去下一页 -->
         <NuxtLink
-          class="dflex flexCenter"
+          class="dflex flexCenter page-link"
           :to="`/post/list/${page + 1}`"
           v-if="page < totalPage"
         >
-          <span>下一页</span>
           <UIcon class="ml5" name="i-heroicons-chevron-right" />
+        </NuxtLink>
+        <!-- 去最后一页 -->
+        <NuxtLink
+          class="dflex flexCenter page-link"
+          :to="`/post/list/${totalPage}`"
+          v-if="page < totalPage"
+        >
+          <UIcon class="ml5" name="i-heroicons-chevron-double-right" />
         </NuxtLink>
       </div>
     </div>
@@ -125,7 +148,7 @@ const totalPage = computed(() => {
   return Math.ceil(postsData.value.total / sitePageSize.value)
 })
 
-console.log(postsData)
+// console.log(postsData)
 
 onMounted(() => {
   console.log('mounted')
@@ -134,26 +157,31 @@ onMounted(() => {
 <style scoped>
 .post-list-body {
   padding: 15px;
+  padding-bottom: 0px;
 }
 .post-list-body-item {
   border-bottom: 1px solid #e2e2e2;
   margin-bottom: 15px;
 }
 .post-list-info-body {
-  margin-bottom: 8px;
+  margin-bottom: 12px;
 }
 .post-list-excerpt-body {
-  margin-bottom: 8px;
+  margin-bottom: 12px;
 }
 .post-list-tags-body {
-  margin-bottom: 8px;
+  margin-bottom: 12px;
+  margin-top: 3px;
+}
+.post-list-tweet-cover-body {
+  margin-bottom: 12px;
 }
 .post-list-tag-item {
-  margin-right: 8px;
+  margin-right: 12px;
   color: #ef90a7;
 }
 .post-list-blog-panel {
-  margin-bottom: 8px;
+  margin-bottom: 12px;
 }
 .post-list-blog-cover-img {
   border-radius: 20px 20px 0px 0px;
@@ -173,9 +201,24 @@ onMounted(() => {
   display: flex;
   justify-content: space-between;
   font-size: 13px;
-  padding-bottom: 8px;
+  padding-bottom: 12px;
 }
 .post-list-page-body {
+  color: #4b4b4b;
   padding-bottom: 20px;
+  /* 两边 中间  */
+  justify-content: space-between;
+  /* 垂直居中 */
+  align-items: center;
+}
+.page-link-body {
+  font-size: 16px;
+  padding: 0 20px;
+}
+.page-link {
+  margin: 0 2px;
+}
+.page-link:hover {
+  color: #ef90a7;
 }
 </style>

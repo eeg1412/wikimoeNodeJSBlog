@@ -5,7 +5,8 @@
     :alt="alt"
     :width="scaledWidth"
     :height="scaledHeight"
-    :style="{ objectFit: fit }"
+    :style="styleObject"
+    :loading="loading"
   />
 </template>
 
@@ -54,11 +55,20 @@ const scaledHeight = computed(() => {
   // calculate the scaled height based on the parent's height
   return props.height ? `${props.height}px` : 'auto'
 })
+
+const styleObject = computed(() => {
+  const obj = {}
+  if (props.fit) {
+    obj.objectFit = props.fit
+  }
+  return obj
+})
 </script>
 
 <style scoped>
 .wikimoe-image {
   width: 100%;
   height: auto;
+  max-height: 100%;
 }
 </style>
