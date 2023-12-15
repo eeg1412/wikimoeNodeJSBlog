@@ -2,6 +2,8 @@ const naviUtils = require('../../../mongodb/utils/navis')
 const utils = require('../../../utils/utils')
 const log4js = require('log4js')
 const adminApiLog = log4js.getLogger('adminApi')
+const cacheDataUtils = require('../../../config/cacheData')
+
 
 module.exports = async function (req, res, next) {
   const { id, __v } = req.body
@@ -70,6 +72,7 @@ module.exports = async function (req, res, next) {
       data: data
     })
     adminApiLog.info(`navi update success`)
+    cacheDataUtils.getNaviList()
   }).catch((err) => {
     res.status(400).json({
       errors: [{
