@@ -2,21 +2,13 @@
   <div v-if="postsData">
     <div class="top-banner-list-body" v-if="bannerListData">
       <Swiper
-        :modules="[SwiperAutoplay, SwiperEffectCreative, SwiperPagination]"
+        :modules="[SwiperAutoplay, SwiperPagination, SwiperMousewheel]"
         :slides-per-view="1"
         :loop="true"
+        :mousewheel="true"
         :autoplay="{
           delay: 8000,
           disableOnInteraction: true,
-        }"
-        :creative-effect="{
-          prev: {
-            shadow: false,
-            translate: ['-20%', 0, -1],
-          },
-          next: {
-            translate: ['100%', 0, 0],
-          },
         }"
         :pagination="{
           type: 'progressbar',
