@@ -285,6 +285,13 @@ export default function (api) {
         shouldAdminJWT: true
       })
     },
+    // delete /navi/delete
+    deleteNavi (data) {
+      return api.delete('/navi/delete', {
+        params: data,
+        shouldAdminJWT: true
+      })
+    },
     // put /option/update
     updateOption (data) {
       return api.put('/option/update', data, {
