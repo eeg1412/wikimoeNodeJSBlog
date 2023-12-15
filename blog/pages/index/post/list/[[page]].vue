@@ -8,9 +8,11 @@
       >
         <!-- 作者 时间 分类名 -->
         <div class="post-list-info-body">
-          <span>{{ item.author?.nickname }}</span
+          <span class="fb">{{ item.author?.nickname }}</span
           ><span class="tenten">·</span
-          ><span class="cGray94">{{ fromNow(item.date) }}</span
+          ><span class="cGray94" :title="formatDate(item.date)">{{
+            fromNow(item.date, 'yyyy-MM-dd')
+          }}</span
           ><template v-if="item.sort"
             ><span class="tenten">·</span
             ><span class="cGray94">{{ item.sort?.sortname }}</span></template
@@ -18,7 +20,10 @@
         </div>
         <!-- 简介/推文 -->
         <div class="post-list-excerpt-body">
-          <div>{{ item.excerpt }}</div>
+          <div v-if="item.type === 1">
+            {{ item.excerpt || '发表了一篇博文' }}
+          </div>
+          <div v-else>{{ item.excerpt }}</div>
           <!-- tags -->
           <div class="post-list-tags-body" v-if="item.tags.length > 0">
             <template v-for="(tag, index) in item.tags" :key="index">
@@ -131,7 +136,7 @@ import { useOptionStore } from '@/store/options'
 import { storeToRefs } from 'pinia'
 
 definePageMeta({
-  alias: '/',
+  alias: ['/', '/post/list/sort/:sortid/:page', '/post/list/tag/:tagid/:page'],
   name: 'post-list',
 })
 const optionStore = useOptionStore()
