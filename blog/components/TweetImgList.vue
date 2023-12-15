@@ -71,6 +71,7 @@ const props = defineProps({
 .blog-tweet-img-list-body.cover-count-1 {
   /* 宽高跟着内容走 */
   display: inline-block;
+  max-width: 100%;
 }
 .blog-tweet-img-list-body.cover-count-2 {
   grid-template-columns: repeat(2, 1fr);
