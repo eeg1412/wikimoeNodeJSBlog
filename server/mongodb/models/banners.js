@@ -10,6 +10,16 @@ var banners = new Schema({
   img: { type: String },
   // link
   link: { type: String },
+  // 是否新窗口打开 
+  newtab: {
+    type: Boolean,
+    default: false
+  },
+  // 是否本站链接
+  isdefault: {
+    type: Boolean,
+    default: false
+  },
   // 0:不可见 1:可见
   status: { type: Number, default: 0 },
 }, { timestamps: true });

@@ -14,6 +14,7 @@ db.once('open', () => {
   console.info('数据库连接成功！');
   globalConfigUtils.initGlobalConfig()
   cacheDataUtils.getNaviList()
+  cacheDataUtils.getBannerList()
 })
 
 db.on('error', function (error) {

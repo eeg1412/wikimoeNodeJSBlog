@@ -24,3 +24,22 @@ exports.getNaviList = async function (req, res, next) {
   })
   return promise
 }
+
+exports.getBannerList = async function (req, res, next) {
+  const sort = {
+    taxis: 1,
+    _id: -1
+  }
+  const promise = new Promise((resolve, reject) => {
+    bannerUtils.find({ status: 1 }, sort).then((data) => {
+      global.$cacheData.bannerList = data
+      resolve(data)
+      console.info('bannerList get success')
+    }).catch((err) => {
+      global.$cacheData.bannerList = null
+      reject(err)
+      console.error('bannerList get fail')
+    })
+  })
+  return promise
+}

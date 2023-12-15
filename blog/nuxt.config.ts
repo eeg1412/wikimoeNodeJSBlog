@@ -5,7 +5,14 @@ export default defineNuxtConfig({
   devServer: {
     port: 8078,
   },
-  modules: ['@pinia/nuxt', '@nuxt/ui'],
+  modules: ['@pinia/nuxt', '@nuxt/ui', 'nuxt-swiper'],
+  swiper: {
+    // Swiper options
+    //----------------------
+    // prefix: 'Swiper',
+    styleLang: 'css',
+    // modules: ['navigation', 'pagination'], // all modules are imported by default
+  },
   css: ['~/assets/css/common.css'],
   runtimeConfig: {
     apiDomain: '',

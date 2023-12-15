@@ -23,7 +23,13 @@ const blogRouteSetting = [
     middleware: [],
     controller: require('../api/blog/post/getPostList'),
   },
-
+  // getBannerList
+  {
+    path: '/banner/list',
+    method: 'get',
+    middleware: [],
+    controller: require('../api/blog/banner/getBannerList'),
+  },
 ]
 
 blogRouteSetting.forEach(item => {

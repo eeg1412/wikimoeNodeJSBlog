@@ -58,7 +58,7 @@ const naviList = computed(() => {
     },
     ...list,
   ]
-  console.log(newList)
+  // console.log(newList)
   return newList
 })
 // 当前路由的path
@@ -93,6 +93,7 @@ const currentPath = computed(() => {
   border-radius: 20px;
   /* 撑开剩余空间 */
   flex: 1;
+  overflow: hidden;
 }
 .blog-layout-right-body {
   width: 300px;

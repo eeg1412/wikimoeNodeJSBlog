@@ -2,6 +2,8 @@ const bannerUtils = require('../../../mongodb/utils/banners')
 const utils = require('../../../utils/utils')
 const log4js = require('log4js')
 const adminApiLog = log4js.getLogger('adminApi')
+const cacheDataUtils = require('../../../config/cacheData')
+
 
 module.exports = async function (req, res, next) {
   // bannername	String	是	否	无	横幅名称
@@ -73,6 +75,7 @@ module.exports = async function (req, res, next) {
       }
     })
     adminApiLog.info(`banner update success`)
+    cacheDataUtils.getBannerList()
   }).catch((err) => {
     res.status(400).json({
       errors: [{

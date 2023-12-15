@@ -47,9 +47,9 @@
                       <div>
                         <!-- 添加图片按钮 -->
                         <Cropper
-                          :aspectRatio="16 / 9"
-                          :width="1280"
-                          :height="720"
+                          :aspectRatio="880 / 300"
+                          :width="880"
+                          :height="300"
                           :src="element.img"
                           @crop="(crop) => setBanner(crop, element)"
                         ></Cropper>
@@ -71,6 +71,16 @@
                     <!-- 链接 link-->
                     <el-form-item label="链接" prop="link">
                       <el-input v-model="element.link"></el-input>
+                    </el-form-item>
+                    <!-- 是否本站 isdefault -->
+                    <el-form-item label="本站" prop="isdefault">
+                      <!-- 0不是 1是 -->
+                      <el-switch v-model="element.isdefault"></el-switch>
+                    </el-form-item>
+                    <!-- 是否新窗口 newtab -->
+                    <el-form-item label="新窗口" prop="newtab">
+                      <!-- 0不是 1是 -->
+                      <el-switch v-model="element.newtab"></el-switch>
                     </el-form-item>
                     <el-form-item label="状态" prop="status">
                       <!-- 0显示 1不显示 -->
