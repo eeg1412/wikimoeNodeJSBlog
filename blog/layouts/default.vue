@@ -80,8 +80,8 @@ const currentPath = computed(() => {
   margin: 0 auto;
   margin-bottom: 20px;
   margin-top: 15px;
-  background: #ffffff;
-  box-shadow: 0px 0px 10px 0px rgba(239, 144, 167, 0.06);
+  box-shadow: 0px 0px 10px 0px rgba(239, 144, 167, 0.08);
+  border-radius: 20px;
 }
 .blog-layout-left-body {
   width: 300px;
@@ -89,9 +89,9 @@ const currentPath = computed(() => {
   flex: 0 0 300px;
   background: #fffdfd;
   border-right: 2px solid #fff7f9;
-  /* 左上角,右下角20px 圆角 */
+  /* 左上角,左下角20px 圆角 */
   border-top-left-radius: 20px;
-  border-bottom-right-radius: 20px;
+  border-bottom-left-radius: 20px;
 }
 .blog-layout-content-body {
   background-color: #ffffff;
@@ -106,9 +106,9 @@ const currentPath = computed(() => {
   flex: 0 0 300px;
   background: #fffdfd;
   border-left: 2px solid #fff7f9;
-  /* 左上角,右下角20px 圆角 */
+  /* 右上角,右下角20px 圆角 */
   border-top-right-radius: 20px;
-  border-bottom-left-radius: 20px;
+  border-bottom-right-radius: 20px;
 }
 .blog-layout-info-menu {
   padding: 20px;
