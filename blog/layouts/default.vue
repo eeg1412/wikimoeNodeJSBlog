@@ -2,22 +2,24 @@
   <div>
     <div class="blog-layout-body" v-if="options">
       <div class="blog-layout-left-body">
-        <!-- logo -->
-        <div>
-          <nuxt-link to="/">
-            <img class="blog-layout-sitelogo" :src="options.siteLogo" />
-          </nuxt-link>
+        <div class="blog-layout-sticky custom-scroll blog-layout-info-menu">
+          <!-- logo -->
+          <div>
+            <nuxt-link to="/">
+              <img class="blog-layout-sitelogo" :src="options.siteLogo" />
+            </nuxt-link>
+          </div>
+          <!-- siteDescription -->
+          <div class="blog-layout-desc">
+            <p>{{ options.siteDescription }}</p>
+          </div>
+          <!-- 导航 -->
+          <ul class="blog-layout-sidebar-body">
+            <template v-for="(item, index) in naviList" :key="index">
+              <NaviItem :item="item" :currentPath="currentPath" />
+            </template>
+          </ul>
         </div>
-        <!-- siteDescription -->
-        <div class="blog-layout-desc">
-          <p>{{ options.siteDescription }}</p>
-        </div>
-        <!-- 导航 -->
-        <ul class="blog-layout-sidebar-body">
-          <template v-for="(item, index) in naviList" :key="index">
-            <NaviItem :item="item" :currentPath="currentPath" />
-          </template>
-        </ul>
       </div>
       <div class="blog-layout-content-body">
         <slot></slot>
@@ -72,37 +74,51 @@ const currentPath = computed(() => {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
-  align-items: flex-start;
+  align-items: stretch;
   margin: 10px;
   width: 1220px;
   margin: 0 auto;
   margin-bottom: 20px;
-  padding-top: 15px;
+  margin-top: 15px;
+  background: #ffffff;
+  box-shadow: 0px 0px 10px 0px rgba(239, 144, 167, 0.06);
 }
 .blog-layout-left-body {
   width: 300px;
-  background-color: #ffffff;
-  border-radius: 20px;
-  padding: 20px;
-  margin-right: 10px;
   box-sizing: border-box;
   flex: 0 0 300px;
+  background: #fffdfd;
+  border-right: 2px solid #fff7f9;
+  /* 左上角,右下角20px 圆角 */
+  border-top-left-radius: 20px;
+  border-bottom-right-radius: 20px;
 }
 .blog-layout-content-body {
   background-color: #ffffff;
-  border-radius: 20px;
   /* 撑开剩余空间 */
   flex: 1;
   overflow: hidden;
 }
 .blog-layout-right-body {
   width: 300px;
-  background-color: #ffffff;
-  border-radius: 20px;
   padding: 20px;
-  margin-left: 10px;
   box-sizing: border-box;
   flex: 0 0 300px;
+  background: #fffdfd;
+  border-left: 2px solid #fff7f9;
+  /* 左上角,右下角20px 圆角 */
+  border-top-right-radius: 20px;
+  border-bottom-left-radius: 20px;
+}
+.blog-layout-info-menu {
+  padding: 20px;
+  max-height: 100vh;
+  max-height: 100dvh;
+  overflow-y: auto;
+}
+.blog-layout-sticky {
+  position: sticky;
+  top: 0px;
 }
 .blog-layout-sitelogo {
   width: 100%;

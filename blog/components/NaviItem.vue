@@ -78,14 +78,19 @@ const showChildren = ref(false)
   align-items: center;
   /* 动画 */
   transition: all 0.3s;
+  border: 1px solid rgba(255, 255, 255, 0);
 }
 .blog-layout-sidebar-item.active {
-  color: #ef90a7;
-  /* font-weight: 700; */
+  background: #ef90a7;
+  color: #ffffff;
 }
 
 .blog-layout-sidebar-item:hover {
-  background: #ef90a7;
+  border: 1px solid #ef90a7;
+  color: #ef90a7;
+}
+.blog-layout-sidebar-item.active:hover {
+  border: 1px solid #ef90a7;
   color: #ffffff;
 }
 .blog-layout-sidebar-item-children-body .blog-layout-sidebar-item {

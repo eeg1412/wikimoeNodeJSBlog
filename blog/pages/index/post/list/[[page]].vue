@@ -42,92 +42,99 @@
     </div>
     <!-- {{ bannerListData }} -->
     <div class="post-list-body">
-      <div
-        v-for="(item, index) in postsData.list"
-        :key="item._id"
-        class="post-list-body-item"
-      >
-        <!-- 作者 时间 分类名 -->
-        <div class="post-list-info-body">
-          <span class="fb">{{ item.author?.nickname }}</span
-          ><span class="tenten">·</span
-          ><span class="cGray94" :title="formatDate(item.date)">{{
-            fromNow(item.date, 'yyyy-MM-dd')
-          }}</span
-          ><template v-if="item.sort"
+      <div>
+        <div
+          v-for="(item, index) in postsData.list"
+          :key="item._id"
+          class="post-list-body-item"
+        >
+          <!-- 作者 时间 分类名 -->
+          <div class="post-list-info-body">
+            <span class="fb">{{ item.author?.nickname }}</span
             ><span class="tenten">·</span
-            ><span class="cGray94">{{ item.sort?.sortname }}</span></template
-          >
-        </div>
-        <!-- 简介/推文 -->
-        <div class="post-list-excerpt-body">
-          <div v-if="item.type === 1">
-            {{ item.excerpt || '发表了一篇博文' }}
+            ><span class="cGray94" :title="formatDate(item.date)">{{
+              fromNow(item.date, 'yyyy-MM-dd')
+            }}</span
+            ><template v-if="item.sort"
+              ><span class="tenten">·</span
+              ><span class="cGray94">{{ item.sort?.sortname }}</span></template
+            >
           </div>
-          <div v-else>{{ item.excerpt }}</div>
-          <!-- tags -->
-          <div class="post-list-tags-body" v-if="item.tags.length > 0">
-            <template v-for="(tag, index) in item.tags" :key="index">
-              <!-- TODO:到时候是链接 -->
-              <span class="post-list-tag-item">#{{ tag.tagname }}</span>
-            </template>
+          <!-- 简介/推文 -->
+          <div class="post-list-excerpt-body">
+            <div v-if="item.type === 1">
+              {{ item.excerpt || '发表了一篇博文' }}
+            </div>
+            <div v-else>{{ item.excerpt }}</div>
+            <!-- tags -->
+            <div class="post-list-tags-body" v-if="item.tags.length > 0">
+              <template v-for="(tag, index) in item.tags" :key="index">
+                <!-- TODO:到时候是链接 -->
+                <span class="post-list-tag-item">#{{ tag.tagname }}</span>
+              </template>
+            </div>
           </div>
-        </div>
 
-        <!-- 图片 -->
-        <template v-if="item.type === 1">
-          <div class="post-list-blog-panel">
-            <div class="post-list-blog-cover-body">
-              <WikimoeImage
-                class="post-list-blog-cover-img"
-                :src="
-                  item.coverImages[0].thumfor || item.coverImages[0].filepath
-                "
-                :alt="item.coverImages[0].filename"
-                :width="
-                  item.coverImages[0].thumWidth || item.coverImages[0].width
-                "
-                :height="
-                  item.coverImages[0].thumHeight || item.coverImages[0].height
-                "
-                v-if="item.coverImages[0]"
-              />
-              <!-- TODO:默认封面图 -->
+          <!-- 图片 -->
+          <template v-if="item.type === 1">
+            <div class="post-list-blog-panel">
+              <div class="post-list-blog-cover-body">
+                <WikimoeImage
+                  class="post-list-blog-cover-img"
+                  :src="
+                    item.coverImages[0].thumfor || item.coverImages[0].filepath
+                  "
+                  :alt="item.coverImages[0].filename"
+                  :width="
+                    item.coverImages[0].thumWidth || item.coverImages[0].width
+                  "
+                  :height="
+                    item.coverImages[0].thumHeight || item.coverImages[0].height
+                  "
+                  v-if="item.coverImages[0]"
+                />
+                <!-- TODO:默认封面图 -->
+              </div>
+              <!-- title -->
+              <div class="post-list-title-body">
+                <div>{{ item.title }}</div>
+              </div>
             </div>
-            <!-- title -->
-            <div class="post-list-title-body">
-              <div>{{ item.title }}</div>
-            </div>
+          </template>
+          <div v-else-if="item.type === 2" class="post-list-tweet-cover-body">
+            <TweetImgList :coverImages="item.coverImages" />
           </div>
-        </template>
-        <div v-else-if="item.type === 2" class="post-list-tweet-cover-body">
-          <TweetImgList :coverImages="item.coverImages" />
-        </div>
-        <!-- 统计信息左边阅读数 右边点赞数 -->
-        <div class="post-list-info-bottom-body cGray94">
-          <div class="dflex flexCenter">
-            <div class="mr15 dflex flexCenter">
-              <!-- icon book-open -->
-              <UIcon class="mr5" name="i-heroicons-book-open" />
-              <span class="cGray94">{{ formatNumber(item.views) }} 阅读</span>
+          <!-- 统计信息左边阅读数 右边点赞数 -->
+          <div class="post-list-info-bottom-body cGray94">
+            <div class="dflex flexCenter">
+              <div class="mr15 dflex flexCenter">
+                <!-- icon book-open -->
+                <UIcon class="mr5" name="i-heroicons-book-open" />
+                <span class="cGray94">{{ formatNumber(item.views) }} 阅读</span>
+              </div>
+              <div class="dflex flexCenter">
+                <!-- icon chat-bubble-left-ellipsis -->
+                <UIcon
+                  class="mr5"
+                  name="i-heroicons-chat-bubble-left-ellipsis"
+                />
+                <span class="cGray94"
+                  >{{ formatNumber(item.comnum) }} 评论</span
+                >
+              </div>
             </div>
             <div class="dflex flexCenter">
-              <!-- icon chat-bubble-left-ellipsis -->
-              <UIcon class="mr5" name="i-heroicons-chat-bubble-left-ellipsis" />
-              <span class="cGray94">{{ formatNumber(item.comnum) }} 评论</span>
+              <!-- heart -->
+              <UIcon class="mr5" name="i-heroicons-heart" />
+              <span class="cGray94">{{ formatNumber(item.likes) }} 点赞</span>
             </div>
-          </div>
-          <div class="dflex flexCenter">
-            <!-- heart -->
-            <UIcon class="mr5" name="i-heroicons-heart" />
-            <span class="cGray94">{{ formatNumber(item.likes) }} 点赞</span>
           </div>
         </div>
       </div>
     </div>
     <!-- 分页 上一页 1/20 下一页 -->
-    <div class="dflex post-list-page-body">
-      <div class="dflex mr15 page-link-body">
+    <div class="dflex post-list-page-body prev-page-btn">
+      <div class="dflex page-link-body">
         <!-- 去第一页 -->
         <NuxtLink
           class="dflex flexCenter page-link"
@@ -146,10 +153,10 @@
           <UIcon class="mr5" name="i-heroicons-chevron-left" />
         </NuxtLink>
       </div>
-      <div class="mr15">
+      <div>
         <span>{{ page }}/{{ totalPage }}</span>
       </div>
-      <div class="dflex page-link-body">
+      <div class="dflex page-link-body next-page-btn">
         <!-- 去下一页 -->
         <NuxtLink
           class="dflex flexCenter page-link"
@@ -281,9 +288,15 @@ onMounted(() => {
   /* 垂直居中 */
   align-items: center;
 }
+
 .page-link-body {
   font-size: 16px;
-  padding: 0 20px;
+  padding: 0 10px;
+  width: 60px;
+}
+.page-link-body.next-page-btn {
+  /* 居右 */
+  justify-content: flex-end;
 }
 .page-link {
   margin: 0 2px;
@@ -294,11 +307,9 @@ onMounted(() => {
 
 .top-banner-list-body {
   width: 100%;
-  /* 左上右上圆角 */
-  border-radius: 20px 20px 0px 0px;
   margin-bottom: 0px;
   overflow: hidden;
-  margin-bottom: -7px;
+  margin-bottom: -5px;
 }
 .top-banner-list-item {
   width: 100%;
@@ -313,8 +324,6 @@ onMounted(() => {
   left: 0;
   width: 100%;
   height: 100%;
-  /* 左上右上圆角 */
-  border-radius: 20px 20px 0px 0px;
   z-index: 1;
 }
 .top-banner-list-item-title {
