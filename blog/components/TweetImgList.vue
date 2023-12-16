@@ -4,7 +4,41 @@
     :class="`cover-count-${coverImages.length}`"
   >
     <template v-if="coverImages.length > 4">
-      <div></div>
+      <div class="blog-tweet-img-swiper-body">
+        <Swiper
+          :modules="[SwiperAutoplay, SwiperPagination, SwiperMousewheel]"
+          :slides-per-view="1"
+          :loop="true"
+          :mousewheel="true"
+          :autoplay="{
+            delay: 8000,
+            disableOnInteraction: true,
+          }"
+          :pagination="{
+            type: 'fraction',
+            clickable: true,
+          }"
+        >
+          <SwiperSlide v-for="(item, index) in coverImages" :key="item._id">
+            <div
+              class="blog-tweet-img-swiper-item"
+              :style="{
+                paddingBottom: sumCoverImagesPadding,
+              }"
+            >
+              <WikimoeImage
+                class="blog-tweet-img-swiper-item-img"
+                :src="item.thumfor || item.filepath"
+                :alt="item.filename"
+                :width="880"
+                :height="300"
+                fit="contain"
+                loading="lazy"
+              />
+            </div>
+          </SwiperSlide>
+        </Swiper>
+      </div>
     </template>
     <template v-else>
       <!-- 四张图以内 -->
@@ -55,6 +89,20 @@ const props = defineProps({
     required: true,
   },
 })
+const sumCoverImagesPadding = computed(() => {
+  if (props.coverImages.length > 4) {
+    // 寻找最大的宽度和高度
+    const maxWidth = Math.max(...props.coverImages.map((item) => item.width))
+    let maxHeight = Math.max(...props.coverImages.map((item) => item.height))
+    // 高度最大是宽度的2倍
+    maxHeight = maxHeight > maxWidth * 1.5 ? maxWidth * 1.5 : maxHeight
+    // 计算padding
+    const padding = (maxHeight / maxWidth) * 100
+
+    return `${padding}%`
+  }
+  return ''
+})
 </script>
 <style scoped>
 .blog-tweet-1img-list-body {
@@ -95,5 +143,37 @@ const props = defineProps({
   grid-template-columns: repeat(2, 1fr);
   grid-auto-rows: auto;
   height: 400px;
+}
+.blog-tweet-img-swiper-body {
+  border-radius: 20px;
+  border: 1px solid #e2e2e2;
+  overflow: hidden;
+}
+.blog-tweet-img-swiper-item {
+  width: 100%;
+  position: relative;
+  z-index: 1;
+}
+.blog-tweet-img-swiper-item-img {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border-radius: 20px;
+}
+</style>
+<style>
+.blog-tweet-img-swiper-body .swiper-pagination-fraction {
+  top: 13px !important;
+  right: 16px !important;
+  bottom: unset !important;
+  left: unset !important;
+  color: #ffffff !important;
+  width: auto !important;
+  background: rgba(0, 0, 0, 0.5) !important;
+  padding: 2px 10px !important;
+  border-radius: 20px !important;
+  font-size: 14px !important;
 }
 </style>
