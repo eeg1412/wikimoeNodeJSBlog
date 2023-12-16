@@ -1,6 +1,25 @@
 <template>
-  <div>
-    <div class="blog-layout-body" v-if="options">
+  <div v-if="options">
+    <!-- 小于1024宽度时出现的顶部栏 -->
+    <div class="blog-top-bar">
+      <div class="blog-top-bar-body">
+        <div class="blog-top-bar-left-body">
+          <nuxt-link to="/">
+            <img class="blog-top-bar-sitelogo" :src="options.siteLogo" />
+          </nuxt-link>
+        </div>
+        <div class="blog-top-bar-right-body">
+          <div class="blog-top-bar-right-body-item">
+            <UIcon name="i-heroicons-bars-3" />
+          </div>
+          <div class="blog-top-bar-right-body-item">
+            <UIcon name="i-heroicons-squares-2x2" />
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- 整体layout -->
+    <div class="blog-layout-body">
       <div class="blog-layout-left-body">
         <div class="blog-layout-sticky custom-scroll blog-layout-info-menu">
           <!-- logo -->
@@ -76,7 +95,8 @@ const currentPath = computed(() => {
   justify-content: space-between;
   align-items: stretch;
   margin: 10px;
-  width: 1220px;
+  max-width: 1220px;
+  width: 100%;
   margin: 0 auto;
   margin-bottom: 20px;
   margin-top: 15px;
@@ -141,5 +161,63 @@ const currentPath = computed(() => {
   padding-top: 35px;
   margin: 0 auto;
   color: #ffffff;
+}
+.blog-top-bar {
+  display: none;
+}
+/* 小于1024时隐藏左右侧边栏 */
+@media (max-width: 1024px) {
+  .blog-layout-body {
+    flex-direction: column;
+  }
+  .blog-layout-left-body {
+    display: none;
+  }
+  .blog-layout-right-body {
+    display: none;
+  }
+  /* 顶部导航栏 */
+  .blog-top-bar {
+    display: block;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 999;
+    background: #ffffff;
+    box-shadow: 0px 0px 10px 0px rgba(239, 144, 167, 0.08);
+  }
+  .blog-top-bar-body {
+    max-width: 1220px;
+    margin: 0 auto;
+    padding: 0 10px;
+    height: 60px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    /* 底部阴影 */
+    box-shadow: 0px 0px 10px 0px rgba(239, 144, 167, 0.08);
+  }
+  .blog-top-bar-left-body {
+    display: flex;
+    align-items: center;
+  }
+  .blog-top-bar-sitelogo {
+    height: 40px;
+  }
+  .blog-top-bar-right-body {
+    display: flex;
+    align-items: center;
+  }
+  .blog-top-bar-right-body-item {
+    font-size: 20px;
+    margin-left: 10px;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+  }
+  .blog-layout-body {
+    margin-top: 60px;
+  }
 }
 </style>
