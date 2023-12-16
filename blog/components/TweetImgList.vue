@@ -6,14 +6,10 @@
     <template v-if="coverImages.length > 4">
       <div class="blog-tweet-img-swiper-body">
         <Swiper
-          :modules="[SwiperAutoplay, SwiperPagination, SwiperMousewheel]"
+          :modules="[SwiperPagination, SwiperMousewheel]"
           :slides-per-view="1"
-          :loop="true"
+          :loop="false"
           :mousewheel="true"
-          :autoplay="{
-            delay: 8000,
-            disableOnInteraction: true,
-          }"
           :pagination="{
             type: 'fraction',
             clickable: true,
@@ -30,8 +26,8 @@
                 class="blog-tweet-img-swiper-item-img"
                 :src="item.thumfor || item.filepath"
                 :alt="item.filename"
-                :width="880"
-                :height="300"
+                :width="item.thumWidth || item.width"
+                :height="item.thumHeight || item.height"
                 fit="contain"
                 loading="lazy"
               />
@@ -94,8 +90,9 @@ const sumCoverImagesPadding = computed(() => {
     // 寻找最大的宽度和高度
     const maxWidth = Math.max(...props.coverImages.map((item) => item.width))
     let maxHeight = Math.max(...props.coverImages.map((item) => item.height))
-    // 高度最大是宽度的2倍
-    maxHeight = maxHeight > maxWidth * 1.5 ? maxWidth * 1.5 : maxHeight
+    // 高度最大是宽度的x倍
+    const x = 1
+    maxHeight = maxHeight > maxWidth * x ? maxWidth * x : maxHeight
     // 计算padding
     const padding = (maxHeight / maxWidth) * 100
 
