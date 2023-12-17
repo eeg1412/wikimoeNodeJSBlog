@@ -33,7 +33,7 @@
         :modules="[SwiperPagination, SwiperMousewheel]"
         :slides-per-view="1"
         :loop="false"
-        :mousewheel="true"
+        :mousewheel="imageGroup.length > 1"
         :pagination="{
           type: 'fraction',
           clickable: true,
