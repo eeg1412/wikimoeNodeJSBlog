@@ -44,7 +44,7 @@
         <slot></slot>
       </div>
       <div class="blog-layout-right-body">
-        <div class="blog-layout-right-box">
+        <div class="blog-layout-right-top-body">
           <!-- 搜索 -->
           <div class="blog-search-body">
             <UInput
@@ -67,6 +67,7 @@
             </UInput>
           </div>
         </div>
+        <div class="blog-layout-right-box"></div>
       </div>
     </div>
     <!-- footer Powered by wikimoeBlog -->
@@ -202,6 +203,11 @@ const goSearch = () => {
 .blog-search-body {
   border-radius: 10px;
   background: #f5f5f5;
+}
+.blog-layout-right-top-body {
+  padding: 20px;
+  position: sticky;
+  top: 0px;
 }
 /* 小于1024时隐藏左右侧边栏 */
 @media (max-width: 1024px) {
