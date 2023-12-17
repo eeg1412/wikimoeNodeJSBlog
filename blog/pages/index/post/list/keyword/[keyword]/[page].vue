@@ -3,8 +3,7 @@
 </template>
 <script setup>
 definePageMeta({
-  alias: ['/'],
-  name: 'post-list',
+  name: 'post-list-keyword',
 })
 </script>
 <style scoped></style>
