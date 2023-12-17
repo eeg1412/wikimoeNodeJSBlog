@@ -42,7 +42,7 @@
     </div>
     <!-- {{ bannerListData }} -->
     <div class="post-list-body">
-      <div>
+      <div v-if="postsData?.list.length > 0">
         <div
           v-for="(item, index) in postsData.list"
           :key="item._id"
@@ -130,6 +130,9 @@
             </div>
           </div>
         </div>
+      </div>
+      <div v-else>
+        <Empty />
       </div>
     </div>
     <!-- 分页 上一页 1/20 下一页 -->
