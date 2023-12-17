@@ -4,7 +4,7 @@
 <script setup>
 definePageMeta({
   alias: ['/'],
-  name: 'post-list',
+  name: 'postList',
 })
 </script>
 <style scoped></style>

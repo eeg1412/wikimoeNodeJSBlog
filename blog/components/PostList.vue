@@ -8,17 +8,30 @@
           class="post-list-body-item"
         >
           <!-- 作者 时间 分类名 -->
-          <div class="post-list-info-body">
-            <span class="fb">{{ item.author?.nickname }}</span
-            ><span class="tenten">·</span
-            ><span class="cGray94" :title="formatDate(item.date)">{{
-              fromNow(item.date, 'yyyy-MM-dd')
-            }}</span
-            ><template v-if="item.sort"
+          <div class="clearfix">
+            <div class="post-list-info-body fl">
+              <span class="fb">{{ item.author?.nickname }}</span
               ><span class="tenten">·</span
-              ><span class="cGray94">{{ item.sort?.sortname }}</span></template
-            >
+              ><span class="cGray94" :title="formatDate(item.date)">{{
+                fromNow(item.date, 'yyyy-MM-dd')
+              }}</span
+              ><template v-if="item.sort"
+                ><span class="tenten">·</span
+                ><span class="cGray94">{{
+                  item.sort?.sortname
+                }}</span></template
+              >
+            </div>
+            <div class="fr">
+              <!-- 置顶图标 -->
+              <UIcon
+                class="cPink f18"
+                name="i-heroicons-bars-arrow-up"
+                v-if="showTopIcon(item)"
+              />
+            </div>
           </div>
+
           <!-- 简介/推文 -->
           <div class="post-list-excerpt-body">
             <div v-if="item.type === 1">
@@ -165,15 +178,40 @@ const route = useRoute()
 const routeName = computed(() => route.name)
 const page = route.params.page ? Number(route.params.page) : 1
 const keyword = route.params.keyword || ''
+const apiType = computed(() => {
+  switch (routeName.value) {
+    case 'postList':
+      return 'post'
+    case 'postListKeyword':
+      return 'keyword'
+
+    default:
+      break
+  }
+})
 console.log(page)
 
-const [postsDataResponse] = await Promise.all([getPostsApi({ page, keyword })])
+const [postsDataResponse] = await Promise.all([
+  getPostsApi({ page, keyword, pageType: apiType.value }),
+])
 
 const { data: postsData } = postsDataResponse
 
 const totalPage = computed(() => {
   return Math.ceil(postsData.value.total / sitePageSize.value)
 })
+
+const showTopIcon = (item) => {
+  switch (routeName.value) {
+    case 'postList':
+      return item.top
+    case 'postListSort':
+      return item.sortop
+
+    default:
+      break
+  }
+}
 
 // console.log(postsData)
 

@@ -6,7 +6,7 @@ const adminApiLog = log4js.getLogger('adminApi')
 
 module.exports = async function (req, res, next) {
   // TODO:置顶
-  let { page, keyword, type, sorttype, sort, tags } = req.query
+  let { page, keyword, type, sorttype, sort, tags, pageType } = req.query
   page = parseInt(page)
   const size = global.$globalConfig?.siteSettings?.sitePageSize || 1
   // 判断page和size是否为数字
@@ -66,9 +66,23 @@ module.exports = async function (req, res, next) {
 
   // date越新越靠前，_id越新越靠前
   let postSorting = {
+
+  }
+  switch (pageType) {
+    case 'post':
+      // 将top放到第一位,top是布尔
+      postSorting['top'] = -1
+      break;
+
+    default:
+      break;
+  }
+  postSorting = {
+    ...postSorting,
     date: -1,
     _id: -1
   }
+
   if (sorttype) {
     switch (sorttype) {
       // 1: 按照创建时间date升序

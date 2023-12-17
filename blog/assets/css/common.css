@@ -805,6 +805,9 @@ input[type='password'] {
 .cRed {
   color: #ff5364;
 }
+.cPink {
+  color: #ff9f9f;
+}
 /*背景颜色*/
 .bcGrayE6 {
   background-color: #e6e6e6;

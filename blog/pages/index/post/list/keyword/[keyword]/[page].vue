@@ -3,7 +3,7 @@
 </template>
 <script setup>
 definePageMeta({
-  name: 'post-list-keyword',
+  name: 'postListKeyword',
 })
 </script>
 <style scoped></style>
