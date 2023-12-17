@@ -95,7 +95,7 @@
               @end="attachmentDrag = false"
               item-key="_id"
             >
-              <template #item="{ element }">
+              <template #item="{ element, index }">
                 <div class="post-cover-image-item">
                   <el-image
                     :src="element.thumfor || element.filepath"
