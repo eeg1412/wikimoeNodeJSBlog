@@ -32,7 +32,16 @@ class HttpRequest {
       }
       useFetch(url, newOptions)
         .then((res) => {
-          resolve(res)
+          if (res.error?.value) {
+            const statusCode = res.error?.value?.statusCode
+            console.log('statusCode', statusCode)
+            showError({
+              statusCode: statusCode || 500,
+              message: '发生一点小意外',
+            })
+          } else {
+            resolve(res)
+          }
         })
         .catch((error) => {
           reject(error)
