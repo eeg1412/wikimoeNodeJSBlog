@@ -1,6 +1,8 @@
 <template>
   <img
     class="wikimoe-image"
+    :class="{ pointer: dataHrefList }"
+    @click="tryOpenHref"
     :src="src"
     :alt="alt"
     :width="scaledWidth"
@@ -12,6 +14,8 @@
 
 <script setup>
 import { computed } from 'vue'
+import { loadAndOpenImg } from '@/utils'
+import { _0 } from '#tailwind-config/theme/backdropBlur'
 
 // props
 const props = defineProps({
@@ -43,6 +47,15 @@ const props = defineProps({
   loading: {
     type: String,
   },
+  // 是否能点击打开
+  dataHrefList: {
+    type: Array,
+    default: null,
+  },
+  dataHrefIndex: {
+    type: Number,
+    default: 0,
+  },
 })
 
 // computed properties
@@ -63,6 +76,21 @@ const styleObject = computed(() => {
   }
   return obj
 })
+
+const tryOpenHref = () => {
+  if (props.dataHref || props.dataHrefList) {
+    const list = props.dataHrefList
+    const dataSource = list.map((item) => {
+      return {
+        src: item.src,
+        width: item.width,
+        height: item.height,
+      }
+    })
+    const index = props.dataHrefIndex || 0
+    loadAndOpenImg(index, dataSource)
+  }
+}
 </script>
 
 <style scoped>

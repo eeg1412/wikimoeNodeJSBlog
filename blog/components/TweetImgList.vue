@@ -28,6 +28,8 @@
                 :alt="item.filename"
                 :width="item.thumWidth || item.width"
                 :height="item.thumHeight || item.height"
+                :dataHrefList="dataHrefList"
+                :dataHrefIndex="index"
                 fit="cover"
                 loading="lazy"
               />
@@ -58,6 +60,8 @@
             :width="coverImages[0].thumWidth || coverImages[0].width"
             :height="coverImages[0].thumHeight || coverImages[0].height"
             :data-href="coverImages[0].filepath"
+            :dataHrefList="dataHrefList"
+            :dataHrefIndex="0"
             loading="lazy"
           />
         </div>
@@ -70,6 +74,8 @@
             :height="img.thumHeight || img.height"
             loading="lazy"
             fit="cover"
+            :dataHrefList="dataHrefList"
+            :dataHrefIndex="index"
             :square="true"
           />
         </template>
@@ -99,6 +105,17 @@ const sumCoverImagesPadding = computed(() => {
     return `${padding}%`
   }
   return ''
+})
+
+const dataHrefList = computed(() => {
+  // src width height
+  return props.coverImages.map((item) => {
+    return {
+      src: item.thumfor || item.filepath,
+      width: item.thumWidth || item.width,
+      height: item.thumHeight || item.height,
+    }
+  })
 })
 </script>
 <style scoped>

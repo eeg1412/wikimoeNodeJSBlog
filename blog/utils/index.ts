@@ -1,3 +1,17 @@
+import PhotoSwipeLightbox from 'photoswipe/lightbox'
+console.log(process.client)
+let lightbox: any = null
+if (process.client) {
+  lightbox = new PhotoSwipeLightbox({
+    pswpModule: () => import('photoswipe'),
+  })
+  lightbox.init()
+}
+
+export function loadAndOpenImg(index: number, DataSource: [any]) {
+  lightbox && lightbox.loadAndOpen(index, DataSource)
+}
+
 // 格式化时间 支持1秒前、1分钟前、1小时前、1天前，超过1天显示具体时间，支持具体时间自定义格式
 export function fromNow(
   date: string | number | Date,
