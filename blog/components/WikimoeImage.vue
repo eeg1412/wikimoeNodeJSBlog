@@ -1,7 +1,7 @@
 <template>
   <img
     class="wikimoe-image"
-    :class="{ pointer: dataHrefList }"
+    :class="{ 'pointer-zoom': dataHrefList }"
     @click="tryOpenHref"
     :src="src"
     :alt="alt"

@@ -2,85 +2,68 @@
   <div
     class="blog-tweet-img-list-wrap"
     :class="`cover-count-${coverImages.length}`"
+    v-if="coverImages.length > 0"
   >
-    <template v-if="coverImages.length > 4">
-      <div class="blog-tweet-img-swiper-body">
-        <Swiper
-          :modules="[SwiperPagination, SwiperMousewheel]"
-          :slides-per-view="1"
-          :loop="false"
-          :mousewheel="true"
-          :pagination="{
-            type: 'fraction',
-            clickable: true,
-          }"
-        >
-          <SwiperSlide v-for="(item, index) in coverImages" :key="item._id">
-            <div
-              class="blog-tweet-img-swiper-item"
-              :style="{
-                paddingBottom: sumCoverImagesPadding,
-              }"
-            >
-              <WikimoeImage
-                class="blog-tweet-img-swiper-item-img"
-                :src="item.thumfor || item.filepath"
-                :alt="item.filename"
-                :width="item.thumWidth || item.width"
-                :height="item.thumHeight || item.height"
-                :dataHrefList="dataHrefList"
-                :dataHrefIndex="index"
-                fit="cover"
-                loading="lazy"
-              />
-            </div>
-          </SwiperSlide>
-        </Swiper>
-      </div>
-    </template>
-    <template v-else>
-      <!-- 四张图以内 -->
+    <div
+      class="blog-tweet-img-list-body cover-count-1-1"
+      v-if="coverImages.length === 1"
+    >
+      <!-- 1张图时 -->
       <div
-        class="blog-tweet-img-list-body"
-        :class="`cover-count-${coverImages.length}`"
-        v-if="coverImages.length > 0"
+        class="blog-tweet-1img-list-body"
+        :style="{
+          width: `${coverImages[0].thumWidth || coverImages[0].width}px`,
+        }"
       >
-        <!-- 1张图时 -->
-        <div
-          class="blog-tweet-1img-list-body"
-          :style="{
-            width: `${coverImages[0].thumWidth || coverImages[0].width}px`,
-          }"
-          v-if="coverImages.length === 1"
-        >
-          <WikimoeImage
-            class="mr5"
-            :src="coverImages[0].thumfor || coverImages[0].filepath"
-            :alt="coverImages[0].filename"
-            :width="coverImages[0].thumWidth || coverImages[0].width"
-            :height="coverImages[0].thumHeight || coverImages[0].height"
-            :data-href="coverImages[0].filepath"
-            :dataHrefList="dataHrefList"
-            :dataHrefIndex="0"
-            loading="lazy"
-          />
-        </div>
-        <template v-else v-for="(img, index) in coverImages" :key="index">
-          <WikimoeImage
-            class="mr5 blog-tweet-img-list-body-item"
-            :src="img.thumfor || img.filepath"
-            :alt="img.filename"
-            :width="img.thumWidth || img.width"
-            :height="img.thumHeight || img.height"
-            loading="lazy"
-            fit="cover"
-            :dataHrefList="dataHrefList"
-            :dataHrefIndex="index"
-            :square="true"
-          />
-        </template>
+        <WikimoeImage
+          class="mr5"
+          :src="coverImages[0].thumfor || coverImages[0].filepath"
+          :alt="coverImages[0].filename"
+          :width="coverImages[0].thumWidth || coverImages[0].width"
+          :height="coverImages[0].thumHeight || coverImages[0].height"
+          :data-href="coverImages[0].filepath"
+          :dataHrefList="dataHrefList"
+          :dataHrefIndex="0"
+          loading="lazy"
+        />
       </div>
-    </template>
+    </div>
+    <div class="blog-tweet-img-swiper-body" v-else>
+      <Swiper
+        :modules="[SwiperPagination, SwiperMousewheel]"
+        :slides-per-view="1"
+        :loop="false"
+        :mousewheel="true"
+        :pagination="{
+          type: 'fraction',
+          clickable: true,
+        }"
+      >
+        <SwiperSlide v-for="(item, index) in imageGroup" :key="item._id">
+          <!-- 四张图以内 -->
+          <div
+            class="blog-tweet-img-list-body"
+            :class="`cover-count-${item.length}`"
+            v-if="item.length > 0"
+          >
+            <template v-for="(img, indexChild) in item" :key="index">
+              <WikimoeImage
+                class="mr5 blog-tweet-img-list-body-item"
+                :src="img.thumfor || img.filepath"
+                :alt="img.filename"
+                :width="img.thumWidth || img.width"
+                :height="img.thumHeight || img.height"
+                loading="lazy"
+                fit="cover"
+                :dataHrefList="dataHrefList"
+                :dataHrefIndex="indexChild"
+                :square="true"
+              />
+            </template>
+          </div>
+        </SwiperSlide>
+      </Swiper>
+    </div>
   </div>
 </template>
 <script setup>
@@ -106,7 +89,23 @@ const sumCoverImagesPadding = computed(() => {
   }
   return ''
 })
-
+const imageGroup = computed(() => {
+  // 如果图片大于4张，就每4张分一组
+  const group = []
+  let temp = []
+  props.coverImages.forEach((item, index) => {
+    temp.push(item)
+    if (index % 4 === 3) {
+      group.push(temp)
+      temp = []
+    }
+  })
+  // 如果最后一组有元素，将其添加到group中
+  if (temp.length > 0) {
+    group.push(temp)
+  }
+  return group
+})
 const dataHrefList = computed(() => {
   // src width height
   return props.coverImages.map((item) => {
@@ -130,10 +129,14 @@ const dataHrefList = computed(() => {
   border-radius: 20px;
   overflow: hidden;
 }
-.blog-tweet-img-list-body.cover-count-1 {
+.blog-tweet-img-list-body.cover-count-1-1 {
   /* 宽高跟着内容走 */
   display: inline-block;
   max-width: 100%;
+}
+.blog-tweet-img-list-body.cover-count-1 {
+  grid-template-columns: 1fr;
+  height: 400px;
 }
 .blog-tweet-img-list-body.cover-count-2 {
   grid-template-columns: repeat(2, 1fr);

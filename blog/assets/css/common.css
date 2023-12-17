@@ -839,6 +839,10 @@ input[type='password'] {
 .pointer {
   cursor: pointer;
 }
+/* 放大镜 */
+.pointer-zoom {
+  cursor: zoom-in;
+}
 
 .common-right-panel-form.common-limit-width {
   max-width: 700px;
