@@ -28,7 +28,7 @@
                 :alt="item.filename"
                 :width="item.thumWidth || item.width"
                 :height="item.thumHeight || item.height"
-                fit="contain"
+                fit="cover"
                 loading="lazy"
               />
             </div>
@@ -91,7 +91,7 @@ const sumCoverImagesPadding = computed(() => {
     const maxWidth = Math.max(...props.coverImages.map((item) => item.width))
     let maxHeight = Math.max(...props.coverImages.map((item) => item.height))
     // 高度最大是宽度的x倍
-    const x = 1
+    const x = 0.7
     maxHeight = maxHeight > maxWidth * x ? maxWidth * x : maxHeight
     // 计算padding
     const padding = (maxHeight / maxWidth) * 100
@@ -143,7 +143,7 @@ const sumCoverImagesPadding = computed(() => {
 }
 .blog-tweet-img-swiper-body {
   border-radius: 20px;
-  border: 1px solid #e2e2e2;
+  /* border: 1px solid #e2e2e2; */
   overflow: hidden;
 }
 .blog-tweet-img-swiper-item {
