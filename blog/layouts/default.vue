@@ -43,7 +43,31 @@
       <div class="blog-layout-content-body">
         <slot></slot>
       </div>
-      <div class="blog-layout-right-body">{{ options }}{{ currentPath }}</div>
+      <div class="blog-layout-right-body">
+        <div class="blog-layout-right-box">
+          <!-- 搜索 -->
+          <div class="blog-search-body">
+            <UInput
+              v-model="keyword"
+              placeholder="请输入关键词"
+              size="lg"
+              variant="none"
+              @keydown.enter="goSearch"
+              :ui="{ icon: { trailing: { pointer: '' } } }"
+            >
+              <template #trailing>
+                <UButton
+                  color="gray"
+                  variant="link"
+                  icon="i-heroicons-magnifying-glass-20-solid"
+                  :padded="false"
+                  @click="goSearch"
+                />
+              </template>
+            </UInput>
+          </div>
+        </div>
+      </div>
     </div>
     <!-- footer Powered by wikimoeBlog -->
     <div class="blog-footer-body">
@@ -59,6 +83,7 @@ import { useOptionStore } from '@/store/options'
 import { storeToRefs } from 'pinia'
 import { getNaviListApi } from '@/api/navi'
 const route = useRoute()
+const router = useRouter()
 const optionStore = useOptionStore()
 const { options } = storeToRefs(optionStore)
 // sidebar
@@ -86,6 +111,13 @@ const naviList = computed(() => {
 const currentPath = computed(() => {
   return route.path
 })
+
+const keyword = ref('')
+const goSearch = () => {
+  router.push({
+    path: `/post/list/keyword/${keyword.value}/1`,
+  })
+}
 </script>
 <style scoped>
 /* flex布局 左边固定300px 右边固定300px margin10 */
@@ -121,7 +153,6 @@ const currentPath = computed(() => {
 }
 .blog-layout-right-body {
   width: 300px;
-  padding: 20px;
   box-sizing: border-box;
   flex: 0 0 300px;
   background: #fffdfd;
@@ -164,6 +195,13 @@ const currentPath = computed(() => {
 }
 .blog-top-bar {
   display: none;
+}
+.blog-layout-right-box {
+  padding: 20px;
+}
+.blog-search-body {
+  border-radius: 10px;
+  background: #f5f5f5;
 }
 /* 小于1024时隐藏左右侧边栏 */
 @media (max-width: 1024px) {

@@ -192,6 +192,7 @@ definePageMeta({
     '/',
     '/post/list/sort/:sortid?/:page?',
     '/post/list/tag/:tagid?/:page?',
+    '/post/list/keyword/:keyword?/:page?',
   ],
   name: 'post-list',
 })
