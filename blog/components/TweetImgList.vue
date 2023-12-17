@@ -74,21 +74,7 @@ const props = defineProps({
     required: true,
   },
 })
-const sumCoverImagesPadding = computed(() => {
-  if (props.coverImages.length > 4) {
-    // 寻找最大的宽度和高度
-    const maxWidth = Math.max(...props.coverImages.map((item) => item.width))
-    let maxHeight = Math.max(...props.coverImages.map((item) => item.height))
-    // 高度最大是宽度的x倍
-    const x = 0.7
-    maxHeight = maxHeight > maxWidth * x ? maxWidth * x : maxHeight
-    // 计算padding
-    const padding = (maxHeight / maxWidth) * 100
 
-    return `${padding}%`
-  }
-  return ''
-})
 const imageGroup = computed(() => {
   // 如果图片大于4张，就每4张分一组
   const group = []
@@ -110,9 +96,9 @@ const dataHrefList = computed(() => {
   // src width height
   return props.coverImages.map((item) => {
     return {
-      src: item.thumfor || item.filepath,
-      width: item.thumWidth || item.width,
-      height: item.thumHeight || item.height,
+      src: item.filepath,
+      width: item.width,
+      height: item.height,
     }
   })
 })
