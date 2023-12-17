@@ -56,7 +56,7 @@
                 loading="lazy"
                 fit="cover"
                 :dataHrefList="dataHrefList"
-                :dataHrefIndex="indexChild"
+                :dataHrefIndex="index * 4 + indexChild"
                 :square="true"
               />
             </template>
