@@ -313,8 +313,8 @@ onMounted(() => {
 }
 .top-banner-list-item {
   width: 100%;
-  /* padding 比例是 880/300 */
-  padding-bottom: 34.09%;
+  /* padding 比例是 880/350 */
+  padding-bottom: 39.77%;
   position: relative;
   z-index: 1;
 }
