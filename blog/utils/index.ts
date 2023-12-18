@@ -86,3 +86,10 @@ export function formatNumber(num: number) {
     return Math.floor(num / 100000000) + 'b'
   }
 }
+
+export const limitStr = (str: string, len: number) => {
+  if (str.length > len) {
+    return str.substring(0, len) + '...'
+  }
+  return str
+}

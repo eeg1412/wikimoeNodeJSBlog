@@ -17,7 +17,7 @@
         </div>
         <!-- 评论内容 -->
         <div class="comment-latest-item-comment-body">
-          {{ item.content }}
+          {{ limitStr(item.content, 28) }}
         </div>
       </div>
     </div>
