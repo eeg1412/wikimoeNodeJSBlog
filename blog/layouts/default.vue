@@ -67,7 +67,21 @@
             </UInput>
           </div>
         </div>
-        <div class="blog-layout-right-box"></div>
+        <div class="blog-layout-right-box">
+          <div
+            v-for="(item, index) in sidebarListData"
+            :key="item._id"
+            class="blog-layout-right-sidebar-item"
+          >
+            <!-- title -->
+            <div class="blog-layout-right-title-body">
+              {{ item.title }}
+            </div>
+            <template v-if="item.type === 3">
+              <CommentLatest />
+            </template>
+          </div>
+        </div>
       </div>
     </div>
     <!-- footer Powered by wikimoeBlog -->
@@ -83,6 +97,7 @@
 import { useOptionStore } from '@/store/options'
 import { storeToRefs } from 'pinia'
 import { getNaviListApi } from '@/api/navi'
+import { getSidebarListApi } from '@/api/sidebar'
 const route = useRoute()
 const router = useRouter()
 const optionStore = useOptionStore()
@@ -94,7 +109,13 @@ const { options } = storeToRefs(optionStore)
 //     path: '/',
 //   },
 // ])
-const { data: naviListData } = await getNaviListApi()
+const [naviData, sidebarData] = await Promise.all([
+  getNaviListApi(),
+  getSidebarListApi(),
+])
+
+const { data: naviListData } = naviData
+const { data: sidebarListData } = sidebarData
 const naviList = computed(() => {
   const list = naviListData.value.data
   const newList = [
@@ -198,7 +219,7 @@ const goSearch = () => {
   display: none;
 }
 .blog-layout-right-box {
-  padding: 20px;
+  padding: 0 20px 20px 20px;
 }
 .blog-search-body {
   border-radius: 10px;
@@ -208,6 +229,16 @@ const goSearch = () => {
   padding: 20px;
   position: sticky;
   top: 0px;
+  background: #ffffff;
+}
+.blog-layout-right-title-body {
+  font-size: 20px;
+  font-weight: 400;
+  padding-bottom: 8px;
+  border-bottom: 1px solid #e2e2e2;
+}
+.blog-layout-right-sidebar-item {
+  margin-bottom: 20px;
 }
 /* 小于1024时隐藏左右侧边栏 */
 @media (max-width: 1024px) {

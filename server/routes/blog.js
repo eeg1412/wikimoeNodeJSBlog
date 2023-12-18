@@ -30,6 +30,20 @@ const blogRouteSetting = [
     middleware: [],
     controller: require('../api/blog/banner/getBannerList'),
   },
+  // getSidebar
+  {
+    path: '/sidebar/list',
+    method: 'get',
+    middleware: [],
+    controller: require('../api/blog/sidebar/getSidebarList'),
+  },
+  // getLatestComments
+  {
+    path: '/comment/latest',
+    method: 'get',
+    middleware: [],
+    controller: require('../api/blog/comment/getLatestComments'),
+  },
 ]
 
 blogRouteSetting.forEach(item => {

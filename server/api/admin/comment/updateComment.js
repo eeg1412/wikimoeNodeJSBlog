@@ -3,6 +3,7 @@ const postUtils = require('../../../mongodb/utils/posts')
 const utils = require('../../../utils/utils')
 const log4js = require('log4js')
 const adminApiLog = log4js.getLogger('adminApi')
+const cacheDataUtils = require('../../../config/cacheData')
 
 module.exports = async function (req, res, next) {
   const { content, top, nickname, url, email, status, id, __v } = req.body
@@ -49,15 +50,17 @@ module.exports = async function (req, res, next) {
     params.url = url
   }
   if (typeof email === 'string') {
-    // 正则校验email
-    const emailReg = /^(\w-*\.*)+@(\w-?)+(\.\w{2,})+$/
-    if (!emailReg.test(email)) {
-      res.status(400).json({
-        errors: [{
-          message: '邮箱格式不正确'
-        }]
-      })
-      return
+    if (email) {
+      // 正则校验email
+      const emailReg = /^(\w-*\.*)+@(\w-?)+(\.\w{2,})+$/
+      if (!emailReg.test(email)) {
+        res.status(400).json({
+          errors: [{
+            message: '邮箱格式不正确'
+          }]
+        })
+        return
+      }
     }
     params.email = email
   }
@@ -105,6 +108,7 @@ module.exports = async function (req, res, next) {
       }
     }
 
+    cacheDataUtils.getCommentList()
   }).catch((err) => {
     res.status(400).json({
       errors: [{

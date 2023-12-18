@@ -24,7 +24,7 @@ module.exports = async function (req, res, next) {
     const updatePromise = new Promise((resolve, reject) => {
       bannerUtils.updateOne({ _id: _id }, params).then((data) => {
         // 判断是否更新成功
-        if (data.nModified === 0) {
+        if (data.modifiedCount === 0) {
           reject({
             message: '更新失败'
           })

@@ -32,7 +32,7 @@ module.exports = async function (req, res, next) {
   // updateOne
   bannerUtils.updateOne({ _id: _id }, params).then((data) => {
     // 判断是否更新成功
-    if (data.nModified === 0) {
+    if (data.modifiedCount === 0) {
       // 记录
       res.status(400).json({
         errors: [{

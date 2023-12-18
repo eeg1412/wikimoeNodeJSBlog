@@ -10,10 +10,11 @@ if (!process.env.DB_HOST) {
 mongoose.connect(process.env.DB_HOST, { useNewUrlParser: true, useUnifiedTopology: true });
 var db = mongoose.connection;
 
-db.once('open', () => {
+db.once('open', async () => {
   console.info('数据库连接成功！');
-  globalConfigUtils.initGlobalConfig()
+  await globalConfigUtils.initGlobalConfig()
   cacheDataUtils.getNaviList()
+  cacheDataUtils.getSidebarList()
   cacheDataUtils.getBannerList()
 })
 

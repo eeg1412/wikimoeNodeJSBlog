@@ -2,6 +2,7 @@ const sidebarUtils = require('../../../mongodb/utils/sidebars')
 const utils = require('../../../utils/utils')
 const log4js = require('log4js')
 const adminApiLog = log4js.getLogger('adminApi')
+const cacheDataUtils = require('../../../config/cacheData')
 
 module.exports = async function (req, res, next) {
   const sidebarList = req.body.sidebarList || []
@@ -35,7 +36,7 @@ module.exports = async function (req, res, next) {
     const updatePromise = new Promise((resolve, reject) => {
       sidebarUtils.updateOne({ _id: _id }, params).then((data) => {
         // 判断是否更新成功
-        if (data.nModified === 0) {
+        if (data.modifiedCount === 0) {
           reject({
             message: '更新失败'
           })
@@ -54,6 +55,7 @@ module.exports = async function (req, res, next) {
       successCount: data.length
     })
     adminApiLog.info(`sidebar update success`)
+    cacheDataUtils.getSidebarList()
   }).catch((err) => {
     res.status(400).json({
       errors: [{

@@ -2,6 +2,7 @@ const sidebarUtils = require('../../../mongodb/utils/sidebars')
 const utils = require('../../../utils/utils')
 const log4js = require('log4js')
 const adminApiLog = log4js.getLogger('adminApi')
+const cacheDataUtils = require('../../../config/cacheData')
 
 module.exports = async function (req, res, next) {
   const {
@@ -9,8 +10,7 @@ module.exports = async function (req, res, next) {
     title,
     content,
     count,
-    status,
-    __v
+    status
   } = req.body
   if (!_id) {
     res.status(400).json({
@@ -20,15 +20,7 @@ module.exports = async function (req, res, next) {
     })
     return
   }
-  // __v 可以为零，但不能为空/null/undefined
-  if (__v === undefined || __v === null) {
-    res.status(400).json({
-      errors: [{
-        message: '__v不能为空'
-      }]
-    })
-    return
-  }
+
   // 校验格式
   const params = {
     title: title || '',
@@ -37,9 +29,9 @@ module.exports = async function (req, res, next) {
     status: status || 0
   }
   // updateOne
-  sidebarUtils.updateOne({ _id: _id, __v: __v }, params).then((data) => {
+  sidebarUtils.updateOne({ _id: _id }, params).then((data) => {
     // 判断是否更新成功
-    if (data.nModified === 0) {
+    if (data.modifiedCount === 0) {
       // 记录
       res.status(400).json({
         errors: [{
@@ -54,6 +46,7 @@ module.exports = async function (req, res, next) {
     res.send({
       data: data
     })
+    cacheDataUtils.getSidebarList()
   }).catch((err) => {
     // 记录
     adminApiLog.error(`sidebar update fail, ${JSON.stringify(err)}`)

@@ -20,9 +20,9 @@ exports.find = async function (parmas, sort) {
 }
 
 // 分页查询
-exports.findPage = async function (parmas, sort, page, limit) {
+exports.findPage = async function (parmas, sort, page, limit, postFilter = 'title _id excerpt') {
   // document查询
-  const list = await commentsModel.find(parmas).populate('parent', 'content _id').populate('post', 'title _id excerpt').populate('user', 'nickname _id photo').sort(sort).skip((page - 1) * limit).limit(limit);
+  const list = await commentsModel.find(parmas).populate('parent', 'content _id').populate('post', postFilter).populate('user', 'nickname _id photo').sort(sort).skip((page - 1) * limit).limit(limit);
   const total = await commentsModel.countDocuments(parmas);
   // 查询失败
   if (!list || total === undefined) {

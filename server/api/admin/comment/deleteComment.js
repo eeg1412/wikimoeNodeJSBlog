@@ -1,8 +1,11 @@
+const { cache } = require('sharp')
 const commentUtils = require('../../../mongodb/utils/comments')
 const postUtils = require('../../../mongodb/utils/posts')
 const utils = require('../../../utils/utils')
 const log4js = require('log4js')
 const adminApiLog = log4js.getLogger('adminApi')
+const cacheDataUtils = require('../../../config/cacheData')
+
 
 module.exports = async function (req, res, next) {
   const id = req.query.id
@@ -43,6 +46,7 @@ module.exports = async function (req, res, next) {
     adminApiLog.info(`comment delete success`)
     // 更新文章评论数
     postUtils.updateOne({ _id: commentInfo.post }, { $inc: { comnum: -1 } })
+    cacheDataUtils.getSidebarList()
   }).catch((err) => {
     res.status(400).json({
       errors: [{

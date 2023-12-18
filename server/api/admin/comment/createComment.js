@@ -3,6 +3,7 @@ const postUtils = require('../../../mongodb/utils/posts')
 const utils = require('../../../utils/utils')
 const log4js = require('log4js')
 const adminApiLog = log4js.getLogger('adminApi')
+const cacheDataUtils = require('../../../config/cacheData')
 
 
 module.exports = async function (req, res, next) {
@@ -63,6 +64,7 @@ module.exports = async function (req, res, next) {
       data: data
     })
     adminApiLog.info(`comment:${content} create success`)
+    cacheDataUtils.getCommentList()
     // 异步更新设备信息
     utils.deviceUtils(req, data._id, commentUtils)
     // 异步更新ip信息
