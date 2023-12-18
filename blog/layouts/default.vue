@@ -87,7 +87,7 @@
     <!-- footer Powered by wikimoeBlog -->
     <div class="blog-footer-body">
       <div class="blog-footer-content-body">
-        <span>Powered by</span>
+        <span>Powered by </span>
         <a href="https://www.wikimoe.com/" target="_blank">wikimoeBlog</a>
       </div>
     </div>
