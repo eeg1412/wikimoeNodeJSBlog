@@ -153,7 +153,7 @@
 import { useRoute, useRouter } from 'vue-router'
 import { authApi } from '@/api'
 import { ElMessage, ElMessageBox } from 'element-plus'
-import { onMounted, reactive, ref, watch } from 'vue'
+import { computed, onMounted, reactive, ref, watch } from 'vue'
 import draggable from 'vuedraggable'
 import RichEditor5 from '@/components/RichEditor5'
 import { t } from '@wangeditor/editor'
@@ -169,81 +169,89 @@ export default {
     // 侧边栏设置
     const sidebarSettingsFormRef = ref(null)
     const sidebarSettingsForm = ref([])
-    const sidebarSettingsTemplate = [
-      // 1:自定义 2:热门文章 3:最新评论 4:标签云 5:随机文章 6:热门文章 7:搜索 8:分类 9:归档
-      {
-        title: '自定义',
-        content: '',
-        count: 1,
-        type: 1,
-        taxis: 0,
-        status: 0,
-      },
-      {
-        title: '热门文章',
-        content: '',
-        count: 10,
-        type: 2,
-        taxis: 0,
-        status: 0,
-      },
-      {
-        title: '最新评论',
-        content: '',
-        count: 10,
-        type: 3,
-        taxis: 0,
-        status: 0,
-      },
-      {
-        title: '标签云',
-        content: '',
-        count: 10,
-        type: 4,
-        taxis: 0,
-        status: 0,
-      },
-      {
-        title: '随机文章',
-        content: '',
-        count: 10,
-        type: 5,
-        taxis: 0,
-        status: 0,
-      },
-      // {
-      //   title: '相册',
-      //   content: '',
-      //   count: 10,
-      //   type: 6,
-      //   taxis: 0,
-      //   status: 0,
-      // },
-      // {
-      //   title: '搜索',
-      //   content: '',
-      //   count: 1,
-      //   type: 7,
-      //   taxis: 0,
-      //   status: 0,
-      // },
-      {
-        title: '分类',
-        content: '',
-        count: 1,
-        type: 8,
-        taxis: 0,
-        status: 0,
-      },
-      {
-        title: '归档',
-        content: '',
-        count: 1,
-        type: 9,
-        taxis: 0,
-        status: 0,
-      },
-    ]
+    const sidebarSettingsTemplate = computed(() => {
+      const base = [
+        // 1:自定义 2:热门文章 3:最新评论 4:标签云 5:随机文章 6:热门文章 7:搜索 8:分类 9:归档
+        {
+          title: '自定义',
+          content: '',
+          count: 1,
+          type: 1,
+          taxis: 0,
+          status: 0,
+        },
+      ]
+      const only1 = [
+        // {
+        //   title: '热门文章',
+        //   content: '',
+        //   count: 10,
+        //   type: 2,
+        //   taxis: 0,
+        //   status: 0,
+        // },
+        {
+          title: '最新评论',
+          content: '',
+          count: 10,
+          type: 3,
+          taxis: 0,
+          status: 0,
+        },
+        // {
+        //   title: '标签云',
+        //   content: '',
+        //   count: 10,
+        //   type: 4,
+        //   taxis: 0,
+        //   status: 0,
+        // },
+        // {
+        //   title: '随机文章',
+        //   content: '',
+        //   count: 10,
+        //   type: 5,
+        //   taxis: 0,
+        //   status: 0,
+        // },
+        // {
+        //   title: '相册',
+        //   content: '',
+        //   count: 10,
+        //   type: 6,
+        //   taxis: 0,
+        //   status: 0,
+        // },
+        // {
+        //   title: '搜索',
+        //   content: '',
+        //   count: 1,
+        //   type: 7,
+        //   taxis: 0,
+        //   status: 0,
+        // },
+        {
+          title: '分类',
+          content: '',
+          count: 1,
+          type: 8,
+          taxis: 0,
+          status: 0,
+        },
+        {
+          title: '归档',
+          content: '',
+          count: 1,
+          type: 9,
+          taxis: 0,
+          status: 0,
+        },
+      ]
+      // 检查 sidebarSettingsForm 里存在的 type，如果存在，只输出sidebarSettingsForm中没有的type
+      const typeList = sidebarSettingsForm.value.map((item) => item.type)
+      const result = only1.filter((item) => !typeList.includes(item.type))
+      return base.concat(result)
+    })
 
     const showConetntTypeList = [1]
     const showCountTypeList = [2, 3, 4, 5, 6]
@@ -254,7 +262,9 @@ export default {
       })
     }
     const handleSideBarCommand = (command) => {
-      const item = sidebarSettingsTemplate.find((item) => item.type === command)
+      const item = sidebarSettingsTemplate.value.find(
+        (item) => item.type === command
+      )
       authApi
         .createSidebar(item)
         .then((res) => {
