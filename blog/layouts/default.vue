@@ -1,5 +1,16 @@
 <template>
-  <div v-if="options">
+  <div
+    v-if="options"
+    :class="{
+      'page-loading': pageLoading,
+    }"
+  >
+    <Transition name="fade">
+      <div class="loader-body" v-if="pageLoading">
+        <span class="loader"><span class="loader-inner"></span></span>
+        <div class="loader-text">Loading</div>
+      </div>
+    </Transition>
     <!-- 小于1024宽度时出现的顶部栏 -->
     <div class="blog-top-bar">
       <div class="blog-top-bar-body">
@@ -183,7 +194,7 @@ const sumLayoutRightBoxHeight = () => {
     layoutRightBoxHeight.value = 0
   }
 }
-// const pageLoading = ref(true)
+const pageLoading = ref(true)
 // let observer
 onMounted(async () => {
   // observer = new ResizeObserver((entries) => {
@@ -192,6 +203,7 @@ onMounted(async () => {
   //   }
   // })
   // observer.observe(layoutRightBox.value)
+  pageLoading.value = false
   setWindowHeight()
   window.addEventListener('resize', setWindowHeightResize)
 })
@@ -285,6 +297,9 @@ onUnmounted(() => {
   top: 0px;
   z-index: 1;
 }
+.page-loading .blog-layout-right-box {
+  position: relative;
+}
 .blog-search-body {
   border-radius: 10px;
   background: #f5f5f5;
@@ -308,6 +323,97 @@ onUnmounted(() => {
 /* 最后一个不margin */
 .blog-layout-right-sidebar-item:last-child {
   margin-bottom: 0px;
+}
+
+/* loader */
+.loader-body {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  /* 背景色 */
+  background-color: #ef90a7;
+  z-index: 999;
+  /* flex 居中 column */
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  display: flex;
+}
+.loader {
+  display: inline-block;
+  width: 30px;
+  height: 30px;
+  position: relative;
+  border: 4px solid #fff;
+  animation: loader 2s infinite ease;
+}
+
+.loader-inner {
+  vertical-align: top;
+  display: inline-block;
+  width: 100%;
+  background-color: #fff;
+  animation: loader-inner 2s infinite ease-in;
+}
+.loader-text {
+  color: #fff;
+  font-size: 16px;
+  margin-top: 20px;
+}
+/* fade */
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.5s ease;
+}
+
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
+}
+@keyframes loader {
+  0% {
+    transform: rotate(0deg);
+  }
+
+  25% {
+    transform: rotate(180deg);
+  }
+
+  50% {
+    transform: rotate(180deg);
+  }
+
+  75% {
+    transform: rotate(360deg);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes loader-inner {
+  0% {
+    height: 0%;
+  }
+
+  25% {
+    height: 0%;
+  }
+
+  50% {
+    height: 100%;
+  }
+
+  75% {
+    height: 100%;
+  }
+
+  100% {
+    height: 0%;
+  }
 }
 /* 小于1024时隐藏左右侧边栏 */
 @media (max-width: 1024px) {
