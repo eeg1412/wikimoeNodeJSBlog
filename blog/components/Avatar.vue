@@ -1,13 +1,8 @@
 <template>
   <div class="dib" :style="imgStyle">
-    <img
-      v-if="imageShow"
-      class="blog-avatar"
-      :src="src"
-      :alt="alt"
-      @error="imgError"
-    />
-    <USkeleton v-else :style="imgStyle" :ui="{ rounded: 'rounded' }" />
+    <ClientOnly>
+      <img class="blog-avatar" :src="src" :alt="alt" @error="imgError" />
+    </ClientOnly>
   </div>
 </template>
 <script setup>
@@ -58,10 +53,6 @@ const src = computed(() => {
 const imgError = () => {
   loadErrorFlag.value = true
 }
-const imageShow = ref(false)
-nextTick(() => {
-  imageShow.value = true
-})
 </script>
 <style scoped>
 .blog-avatar {

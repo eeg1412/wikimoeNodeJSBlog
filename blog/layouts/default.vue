@@ -166,7 +166,7 @@ const setWindowHeight = () => {
     sumLayoutRightBoxHeight()
   }
 }
-const setWindowHeightScroll = () => {
+const setWindowHeightResize = () => {
   clearTimeout(setWindowHeightTimer)
   setWindowHeightTimer = setTimeout(() => {
     setWindowHeight()
@@ -178,16 +178,28 @@ const sumLayoutRightBoxHeight = () => {
   if (layoutRightBox.value) {
     layoutRightBoxHeight.value =
       layoutRightBox.value.offsetHeight - windowHeight
+    console.log(layoutRightBox.value.offsetHeight, windowHeight)
+  } else {
+    layoutRightBoxHeight.value = 0
   }
-  layoutRightBoxHeight.value = 0
 }
-
-onMounted(() => {
+// const pageLoading = ref(true)
+// let observer
+onMounted(async () => {
+  // observer = new ResizeObserver((entries) => {
+  //   for (let entry of entries) {
+  //     setWindowHeightResize()
+  //   }
+  // })
+  // observer.observe(layoutRightBox.value)
   setWindowHeight()
-  window.addEventListener('resize', setWindowHeightScroll)
+  window.addEventListener('resize', setWindowHeightResize)
 })
 onUnmounted(() => {
-  window.removeEventListener('resize', setWindowHeightScroll)
+  // if (observer) {
+  //   observer.disconnect()
+  // }
+  window.removeEventListener('resize', setWindowHeightResize)
 })
 </script>
 <style scoped>
@@ -270,6 +282,7 @@ onUnmounted(() => {
 .blog-layout-right-box {
   padding: 0 20px 20px 20px;
   position: sticky;
+  top: 0px;
   z-index: 1;
 }
 .blog-search-body {
@@ -291,6 +304,10 @@ onUnmounted(() => {
 }
 .blog-layout-right-sidebar-item {
   margin-bottom: 20px;
+}
+/* 最后一个不margin */
+.blog-layout-right-sidebar-item:last-child {
+  margin-bottom: 0px;
 }
 /* 小于1024时隐藏左右侧边栏 */
 @media (max-width: 1024px) {
