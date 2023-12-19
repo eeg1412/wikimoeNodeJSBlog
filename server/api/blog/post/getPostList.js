@@ -116,11 +116,21 @@ module.exports = async function (req, res, next) {
       })
       return
     }
+    month = month - 1
+    // 判断month是否在0-11之间
+    if (month < 0 || month > 11) {
+      res.status(400).json({
+        errors: [{
+          message: '月份错误'
+        }]
+      })
+      return
+    }
     // 时区
     const siteTimeZone = global.$globalConfig.siteSettings.siteTimeZone || 'Asia/Shanghai'
     // 根据年月和时区查询整月的开始时间和结束时间
-    const startDate = moment.tz([year, month - 1], siteTimeZone).startOf('month').toDate();
-    const endDate = moment.tz([year, month], siteTimeZone).startOf('month').toDate();
+    const startDate = moment.tz([year, month], siteTimeZone).startOf('month').toDate();
+    const endDate = moment.tz([year, month], siteTimeZone).add(1, 'month').startOf('month').toDate();
     // 查询条件
     params.date = {
       $gte: startDate,
