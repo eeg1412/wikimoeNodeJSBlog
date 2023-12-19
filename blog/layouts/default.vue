@@ -226,7 +226,7 @@ onUnmounted(() => {
   width: 300px;
   box-sizing: border-box;
   flex: 0 0 300px;
-  background: #fffdfd;
+  background: #ffffff;
   border-left: 2px solid #fff7f9;
   /* 右上角,右下角20px 圆角 */
   border-top-right-radius: 20px;
@@ -281,7 +281,7 @@ onUnmounted(() => {
   position: sticky;
   z-index: 2;
   top: 0px;
-  background: #fffdfd;
+  background: #ffffff;
 }
 .blog-layout-right-title-body {
   font-size: 20px;

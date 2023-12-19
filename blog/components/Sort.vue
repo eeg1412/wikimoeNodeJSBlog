@@ -69,7 +69,7 @@ const { data: sortListData } = sortData
   display: block;
   text-decoration: none;
   font-size: 12px;
-  background: #fffdfd;
+  background: #ffffff;
   border: 1px solid rgba(255, 255, 255, 0);
   color: #3c3c3c;
   padding: 5px 10px;
