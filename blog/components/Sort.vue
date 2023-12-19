@@ -13,6 +13,7 @@
             params: { sortid: item.alias || item._id, page: 1 },
           }"
           class="sort-list-item-link"
+          :class="{ active: sortid === item.alias || sortid === item._id }"
         >
           {{ item.sortname }}
         </NuxtLink>
@@ -29,6 +30,7 @@
                 params: { sortid: item.alias || item._id, page: 1 },
               }"
               class="sort-list-item-link"
+              :class="{ active: sortid === item.alias || sortid === item._id }"
             >
               {{ item.sortname }}
             </NuxtLink>
@@ -40,6 +42,8 @@
 </template>
 <script setup>
 import { getSortListApi } from '@/api/sort'
+const route = useRoute()
+const sortid = computed(() => route.params.sortid)
 const [sortData] = await Promise.all([getSortListApi()])
 const { data: sortListData } = sortData
 </script>
@@ -56,7 +60,7 @@ const { data: sortListData } = sortData
   line-height: 1.5em;
 }
 .sort-list-item {
-  margin-top: 1px;
+  margin-top: 5px;
 }
 .sort-list-children-body {
   padding-left: 10px;
@@ -66,17 +70,23 @@ const { data: sortListData } = sortData
   text-decoration: none;
   font-size: 12px;
   background: #fffdfd;
+  border: 1px solid rgba(255, 255, 255, 0);
   color: #3c3c3c;
-  padding: 0.5em;
+  padding: 5px 10px;
   transition: all 0.25s;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
   cursor: pointer;
+  border-radius: 5px;
 }
 .sort-list-item-link:hover {
-  background: #e8e8e8;
-  background: #f8f8f8;
-  padding-left: 10px;
+  border: 1px solid #ef90a7;
+  color: #ef90a7;
+  padding-left: 18px;
+}
+.sort-list-item-link.active {
+  background: #ef90a7;
+  color: #ffffff;
 }
 </style>
