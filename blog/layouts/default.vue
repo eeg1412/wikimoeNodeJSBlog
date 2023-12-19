@@ -83,7 +83,10 @@
             <div class="blog-layout-right-title-body">
               {{ item.title }}
             </div>
-            <template v-if="item.type === 3">
+            <template v-if="item.type === 1">
+              <HtmlContent :content="item.content" />
+            </template>
+            <template v-else-if="item.type === 3">
               <CommentLatest />
             </template>
             <template v-else-if="item.type === 8">
