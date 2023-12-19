@@ -158,30 +158,36 @@ const goSearch = () => {
 }
 
 const layoutRightBox = ref(null)
-const windowHeight = ref(0)
+let windowHeight = 0
 let setWindowHeightTimer = null
 const setWindowHeight = () => {
+  if (windowHeight !== undefined) {
+    windowHeight = window.innerHeight || 0
+    sumLayoutRightBoxHeight()
+  }
+}
+const setWindowHeightScroll = () => {
   clearTimeout(setWindowHeightTimer)
   setWindowHeightTimer = setTimeout(() => {
-    if (windowHeight?.value !== undefined) {
-      windowHeight.value = window.innerHeight || 0
-    }
+    setWindowHeight()
   }, 100)
 }
 // 计算layoutRightBox高度和window高度的差
-const layoutRightBoxHeight = computed(() => {
+const layoutRightBoxHeight = ref(0)
+const sumLayoutRightBoxHeight = () => {
   if (layoutRightBox.value) {
-    return layoutRightBox.value.offsetHeight - windowHeight.value
+    layoutRightBoxHeight.value =
+      layoutRightBox.value.offsetHeight - windowHeight
   }
-  return 0
-})
+  layoutRightBoxHeight.value = 0
+}
 
 onMounted(() => {
   setWindowHeight()
-  window.addEventListener('resize', setWindowHeight)
+  window.addEventListener('resize', setWindowHeightScroll)
 })
 onUnmounted(() => {
-  window.removeEventListener('resize', setWindowHeight)
+  window.removeEventListener('resize', setWindowHeightScroll)
 })
 </script>
 <style scoped>
