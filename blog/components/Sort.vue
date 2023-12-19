@@ -20,7 +20,7 @@
         <ul class="sort-list-children-body">
           <li
             v-for="(item, index) in item.children"
-            :key="item.alias || item._id"
+            :key="item._id"
             class="sort-list-item"
           >
             <NuxtLink
