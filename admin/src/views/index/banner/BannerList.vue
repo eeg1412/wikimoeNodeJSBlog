@@ -1,5 +1,5 @@
 <template>
-  <div class="common-right-panel-form banner-list-body common-limit-width">
+  <div class="common-right-panel-form banner-list-body">
     <div class="pb20">
       <el-breadcrumb separator="/">
         <el-breadcrumb-item>横幅</el-breadcrumb-item>
