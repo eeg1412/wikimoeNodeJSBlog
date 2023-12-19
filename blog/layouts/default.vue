@@ -8,7 +8,7 @@
     <Transition name="fade">
       <div class="loader-body" v-if="pageLoading">
         <span class="loader"><span class="loader-inner"></span></span>
-        <div class="loader-text">Loading</div>
+        <div class="loader-text">正在召唤神秘力量</div>
       </div>
     </Transition>
     <!-- 小于1024宽度时出现的顶部栏 -->
@@ -195,6 +195,7 @@ const sumLayoutRightBoxHeight = () => {
   }
 }
 const pageLoading = ref(true)
+
 // let observer
 onMounted(async () => {
   // observer = new ResizeObserver((entries) => {
