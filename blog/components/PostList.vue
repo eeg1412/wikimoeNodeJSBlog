@@ -178,13 +178,15 @@ const route = useRoute()
 const routeName = computed(() => route.name)
 const page = route.params.page ? Number(route.params.page) : 1
 const keyword = route.params.keyword || ''
+const sortid = route.params.sortid || ''
 const apiType = computed(() => {
   switch (routeName.value) {
     case 'postList':
       return 'post'
     case 'postListKeyword':
       return 'keyword'
-
+    case 'postListSort':
+      return 'sort'
     default:
       break
   }
@@ -192,7 +194,7 @@ const apiType = computed(() => {
 console.log(page)
 
 const [postsDataResponse] = await Promise.all([
-  getPostsApi({ page, keyword, pageType: apiType.value }),
+  getPostsApi({ page, keyword, pageType: apiType.value, sortid: sortid }),
 ])
 
 const { data: postsData } = postsDataResponse

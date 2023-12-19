@@ -1,7 +1,9 @@
 const naviUtils = require('../mongodb/utils/navis')
 const sidebarUtils = require('../mongodb/utils/sidebars')
 const bannerUtils = require('../mongodb/utils/banners')
+const sortUtils = require('../mongodb/utils/sorts')
 const commentUtils = require('../mongodb/utils/comments')
+
 const utils = require('../utils/utils')
 
 exports.getNaviList = async function (req, res, next) {
@@ -22,6 +24,29 @@ exports.getNaviList = async function (req, res, next) {
       global.$cacheData.naviList = null
       reject(err)
       console.error('naviList get fail')
+    })
+  })
+  return promise
+}
+
+exports.getSortList = async function (req, res, next) {
+  console.info('sortList get')
+  const sort = {
+    taxis: 1,
+    _id: -1
+  }
+  const promise = new Promise((resolve, reject) => {
+    sortUtils.find({}, sort).then((data) => {
+      // 根据返回的data，配合parent字段，生成树形结构
+      const jsonData = data.map(doc => doc.toJSON())
+      const treeData = utils.generateTreeData(jsonData)
+      global.$cacheData.sortList = treeData
+      resolve(treeData)
+      console.info('sortList get success')
+    }).catch((err) => {
+      global.$cacheData.sortList = null
+      reject(err)
+      console.error('sortList get fail')
     })
   })
   return promise

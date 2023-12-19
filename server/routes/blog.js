@@ -44,6 +44,13 @@ const blogRouteSetting = [
     middleware: [],
     controller: require('../api/blog/comment/getLatestComments'),
   },
+  // getSortList
+  {
+    path: '/sort/list',
+    method: 'get',
+    middleware: [],
+    controller: require('../api/blog/sort/getSortList'),
+  },
 ]
 
 blogRouteSetting.forEach(item => {

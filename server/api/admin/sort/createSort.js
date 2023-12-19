@@ -3,6 +3,7 @@ const sortUtils = require('../../../mongodb/utils/sorts')
 const utils = require('../../../utils/utils')
 const log4js = require('log4js')
 const adminApiLog = log4js.getLogger('adminApi')
+const cacheDataUtils = require('../../../config/cacheData')
 
 module.exports = async function (req, res, next) {
   // sortname	String	是	否	无	分类名称
@@ -33,12 +34,32 @@ module.exports = async function (req, res, next) {
     res.status(400).json({ errors })
     return
   }
+  if (alias) {
+    // 查询alias是否存在，查询条件时大小写不敏感的
+    const query = {
+      alias: {
+        $regex: new RegExp('^' + alias + '$', 'i')
+      }
+    }
+    const result = await sortUtils.findOne(query)
+    if (result) {
+      res.status(400).json({
+        errors: [{
+          message: '分类别名已存在'
+        }]
+      })
+      return
+    }
+  }
+
+
   // save
   sortUtils.save(params).then((data) => {
     res.send({
       data: data
     })
     adminApiLog.info(`sort:${sortname} create success`)
+    cacheDataUtils.getSortList()
   }).catch((err) => {
     res.status(400).json({
       errors: [{

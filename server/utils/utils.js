@@ -243,3 +243,7 @@ exports.deviceUtils = function (req, id, modelUtils) {
 exports.isNumber = function (value) {
   return typeof value === 'number' && isFinite(value)
 }
+
+exports.isObjectId = function (value) {
+  return value.match(/^[0-9a-fA-F]{24}$/)
+}

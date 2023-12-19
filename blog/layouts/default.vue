@@ -80,6 +80,9 @@
             <template v-if="item.type === 3">
               <CommentLatest />
             </template>
+            <template v-else-if="item.type === 8">
+              <Sort />
+            </template>
           </div>
         </div>
       </div>
@@ -98,6 +101,7 @@ import { useOptionStore } from '@/store/options'
 import { storeToRefs } from 'pinia'
 import { getNaviListApi } from '@/api/navi'
 import { getSidebarListApi } from '@/api/sidebar'
+
 const route = useRoute()
 const router = useRouter()
 const optionStore = useOptionStore()
@@ -229,7 +233,7 @@ const goSearch = () => {
   padding: 20px;
   position: sticky;
   top: 0px;
-  background: #ffffff;
+  background: #fffdfd;
 }
 .blog-layout-right-title-body {
   font-size: 20px;

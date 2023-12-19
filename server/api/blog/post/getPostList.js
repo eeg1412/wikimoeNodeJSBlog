@@ -1,12 +1,13 @@
 
 const postUtils = require('../../../mongodb/utils/posts')
+const sortUtils = require('../../../mongodb/utils/sorts')
 const utils = require('../../../utils/utils')
 const log4js = require('log4js')
 const adminApiLog = log4js.getLogger('adminApi')
 
 module.exports = async function (req, res, next) {
   // TODO:置顶
-  let { page, keyword, type, sorttype, sort, tags, pageType } = req.query
+  let { page, keyword, type, sorttype, sortid, tags, pageType } = req.query
   page = parseInt(page)
   const size = global.$globalConfig?.siteSettings?.sitePageSize || 1
   // 判断page和size是否为数字
@@ -53,8 +54,43 @@ module.exports = async function (req, res, next) {
   }
 
   // 如果sort存在，就加入查询条件
-  if (sort) {
-    params.sort = sort
+  if (sortid) {
+    const sortList = global.$cacheData?.sortList || []
+    function findInSortList (sortList, sortid, isObjectId) {
+      for (let item of sortList) {
+        if ((isObjectId && item._id.toString() === sortid) || (!isObjectId && item.alias.toLowerCase() === sortid.toLowerCase())) {
+          return item;
+        }
+
+        if (item.children) {
+          let result = findInSortList(item.children, sortid, isObjectId);
+          if (result) {
+            return result;
+          }
+        }
+      }
+
+      return null;
+    }
+
+    let isObjectId = utils.isObjectId(sortid);
+    let sort = findInSortList(sortList, sortid, isObjectId);
+    let childrenIds = [];
+
+    if (sort && sort.children) {
+      childrenIds = sort.children.map(child => child._id);
+    }
+    if (!sort) {
+      res.status(404).json({
+        errors: [{
+          message: '分类不存在'
+        }]
+      })
+      return
+    }
+    params.sort = {
+      $in: [sort._id, ...childrenIds]
+    }
   }
   // 如果tags存在，就加入查询条件
   if (tags) {
@@ -72,6 +108,10 @@ module.exports = async function (req, res, next) {
     case 'post':
       // 将top放到第一位,top是布尔
       postSorting['top'] = -1
+      break;
+    case 'sort':
+      // 将sort放到第一位
+      postSorting['sortop'] = -1
       break;
 
     default:

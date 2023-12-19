@@ -16,6 +16,7 @@ db.once('open', async () => {
   cacheDataUtils.getNaviList()
   cacheDataUtils.getSidebarList()
   cacheDataUtils.getBannerList()
+  cacheDataUtils.getSortList()
 })
 
 db.on('error', function (error) {
