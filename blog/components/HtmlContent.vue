@@ -1,11 +1,9 @@
 <template>
   <div class="html-content-body">
     <div v-html="contentCom" @click.middle="onMidClick" @click="onClick"></div>
-    <div class="none" ref="divDom"></div>
   </div>
 </template>
 <script setup>
-import { _0 } from '#tailwind-config/theme/backdropBlur'
 import { loadAndOpenImg } from '@/utils'
 
 // props
@@ -16,7 +14,6 @@ const props = defineProps({
     default: '',
   },
 })
-const divDom = ref(null)
 // img标签自动添加loading="lazy"
 // let htmlContent = '你的HTML内容'
 // htmlContent = htmlContent.replace(
@@ -30,22 +27,24 @@ const contentCom = computed(() => {
     /<img(?!.*?loading\s*=\s*['"]lazy['"])([^>]*?)>/gi,
     '<img loading="lazy" $1>'
   )
-  if (divDom.value) {
-    divDom.value.innerHTML = content
-    const imgList = divDom.value.querySelectorAll('img')
-    imgList.forEach((img) => {
-      // 检查 data-href 属性是否有值
-      if (img.getAttribute('data-href')) {
-        // 如果 data-href 属性有值，添加 pointer 类
-        img.classList.add('pointer')
-      }
-    })
-    const newHtml = divDom.value.innerHTML
-    // 清空 divDom
-    divDom.value.innerHTML = ''
-    return newHtml
-  }
-  return ''
+  // 去掉data-href为空的data-href属性
+  content = content.replace(/data-href=""/gi, '')
+  // if (divDom.value) {
+  //   divDom.value.innerHTML = content
+  //   const imgList = divDom.value.querySelectorAll('img')
+  //   imgList.forEach((img) => {
+  //     // 检查 data-href 属性是否有值
+  //     if (img.getAttribute('data-href')) {
+  //       // 如果 data-href 属性有值，添加 pointer 类
+  //       img.classList.add('pointer')
+  //     }
+  //   })
+  //   const newHtml = divDom.value.innerHTML
+  //   // 清空 divDom
+  //   divDom.value.innerHTML = ''
+  //   return newHtml
+  // }
+  return content
 })
 
 const getImgHref = (e) => {
@@ -53,7 +52,8 @@ const getImgHref = (e) => {
   // 检查是否为 img 标签
   if (target.tagName === 'IMG') {
     // 检查 data-href 属性是否有值，需要URI decode
-    const dataHref = decodeURIComponent(target.getAttribute('data-href'))
+    let dataHref = target.getAttribute('data-href')
+    dataHref = dataHref ? decodeURIComponent(dataHref) : null
     if (dataHref) {
       return dataHref
     }
@@ -101,8 +101,11 @@ const onMidClick = (e) => {
 }
 </style>
 <style>
+.html-content-body img[data-href] {
+  cursor: pointer;
+}
 .html-content-body img {
-  max-width: 100%;
-  height: auto;
+  max-width: 100% !important;
+  height: auto !important;
 }
 </style>

@@ -27,7 +27,7 @@ import '@wangeditor/editor/dist/css/style.css' // 引入 css
 import { onBeforeUnmount, ref, shallowRef, onMounted, computed } from 'vue'
 import { Editor, Toolbar } from '@wangeditor/editor-for-vue'
 import AttachmentsDialog from '@/components/AttachmentsDialog'
-import { DomEditor } from '@wangeditor/editor'
+import { DomEditor, SlateTransforms } from '@wangeditor/editor'
 import store from '@/store'
 
 export default {
@@ -176,20 +176,49 @@ export default {
     const siteUrl = computed(() => {
       return store.state.siteUrl
     })
-    const selectAttachments = (attachments) => {
+    const selectAttachments = async (attachments) => {
       console.log(attachments)
-      attachments.forEach((item) => {
+      const editor = editorRef.value
+      // let html = ''
+      // attachments.forEach((item) => {
+      //   // 写入img标签
+      //   html += `<img src="${siteUrl.value + item.filepath}" alt="${
+      //     item.filename
+      //   }" width="${item.thumWidth || item.width}" height="${
+      //     item.thumHeight || item.height
+      //   }" loading="lazy" />`
+      // })
+
+      for (const item of attachments) {
         if (insertFn_) {
-          // insertFn(url, alt, href)
-          insertFn_(
+          const insertFnPromise = insertFn_(
             item.thumfor
               ? siteUrl.value + item.thumfor
               : siteUrl.value + item.filepath,
             item.filename,
             siteUrl.value + item.filepath
           )
+          await insertFnPromise
+          const editor = editorRef.value
+          console.log(editor)
+          SlateTransforms.setNodes(
+            editor,
+            {
+              style: {
+                width: (item.thumWidth || item.width) + 'px',
+                height: (item.thumHeight || item.height) + 'px',
+              },
+            },
+            {
+              match: (n) => {
+                // 找到img标签
+                console.log(n.type)
+                return n.type === 'image'
+              },
+            }
+          )
         }
-      })
+      }
     }
 
     const handleBlur = () => {
