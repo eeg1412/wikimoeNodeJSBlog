@@ -157,7 +157,9 @@ let setWindowHeightTimer = null
 const setWindowHeight = () => {
   clearTimeout(setWindowHeightTimer)
   setWindowHeightTimer = setTimeout(() => {
-    windowHeight.value = window.innerHeight || 0
+    if (windowHeight?.value !== undefined) {
+      windowHeight.value = window.innerHeight || 0
+    }
   }, 100)
 }
 // 计算layoutRightBox高度和window高度的差
