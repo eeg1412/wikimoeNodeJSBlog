@@ -67,7 +67,13 @@
             </UInput>
           </div>
         </div>
-        <div class="blog-layout-right-box">
+        <div
+          class="blog-layout-right-box"
+          ref="layoutRightBox"
+          :style="{
+            top: -layoutRightBoxHeight + 'px',
+          }"
+        >
           <div
             v-for="(item, index) in sidebarListData"
             :key="item._id"
@@ -144,6 +150,31 @@ const goSearch = () => {
     path: `/post/list/keyword/${keyword.value}/1`,
   })
 }
+
+const layoutRightBox = ref(null)
+const windowHeight = ref(0)
+let setWindowHeightTimer = null
+const setWindowHeight = () => {
+  clearTimeout(setWindowHeightTimer)
+  setWindowHeightTimer = setTimeout(() => {
+    windowHeight.value = window.innerHeight || 0
+  }, 100)
+}
+// 计算layoutRightBox高度和window高度的差
+const layoutRightBoxHeight = computed(() => {
+  if (layoutRightBox.value) {
+    return layoutRightBox.value.offsetHeight - windowHeight.value
+  }
+  return 0
+})
+
+onMounted(() => {
+  setWindowHeight()
+  window.addEventListener('resize', setWindowHeight)
+})
+onUnmounted(() => {
+  window.removeEventListener('resize', setWindowHeight)
+})
 </script>
 <style scoped>
 /* flex布局 左边固定300px 右边固定300px margin10 */
@@ -224,6 +255,8 @@ const goSearch = () => {
 }
 .blog-layout-right-box {
   padding: 0 20px 20px 20px;
+  position: sticky;
+  z-index: 1;
 }
 .blog-search-body {
   border-radius: 10px;
@@ -232,6 +265,7 @@ const goSearch = () => {
 .blog-layout-right-top-body {
   padding: 20px;
   position: sticky;
+  z-index: 2;
   top: 0px;
   background: #fffdfd;
 }
