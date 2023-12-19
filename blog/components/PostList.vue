@@ -17,9 +17,16 @@
               }}</span
               ><template v-if="item.sort"
                 ><span class="tenten">·</span
-                ><span class="cGray94">{{
-                  item.sort?.sortname
-                }}</span></template
+                ><NuxtLink
+                  class="cGray94 common-a"
+                  :to="{
+                    name: 'postListSort',
+                    params: { sortid: item.sort._id, page: 1 },
+                  }"
+                  v-if="item.sort"
+                >
+                  {{ item.sort.sortname }}
+                </NuxtLink></template
               >
             </div>
             <div class="fr">
@@ -41,8 +48,14 @@
             <!-- tags -->
             <div class="post-list-tags-body" v-if="item.tags.length > 0">
               <template v-for="(tag, index) in item.tags" :key="index">
-                <!-- TODO:到时候是链接 -->
-                <span class="post-list-tag-item">#{{ tag.tagname }}</span>
+                <NuxtLink
+                  class="post-list-tag-item"
+                  :to="{
+                    name: 'postListTag',
+                    params: { tagid: tag._id, page: 1 },
+                  }"
+                  >#{{ tag.tagname }}</NuxtLink
+                >
               </template>
             </div>
           </div>
@@ -181,6 +194,7 @@ const keyword = route.params.keyword || ''
 const sortid = route.params.sortid || ''
 const year = route.params.year || ''
 const month = route.params.month || ''
+const tagid = route.params.tagid || ''
 const apiType = computed(() => {
   switch (routeName.value) {
     case 'postList':
@@ -203,6 +217,7 @@ const [postsDataResponse] = await Promise.all([
     sortid: sortid,
     year,
     month,
+    tags: tagid ? [tagid] : null,
   }),
 ])
 
