@@ -179,6 +179,8 @@ const routeName = computed(() => route.name)
 const page = route.params.page ? Number(route.params.page) : 1
 const keyword = route.params.keyword || ''
 const sortid = route.params.sortid || ''
+const year = route.params.year || ''
+const month = route.params.month || ''
 const apiType = computed(() => {
   switch (routeName.value) {
     case 'postList':
@@ -194,7 +196,14 @@ const apiType = computed(() => {
 console.log(page)
 
 const [postsDataResponse] = await Promise.all([
-  getPostsApi({ page, keyword, pageType: apiType.value, sortid: sortid }),
+  getPostsApi({
+    page,
+    keyword,
+    pageType: apiType.value,
+    sortid: sortid,
+    year,
+    month,
+  }),
 ])
 
 const { data: postsData } = postsDataResponse

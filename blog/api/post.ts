@@ -10,4 +10,9 @@ const getPostsApi = (params: any) => {
   return httpRequest.get(URL, params)
 }
 
-export { getPostsApi }
+// '/post/archive'
+const archiveURL = `/post/archive`
+const getArchiveApi = () => {
+  return httpRequest.get(archiveURL)
+}
+export { getPostsApi, getArchiveApi }

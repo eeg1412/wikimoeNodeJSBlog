@@ -51,6 +51,13 @@ const blogRouteSetting = [
     middleware: [],
     controller: require('../api/blog/sort/getSortList'),
   },
+  // getPostArchiveList
+  {
+    path: '/post/archive',
+    method: 'get',
+    middleware: [],
+    controller: require('../api/blog/post/getPostArchiveList'),
+  },
 ]
 
 blogRouteSetting.forEach(item => {

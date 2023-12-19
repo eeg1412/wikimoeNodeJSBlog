@@ -879,6 +879,9 @@ input[type='password'] {
   border-radius: 4px;
   background-color: #bbb;
 }
+.common-a:hover {
+  color: #ef90a7;
+}
 
 .common-blockquote {
   margin: 0;

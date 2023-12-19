@@ -50,3 +50,9 @@ exports.count = async function (parmas) {
   // document查询
   return await postsModel.countDocuments(parmas);
 }
+
+// 聚合
+exports.aggregate = async function (parmas) {
+  // document查询
+  return await postsModel.aggregate(parmas);
+}

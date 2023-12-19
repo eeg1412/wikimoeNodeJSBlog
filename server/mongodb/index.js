@@ -17,6 +17,7 @@ db.once('open', async () => {
   cacheDataUtils.getSidebarList()
   cacheDataUtils.getBannerList()
   cacheDataUtils.getSortList()
+  cacheDataUtils.getPostArchiveList()
 })
 
 db.on('error', function (error) {

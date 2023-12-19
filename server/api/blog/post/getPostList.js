@@ -4,10 +4,11 @@ const sortUtils = require('../../../mongodb/utils/sorts')
 const utils = require('../../../utils/utils')
 const log4js = require('log4js')
 const adminApiLog = log4js.getLogger('adminApi')
+const moment = require('moment-timezone');
 
 module.exports = async function (req, res, next) {
-  // TODO:置顶
-  let { page, keyword, type, sorttype, sortid, tags, pageType } = req.query
+  let { page, keyword, type, sorttype, sortid, tags, pageType, year,
+    month, } = req.query
   page = parseInt(page)
   const size = global.$globalConfig?.siteSettings?.sitePageSize || 1
   // 判断page和size是否为数字
@@ -73,6 +74,7 @@ module.exports = async function (req, res, next) {
       return null;
     }
 
+
     let isObjectId = utils.isObjectId(sortid);
     let sort = findInSortList(sortList, sortid, isObjectId);
     let childrenIds = [];
@@ -99,6 +101,33 @@ module.exports = async function (req, res, next) {
       $in: tags
     }
   }
+
+  // 如果存在年和月
+  if (year && month) {
+    // 年月需要转成数字
+    year = parseInt(year)
+    month = parseInt(month)
+    // 判断year和month是否是NaN
+    if (isNaN(year) || isNaN(month)) {
+      res.status(400).json({
+        errors: [{
+          message: '参数错误'
+        }]
+      })
+      return
+    }
+    // 时区
+    const siteTimeZone = global.$globalConfig.siteSettings.siteTimeZone || 'Asia/Shanghai'
+    // 根据年月和时区查询整月的开始时间和结束时间
+    const startDate = moment.tz([year, month - 1], siteTimeZone).startOf('month').toDate();
+    const endDate = moment.tz([year, month], siteTimeZone).startOf('month').toDate();
+    // 查询条件
+    params.date = {
+      $gte: startDate,
+      $lt: endDate
+    }
+  }
+
 
   // date越新越靠前，_id越新越靠前
   let postSorting = {

@@ -89,6 +89,9 @@
             <template v-else-if="item.type === 8">
               <Sort />
             </template>
+            <template v-else-if="item.type === 9">
+              <Archive />
+            </template>
           </div>
         </div>
       </div>

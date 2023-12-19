@@ -2,6 +2,7 @@ const naviUtils = require('../mongodb/utils/navis')
 const sidebarUtils = require('../mongodb/utils/sidebars')
 const bannerUtils = require('../mongodb/utils/banners')
 const sortUtils = require('../mongodb/utils/sorts')
+const postUtils = require('../mongodb/utils/posts')
 const commentUtils = require('../mongodb/utils/comments')
 
 const utils = require('../utils/utils')
@@ -159,6 +160,47 @@ exports.getCommentList = async function (req, res, next) {
       global.$cacheData.commentList = null
       reject(err)
       console.error('commentList get fail')
+    })
+  })
+  return promise
+}
+
+// 根据服务器提供的时区，查询每个月的status为1的post总数，返回的数据包含 2023年12月 和 count
+exports.getPostArchiveList = async function (req, res, next) {
+  console.info('postArchive get')
+  const siteTimeZone = global.$globalConfig.siteSettings.siteTimeZone || 'Asia/Shanghai'
+  const promise = new Promise((resolve, reject) => {
+    postUtils.aggregate([
+      {
+        $match: {
+          status: 1,
+          // type 1 和 2
+          type: { $in: [1, 2] }
+        }
+      },
+      {
+        $group: {
+          _id: {
+            year: { $year: { date: "$date", timezone: siteTimeZone } },
+            month: { $month: { date: "$date", timezone: siteTimeZone } }
+          },
+          count: { $sum: 1 }
+        }
+      },
+      {
+        $sort: {
+          '_id.year': -1,
+          '_id.month': -1
+        }
+      }
+    ]).then((data) => {
+      global.$cacheData.postArchiveList = data
+      resolve(data)
+      console.info('postArchive get success')
+    }).catch((err) => {
+      global.$cacheData.postArchiveList = null
+      reject(err)
+      console.error('postArchive get fail')
     })
   })
   return promise

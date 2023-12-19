@@ -5,6 +5,7 @@ const log4js = require('log4js')
 const tagUtils = require('../../../mongodb/utils/tags')
 const adminApiLog = log4js.getLogger('adminApi')
 const validator = require('validator')
+const cacheDataUtils = require('../../../config/cacheData')
 
 module.exports = async function (req, res, next) {
   // - title	标题字段
@@ -113,10 +114,18 @@ module.exports = async function (req, res, next) {
   }
   // 校验alias是否存在
   if (alias) {
-    const aliasPost = await postUtils.findOne({ alias: alias }).catch((err) => {
+    const aliasPost = await postUtils.findOne({
+      alias: {
+        $regex: new RegExp('^' + alias + '$', 'i')
+      },
+      // 排除自己
+      _id: {
+        $ne: id
+      }
+    }).catch((err) => {
       return 500
     })
-    if (aliasPost && aliasPost._id.toString() !== id) {
+    if (aliasPost) {
       res.status(400).json({
         errors: [{
           message: '别名已存在'
@@ -184,6 +193,10 @@ module.exports = async function (req, res, next) {
       data: data
     })
     adminApiLog.info(`post update success`)
+    // 新旧status不一样，更新缓存
+    if (post.status !== status) {
+      cacheDataUtils.getPostArchiveList()
+    }
   }).catch((err) => {
     res.status(400).json({
       errors: [{
