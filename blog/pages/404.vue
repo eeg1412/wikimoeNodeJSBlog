@@ -3,7 +3,7 @@
     <div class="error-code">404</div>
     <div class="error-msg">页面不见了？</div>
     <!-- 尝试回到首页 -->
-    <div class="error-btn pointer" @click="reflushHome">重试</div>
+    <div class="error-btn pointer" @click="reflushHome">返回首页</div>
   </div>
 </template>
 <script setup>
