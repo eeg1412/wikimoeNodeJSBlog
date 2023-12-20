@@ -27,8 +27,10 @@ const contentCom = computed(() => {
     /<img(?!.*?loading\s*=\s*['"]lazy['"])([^>]*?)>/gi,
     '<img loading="lazy" $1>'
   )
-  // 去掉data-href为空的data-href属性
-  content = content.replace(/data-href=""/gi, '')
+  if (process.client) {
+    // 去掉data-href为空的data-href属性
+    content = content.replace(/data-href=""/gi, '')
+  }
   // if (divDom.value) {
   //   divDom.value.innerHTML = content
   //   const imgList = divDom.value.querySelectorAll('img')
