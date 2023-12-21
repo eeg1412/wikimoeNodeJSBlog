@@ -47,9 +47,11 @@ export default {
         // TODO: v4版本的data-href需要uri解码
         editor.cmd.do(
           'insertHTML',
-          `<img src="${siteUrl.value}${
-            item.thumfor || item.filepath
-          }" data-href="${siteUrl.value}${item.filepath}" />`
+          `<img src="${siteUrl.value}${item.thumfor || item.filepath}" width="${
+            item.thumWidth || item.width
+          }" height="${item.thumHeight || item.height}" data-href="${
+            siteUrl.value
+          }${item.filepath}" />`
         )
       })
     }

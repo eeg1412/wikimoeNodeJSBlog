@@ -27,8 +27,69 @@ import '@wangeditor/editor/dist/css/style.css' // 引入 css
 import { onBeforeUnmount, ref, shallowRef, onMounted, computed } from 'vue'
 import { Editor, Toolbar } from '@wangeditor/editor-for-vue'
 import AttachmentsDialog from '@/components/AttachmentsDialog'
-import { DomEditor, SlateTransforms } from '@wangeditor/editor'
+import { Boot, DomEditor, SlateTransforms } from '@wangeditor/editor'
 import store from '@/store'
+
+const imageToHtmlConf = {
+  type: 'image',
+  elemToHtml: (elemNode) => {
+    const { src, alt = '', href = '', style = {}, width, height } = elemNode
+    const { width: styWidth = '', height: styHeight = '' } = style
+
+    let styleStr = ''
+    if (styWidth) styleStr += `width: ${styWidth};`
+    if (styHeight) styleStr += `height: ${styHeight};`
+    return `<img src="${src}" alt="${alt}"${
+      href ? ` data-href=${href}` : ''
+    } width="${width}" height="${height}" style="${styleStr}"/>`
+  },
+}
+
+export function getStyleValue($elem, styleKey) {
+  let res = ''
+
+  const styleStr = $elem.getAttribute('style') || '' // 如 'line-height: 2.5; color: red;'
+  const styleArr = styleStr.split(';') // 如 ['line-height: 2.5', ' color: red', '']
+  const length = styleArr.length
+  for (let i = 0; i < length; i++) {
+    const styleItemStr = styleArr[i] // 如 'line-height: 2.5'
+    if (styleItemStr) {
+      const arr = styleItemStr.split(':') // ['line-height', ' 2.5']
+      if (arr[0].trim() === styleKey) {
+        res = arr[1].trim()
+      }
+    }
+  }
+
+  return res
+}
+
+function parseImgHtml(elem, children, editor) {
+  const $elem = elem
+  let href = $elem.getAttribute('data-href') || ''
+  href = decodeURIComponent(href) // 兼容 V4
+
+  return {
+    type: 'image',
+    src: $elem.getAttribute('src') || '',
+    alt: $elem.getAttribute('alt') || '',
+    width: $elem.getAttribute('width') || '',
+    height: $elem.getAttribute('height') || '',
+    href,
+    style: {
+      width: getStyleValue($elem, 'width'),
+      height: getStyleValue($elem, 'height'),
+    },
+    children: [{ text: '' }], // void node 有一个空白 text
+  }
+}
+
+export const parseImgHtmlConf = {
+  selector: 'img:not([data-w-e-type])', // data-w-e-type 属性，留给自定义元素，保证扩展性
+  parseElemHtml: parseImgHtml,
+}
+Boot.registerElemToHtml(imageToHtmlConf)
+Boot.registerParseElemHtml(parseImgHtmlConf)
 
 export default {
   props: {
@@ -204,15 +265,11 @@ export default {
           SlateTransforms.setNodes(
             editor,
             {
-              style: {
-                width: (item.thumWidth || item.width) + 'px',
-                height: (item.thumHeight || item.height) + 'px',
-              },
+              width: item.thumWidth || item.width,
+              height: item.thumHeight || item.height,
             },
             {
               match: (n) => {
-                // 找到img标签
-                console.log(n.type)
                 return n.type === 'image'
               },
             }
