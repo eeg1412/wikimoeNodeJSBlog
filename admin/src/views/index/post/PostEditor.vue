@@ -99,7 +99,7 @@
                 <div class="post-cover-image-item">
                   <el-image
                     :src="element.thumfor || element.filepath"
-                    fit="cover"
+                    fit="contain"
                     :preview-src-list="[element.filepath]"
                     :preview-teleported="true"
                     style="width: 100%; height: 100%"

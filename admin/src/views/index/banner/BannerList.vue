@@ -272,7 +272,7 @@ export default {
 <style>
 .banner-list-body .el-upload--text .avatar {
   width: 100%;
-  max-width: 300px;
+  max-width: 600px;
   height: auto;
 }
 </style>
