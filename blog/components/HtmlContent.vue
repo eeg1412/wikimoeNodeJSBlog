@@ -159,6 +159,7 @@ onMounted(() => {
 .html-content-body img {
   max-width: 100% !important;
   height: auto !important;
+  display: inline;
 }
 .html-content-body a:hover {
   color: #ef90a7;
