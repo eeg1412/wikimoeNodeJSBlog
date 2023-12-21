@@ -9,6 +9,16 @@
           @click="(e) => goPostDetail(e, item)"
           @click.middle="(e) => goPostDetail(e, item, true)"
         >
+          <!-- seo 为了抓取链接 -->
+          <NuxtLink
+            class="none"
+            :to="{
+              name: 'postDetail',
+              params: { id: item.alias || item._id },
+            }"
+          >
+            {{ item.title || item.excerpt }}
+          </NuxtLink>
           <!-- 作者 时间 分类名 -->
           <div class="clearfix">
             <div class="post-list-info-body fl">
