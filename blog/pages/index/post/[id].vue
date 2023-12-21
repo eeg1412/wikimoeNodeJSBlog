@@ -75,7 +75,10 @@
     >
       <div class="post-tweet-detail-content">{{ postData.data.excerpt }}</div>
       <div class="post-tweet-detail-cover-list-body">
-        <TweetImgList :coverImages="postData.data.coverImages" />
+        <TweetImgList
+          :coverImages="postData.data.coverImages"
+          :swiperMode="false"
+        />
       </div>
     </div>
     <!-- tags -->

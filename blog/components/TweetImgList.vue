@@ -29,26 +29,54 @@
         />
       </div>
     </div>
-    <div class="blog-tweet-img-swiper-body" v-else>
-      <Swiper
-        :modules="[SwiperPagination, SwiperMousewheel]"
-        :slides-per-view="1"
-        :loop="false"
-        :mousewheel="imageGroup.length > 1"
-        :pagination="{
-          type: 'fraction',
-        }"
-      >
-        <SwiperSlide v-for="(item, index) in imageGroup" :key="item._id">
+    <template v-else>
+      <div class="blog-tweet-img-swiper-body" v-if="swiperMode">
+        <Swiper
+          :modules="[SwiperPagination, SwiperMousewheel]"
+          :slides-per-view="1"
+          :loop="false"
+          :mousewheel="imageGroup.length > 1"
+          :pagination="{
+            type: 'fraction',
+          }"
+        >
+          <SwiperSlide v-for="(item, index) in imageGroup" :key="item._id">
+            <!-- 四张图以内 -->
+            <div
+              class="blog-tweet-img-list-body"
+              :class="`cover-count-${item.length}`"
+              v-if="item.length > 0"
+            >
+              <template v-for="(img, indexChild) in item" :key="index">
+                <WikimoeImage
+                  class="blog-tweet-img-list-body-item"
+                  :src="img.thumfor || img.filepath"
+                  :alt="img.filename"
+                  :width="img.thumWidth || img.width"
+                  :height="img.thumHeight || img.height"
+                  loading="lazy"
+                  fit="cover"
+                  :dataHrefList="dataHrefList"
+                  :dataHrefIndex="index * 4 + indexChild"
+                  :square="true"
+                  :clickStop="true"
+                />
+              </template>
+            </div>
+          </SwiperSlide>
+        </Swiper>
+      </div>
+      <div class="blog-tweet-img-swiper-body type-no-swiper" v-else>
+        <template v-for="(item, index) in imageGroup" :key="item._id">
           <!-- 四张图以内 -->
           <div
-            class="blog-tweet-img-list-body"
+            class="blog-tweet-img-list-body blog-tweet-img-list-body-no-swiper"
             :class="`cover-count-${item.length}`"
             v-if="item.length > 0"
           >
             <template v-for="(img, indexChild) in item" :key="index">
               <WikimoeImage
-                class="mr5 blog-tweet-img-list-body-item"
+                class="blog-tweet-img-list-body-item"
                 :src="img.thumfor || img.filepath"
                 :alt="img.filename"
                 :width="img.thumWidth || img.width"
@@ -62,9 +90,9 @@
               />
             </template>
           </div>
-        </SwiperSlide>
-      </Swiper>
-    </div>
+        </template>
+      </div>
+    </template>
   </div>
 </template>
 <script setup>
@@ -73,6 +101,10 @@ const props = defineProps({
   coverImages: {
     type: Array,
     required: true,
+  },
+  swiperMode: {
+    type: Boolean,
+    default: true,
   },
 })
 
@@ -113,12 +145,13 @@ const dataHrefList = computed(() => {
   display: grid;
   /* 2像素间距 */
   grid-gap: 2px;
-  border-radius: 20px;
+  /* border-radius: 20px; */
   overflow: hidden;
 }
 .blog-tweet-img-list-body.cover-count-1-1 {
   /* 宽高跟着内容走 */
   display: inline-block;
+  border-radius: 20px;
   max-width: 100%;
 }
 .blog-tweet-img-list-body.cover-count-1 {
@@ -134,6 +167,13 @@ const dataHrefList = computed(() => {
   grid-template-columns: 1fr 1fr;
   grid-auto-rows: auto;
   height: 400px;
+}
+.blog-tweet-img-list-body-no-swiper {
+  margin-top: 2px;
+}
+/* 第一个每天top */
+.blog-tweet-img-list-body-no-swiper:nth-child(1) {
+  margin-top: 0px;
 }
 
 .blog-tweet-img-list-body.cover-count-3
