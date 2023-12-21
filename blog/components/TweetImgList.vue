@@ -163,7 +163,6 @@ const dataHrefList = computed(() => {
   height: 400px;
 }
 .blog-tweet-img-list-body.cover-count-3 {
-  display: grid;
   grid-template-columns: 1fr 1fr;
   grid-auto-rows: auto;
   height: 400px;
