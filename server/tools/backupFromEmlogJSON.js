@@ -352,7 +352,7 @@ const init = async () => {
     }
     // 如果email和userData的email相同，则是管理员
     // TODO:待验证
-    if (userData.email === comment.email) {
+    if (userData.email === comment.email || userData.nickname === comment.nickname) {
       comment.user = userData._id
     }
     commentMap[commentEmlog.cid] = null
@@ -398,6 +398,11 @@ const init = async () => {
       nickname: replyEmlog.name,
       ip: replyEmlog.ip,
       status: replyEmlog.hide === 'y' ? 0 : 1,
+    }
+    // 如果nickname和userData的nickname相同，则是管理员
+    // TODO:待验证
+    if (userData.nickname === reply.nickname) {
+      reply.user = userData._id
     }
     replyList.push(reply)
   })
