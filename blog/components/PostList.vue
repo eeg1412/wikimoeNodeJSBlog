@@ -90,7 +90,13 @@
                   "
                   v-if="item.coverImages[0]"
                 />
-                <!-- TODO:默认封面图 -->
+                <!-- 默认封面图 defaultCover -->
+                <WikimoeImage
+                  class="post-list-blog-cover-img"
+                  :src="defaultCover"
+                  :alt="item.title"
+                  v-else
+                />
               </div>
               <!-- title -->
               <div class="post-list-title-body">
@@ -185,6 +191,7 @@ import { storeToRefs } from 'pinia'
 
 const optionStore = useOptionStore()
 const { options } = storeToRefs(optionStore)
+const defaultCover = options.value.siteDefaultCover || ''
 const sitePageSize = computed(() => options.value.sitePageSize || 1)
 const route = useRoute()
 const router = useRouter()
