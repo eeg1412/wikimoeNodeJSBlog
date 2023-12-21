@@ -335,7 +335,7 @@ onUnmounted(() => {
   bottom: 0;
   /* 背景色 */
   background-color: #ef90a7;
-  z-index: 999;
+  z-index: 99999;
   /* flex 居中 column */
   flex-direction: column;
   justify-content: center;

@@ -1,11 +1,17 @@
 <template>
   <div class="html-content-body">
-    <div v-html="contentCom" @click.middle="onMidClick" @click="onClick"></div>
+    <div
+      v-html="contentCom"
+      @click.middle="onMidClick"
+      @click="onClick"
+      ref="htmlContent"
+    ></div>
   </div>
 </template>
 <script setup>
 import { loadAndOpenImg } from '@/utils'
-
+import 'highlight.js/styles/base16/dracula.css'
+import hljs from 'highlight.js'
 // props
 const props = defineProps({
   // content
@@ -28,7 +34,7 @@ const contentCom = computed(() => {
     '<img loading="lazy" $1>'
   )
   // 去掉data-href为空的data-href属性
-  content = content.replace(/data-href=""/gi, '')
+  // content = content.replace(/data-href=""/gi, '')
   // if (divDom.value) {
   //   divDom.value.innerHTML = content
   //   const imgList = divDom.value.querySelectorAll('img')
@@ -94,6 +100,52 @@ const onMidClick = (e) => {
     window.open(dataHref, '_blank')
   }
 }
+
+const htmlContent = ref(null)
+
+const initHljs = () => {
+  const codeList = htmlContent.value.querySelectorAll('pre')
+  codeList.forEach((block) => {
+    // 去掉block前后的空格和空行
+    block.innerHTML = block.innerHTML.trim()
+    hljs.highlightBlock(block)
+    const lines = (block.textContent + '\n').split('\n').length - 1
+    block.setAttribute(
+      'data-lines',
+      Array.from({ length: lines }, (_, i) => i + 1).join('\n')
+    )
+  })
+}
+
+const initImgs = () => {
+  const imgList = htmlContent.value.querySelectorAll('img')
+  imgList.forEach((img) => {
+    // 如果没有 data-href 属性，删除 href 属性
+    if (!img.getAttribute('data-href')) {
+      img.removeAttribute('data-href')
+    }
+  })
+}
+
+const init = () => {
+  if (process.client && htmlContent.value) {
+    nextTick(() => {
+      initHljs()
+      initImgs()
+    })
+  }
+}
+
+watch(
+  () => props.content,
+  () => {
+    init()
+  }
+)
+
+onMounted(() => {
+  init()
+})
 </script>
 <style scoped>
 .html-content-body {
@@ -113,5 +165,52 @@ const onMidClick = (e) => {
 }
 .html-content-body p {
   line-height: 2;
+}
+.html-content-body pre {
+  margin: 0.5em 0;
+  padding: 0 1em;
+  overflow: auto;
+  border-radius: 0.3em;
+  background: #282a36;
+}
+.html-content-body pre.hljs {
+  position: relative;
+  padding-left: 3.5em;
+}
+.html-content-body pre::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+.html-content-body pre::-webkit-scrollbar-thumb {
+  height: 40px;
+  border-radius: 4px;
+  background-color: rgba(255, 255, 255, 0);
+}
+.html-content-body pre:hover::-webkit-scrollbar-thumb {
+  height: 40px;
+  border-radius: 4px;
+  background-color: #bbb;
+}
+
+.html-content-body pre::-webkit-scrollbar-thumb:hover {
+  background-color: #bbb;
+}
+.hljs:before {
+  content: attr(data-lines);
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 3em;
+  padding: 0 0.5em;
+  overflow: hidden;
+  letter-spacing: -1px;
+  text-align: right;
+  color: #ccc;
+  text-transform: uppercase;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
 }
 </style>
