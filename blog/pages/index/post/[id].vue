@@ -157,6 +157,9 @@ const { data: postData } = postDataResponse
   line-height: 1.5;
   margin-bottom: 10px;
 }
+.post-detail-tags-body {
+  margin-top: 5px;
+}
 .post-detail-tag-item {
   margin-right: 12px;
   color: #ef90a7;
