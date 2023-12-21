@@ -96,13 +96,14 @@
     </div>
     <!-- 点赞按钮 -->
     <div class="post-detail-like-body">
-      <div class="post-detail-like-btn">
-        <UIcon class="mr5" name="i-heroicons-heart" />
-        <span class="post-detail-like-number">{{
-          formatNumber(postData.data.likes)
-        }}</span
-        >点赞
-      </div>
+      <UButton
+        icon="i-heroicons-heart"
+        size="md"
+        color="primary"
+        variant="solid"
+        :label="`${formatNumber(postData.data.likes)}点赞`"
+        :trailing="false"
+      />
     </div>
     <!-- 评论 -->
     <!-- 评论列表 commentList -->
@@ -287,21 +288,7 @@ onMounted(() => {
 }
 .post-detail-like-body {
   text-align: center;
-}
-.post-detail-like-number {
-  padding-right: 2px;
-}
-.post-detail-like-btn {
-  border-radius: 5px;
-  background: #ef90a7;
-  color: #fff;
-  padding: 8px 15px;
-  display: inline-flex;
-  align-items: center;
-  /* 居中 */
-  justify-content: center;
-  margin: 20px auto;
-  cursor: pointer;
+  margin-bottom: 20px;
 }
 /* 评论 */
 .comment-list-body {
