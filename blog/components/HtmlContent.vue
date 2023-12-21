@@ -111,4 +111,7 @@ const onMidClick = (e) => {
 .html-content-body a:hover {
   color: #ef90a7;
 }
+.html-content-body p {
+  line-height: 2;
+}
 </style>
