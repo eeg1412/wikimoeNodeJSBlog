@@ -3,7 +3,9 @@
     <div
       v-for="(item, index) in commentLatest"
       :key="item._id"
-      class="comment-latest-item-body"
+      class="comment-latest-item-body pointer"
+      @click="(e) => goPostDetail(e, item)"
+      @click.middle="(e) => goPostDetail(e, item, true)"
     >
       <!-- 左边头像 -->
       <div class="comment-latest-item-avatar-body">
@@ -27,8 +29,39 @@
 import { getCommentLatestApi } from '@/api/comment'
 
 const props = defineProps({})
+const router = useRouter()
 
 const { data: commentLatest } = await getCommentLatestApi()
+
+const goPostDetail = (e, item, middle) => {
+  // 如果是点击了链接，就不跳转
+  if (e.target.tagName === 'A') {
+    return
+  }
+
+  let id = item.post._id
+  const alias = item.post.alias
+  if (alias) {
+    id = alias
+  }
+  const routeName = 'postDetail'
+  // 如果middle为true，就在新标签页打开
+  if (middle) {
+    // resolveUrl
+    const url = router.resolve({
+      name: routeName,
+      params: { id },
+    }).href
+    window.open(url, '_blank')
+  } else {
+    router.push({
+      name: routeName,
+      params: {
+        id: id,
+      },
+    })
+  }
+}
 </script>
 <style scoped>
 .comment-latest-item-body {
