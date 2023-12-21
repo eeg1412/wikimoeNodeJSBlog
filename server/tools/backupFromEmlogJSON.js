@@ -350,6 +350,11 @@ const init = async () => {
       ip: commentEmlog.ip,
       status: commentEmlog.hide === 'y' ? 0 : 1,
     }
+    // 如果email和userData的email相同，则是管理员
+    // TODO:待验证
+    if (userData.email === comment.email) {
+      comment.user = userData._id
+    }
     commentMap[commentEmlog.cid] = null
     commentList.push(comment)
   })
