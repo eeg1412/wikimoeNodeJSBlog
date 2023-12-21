@@ -17,6 +17,9 @@
         <div class="comment-latest-item-nickname-body fb">
           {{ item.nickname }}
         </div>
+        <div class="comment-latest-item-date">
+          {{ fromNow(item.date) }}
+        </div>
         <!-- 评论内容 -->
         <div class="comment-latest-item-comment-body">
           {{ limitStr(item.content, 28) }}
@@ -86,5 +89,10 @@ const goPostDetail = (e, item, middle) => {
 }
 .comment-latest-item-comment-body {
   word-break: break-all;
+}
+.comment-latest-item-date {
+  color: #999;
+  font-size: 12px;
+  font-weight: 400;
 }
 </style>

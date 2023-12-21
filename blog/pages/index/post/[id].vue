@@ -94,11 +94,98 @@
         >
       </template>
     </div>
+    <!-- 点赞按钮 -->
+    <div class="post-detail-like-body">
+      <div class="post-detail-like-btn">
+        <UIcon class="mr5" name="i-heroicons-heart" />
+        <span class="post-detail-like-number">{{
+          formatNumber(postData.data.likes)
+        }}</span
+        >点赞
+      </div>
+    </div>
+    <!-- 评论 -->
+    <!-- 评论列表 commentList -->
+    <ClientOnly>
+      <div class="comment-list-body">
+        <div class="comment-list-title">评论：</div>
+        <div
+          class="comment-list-item"
+          v-for="(item, index) in commentList"
+          :key="item._id"
+        >
+          <div class="comment-list-item-avatar-body">
+            <a :href="item.url" target="_blank" v-if="item.url">
+              <Avatar :avatar="item.avatar" :alt="item.nickname" />
+            </a>
+            <Avatar :avatar="item.avatar" :alt="item.nickname" v-else />
+          </div>
+          <div class="comment-list-item-right-info">
+            <div>
+              <div class="comment-list-item-author">
+                <a :href="item.url" target="_blank" v-if="item.url">{{
+                  item.nickname
+                }}</a>
+                <span v-else>{{ item.nickname }}</span>
+              </div>
+              <div class="comment-list-item-date">
+                {{ fromNow(item.date) }}
+              </div>
+            </div>
+            <blockquote
+              class="comment-list-item-parent-content"
+              v-if="item.parent"
+            >
+              {{ item.parent.content }}
+            </blockquote>
+            <div class="comment-list-item-content">{{ item.content }}</div>
+            <!-- 按钮 -->
+            <!-- 喜欢按钮 -->
+            <div class="comment-list-item-btns">
+              <div class="comment-list-item-btn type-like">
+                <UIcon class="mr5" name="i-heroicons-heart" />
+                <span>{{ formatNumber(item.likes) }}</span>
+              </div>
+              <!-- 回复按钮 -->
+              <div class="comment-list-item-btn">回复</div>
+            </div>
+          </div>
+        </div>
+        <!-- 翻页 -->
+        <div class="comment-page-body">
+          <UPagination
+            v-model="commentPage"
+            :page-count="commentSize"
+            :total="commentTotal"
+            size="md"
+            :inactiveButton="{
+              variant: 'ghost',
+            }"
+            :firstButton="{
+              variant: 'ghost',
+            }"
+            :lastButton="{
+              variant: 'ghost',
+            }"
+            :prevButton="{
+              variant: 'ghost',
+            }"
+            :nextButton="{
+              variant: 'ghost',
+            }"
+            :showFirst="true"
+            :showLast="true"
+            :max="5"
+          />
+        </div>
+      </div>
+    </ClientOnly>
   </div>
 </template>
 <script setup>
 import { useRoute } from 'vue-router'
 import { getDetailApi } from '@/api/post'
+import { getCommentListApi } from '@/api/comment'
 
 definePageMeta({
   name: 'postDetail',
@@ -111,8 +198,42 @@ const [postDataResponse] = await Promise.all([
     id,
   }),
 ])
-
 const { data: postData } = postDataResponse
+const postid = postData.value.data._id
+// comment
+const commentPage = ref(1)
+const commentData = ref({
+  list: [],
+  total: 0,
+  size: 1,
+})
+const commentList = computed(() => {
+  return commentData.value.list
+})
+const commentTotal = computed(() => {
+  return commentData.value.total
+})
+const commentSize = computed(() => {
+  return commentData.value.size
+})
+const getCommentList = async () => {
+  getCommentListApi({
+    id: postid,
+    page: commentPage.value,
+  }).then((res) => {
+    console.log(res)
+    commentData.value = res
+  })
+}
+watch(
+  () => commentPage.value,
+  () => {
+    getCommentList()
+  }
+)
+onMounted(() => {
+  getCommentList()
+})
 </script>
 <style scoped>
 .post-detail-body {
@@ -163,5 +284,93 @@ const { data: postData } = postDataResponse
 .post-detail-tag-item {
   margin-right: 12px;
   color: #ef90a7;
+}
+.post-detail-like-body {
+  text-align: center;
+}
+.post-detail-like-number {
+  padding-right: 2px;
+}
+.post-detail-like-btn {
+  border-radius: 5px;
+  background: #ef90a7;
+  color: #fff;
+  padding: 8px 15px;
+  display: inline-flex;
+  align-items: center;
+  /* 居中 */
+  justify-content: center;
+  margin: 20px auto;
+  cursor: pointer;
+}
+/* 评论 */
+.comment-list-body {
+  border-top: 1px solid #e2e2e2;
+  padding-top: 20px;
+}
+.comment-list-title {
+  font-size: 16px;
+  font-weight: 700;
+}
+.comment-list-item {
+  display: flex;
+  border-bottom: 1px solid #e2e2e2;
+  padding: 20px 0;
+}
+.comment-list-item-avatar-body {
+  margin-right: 10px;
+}
+.comment-list-item-right-info {
+  flex: 1;
+}
+.comment-list-item-author {
+  font-size: 14px;
+  font-weight: 700;
+  margin-right: 10px;
+}
+.comment-list-item-date {
+  font-size: 12px;
+  color: #949494;
+}
+.comment-list-item-parent-content,
+.comment-list-item-content {
+  /* 允许换行 */
+  white-space: pre-wrap;
+}
+.comment-list-item-parent-content {
+  border: none;
+  border-left: 5px solid #eee;
+  padding: 3px 10px;
+  margin: 10px 0;
+  color: #949494;
+  font-size: 12px;
+}
+.comment-list-item-content {
+  font-size: 14px;
+  line-height: 1.5;
+}
+.comment-list-item-btns {
+  margin-top: 10px;
+  display: flex;
+  align-items: center;
+}
+.comment-list-item-btn {
+  font-size: 12px;
+  margin-right: 10px;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+}
+.comment-list-item-btn.type-like {
+  border: 1px solid #e2e2e2;
+  color: #949494;
+  padding: 1px 8px;
+  border-radius: 10px;
+}
+.comment-page-body {
+  /* 居中 */
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
 }
 </style>

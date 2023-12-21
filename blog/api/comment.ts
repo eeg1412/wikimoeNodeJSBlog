@@ -10,5 +10,10 @@ const URL = `/comment/latest`
 const getCommentLatestApi = () => {
   return httpRequest.get(URL)
 }
+// /comment/list
+const commentListURL = `/comment/list`
+const getCommentListApi = (params: any, options: any) => {
+  return httpRequest.getFetch(commentListURL, params, options)
+}
 
-export { getCommentLatestApi }
+export { getCommentLatestApi, getCommentListApi }

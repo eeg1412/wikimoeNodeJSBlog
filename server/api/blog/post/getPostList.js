@@ -223,7 +223,8 @@ module.exports = async function (req, res, next) {
     // 返回格式list,total
     res.send({
       list: data.list,
-      total: data.total
+      total: data.total,
+      size: size,
     })
 
   }).catch((err) => {

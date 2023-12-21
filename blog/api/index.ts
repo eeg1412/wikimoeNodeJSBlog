@@ -49,6 +49,18 @@ class HttpRequest {
     })
   }
 
+  requestFetch(url: string, options: any) {
+    return new Promise((resolve, reject) => {
+      $fetch(url, options)
+        .then((res: any) => {
+          resolve(res)
+        })
+        .catch((error) => {
+          reject(error)
+        })
+    })
+  }
+
   // 封装常用方法
 
   get<T = any>(url: string, params?: any, options?: UseFetchOptions<T>) {
@@ -65,6 +77,35 @@ class HttpRequest {
 
   Delete<T = any>(url: string, params: any, options?: UseFetchOptions<T>) {
     return this.request(url, 'DELETE', params, options)
+  }
+
+  // requestFetch
+  getFetch(url: string, data: any, options: any = {}) {
+    options.method = 'GET'
+    options.baseURL = BASE_URL
+    options.params = data
+    return this.requestFetch(url, options)
+  }
+
+  postFetch(url: string, data: any, options?: any) {
+    options.method = 'POST'
+    options.baseURL = BASE_URL
+    options.body = data
+    return this.requestFetch(url, options)
+  }
+
+  PutFetch(url: string, data: any, options?: any) {
+    options.method = 'PUT'
+    options.baseURL = BASE_URL
+    options.body = data
+    return this.requestFetch(url, options)
+  }
+
+  DeleteFetch(url: string, data: any, options?: any) {
+    options.method = 'DELETE'
+    options.baseURL = BASE_URL
+    options.params = data
+    return this.requestFetch(url, options)
   }
 }
 
