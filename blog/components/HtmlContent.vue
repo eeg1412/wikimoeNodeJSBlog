@@ -173,6 +173,10 @@ onMounted(() => {
   border-radius: 0.3em;
   background: #282a36;
 }
+.html-content-body strong,
+.html-content-body b {
+  font-weight: 700;
+}
 .html-content-body pre.hljs {
   position: relative;
   padding-left: 3.5em;
