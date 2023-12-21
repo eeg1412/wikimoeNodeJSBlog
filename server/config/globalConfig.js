@@ -29,6 +29,8 @@ const initGlobalConfig = async () => {
     siteSubTitle: '',
     // 站点LOGO
     siteLogo: '',
+    // 站点封面
+    siteDefaultCover: '',
     // 站点描述
     siteDescription: '',
     // 站点关键词

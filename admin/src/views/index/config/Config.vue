@@ -31,6 +31,16 @@
               <el-icon v-else class="avatar-uploader-icon"><Plus /></el-icon>
             </el-upload>
           </el-form-item>
+          <!-- siteDefaultCover -->
+          <el-form-item label="默认封面图" prop="siteDefaultCover">
+            <Cropper
+              :aspectRatio="672 / 324"
+              :width="672"
+              :height="324"
+              :src="siteSettingsForm.siteDefaultCover"
+              @crop="setSiteDefaultCover"
+            ></Cropper>
+          </el-form-item>
           <el-form-item label="站点描述" prop="siteDescription">
             <el-input v-model="siteSettingsForm.siteDescription"></el-input>
           </el-form-item>
@@ -335,10 +345,12 @@ import { authApi } from '@/api'
 // ElMessage
 import { ElMessage, ElMessageBox } from 'element-plus'
 import RichEditor5 from '@/components/RichEditor5'
+import Cropper from '@/components/Cropper'
 
 export default {
   components: {
     RichEditor5,
+    Cropper,
   },
   setup() {
     const activeName = ref('site')
@@ -462,6 +474,8 @@ export default {
       siteSubTitle: '',
       // 站点LOGO
       siteLogo: '',
+      // 默认封面图
+      siteDefaultCover: '',
       // 站点描述
       siteDescription: '',
       // 站点关键词
@@ -480,6 +494,10 @@ export default {
       // logo
       siteLogo: [
         { required: true, message: '请上传站点LOGO', trigger: 'blur' },
+      ],
+      // siteDefaultCover
+      siteDefaultCover: [
+        { required: true, message: '请上传默认封面图', trigger: 'blur' },
       ],
       siteUrl: [{ required: true, message: '请输入站点地址', trigger: 'blur' }],
       sitePageSize: [
@@ -507,6 +525,9 @@ export default {
           siteSettingsForm.siteLogo = base64
         }
       }
+    }
+    const setSiteDefaultCover = (crop) => {
+      siteSettingsForm.siteDefaultCover = crop
     }
     const siteSettingsSubmit = () => {
       siteSettingsFormRef.value.validate((valid) => {
@@ -842,6 +863,7 @@ export default {
       commentSettingsForm,
       commentSettingsRules,
       setSiteLogo,
+      setSiteDefaultCover,
       commentSettingsSubmit,
       // RSS设置
       rssSettingsFormRef,

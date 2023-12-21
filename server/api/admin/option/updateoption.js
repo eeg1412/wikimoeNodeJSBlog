@@ -16,14 +16,15 @@ module.exports = async function (req, res, next) {
     const base64Reg = /^data:image\/\w+;base64,/
     switch (name) {
       case 'siteLogo':
+      case 'siteDefaultCover':
         // 判断value是否是base64
         if (base64Reg.test(value)) {
           // 转换成图片并储存
-          const path = './public/upload/logo/'
-          const fileName = 'logo'
+          const path = './public/upload/siteImg/'
+          const fileName = name
           try {
             const imgRes = utils.base64ToFile(value, path, fileName)
-            value = `/upload/logo/${imgRes.fileNameAll}?v=${Date.now()}`
+            value = `/upload/siteImg/${imgRes.fileNameAll}?v=${Date.now()}`
           } catch (error) {
             res.status(400).json({
               errors: [{
