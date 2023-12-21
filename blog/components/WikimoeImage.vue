@@ -56,6 +56,10 @@ const props = defineProps({
     type: Number,
     default: 0,
   },
+  clickStop: {
+    type: Boolean,
+    default: false,
+  },
 })
 
 // computed properties
@@ -77,7 +81,10 @@ const styleObject = computed(() => {
   return obj
 })
 
-const tryOpenHref = () => {
+const tryOpenHref = (e) => {
+  if (props.clickStop) {
+    e.stopPropagation()
+  }
   if (props.dataHref || props.dataHrefList) {
     const list = props.dataHrefList
     const dataSource = list.map((item) => {

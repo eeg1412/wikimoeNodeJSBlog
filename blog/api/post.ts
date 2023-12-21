@@ -4,9 +4,17 @@ import httpRequest from '~/api'
  * @description 查询文章
  * @return {any} 返回文章
  */
-
+interface GetPostsParams {
+  page?: number
+  keyword?: string
+  pageType?: string
+  sortid?: string
+  year?: string
+  month?: string
+  tags?: string
+}
 const URL = `/post/list`
-const getPostsApi = (params: any) => {
+const getPostsApi = (params: GetPostsParams) => {
   return httpRequest.get(URL, params)
 }
 
@@ -15,4 +23,13 @@ const archiveURL = `/post/archive`
 const getArchiveApi = () => {
   return httpRequest.get(archiveURL)
 }
-export { getPostsApi, getArchiveApi }
+// '/post/detail'
+interface PostDetailParams {
+  id: string
+}
+const detailURL = `/post/detail`
+const getDetailApi = (params: PostDetailParams) => {
+  return httpRequest.get(`${detailURL}`, params)
+}
+
+export { getPostsApi, getArchiveApi, getDetailApi }

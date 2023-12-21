@@ -22,7 +22,7 @@ const props = defineProps({
 // )
 // console.log(htmlContent)
 const contentCom = computed(() => {
-  let content = props.content
+  let content = props.content || ''
   content = content.replace(
     /<img(?!.*?loading\s*=\s*['"]lazy['"])([^>]*?)>/gi,
     '<img loading="lazy" $1>'
@@ -107,5 +107,8 @@ const onMidClick = (e) => {
 .html-content-body img {
   max-width: 100% !important;
   height: auto !important;
+}
+.html-content-body a:hover {
+  color: #ef90a7;
 }
 </style>

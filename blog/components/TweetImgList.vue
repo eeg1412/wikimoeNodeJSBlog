@@ -24,6 +24,7 @@
           :data-href="coverImages[0].filepath"
           :dataHrefList="dataHrefList"
           :dataHrefIndex="0"
+          :clickStop="true"
           loading="lazy"
         />
       </div>
@@ -36,7 +37,6 @@
         :mousewheel="imageGroup.length > 1"
         :pagination="{
           type: 'fraction',
-          clickable: true,
         }"
       >
         <SwiperSlide v-for="(item, index) in imageGroup" :key="item._id">
@@ -58,6 +58,7 @@
                 :dataHrefList="dataHrefList"
                 :dataHrefIndex="index * 4 + indexChild"
                 :square="true"
+                :clickStop="true"
               />
             </template>
           </div>

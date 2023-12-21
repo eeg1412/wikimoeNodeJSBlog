@@ -5,7 +5,9 @@
         <div
           v-for="(item, index) in postsData.list"
           :key="item._id"
-          class="post-list-body-item"
+          class="post-list-body-item pointer"
+          @click="(e) => goPostDetail(e, item)"
+          @click.middle="(e) => goPostDetail(e, item, true)"
         >
           <!-- 作者 时间 分类名 -->
           <div class="clearfix">
@@ -126,10 +128,7 @@
         <!-- 去第一页 -->
         <NuxtLink
           class="dflex flexCenter page-link"
-          :to="{
-            name: routeName,
-            params: { page: 1 },
-          }"
+          :to="routePagination.firstRoute"
           v-if="page > 1"
         >
           <UIcon class="mr5" name="i-heroicons-chevron-double-left" />
@@ -138,10 +137,7 @@
         <!-- 去上一页 -->
         <NuxtLink
           class="dflex flexCenter page-link"
-          :to="{
-            name: routeName,
-            params: { page: page - 1 },
-          }"
+          :to="routePagination.prevRoute"
           v-if="page > 1"
         >
           <UIcon class="mr5" name="i-heroicons-chevron-left" />
@@ -154,10 +150,7 @@
         <!-- 去下一页 -->
         <NuxtLink
           class="dflex flexCenter page-link"
-          :to="{
-            name: routeName,
-            params: { page: page + 1 },
-          }"
+          :to="routePagination.nextRoute"
           v-if="page < totalPage"
         >
           <UIcon class="ml5" name="i-heroicons-chevron-right" />
@@ -165,10 +158,7 @@
         <!-- 去最后一页 -->
         <NuxtLink
           class="dflex flexCenter page-link"
-          :to="{
-            name: routeName,
-            params: { page: totalPage },
-          }"
+          :to="routePagination.lastRoute"
           v-if="page < totalPage"
         >
           <UIcon class="ml5" name="i-heroicons-chevron-double-right" />
@@ -187,6 +177,7 @@ const optionStore = useOptionStore()
 const { options } = storeToRefs(optionStore)
 const sitePageSize = computed(() => options.value.sitePageSize || 1)
 const route = useRoute()
+const router = useRouter()
 
 const routeName = computed(() => route.name)
 const page = route.params.page ? Number(route.params.page) : 1
@@ -203,11 +194,63 @@ const apiType = computed(() => {
       return 'keyword'
     case 'postListSort':
       return 'sort'
+    case 'postListArchive':
+      return 'archive'
+    case 'postListTag':
+      return 'tag'
     default:
       break
   }
 })
-console.log(page)
+// routePagination
+const routePagination = computed(() => {
+  const to = {
+    // 第一页
+    firstRoute: {},
+    // 最后一页
+    lastRoute: {},
+    // 上一页
+    prevRoute: {},
+    // 下一页
+    nextRoute: {},
+  }
+  switch (routeName.value) {
+    case 'postList':
+    case 'postListKeyword':
+    case 'postListSort':
+    case 'postListArchive':
+    case 'postListTag':
+      to.firstRoute = {
+        name: routeName.value,
+        params: {
+          page: 1,
+        },
+      }
+      to.lastRoute = {
+        name: routeName.value,
+        params: {
+          page: totalPage.value,
+        },
+      }
+      to.prevRoute = {
+        name: routeName.value,
+        params: {
+          page: page - 1,
+        },
+      }
+      to.nextRoute = {
+        name: routeName.value,
+        params: {
+          page: page + 1,
+        },
+      }
+      break
+
+    default:
+      break
+  }
+  return to
+})
 
 const [postsDataResponse] = await Promise.all([
   getPostsApi({
@@ -236,6 +279,36 @@ const showTopIcon = (item) => {
 
     default:
       break
+  }
+}
+
+const goPostDetail = (e, item, middle) => {
+  // 如果是点击了链接，就不跳转
+  if (e.target.tagName === 'A') {
+    return
+  }
+
+  let id = item._id
+  const alias = item.alias
+  if (alias) {
+    id = alias
+  }
+  const routeName = 'postDetail'
+  // 如果middle为true，就在新标签页打开
+  if (middle) {
+    // resolveUrl
+    const url = router.resolve({
+      name: routeName,
+      params: { id },
+    }).href
+    window.open(url, '_blank')
+  } else {
+    router.push({
+      name: routeName,
+      params: {
+        id: id,
+      },
+    })
   }
 }
 
