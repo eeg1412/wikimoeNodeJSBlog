@@ -259,9 +259,15 @@ onUnmounted(() => {
 }
 .blog-layout-info-menu {
   padding: 20px;
-  max-height: 100vh;
-  max-height: 100dvh;
+  height: 100vh;
+  height: 100dvh;
   overflow-y: auto;
+  background-image: url('/img/menuBg.png');
+  background-repeat: no-repeat;
+  background-position: right bottom;
+  background-size: 100%;
+  /* 左下角圆角 */
+  border-bottom-left-radius: 20px;
 }
 .blog-layout-sticky {
   position: sticky;
