@@ -128,6 +128,9 @@
                   item.nickname
                 }}</a>
                 <span v-else>{{ item.nickname }}</span>
+                <UBadge class="ml-1" size="xs" v-if="item.isAdmin"
+                  >管理员</UBadge
+                >
               </div>
               <div class="comment-list-item-date">
                 {{ fromNow(item.date) }}
