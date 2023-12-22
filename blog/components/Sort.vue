@@ -81,10 +81,10 @@ const { data: sortListData } = sortData
   border-radius: 5px;
 }
 .sort-list-item-link:hover {
-  @apply border border-solid border-wikimoe-500 text-wikimoe-500;
+  @apply border border-solid border-primary-500 text-primary-500;
   padding-left: 18px;
 }
 .sort-list-item-link.active {
-  @apply bg-wikimoe-500 text-white;
+  @apply bg-primary-500 text-white;
 }
 </style>

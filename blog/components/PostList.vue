@@ -357,7 +357,7 @@ onMounted(() => {})
 }
 .post-list-tag-item {
   margin-right: 12px;
-  @apply text-wikimoe-500;
+  @apply text-primary-500;
 }
 .post-list-blog-panel {
   margin-bottom: 12px;
@@ -401,6 +401,6 @@ onMounted(() => {})
   margin: 0 2px;
 }
 .page-link:hover {
-  @apply text-wikimoe-500;
+  @apply text-primary-500;
 }
 </style>

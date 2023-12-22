@@ -162,7 +162,7 @@ onMounted(() => {
   display: inline;
 }
 .html-content-body a:hover {
-  @apply text-wikimoe-500;
+  @apply text-primary-500;
 }
 .html-content-body p {
   line-height: 2;
@@ -198,7 +198,7 @@ onMounted(() => {
   background-color: #bbb;
 }
 .hljs:before {
-  @apply text-wikimoe-50;
+  @apply text-primary-50;
   content: attr(data-lines);
   position: absolute;
   top: 0;

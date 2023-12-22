@@ -104,7 +104,7 @@ const openLink = (item, midClick) => {
 .top-banner-list-body
   .swiper-pagination-progressbar
   .swiper-pagination-progressbar-fill {
-  @apply bg-wikimoe-500;
+  @apply bg-primary-500;
 }
 .top-banner-list-body .swiper-pagination-progressbar {
   top: unset !important;

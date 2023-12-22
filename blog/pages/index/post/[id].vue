@@ -285,7 +285,7 @@ onMounted(() => {
 }
 .post-detail-tag-item {
   margin-right: 12px;
-  @apply text-wikimoe-500;
+  @apply text-primary-500;
 }
 .post-detail-like-body {
   text-align: center;

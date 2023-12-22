@@ -81,15 +81,15 @@ const showChildren = ref(false)
   border: 1px solid rgba(255, 255, 255, 0);
 }
 .blog-layout-sidebar-item.active {
-  @apply bg-wikimoe-500 text-white;
+  @apply bg-primary-500 text-white;
 }
 
 .blog-layout-sidebar-item:hover {
-  @apply border border-wikimoe-500 text-wikimoe-500;
+  @apply border border-primary-500 text-primary-500;
 }
 
 .blog-layout-sidebar-item.active:hover {
-  @apply border border-wikimoe-500 text-white;
+  @apply border border-primary-500 text-white;
 }
 .blog-layout-sidebar-item-children-body .blog-layout-sidebar-item {
   padding-left: 35px;

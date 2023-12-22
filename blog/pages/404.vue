@@ -27,7 +27,7 @@ const reflushHome = () => {
 }
 .error-code {
   font-size: 100px;
-  @apply text-wikimoe-500;
+  @apply text-primary-500;
 }
 .error-msg {
   font-size: 20px;
@@ -36,7 +36,7 @@ const reflushHome = () => {
 .error-btn {
   padding: 10px 20px;
   border-radius: 20px;
-  @apply text-white bg-wikimoe-500;
+  @apply text-white bg-primary-500;
   display: block;
   margin-top: 20px;
 }

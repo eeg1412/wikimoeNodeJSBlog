@@ -873,7 +873,7 @@ input[type='password'] {
   background-color: #bbb;
 }
 .common-a:hover {
-  @apply text-wikimoe-500;
+  @apply text-primary-500;
 }
 
 .common-blockquote {

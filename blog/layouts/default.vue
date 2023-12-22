@@ -340,7 +340,7 @@ onUnmounted(() => {
   right: 0;
   bottom: 0;
   /* 背景色 */
-  @apply bg-wikimoe-500;
+  @apply bg-primary-500;
   z-index: 99999;
   /* flex 居中 column */
   flex-direction: column;
