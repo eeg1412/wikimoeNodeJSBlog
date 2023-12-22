@@ -340,7 +340,7 @@ onUnmounted(() => {
   right: 0;
   bottom: 0;
   /* 背景色 */
-  background-color: #ef90a7;
+  @apply bg-wikimoe-500;
   z-index: 99999;
   /* flex 居中 column */
   flex-direction: column;
@@ -353,7 +353,7 @@ onUnmounted(() => {
   width: 30px;
   height: 30px;
   position: relative;
-  border: 4px solid #fff;
+  @apply border-solid border-4 border-white;
   animation: loader 2s infinite ease;
 }
 
@@ -361,11 +361,11 @@ onUnmounted(() => {
   vertical-align: top;
   display: inline-block;
   width: 100%;
-  background-color: #fff;
+  @apply bg-white;
   animation: loader-inner 2s infinite ease-in;
 }
 .loader-text {
-  color: #fff;
+  @apply text-white;
   font-size: 16px;
   margin-top: 20px;
 }
@@ -441,7 +441,7 @@ onUnmounted(() => {
     left: 0;
     right: 0;
     z-index: 999;
-    background: #ffffff;
+    @apply bg-white;
     box-shadow: 0px 0px 10px 0px rgba(239, 144, 167, 0.08);
   }
   .blog-top-bar-body {

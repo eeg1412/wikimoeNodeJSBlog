@@ -339,7 +339,7 @@ onMounted(() => {})
   padding-bottom: 0px;
 }
 .post-list-body-item {
-  border-bottom: 1px solid #e2e2e2;
+  @apply border-solid border-b border-gray-200;
   margin-bottom: 15px;
 }
 .post-list-info-body {
@@ -357,21 +357,18 @@ onMounted(() => {})
 }
 .post-list-tag-item {
   margin-right: 12px;
-  color: #ef90a7;
+  @apply text-wikimoe-500;
 }
 .post-list-blog-panel {
   margin-bottom: 12px;
 }
 .post-list-blog-cover-img {
   border-radius: 20px 20px 0px 0px;
-  border-top: 1px solid #e2e2e2;
-  border-right: 1px solid #e2e2e2;
-  border-left: 1px solid #e2e2e2;
+  @apply border-solid border-t border-r border-l border-gray-200;
 }
 .post-list-title-body {
   border-radius: 0px 0px 20px 20px;
-  border: 1px solid #e2e2e2;
-  background: #fff;
+  @apply border-solid border border-gray-200 bg-white;
   padding: 10px 20px;
   box-sizing: border-box;
   font-size: 15px;
@@ -383,7 +380,7 @@ onMounted(() => {})
   padding-bottom: 12px;
 }
 .post-list-page-body {
-  color: #4b4b4b;
+  @apply text-gray-200;
   padding-bottom: 20px;
   /* 两边 中间  */
   justify-content: space-between;
@@ -404,6 +401,6 @@ onMounted(() => {})
   margin: 0 2px;
 }
 .page-link:hover {
-  color: #ef90a7;
+  @apply text-wikimoe-500;
 }
 </style>

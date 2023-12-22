@@ -273,6 +273,7 @@ onMounted(() => {
 /* 推文 */
 .post-tweet-detail-content-body {
   padding-top: 10px;
+  margin-bottom: 10px;
 }
 .post-tweet-detail-content {
   font-size: 16px;
@@ -284,7 +285,7 @@ onMounted(() => {
 }
 .post-detail-tag-item {
   margin-right: 12px;
-  color: #ef90a7;
+  @apply text-wikimoe-500;
 }
 .post-detail-like-body {
   text-align: center;

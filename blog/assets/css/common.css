@@ -648,7 +648,7 @@ summary {
 /*--针对特定项目的页面的样式(可修改)--*/
 html,
 body {
-  font-size: 14px;
+  font-size: 16px;
   font-family: -apple-system, BlinkMacSystemFont, Helvetica Neue, PingFang SC,
     Microsoft YaHei, Source Han Sans SC, Noto Sans CJK SC, WenQuanYi Micro Hei,
     sans-serif;
@@ -661,13 +661,6 @@ html {
   -webkit-text-size-adjust: none;
   width: 100%;
   height: 100%;
-}
-
-#app {
-  width: 100%;
-  height: 100%;
-  overflow-x: hidden;
-  overflow-y: auto;
 }
 
 body {
@@ -880,7 +873,7 @@ input[type='password'] {
   background-color: #bbb;
 }
 .common-a:hover {
-  color: #ef90a7;
+  @apply text-wikimoe-500;
 }
 
 .common-blockquote {

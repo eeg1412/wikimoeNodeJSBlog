@@ -28,17 +28,16 @@ const reflushHome = () => {
 }
 .error-code {
   font-size: 100px;
-  color: #ef90a7;
+  @apply text-wikimoe-500;
 }
 .error-msg {
   font-size: 20px;
   color: #999;
 }
 .error-btn {
+  @apply text-white bg-wikimoe-500;
   padding: 10px 20px;
   border-radius: 20px;
-  background: #ef90a7;
-  color: #ffffff;
   display: block;
   margin-top: 20px;
 }

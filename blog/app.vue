@@ -11,4 +11,8 @@ const optionStore = useOptionStore()
 const { getOptions } = optionStore
 getOptions()
 </script>
-<style scoped></style>
+<style scoped>
+.blog-body {
+  font-size: 14px;
+}
+</style>

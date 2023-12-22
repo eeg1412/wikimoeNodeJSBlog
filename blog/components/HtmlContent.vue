@@ -154,7 +154,7 @@ onMounted(() => {
 </style>
 <style>
 .html-content-body img[data-href] {
-  cursor: pointer;
+  @apply cursor-pointer;
 }
 .html-content-body img {
   max-width: 100% !important;
@@ -162,17 +162,13 @@ onMounted(() => {
   display: inline;
 }
 .html-content-body a:hover {
-  color: #ef90a7;
+  @apply text-wikimoe-500;
 }
 .html-content-body p {
   line-height: 2;
 }
 .html-content-body pre {
-  margin: 0.5em 0;
-  padding: 0 1em;
-  overflow: auto;
-  border-radius: 0.3em;
-  background: #282a36;
+  @apply my-2 overflow-auto rounded-md bg-gray-800;
 }
 .html-content-body strong,
 .html-content-body b {
@@ -202,6 +198,7 @@ onMounted(() => {
   background-color: #bbb;
 }
 .hljs:before {
+  @apply text-wikimoe-50;
   content: attr(data-lines);
   position: absolute;
   top: 0;
@@ -211,7 +208,7 @@ onMounted(() => {
   overflow: hidden;
   letter-spacing: -1px;
   text-align: right;
-  color: #ccc;
+
   text-transform: uppercase;
   -webkit-user-select: none;
   -moz-user-select: none;

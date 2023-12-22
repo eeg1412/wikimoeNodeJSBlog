@@ -81,17 +81,15 @@ const showChildren = ref(false)
   border: 1px solid rgba(255, 255, 255, 0);
 }
 .blog-layout-sidebar-item.active {
-  background: #ef90a7;
-  color: #ffffff;
+  @apply bg-wikimoe-500 text-white;
 }
 
 .blog-layout-sidebar-item:hover {
-  border: 1px solid #ef90a7;
-  color: #ef90a7;
+  @apply border border-wikimoe-500 text-wikimoe-500;
 }
+
 .blog-layout-sidebar-item.active:hover {
-  border: 1px solid #ef90a7;
-  color: #ffffff;
+  @apply border border-wikimoe-500 text-white;
 }
 .blog-layout-sidebar-item-children-body .blog-layout-sidebar-item {
   padding-left: 35px;

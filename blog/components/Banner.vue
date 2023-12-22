@@ -104,11 +104,11 @@ const openLink = (item, midClick) => {
 .top-banner-list-body
   .swiper-pagination-progressbar
   .swiper-pagination-progressbar-fill {
-  background: #ef90a7 !important;
+  @apply bg-wikimoe-500;
 }
 .top-banner-list-body .swiper-pagination-progressbar {
   top: unset !important;
   bottom: 0px !important;
-  background: rgba(0, 0, 0, 0.4);
+  @apply bg-black bg-opacity-40;
 }
 </style>
