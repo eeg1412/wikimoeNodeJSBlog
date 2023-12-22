@@ -888,3 +888,11 @@ input[type='password'] {
 .tenten {
   padding: 0 3px;
 }
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.5s;
+}
+.fade-enter,
+.fade-leave-to {
+  opacity: 0;
+}

@@ -380,7 +380,7 @@ onMounted(() => {})
   padding-bottom: 12px;
 }
 .post-list-page-body {
-  @apply text-gray-200;
+  @apply text-gray-400;
   padding-bottom: 20px;
   /* 两边 中间  */
   justify-content: space-between;

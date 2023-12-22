@@ -109,78 +109,95 @@
     <!-- 评论列表 commentList -->
     <ClientOnly>
       <div class="comment-list-body">
-        <div class="comment-list-title">评论：</div>
-        <div
-          class="comment-list-item"
-          v-for="(item, index) in commentList"
-          :key="item._id"
-        >
-          <div class="comment-list-item-avatar-body">
-            <a :href="item.url" target="_blank" v-if="item.url">
-              <Avatar :avatar="item.avatar" :alt="item.nickname" />
-            </a>
-            <Avatar :avatar="item.avatar" :alt="item.nickname" v-else />
-          </div>
-          <div class="comment-list-item-right-info">
-            <div>
-              <div class="comment-list-item-author">
-                <a :href="item.url" target="_blank" v-if="item.url">{{
-                  item.nickname
-                }}</a>
-                <span v-else>{{ item.nickname }}</span>
-                <UBadge class="ml-1" size="xs" v-if="item.isAdmin"
-                  >管理员</UBadge
-                >
-              </div>
-              <div class="comment-list-item-date">
-                {{ fromNow(item.date) }}
-              </div>
-            </div>
-            <blockquote
-              class="comment-list-item-parent-content"
-              v-if="item.parent"
+        <!-- 评论form -->
+        <CommentForm :postid="id" :commentid="commentid" />
+        <div class="relative">
+          <DivLoading :loading="commentLoading" />
+          <!-- 评论 -->
+          <div
+            class="mt-5 pt-5 border-t border-solid border-gray-200"
+            ref="commentListRef"
+            v-if="commentTotal > 0"
+          >
+            <div class="comment-list-title">评论：</div>
+            <div
+              class="comment-list-item"
+              v-for="(item, index) in commentList"
+              :key="item._id"
             >
-              {{ item.parent.content }}
-            </blockquote>
-            <div class="comment-list-item-content">{{ item.content }}</div>
-            <!-- 按钮 -->
-            <!-- 喜欢按钮 -->
-            <div class="comment-list-item-btns">
-              <div class="comment-list-item-btn type-like">
-                <UIcon class="mr5" name="i-heroicons-heart" />
-                <span>{{ formatNumber(item.likes) }}</span>
+              <div class="comment-list-item-avatar-body">
+                <a :href="item.url" target="_blank" v-if="item.url">
+                  <Avatar :avatar="item.avatar" :alt="item.nickname" />
+                </a>
+                <Avatar :avatar="item.avatar" :alt="item.nickname" v-else />
               </div>
-              <!-- 回复按钮 -->
-              <div class="comment-list-item-btn">回复</div>
+              <div class="comment-list-item-right-info">
+                <div>
+                  <div class="comment-list-item-author">
+                    <a :href="item.url" target="_blank" v-if="item.url">{{
+                      item.nickname
+                    }}</a>
+                    <span v-else>{{ item.nickname }}</span>
+                    <UBadge class="ml-1" size="xs" v-if="item.isAdmin"
+                      >管理员</UBadge
+                    >
+                  </div>
+                  <div class="comment-list-item-date">
+                    {{ fromNow(item.date) }}
+                  </div>
+                </div>
+                <blockquote
+                  class="comment-list-item-parent-content"
+                  v-if="item.parent"
+                >
+                  {{ item.parent.content }}
+                </blockquote>
+                <div class="comment-list-item-content">{{ item.content }}</div>
+                <!-- 按钮 -->
+                <!-- 喜欢按钮 -->
+                <div class="comment-list-item-btns">
+                  <UButton
+                    size="xs"
+                    icon="i-heroicons-heart"
+                    color="white"
+                    variant="solid"
+                    >{{ formatNumber(item.likes) }}</UButton
+                  >
+                  <UButton size="xs" color="white" variant="ghost"
+                    >回复</UButton
+                  >
+                </div>
+              </div>
             </div>
           </div>
-        </div>
-        <!-- 翻页 -->
-        <div class="comment-page-body">
-          <UPagination
-            v-model="commentPage"
-            :page-count="commentSize"
-            :total="commentTotal"
-            size="md"
-            :inactiveButton="{
-              variant: 'ghost',
-            }"
-            :firstButton="{
-              variant: 'ghost',
-            }"
-            :lastButton="{
-              variant: 'ghost',
-            }"
-            :prevButton="{
-              variant: 'ghost',
-            }"
-            :nextButton="{
-              variant: 'ghost',
-            }"
-            :showFirst="true"
-            :showLast="true"
-            :max="5"
-          />
+          <!-- 翻页 -->
+          <div class="comment-page-body">
+            <UPagination
+              v-model="commentPage"
+              :page-count="commentSize"
+              :total="commentTotal"
+              size="md"
+              :inactiveButton="{
+                variant: 'ghost',
+              }"
+              :firstButton="{
+                variant: 'ghost',
+              }"
+              :lastButton="{
+                variant: 'ghost',
+              }"
+              :prevButton="{
+                variant: 'ghost',
+              }"
+              :nextButton="{
+                variant: 'ghost',
+              }"
+              :showFirst="true"
+              :showLast="true"
+              :max="5"
+              v-if="commentTotal > 0"
+            />
+          </div>
         </div>
       </div>
     </ClientOnly>
@@ -220,19 +237,37 @@ const commentTotal = computed(() => {
 const commentSize = computed(() => {
   return commentData.value.size
 })
-const getCommentList = async () => {
+const commentLoading = ref(false)
+const getCommentList = async (goToCommentListRef) => {
+  commentLoading.value = true
   getCommentListApi({
     id: postid,
     page: commentPage.value,
-  }).then((res) => {
-    console.log(res)
-    commentData.value = res
   })
+    .then((res) => {
+      console.log(res)
+      commentData.value = res
+      nextTick(() => {
+        if (goToCommentListRef) {
+          const rect = commentListRef.value.getBoundingClientRect()
+          window.scrollBy({
+            top: rect.top - 100,
+            behavior: 'smooth',
+          })
+        }
+      })
+    })
+    .finally(() => {
+      commentLoading.value = false
+    })
 }
+const commentListRef = ref(null)
+
+const commentid = ref('')
 watch(
   () => commentPage.value,
   () => {
-    getCommentList()
+    getCommentList(true)
   }
 )
 onMounted(() => {
@@ -242,7 +277,6 @@ onMounted(() => {
 <style scoped>
 .post-detail-body {
   position: relative;
-  background: #fff;
   padding: 20px;
 }
 .post-blog-head {
@@ -250,7 +284,7 @@ onMounted(() => {
   /* 垂直居中 */
   align-items: center;
   margin-bottom: 0px;
-  border-bottom: 1px solid #e2e2e2;
+  @apply border-solid border-b border-gray-200;
   padding-bottom: 10px;
 }
 .post-author-avatar-body {
@@ -292,11 +326,11 @@ onMounted(() => {
 }
 .post-detail-like-body {
   text-align: center;
+  margin-top: 20px;
   margin-bottom: 20px;
 }
 /* 评论 */
 .comment-list-body {
-  border-top: 1px solid #e2e2e2;
   padding-top: 20px;
 }
 .comment-list-title {
@@ -305,7 +339,7 @@ onMounted(() => {
 }
 .comment-list-item {
   display: flex;
-  border-bottom: 1px solid #e2e2e2;
+  @apply border-solid border-b border-gray-200;
   padding: 20px 0;
 }
 .comment-list-item-avatar-body {
@@ -335,6 +369,8 @@ onMounted(() => {
   margin: 10px 0;
   color: #949494;
   font-size: 12px;
+  background: #f9f9f9;
+  border-radius: 3px;
 }
 .comment-list-item-content {
   font-size: 14px;
@@ -353,7 +389,7 @@ onMounted(() => {
   cursor: pointer;
 }
 .comment-list-item-btn.type-like {
-  border: 1px solid #e2e2e2;
+  @apply border-solid border-b border-gray-200;
   color: #949494;
   padding: 1px 8px;
   border-radius: 10px;
