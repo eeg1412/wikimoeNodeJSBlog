@@ -179,18 +179,23 @@
               size="md"
               :inactiveButton="{
                 variant: 'ghost',
+                color: 'gray',
               }"
               :firstButton="{
                 variant: 'ghost',
+                color: 'gray',
               }"
               :lastButton="{
                 variant: 'ghost',
+                color: 'gray',
               }"
               :prevButton="{
                 variant: 'ghost',
+                color: 'gray',
               }"
               :nextButton="{
                 variant: 'ghost',
+                color: 'gray',
               }"
               :showFirst="true"
               :showLast="true"
