@@ -134,14 +134,27 @@
                 </div>
                 <div class="comment-list-item-right-info">
                   <div>
-                    <div class="comment-list-item-author">
-                      <a :href="item.url" target="_blank" v-if="item.url">{{
-                        item.nickname
-                      }}</a>
-                      <span v-else>{{ item.nickname }}</span>
-                      <UBadge class="ml-1" size="xs" v-if="item.isAdmin"
-                        >管理员</UBadge
-                      >
+                    <div
+                      class="comment-list-item-author flex justify-between items-center"
+                    >
+                      <div>
+                        <a :href="item.url" target="_blank" v-if="item.url">{{
+                          item.nickname
+                        }}</a>
+                        <span v-else>{{ item.nickname }}</span>
+                        <UBadge class="ml-1" size="xs" v-if="item.isAdmin"
+                          >管理员</UBadge
+                        >
+                      </div>
+
+                      <div>
+                        <!-- 置顶图标 -->
+                        <UIcon
+                          class="cPink f18"
+                          name="i-heroicons-bars-arrow-up"
+                          v-if="item.top"
+                        />
+                      </div>
                     </div>
                     <div class="comment-list-item-date">
                       {{ fromNow(item.date) }}

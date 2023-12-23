@@ -21,13 +21,15 @@ module.exports = async function (req, res, next) {
     post: id
   }
   const sort = {
+    // top置顶
+    top: -1,
     date: -1
   }
   commentUtils.findPage(params, sort, page, size).then((data) => {
     // 返回格式list,total
     const list = JSON.parse(JSON.stringify(data.list))
     // 需要获取的key数组
-    const keys = ['_id', 'avatar', 'content', 'date', 'nickname', 'url', 'post', 'likes', 'isAdmin', 'parent']
+    const keys = ['_id', 'avatar', 'content', 'date', 'nickname', 'url', 'post', 'likes', 'isAdmin', 'parent', 'top']
     // 将list的email字段替换为gravatar头像
     list.forEach((item) => {
       const email = item.email || item.nickname
