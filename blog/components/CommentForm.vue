@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div v-if="options.siteEnableComment">
     <div
       class="mb-4 text-primary-500 font-bold text-base border-b border-dotted pb-3 border-gray-300"
       v-if="!commentid"
@@ -63,6 +63,12 @@
   </div>
 </template>
 <script setup>
+import { storeToRefs } from 'pinia'
+import { useOptionStore } from '@/store/options'
+
+const optionStore = useOptionStore()
+const { options } = storeToRefs(optionStore)
+
 const props = defineProps({
   postid: {
     type: String,

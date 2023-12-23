@@ -166,22 +166,24 @@
                       variant="solid"
                       >{{ formatNumber(item.likes) }}</UButton
                     >
-                    <UButton
-                      size="xs"
-                      color="white"
-                      variant="ghost"
-                      @click="openComment(item._id)"
-                      v-if="item._id !== commentid"
-                      >回复</UButton
-                    >
-                    <UButton
-                      size="xs"
-                      color="white"
-                      variant="ghost"
-                      @click="closeComment"
-                      v-else
-                      >取消</UButton
-                    >
+                    <template v-if="options.siteEnableComment">
+                      <UButton
+                        size="xs"
+                        color="white"
+                        variant="ghost"
+                        @click="openComment(item._id)"
+                        v-if="item._id !== commentid"
+                        >回复</UButton
+                      >
+                      <UButton
+                        size="xs"
+                        color="white"
+                        variant="ghost"
+                        @click="closeComment"
+                        v-else
+                        >取消</UButton
+                      >
+                    </template>
                   </div>
                   <div class="mt-5">
                     <!-- 回复表单 -->
@@ -237,6 +239,11 @@
 import { useRoute } from 'vue-router'
 import { getDetailApi } from '@/api/post'
 import { getCommentListApi } from '@/api/comment'
+import { storeToRefs } from 'pinia'
+import { useOptionStore } from '@/store/options'
+
+const optionStore = useOptionStore()
+const { options } = storeToRefs(optionStore)
 
 const route = useRoute()
 const id = route.params.id
