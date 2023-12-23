@@ -125,47 +125,72 @@
               v-for="(item, index) in commentList"
               :key="item._id"
             >
-              <div class="comment-list-item-avatar-body">
-                <a :href="item.url" target="_blank" v-if="item.url">
-                  <Avatar :avatar="item.avatar" :alt="item.nickname" />
-                </a>
-                <Avatar :avatar="item.avatar" :alt="item.nickname" v-else />
-              </div>
-              <div class="comment-list-item-right-info">
-                <div>
-                  <div class="comment-list-item-author">
-                    <a :href="item.url" target="_blank" v-if="item.url">{{
-                      item.nickname
-                    }}</a>
-                    <span v-else>{{ item.nickname }}</span>
-                    <UBadge class="ml-1" size="xs" v-if="item.isAdmin"
-                      >管理员</UBadge
+              <div class="flex">
+                <div class="comment-list-item-avatar-body">
+                  <a :href="item.url" target="_blank" v-if="item.url">
+                    <Avatar :avatar="item.avatar" :alt="item.nickname" />
+                  </a>
+                  <Avatar :avatar="item.avatar" :alt="item.nickname" v-else />
+                </div>
+                <div class="comment-list-item-right-info">
+                  <div>
+                    <div class="comment-list-item-author">
+                      <a :href="item.url" target="_blank" v-if="item.url">{{
+                        item.nickname
+                      }}</a>
+                      <span v-else>{{ item.nickname }}</span>
+                      <UBadge class="ml-1" size="xs" v-if="item.isAdmin"
+                        >管理员</UBadge
+                      >
+                    </div>
+                    <div class="comment-list-item-date">
+                      {{ fromNow(item.date) }}
+                    </div>
+                  </div>
+                  <blockquote
+                    class="comment-list-item-parent-content"
+                    v-if="item.parent"
+                  >
+                    {{ item.parent.content }}
+                  </blockquote>
+                  <div class="comment-list-item-content">
+                    {{ item.content }}
+                  </div>
+                  <!-- 按钮 -->
+                  <!-- 喜欢按钮 -->
+                  <div class="comment-list-item-btns">
+                    <UButton
+                      size="xs"
+                      icon="i-heroicons-heart"
+                      color="white"
+                      variant="solid"
+                      >{{ formatNumber(item.likes) }}</UButton
+                    >
+                    <UButton
+                      size="xs"
+                      color="white"
+                      variant="ghost"
+                      @click="openComment(item._id)"
+                      v-if="item._id !== commentid"
+                      >回复</UButton
+                    >
+                    <UButton
+                      size="xs"
+                      color="white"
+                      variant="ghost"
+                      @click="closeComment"
+                      v-else
+                      >取消</UButton
                     >
                   </div>
-                  <div class="comment-list-item-date">
-                    {{ fromNow(item.date) }}
+                  <div class="mt-5">
+                    <!-- 回复表单 -->
+                    <CommentForm
+                      :postid="postid"
+                      :commentid="commentid"
+                      v-if="commentid === item._id"
+                    />
                   </div>
-                </div>
-                <blockquote
-                  class="comment-list-item-parent-content"
-                  v-if="item.parent"
-                >
-                  {{ item.parent.content }}
-                </blockquote>
-                <div class="comment-list-item-content">{{ item.content }}</div>
-                <!-- 按钮 -->
-                <!-- 喜欢按钮 -->
-                <div class="comment-list-item-btns">
-                  <UButton
-                    size="xs"
-                    icon="i-heroicons-heart"
-                    color="white"
-                    variant="solid"
-                    >{{ formatNumber(item.likes) }}</UButton
-                  >
-                  <UButton size="xs" color="white" variant="ghost"
-                    >回复</UButton
-                  >
                 </div>
               </div>
             </div>
@@ -265,6 +290,12 @@ const getCommentList = async (goToCommentListRef) => {
 const commentListRef = ref(null)
 
 const commentid = ref('')
+const openComment = (id) => {
+  commentid.value = id
+}
+const closeComment = () => {
+  commentid.value = ''
+}
 watch(
   () => commentPage.value,
   () => {
@@ -339,7 +370,6 @@ onMounted(() => {
   font-weight: 700;
 }
 .comment-list-item {
-  display: flex;
   @apply border-solid border-b border-gray-200;
   padding: 20px 0;
 }

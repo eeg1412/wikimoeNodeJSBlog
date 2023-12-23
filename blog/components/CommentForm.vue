@@ -2,6 +2,7 @@
   <div>
     <div
       class="mb-4 text-primary-500 font-bold text-base border-b border-dotted pb-3 border-gray-300"
+      v-if="!commentid"
     >
       发表评论：
     </div>
