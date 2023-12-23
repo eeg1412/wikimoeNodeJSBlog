@@ -51,6 +51,10 @@ var comments = new Schema({
     type: Number,
     default: 0
   },
+  uuid: {
+    type: String,
+    default: ''
+  },
   // 评论者ip
   ip: {
     type: String,

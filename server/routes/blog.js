@@ -72,6 +72,13 @@ const blogRouteSetting = [
     middleware: [],
     controller: require('../api/blog/comment/getCommentList'),
   },
+  // post createComment
+  {
+    path: '/comment/create',
+    method: 'post',
+    middleware: [],
+    controller: require('../api/blog/comment/createComment'),
+  },
 ]
 
 blogRouteSetting.forEach(item => {
