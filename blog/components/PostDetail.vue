@@ -110,7 +110,7 @@
     <ClientOnly>
       <div class="comment-list-body">
         <!-- 评论form -->
-        <CommentForm :postid="id" :commentid="commentid" />
+        <CommentForm :postid="postid" :commentid="commentid" />
         <div class="relative">
           <DivLoading :loading="commentLoading" />
           <!-- 评论 -->
