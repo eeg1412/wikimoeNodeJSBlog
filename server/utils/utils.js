@@ -73,18 +73,25 @@ exports.parseBase64 = (base64) => {
   }
 }
 
+
 exports.checkForm = function (form, ruleArr) {
+  const requiredCheck = function (required, value) {
+    return required && checkVauleIsNone(value)
+  }
+  const checkVauleIsNone = function (value) {
+    return value === null || value === undefined || value === ''
+  }
   const result = []
   ruleArr.forEach((rule) => {
     const { key, label, type, required, options, errorMessage, reg } = rule
     const value = form[key]
-    if (required && (!value && value !== 0)) {
+    if (requiredCheck(required, value)) {
       result.push({
         key,
         message: `${label || key} 是必须项`
       })
     }
-    if (type) {
+    if (type && !checkVauleIsNone(value)) {
       if (type === 'regCheck') {
         if (!reg.test(value)) {
           result.push({
@@ -94,7 +101,7 @@ exports.checkForm = function (form, ruleArr) {
         }
       } else {
         const check = validator[type](String(value), options)
-        if (!check) {
+        if (!check && check !== 0) {
           result.push({
             key,
             message: errorMessage || `${label || key} 内容有误`

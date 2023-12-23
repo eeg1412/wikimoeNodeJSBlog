@@ -28,11 +28,16 @@ module.exports = async function (req, res, next) {
   // 校验格式
   const params = {
     post,
-    parent,
     content,
     nickname,
     uuid,
     ip: ip
+  }
+  if (email) {
+    params.email = email
+  }
+  if (url) {
+    params.url = url
   }
   const rule = [
     {
@@ -71,12 +76,6 @@ module.exports = async function (req, res, next) {
   if (errors.length > 0) {
     res.status(400).json({ errors })
     return
-  }
-  if (email) {
-    params.email = email
-  }
-  if (url) {
-    params.url = url
   }
   // 获取文章信息
   const postInfo = await postUtils.findOne({ _id: post })
@@ -132,20 +131,35 @@ module.exports = async function (req, res, next) {
     params.status = 1
   }
 
+  if (parent) {
+    // 校验parent是否是ObjectId
+    if (!utils.isObjectId(parent)) {
+      res.status(400).json({
+        errors: [{
+          message: 'parent格式错误'
+        }]
+      })
+      return
+    }
+    params.parent = parent
+  }
+
 
   // save
   commentUtils.save(params).then((data) => {
     res.send({
-      data: data
+      status: params.status
     })
     adminApiLog.info(`comment:${content} create success`)
-    cacheDataUtils.getCommentList()
     // 异步更新设备信息
     utils.deviceUtils(req, data._id, commentUtils)
     // 异步更新ip信息
     utils.IP2LocationUtils(ip, data._id, commentUtils)
-    // 异步更新文章评论数
-    postUtils.updateOne({ _id: post }, { $inc: { comnum: 1 } })
+    if (params.status === 1) {
+      // 异步更新文章评论数
+      postUtils.updateOne({ _id: post }, { $inc: { comnum: 1 } })
+      cacheDataUtils.getCommentList()
+    }
     // TODO: 发送邮件通知
   }).catch((err) => {
     console.error(err)

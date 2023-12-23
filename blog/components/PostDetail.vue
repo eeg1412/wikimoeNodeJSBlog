@@ -110,7 +110,11 @@
     <ClientOnly>
       <div class="comment-list-body">
         <!-- 评论form -->
-        <CommentForm :postid="postid" :commentid="commentid" />
+        <CommentForm
+          :postid="postid"
+          :commentid="commentid"
+          @refresh="refreshCommentList"
+        />
         <div class="relative">
           <DivLoading :loading="commentLoading" />
           <!-- 评论 -->
@@ -203,6 +207,7 @@
                     <CommentForm
                       :postid="postid"
                       :commentid="commentid"
+                      @refresh="refreshCommentList"
                       v-if="commentid === item._id"
                     />
                   </div>
@@ -315,6 +320,10 @@ const openComment = (id) => {
 }
 const closeComment = () => {
   commentid.value = ''
+}
+const refreshCommentList = () => {
+  commentPage.value = 1
+  getCommentList()
 }
 watch(
   () => commentPage.value,

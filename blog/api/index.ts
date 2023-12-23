@@ -50,6 +50,21 @@ class HttpRequest {
   }
 
   requestFetch(url: string, options: any) {
+    // 查看options内包含shouldUuid
+    const shouldUuid = options.shouldUuid
+    // 如果有就去本地拿uuid
+    if (shouldUuid && process.client) {
+      const uuid = localStorage.getItem('uuid')
+      // 删除shouldUuid
+      delete options.shouldUuid
+      if (uuid) {
+        options.headers = {
+          ...options.headers,
+          // 将uuid放入请求头 x-request-id
+          'x-request-id': uuid,
+        }
+      }
+    }
     return new Promise((resolve, reject) => {
       $fetch(url, options)
         .then((res: any) => {

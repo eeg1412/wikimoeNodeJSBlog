@@ -2,6 +2,7 @@
   <div class="blog-body">
     <NuxtLoadingIndicator color="#ef90a7" />
     <NuxtPage></NuxtPage>
+    <UNotifications />
   </div>
 </template>
 <script setup>

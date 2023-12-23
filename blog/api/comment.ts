@@ -15,5 +15,13 @@ const commentListURL = `/comment/list`
 const getCommentListApi = (params: any, options: any) => {
   return httpRequest.getFetch(commentListURL, params, options)
 }
+// /comment/create
+const commentCreateURL = `/comment/create`
+const getCommentCreateApi = (params: any, options: any) => {
+  return httpRequest.postFetch(commentCreateURL, params, {
+    ...options,
+    shouldUuid: true,
+  })
+}
 
-export { getCommentLatestApi, getCommentListApi }
+export { getCommentLatestApi, getCommentListApi, getCommentCreateApi }

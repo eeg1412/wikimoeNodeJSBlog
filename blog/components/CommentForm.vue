@@ -65,7 +65,9 @@
 <script setup>
 import { storeToRefs } from 'pinia'
 import { useOptionStore } from '@/store/options'
+import { getCommentCreateApi } from '@/api/comment'
 
+const toast = useToast()
 const optionStore = useOptionStore()
 const { options } = storeToRefs(optionStore)
 
@@ -85,6 +87,7 @@ const form = reactive({
   url: '',
   content: '',
 })
+const emits = defineEmits()
 
 const error = ref({})
 const onSubmit = (event) => {
@@ -103,6 +106,53 @@ const onSubmit = (event) => {
   }
   // 提交
   console.log(event.data)
+  getCommentCreateApi({
+    post: props.postid,
+    parent: props.commentid,
+    nickname: event.data.nickname,
+    email: event.data.email,
+    url: event.data.url,
+    content: event.data.content,
+  })
+    .then((res) => {
+      console.log(res)
+      // 清空表单
+      form.nickname = ''
+      form.email = ''
+      form.url = ''
+      form.content = ''
+      const dataStatus = res.status
+      // 0是审核中，1是审核通过
+      if (dataStatus === 0) {
+        toast.add({
+          title: '评论成功，将在审核后显示',
+          icon: 'i-heroicons-check-circle',
+          color: 'green',
+        })
+      } else {
+        toast.add({
+          title: '评论成功',
+          icon: 'i-heroicons-check-circle',
+          color: 'green',
+        })
+        // 刷新评论列表
+        emits('refresh')
+      }
+    })
+    .catch((err) => {
+      console.log(err)
+      const errors = err.response?._data?.errors
+      if (errors) {
+        errors.forEach((item) => {
+          const message = item.message
+          toast.add({
+            title: message,
+            icon: 'i-heroicons-x-circle',
+            color: 'red',
+          })
+        })
+      }
+    })
 }
 </script>
 <style scoped></style>
