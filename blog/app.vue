@@ -10,6 +10,10 @@ import { storeToRefs } from 'pinia'
 const optionStore = useOptionStore()
 const { getOptions } = optionStore
 getOptions()
+onMounted(() => {
+  // 检查uuid
+  checkUuid()
+})
 </script>
 <style scoped>
 .blog-body {

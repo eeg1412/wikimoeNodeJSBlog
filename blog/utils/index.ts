@@ -53,18 +53,20 @@ export function formatDate(
     S: date.getMilliseconds(), // 毫秒
   }
 
-  if (/(y+)/.test(fmt)) {
+  const yearMatch = /(y+)/.exec(fmt)
+  if (yearMatch) {
     fmt = fmt.replace(
-      RegExp.$1,
-      (date.getFullYear() + '').substr(4 - RegExp.$1.length)
+      yearMatch[0],
+      (date.getFullYear() + '').substr(4 - yearMatch[0].length)
     )
   }
 
   for (let k in o) {
-    if (new RegExp('(' + k + ')').test(fmt)) {
+    const match = new RegExp('(' + k + ')').exec(fmt)
+    if (match) {
       fmt = fmt.replace(
-        RegExp.$1,
-        RegExp.$1.length === 1
+        match[0],
+        match[0].length === 1
           ? o[k] + ''
           : ('00' + o[k]).substr(('' + o[k]).length)
       )
@@ -92,4 +94,24 @@ export const limitStr = (str: string, len: number) => {
     return str.substring(0, len) + '...'
   }
   return str
+}
+
+// 生成uuid
+export const uuid = (): string => {
+  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+    // eslint-disable-next-line no-mixed-operators
+    const r = (Math.random() * 16) | 0
+    // eslint-disable-next-line no-mixed-operators, eqeqeq
+    const v = c == 'x' ? r : (r & 0x3) | 0x8
+    return v.toString(16)
+  })
+}
+// 检查本地是否存在uuid，没有则生成
+export const checkUuid = () => {
+  let storedUuid = localStorage.getItem('uuid')
+  if (!storedUuid) {
+    storedUuid = uuid()
+    localStorage.setItem('uuid', storedUuid)
+  }
+  return storedUuid
 }
