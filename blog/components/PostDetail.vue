@@ -225,26 +225,34 @@
               :inactiveButton="{
                 variant: 'ghost',
                 color: 'gray',
+                size: 'xs',
+              }"
+              :activeButton="{
+                size: 'xs',
               }"
               :firstButton="{
                 variant: 'ghost',
                 color: 'gray',
+                size: 'xs',
               }"
               :lastButton="{
                 variant: 'ghost',
                 color: 'gray',
+                size: 'xs',
               }"
               :prevButton="{
                 variant: 'ghost',
                 color: 'gray',
+                size: 'xs',
               }"
               :nextButton="{
                 variant: 'ghost',
                 color: 'gray',
+                size: 'xs',
               }"
               :showFirst="true"
               :showLast="true"
-              :max="5"
+              :max="7"
               v-if="commentTotal > 0"
             />
           </div>
@@ -421,6 +429,7 @@ onMounted(() => {
 .comment-list-item-content {
   /* 允许换行 */
   white-space: pre-wrap;
+  word-break: break-word;
 }
 .comment-list-item-parent-content {
   border: none;
