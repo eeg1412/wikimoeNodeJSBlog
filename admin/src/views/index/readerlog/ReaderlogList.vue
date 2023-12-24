@@ -2,7 +2,7 @@
   <div class="common-right-panel-form">
     <div class="pb20">
       <el-breadcrumb separator="/">
-        <el-breadcrumb-item>读者日志列表</el-breadcrumb-item>
+        <el-breadcrumb-item>读者访问日志列表</el-breadcrumb-item>
       </el-breadcrumb>
     </div>
     <div class="clearfix pb20">
@@ -14,7 +14,7 @@
         <!-- 追加 -->
       </div>
     </div>
-    <!-- 读者日志 -->
+    <!-- 读者访问日志 -->
     <div class="mb20">
       <el-table :data="readerlogList" row-key="_id" border>
         <!-- uuid -->

@@ -33,7 +33,7 @@ module.exports = async function (req, res, next) {
   }).catch((err) => {
     res.status(400).json({
       errors: [{
-        message: '读者日志列表获取失败'
+        message: '读者访问日志列表获取失败'
       }]
     })
     adminApiLog.error(`readerlog list get fail, ${JSON.stringify(err)
