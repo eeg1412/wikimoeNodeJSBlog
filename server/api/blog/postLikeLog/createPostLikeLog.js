@@ -66,7 +66,7 @@ module.exports = async function (req, res, next) {
   }
 
   let data = null
-  params.ipInfo = await utils.IP2LocationUtils(ip, id, null, false)
+  params.ipInfo = await utils.IP2LocationUtils(ip, null, null, false)
   if (oldData) {
     // 如果oldData存在，则更新
     // 加上__v

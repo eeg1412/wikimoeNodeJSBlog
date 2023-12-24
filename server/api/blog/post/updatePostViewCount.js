@@ -41,7 +41,7 @@ module.exports = async function (req, res, next) {
 
 
   // 更新
-  postUtils.findOneAndUpdate({ _id: id }, params, { new: true }).then((data) => {
+  postUtils.findOneAndUpdate({ _id: id }, params, { new: true }).then(async (data) => {
     userApiLog.info(`post view update success`)
     // 添加阅读日志
     // 操作者的uuid
@@ -86,14 +86,12 @@ module.exports = async function (req, res, next) {
         targetId: id,
         content: content,
       },
+      deviceInfo: utils.deviceUAInfoUtils(req),
+      ipInfo: await utils.IP2LocationUtils(ip, null, null, false),
       ip: ip
     }
     readerlogUtils.save(readerlogParams).then((data) => {
       userApiLog.info(`post view log create success`)
-      // 异步更新设备信息
-      utils.deviceUtils(req, data._id, readerlogUtils)
-      // 异步更新ip信息
-      utils.IP2LocationUtils(ip, data._id, readerlogUtils)
     }).catch((err) => {
       userApiLog.error(`post view log create fail, ${JSON.stringify(err)}`)
     })
