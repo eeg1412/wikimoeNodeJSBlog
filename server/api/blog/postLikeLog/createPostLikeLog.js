@@ -18,6 +18,7 @@ module.exports = async function (req, res, next) {
     like,
     uuid,
     ip: ip,
+    deviceInfo: utils.deviceUAInfoUtils(req),
     date: new Date()
   }
   const rule = [
@@ -37,7 +38,6 @@ module.exports = async function (req, res, next) {
   const oldData = await postLikeLogUtils.findOne(filter, '_id post like __v')
   let oldLike = null
   if (oldData) {
-    console.log(oldData.__v, __v)
     if (oldData.__v !== __v) {
       res.status(400).json({
         errors: [{
@@ -66,6 +66,7 @@ module.exports = async function (req, res, next) {
   }
   // 如果oldData存在，则更新
   let data = null
+  params.ipInfo = await utils.IP2LocationUtils(ip, id, null, false)
   if (oldData) {
     // 加上__v
     const newFilter = {
@@ -81,11 +82,6 @@ module.exports = async function (req, res, next) {
       })
       return
     }
-    // TODO:需要优化
-    // 异步更新设备信息
-    await utils.deviceUtils(req, id, postLikeLogUtils)
-    // 异步更新ip信息
-    await utils.IP2LocationUtils(ip, id, postLikeLogUtils)
     data = await postLikeLogUtils.findOne(filter, '_id post like __v')
 
   } else {

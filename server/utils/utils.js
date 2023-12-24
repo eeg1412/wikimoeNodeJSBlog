@@ -191,7 +191,7 @@ let ip2location = null
 if (process.env.IP2LOCATION === '1') {
   this.initIp2location()
 }
-exports.IP2LocationUtils = function (ip, id, modelUtils) {
+exports.IP2LocationUtils = function (ip, id, modelUtils, updateMongodb = true) {
   if (process.env.IP2LOCATION === '1') {
     const promise = new Promise((resolve, reject) => {
       console.time('ip2location')
@@ -222,9 +222,11 @@ exports.IP2LocationUtils = function (ip, id, modelUtils) {
         })
 
         console.timeEnd('ip2location')
-        modelUtils.updateOne({ _id: id }, {
-          ipInfo: ipInfoAll
-        })
+        if (updateMongodb) {
+          modelUtils.updateOne({ _id: id }, {
+            ipInfo: ipInfoAll
+          })
+        }
         resolve(ipInfoAll)
       } catch (err) {
         console.error('ip2location解析失败', err)
@@ -239,8 +241,12 @@ exports.IP2LocationUtils = function (ip, id, modelUtils) {
   })
 
 }
-exports.deviceUtils = function (req, id, modelUtils) {
+exports.deviceUAInfoUtils = function (req) {
   const ua = parser(req.get('user-agent'))
+  return ua
+}
+exports.deviceUtils = function (req, id, modelUtils) {
+  const ua = this.deviceUAInfoUtils(req)
   const result = modelUtils.updateOne({ _id: id }, {
     deviceInfo: ua
   })
