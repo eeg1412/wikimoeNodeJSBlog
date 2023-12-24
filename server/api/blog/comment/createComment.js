@@ -157,7 +157,7 @@ module.exports = async function (req, res, next) {
     utils.IP2LocationUtils(ip, data._id, commentUtils)
     if (params.status === 1) {
       // 异步更新文章评论数
-      postUtils.updateOne({ _id: post }, { $inc: { comnum: 1 } })
+      postUtils.updateOne({ _id: post }, { $inc: { comnum: 1 } }, true)
       cacheDataUtils.getCommentList()
     }
     // TODO: 发送邮件通知

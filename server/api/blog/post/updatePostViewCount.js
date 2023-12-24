@@ -27,6 +27,10 @@ module.exports = async function (req, res, next) {
   // - __v  版本号字段
   const id = req.body.id
   const uuid = req.headers['x-request-id']
+  // 判断uuid是否符合格式
+  if (!utils.isUUID(uuid)) {
+    return
+  }
 
   const params = {
     // views + 1

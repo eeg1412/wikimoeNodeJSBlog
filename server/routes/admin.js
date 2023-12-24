@@ -573,6 +573,15 @@ const adminRouteSetting = [
     roleType: null,
     role: null
   },
+  // getPostLikeLogList
+  {
+    path: '/postlikelog/list',
+    method: 'get',
+    middleware: [checkAuth],
+    controller: require('../api/admin/postLikeLog/getPostLikeLogList'),
+    roleType: null,
+    role: null
+  },
 ]
 
 adminRouteSetting.forEach(item => {

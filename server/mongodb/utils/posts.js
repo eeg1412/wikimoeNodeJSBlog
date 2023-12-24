@@ -34,9 +34,13 @@ exports.findPage = async function (parmas, filter, sort, page, limit) {
   }
 }
 
-exports.updateOne = async function (filters, parmas) {
+exports.updateOne = async function (filters, parmas, isClient = false) {
   // document查询
-  parmas.$inc = { __v: 1, ...parmas.$inc }
+  if (isClient) {
+    parmas.$inc = { client__v: 1, ...parmas.$inc }
+  } else {
+    parmas.$inc = { __v: 1, ...parmas.$inc }
+  }
   return await postsModel.updateOne(filters, parmas);
 }
 // 删除

@@ -86,6 +86,20 @@ const blogRouteSetting = [
     middleware: [],
     controller: require('../api/blog/post/updatePostViewCount'),
   },
+  // post createPostLikeLog
+  {
+    path: '/post/like/log',
+    method: 'post',
+    middleware: [],
+    controller: require('../api/blog/postLikeLog/createPostLikeLog'),
+  },
+  // post getPostLikeLogList
+  {
+    path: '/post/like/log/list',
+    method: 'post',
+    middleware: [],
+    controller: require('../api/blog/postLikeLog/getPostLikeLogList'),
+  },
 ]
 
 blogRouteSetting.forEach(item => {

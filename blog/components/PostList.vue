@@ -126,10 +126,26 @@
                 >
               </div>
             </div>
-            <div class="dflex flexCenter">
+
+            <div
+              class="dflex flexCenter cursor-pointer hover:text-primary-500"
+              :class="checkIsLike(item._id) ? 'text-primary-500' : 'cGray94'"
+              @click.stop="likePost(item._id)"
+              v-if="likeListInited"
+            >
               <!-- heart -->
-              <UIcon class="mr5" name="i-heroicons-heart" />
-              <span class="cGray94">{{ formatNumber(item.likes) }} 点赞</span>
+              <UIcon
+                class="mr5"
+                name="i-heroicons-heart-solid"
+                v-if="checkIsLike(item._id)"
+              />
+              <!-- heart-outline -->
+              <UIcon class="mr5" name="i-heroicons-heart" v-else />
+
+              <span>{{ formatNumber(item.likes) }} 点赞</span>
+            </div>
+            <div class="dflex flexCenter" v-else>
+              <USkeleton class="h-2 w-[50px]" />
             </div>
           </div>
         </div>
@@ -185,7 +201,7 @@
 </template>
 <script setup>
 import { useRoute } from 'vue-router'
-import { getPostsApi } from '@/api/post'
+import { getPostsApi, postLikeLogListApi, postLikeLogApi } from '@/api/post'
 import { useOptionStore } from '@/store/options'
 import { storeToRefs } from 'pinia'
 
@@ -195,6 +211,7 @@ const defaultCover = options.value.siteDefaultCover || ''
 const sitePageSize = computed(() => options.value.sitePageSize || 1)
 const route = useRoute()
 const router = useRouter()
+const toast = useToast()
 
 const routeName = computed(() => route.name)
 const page = route.params.page ? Number(route.params.page) : 1
@@ -330,8 +347,89 @@ const goPostDetail = (e, item, middle) => {
 }
 
 // console.log(postsData)
+const likeListInited = ref(false)
+const likeListLoading = ref(false)
+const likeList = ref([])
+const postLikeLogList = () => {
+  const postIdList = postsData.value.list.map((item) => item._id)
+  likeListLoading.value = true
+  postLikeLogListApi({ postIdList })
+    .then((res) => {
+      likeList.value = res.list
+    })
+    .finally(() => {
+      likeListInited.value = true
+      likeListLoading.value = false
+    })
+}
+const checkIsLike = (postId) => {
+  const likeData = likeList.value.find((item) => item.post === postId)
+  if (likeData) {
+    return likeData.like
+  } else {
+    return false
+  }
+}
+const getLikeDataByPostId = (postId) => {
+  const likeData = likeList.value.find((item) => item.post === postId)
+  if (likeData) {
+    return likeData
+  } else {
+    return null
+  }
+}
 
-onMounted(() => {})
+const likePostIsLoading = ref(false)
+const likePost = (postId) => {
+  if (likePostIsLoading.value) {
+    return
+  }
+  // 如果找到了，判断里面的Like，没有就是false
+  let like = checkIsLike(postId)
+  const __v = getLikeDataByPostId(postId)?.__v
+  likePostIsLoading.value = true
+
+  postLikeLogApi({ id: postId, like: !like, __v })
+    .then((res) => {
+      // 将对应的likeList里的postId替换为res.data
+      const index = likeList.value.findIndex((item) => item.post === postId)
+      if (index > -1) {
+        likeList.value[index] = res.data
+      } else {
+        likeList.value.push(res.data)
+      }
+      const newLike = res.data.like
+      // postsData.value.list 找到对应的postId，将likes数量根据newLike加减
+      const postIndex = postsData.value.list.findIndex(
+        (item) => item._id === postId
+      )
+
+      const post = postsData.value.list[postIndex]
+      const newLikeCount = newLike ? post.likes + 1 : post.likes - 1
+      postsData.value.list[postIndex].likes = newLikeCount
+    })
+    .catch((err) => {
+      console.log(err)
+      const errors = err.response?._data?.errors
+      if (errors) {
+        errors.forEach((item) => {
+          const message = item.message
+          toast.add({
+            title: message,
+            icon: 'i-heroicons-x-circle',
+            color: 'red',
+          })
+        })
+      }
+    })
+    .finally(() => {
+      likePostIsLoading.value = false
+    })
+}
+
+onMounted(() => {
+  postLikeLogList()
+})
 </script>
 <style scoped>
 .post-list-body {

@@ -38,4 +38,25 @@ const putViewCountApi = (params: any) => {
     shouldUuid: true,
   })
 }
-export { getPostsApi, getArchiveApi, getDetailApi, putViewCountApi }
+// post '/post/like/log'
+const likeLogURL = `/post/like/log`
+const postLikeLogApi = (params: any) => {
+  return httpRequest.postFetch(`${likeLogURL}`, params, {
+    shouldUuid: true,
+  })
+}
+// post '/post/like/log/list'
+const likeLogListURL = `/post/like/log/list`
+const postLikeLogListApi = (params: any) => {
+  return httpRequest.postFetch(`${likeLogListURL}`, params, {
+    shouldUuid: true,
+  })
+}
+export {
+  getPostsApi,
+  getArchiveApi,
+  getDetailApi,
+  putViewCountApi,
+  postLikeLogApi,
+  postLikeLogListApi,
+}

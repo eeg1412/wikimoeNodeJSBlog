@@ -440,7 +440,7 @@ onUnmounted(() => {
     top: 0;
     left: 0;
     right: 0;
-    z-index: 999;
+    z-index: 20;
     @apply bg-white;
     box-shadow: 0px 0px 10px 0px rgba(239, 144, 167, 0.08);
   }

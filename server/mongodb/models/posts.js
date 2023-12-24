@@ -96,6 +96,10 @@ var posts = new Schema({
     type: Number,
     default: 5
   },
+  client__v: {
+    type: Number,
+    default: 0
+  },
   coverImages: [{ type: Schema.ObjectId, ref: 'attachments' }],
 }, { timestamps: true });
 

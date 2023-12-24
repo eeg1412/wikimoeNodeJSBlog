@@ -117,6 +117,16 @@
               <i class="fas fa-image pr10"></i>
               <template #title>横幅</template>
             </el-menu-item>
+            <!-- 文章点赞日志 PostLikeLogList -->
+            <el-menu-item
+              index="PostLikeLogList"
+              @click="removeParam('PostLikeLogList')"
+              @click.middle="openNewTab('PostLikeLogList')"
+              :route="{ name: 'PostLikeLogList' }"
+            >
+              <i class="fas fa-thumbs-up pr10"></i>
+              <template #title>文章点赞日志</template>
+            </el-menu-item>
             <!-- 读者访问日志 ReaderlogList -->
             <el-menu-item
               index="ReaderlogList"

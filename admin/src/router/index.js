@@ -139,6 +139,12 @@ const routes = [
         name: 'ReaderlogList',
         component: () => import(/* webpackChunkName: "ReaderlogList" */ '../views/index/readerlog/ReaderlogList.vue')
       },
+      // PostLikeLogList
+      {
+        path: '/postlikelog/list',
+        name: 'PostLikeLogList',
+        component: () => import(/* webpackChunkName: "PostLikeLogList" */ '../views/index/postLikeLog/PostLikeLogList.vue')
+      },
       // config
       {
         path: '/config',

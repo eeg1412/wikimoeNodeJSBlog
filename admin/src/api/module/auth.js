@@ -388,5 +388,12 @@ export default function (api) {
         shouldAdminJWT: true
       })
     },
+    // get '/postlikelog/list'
+    getPostLikeLogList (data) {
+      return api.get('/postlikelog/list', {
+        params: data,
+        shouldAdminJWT: true
+      })
+    },
   }
 }

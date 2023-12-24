@@ -95,15 +95,33 @@
       </template>
     </div>
     <!-- 点赞按钮 -->
-    <div class="post-detail-like-body">
+
+    <div class="post-detail-like-body" v-if="likeListInited">
       <UButton
-        icon="i-heroicons-heart"
+        icon="i-heroicons-heart-solid"
         size="md"
         color="primary"
         variant="solid"
         :label="`${formatNumber(postData.data.likes)}点赞`"
         :trailing="false"
+        :loading="likeListLoading || likePostIsLoading"
+        v-if="checkIsLike()"
+        @click="likePost"
       />
+      <UButton
+        icon="i-heroicons-heart"
+        size="md"
+        color="primary"
+        variant="outline"
+        :label="`${formatNumber(postData.data.likes)}点赞`"
+        :trailing="false"
+        :loading="likeListLoading || likePostIsLoading"
+        v-else
+        @click="likePost"
+      />
+    </div>
+    <div class="post-detail-like-body dflex flexCenter" v-else>
+      <USkeleton class="h-9 w-[90px]" />
     </div>
     <!-- 评论 -->
     <!-- 评论列表 commentList -->
@@ -263,7 +281,12 @@
 </template>
 <script setup>
 import { useRoute } from 'vue-router'
-import { getDetailApi, putViewCountApi } from '@/api/post'
+import {
+  getDetailApi,
+  putViewCountApi,
+  postLikeLogListApi,
+  postLikeLogApi,
+} from '@/api/post'
 import { getCommentListApi } from '@/api/comment'
 import { storeToRefs } from 'pinia'
 import { useOptionStore } from '@/store/options'
@@ -274,6 +297,7 @@ const { options } = storeToRefs(optionStore)
 const route = useRoute()
 const id = route.params.id
 const routeName = route.name
+const toast = useToast()
 let type = null
 switch (routeName) {
   case 'postDetail':
@@ -360,9 +384,73 @@ const putViewCount = () => {
     id: postid,
   })
 }
+
+// post like
+const likeListInited = ref(false)
+const likeListLoading = ref(false)
+const likeList = ref([])
+const postLikeLogList = () => {
+  const postIdList = [postid]
+  likeListLoading.value = true
+  postLikeLogListApi({ postIdList })
+    .then((res) => {
+      likeList.value = res.list
+    })
+    .finally(() => {
+      likeListInited.value = true
+      likeListLoading.value = false
+    })
+}
+const checkIsLike = () => {
+  const likeData = likeList.value.find((item) => item.post === postid)
+  if (likeData) {
+    return likeData.like
+  } else {
+    return false
+  }
+}
+const getLikeDataByPostId = () => {
+  const likeData = likeList.value.find((item) => item.post === postid)
+  if (likeData) {
+    return likeData
+  } else {
+    return null
+  }
+}
+
+const likePostIsLoading = ref(false)
+const likePost = () => {
+  if (likePostIsLoading.value) {
+    return
+  }
+  // 如果找到了，判断里面的Like，没有就是false
+  let like = checkIsLike()
+  const __v = getLikeDataByPostId()?.__v
+  likePostIsLoading.value = true
+
+  postLikeLogApi({ id: postid, like: !like, __v })
+    .then((res) => {
+      // 将对应的likeList里的postId替换为res.data
+      const index = likeList.value.findIndex((item) => item.post === postid)
+      if (index > -1) {
+        likeList.value[index] = res.data
+      } else {
+        likeList.value.push(res.data)
+      }
+      const newLike = res.data.like
+      const newLikeCount = newLike
+        ? postData.value.data.likes + 1
+        : postData.value.data.likes - 1
+      postData.value.data.likes = newLikeCount
+    })
+    .finally(() => {
+      likePostIsLoading.value = false
+    })
+}
 onMounted(() => {
   getCommentList()
   putViewCount()
+  postLikeLogList()
 })
 </script>
 <style scoped>
