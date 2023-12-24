@@ -47,13 +47,13 @@ module.exports = async function (req, res, next) {
       return
     }
     oldLike = oldData.like
-  }
-  // 如果oldLike和like相等，则不需要更新
-  if (oldLike === like) {
-    res.send({
-      data: oldData
-    })
-    return
+    // 如果oldLike和like相等，则不需要更新
+    if (oldLike === like) {
+      res.send({
+        data: oldData
+      })
+      return
+    }
   }
   if (oldLike === null && like === false) {
     // 400
@@ -64,10 +64,11 @@ module.exports = async function (req, res, next) {
     })
     return
   }
-  // 如果oldData存在，则更新
+
   let data = null
   params.ipInfo = await utils.IP2LocationUtils(ip, id, null, false)
   if (oldData) {
+    // 如果oldData存在，则更新
     // 加上__v
     const newFilter = {
       ...filter,
