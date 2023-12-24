@@ -19,7 +19,7 @@
     <div class="mb20">
       <el-table :data="readerlogList" row-key="_id" border>
         <!-- uuid -->
-        <el-table-column prop="uuid" label="uuid" width="200" />
+        <el-table-column prop="uuid" label="uuid" width="315" />
         <!-- 动作 action -->
         <el-table-column prop="action" label="动作" width="200" />
         <!-- 操作内容 data -->

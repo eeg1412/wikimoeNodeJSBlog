@@ -127,6 +127,8 @@
             </div>
           </template>
         </el-table-column>
+        <!-- uuid -->
+        <el-table-column prop="uuid" label="uuid" width="315" />
 
         <el-table-column label="操作" width="170" fixed="right">
           <template #default="{ row }">
