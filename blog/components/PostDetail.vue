@@ -273,9 +273,23 @@ const { options } = storeToRefs(optionStore)
 
 const route = useRoute()
 const id = route.params.id
+const routeName = route.name
+let type = null
+switch (routeName) {
+  case 'postDetail':
+    type = [1, 2]
+    break
+  case 'pageDetail':
+    type = [2]
+    break
+
+  default:
+    break
+}
 const [postDataResponse] = await Promise.all([
   getDetailApi({
     id,
+    type,
   }),
 ])
 const { data: postData } = postDataResponse

@@ -6,6 +6,7 @@ const adminApiLog = log4js.getLogger('adminApi')
 
 module.exports = async function (req, res, next) {
   const id = req.query.id
+  const type = req.query.type
   if (!id) {
     res.status(400).json({
       errors: [{
@@ -16,6 +17,14 @@ module.exports = async function (req, res, next) {
   }
   const params = {
     status: 1,
+  }
+  if (type && Array.isArray(type) && type.length > 0) {
+    // type是数组
+    // 将type转换为数字
+    let newType = type.map(Number);
+    params.type = {
+      $in: newType
+    }
   }
   // 判断id是否是ObjectId
   if (utils.isObjectId(id)) {
