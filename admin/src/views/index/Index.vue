@@ -117,6 +117,17 @@
               <i class="fas fa-image pr10"></i>
               <template #title>横幅</template>
             </el-menu-item>
+            <!-- 读者日志 ReaderlogList -->
+            <el-menu-item
+              index="ReaderlogList"
+              @click="removeParam('ReaderlogList')"
+              @click.middle="openNewTab('ReaderlogList')"
+              :route="{ name: 'ReaderlogList' }"
+            >
+              <i class="fas fa-book pr10"></i>
+              <template #title>读者日志</template>
+            </el-menu-item>
+
             <!-- 设置 -->
             <el-menu-item
               index="Config"

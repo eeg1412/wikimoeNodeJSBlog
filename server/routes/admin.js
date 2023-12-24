@@ -564,6 +564,15 @@ const adminRouteSetting = [
     roleType: null,
     role: null
   },
+  // getReaderlogList
+  {
+    path: '/readerlog/list',
+    method: 'get',
+    middleware: [checkAuth],
+    controller: require('../api/admin/readerlog/getReaderlogList'),
+    roleType: null,
+    role: null
+  },
 ]
 
 adminRouteSetting.forEach(item => {

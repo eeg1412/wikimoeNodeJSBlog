@@ -133,6 +133,12 @@ const routes = [
         name: 'BannerList',
         component: () => import(/* webpackChunkName: "BannerList" */ '../views/index/banner/BannerList.vue')
       },
+      // ReaderlogList
+      {
+        path: '/readerlog/list',
+        name: 'ReaderlogList',
+        component: () => import(/* webpackChunkName: "ReaderlogList" */ '../views/index/readerlog/ReaderlogList.vue')
+      },
       // config
       {
         path: '/config',

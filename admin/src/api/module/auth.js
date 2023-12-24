@@ -381,5 +381,12 @@ export default function (api) {
         shouldAdminJWT: true
       })
     },
+    // get /readerlog/list
+    getReaderlogList (data) {
+      return api.get('/readerlog/list', {
+        params: data,
+        shouldAdminJWT: true
+      })
+    },
   }
 }
