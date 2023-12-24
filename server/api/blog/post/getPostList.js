@@ -3,7 +3,7 @@ const postUtils = require('../../../mongodb/utils/posts')
 const sortUtils = require('../../../mongodb/utils/sorts')
 const utils = require('../../../utils/utils')
 const log4js = require('log4js')
-const adminApiLog = log4js.getLogger('adminApi')
+const userApiLog = log4js.getLogger('userApi')
 const moment = require('moment-timezone');
 
 module.exports = async function (req, res, next) {
@@ -233,6 +233,6 @@ module.exports = async function (req, res, next) {
         message: '文章列表获取失败'
       }]
     })
-    adminApiLog.error(`post list get fail, ${JSON.stringify(err)}`)
+    userApiLog.error(`post list get fail, ${JSON.stringify(err)}`)
   })
 }

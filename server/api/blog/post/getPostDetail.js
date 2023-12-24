@@ -2,7 +2,7 @@
 const postUtils = require('../../../mongodb/utils/posts')
 const utils = require('../../../utils/utils')
 const log4js = require('log4js')
-const adminApiLog = log4js.getLogger('adminApi')
+const userApiLog = log4js.getLogger('userApi')
 
 module.exports = async function (req, res, next) {
   const id = req.query.id
@@ -53,6 +53,6 @@ module.exports = async function (req, res, next) {
         message: '文章详情获取失败'
       }]
     })
-    adminApiLog.error(`post detail get fail, ${JSON.stringify(err)}`)
+    userApiLog.error(`post detail get fail, ${JSON.stringify(err)}`)
   })
 }

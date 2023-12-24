@@ -2,7 +2,7 @@ const commentUtils = require('../../../mongodb/utils/comments')
 const postUtils = require('../../../mongodb/utils/posts')
 const utils = require('../../../utils/utils')
 const log4js = require('log4js')
-const adminApiLog = log4js.getLogger('adminApi')
+const userApiLog = log4js.getLogger('userApi')
 const cacheDataUtils = require('../../../config/cacheData')
 
 
@@ -150,7 +150,7 @@ module.exports = async function (req, res, next) {
     res.send({
       status: params.status
     })
-    adminApiLog.info(`comment:${content} create success`)
+    userApiLog.info(`comment:${content} create success`)
     // 异步更新设备信息
     utils.deviceUtils(req, data._id, commentUtils)
     // 异步更新ip信息
@@ -168,7 +168,7 @@ module.exports = async function (req, res, next) {
         message: '评论创建失败'
       }]
     })
-    adminApiLog.error(`comment:${content} create fail, ${JSON.stringify(err)}`)
+    userApiLog.error(`comment:${content} create fail, ${JSON.stringify(err)}`)
   })
 
 }

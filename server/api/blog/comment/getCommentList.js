@@ -1,7 +1,7 @@
 const commentUtils = require('../../../mongodb/utils/comments')
 const utils = require('../../../utils/utils')
 const log4js = require('log4js')
-const adminApiLog = log4js.getLogger('adminApi')
+const userApiLog = log4js.getLogger('userApi')
 
 module.exports = async function (req, res, next) {
   let { page, id } = req.query
@@ -66,6 +66,6 @@ module.exports = async function (req, res, next) {
         message: '评论列表获取失败'
       }]
     })
-    adminApiLog.error(`comment list get fail, ${JSON.stringify(err)}`)
+    userApiLog.error(`comment list get fail, ${JSON.stringify(err)}`)
   })
 }

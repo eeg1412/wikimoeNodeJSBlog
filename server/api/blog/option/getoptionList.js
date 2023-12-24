@@ -1,7 +1,7 @@
 const optionUtils = require('../../../mongodb/utils/options')
 const utils = require('../../../utils/utils')
 const log4js = require('log4js')
-const adminApiLog = log4js.getLogger('adminApi')
+const userApiLog = log4js.getLogger('userApi')
 
 module.exports = async function (req, res, next) {
 

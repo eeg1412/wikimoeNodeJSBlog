@@ -1,6 +1,6 @@
 const cacheDataUtils = require('../../../config/cacheData')
 const log4js = require('log4js')
-const adminApiLog = log4js.getLogger('adminApi')
+const userApiLog = log4js.getLogger('userApi')
 
 module.exports = async function (req, res, next) {
   if (global.$cacheData?.sortList) {
@@ -14,7 +14,7 @@ module.exports = async function (req, res, next) {
           message: 'sort列表获取失败'
         }]
       })
-      adminApiLog.error(`sort list get fail, ${JSON.stringify(err)
+      userApiLog.error(`sort list get fail, ${JSON.stringify(err)
         }`)
     })
   }
