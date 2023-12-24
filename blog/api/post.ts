@@ -31,5 +31,11 @@ const detailURL = `/post/detail`
 const getDetailApi = (params: PostDetailParams) => {
   return httpRequest.get(`${detailURL}`, params)
 }
-
-export { getPostsApi, getArchiveApi, getDetailApi }
+//put  /post/view/count
+const viewCountURL = `/post/view/count`
+const putViewCountApi = (params: any) => {
+  return httpRequest.putFetch(`${viewCountURL}`, params, {
+    shouldUuid: true,
+  })
+}
+export { getPostsApi, getArchiveApi, getDetailApi, putViewCountApi }

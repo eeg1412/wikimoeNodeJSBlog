@@ -106,6 +106,7 @@ sub {
 ins,
 a {
   text-decoration: none;
+  color: var(--el-color-primary);
 }
 a {
   cursor: pointer;

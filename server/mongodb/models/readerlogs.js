@@ -13,10 +13,21 @@ var readerlogs = new Schema({
     required: true,
   },
   // data
+  // data
   data: {
     // object
-    type: Object,
-    default: {}
+    target: {
+      type: String,
+      default: ''
+    },
+    targetId: {
+      type: mongoose.Schema.Types.ObjectId,
+      default: null
+    },
+    content: {
+      type: String,
+      default: ''
+    },
   },
   // ip
   ip: {

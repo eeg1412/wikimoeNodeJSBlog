@@ -263,7 +263,7 @@
 </template>
 <script setup>
 import { useRoute } from 'vue-router'
-import { getDetailApi } from '@/api/post'
+import { getDetailApi, putViewCountApi } from '@/api/post'
 import { getCommentListApi } from '@/api/comment'
 import { storeToRefs } from 'pinia'
 import { useOptionStore } from '@/store/options'
@@ -353,8 +353,16 @@ watch(
     getCommentList(true)
   }
 )
+
+// viewCount
+const putViewCount = () => {
+  putViewCountApi({
+    id: postid,
+  })
+}
 onMounted(() => {
   getCommentList()
+  putViewCount()
 })
 </script>
 <style scoped>

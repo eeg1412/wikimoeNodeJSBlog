@@ -86,11 +86,11 @@ class HttpRequest {
     return this.request(url, 'POST', data, options)
   }
 
-  Put<T = any>(url: string, data: any, options?: UseFetchOptions<T>) {
+  put<T = any>(url: string, data: any, options?: UseFetchOptions<T>) {
     return this.request(url, 'PUT', data, options)
   }
 
-  Delete<T = any>(url: string, params: any, options?: UseFetchOptions<T>) {
+  delete<T = any>(url: string, params: any, options?: UseFetchOptions<T>) {
     return this.request(url, 'DELETE', params, options)
   }
 
@@ -109,14 +109,14 @@ class HttpRequest {
     return this.requestFetch(url, options)
   }
 
-  PutFetch(url: string, data: any, options?: any) {
+  putFetch(url: string, data: any, options?: any) {
     options.method = 'PUT'
     options.baseURL = BASE_URL
     options.body = data
     return this.requestFetch(url, options)
   }
 
-  DeleteFetch(url: string, data: any, options?: any) {
+  deleteFetch(url: string, data: any, options?: any) {
     options.method = 'DELETE'
     options.baseURL = BASE_URL
     options.params = data

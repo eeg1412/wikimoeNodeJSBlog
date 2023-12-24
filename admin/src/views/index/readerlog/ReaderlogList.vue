@@ -12,7 +12,6 @@
       <div class="fr">
         <!-- 按钮用 -->
         <!-- 追加 -->
-        <el-button type="primary" @click="handleAdd">追加</el-button>
       </div>
     </div>
     <!-- 读者日志 -->
@@ -23,7 +22,43 @@
         <!-- 动作 action -->
         <el-table-column prop="action" label="动作" width="200" />
         <!-- 操作内容 data -->
-        <el-table-column prop="data" label="操作内容" />
+        <el-table-column prop="data" label="操作对象内容" min-width="200">
+          <template #default="{ row }">
+            <div v-if="row.data">
+              <!-- 如果 target targetId content 三者都有则显示跳转到对应页面的链接，否则优先显示content，没有再显示targetId -->
+              <div
+                v-if="
+                  targetToName(row.data.target) &&
+                  row.data.targetId &&
+                  row.data.content
+                "
+              >
+                <router-link
+                  :to="{
+                    name: targetToName(row.data.target),
+                    params: { id: row.data.targetId },
+                  }"
+                  >{{ row.data.content }}</router-link
+                >
+              </div>
+              <div v-else-if="row.data.content">
+                {{ row.data.content }}
+              </div>
+              <div v-else-if="row.data.target && row.data.targetId">
+                <router-link
+                  :to="{
+                    name: row.data.target,
+                    params: { id: row.data.targetId },
+                  }"
+                  >{{ row.data.targetId }}</router-link
+                >
+              </div>
+              <div v-else>
+                {{ row.data.targetId }}
+              </div>
+            </div>
+          </template>
+        </el-table-column>
         <!-- IP信息 -->
         <el-table-column prop="ip" label="IP信息" width="200">
           <template #default="{ row }">
@@ -113,6 +148,16 @@ export default {
         params.keyword = sessionParams.keyword
       }
     }
+    const targetToName = (target) => {
+      const targetMap = {
+        post: 'PostEdit',
+      }
+      if (targetMap[target]) {
+        return targetMap[target]
+      } else {
+        return null
+      }
+    }
     onMounted(() => {
       initParams()
       getReaderlogList()
@@ -122,8 +167,9 @@ export default {
       params,
       total,
       getReaderlogList,
+      targetToName,
     }
   },
 }
 </script>
-<style lang=""></style>
+<style scoped></style>

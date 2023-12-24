@@ -56,3 +56,8 @@ exports.aggregate = async function (parmas) {
   // document查询
   return await postsModel.aggregate(parmas);
 }
+// findOneAndUpdate
+exports.findOneAndUpdate = async function (filters, parmas, options) {
+  // document查询
+  return await postsModel.findOneAndUpdate(filters, parmas, options);
+}

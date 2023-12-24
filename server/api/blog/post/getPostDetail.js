@@ -42,6 +42,7 @@ module.exports = async function (req, res, next) {
           message: '文章不存在'
         }]
       })
+      userApiLog.error(`post detail get fail, 文章不存在, id: ${id}`)
       return
     }
     res.send({

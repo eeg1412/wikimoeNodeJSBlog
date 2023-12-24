@@ -79,6 +79,13 @@ const blogRouteSetting = [
     middleware: [],
     controller: require('../api/blog/comment/createComment'),
   },
+  // put updatePostViewCount
+  {
+    path: '/post/view/count',
+    method: 'put',
+    middleware: [],
+    controller: require('../api/blog/post/updatePostViewCount'),
+  },
 ]
 
 blogRouteSetting.forEach(item => {
