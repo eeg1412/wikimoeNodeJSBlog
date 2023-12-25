@@ -20,10 +20,16 @@
           </nuxt-link>
         </div>
         <div class="blog-top-bar-right-body">
-          <div class="blog-top-bar-right-body-item">
+          <div
+            class="blog-top-bar-right-body-item menu-btn"
+            @click="toggleLeftMenu"
+          >
             <UIcon name="i-heroicons-bars-3" />
           </div>
-          <div class="blog-top-bar-right-body-item">
+          <div
+            class="blog-top-bar-right-body-item sidebar-btn"
+            @click="toggleRightSidebar"
+          >
             <UIcon name="i-heroicons-squares-2x2" />
           </div>
         </div>
@@ -31,17 +37,30 @@
     </div>
     <!-- 整体layout -->
     <div class="blog-layout-body">
-      <div class="blog-layout-left-body">
+      <div
+        class="blog-layout-left-body"
+        :class="{
+          active: leftMenuActive,
+        }"
+      >
         <div class="blog-layout-sticky custom-scroll blog-layout-info-menu">
-          <!-- logo -->
-          <div>
-            <nuxt-link to="/">
-              <img class="blog-layout-sitelogo" :src="options.siteLogo" />
-            </nuxt-link>
+          <div class="blog-layout-left-top-info-body">
+            <!-- logo -->
+            <div>
+              <nuxt-link to="/">
+                <img class="blog-layout-sitelogo" :src="options.siteLogo" />
+              </nuxt-link>
+            </div>
+            <!-- siteDescription -->
+            <div class="blog-layout-desc">
+              <p>{{ options.siteDescription }}</p>
+            </div>
           </div>
-          <!-- siteDescription -->
-          <div class="blog-layout-desc">
-            <p>{{ options.siteDescription }}</p>
+          <!-- 关闭按钮 -->
+          <div class="justify-end layout-close-btn-body type-l">
+            <div class="text-xl cursor-pointer" @click="toggleLeftMenu">
+              <UIcon name="i-heroicons-x-mark" />
+            </div>
           </div>
           <!-- 导航 -->
           <ul class="blog-layout-sidebar-body">
@@ -54,8 +73,19 @@
       <div class="blog-layout-content-body">
         <slot></slot>
       </div>
-      <div class="blog-layout-right-body">
+      <div
+        class="blog-layout-right-body custom-scroll"
+        :class="{
+          active: rightSidebarActive,
+        }"
+      >
         <div class="blog-layout-right-top-body">
+          <!-- 关闭按钮 -->
+          <div class="justify-end mb-5 layout-close-btn-body type-r">
+            <div class="text-xl cursor-pointer" @click="toggleRightSidebar">
+              <UIcon name="i-heroicons-x-mark" />
+            </div>
+          </div>
           <!-- 搜索 -->
           <div class="blog-search-body">
             <UInput
@@ -199,6 +229,24 @@ const sumLayoutRightBoxHeight = () => {
 }
 const pageLoading = ref(true)
 
+// 左右菜单
+const leftMenuActive = ref(false)
+const rightSidebarActive = ref(false)
+const toggleLeftMenu = () => {
+  leftMenuActive.value = !leftMenuActive.value
+}
+const toggleRightSidebar = () => {
+  rightSidebarActive.value = !rightSidebarActive.value
+}
+// 检测到路由跳转时关闭左右菜单
+watch(
+  () => route.path,
+  (newVal, oldVal) => {
+    leftMenuActive.value = false
+    rightSidebarActive.value = false
+  }
+)
+
 // let observer
 onMounted(async () => {
   // observer = new ResizeObserver((entries) => {
@@ -299,6 +347,9 @@ onUnmounted(() => {
   color: #ffffff;
 }
 .blog-top-bar {
+  display: none;
+}
+.layout-close-btn-body {
   display: none;
 }
 .blog-layout-right-box {
@@ -428,13 +479,55 @@ onUnmounted(() => {
 /* 小于1024时隐藏左右侧边栏 */
 @media (max-width: 1024px) {
   .blog-layout-body {
-    flex-direction: column;
+    margin-bottom: 0px;
+  }
+  .blog-top-bar-right-body-item.menu-btn {
+    display: flex;
+  }
+  .layout-close-btn-body.type-l {
+    display: flex;
   }
   .blog-layout-left-body {
+    transform: translateX(-100%);
+    opacity: 0;
+    transition: all 0.3s ease;
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    z-index: 21;
+    width: 100%;
+    height: 100%;
+  }
+  .blog-layout-left-body.active {
+    transform: translateX(0%);
+    opacity: 1;
+  }
+  .blog-layout-sticky {
+    background-image: none;
+  }
+  .blog-layout-left-top-info-body {
     display: none;
   }
-  .blog-layout-right-body {
+  .blog-layout-left-body.show {
+    display: block;
+  }
+  /* .blog-layout-sticky {
+    top: 60px;
+  }
+  .blog-layout-info-menu {
+    height: calc(100vh - 60px);
+    height: calc(100dvh - 60px);
+  }
+  .blog-layout-left-body {
+    border-top-left-radius: 0px;
+    border-bottom-left-radius: 0px;
+  } */
+  /* .blog-layout-right-body {
     display: none;
+  } */
+  .blog-layout-right-top-body {
+    top: 60px;
   }
   /* 顶部导航栏 */
   .blog-top-bar {
@@ -445,7 +538,6 @@ onUnmounted(() => {
     right: 0;
     z-index: 20;
     @apply bg-white;
-    box-shadow: 0px 0px 10px 0px rgba(239, 144, 167, 0.08);
   }
   .blog-top-bar-body {
     max-width: 1220px;
@@ -472,12 +564,63 @@ onUnmounted(() => {
   .blog-top-bar-right-body-item {
     font-size: 20px;
     margin-left: 10px;
-    display: flex;
+    display: none;
     align-items: center;
     cursor: pointer;
   }
   .blog-layout-body {
     margin-top: 60px;
+  }
+  .blog-layout-content-body {
+    margin-left: 5px;
+  }
+}
+/* 小于768时 */
+@media (max-width: 768px) {
+  .blog-layout-content-body {
+    margin-left: 0px;
+  }
+  .blog-layout-body {
+    margin-bottom: 0px;
+  }
+  .blog-layout-body {
+    flex-direction: column;
+  }
+  .blog-layout-right-body {
+    /* display: none; */
+    transform: translateX(100%);
+    opacity: 0;
+    transition: all 0.3s ease;
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    z-index: 21;
+    width: 100%;
+    height: 100%;
+    overflow-y: auto;
+    /* 右上角 右下角 没有圆角 */
+    border-top-right-radius: 0px;
+    border-bottom-right-radius: 0px;
+  }
+  .layout-close-btn-body.type-r {
+    display: flex;
+  }
+  .blog-layout-right-body.active {
+    transform: translateX(0%);
+    opacity: 1;
+  }
+  .blog-layout-right-top-body {
+    top: 0px;
+  }
+  .blog-layout-right-box {
+    position: relative;
+    height: auto;
+    overflow: hidden;
+    top: 0 !important;
+  }
+  .blog-top-bar-right-body-item.sidebar-btn {
+    display: flex;
   }
 }
 </style>
