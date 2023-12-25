@@ -89,6 +89,17 @@
         />
       </div>
     </div>
+    <!-- 运行代码按钮 -->
+    <div class="post-run-code-body mt-3 mb-5" v-if="code">
+      <UButton
+        size="md"
+        color="primary"
+        variant="solid"
+        :label="`运行代码`"
+        :trailing="false"
+        @click="runCode"
+      />
+    </div>
     <!-- tags -->
     <div class="post-detail-tags-body" v-if="postData.data.tags.length > 0">
       <template v-for="(tag, index) in postData.data.tags" :key="index">
@@ -342,6 +353,15 @@ const { data: postData } = postDataResponse
 const pageTemplate = computed(() => {
   return postData.value?.data?.template
 })
+const code = computed(() => {
+  return postData.value?.data?.code
+})
+const runCode = () => {
+  const runCodeContent = code.value
+  // 打开新窗口并运行代码
+  const newWindow = window.open()
+  newWindow.document.write(runCodeContent)
+}
 const postid = postData.value.data._id
 // comment
 const commentPage = ref(1)
