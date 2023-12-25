@@ -69,15 +69,12 @@
           </template>
         </el-table-column>
         <!-- UA信息 -->
-        <el-table-column label="UA信息" width="180">
+        <el-table-column label="UA信息" width="210">
           <template #default="{ row }">
-            <div>
-              {{ row.deviceInfo?.os?.name }} {{ row.deviceInfo?.os?.version }}
-            </div>
-            <div>
-              {{ row.deviceInfo?.browser?.name }}
-              {{ row.deviceInfo?.browser?.version }}
-            </div>
+            <div>系统：{{ row.deviceInfo?.os?.name }}</div>
+            <div>系统版本号：{{ row.deviceInfo?.os?.version }}</div>
+            <div>浏览器：{{ row.deviceInfo?.browser?.name }}</div>
+            <div>浏览器版本号： {{ row.deviceInfo?.browser?.version }}</div>
           </template>
         </el-table-column>
       </el-table>
