@@ -582,6 +582,15 @@ const adminRouteSetting = [
     roleType: null,
     role: null
   },
+  // getCommentLikeLogList
+  {
+    path: '/commentlikelog/list',
+    method: 'get',
+    middleware: [checkAuth],
+    controller: require('../api/admin/commentLikeLog/getCommentLikeLogList'),
+    roleType: null,
+    role: null
+  },
 ]
 
 adminRouteSetting.forEach(item => {

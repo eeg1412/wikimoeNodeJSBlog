@@ -1,7 +1,7 @@
-const postLikeLogUtils = require('../../../mongodb/utils/postLikeLogs')
+const commentLikeLogUtils = require('../../../mongodb/utils/commentLikeLogs')
 const utils = require('../../../utils/utils')
 const log4js = require('log4js')
-const postUtils = require('../../../mongodb/utils/posts')
+const commentUtils = require('../../../mongodb/utils/comments')
 const userApiLog = log4js.getLogger('userApi')
 const readerlogUtils = require('../../../mongodb/utils/readerlogs')
 
@@ -11,7 +11,7 @@ module.exports = async function (req, res, next) {
   const uuid = req.headers['x-request-id']
   const ip = utils.getUserIp(req)
   const filter = {
-    post: id,
+    comment: id,
     uuid,
   }
   // 校验格式
@@ -36,7 +36,7 @@ module.exports = async function (req, res, next) {
     res.status(400).json({ errors })
     return
   }
-  // 根据ip或uuid， 查询 readerlogUtils.count 中action字段 postLike 或 postDislike 当天的数据量是否超过1000条
+  // 根据ip或uuid， 查询 readerlogUtils.count 中action字段 commentLike 或 postDislike 当天的数据量是否超过1000条
   const readerlogCount = await readerlogUtils.count({
     $or: [
       {
@@ -46,9 +46,9 @@ module.exports = async function (req, res, next) {
         ip: ip
       }
     ],
-    // action字段 postLike 或 postDislike
+    // action字段 commentLike 或 commentDislike
     action: {
-      $in: ['postLike', 'postDislike']
+      $in: ['commentLike', 'commentDislike']
     },
     createdAt: {
       $gte: utils.getTodayStartTime(),
@@ -63,7 +63,7 @@ module.exports = async function (req, res, next) {
     })
     return
   }
-  const oldData = await postLikeLogUtils.findOne(filter, '_id post like __v')
+  const oldData = await commentLikeLogUtils.findOne(filter, '_id comment like __v')
   let oldLike = null
   if (oldData) {
     if (oldData.__v !== __v) {
@@ -102,7 +102,7 @@ module.exports = async function (req, res, next) {
       ...filter,
       __v
     }
-    const updateRes = await postLikeLogUtils.updateOne(newFilter, params)
+    const updateRes = await commentLikeLogUtils.updateOne(newFilter, params)
     if (!updateRes || updateRes.modifiedCount === 0) {
       res.status(400).json({
         errors: [{
@@ -111,22 +111,22 @@ module.exports = async function (req, res, next) {
       })
       return
     }
-    data = await postLikeLogUtils.findOne(filter, '_id post like __v')
+    data = await commentLikeLogUtils.findOne(filter, '_id comment like __v')
 
   } else {
     // 如果oldData不存在，则创建
     const newParams = {
       ...params,
-      post: id,
+      comment: id,
       uuid,
     }
-    data = await postLikeLogUtils.save(newParams).catch((err) => {
+    data = await commentLikeLogUtils.save(newParams).catch((err) => {
       res.status(400).json({
         errors: [{
           message: '更新失败'
         }]
       })
-      userApiLog.error(`postLikeLog create fail, ${JSON.stringify(err)}`)
+      userApiLog.error(`commentLikeLog create fail, ${JSON.stringify(err)}`)
       return
     })
   }
@@ -135,15 +135,15 @@ module.exports = async function (req, res, next) {
   }
 
   const sendData = {}
-  // 只要_id,post,like,__v
+  // 只要_id,comment,like,__v
   sendData._id = data._id
-  sendData.post = data.post
+  sendData.comment = data.comment
   sendData.like = data.like
   sendData.__v = data.__v
   res.send({
     data: sendData
   })
-  userApiLog.info(`postLikeLog create success`)
+  userApiLog.info(`commentLikeLog create success`)
   // 异步更新文章点赞数
   let likes = 0
   if (like) {
@@ -151,19 +151,19 @@ module.exports = async function (req, res, next) {
   } else {
     likes = -1
   }
-  postUtils.updateOne({ _id: id }, { $inc: { likes: likes } }, true)
-  // 查询post
-  const post = await postUtils.findOne({ _id: id }, 'title excerpt')
-  let content = post.title || post.excerpt
+  commentUtils.updateOne({ _id: id }, { $inc: { likes: likes } }, true)
+  // 查询comment
+  const comment = await commentUtils.findOne({ _id: id }, 'content')
+  let content = comment.content
   // 控制content长度在20字，超过...
   if (content.length > 20) {
     content = content.substring(0, 20) + '...'
   }
   const readerlogParams = {
     uuid: uuid,
-    action: like ? 'postLike' : 'postDislike',
+    action: like ? 'commentLike' : 'commentDislike',
     data: {
-      target: 'post',
+      target: 'comment',
       targetId: id,
       content: content,
     },
@@ -172,9 +172,9 @@ module.exports = async function (req, res, next) {
     ip: ip
   }
   readerlogUtils.save(readerlogParams).then((data) => {
-    userApiLog.info(`post like log create success`)
+    userApiLog.info(`comment like log create success`)
   }).catch((err) => {
-    userApiLog.error(`post like log create fail, ${JSON.stringify(err)}`)
+    userApiLog.error(`comment like log create fail, ${JSON.stringify(err)}`)
   })
 }
 

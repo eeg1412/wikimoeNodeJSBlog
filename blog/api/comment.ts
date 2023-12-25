@@ -24,4 +24,24 @@ const getCommentCreateApi = (params: any, options: any) => {
   })
 }
 
-export { getCommentLatestApi, getCommentListApi, getCommentCreateApi }
+// post /comment/like/log
+const commentLikeLogURL = `/comment/like/log`
+const postCommentLikeLogApi = (params: any) => {
+  return httpRequest.postFetch(`${commentLikeLogURL}`, params, {
+    shouldUuid: true,
+  })
+}
+// post /comment/like/log/list
+const commentLikeLogListURL = `/comment/like/log/list`
+const postCommentLikeLogListApi = (params: any) => {
+  return httpRequest.postFetch(`${commentLikeLogListURL}`, params, {
+    shouldUuid: true,
+  })
+}
+export {
+  getCommentLatestApi,
+  getCommentListApi,
+  getCommentCreateApi,
+  postCommentLikeLogApi,
+  postCommentLikeLogListApi,
+}

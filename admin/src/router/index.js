@@ -145,6 +145,12 @@ const routes = [
         name: 'PostLikeLogList',
         component: () => import(/* webpackChunkName: "PostLikeLogList" */ '../views/index/postLikeLog/PostLikeLogList.vue')
       },
+      // CommentLikeLogList
+      {
+        path: '/commentlikelog/list',
+        name: 'CommentLikeLogList',
+        component: () => import(/* webpackChunkName: "CommentLikeLogList" */ '../views/index/commentLikeLog/CommentLikeLogList.vue')
+      },
       // config
       {
         path: '/config',

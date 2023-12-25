@@ -127,6 +127,16 @@
               <i class="fas fa-thumbs-up pr10"></i>
               <template #title>文章点赞日志</template>
             </el-menu-item>
+            <!-- 评论点赞日志 CommentLikeLogList -->
+            <el-menu-item
+              index="CommentLikeLogList"
+              @click="removeParam('CommentLikeLogList')"
+              @click.middle="openNewTab('CommentLikeLogList')"
+              :route="{ name: 'CommentLikeLogList' }"
+            >
+              <i class="fas fa-thumbs-up pr10"></i>
+              <template #title>评论点赞日志</template>
+            </el-menu-item>
             <!-- 读者访问日志 ReaderlogList -->
             <el-menu-item
               index="ReaderlogList"

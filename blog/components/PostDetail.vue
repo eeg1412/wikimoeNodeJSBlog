@@ -196,9 +196,19 @@
                   <div class="comment-list-item-btns">
                     <UButton
                       size="xs"
+                      icon="i-heroicons-heart-solid"
+                      color="primary"
+                      v-if="checkIsCommentLike(item._id)"
+                      @click="likeComment(item._id)"
+                      >{{ formatNumber(item.likes) }}</UButton
+                    >
+                    <UButton
+                      size="xs"
                       icon="i-heroicons-heart"
                       color="white"
                       variant="solid"
+                      @click="likeComment(item._id)"
+                      v-else
                       >{{ formatNumber(item.likes) }}</UButton
                     >
                     <template v-if="options.siteEnableComment">
@@ -287,7 +297,11 @@ import {
   postLikeLogListApi,
   postLikeLogApi,
 } from '@/api/post'
-import { getCommentListApi } from '@/api/comment'
+import {
+  getCommentListApi,
+  postCommentLikeLogApi,
+  postCommentLikeLogListApi,
+} from '@/api/comment'
 import { storeToRefs } from 'pinia'
 import { useOptionStore } from '@/store/options'
 
@@ -344,6 +358,7 @@ const getCommentList = async (goToCommentListRef) => {
     .then((res) => {
       console.log(res)
       commentData.value = res
+      commentLikeLogList()
       nextTick(() => {
         if (goToCommentListRef) {
           const rect = commentListRef.value.getBoundingClientRect()
@@ -377,6 +392,92 @@ watch(
     getCommentList(true)
   }
 )
+// 评论点赞
+const commentLikeListInited = ref(false)
+const commentLikeListLoading = ref(false)
+const commentLikeList = ref([])
+const commentLikeLogList = () => {
+  const commentIdList = commentData.value.list.map((item) => item._id)
+  commentLikeListLoading.value = true
+  postCommentLikeLogListApi({ commentIdList })
+    .then((res) => {
+      commentLikeList.value = res.list
+    })
+    .finally(() => {
+      commentLikeListInited.value = true
+      commentLikeListLoading.value = false
+    })
+}
+const checkIsCommentLike = (commentId) => {
+  const likeData = commentLikeList.value.find(
+    (item) => item.comment === commentId
+  )
+  if (likeData) {
+    return likeData.like
+  } else {
+    return false
+  }
+}
+const getLikeDataByCommentId = (commentId) => {
+  const likeData = commentLikeList.value.find(
+    (item) => item.comment === commentId
+  )
+  if (likeData) {
+    return likeData
+  } else {
+    return null
+  }
+}
+
+const likeCommentIsLoading = ref(false)
+const likeComment = (commentId) => {
+  if (likeCommentIsLoading.value) {
+    return
+  }
+  // 如果找到了，判断里面的Like，没有就是false
+  let like = checkIsCommentLike(commentId)
+  const __v = getLikeDataByCommentId(commentId)?.__v
+  likeCommentIsLoading.value = true
+
+  postCommentLikeLogApi({ id: commentId, like: !like, __v })
+    .then((res) => {
+      // 将对应的likeList里的commentId替换为res.data
+      const index = commentLikeList.value.findIndex(
+        (item) => item.comment === commentId
+      )
+      if (index > -1) {
+        commentLikeList.value[index] = res.data
+      } else {
+        commentLikeList.value.push(res.data)
+      }
+      const newLike = res.data.like
+      // commentData.value.list 找到对应的commentId，将likes数量根据newLike加减
+      const commentIndex = commentData.value.list.findIndex(
+        (item) => item._id === commentId
+      )
+
+      const comment = commentData.value.list[commentIndex]
+      const newLikeCount = newLike ? comment.likes + 1 : comment.likes - 1
+      commentData.value.list[commentIndex].likes = newLikeCount
+    })
+    .catch((err) => {
+      console.log(err)
+      const errors = err.response?._data?.errors
+      if (errors) {
+        errors.forEach((item) => {
+          const message = item.message
+          toast.add({
+            title: message,
+            icon: 'i-heroicons-x-circle',
+            color: 'red',
+          })
+        })
+      }
+    })
+    .finally(() => {
+      likeCommentIsLoading.value = false
+    })
+}
 
 // viewCount
 const putViewCount = () => {

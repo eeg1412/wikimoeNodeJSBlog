@@ -395,5 +395,12 @@ export default function (api) {
         shouldAdminJWT: true
       })
     },
+    // get '/commentlikelog/list'
+    getCommentLikeLogList (data) {
+      return api.get('/commentlikelog/list', {
+        params: data,
+        shouldAdminJWT: true
+      })
+    },
   }
 }

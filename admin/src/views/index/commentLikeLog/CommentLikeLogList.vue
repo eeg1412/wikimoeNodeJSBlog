@@ -2,7 +2,7 @@
   <div class="common-right-panel-form">
     <div class="pb20">
       <el-breadcrumb separator="/">
-        <el-breadcrumb-item>文章点赞记录列表</el-breadcrumb-item>
+        <el-breadcrumb-item>评论点赞记录列表</el-breadcrumb-item>
       </el-breadcrumb>
     </div>
     <div class="clearfix pb20">
@@ -14,10 +14,10 @@
         <!-- 追加 -->
       </div>
     </div>
-    <!-- 文章点赞记录 -->
+    <!-- 评论点赞记录 -->
     <div class="mb20">
-      <el-table :data="postLikeLogList" row-key="_id" border>
-        <el-table-column label="文章/推文" min-width="180">
+      <el-table :data="commentLikeLogList" row-key="_id" border>
+        <el-table-column label="评论" min-width="180">
           <template #default="{ row }">
             <div :title="row.post.title || row.post.excerpt">
               {{ row.post.title || row.post.excerpt }}
@@ -104,21 +104,21 @@ export default {
   setup() {
     const route = useRoute()
     const router = useRouter()
-    const postLikeLogList = ref([])
+    const commentLikeLogList = ref([])
     const params = reactive({
       page: 1,
       size: 10,
       keyword: '',
     })
     const total = ref(0)
-    const getPostLikeLogList = (resetPage) => {
+    const getCommentLikeLogList = (resetPage) => {
       if (resetPage) {
         params.page = 1
       }
       authApi
-        .getPostLikeLogList(params)
+        .getCommentLikeLogList(params)
         .then((res) => {
-          postLikeLogList.value = res.data.list
+          commentLikeLogList.value = res.data.list
           total.value = res.data.total
           setSessionParams(route.name, params)
         })
@@ -130,7 +130,7 @@ export default {
     watch(
       () => params.page,
       (newVal, oldVal) => {
-        getPostLikeLogList()
+        getCommentLikeLogList()
       }
     )
 
@@ -151,13 +151,13 @@ export default {
     }
     onMounted(() => {
       initParams()
-      getPostLikeLogList()
+      getCommentLikeLogList()
     })
     return {
-      postLikeLogList,
+      commentLikeLogList,
       params,
       total,
-      getPostLikeLogList,
+      getCommentLikeLogList,
       titleLimit,
     }
   },
