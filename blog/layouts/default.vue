@@ -187,8 +187,11 @@ const setWindowHeightResize = () => {
 const layoutRightBoxHeight = ref(0)
 const sumLayoutRightBoxHeight = () => {
   if (layoutRightBox.value) {
-    layoutRightBoxHeight.value =
-      layoutRightBox.value.offsetHeight - windowHeight
+    let newTop = layoutRightBox.value.offsetHeight - windowHeight
+    if (newTop < 0) {
+      newTop = 0
+    }
+    layoutRightBoxHeight.value = newTop
     console.log(layoutRightBox.value.offsetHeight, windowHeight)
   } else {
     layoutRightBoxHeight.value = 0
