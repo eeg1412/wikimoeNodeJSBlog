@@ -22,7 +22,7 @@ exports.find = async function (parmas, sort, projection) {
 // 分页查询
 exports.findPage = async function (parmas, sort, page, limit, projection) {
   // document查询
-  const list = await commentLikeLogsModel.find(parmas, projection).populate('post', 'title _id excerpt').sort(sort).skip((page - 1) * limit).limit(limit);
+  const list = await commentLikeLogsModel.find(parmas, projection).populate('comment', 'content _id').sort(sort).skip((page - 1) * limit).limit(limit);
   const total = await commentLikeLogsModel.countDocuments(parmas);
   // 查询失败
   if (!list || total === undefined) {

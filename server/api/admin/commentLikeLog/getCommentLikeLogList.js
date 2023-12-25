@@ -32,7 +32,7 @@ module.exports = async function (req, res, next) {
   }).catch((err) => {
     res.status(400).json({
       errors: [{
-        message: '文章点赞记录列表获取失败'
+        message: '评论点赞记录列表获取失败'
       }]
     })
     adminApiLog.error(`commentLikeLog list get fail, ${JSON.stringify(err)

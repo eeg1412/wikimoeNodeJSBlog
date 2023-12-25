@@ -19,8 +19,8 @@
       <el-table :data="commentLikeLogList" row-key="_id" border>
         <el-table-column label="评论" min-width="180">
           <template #default="{ row }">
-            <div :title="row.post.title || row.post.excerpt">
-              {{ row.post.title || row.post.excerpt }}
+            <div :title="row.comment.content">
+              {{ row.comment.content }}
             </div>
           </template>
         </el-table-column>
