@@ -2,7 +2,7 @@ require('dotenv').config()
 // envType: 本番：prod 开发：dev
 // const envType = process.argv[3] || 'dev'
 // dotenv.config({ path: `./${envType}.env` })
-const db = require('../mongodb/index')
+const db = require('./mongodb')
 const userUtils = require('../mongodb/utils/users')
 const chalk = require('chalk')
 const { Select, Form } = require('enquirer')
