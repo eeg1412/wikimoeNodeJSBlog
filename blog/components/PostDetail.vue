@@ -195,7 +195,7 @@
                   <!-- 喜欢按钮 -->
                   <div class="comment-list-item-btns">
                     <UButton
-                      size="xs"
+                      size="2xs"
                       icon="i-heroicons-heart-solid"
                       color="primary"
                       v-if="checkIsCommentLike(item._id)"
@@ -203,7 +203,7 @@
                       >{{ formatNumber(item.likes) }}</UButton
                     >
                     <UButton
-                      size="xs"
+                      size="2xs"
                       icon="i-heroicons-heart"
                       color="white"
                       variant="solid"
@@ -213,7 +213,7 @@
                     >
                     <template v-if="options.siteEnableComment">
                       <UButton
-                        size="xs"
+                        size="2xs"
                         color="white"
                         variant="ghost"
                         @click="openComment(item._id)"
@@ -221,7 +221,7 @@
                         >回复</UButton
                       >
                       <UButton
-                        size="xs"
+                        size="2xs"
                         color="white"
                         variant="ghost"
                         @click="closeComment"
