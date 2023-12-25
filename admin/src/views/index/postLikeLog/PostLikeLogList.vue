@@ -17,10 +17,10 @@
     <!-- 文章点赞记录 -->
     <div class="mb20">
       <el-table :data="postLikeLogList" row-key="_id" border>
-        <el-table-column label="评论文章/推文" width="180">
+        <el-table-column label="评论文章/推文" min-width="180">
           <template #default="{ row }">
             <div :title="row.post.title || row.post.excerpt">
-              {{ titleLimit(row.post.title || row.post.excerpt) }}
+              {{ row.post.title || row.post.excerpt }}
             </div>
           </template>
         </el-table-column>
