@@ -443,6 +443,20 @@ const likePost = () => {
         : postData.value.data.likes - 1
       postData.value.data.likes = newLikeCount
     })
+    .catch((err) => {
+      console.log(err)
+      const errors = err.response?._data?.errors
+      if (errors) {
+        errors.forEach((item) => {
+          const message = item.message
+          toast.add({
+            title: message,
+            icon: 'i-heroicons-x-circle',
+            color: 'red',
+          })
+        })
+      }
+    })
     .finally(() => {
       likePostIsLoading.value = false
     })

@@ -85,6 +85,12 @@
             </div>
           </template>
         </el-table-column>
+        <!-- createdAt -->
+        <el-table-column prop="createdAt" label="创建时间" width="180">
+          <template #default="{ row }">
+            {{ $formatDate(row.createdAt) }}
+          </template>
+        </el-table-column>
       </el-table>
     </div>
     <!-- 分页 -->

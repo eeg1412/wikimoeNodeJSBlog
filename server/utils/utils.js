@@ -265,3 +265,19 @@ exports.isUUID = function (value) {
   // 通过 validator isUUID 来判断
   return validator.isUUID(String(value))
 }
+// getTodayStartTime
+exports.getTodayStartTime = function () {
+  const date = new Date()
+  date.setHours(0)
+  date.setMinutes(0)
+  date.setSeconds(0)
+  return date
+}
+// getTodayEndTime
+exports.getTodayEndTime = function () {
+  const date = new Date()
+  date.setHours(23)
+  date.setMinutes(59)
+  date.setSeconds(59)
+  return date
+}

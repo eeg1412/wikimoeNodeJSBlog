@@ -3,6 +3,7 @@ const utils = require('../../../utils/utils')
 const log4js = require('log4js')
 const postUtils = require('../../../mongodb/utils/posts')
 const userApiLog = log4js.getLogger('userApi')
+const readerlogUtils = require('../../../mongodb/utils/readerlogs')
 
 module.exports = async function (req, res, next) {
 
@@ -33,6 +34,33 @@ module.exports = async function (req, res, next) {
   const errors = utils.checkForm(params, rule)
   if (errors.length > 0) {
     res.status(400).json({ errors })
+    return
+  }
+  // 根据ip或uuid， 查询 readerlogUtils.count 中action字段 postLike 或 postDislike 当天的数据量是否超过1000条
+  const readerlogCount = await readerlogUtils.count({
+    $or: [
+      {
+        uuid: uuid
+      },
+      {
+        ip: ip
+      }
+    ],
+    // action字段 postLike 或 postDislike
+    action: {
+      $in: ['postLike', 'postDislike']
+    },
+    createdAt: {
+      $gte: utils.getTodayStartTime(),
+      $lte: utils.getTodayEndTime()
+    }
+  })
+  if (readerlogCount >= 1000) {
+    res.status(400).json({
+      errors: [{
+        message: '到达今日点赞上限'
+      }]
+    })
     return
   }
   const oldData = await postLikeLogUtils.findOne(filter, '_id post like __v')
@@ -124,7 +152,29 @@ module.exports = async function (req, res, next) {
     likes = -1
   }
   postUtils.updateOne({ _id: id }, { $inc: { likes: likes } }, true)
-
-
-
+  // 查询post
+  const post = await postUtils.findOne({ _id: id }, 'title excerpt')
+  let content = post.title || post.excerpt
+  // 控制content长度在20字，超过...
+  if (content.length > 20) {
+    content = content.substring(0, 20) + '...'
+  }
+  const readerlogParams = {
+    uuid: uuid,
+    action: like ? 'postLike' : 'postDislike',
+    data: {
+      target: 'post',
+      targetId: id,
+      content: content,
+    },
+    deviceInfo: params.deviceInfo,
+    ipInfo: params.ipInfo,
+    ip: ip
+  }
+  readerlogUtils.save(readerlogParams).then((data) => {
+    userApiLog.info(`post view log create success`)
+  }).catch((err) => {
+    userApiLog.error(`post view log create fail, ${JSON.stringify(err)}`)
+  })
 }
+

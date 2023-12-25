@@ -27,8 +27,30 @@ module.exports = async function (req, res, next) {
   // - __v  版本号字段
   const id = req.body.id
   const uuid = req.headers['x-request-id']
+  const ip = utils.getUserIp(req)
   // 判断uuid是否符合格式
   if (!utils.isUUID(uuid)) {
+    return
+  }
+
+  // 根据ip或uuid， 查询 readerlogUtils.count 中action字段 postView 当天的数据量是否超过1000条
+  const readerlogCount = await readerlogUtils.count({
+    $or: [
+      {
+        uuid: uuid
+      },
+      {
+        ip: ip
+      }
+    ],
+    // action字段 postView
+    action: 'postView',
+    createdAt: {
+      $gte: utils.getTodayStartTime(),
+      $lte: utils.getTodayEndTime()
+    }
+  })
+  if (readerlogCount >= 1000) {
     return
   }
 
@@ -72,7 +94,6 @@ module.exports = async function (req, res, next) {
     //   type: Object,
     //   default: {}
     // },
-    const ip = utils.getUserIp(req)
     let content = data.title || data.excerpt
     // 控制content长度在20字，超过...
     if (content.length > 20) {

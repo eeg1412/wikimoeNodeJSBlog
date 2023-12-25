@@ -301,7 +301,7 @@ const [postsDataResponse] = await Promise.all([
 const { data: postsData } = postsDataResponse
 
 const totalPage = computed(() => {
-  return Math.ceil(postsData.value.total / sitePageSize.value)
+  return Math.ceil(postsData.value.total / postsData.value.size)
 })
 
 const showTopIcon = (item) => {
