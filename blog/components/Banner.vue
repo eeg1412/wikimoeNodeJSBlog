@@ -48,6 +48,7 @@ const { data: bannerListData } = bannerListDataResponse
 
 const openLink = (item, midClick) => {
   const { link, isdefault, newtab } = item
+  if (!link) return
   console.log(item)
   if (newtab || midClick) {
     window.open(link)
