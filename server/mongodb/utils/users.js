@@ -8,9 +8,9 @@ exports.save = async function (parmas) {
 }
 
 
-exports.findOne = async function (parmas) {
+exports.findOne = async function (parmas, projection) {
     // document查询
-    return await usersModel.findOne(parmas);
+    return await usersModel.findOne(parmas, projection);
 }
 
 exports.updateOne = async function (filters, parmas) {

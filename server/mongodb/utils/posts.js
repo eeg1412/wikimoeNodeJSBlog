@@ -8,21 +8,21 @@ exports.save = async function (parmas) {
 }
 
 
-exports.findOne = async function (parmas) {
+exports.findOne = async function (parmas, projection) {
   // document查询
-  return await postsModel.findOne(parmas).populate('author', 'nickname _id photo').populate('sort').populate('tags').populate('coverImages');
+  return await postsModel.findOne(parmas, projection).populate('author', 'nickname _id photo').populate('sort').populate('tags').populate('coverImages');
 }
 
 // 查找所有
-exports.find = async function (parmas, sort) {
+exports.find = async function (parmas, sort, projection) {
   // document查询
-  return await postsModel.find(parmas).sort(sort);
+  return await postsModel.find(parmas, projection).sort(sort);
 }
 
 // 分页查询
-exports.findPage = async function (parmas, filter, sort, page, limit) {
+exports.findPage = async function (parmas, sort, page, limit, projection) {
   // document查询
-  const list = await postsModel.find(parmas, filter).populate('author', 'nickname _id photo').populate('sort').populate('tags').populate('coverImages').sort(sort).skip((page - 1) * limit).limit(limit);
+  const list = await postsModel.find(parmas, projection).populate('author', 'nickname _id photo').populate('sort').populate('tags').populate('coverImages').sort(sort).skip((page - 1) * limit).limit(limit);
   const total = await postsModel.countDocuments(parmas);
   // 查询失败
   if (!list || total === undefined) {

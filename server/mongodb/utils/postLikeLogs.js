@@ -20,9 +20,9 @@ exports.find = async function (parmas, sort, projection) {
 }
 
 // 分页查询
-exports.findPage = async function (parmas, sort, page, limit) {
+exports.findPage = async function (parmas, sort, page, limit, projection) {
   // document查询
-  const list = await postLikeLogsModel.find(parmas).populate('post', 'title _id excerpt').sort(sort).skip((page - 1) * limit).limit(limit);
+  const list = await postLikeLogsModel.find(parmas, projection).populate('post', 'title _id excerpt').sort(sort).skip((page - 1) * limit).limit(limit);
   const total = await postLikeLogsModel.countDocuments(parmas);
   // 查询失败
   if (!list || total === undefined) {

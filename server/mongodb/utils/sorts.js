@@ -8,15 +8,15 @@ exports.save = async function (parmas) {
 }
 
 
-exports.findOne = async function (parmas) {
+exports.findOne = async function (parmas, projection) {
   // document查询
-  return await sortsModel.findOne(parmas);
+  return await sortsModel.findOne(parmas, projection);
 }
 
 // 查找所有
-exports.find = async function (parmas, sort) {
+exports.find = async function (parmas, sort, projection) {
   // document查询
-  return await sortsModel.find(parmas).sort(sort);
+  return await sortsModel.find(parmas, projection).sort(sort);
 }
 
 exports.updateOne = async function (filters, parmas) {

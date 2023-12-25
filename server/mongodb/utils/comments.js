@@ -8,21 +8,21 @@ exports.save = async function (parmas) {
 }
 
 
-exports.findOne = async function (parmas) {
+exports.findOne = async function (parmas, projection) {
   // document查询
-  return await commentsModel.findOne(parmas).populate('parent', 'content _id').populate('post', 'title _id excerpt').populate('user', 'nickname _id photo');
+  return await commentsModel.findOne(parmas, projection).populate('parent', 'content _id').populate('post', 'title _id excerpt').populate('user', 'nickname _id photo');
 }
 
 // 查找所有
-exports.find = async function (parmas, sort) {
+exports.find = async function (parmas, sort, projection) {
   // document查询
-  return await commentsModel.find(parmas).sort(sort);
+  return await commentsModel.find(parmas, projection).sort(sort);
 }
 
 // 分页查询
-exports.findPage = async function (parmas, sort, page, limit, postFilter = 'title _id excerpt') {
+exports.findPage = async function (parmas, sort, page, limit, projection, options = {}) {
   // document查询
-  const list = await commentsModel.find(parmas).populate('parent', 'content _id status').populate('post', postFilter).populate('user', 'nickname _id photo').sort(sort).skip((page - 1) * limit).limit(limit);
+  const list = await commentsModel.find(parmas, projection).populate('parent', 'content _id status').populate('post', options.postFilter || 'title _id excerpt').populate('user', 'nickname _id photo').sort(sort).skip((page - 1) * limit).limit(limit);
   const total = await commentsModel.countDocuments(parmas);
   // 查询失败
   if (!list || total === undefined) {

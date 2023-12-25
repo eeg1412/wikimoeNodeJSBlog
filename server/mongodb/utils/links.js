@@ -8,21 +8,21 @@ exports.save = async function (parmas) {
 }
 
 
-exports.findOne = async function (parmas) {
+exports.findOne = async function (parmas, projection) {
   // document查询
-  return await linksModel.findOne(parmas);
+  return await linksModel.findOne(parmas, projection);
 }
 
 // 查找所有
-exports.find = async function (parmas, sort) {
+exports.find = async function (parmas, sort, projection) {
   // document查询
-  return await linksModel.find(parmas).sort(sort);
+  return await linksModel.find(parmas, projection).sort(sort);
 }
 
 // 分页查询
-exports.findPage = async function (parmas, sort, page, limit) {
+exports.findPage = async function (parmas, sort, page, limit, projection) {
   // document查询
-  const list = await linksModel.find(parmas).sort(sort).skip((page - 1) * limit).limit(limit);
+  const list = await linksModel.find(parmas, projection).sort(sort).skip((page - 1) * limit).limit(limit);
   const total = await linksModel.countDocuments(parmas);
   // 查询失败
   if (!list || total === undefined) {

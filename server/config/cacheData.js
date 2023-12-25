@@ -124,7 +124,7 @@ exports.getCommentList = async function (req, res, next) {
     _id: -1
   }
   const promise = new Promise((resolve, reject) => {
-    commentUtils.findPage({ status: 1 }, sort, 1, count, 'status _id alias').then((data) => {
+    commentUtils.findPage({ status: 1 }, sort, 1, count, { postFilter: 'status _id alias' }).then((data) => {
       let list = JSON.parse(JSON.stringify(data.list))
       // 需要获取的key数组
       const keys = ['_id', 'avatar', 'content', 'date', 'nickname', 'url', 'post', 'likes', 'isAdmin']

@@ -122,7 +122,7 @@ module.exports = async function (req, res, next) {
     }
   }
   const filter = '-content'
-  postUtils.findPage(params, filter, postSorting, page, size).then((data) => {
+  postUtils.findPage(params, postSorting, page, size, filter).then((data) => {
 
     // 返回格式list,total
     res.send({
