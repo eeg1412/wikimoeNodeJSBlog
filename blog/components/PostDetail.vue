@@ -1,6 +1,5 @@
 <template>
   <div class="post-detail-body" v-if="postData?.data">
-    <!-- {{ postData.data }} -->
     <!-- 头部 -->
     <div class="post-blog-head" v-if="postData.data.type === 1">
       <div class="post-author-avatar-body">
@@ -63,6 +62,15 @@
           >
         </p>
       </div>
+    </div>
+    <div v-else-if="3">
+      <template v-if="pageTemplate === 'almanac'">
+        <div>
+          <PageAlmanac />
+          <div class="mb-5"></div>
+          <PageSeeking />
+        </div>
+      </template>
     </div>
     <!-- 文章内容 -->
     <HtmlContent
@@ -318,7 +326,7 @@ switch (routeName) {
     type = [1, 2]
     break
   case 'pageDetail':
-    type = [2]
+    type = [3]
     break
 
   default:
@@ -331,6 +339,9 @@ const [postDataResponse] = await Promise.all([
   }),
 ])
 const { data: postData } = postDataResponse
+const pageTemplate = computed(() => {
+  return postData.value?.data?.template
+})
 const postid = postData.value.data._id
 // comment
 const commentPage = ref(1)
