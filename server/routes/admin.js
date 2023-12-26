@@ -591,6 +591,51 @@ const adminRouteSetting = [
     roleType: null,
     role: null
   },
+  // createBangumi
+  {
+    path: '/bangumi/create',
+    method: 'post',
+    middleware: [checkAuth],
+    controller: require('../api/admin/bangumi/createBangumi'),
+    roleType: null,
+    role: null
+  },
+  // deleteBangumi
+  {
+    path: '/bangumi/delete',
+    method: 'delete',
+    middleware: [checkAuth],
+    controller: require('../api/admin/bangumi/deleteBangumi'),
+    roleType: null,
+    role: null
+  },
+  // getBangumiDetail
+  {
+    path: '/bangumi/detail',
+    method: 'get',
+    middleware: [checkAuth],
+    controller: require('../api/admin/bangumi/getBangumiDetail'),
+    roleType: null,
+    role: null
+  },
+  // getBangumiList
+  {
+    path: '/bangumi/list',
+    method: 'get',
+    middleware: [checkAuth],
+    controller: require('../api/admin/bangumi/getBangumiList'),
+    roleType: null,
+    role: null
+  },
+  // updateBangumi
+  {
+    path: '/bangumi/update',
+    method: 'put',
+    middleware: [checkAuth],
+    controller: require('../api/admin/bangumi/updateBangumi'),
+    roleType: null,
+    role: null
+  },
 ]
 
 adminRouteSetting.forEach(item => {
