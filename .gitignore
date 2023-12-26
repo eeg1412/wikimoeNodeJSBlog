@@ -6,6 +6,7 @@ node_modules
 /server/public/upload/linkicon/*
 /server/public/upload/banner/*
 /server/public/upload/siteImg/*
+/server/public/upload/bangumi/*
 /server/public/content/uploadfile/*
 /server/public/admin/*
 /server/config/globalConfig.json
