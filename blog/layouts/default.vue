@@ -43,7 +43,12 @@
           active: leftMenuActive,
         }"
       >
-        <div class="blog-layout-sticky custom-scroll blog-layout-info-menu">
+        <div
+          class="blog-layout-sticky custom-scroll blog-layout-info-menu blog-layout-info-menu-bg"
+          :class="{
+            'no-bg': naviList.length > 9,
+          }"
+        >
           <div class="blog-layout-left-top-info-body">
             <!-- logo -->
             <div>
@@ -313,12 +318,17 @@ onUnmounted(() => {
   height: 100vh;
   height: 100dvh;
   overflow-y: auto;
+  /* 左下角圆角 */
+  border-bottom-left-radius: 20px;
+}
+.blog-layout-info-menu-bg {
   background-image: url('/img/menuBg.png');
   background-repeat: no-repeat;
   background-position: right bottom;
   background-size: 100%;
-  /* 左下角圆角 */
-  border-bottom-left-radius: 20px;
+}
+.blog-layout-info-menu-bg.no-bg {
+  background-image: none;
 }
 .blog-layout-sticky {
   position: sticky;
@@ -622,6 +632,12 @@ onUnmounted(() => {
   }
   .blog-top-bar-right-body-item.sidebar-btn {
     display: flex;
+  }
+}
+/* 高度小于900时 blog-layout-info-menu-bg 的背景图片为none */
+@media (max-height: 900px) {
+  .blog-layout-info-menu-bg {
+    background-image: none;
   }
 }
 </style>
