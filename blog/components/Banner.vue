@@ -65,7 +65,6 @@ const openLink = (item, midClick) => {
   width: 100%;
   margin-bottom: 0px;
   overflow: hidden;
-  margin-bottom: -5px;
 }
 .top-banner-list-item {
   width: 100%;

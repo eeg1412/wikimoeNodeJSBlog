@@ -443,7 +443,7 @@ onMounted(() => {
   padding: 20px;
 }
 .post-list-info-body {
-  margin-bottom: 12px;
+  margin-bottom: 5px;
 }
 .post-list-excerpt-body {
   margin-bottom: 12px;
