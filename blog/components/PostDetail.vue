@@ -78,6 +78,14 @@
           <PageLink />
         </div>
       </template>
+      <template v-else-if="pageTemplate === 'about'">
+        <PageAbout :author="postData.data.author" />
+      </template>
+      <template v-else>
+        <div>
+          <h2 class="post-title mb-3">{{ postData.data.title }}</h2>
+        </div>
+      </template>
     </div>
     <!-- 文章内容 -->
     <HtmlContent
