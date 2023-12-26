@@ -1,14 +1,20 @@
 <template>
-  <el-upload
-    class="avatar-uploader"
-    :show-file-list="false"
-    :auto-upload="false"
-    :on-change="uploadImage"
-    accept="image/*"
-  >
-    <img v-if="src" :src="src" class="avatar" />
-    <el-icon v-else class="avatar-uploader-icon"><Plus /></el-icon>
-  </el-upload>
+  <div>
+    <el-upload
+      class="avatar-uploader"
+      :show-file-list="false"
+      :auto-upload="false"
+      :on-change="uploadImage"
+      accept="image/*"
+    >
+      <img v-if="src" :src="src" class="avatar" />
+      <el-icon v-else class="avatar-uploader-icon"><Plus /></el-icon>
+    </el-upload>
+    <div @paste="handlePaste" class="avatar-uploader-click-tips">
+      单击这里粘贴图片
+    </div>
+  </div>
+
   <el-dialog
     v-model="cropperDialogOpen"
     :destroy-on-close="true"
@@ -109,6 +115,22 @@ export default {
       }
     }
 
+    const handlePaste = (event) => {
+      const items = (event.clipboardData || event.originalEvent.clipboardData)
+        .items
+      console.log(items)
+      for (let index in items) {
+        const item = items[index]
+        if (item.kind === 'file') {
+          const blob = item.getAsFile()
+          if (blob.type.startsWith('image/')) {
+            imgSrc.value = URL.createObjectURL(blob)
+            cropperDialogOpen.value = true
+          }
+        }
+      }
+    }
+
     const toCrop = () => {
       let config = {
         maxWidth: props.maxWidth,
@@ -143,7 +165,15 @@ export default {
       // emit('crop', base64)
       // cropperDialogOpen.value = false
     }
-    return { cropper, cropperDialogOpen, imgSrc, uploadImage, toCrop, uploder }
+    return {
+      handlePaste,
+      cropper,
+      cropperDialogOpen,
+      imgSrc,
+      uploadImage,
+      toCrop,
+      uploder,
+    }
   },
 }
 </script>
@@ -152,5 +182,11 @@ export default {
   max-height: 80vh;
   overflow-y: auto;
   overflow-x: hidden;
+}
+.avatar-uploader-click-tips {
+  font-size: 12px;
+  text-align: center;
+  border: 1px dashed #d9d9d9;
+  cursor: pointer;
 }
 </style>
