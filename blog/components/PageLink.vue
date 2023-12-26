@@ -12,6 +12,8 @@
         <img
           class="object-cover rounded-full"
           :src="item.icon"
+          :alt="item.sitename"
+          loading="lazy"
           v-if="item.icon"
         />
         <UAvatar :alt="item.sitename" v-else size="2xl" />
