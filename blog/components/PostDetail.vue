@@ -11,7 +11,7 @@
         />
       </div>
       <div class="post-right-info">
-        <h2 class="post-title">{{ postData.data.title }}</h2>
+        <h2 class="post-title mb-1">{{ postData.data.title }}</h2>
         <p class="post-extra cGray94">
           作者：{{ postData.data.author.nickname
           }}<span class="tenten">·</span>时间：{{
@@ -66,9 +66,16 @@
     <div v-else-if="3">
       <template v-if="pageTemplate === 'almanac'">
         <div>
+          <h2 class="post-title mb-3">{{ postData.data.title }}</h2>
           <PageAlmanac />
           <div class="mb-5"></div>
           <PageSeeking />
+        </div>
+      </template>
+      <template v-else-if="pageTemplate === 'link'">
+        <div>
+          <h2 class="post-title mb-3">{{ postData.data.title }}</h2>
+          <PageLink />
         </div>
       </template>
     </div>
@@ -309,7 +316,6 @@
   </div>
 </template>
 <script setup>
-import { useRoute } from 'vue-router'
 import {
   getDetailApi,
   putViewCountApi,
@@ -626,7 +632,6 @@ onMounted(() => {
 .post-title {
   font-size: 16px;
   font-weight: 700;
-  margin-bottom: 3px;
 }
 .post-extra {
   font-size: 12px;

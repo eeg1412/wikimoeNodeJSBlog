@@ -54,7 +54,7 @@
         <el-table-column prop="rss" label="RSS地址" min-width="250px" />
         <el-table-column prop="description" label="描述" min-width="250px" />
         <el-table-column prop="taxis" label="排序" width="100px" />
-        <el-table-column prop="status" label="状态" width="80px">
+        <el-table-column prop="status" label="状态" width="100px">
           <template #default="{ row }">
             <el-tag v-if="row.status === 1" type="success">显示</el-tag>
             <el-tag v-else type="danger">不显示</el-tag>
