@@ -896,3 +896,6 @@ input[type='password'] {
 .fade-leave-to {
   opacity: 0;
 }
+a {
+  -webkit-tap-highlight-color: transparent;
+}

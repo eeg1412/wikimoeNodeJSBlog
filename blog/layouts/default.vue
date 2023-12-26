@@ -371,6 +371,7 @@ onUnmounted(() => {
   z-index: 2;
   top: 0px;
   background: #ffffff;
+  border-radius: 20px;
 }
 .blog-layout-right-title-body {
   font-size: 20px;

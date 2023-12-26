@@ -5,7 +5,7 @@
         <div
           v-for="(item, index) in postsData.list"
           :key="item._id"
-          class="post-list-body-item pointer"
+          class="post-list-body-item pointer hover:bg-gray-50"
           @click="(e) => goPostDetail(e, item)"
           @click.middle="(e) => goPostDetail(e, item, true)"
         >
@@ -74,10 +74,10 @@
 
           <!-- 图片 -->
           <template v-if="item.type === 1">
-            <div class="post-list-blog-panel">
+            <div class="post-list-blog-panel group">
               <div class="post-list-blog-cover-body">
                 <WikimoeImage
-                  class="post-list-blog-cover-img"
+                  class="post-list-blog-cover-img border-t border-l border-r border-gray-200 border-solid group-hover:border-primary-300"
                   :src="
                     item.coverImages[0].thumfor || item.coverImages[0].filepath
                   "
@@ -92,15 +92,17 @@
                 />
                 <!-- 默认封面图 defaultCover -->
                 <WikimoeImage
-                  class="post-list-blog-cover-img"
+                  class="post-list-blog-cover-img border-t border-l border-r border-gray-200 border-solid group-hover:border-primary-300"
                   :src="defaultCover"
                   :alt="item.title"
                   v-else
                 />
               </div>
               <!-- title -->
-              <div class="post-list-title-body">
-                <div>{{ item.title }}</div>
+              <div
+                class="post-list-title-body border border-gray-200 border-solid group-hover:border-primary-300"
+              >
+                <div class="group-hover:text-primary-500">{{ item.title }}</div>
               </div>
             </div>
           </template>
@@ -432,13 +434,13 @@ onMounted(() => {
 })
 </script>
 <style scoped>
-.post-list-body {
+/* .post-list-body {
   padding: 15px;
   padding-bottom: 0px;
-}
+} */
 .post-list-body-item {
   @apply border-solid border-b border-gray-200;
-  margin-bottom: 15px;
+  padding: 20px;
 }
 .post-list-info-body {
   margin-bottom: 12px;
@@ -462,11 +464,9 @@ onMounted(() => {
 }
 .post-list-blog-cover-img {
   border-radius: 20px 20px 0px 0px;
-  @apply border-solid border-t border-r border-l border-gray-200;
 }
 .post-list-title-body {
   border-radius: 0px 0px 20px 20px;
-  @apply border-solid border border-gray-200 bg-white;
   padding: 10px 20px;
   box-sizing: border-box;
   font-size: 15px;
@@ -475,11 +475,10 @@ onMounted(() => {
   display: flex;
   justify-content: space-between;
   font-size: 13px;
-  padding-bottom: 12px;
 }
 .post-list-page-body {
   @apply text-gray-400;
-  padding-bottom: 20px;
+  padding: 20px 0px;
   /* 两边 中间  */
   justify-content: space-between;
   /* 垂直居中 */
