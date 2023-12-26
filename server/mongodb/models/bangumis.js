@@ -31,6 +31,11 @@ var bangumis = new Schema({
     type: [String],
     default: []
   },
+  // 状态 0: 不显示 1: 显示
+  status: {
+    type: Number,
+    default: 0
+  },
 }, { timestamps: true });
 
 module.exports = mongoose.model('bangumis', bangumis);

@@ -1,11 +1,12 @@
 const bangumiUtils = require('../../../mongodb/utils/bangumis')
 const utils = require('../../../utils/utils')
 const log4js = require('log4js')
+const mongoose = require('mongoose')
 const adminApiLog = log4js.getLogger('adminApi')
 
 module.exports = async function (req, res, next) {
 
-  const { title, cover, summary, rating, year, season, label } = req.body
+  const { title, cover, summary, rating, year, season, label, status } = req.body
   // 校验格式
   const params = {
     title,
@@ -14,7 +15,8 @@ module.exports = async function (req, res, next) {
     rating,
     year,
     season,
-    label
+    label,
+    status
   }
 
   const base64Reg = /^data:image\/\w+;base64,/

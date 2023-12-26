@@ -117,6 +117,16 @@
               <i class="fas fa-image pr10"></i>
               <template #title>横幅</template>
             </el-menu-item>
+            <!-- 追番 BangumiList -->
+            <el-menu-item
+              index="BangumiList"
+              @click="removeParam('BangumiList')"
+              @click.middle="openNewTab('BangumiList')"
+              :route="{ name: 'BangumiList' }"
+            >
+              <i class="fas fa-tv pr10"></i>
+              <template #title>追番</template>
+            </el-menu-item>
             <!-- 文章点赞日志 PostLikeLogList -->
             <el-menu-item
               index="PostLikeLogList"

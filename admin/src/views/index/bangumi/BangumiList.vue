@@ -1,0 +1,250 @@
+<template>
+  <div class="common-right-panel-form">
+    <div class="pb20">
+      <el-breadcrumb separator="/">
+        <el-breadcrumb-item>追番列表</el-breadcrumb-item>
+      </el-breadcrumb>
+    </div>
+    <div class="clearfix pb20">
+      <div class="fl common-top-search-form-body">
+        <!-- 检索用 -->
+        <el-form
+          :inline="true"
+          :model="params"
+          @submit.prevent
+          class="demo-form-inline"
+          @keypress.enter="getBangumiList(true)"
+        >
+          <el-form-item>
+            <el-input
+              v-model="params.keyword"
+              placeholder="请输入追番名称"
+              style="width: 160px"
+              clearable
+            ></el-input>
+          </el-form-item>
+          <!-- 数字 年份输入框 -->
+          <el-form-item>
+            <el-input-number
+              v-model="params.year"
+              placeholder="请输入年份"
+              style="width: 160px"
+            ></el-input-number>
+          </el-form-item>
+          <!-- 季度 选择器 1 2 3 4 -->
+          <el-form-item>
+            <el-select
+              v-model="params.season"
+              placeholder="请选择季度"
+              clearable
+            >
+              <el-option label="冬季新番" :value="1"></el-option>
+              <el-option label="春季新番" :value="2"></el-option>
+              <el-option label="夏季新番" :value="3"></el-option>
+              <el-option label="秋季新番" :value="4"></el-option>
+            </el-select>
+          </el-form-item>
+          <!-- 状态 0不显示 1显示 -->
+          <el-form-item>
+            <el-select
+              v-model="params.status"
+              placeholder="请选择状态"
+              style="width: 100px"
+              clearable
+            >
+              <el-option label="显示" :value="1"></el-option>
+              <el-option label="不显示" :value="0"></el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item>
+            <el-button type="primary" @click="getBangumiList(true)"
+              >搜索</el-button
+            >
+          </el-form-item>
+        </el-form>
+      </div>
+      <div class="fr">
+        <!-- 按钮用 -->
+        <!-- 追加 -->
+        <el-button type="primary" @click="handleAdd">追加</el-button>
+      </div>
+    </div>
+    <!-- 追番 -->
+    <div class="mb20">
+      <el-table :data="bangumiList" row-key="_id" border>
+        <!-- 封面 cover -->
+        <el-table-column label="封面" width="90">
+          <template #default="{ row }">
+            <!-- el-image -->
+            <el-image
+              v-if="row.cover"
+              style="width: 64px; height: 64px"
+              :src="row.cover"
+              fit="contain"
+              :preview-src-list="[row.cover]"
+              :preview-teleported="true"
+            ></el-image>
+          </template>
+        </el-table-column>
+        <!-- 标题 title -->
+        <el-table-column prop="title" label="标题" min-width="200px" />
+        <!-- 简评 -->
+        <el-table-column prop="summary" label="简评" min-width="250px" />
+        <!-- 评分 rating -->
+        <el-table-column prop="rating" label="评分" width="60px" />
+        <!-- 年份 year -->
+        <el-table-column prop="year" label="年份" width="60px" />
+        <!-- 季度 season -->
+        <el-table-column prop="season" label="季度" width="110px">
+          <!-- 1冬季新番 2春季新番 3夏季新番 4秋季新番 -->
+          <template #default="{ row }">
+            <span v-if="row.season === 1">冬季新番</span>
+            <span v-else-if="row.season === 2">春季新番</span>
+            <span v-else-if="row.season === 3">夏季新番</span>
+            <span v-else-if="row.season === 4">秋季新番</span>
+          </template>
+        </el-table-column>
+        <!-- 标记 字符串数组 label -->
+        <el-table-column prop="label" label="标记">
+          <template #default="{ row }">
+            <el-tag v-for="item in row.label" :key="item" type="success">{{
+              item
+            }}</el-tag>
+          </template>
+        </el-table-column>
+        <!-- 状态 -->
+        <el-table-column prop="status" label="状态" width="100px">
+          <template #default="{ row }">
+            <el-tag v-if="row.status === 1" type="success">显示</el-tag>
+            <el-tag v-else type="danger">不显示</el-tag>
+          </template>
+        </el-table-column>
+
+        <el-table-column label="操作" width="140" fixed="right">
+          <template #default="{ row }">
+            <el-button type="primary" size="small" @click="goEdit(row._id)"
+              >编辑</el-button
+            >
+            <el-button
+              type="danger"
+              size="small"
+              @click="deleteBangumi(row._id)"
+              >删除</el-button
+            >
+          </template>
+        </el-table-column>
+      </el-table>
+    </div>
+    <!-- 分页 -->
+    <div class="clearfix">
+      <el-pagination
+        class="fr"
+        background
+        layout="total, prev, pager, next"
+        :total="total"
+        v-model:current-page="params.page"
+      />
+    </div>
+  </div>
+</template>
+<script>
+import { useRoute, useRouter } from 'vue-router'
+import { authApi } from '@/api'
+import { ElMessage, ElMessageBox } from 'element-plus'
+import { onMounted, reactive, ref, watch } from 'vue'
+import { setSessionParams, getSessionParams } from '@/utils/utils'
+export default {
+  setup() {
+    const route = useRoute()
+    const router = useRouter()
+    const bangumiList = ref([])
+    const params = reactive({
+      page: 1,
+      size: 10,
+      keyword: '',
+      year: null,
+      season: null,
+    })
+    const total = ref(0)
+    const getBangumiList = (resetPage) => {
+      if (resetPage) {
+        params.page = 1
+      }
+      authApi
+        .getBangumiList(params)
+        .then((res) => {
+          bangumiList.value = res.data.list
+          total.value = res.data.total
+          setSessionParams(route.name, params)
+        })
+        .catch((err) => {
+          console.log(err)
+        })
+    }
+    const handleAdd = () => {
+      router.push({
+        name: 'BangumiAdd',
+      })
+    }
+    // 监听 params.page 的变化
+    watch(
+      () => params.page,
+      (newVal, oldVal) => {
+        getBangumiList()
+      }
+    )
+
+    const goEdit = (id) => {
+      router.push({
+        name: 'BangumiEdit',
+        params: {
+          id,
+        },
+      })
+    }
+    const deleteBangumi = (id) => {
+      ElMessageBox.confirm('确定要删除吗？', {
+        confirmButtonText: '是',
+        cancelButtonText: '否',
+        type: 'warning',
+      })
+        .then(() => {
+          const params = {
+            id,
+          }
+          authApi
+            .deleteBangumi(params)
+            .then(() => {
+              ElMessage.success('删除成功')
+              getBangumiList()
+            })
+            .catch(() => {})
+        })
+        .catch(() => {})
+    }
+
+    const initParams = () => {
+      const sessionParams = getSessionParams(route.name)
+      if (sessionParams) {
+        params.page = sessionParams.page
+        params.size = sessionParams.size
+        params.keyword = sessionParams.keyword
+      }
+    }
+    onMounted(() => {
+      initParams()
+      getBangumiList()
+    })
+    return {
+      bangumiList,
+      params,
+      total,
+      getBangumiList,
+      handleAdd,
+      goEdit,
+      deleteBangumi,
+    }
+  },
+}
+</script>
+<style lang=""></style>

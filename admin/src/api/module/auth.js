@@ -402,5 +402,38 @@ export default function (api) {
         shouldAdminJWT: true
       })
     },
+    // /bangumi/create
+    createBangumi (data) {
+      return api.post('/bangumi/create', data, {
+        shouldAdminJWT: true
+      })
+    },
+    // delete /bangumi/delete
+    deleteBangumi (data) {
+      return api.delete('/bangumi/delete', {
+        params: data,
+        shouldAdminJWT: true
+      })
+    },
+    // get /bangumi/list
+    getBangumiList (data) {
+      return api.get('/bangumi/list', {
+        params: data,
+        shouldAdminJWT: true
+      })
+    },
+    // get /bangumi/detail
+    getBangumiDetail (data) {
+      return api.get('/bangumi/detail', {
+        params: data,
+        shouldAdminJWT: true
+      })
+    },
+    // put /bangumi/update
+    updateBangumi (data) {
+      return api.put('/bangumi/update', data, {
+        shouldAdminJWT: true
+      })
+    },
   }
 }

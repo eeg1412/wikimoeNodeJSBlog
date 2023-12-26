@@ -121,6 +121,24 @@ const routes = [
         name: 'CommentEdit',
         component: () => import(/* webpackChunkName: "CommentEditor" */ '../views/index/comment/CommentEditor.vue')
       },
+      // BangumiList
+      {
+        path: '/bangumi/list',
+        name: 'BangumiList',
+        component: () => import(/* webpackChunkName: "BangumiList" */ '../views/index/bangumi/BangumiList.vue')
+      },
+      // BangumiEditor
+      {
+        path: '/bangumi/editor/:id',
+        name: 'BangumiEdit',
+        component: () => import(/* webpackChunkName: "BangumiEditor" */ '../views/index/bangumi/BangumiEditor.vue')
+      },
+      // BangumiEditor
+      {
+        path: '/bangumi/add',
+        name: 'BangumiAdd',
+        component: () => import(/* webpackChunkName: "BangumiEditor" */ '../views/index/bangumi/BangumiEditor.vue')
+      },
       // SidebarList
       {
         path: '/sidebar/list',

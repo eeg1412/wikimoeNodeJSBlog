@@ -5,7 +5,7 @@ const adminApiLog = log4js.getLogger('adminApi')
 
 module.exports = async function (req, res, next) {
   // banguminame	String	是	否	无	追番名称
-  const { title, cover, summary, rating, year, season, label, id, __v } = req.body
+  const { title, cover, summary, rating, year, season, label, status, id, __v } = req.body
   if (!id) {
     res.status(400).json({
       errors: [{
@@ -31,7 +31,8 @@ module.exports = async function (req, res, next) {
     rating,
     year,
     season,
-    label
+    label,
+    status
   }
 
   const base64Reg = /^data:image\/\w+;base64,/
