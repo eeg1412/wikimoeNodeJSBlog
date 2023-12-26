@@ -46,7 +46,7 @@
         <div
           class="blog-layout-sticky custom-scroll blog-layout-info-menu blog-layout-info-menu-bg"
           :class="{
-            'no-bg': naviList.length > 9,
+            'no-bg': naviList.length > 10,
           }"
         >
           <div class="blog-layout-left-top-info-body">
@@ -291,11 +291,7 @@ onUnmounted(() => {
   width: 300px;
   box-sizing: border-box;
   flex: 0 0 300px;
-  background: #fffdfd;
   border-right: 2px solid #fff7f9;
-  /* 左上角,左下角20px 圆角 */
-  border-top-left-radius: 20px;
-  border-bottom-left-radius: 20px;
 }
 .blog-layout-content-body {
   background-color: #ffffff;
@@ -307,11 +303,7 @@ onUnmounted(() => {
   width: 300px;
   box-sizing: border-box;
   flex: 0 0 300px;
-  background: #ffffff;
   border-left: 2px solid #fff7f9;
-  /* 右上角,右下角20px 圆角 */
-  border-top-right-radius: 20px;
-  border-bottom-right-radius: 20px;
 }
 .blog-layout-info-menu {
   padding: 20px;
@@ -333,6 +325,10 @@ onUnmounted(() => {
 .blog-layout-sticky {
   position: sticky;
   top: 0px;
+  background-color: #fffdfd;
+  /* 左上角,左下角20px 圆角 */
+  border-top-left-radius: 20px;
+  border-bottom-left-radius: 20px;
 }
 .blog-layout-sitelogo {
   width: 100%;
@@ -367,6 +363,8 @@ onUnmounted(() => {
   position: sticky;
   top: 0px;
   z-index: 1;
+  background: #ffffff;
+  border-bottom-right-radius: 20px;
 }
 .page-loading .blog-layout-right-box {
   position: relative;
@@ -381,7 +379,8 @@ onUnmounted(() => {
   z-index: 2;
   top: 0px;
   background: #ffffff;
-  border-radius: 20px;
+  /* 右上圆角 */
+  border-top-right-radius: 20px;
 }
 .blog-layout-right-title-body {
   font-size: 20px;
