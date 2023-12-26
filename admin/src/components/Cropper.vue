@@ -31,6 +31,7 @@
         :aspect-ratio="aspectRatio"
         :src="imgSrc"
         :viewMode="2"
+        :autoCropArea="1"
         dragMode="move"
         preview=".preview"
       />
@@ -179,14 +180,20 @@ export default {
 </script>
 <style lang="less">
 .cropper-body {
-  max-height: 80vh;
-  overflow-y: auto;
-  overflow-x: hidden;
+  height: calc(100vh - 300px);
+  min-height: 300px;
+  overflow: hidden;
+}
+.com-cropper {
+  width: 100%;
+  height: 100%;
 }
 .avatar-uploader-click-tips {
   font-size: 12px;
   text-align: center;
   border: 1px dashed #d9d9d9;
   cursor: pointer;
+  line-height: 16px;
+  padding: 10px 0;
 }
 </style>
