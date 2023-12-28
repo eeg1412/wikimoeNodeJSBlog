@@ -31,6 +31,16 @@
               <el-icon v-else class="avatar-uploader-icon"><Plus /></el-icon>
             </el-upload>
           </el-form-item>
+          <!-- siteFavicon -->
+          <el-form-item label="站点图标" prop="siteFavicon">
+            <Cropper
+              :aspectRatio="256 / 256"
+              :width="256"
+              :height="256"
+              :src="siteSettingsForm.siteFavicon"
+              @crop="setSiteFavicon"
+            ></Cropper>
+          </el-form-item>
           <!-- siteDefaultCover -->
           <el-form-item label="默认封面图" prop="siteDefaultCover">
             <Cropper
@@ -485,6 +495,8 @@ export default {
       siteSubTitle: '',
       // 站点LOGO
       siteLogo: '',
+      // 站点图标
+      siteFavicon: '',
       // 默认封面图
       siteDefaultCover: '',
       // 站点描述
@@ -539,6 +551,9 @@ export default {
     }
     const setSiteDefaultCover = (crop) => {
       siteSettingsForm.siteDefaultCover = crop
+    }
+    const setSiteFavicon = (crop) => {
+      siteSettingsForm.siteFavicon = crop
     }
     const siteSettingsSubmit = () => {
       siteSettingsFormRef.value.validate((valid) => {
@@ -875,6 +890,7 @@ export default {
       commentSettingsRules,
       setSiteLogo,
       setSiteDefaultCover,
+      setSiteFavicon,
       commentSettingsSubmit,
       // RSS设置
       rssSettingsFormRef,

@@ -31,6 +31,8 @@ const initGlobalConfig = async () => {
     siteLogo: '',
     // 站点封面
     siteDefaultCover: '',
+    // 站点Favicon
+    siteFavicon: '',
     // 站点描述
     siteDescription: '',
     // 站点关键词

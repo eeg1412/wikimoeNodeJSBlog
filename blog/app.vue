@@ -10,7 +10,38 @@ import { useOptionStore } from '@/store/options'
 import { storeToRefs } from 'pinia'
 const optionStore = useOptionStore()
 const { getOptions } = optionStore
-getOptions()
+await getOptions()
+const { options } = storeToRefs(optionStore)
+useHead({
+  titleTemplate: (titleChunk) => {
+    return titleChunk
+      ? `${options.value.siteTitle} - ${titleChunk}`
+      : options.value.siteTitle
+  },
+  title: options.value.siteSubTitle,
+  meta: [
+    { name: 'description', content: options.value.siteDescription },
+    // OGP
+    { property: 'og:type', content: 'website' },
+    { property: 'og:site_name', content: options.value.siteTitle },
+    { property: 'og:title', content: options.value.siteTitle },
+    { property: 'og:description', content: options.value.siteDescription },
+    { property: 'og:url', content: options.value.siteUrl },
+    {
+      property: 'og:image',
+      content: options.value.siteUrl + options.value.siteDefaultCover,
+    },
+    // twitter
+    { name: 'twitter:card', content: 'summary_large_image' },
+  ],
+  link: [
+    {
+      rel: 'icon',
+      type: 'image/x-icon',
+      href: options.value.siteFavicon,
+    },
+  ],
+})
 onMounted(() => {
   // 检查uuid
   checkUuid()

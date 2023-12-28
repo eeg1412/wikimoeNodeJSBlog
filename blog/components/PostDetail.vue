@@ -436,6 +436,7 @@ const refreshCommentList = () => {
   commentPage.value = 1
   getCommentList(true)
 }
+
 watch(
   () => commentPage.value,
   () => {
@@ -612,6 +613,17 @@ const likePost = () => {
       likePostIsLoading.value = false
     })
 }
+
+// 设置SEO
+useSeoMeta({
+  title: postData.value?.data?.title || '',
+  ogTitle: postData.value?.data?.title || '',
+  description: postData.value?.data?.excerpt || '',
+  ogDescription: postData.value?.data?.excerpt || '',
+  ogImage: postData.value?.data?.coverImages[0]?.thumfor
+    ? options.value.siteUrl + postData.value?.data?.coverImages[0]?.thumfor
+    : options.value.siteUrl + options.value.siteDefaultCover,
+})
 onMounted(() => {
   getCommentList()
   putViewCount()
