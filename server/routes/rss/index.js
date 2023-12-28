@@ -24,7 +24,7 @@ router.get('/', async function (req, res, next) {
     _id: -1
   }
   const size = parseInt(siteRssMaxCount) || 1
-  const data = await postUtils.findPage(params, '', sort, 1, size)
+  const data = await postUtils.findPage(params, sort, 1, size, undefined, { authorFilter: 'nickname' })
   const { list } = data
   const feed = new Feed({
     title: siteTitle,
