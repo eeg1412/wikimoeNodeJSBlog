@@ -21,6 +21,24 @@ useHead({
   title: options.value.siteSubTitle,
   meta: [
     { name: 'description', content: options.value.siteDescription },
+    // name="keywords"
+    { name: 'keywords', content: options.value.siteKeywords },
+    // name="generator"
+    { name: 'generator', content: 'wikimoeBlog' },
+    // itemprop="name"
+    { itemprop: 'name', content: options.value.siteTitle },
+    // itemprop="image"
+    {
+      itemprop: 'image',
+      content: options.value.siteUrl + options.value.siteDefaultCover,
+    },
+    // rel="alternate" type="application/rss+xml" title="RSS"
+    {
+      rel: 'alternate',
+      type: 'application/rss+xml',
+      title: 'RSS',
+      href: options.value.siteUrl + '/rss',
+    },
     // OGP
     { property: 'og:type', content: 'website' },
     { property: 'og:site_name', content: options.value.siteTitle },

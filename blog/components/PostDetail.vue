@@ -616,9 +616,12 @@ const likePost = () => {
 
 // 设置SEO
 useSeoMeta({
-  title: postData.value?.data?.title || '',
+  title: postData.value?.data?.title || postData.value?.data?.excerpt || '',
   ogTitle: postData.value?.data?.title || '',
   description: postData.value?.data?.excerpt || '',
+  keywords:
+    postData.value?.data?.tags.map((item) => item.tagname).join(',') ||
+    options.value.siteKeywords,
   ogDescription: postData.value?.data?.excerpt || '',
   ogImage: postData.value?.data?.coverImages[0]?.thumfor
     ? options.value.siteUrl + postData.value?.data?.coverImages[0]?.thumfor
