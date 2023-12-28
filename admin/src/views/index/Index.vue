@@ -2,7 +2,7 @@
   <div class="common-layout">
     <el-container>
       <el-aside
-        class="common-aside"
+        class="common-aside custom-scroll scroll-not-hide"
         :class="{ isCollapse: isCollapse, phoneMenuOpen: phoneMenuOpen }"
       >
         <div class="common-aside-body">
@@ -127,46 +127,53 @@
               <i class="fas fa-tv pr10"></i>
               <template #title>追番</template>
             </el-menu-item>
-            <!-- 文章点赞日志 PostLikeLogList -->
-            <el-menu-item
-              index="PostLikeLogList"
-              @click="removeParam('PostLikeLogList')"
-              @click.middle="openNewTab('PostLikeLogList')"
-              :route="{ name: 'PostLikeLogList' }"
-            >
-              <i class="fas fa-thumbs-up pr10"></i>
-              <template #title>文章点赞日志</template>
-            </el-menu-item>
-            <!-- 评论点赞日志 CommentLikeLogList -->
-            <el-menu-item
-              index="CommentLikeLogList"
-              @click="removeParam('CommentLikeLogList')"
-              @click.middle="openNewTab('CommentLikeLogList')"
-              :route="{ name: 'CommentLikeLogList' }"
-            >
-              <i class="fas fa-thumbs-up pr10"></i>
-              <template #title>评论点赞日志</template>
-            </el-menu-item>
-            <!-- 读者访问日志 ReaderlogList -->
-            <el-menu-item
-              index="ReaderlogList"
-              @click="removeParam('ReaderlogList')"
-              @click.middle="openNewTab('ReaderlogList')"
-              :route="{ name: 'ReaderlogList' }"
-            >
-              <i class="fas fa-user-clock pr10"></i>
-              <template #title>读者访问日志</template>
-            </el-menu-item>
-            <!-- 邮件发送日志  EmailSendHistoryList -->
-            <el-menu-item
-              index="EmailSendHistoryList"
-              @click="removeParam('EmailSendHistoryList')"
-              @click.middle="openNewTab('EmailSendHistoryList')"
-              :route="{ name: 'EmailSendHistoryList' }"
-            >
-              <i class="fas fa-envelope pr10"></i>
-              <template #title>邮件发送日志</template>
-            </el-menu-item>
+            <el-sub-menu>
+              <template #title>
+                <!-- 日志图标 -->
+                <i class="fas fa-book pr10"></i>日志
+              </template>
+              <!-- 文章点赞日志 PostLikeLogList -->
+              <el-menu-item
+                index="PostLikeLogList"
+                @click="removeParam('PostLikeLogList')"
+                @click.middle="openNewTab('PostLikeLogList')"
+                :route="{ name: 'PostLikeLogList' }"
+              >
+                <i class="fas fa-thumbs-up pr10"></i>
+                <template #title> 文章点赞日志</template>
+              </el-menu-item>
+              <!-- 评论点赞日志 CommentLikeLogList -->
+              <el-menu-item
+                index="CommentLikeLogList"
+                @click="removeParam('CommentLikeLogList')"
+                @click.middle="openNewTab('CommentLikeLogList')"
+                :route="{ name: 'CommentLikeLogList' }"
+              >
+                <i class="fas fa-thumbs-up pr10"></i>
+                <template #title>评论点赞日志</template>
+              </el-menu-item>
+              <!-- 读者访问日志 ReaderlogList -->
+              <el-menu-item
+                index="ReaderlogList"
+                @click="removeParam('ReaderlogList')"
+                @click.middle="openNewTab('ReaderlogList')"
+                :route="{ name: 'ReaderlogList' }"
+              >
+                <i class="fas fa-user-clock pr10"></i>
+                <template #title>读者访问日志</template>
+              </el-menu-item>
+              <!-- 邮件发送日志  EmailSendHistoryList -->
+              <el-menu-item
+                index="EmailSendHistoryList"
+                @click="removeParam('EmailSendHistoryList')"
+                @click.middle="openNewTab('EmailSendHistoryList')"
+                :route="{ name: 'EmailSendHistoryList' }"
+              >
+                <i class="fas fa-envelope pr10"></i>
+                <template #title>邮件发送日志</template>
+              </el-menu-item>
+            </el-sub-menu>
+
             <!-- 设置 -->
             <el-menu-item
               index="Config"
