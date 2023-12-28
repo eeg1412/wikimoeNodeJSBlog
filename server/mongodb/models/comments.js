@@ -68,6 +68,11 @@ var comments = new Schema({
     type: Object,
     default: {}
   },
+  // 需要通知父级评论的用户的Flag
+  needSendMailToParent: {
+    type: Boolean,
+    default: false
+  },
   // 评论状态,0待审核,1审核通过,2未通过,查询评论时注意父级评论的状态
   status: {
     type: Number,

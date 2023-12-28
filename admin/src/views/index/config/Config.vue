@@ -300,6 +300,10 @@
                 v-model:content="emailSettingsForm.emailSendToMeTemplate"
                 v-if="activeName === 'email'"
               />
+              <!-- siteTitle -->
+              <div>${siteTitle}为站点名称</div>
+              <div>${title}为文章标题</div>
+              <div>${nickname}为评论者昵称</div>
               <div>${comment}为评论内容</div>
             </el-form-item>
             <!-- 通知评论者模板 -->
@@ -312,7 +316,14 @@
                 v-model:content="emailSettingsForm.emailSendToCommenterTemplate"
                 v-if="activeName === 'email'"
               />
+              <!-- siteTitle -->
+              <div>${siteTitle}为站点名称</div>
+              <div>${title}为文章标题</div>
+              <!-- nickname -->
+              <div>${nickname}为评论者昵称</div>
               <div>${comment}为评论内容</div>
+              <div>${parentNickname}为被回复者昵称</div>
+              <div>${parentComment}为被回复的内容</div>
             </el-form-item>
 
             <el-form-item label="发送选项" prop="emailSendOptions">

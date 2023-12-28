@@ -101,6 +101,15 @@ module.exports = async function (req, res, next) {
       // 如果是审核通过，那么就更新文章评论数+1
       if (newStatus === 1) {
         postUtils.updateOne({ _id: commentInfo.post }, { $inc: { comnum: 1 } })
+        // 发送邮件通知
+        // 包含parent时,needSendMailToParent为true
+        if (commentInfo.parent && commentInfo.needSendMailToParent) {
+          // 发送回复邮件通知
+          // 发送邮件通知
+          utils.sendReplyCommentNotice(null, commentInfo, null)
+          // 更新needSendMailToParent为false
+          commentUtils.updateOne({ _id: commentInfo._id }, { needSendMailToParent: false })
+        }
       }
       // 如果是审核未通过或者待评论，那么就更新文章评论数-1
       if ((newStatus === 2 || newStatus === 0) && oldStatus === 1) {

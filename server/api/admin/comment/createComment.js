@@ -71,6 +71,10 @@ module.exports = async function (req, res, next) {
     utils.IP2LocationUtils(ip, data._id, commentUtils)
     // 异步更新文章评论数
     postUtils.updateOne({ _id: post }, { $inc: { comnum: 1 } })
+    // 发送邮件通知
+    if (parent) {
+      utils.sendReplyCommentNotice(postInfo, String(data._id))
+    }
   }).catch((err) => {
     console.error(err)
     res.status(400).json({

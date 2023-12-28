@@ -273,6 +273,7 @@
                     <CommentForm
                       :postid="postid"
                       :commentid="commentid"
+                      :parentNickname="item.nickname || item.user?.nickname"
                       @refresh="refreshCommentList"
                       v-if="commentid === item._id"
                     />
@@ -433,7 +434,7 @@ const closeComment = () => {
 }
 const refreshCommentList = () => {
   commentPage.value = 1
-  getCommentList()
+  getCommentList(true)
 }
 watch(
   () => commentPage.value,

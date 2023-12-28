@@ -144,6 +144,21 @@ module.exports = async function (req, res, next) {
     params.parent = parent
   }
 
+  const emailSettings = global.$globalConfig.emailSettings
+  const { emailEnable, emailSendOptions } = emailSettings
+  // 立即发送flag
+  let sendParentMailFlag = false
+  //  判断emailEnable为true，且emailSendOptions包含字符串replyComment且包含parent时
+  if (emailEnable && emailSendOptions.includes('replyComment') && parent) {
+    // 根据siteEnableCommentReview判断是否需要审核
+    if (siteEnableCommentReview) {
+      // 需要审核则params的needSendMailToParent 为true
+      params.needSendMailToParent = true
+    } else {
+      // 不需要审核则立即发送
+      sendParentMailFlag = true
+    }
+  }
 
   // save
   commentUtils.save(params).then((data) => {
@@ -160,7 +175,12 @@ module.exports = async function (req, res, next) {
       postUtils.updateOne({ _id: post }, { $inc: { comnum: 1 } }, true)
       cacheDataUtils.getCommentList()
     }
-    // TODO: 发送邮件通知
+    utils.sendCommentAddNotice(postInfo, data)
+    if (sendParentMailFlag) {
+      // 发送回复邮件通知
+      // 获取父评论信息
+      utils.sendReplyCommentNotice(postInfo, data)
+    }
   }).catch((err) => {
     console.error(err)
     res.status(400).json({

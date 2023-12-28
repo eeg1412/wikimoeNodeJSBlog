@@ -6,6 +6,11 @@ const fs = require('fs')
 const path = require('path');
 const { IP2Location } = require("ip2location-nodejs");
 const parser = require('ua-parser-js');
+const nodemailer = require('nodemailer')
+const emailSendHistoryUtils = require('../mongodb/utils/emailSendHistorys')
+const postUtils = require('../mongodb/utils/posts')
+const commentUtils = require('../mongodb/utils/comments')
+const { type } = require('os')
 
 exports.creatSha256Str = function (str) {
   const sha256 = crypto.createHash('sha256')
@@ -280,4 +285,198 @@ exports.getTodayEndTime = function () {
   date.setMinutes(59)
   date.setSeconds(59)
   return date
+}
+
+// 写一个用nodemailer发送邮件的方法，参数是收件人邮箱和邮件内容和标题
+exports.sendEmail = function (to, content, subject) {
+  const emailSettings = global.$globalConfig.emailSettings
+  const siteSettings = global.$globalConfig.siteSettings
+  const { siteTitle } = siteSettings
+  if (!emailSettings) {
+    console.error('请在后台设置邮箱')
+    return
+  }
+  const { emailSmtpHost, emailSmtpPort, emailSender, emailPassword } = emailSettings
+  // 以上参数缺一不可
+  if (!emailSmtpHost || !emailSmtpPort || !emailSender || !emailPassword) {
+    console.error('请在后台设置邮箱')
+    return
+  }
+  const transporter = nodemailer.createTransport({
+    host: emailSmtpHost,
+    port: emailSmtpPort,
+    secure: true, // true for 465, false for other ports
+    auth: {
+      user: emailSender,
+      pass: emailPassword
+    }
+  })
+  const mailOptions = {
+    from: emailSender,
+    to,
+    subject,
+    html: content
+  }
+  const promise = new Promise((resolve, reject) => {
+    transporter.sendMail(mailOptions, (error, info) => {
+      if (error) {
+        console.error(error)
+        reject(error)
+        return
+      }
+      console.info('Message sent: %s', info.messageId)
+      resolve(info)
+    })
+  })
+  promise.then((info) => {
+    const emailSendHistory = {
+      to,
+      content,
+      status: 1
+    }
+    emailSendHistoryUtils.save(emailSendHistory)
+  }).catch((err) => {
+    const emailSendHistory = {
+      to,
+      content,
+      status: 0,
+      errInfo: JSON.stringify(err)
+    }
+    emailSendHistoryUtils.save(emailSendHistory)
+  })
+  return promise
+}
+// 发送评论添加通知，参数是文章信息post，评论信息comment
+exports.sendCommentAddNotice = function (post, comment) {
+  const siteSettings = global.$globalConfig.siteSettings
+  const emailSettings = global.$globalConfig.emailSettings
+  const { emailSendToMeTemplate, emailEnable, emailSendOptions, emailReceiver } = emailSettings
+
+  // 如果没有设置emailSendToMeTemplate，就不发送邮件
+  if (!emailSendToMeTemplate) {
+    console.error('请在后台设置emailSendToMeTemplate')
+    return
+  }
+
+  // 判断emailEnable为true，且emailSendOptions包含字符串receiveComment
+  if (emailEnable && emailSendOptions.includes('receiveComment')) {
+    const { siteUrl, siteTitle } = siteSettings
+    const { title, _id, alias, excerpt } = post
+    let { nickname, content, user } = comment
+    if (user) {
+      nickname = user.nickname
+    }
+    const to = emailReceiver
+    const subject = `【${siteTitle}】的文章/推文有了新的评论`
+    let contentHtml = emailSendToMeTemplate
+    // 替换模板中的变量
+    // ${comment}为评论内容
+    // ${nickname}为评论者昵称
+    // ${title}为文章标题
+    // 其中${title}需要替换成a标签
+    // 其中${siteTitle}为站点名称需要替换成a标签
+    // 开始替换
+    contentHtml = contentHtml.replace(/\${comment}/g, content)
+    contentHtml = contentHtml.replace(/\${nickname}/g, nickname)
+    contentHtml = contentHtml.replace(/\${title}/g, `<a href="${siteUrl}/post/${alias || _id}">${title || excerpt}</a>`)
+    contentHtml = contentHtml.replace(/\${siteTitle}/g, `<a href="${siteUrl}">${siteTitle}</a>`)
+    this.sendEmail(to, contentHtml, subject)
+  }
+
+}
+
+// 发送回复评论通知，参数是文章信息post，评论信息comment，父级评论信息parentComment
+exports.sendReplyCommentNotice = async function (post, comment) {
+  if (typeof comment === 'string') {
+    // 如果comment是字符串，说明是评论id，需要查询评论信息
+    comment = await commentUtils.findOne({ _id: comment }, '', { userFilter: 'nickname _id email' })
+  }
+  if (!comment) {
+    console.error('comment为必须参数')
+    return
+  }
+
+  // 如果不存在post就查询post
+  if (!post) {
+    post = await postUtils.findOne({ _id: comment.post })
+    if (!post) {
+      console.error('post不存在')
+      return
+    }
+  }
+
+
+  let parentComment = await commentUtils.findOne({ _id: comment.parent }, '', { userFilter: 'nickname _id email' })
+  if (!parentComment) {
+    console.error('parentComment不存在')
+    return
+  }
+
+  const parentCommentUser = parentComment.user || {}
+  const commentUser = comment.user || {}
+  const parentCommentIsAdmin = parentComment.user ? true : false
+  const commentIsAdmin = comment.user ? true : false
+
+  const parentCommentEmail = parentComment.email || parentCommentUser.email
+  const commentEmail = comment.email || commentUser.email
+
+  if (!parentCommentEmail) {
+    console.error('parentComment.email不存在')
+    return
+  }
+  if (parentCommentEmail === commentEmail) {
+    console.log('父级评论者邮箱和评论者邮箱相同，不发送邮件')
+    return
+  }
+  if (parentCommentIsAdmin) {
+    console.log('父级评论者是管理员，不发送邮件')
+    return
+  }
+  if (parentComment.status !== 1) {
+    console.log('父级评论未审核通过，不发送邮件')
+    return
+  }
+  const siteSettings = global.$globalConfig.siteSettings
+  const emailSettings = global.$globalConfig.emailSettings
+  const { emailSendToCommenterTemplate, emailEnable, emailSendOptions } = emailSettings
+
+  // 如果没有设置emailSendToCommenterTemplate，就不发送邮件
+  if (!emailSendToCommenterTemplate) {
+    console.error('请在后台设置emailSendToCommenterTemplate')
+    return
+  }
+
+  // 判断emailEnable为true，且emailSendOptions包含字符串receiveComment
+  if (emailEnable && emailSendOptions.includes('replyComment')) {
+    const { siteUrl, siteTitle } = siteSettings
+    const { title, _id, alias, excerpt } = post
+    let { nickname, content } = comment
+    let { nickname: parentNickname, content: parentContent } = parentComment
+    if (commentIsAdmin) {
+      nickname = commentUser.nickname
+    }
+    if (parentCommentIsAdmin) {
+      parentNickname = parentCommentUser.nickname
+    }
+    const to = parentCommentEmail
+    const subject = `您在【${siteTitle}】发表的评论收到了回复`
+    let contentHtml = emailSendToCommenterTemplate
+    // 替换模板中的变量
+    // ${comment}为评论内容
+    // ${nickname}为评论者昵称
+    // ${title}为文章标题
+    // ${parentComment}为父级评论内容
+    // ${parentNickname}为父级评论者昵称
+    // 其中${title}需要替换成a标签
+    // 其中${siteTitle}为站点名称需要替换成a标签
+    // 开始替换
+    contentHtml = contentHtml.replace(/\${comment}/g, content)
+    contentHtml = contentHtml.replace(/\${nickname}/g, nickname)
+    contentHtml = contentHtml.replace(/\${title}/g, `<a href="${siteUrl}/post/${alias || _id}">${title || excerpt}</a>`)
+    contentHtml = contentHtml.replace(/\${siteTitle}/g, `<a href="${siteUrl}">${siteTitle}</a>`)
+    contentHtml = contentHtml.replace(/\${parentComment}/g, parentContent)
+    contentHtml = contentHtml.replace(/\${parentNickname}/g, parentNickname)
+    this.sendEmail(to, contentHtml, subject)
+  }
+
 }

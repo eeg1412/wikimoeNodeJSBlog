@@ -80,12 +80,16 @@ const props = defineProps({
     type: String,
     default: '',
   },
+  parentNickname: {
+    type: Object,
+    default: null,
+  },
 })
 const form = reactive({
   nickname: '',
   email: '',
   url: '',
-  content: '',
+  content: props.parentNickname ? `@${props.parentNickname}：` : '',
 })
 const emits = defineEmits()
 
