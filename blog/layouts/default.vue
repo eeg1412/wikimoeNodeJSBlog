@@ -82,6 +82,7 @@
         class="blog-layout-right-body custom-scroll"
         :class="{
           active: rightSidebarActive,
+          'blog-layout-right-body-full-height': layoutRightBoxHeight === 0,
         }"
       >
         <div class="blog-layout-right-top-body">
@@ -304,6 +305,12 @@ onUnmounted(() => {
   box-sizing: border-box;
   flex: 0 0 300px;
   border-left: 2px solid #fff7f9;
+}
+.blog-layout-right-body.blog-layout-right-body-full-height {
+  background-color: #ffffff;
+  /* 右上角 右下角圆角 */
+  border-top-right-radius: 20px;
+  border-bottom-right-radius: 20px;
 }
 .blog-layout-info-menu {
   padding: 20px;
