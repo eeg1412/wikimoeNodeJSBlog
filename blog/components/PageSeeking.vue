@@ -138,6 +138,7 @@ var selectedEvent = null
 
 const showQiu = ref(false)
 const eventClik = (item) => {
+  clearTimeout(slideTimer)
   // items
   items.value.forEach((element) => {
     element.class = ''
