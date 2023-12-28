@@ -3,6 +3,7 @@ const sidebarUtils = require('../mongodb/utils/sidebars')
 const bannerUtils = require('../mongodb/utils/banners')
 const sortUtils = require('../mongodb/utils/sorts')
 const postUtils = require('../mongodb/utils/posts')
+const bangumiUtils = require('../mongodb/utils/bangumis')
 const commentUtils = require('../mongodb/utils/comments')
 
 const utils = require('../utils/utils')
@@ -201,6 +202,46 @@ exports.getPostArchiveList = async function (req, res, next) {
       global.$cacheData.postArchiveList = null
       reject(err)
       console.error('postArchive get fail')
+    })
+  })
+  return promise
+}
+// 获取bangumi的年份表
+exports.getBangumiYearList = async function (req, res, next) {
+  console.info('bangumiYearList get')
+  const promise = new Promise((resolve, reject) => {
+    bangumiUtils.aggregate([
+      {
+        $match: {
+          status: 1,
+        }
+      },
+      {
+        $group: {
+          _id: "$year",
+          seasons: { $addToSet: "$season" }
+        }
+      },
+      {
+        $project: {
+          _id: 0,
+          year: "$_id",
+          seasonList: "$seasons"
+        }
+      },
+      {
+        $sort: {
+          'year': -1
+        }
+      }
+    ]).then((data) => {
+      global.$cacheData.bangumiYearList = data
+      resolve(data)
+      console.info('bangumiYearList get success')
+    }).catch((err) => {
+      global.$cacheData.bangumiYearList = null
+      reject(err)
+      console.error('bangumiYearList get fail')
     })
   })
   return promise

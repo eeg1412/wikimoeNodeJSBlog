@@ -514,7 +514,7 @@ export default {
     })
     const attachmentDrag = ref(false)
     // template
-    // 模板选项 about:关于页面, link: 友情链接页面, almanac:程序员老黄历
+    // 模板选项 about:关于页面, link: 友情链接页面, almanac:程序员老黄历, bangumi:追番
     const templateList = ref([
       {
         label: '关于',
@@ -527,6 +527,10 @@ export default {
       {
         label: '程序员老黄历',
         value: 'almanac',
+      },
+      {
+        label: '追番',
+        value: 'bangumi',
       },
     ])
 

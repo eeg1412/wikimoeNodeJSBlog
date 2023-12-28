@@ -86,6 +86,10 @@
           <h2 class="post-title mb-3">{{ postData.data.title }}</h2>
         </div>
       </template>
+      <!-- bangumi -->
+      <template v-if="pageTemplate === 'bangumi'">
+        <PageBangumi />
+      </template>
     </div>
     <!-- 文章内容 -->
     <HtmlContent

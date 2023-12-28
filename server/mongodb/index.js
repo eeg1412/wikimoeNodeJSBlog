@@ -18,6 +18,7 @@ db.once('open', async () => {
   cacheDataUtils.getBannerList()
   cacheDataUtils.getSortList()
   cacheDataUtils.getPostArchiveList()
+  cacheDataUtils.getBangumiYearList()
 })
 
 db.on('error', function (error) {

@@ -14,7 +14,7 @@ var bangumis = new Schema({
   summary: {
     type: String,
   },
-  // 评分
+  // 评分，神作，佳作，良作，劣作，烂作，迷
   rating: {
     type: Number,
   },

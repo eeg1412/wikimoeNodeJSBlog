@@ -2,7 +2,10 @@
   <div class="empty-body">
     <div class="empty-body-content">
       <!-- 文字 -->
-      <div class="mt10">暂无数据</div>
+      <div class="flex items-center justify-center mt-10">
+        <UIcon name="i-heroicons-circle-stack" class="mr-2" />
+        暂无数据
+      </div>
     </div>
   </div>
 </template>

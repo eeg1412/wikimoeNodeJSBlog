@@ -1,0 +1,244 @@
+<template>
+  <div class="pt-2 pb-2">
+    <div class="flex items-center" v-if="selectYear && selectSeason">
+      <!-- 顶部年份季度选择 -->
+      <UPopover :popper="{ arrow: true }">
+        <UButton
+          :label="`${selectYear}年`"
+          size="sm"
+          variant="soft"
+          trailing-icon="i-heroicons-chevron-down-20-solid"
+          class="mr-3"
+        />
+
+        <template #panel="{ close }">
+          <div class="p-4 w-60">
+            <!-- 年份选择表 -->
+            <div class="flex flex-wrap">
+              <div
+                v-for="year in yearPageList"
+                :key="year.year"
+                class="w-1/2 p-2"
+              >
+                <UButton
+                  :label="`${year.year}年`"
+                  size="sm"
+                  :variant="year.year === selectYear ? 'solid' : 'ghost'"
+                  @click="selectYearHandle(year.year, close)"
+                />
+              </div>
+            </div>
+            <!-- 翻页器 -->
+            <div class="flex justify-between items-center mt-4">
+              <UButton
+                :disabled="yearPage === 1"
+                size="sm"
+                variant="ghost"
+                @click="yearPage--"
+              >
+                <UIcon class="mr5" name="i-heroicons-chevron-left" />
+              </UButton>
+              <span class="mx-4 text-gray-500"
+                >{{ yearPage }}/{{ yearTotalPage }}</span
+              >
+              <UButton
+                :disabled="yearPage === yearTotalPage"
+                size="sm"
+                variant="ghost"
+                @click="yearPage++"
+              >
+                <UIcon class="mr5" name="i-heroicons-chevron-right" />
+              </UButton>
+            </div>
+          </div>
+        </template>
+      </UPopover>
+      <UPopover :popper="{ arrow: true }">
+        <UButton
+          :label="seasonToName(selectSeason)"
+          size="sm"
+          variant="soft"
+          trailing-icon="i-heroicons-chevron-down-20-solid"
+        />
+
+        <template #panel="{ close }">
+          <div class="p-4 w-60">
+            <!-- 季度选择器 -->
+            <div class="flex flex-wrap">
+              <div
+                v-for="season in selectSeasonList"
+                :key="season"
+                class="w-1/2 p-2"
+              >
+                <UButton
+                  :label="seasonToName(season)"
+                  size="sm"
+                  :variant="season === selectSeason ? 'solid' : 'ghost'"
+                  @click="selectSeasonHandle(season, close)"
+                />
+              </div>
+            </div>
+          </div>
+        </template>
+      </UPopover>
+    </div>
+    <div class="relative">
+      <!-- 追番列表 -->
+      <div v-if="bangumiList.length > 0" class="mt-5">
+        <div class="grid md:grid-cols-2 gap-6 p-2">
+          <div
+            v-for="bangumi in bangumiList"
+            :key="bangumi.id"
+            class="flex h-32"
+          >
+            <div class="h-32 flex-shrink-0">
+              <WikimoeImage
+                class="w-full rounded"
+                :src="bangumi.cover || '/img/nopic400-565.png'"
+                :alt="bangumi.title"
+                :width="400"
+                :height="565"
+                :data-href="bangumi.cover"
+                :data-href-list="
+                  bangumi.cover ? setDataHrefList(bangumi.cover) : null
+                "
+                loading="lazy"
+                fit="cover"
+              />
+            </div>
+            <div class="pl-2 w-full flex flex-col">
+              <div class="font-bold mb-1 line-clamp-2 flex-shrink-0">
+                {{ bangumi.title }}
+              </div>
+              <div
+                v-if="bangumi.rating"
+                class="text-sm mb-1 text-primary flex-shrink-0"
+              >
+                评分：<span>{{ bangumi.rating }}</span>
+                分
+              </div>
+              <div v-else class="text-sm mb-1 text-gray-400">暂无评分</div>
+              <!-- prettier-ignore -->
+              <div class="text-sm whitespace-pre-line text-gray-500 overflow-auto custom-scroll flex-grow" v-if="bangumi.summary">{{ bangumi.summary }}</div>
+              <div v-else class="text-sm text-gray-400">暂无简评</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div v-else>
+        <Empty />
+      </div>
+      <DivLoading :loading="bangumiLoading" />
+    </div>
+  </div>
+</template>
+<script setup>
+import {
+  getBangumiListApi,
+  getBangumiYearListApi,
+  getBangumiListApiFetch,
+} from '@/api/bangumi'
+
+const { data: yearListData } = await getBangumiYearListApi()
+
+const yearList = computed(() => {
+  const list = yearListData.value?.data || []
+  //  遍历list，将其中的seasons 数组从小到大排序
+  list.forEach((item) => {
+    item.seasonList.sort((a, b) => {
+      return a - b
+    })
+  })
+  return list
+})
+const selectYear = ref(null)
+const yearPageSize = ref(4)
+const yearPage = ref(1)
+const yearTotalPage = computed(() => {
+  return Math.ceil(yearList.value.length / yearPageSize.value)
+})
+// 当前页的年份列表
+const yearPageList = computed(() => {
+  const start = (yearPage.value - 1) * yearPageSize.value
+  const end = start + yearPageSize.value
+  return yearList.value.slice(start, end)
+})
+// watch selectYear
+
+const selectSeason = ref(null)
+const selectSeasonList = computed(() => {
+  // yearList.value
+  const year = selectYear.value
+  if (!year) return []
+  const yearItem = yearList.value.find((item) => item.year === year)
+  return yearItem?.seasonList || []
+})
+const initYearSeason = () => {
+  const lastYear = yearList.value[0] || null
+  if (lastYear) {
+    selectYear.value = lastYear.year || null
+    selectSeason.value = lastYear.seasonList[0] || null
+  }
+}
+initYearSeason()
+// 如果年份和季度都存在，就获取番剧列表
+const bangumiList = ref([])
+if (selectYear.value && selectSeason.value) {
+  const params = {
+    year: selectYear.value,
+    season: selectSeason.value,
+  }
+  await getBangumiListApi(params).then((res) => {
+    bangumiList.value = res.data.value.data
+  })
+}
+const seasonToName = (season) => {
+  switch (season) {
+    case 1:
+      return '冬季新番'
+    case 2:
+      return '春季新番'
+    case 3:
+      return '夏季新番'
+    case 4:
+      return '秋季新番'
+    default:
+      return ''
+  }
+}
+const setDataHrefList = (cover) => {
+  return [
+    {
+      src: cover,
+      width: 400,
+      height: 565,
+    },
+  ]
+}
+
+const bangumiLoading = ref(false)
+const fetchBangumiList = async () => {
+  const params = {
+    year: selectYear.value,
+    season: selectSeason.value,
+  }
+  bangumiLoading.value = true
+  const res = await getBangumiListApi(params)
+  bangumiList.value = res?.data?.value?.data || []
+  bangumiLoading.value = false
+}
+// 选择了年份
+const selectYearHandle = async (year, close) => {
+  if (close) close()
+  selectYear.value = year
+  selectSeason.value = selectSeasonList.value[0]
+  await fetchBangumiList()
+}
+// 选择了季度
+const selectSeasonHandle = async (season, close) => {
+  if (close) close()
+  selectSeason.value = season
+  await fetchBangumiList()
+}
+</script>
+<style scoped></style>
