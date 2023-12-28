@@ -91,7 +91,7 @@
             :key="bangumi.id"
             class="flex h-32"
           >
-            <div class="h-32 flex-shrink-0">
+            <div class="h-32 flex-shrink-0 relative">
               <WikimoeImage
                 class="w-full rounded"
                 :src="bangumi.cover || '/img/nopic400-565.png'"
@@ -105,6 +105,16 @@
                 loading="lazy"
                 fit="cover"
               />
+              <div class="absolute bottom-0 left-0 p-1">
+                <UBadge
+                  v-for="(label, index) in bangumi.label"
+                  :key="index"
+                  size="xs"
+                  class="mr-1"
+                >
+                  {{ label }}
+                </UBadge>
+              </div>
             </div>
             <div class="pl-2 w-full flex flex-col">
               <div class="font-bold mb-1 line-clamp-2 flex-shrink-0">
@@ -114,8 +124,10 @@
                 v-if="bangumi.rating"
                 class="text-sm mb-1 text-primary flex-shrink-0"
               >
-                评分：<span>{{ bangumi.rating }}</span>
-                分
+                评分：<span>{{ bangumi.rating }}</span
+                >分<UBadge size="xs" class="ml-2">{{
+                  ratingToText(bangumi.rating)
+                }}</UBadge>
               </div>
               <div v-else class="text-sm mb-1 text-gray-400">暂无评分</div>
               <!-- prettier-ignore -->
@@ -214,6 +226,19 @@ const setDataHrefList = (cover) => {
       height: 565,
     },
   ]
+}
+// 评分转文字
+const ratingToText = (rating) => {
+  if (rating >= 90) return '神作'
+  if (rating >= 80) return '佳作'
+  if (rating >= 70) return '良作'
+  if (rating >= 60) return '还行'
+  if (rating >= 50) return '劣作'
+  if (rating >= 40) return '差'
+  if (rating >= 30) return '烂作'
+  if (rating >= 20) return '烂差'
+  if (rating >= 10) return '迷'
+  return '暂无评分'
 }
 
 const bangumiLoading = ref(false)
