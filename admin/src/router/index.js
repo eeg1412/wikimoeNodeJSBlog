@@ -169,6 +169,12 @@ const routes = [
         name: 'CommentLikeLogList',
         component: () => import(/* webpackChunkName: "CommentLikeLogList" */ '../views/index/commentLikeLog/CommentLikeLogList.vue')
       },
+      // EmailSendHistoryList
+      {
+        path: '/emailsendhistory/list',
+        name: 'EmailSendHistoryList',
+        component: () => import(/* webpackChunkName: "EmailSendHistoryList" */ '../views/index/emailSendHistory/EmailSendHistoryList.vue')
+      },
       // config
       {
         path: '/config',

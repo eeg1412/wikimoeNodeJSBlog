@@ -435,5 +435,12 @@ export default function (api) {
         shouldAdminJWT: true
       })
     },
+    // get /emailsendhistory/list
+    getEmailSendHistoryList (data) {
+      return api.get('/emailsendhistory/list', {
+        params: data,
+        shouldAdminJWT: true
+      })
+    },
   }
 }

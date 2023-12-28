@@ -157,7 +157,16 @@
               <i class="fas fa-user-clock pr10"></i>
               <template #title>读者访问日志</template>
             </el-menu-item>
-
+            <!-- 邮件发送日志  EmailSendHistoryList -->
+            <el-menu-item
+              index="EmailSendHistoryList"
+              @click="removeParam('EmailSendHistoryList')"
+              @click.middle="openNewTab('EmailSendHistoryList')"
+              :route="{ name: 'EmailSendHistoryList' }"
+            >
+              <i class="fas fa-envelope pr10"></i>
+              <template #title>邮件发送日志</template>
+            </el-menu-item>
             <!-- 设置 -->
             <el-menu-item
               index="Config"

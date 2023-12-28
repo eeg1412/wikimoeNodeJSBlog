@@ -636,6 +636,15 @@ const adminRouteSetting = [
     roleType: null,
     role: null
   },
+  // getEmailSendHistoryList
+  {
+    path: '/emailsendhistory/list',
+    method: 'get',
+    middleware: [checkAuth],
+    controller: require('../api/admin/emailSendHistory/getEmailSendHistoryList'),
+    roleType: null,
+    role: null
+  },
 ]
 
 adminRouteSetting.forEach(item => {

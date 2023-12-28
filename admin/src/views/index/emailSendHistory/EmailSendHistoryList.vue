@@ -18,31 +18,60 @@
           <el-form-item>
             <el-input
               v-model="params.keyword"
-              placeholder="请输入邮件发送记录名称"
+              placeholder="请输入关键词"
             ></el-input>
           </el-form-item>
           <el-form-item>
-            <el-button type="primary" @click="getEmailSendHistoryList(true)">搜索</el-button>
+            <el-button type="primary" @click="getEmailSendHistoryList(true)"
+              >搜索</el-button
+            >
           </el-form-item>
         </el-form>
       </div>
       <div class="fr">
         <!-- 按钮用 -->
-        <!-- 追加 -->
-        <el-button type="primary" @click="handleAdd">追加</el-button>
       </div>
     </div>
     <!-- 邮件发送记录 -->
     <div class="mb20">
       <el-table :data="emailSendHistoryList" row-key="_id" border>
-        <el-table-column label="操作" width="140" fixed="right">
+        <!-- // 发送对象
+        to: {
+          type: String,
+        },
+        // 发送内容
+        content: {
+          type: String,
+        },
+        errInfo: {
+          type: String,
+        },
+        // 发送状态 0: 发送失败 1: 发送成功
+        status: {
+          type: Number,
+          default: 0
+        }, -->
+        <el-table-column label="发送对象" prop="to"></el-table-column>
+        <el-table-column label="发送内容" prop="content">
           <template #default="{ row }">
-            <el-button type="primary" size="small" @click="goEdit(row._id)"
-              >编辑</el-button
-            >
-            <el-button type="danger" size="small" @click="deleteEmailSendHistory(row._id)"
-              >删除</el-button
-            >
+            <div v-html="row.content"></div>
+          </template>
+        </el-table-column>
+        <el-table-column label="错误信息" prop="errInfo"></el-table-column>
+        <el-table-column label="发送状态" prop="status" width="100px">
+          <template #default="{ row }">
+            <!-- tag -->
+            <el-tag v-if="row.status === 0" type="danger" effect="dark">
+              发送失败
+            </el-tag>
+            <el-tag v-else-if="row.status === 1" type="success" effect="dark">
+              发送成功
+            </el-tag>
+          </template>
+        </el-table-column>
+        <el-table-column label="发送时间" prop="createdAt" width="180px">
+          <template #default="{ row }">
+            {{ $formatDate(row.createdAt) }}
           </template>
         </el-table-column>
       </el-table>
