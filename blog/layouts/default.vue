@@ -321,7 +321,7 @@ onUnmounted(() => {
   border-bottom-left-radius: 20px;
 }
 .blog-layout-info-menu-bg {
-  background-image: url('/img/menuBg.png');
+  background-image: url('/img/menuBg.png?v=2');
   background-repeat: no-repeat;
   background-position: right bottom;
   background-size: 100%;
