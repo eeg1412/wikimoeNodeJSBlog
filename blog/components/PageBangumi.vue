@@ -189,7 +189,8 @@ const initYearSeason = () => {
   const lastYear = yearList.value[0] || null
   if (lastYear) {
     selectYear.value = lastYear.year || null
-    selectSeason.value = lastYear.seasonList[0] || null
+    selectSeason.value =
+      lastYear.seasonList[lastYear.seasonList.length - 1] || null
   }
 }
 initYearSeason()
