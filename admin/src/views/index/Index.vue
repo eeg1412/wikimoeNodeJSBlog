@@ -127,7 +127,7 @@
               <i class="fas fa-tv pr10"></i>
               <template #title>追番</template>
             </el-menu-item>
-            <el-sub-menu>
+            <el-sub-menu index="history">
               <template #title>
                 <!-- 日志图标 -->
                 <i class="fas fa-book pr10"></i>日志
