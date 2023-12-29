@@ -43,7 +43,7 @@
                 <el-col :xs="24" :sm="24" :md="12" :lg="12" :xl="12">
                   <div>
                     <!-- 图片 -->
-                    <div>
+                    <div class="banner-image-body">
                       <div>
                         <!-- 添加图片按钮 -->
                         <Cropper
@@ -268,11 +268,13 @@ export default {
 .handle {
   cursor: move;
 }
+.banner-image-body {
+  max-width: 600px;
+}
 </style>
 <style>
 .banner-list-body .el-upload--text .avatar {
   width: 100%;
-  max-width: 600px;
   height: auto;
 }
 </style>
