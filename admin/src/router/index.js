@@ -175,6 +175,12 @@ const routes = [
         name: 'EmailSendHistoryList',
         component: () => import(/* webpackChunkName: "EmailSendHistoryList" */ '../views/index/emailSendHistory/EmailSendHistoryList.vue')
       },
+      // ReferrerList
+      {
+        path: '/referrer/list',
+        name: 'ReferrerList',
+        component: () => import(/* webpackChunkName: "ReferrerList" */ '../views/index/referrer/ReferrerList.vue')
+      },
       // config
       {
         path: '/config',

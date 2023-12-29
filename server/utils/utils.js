@@ -10,7 +10,7 @@ const nodemailer = require('nodemailer')
 const emailSendHistoryUtils = require('../mongodb/utils/emailSendHistorys')
 const postUtils = require('../mongodb/utils/posts')
 const commentUtils = require('../mongodb/utils/comments')
-const { type } = require('os')
+const referrerUtils = require('../mongodb/utils/referrers')
 
 exports.creatSha256Str = function (str) {
   const sha256 = crypto.createHash('sha256')
@@ -477,6 +477,38 @@ exports.sendReplyCommentNotice = async function (post, comment) {
     contentHtml = contentHtml.replace(/\${parentComment}/g, parentContent)
     contentHtml = contentHtml.replace(/\${parentNickname}/g, parentNickname)
     this.sendEmail(to, contentHtml, subject)
+  }
+}
+// 获取.env的REFERRER_DOMAIN_WHITELIST
+const referrerDomainWhitelist = process.env.REFERRER_DOMAIN_WHITELIST ? process.env.REFERRER_DOMAIN_WHITELIST.split(',') : []
+const referrerRecordTimerMap = {}
+// 引用记录传入参数是referrer和type
+exports.referrerRecord = function (referrer, referrerType) {
+  if (referrer) {
+    // 如果referrer存在，就判断referrer是否在REFERRER_DOMAIN_WHITELIST中
+    const isReferrerDomainWhitelist = referrerDomainWhitelist.some((item) => {
+      // list中仅包含域名，不包含协议和路径
+      return referrer.includes(item)
+    })
+    // 如果referrer不在REFERRER_DOMAIN_WHITELIST中，就记录
+    if (!isReferrerDomainWhitelist) {
+      // 判断是否存在计时器
+      if (referrerRecordTimerMap[referrer]) {
+        // 如果存在计时器，就清除计时器
+        clearTimeout(referrerRecordTimerMap[referrer])
+      }
+      // 重新设置计时器
+      referrerRecordTimerMap[referrer] = setTimeout(() => {
+        // 如果计时器到期，就保存referrer
+        const params = {
+          referrer,
+          referrerType
+        }
+        referrerUtils.save(params)
+        // 删除计时器
+        delete referrerRecordTimerMap[referrer]
+      }, 1000 * 60)
+    }
   }
 
 }

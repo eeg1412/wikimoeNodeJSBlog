@@ -442,5 +442,12 @@ export default function (api) {
         shouldAdminJWT: true
       })
     },
+    // get '/referrer/list'
+    getReferrerList (data) {
+      return api.get('/referrer/list', {
+        params: data,
+        shouldAdminJWT: true
+      })
+    },
   }
 }

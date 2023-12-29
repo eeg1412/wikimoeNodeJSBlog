@@ -10,6 +10,7 @@ var history = require('connect-history-api-fallback');
 var adminRouter = require('./routes/admin');
 const blogRouter = require('./routes/blog');
 const rssRouter = require('./routes/rss/index');
+const utils = require('./utils/utils')
 
 var app = express();
 
@@ -21,8 +22,7 @@ app.use(express.urlencoded({ extended: false, limit: process.env.URLENCODED_LIMT
 app.use(cookieParser());
 app.use('/upload', express.static(path.join(__dirname, 'public/upload')));
 app.use('/content', function (req, res, next) {
-  // TODO: 这里加一个非本站引用时的记录
-  console.log('Referer:', req.headers.referer);
+  utils.referrerRecord(req.headers.referer, 'assets')
   next();
 }, express.static(path.join(__dirname, 'public/content')));
 // app.use(express.static(path.join(__dirname, 'public')));

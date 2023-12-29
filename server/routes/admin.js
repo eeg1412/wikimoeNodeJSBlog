@@ -645,6 +645,15 @@ const adminRouteSetting = [
     roleType: null,
     role: null
   },
+  // getReferrerList
+  {
+    path: '/referrer/list',
+    method: 'get',
+    middleware: [checkAuth],
+    controller: require('../api/admin/referrer/getReferrerList'),
+    roleType: null,
+    role: null
+  },
 ]
 
 adminRouteSetting.forEach(item => {

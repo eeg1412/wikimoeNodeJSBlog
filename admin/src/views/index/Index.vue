@@ -19,7 +19,11 @@
               <el-button text :icon="Close" @click="switchOpenMenu"></el-button>
             </div>
           </div>
-          <el-menu :default-active="activeIndex" router>
+          <el-menu
+            :default-active="activeIndex"
+            router
+            class="admin-left-menu-body custom-scroll scroll-not-hide"
+          >
             <el-menu-item
               index="Home"
               @click="removeParam(null)"
@@ -171,6 +175,16 @@
               >
                 <i class="fas fa-envelope pr10"></i>
                 <template #title>邮件发送日志</template>
+              </el-menu-item>
+              <!-- 引用日志 ReferrerList -->
+              <el-menu-item
+                index="ReferrerList"
+                @click="removeParam('ReferrerList')"
+                @click.middle="openNewTab('ReferrerList')"
+                :route="{ name: 'ReferrerList' }"
+              >
+                <i class="fas fa-external-link-alt pr10"></i>
+                <template #title>引用日志</template>
               </el-menu-item>
             </el-sub-menu>
 
@@ -381,6 +395,11 @@ export default {
 }
 .common-aside-collapse-btn:hover {
   background-color: #f9f9f9;
+}
+.admin-left-menu-body {
+  height: calc(100dvh - 62px);
+  overflow: auto;
+  margin-right: 10px;
 }
 /* 媒体查询 手机模式 */
 @media (max-width: 767px) {
