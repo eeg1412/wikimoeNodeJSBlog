@@ -44,7 +44,7 @@ export default {
     const selectAttachments = (attachments) => {
       console.log(attachments)
       attachments.forEach((item) => {
-        // TODO: v4版本的data-href需要uri解码
+        // v4版本的data-href需要uri解码
         editor.cmd.do(
           'insertHTML',
           `<img src="${siteUrl.value}${item.thumfor || item.filepath}" width="${

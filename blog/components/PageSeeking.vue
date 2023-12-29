@@ -149,7 +149,6 @@ const eventClik = (item) => {
   cardList.value = []
 }
 
-// TODO 概率分布
 function getNextCardText() {
   return pickRandomWithRate(timeseed + selectedEvent, slidecount)
 }

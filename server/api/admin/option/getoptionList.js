@@ -11,7 +11,7 @@ module.exports = async function (req, res, next) {
   }
   if (nameList.length > 0) {
     params.name = { $in: nameList }
-    // TODO:注意博客端获取时要注意邮箱密码等敏感信息的过滤
+    // 注意博客端获取时要注意邮箱密码等敏感信息的过滤
   }
 
   optionUtils.find(params).then((data) => {

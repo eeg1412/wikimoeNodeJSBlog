@@ -309,7 +309,7 @@ export default {
   setup() {
     const router = useRouter()
     const route = useRoute()
-    // TODO: img标签自动添加loading="lazy"
+    // img标签自动添加loading="lazy"
     // let htmlContent = '你的HTML内容'
     // htmlContent = htmlContent.replace(
     //   /<img(?!.*?loading\s*=\s*['"]lazy['"])([^>]*?)>/gi,
