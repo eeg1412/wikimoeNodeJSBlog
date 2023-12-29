@@ -515,6 +515,8 @@ onUnmounted(() => {
     z-index: 21;
     width: 100%;
     height: 100%;
+    border-right: 0px solid #fff7f9;
+    background-color: #fffdfd;
   }
   .blog-layout-left-body.active {
     transform: translateX(0%);
@@ -619,6 +621,8 @@ onUnmounted(() => {
     /* 右上角 右下角 没有圆角 */
     border-top-right-radius: 0px;
     border-bottom-right-radius: 0px;
+    background-color: #ffffff;
+    border-left: 0px solid #fff7f9;
   }
   .layout-close-btn-body.type-r {
     display: flex;

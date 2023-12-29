@@ -1,5 +1,5 @@
 <template>
-  <div class="pt-2 pb-2">
+  <div class="pt-2 pb-2 page-bangumi-body">
     <div class="flex items-center" v-if="selectYear && selectSeason">
       <!-- 顶部年份季度选择 -->
       <UPopover :popper="{ arrow: true }">
@@ -93,7 +93,7 @@
           >
             <div class="h-32 flex-shrink-0 relative">
               <WikimoeImage
-                class="w-full rounded"
+                class="w-full rounded bangumi-cover"
                 :src="bangumi.cover || '/img/nopic400-565.png'"
                 :alt="bangumi.title"
                 :width="400"
@@ -266,4 +266,9 @@ const selectSeasonHandle = async (season, close) => {
   await fetchBangumiList()
 }
 </script>
-<style scoped></style>
+<style>
+.page-bangumi-body .bangumi-cover {
+  height: 100%;
+  width: auto;
+}
+</style>
