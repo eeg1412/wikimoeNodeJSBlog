@@ -9,7 +9,27 @@ blog：博客部分
 
 三个部分需要按照顺序启动
 
-## 1.博客 API 部分
+## 1.博客 管理后台前端
+
+### 进入文件夹
+
+```
+cd admin
+```
+
+### 安装依赖
+
+```
+yarn install
+```
+
+### 编译
+
+```
+yarn build
+```
+
+## 2.博客 API 部分
 
 ### 进入文件夹
 
@@ -20,7 +40,7 @@ cd server
 ### 安装依赖
 
 ```
-npm run ci
+yarn install
 ```
 
 ### 配置.env 文件
@@ -41,11 +61,44 @@ REFERRER_DOMAIN_WHITELIST="引用域名白名单，比如wikimoe.com"
 ### 运行
 
 ```
-npm run start
+yarn start
 ```
 
 ### 创建管理员（如果需要）
 
 ```
-npm run create
+yarn create
 ```
+
+## 3.博客 页面 部分
+
+### 进入文件夹
+
+```
+cd blog
+```
+
+### 安装依赖
+
+```
+yarn install
+```
+
+### 配置.env 文件
+
+文件内容如下：
+
+```
+NUXT_API_API_DOMAIN="填写API的HTTP地址，如：http://localhost:3011"
+GOOGLE_ADSENSE_ID="如果需要设置谷歌广告，填写谷歌广告ID"
+GOOGLE_ADSENSE_TEST_MODE="是否启用测试模式 1 为启用，0 为不启用"
+GOOGLE_ADSENSE_HOME_BT="首页底部广告，填写格式为：ad-slot,ad-format,ad-layout-key"
+```
+
+### 编译
+
+```
+yarn build
+```
+
+编译后生成 .output 文件夹，通过 node 运行即可。
