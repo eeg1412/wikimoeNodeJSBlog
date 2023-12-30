@@ -35,6 +35,7 @@ URLENCODED_LIMT="URL编码的大小限制如（50mb）"
 JWT_SECRET="JWT所用的密文"
 IP2LOCATION="1为开启IP地址解析"
 IP2LOCATION_FILE_NAME="地址解析用到的BIN文件，一般为IP2LOCATION-LITE-DB1.BIN"
+REFERRER_DOMAIN_WHITELIST="引用域名白名单，比如wikimoe.com"
 ```
 
 ### 运行
