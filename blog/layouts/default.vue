@@ -146,6 +146,14 @@
         </div>
       </div>
     </div>
+    <div class="google-ad-bt" v-if="GOOGLE_ADSENSE_HOME_BT_SLOT">
+      <Adsbygoogle
+        :ad-slot="GOOGLE_ADSENSE_HOME_BT_SLOT"
+        :ad-format="GOOGLE_ADSENSE_HOME_BT_FORMAT"
+        :ad-layout-key="GOOGLE_ADSENSE_HOME_BT_LAYOUT_KEY"
+      />
+    </div>
+
     <!-- footer Powered by wikimoeBlog -->
     <div class="blog-footer-body">
       <div class="blog-footer-content-body">
@@ -252,6 +260,16 @@ watch(
     rightSidebarActive.value = false
   }
 )
+
+// google adsense
+const runtimeConfig = useRuntimeConfig()
+const GOOGLE_ADSENSE_HOME_BT_SLOT =
+  runtimeConfig.public.GOOGLE_ADSENSE_HOME_BT_SLOT
+// GOOGLE_ADSENSE_HOME_BT_FORMAT
+const GOOGLE_ADSENSE_HOME_BT_FORMAT =
+  runtimeConfig.public.GOOGLE_ADSENSE_HOME_BT_FORMAT
+const GOOGLE_ADSENSE_HOME_BT_LAYOUT_KEY =
+  runtimeConfig.public.GOOGLE_ADSENSE_HOME_BT_LAYOUT_KEY
 
 // let observer
 onMounted(async () => {
@@ -649,5 +667,17 @@ onUnmounted(() => {
   .blog-layout-info-menu-bg {
     background-image: none;
   }
+}
+</style>
+<style scoped>
+.google-ad-bt {
+  height: 15vh;
+  background: #fff;
+  max-width: 1220px;
+  margin: 0 auto;
+  margin-bottom: 20px;
+  margin-top: 20px;
+  border-radius: 20px;
+  overflow: hidden;
 }
 </style>

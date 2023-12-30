@@ -1,5 +1,24 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 
+const modulesPlus = []
+const publicRuntimeConfigPlus: any = {}
+if (process.env.GOOGLE_ADSENSE_ID) {
+  modulesPlus.push('@nuxtjs/google-adsense')
+  publicRuntimeConfigPlus.googleAdsense = {
+    onPageLoad: true,
+    pageLevelAds: false,
+    id: process.env.GOOGLE_ADSENSE_ID,
+    test: process.env.GOOGLE_ADSENSE_TEST_MODE === '1',
+  }
+  publicRuntimeConfigPlus.GOOGLE_ADSENSE_HOME_BT_SLOT =
+    process.env.GOOGLE_ADSENSE_HOME_BT_SLOT || null
+  // GOOGLE_ADSENSE_HOME_BT_FORMAT
+  publicRuntimeConfigPlus.GOOGLE_ADSENSE_HOME_BT_FORMAT =
+    process.env.GOOGLE_ADSENSE_HOME_BT_FORMAT || null
+  // GOOGLE_ADSENSE_HOME_BT_LAYOUT_KEY
+  publicRuntimeConfigPlus.GOOGLE_ADSENSE_HOME_BT_LAYOUT_KEY =
+    process.env.GOOGLE_ADSENSE_HOME_BT_LAYOUT_KEY || null
+}
 export default defineNuxtConfig({
   app: {
     head: {
@@ -12,7 +31,8 @@ export default defineNuxtConfig({
   devServer: {
     port: 8078,
   },
-  modules: ['@pinia/nuxt', '@nuxt/ui', 'nuxt-swiper'],
+  modules: ['@pinia/nuxt', '@nuxt/ui', 'nuxt-swiper', ...modulesPlus],
+
   swiper: {
     // Swiper options
     //----------------------
@@ -23,6 +43,9 @@ export default defineNuxtConfig({
   css: ['~/assets/css/common.css', 'photoswipe/style.css'],
   runtimeConfig: {
     apiDomain: '',
+    public: {
+      ...publicRuntimeConfigPlus,
+    },
   },
   routeRules: {
     '/api/admin/**': {

@@ -939,6 +939,30 @@
     unimport "^3.5.0"
     untyped "^1.4.0"
 
+"@nuxt/kit@^3.6.5":
+  version "3.9.0"
+  resolved "https://registry.yarnpkg.com/@nuxt/kit/-/kit-3.9.0.tgz#b18492bb9b6ea42f8df68483c3286614df0f9933"
+  integrity sha512-XVFQihMTXM5y7Xj7EXbcDbUbxNkC8+ArQKArAH5PK1ulCWZWyP+VR94Gg2boo9vI2eNLTs+LquxnOtOHRQrg0A==
+  dependencies:
+    "@nuxt/schema" "3.9.0"
+    c12 "^1.5.1"
+    consola "^3.2.3"
+    defu "^6.1.3"
+    globby "^14.0.0"
+    hash-sum "^2.0.0"
+    ignore "^5.3.0"
+    jiti "^1.21.0"
+    knitwork "^1.0.0"
+    mlly "^1.4.2"
+    pathe "^1.1.1"
+    pkg-types "^1.0.3"
+    scule "^1.1.1"
+    semver "^7.5.4"
+    ufo "^1.3.2"
+    unctx "^2.3.1"
+    unimport "^3.7.0"
+    untyped "^1.4.0"
+
 "@nuxt/schema@3.8.2", "@nuxt/schema@^3.8.2":
   version "3.8.2"
   resolved "https://registry.npmjs.org/@nuxt/schema/-/schema-3.8.2.tgz"
@@ -954,6 +978,23 @@
     std-env "^3.5.0"
     ufo "^1.3.2"
     unimport "^3.5.0"
+    untyped "^1.4.0"
+
+"@nuxt/schema@3.9.0":
+  version "3.9.0"
+  resolved "https://registry.yarnpkg.com/@nuxt/schema/-/schema-3.9.0.tgz#4eb52c8c8f10ae7195a2fa75bf4c90445418554e"
+  integrity sha512-NaRiq+g6XE4YOZLy7be2e6AmZCW0gfQWDM88TSfNr3Lypo+6PuY2VqzZLpSvOCNlW3CFj/kWtMdhool2BP0yIg==
+  dependencies:
+    "@nuxt/ui-templates" "^1.3.1"
+    consola "^3.2.3"
+    defu "^6.1.3"
+    hookable "^5.5.3"
+    pathe "^1.1.1"
+    pkg-types "^1.0.3"
+    scule "^1.1.1"
+    std-env "^3.7.0"
+    ufo "^1.3.2"
+    unimport "^3.7.0"
     untyped "^1.4.0"
 
 "@nuxt/telemetry@^2.5.2":
@@ -1060,6 +1101,15 @@
     "@nuxt/kit" "^3.8.1"
     lodash.template "^4.5.0"
     pathe "^1.1.1"
+
+"@nuxtjs/google-adsense@^3.0.0":
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/@nuxtjs/google-adsense/-/google-adsense-3.0.0.tgz#e51317f2344e5c7ac9ac13a9564eabf88a8bc406"
+  integrity sha512-fR1rbj6mnfBCWMkVSocPUYX11rGzTwSs1v2sajG6wtXGjXLGRjJSFKSynYHdwO3V4o4xRvtve0W/Db96eiTKmA==
+  dependencies:
+    "@nuxt/kit" "^3.6.5"
+    "@vueuse/core" "^10.4.1"
+    defu "^6.1.2"
 
 "@nuxtjs/tailwindcss@^6.10.1":
   version "6.10.1"
@@ -1672,6 +1722,16 @@
     "@vueuse/shared" "10.7.0"
     vue-demi ">=0.14.6"
 
+"@vueuse/core@^10.4.1":
+  version "10.7.1"
+  resolved "https://registry.yarnpkg.com/@vueuse/core/-/core-10.7.1.tgz#b4bfe3355dbb0ec17d34d737385e1c8a0156ccf1"
+  integrity sha512-74mWHlaesJSWGp1ihg76vAnfVq9NTv1YT0SYhAQ6zwFNdBkkP+CKKJmVOEHcdSnLXCXYiL5e7MaewblfiYLP7g==
+  dependencies:
+    "@types/web-bluetooth" "^0.0.20"
+    "@vueuse/metadata" "10.7.1"
+    "@vueuse/shared" "10.7.1"
+    vue-demi ">=0.14.6"
+
 "@vueuse/integrations@^10.7.0":
   version "10.7.0"
   resolved "https://registry.npmjs.org/@vueuse/integrations/-/integrations-10.7.0.tgz"
@@ -1694,10 +1754,22 @@
   resolved "https://registry.npmjs.org/@vueuse/metadata/-/metadata-10.7.0.tgz"
   integrity sha512-GlaH7tKP2iBCZ3bHNZ6b0cl9g0CJK8lttkBNUX156gWvNYhTKEtbweWLm9rxCPIiwzYcr/5xML6T8ZUEt+DkvA==
 
+"@vueuse/metadata@10.7.1":
+  version "10.7.1"
+  resolved "https://registry.yarnpkg.com/@vueuse/metadata/-/metadata-10.7.1.tgz#190a8d0e97216941cc95120c89dfa2c4228b2a53"
+  integrity sha512-jX8MbX5UX067DYVsbtrmKn6eG6KMcXxLRLlurGkZku5ZYT3vxgBjui2zajvUZ18QLIjrgBkFRsu7CqTAg18QFw==
+
 "@vueuse/shared@10.7.0":
   version "10.7.0"
   resolved "https://registry.npmjs.org/@vueuse/shared/-/shared-10.7.0.tgz"
   integrity sha512-kc00uV6CiaTdc3i1CDC4a3lBxzaBE9AgYNtFN87B5OOscqeWElj/uza8qVDmk7/U8JbqoONLbtqiLJ5LGRuqlw==
+  dependencies:
+    vue-demi ">=0.14.6"
+
+"@vueuse/shared@10.7.1":
+  version "10.7.1"
+  resolved "https://registry.yarnpkg.com/@vueuse/shared/-/shared-10.7.1.tgz#b9892fc31784d685619015fba287cde53873485d"
+  integrity sha512-v0jbRR31LSgRY/C5i5X279A/WQjD6/JsMzGa+eqt658oJ75IvQXAeONmwvEMrvJQKnRElq/frzBR7fhmWY5uLw==
   dependencies:
     vue-demi ">=0.14.6"
 
@@ -5551,6 +5623,11 @@ std-env@^3.4.3, std-env@^3.5.0:
   resolved "https://registry.npmjs.org/std-env/-/std-env-3.6.0.tgz"
   integrity sha512-aFZ19IgVmhdB2uX599ve2kE6BIE3YMnQ6Gp6BURhW/oIzpXGKr878TQfAQZn1+i0Flcc/UKUy1gOlcfaUBCryg==
 
+std-env@^3.7.0:
+  version "3.7.0"
+  resolved "https://registry.yarnpkg.com/std-env/-/std-env-3.7.0.tgz#c9f7386ced6ecf13360b6c6c55b8aaa4ef7481d2"
+  integrity sha512-JPbdCEQLj1w5GilpiHAx3qJvFndqybBysA3qUOnznweH4QbNYUsW/ea8QzSrnh0vNsezMMw5bcVool8lM0gwzg==
+
 streamx@^2.15.0:
   version "2.15.6"
   resolved "https://registry.npmjs.org/streamx/-/streamx-2.15.6.tgz"
@@ -5931,6 +6008,25 @@ unimport@^3.5.0, unimport@^3.6.0, unimport@^3.6.1:
   dependencies:
     "@rollup/pluginutils" "^5.1.0"
     escape-string-regexp "^5.0.0"
+    fast-glob "^3.3.2"
+    local-pkg "^0.5.0"
+    magic-string "^0.30.5"
+    mlly "^1.4.2"
+    pathe "^1.1.1"
+    pkg-types "^1.0.3"
+    scule "^1.1.1"
+    strip-literal "^1.3.0"
+    unplugin "^1.5.1"
+
+unimport@^3.7.0:
+  version "3.7.1"
+  resolved "https://registry.yarnpkg.com/unimport/-/unimport-3.7.1.tgz#37250d0f3f2dcf1e1b66ed13728db0e9f50ba0c3"
+  integrity sha512-V9HpXYfsZye5bPPYUgs0Otn3ODS1mDUciaBlXljI4C2fTwfFpvFZRywmlOu943puN9sncxROMZhsZCjNXEpzEQ==
+  dependencies:
+    "@rollup/pluginutils" "^5.1.0"
+    acorn "^8.11.2"
+    escape-string-regexp "^5.0.0"
+    estree-walker "^3.0.3"
     fast-glob "^3.3.2"
     local-pkg "^0.5.0"
     magic-string "^0.30.5"
