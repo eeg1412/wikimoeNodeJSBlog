@@ -147,7 +147,7 @@
       </div>
     </div>
     <div class="google-ad-bt" v-if="GOOGLE_ADSENSE_HOME_BT_SLOT">
-      <Adsbygoogle
+      <AdsbygoogleHave
         :ad-slot="GOOGLE_ADSENSE_HOME_BT_SLOT"
         :ad-format="GOOGLE_ADSENSE_HOME_BT_FORMAT"
         :ad-layout-key="GOOGLE_ADSENSE_HOME_BT_LAYOUT_KEY"
