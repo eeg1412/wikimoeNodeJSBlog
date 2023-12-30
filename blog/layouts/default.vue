@@ -147,11 +147,7 @@
       </div>
     </div>
     <div class="google-ad-bt" v-if="GOOGLE_ADSENSE_HOME_BT">
-      <AdsbygoogleHave
-        :ad-slot="GOOGLE_ADSENSE_HOME_BT[0]"
-        :ad-format="GOOGLE_ADSENSE_HOME_BT[1]"
-        :ad-layout-key="GOOGLE_ADSENSE_HOME_BT[2]"
-      />
+      <div class="p-4"><AdsbygoogleHave :ad="GOOGLE_ADSENSE_HOME_BT" /></div>
     </div>
 
     <!-- footer Powered by wikimoeBlog -->
@@ -263,9 +259,8 @@ watch(
 
 // google adsense
 const runtimeConfig = useRuntimeConfig()
-const GOOGLE_ADSENSE_HOME_BT = runtimeConfig.public.GOOGLE_ADSENSE_HOME_BT
-  ? runtimeConfig.public.GOOGLE_ADSENSE_HOME_BT.split(',')
-  : null
+const GOOGLE_ADSENSE_HOME_BT =
+  runtimeConfig.public.GOOGLE_ADSENSE_HOME_BT || null
 
 // let observer
 onMounted(async () => {
@@ -673,5 +668,6 @@ onUnmounted(() => {
   margin-top: 20px;
   border-radius: 20px;
   overflow: hidden;
+  box-shadow: 0px 0px 10px 0px rgba(239, 144, 167, 0.08);
 }
 </style>

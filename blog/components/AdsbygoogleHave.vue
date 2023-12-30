@@ -7,18 +7,14 @@
 </template>
 <script setup>
 const props = defineProps({
-  // :ad-slot="GOOGLE_ADSENSE_HOME_BT_SLOT"
-  // :ad-format="GOOGLE_ADSENSE_HOME_BT_FORMAT"
-  // :ad-layout-key="GOOGLE_ADSENSE_HOME_BT_LAYOUT_KEY"
-  adSlot: {
+  ad: {
     type: String,
     required: true,
   },
-  adFormat: {
-    type: String,
-  },
-  adLayoutKey: {
-    type: String,
-  },
 })
+// ad 转换
+const adArray = props.ad.split(',')
+const adSlot = adArray[0]
+const adFormat = adArray[1]
+const adLayoutKey = adArray[2]
 </script>

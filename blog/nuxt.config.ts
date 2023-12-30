@@ -12,6 +12,9 @@ if (process.env.GOOGLE_ADSENSE_ID) {
   }
   publicRuntimeConfigPlus.GOOGLE_ADSENSE_HOME_BT =
     process.env.GOOGLE_ADSENSE_HOME_BT || null
+  // GOOGLE_ADSENSE_POST_DETAIL_BT
+  publicRuntimeConfigPlus.GOOGLE_ADSENSE_POST_DETAIL_BT =
+    process.env.GOOGLE_ADSENSE_POST_DETAIL_BT || null
 }
 export default defineNuxtConfig({
   app: {
