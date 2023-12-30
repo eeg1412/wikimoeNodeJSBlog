@@ -10,14 +10,8 @@ if (process.env.GOOGLE_ADSENSE_ID) {
     id: process.env.GOOGLE_ADSENSE_ID,
     test: process.env.GOOGLE_ADSENSE_TEST_MODE === '1',
   }
-  publicRuntimeConfigPlus.GOOGLE_ADSENSE_HOME_BT_SLOT =
-    process.env.GOOGLE_ADSENSE_HOME_BT_SLOT || null
-  // GOOGLE_ADSENSE_HOME_BT_FORMAT
-  publicRuntimeConfigPlus.GOOGLE_ADSENSE_HOME_BT_FORMAT =
-    process.env.GOOGLE_ADSENSE_HOME_BT_FORMAT || null
-  // GOOGLE_ADSENSE_HOME_BT_LAYOUT_KEY
-  publicRuntimeConfigPlus.GOOGLE_ADSENSE_HOME_BT_LAYOUT_KEY =
-    process.env.GOOGLE_ADSENSE_HOME_BT_LAYOUT_KEY || null
+  publicRuntimeConfigPlus.GOOGLE_ADSENSE_HOME_BT =
+    process.env.GOOGLE_ADSENSE_HOME_BT || null
 }
 export default defineNuxtConfig({
   app: {

@@ -146,11 +146,11 @@
         </div>
       </div>
     </div>
-    <div class="google-ad-bt" v-if="GOOGLE_ADSENSE_HOME_BT_SLOT">
+    <div class="google-ad-bt" v-if="GOOGLE_ADSENSE_HOME_BT">
       <AdsbygoogleHave
-        :ad-slot="GOOGLE_ADSENSE_HOME_BT_SLOT"
-        :ad-format="GOOGLE_ADSENSE_HOME_BT_FORMAT"
-        :ad-layout-key="GOOGLE_ADSENSE_HOME_BT_LAYOUT_KEY"
+        :ad-slot="GOOGLE_ADSENSE_HOME_BT[0]"
+        :ad-format="GOOGLE_ADSENSE_HOME_BT[1]"
+        :ad-layout-key="GOOGLE_ADSENSE_HOME_BT[2]"
       />
     </div>
 
@@ -263,13 +263,9 @@ watch(
 
 // google adsense
 const runtimeConfig = useRuntimeConfig()
-const GOOGLE_ADSENSE_HOME_BT_SLOT =
-  runtimeConfig.public.GOOGLE_ADSENSE_HOME_BT_SLOT
-// GOOGLE_ADSENSE_HOME_BT_FORMAT
-const GOOGLE_ADSENSE_HOME_BT_FORMAT =
-  runtimeConfig.public.GOOGLE_ADSENSE_HOME_BT_FORMAT
-const GOOGLE_ADSENSE_HOME_BT_LAYOUT_KEY =
-  runtimeConfig.public.GOOGLE_ADSENSE_HOME_BT_LAYOUT_KEY
+const GOOGLE_ADSENSE_HOME_BT = runtimeConfig.public.GOOGLE_ADSENSE_HOME_BT
+  ? runtimeConfig.public.GOOGLE_ADSENSE_HOME_BT.split(',')
+  : null
 
 // let observer
 onMounted(async () => {
