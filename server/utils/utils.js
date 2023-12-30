@@ -484,6 +484,10 @@ const referrerDomainWhitelist = process.env.REFERRER_DOMAIN_WHITELIST ? process.
 const referrerRecordTimerMap = {}
 // 引用记录传入参数是referrer和type
 exports.referrerRecord = function (referrer, referrerType) {
+  if (referrerDomainWhitelist.length === 0) {
+    console.warn('REFERRER_DOMAIN_WHITELIST为空，不记录referrer')
+    return
+  }
   if (referrer) {
     // 如果referrer存在，就判断referrer是否在REFERRER_DOMAIN_WHITELIST中
     const isReferrerDomainWhitelist = referrerDomainWhitelist.some((item) => {
@@ -492,22 +496,24 @@ exports.referrerRecord = function (referrer, referrerType) {
     })
     // 如果referrer不在REFERRER_DOMAIN_WHITELIST中，就记录
     if (!isReferrerDomainWhitelist) {
+      const md5Id = this.md5hex(referrer)
       // 判断是否存在计时器
-      if (referrerRecordTimerMap[referrer]) {
-        // 如果存在计时器，就清除计时器
-        clearTimeout(referrerRecordTimerMap[referrer])
+      if (referrerRecordTimerMap[md5Id]) {
+        // 如果存在计时器，就补操作
+        return
       }
-      // 重新设置计时器
-      referrerRecordTimerMap[referrer] = setTimeout(() => {
+      // 设置计时器
+      referrerRecordTimerMap[md5Id] = setTimeout(() => {
         // 如果计时器到期，就保存referrer
         const params = {
           referrer,
           referrerType
         }
+        console.log('referrer记录', params)
         referrerUtils.save(params)
         // 删除计时器
-        delete referrerRecordTimerMap[referrer]
-      }, 1000 * 60)
+        delete referrerRecordTimerMap[md5Id]
+      }, 1000 * 60 * 60)
     }
   }
 
