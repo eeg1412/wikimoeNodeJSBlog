@@ -10,8 +10,6 @@ if (process.env.GOOGLE_ADSENSE_ID) {
     id: process.env.GOOGLE_ADSENSE_ID,
     test: process.env.GOOGLE_ADSENSE_TEST_MODE === '1',
   }
-  publicRuntimeConfigPlus.GOOGLE_ADSENSE_HOME_BT =
-    process.env.GOOGLE_ADSENSE_HOME_BT || null
   // GOOGLE_ADSENSE_POST_DETAIL_BT
   publicRuntimeConfigPlus.GOOGLE_ADSENSE_POST_DETAIL_BT =
     process.env.GOOGLE_ADSENSE_POST_DETAIL_BT || null

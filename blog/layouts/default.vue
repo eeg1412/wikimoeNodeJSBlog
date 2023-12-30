@@ -146,9 +146,6 @@
         </div>
       </div>
     </div>
-    <div class="google-ad-bt" v-if="GOOGLE_ADSENSE_HOME_BT">
-      <div class="p-4"><AdsbygoogleHave :ad="GOOGLE_ADSENSE_HOME_BT" /></div>
-    </div>
 
     <!-- footer Powered by wikimoeBlog -->
     <div class="blog-footer-body">
@@ -256,11 +253,6 @@ watch(
     rightSidebarActive.value = false
   }
 )
-
-// google adsense
-const runtimeConfig = useRuntimeConfig()
-const GOOGLE_ADSENSE_HOME_BT =
-  runtimeConfig.public.GOOGLE_ADSENSE_HOME_BT || null
 
 // let observer
 onMounted(async () => {
@@ -659,7 +651,7 @@ onUnmounted(() => {
     background-image: none;
   }
 }
-.google-ad-bt {
+/* .google-ad-bt {
   max-height: 20vh;
   background: #fff;
   max-width: 1220px;
@@ -669,5 +661,5 @@ onUnmounted(() => {
   border-radius: 20px;
   overflow: hidden;
   box-shadow: 0px 0px 10px 0px rgba(239, 144, 167, 0.08);
-}
+} */
 </style>
