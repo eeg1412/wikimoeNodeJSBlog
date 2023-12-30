@@ -664,10 +664,8 @@ onUnmounted(() => {
     background-image: none;
   }
 }
-</style>
-<style scoped>
 .google-ad-bt {
-  height: 15vh;
+  max-height: 20vh;
   background: #fff;
   max-width: 1220px;
   margin: 0 auto;
