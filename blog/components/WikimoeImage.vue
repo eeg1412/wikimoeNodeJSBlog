@@ -15,7 +15,6 @@
 <script setup>
 import { computed } from 'vue'
 import { loadAndOpenImg } from '@/utils'
-import { _0 } from '#tailwind-config/theme/backdropBlur'
 
 // props
 const props = defineProps({
