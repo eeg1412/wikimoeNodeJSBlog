@@ -103,6 +103,17 @@
                 >
                   <RichEditor5 v-model:content="element.content" />
                 </el-form-item>
+                <!-- showTextInputTypeList -->
+                <el-form-item
+                  label="内容"
+                  prop="content"
+                  v-if="showTextInputTypeList.includes(element.type)"
+                >
+                  <el-input
+                    v-model="element.content"
+                    :placeholder="placeholderMap[element.type]"
+                  ></el-input>
+                </el-form-item>
                 <el-form-item
                   label="显示条数"
                   prop="count"
@@ -177,6 +188,15 @@ export default {
           content: '',
           count: 1,
           type: 1,
+          taxis: 0,
+          status: 0,
+        },
+        // 谷歌广告
+        {
+          title: '谷歌广告',
+          content: '',
+          count: 1,
+          type: 10,
           taxis: 0,
           status: 0,
         },
@@ -255,6 +275,11 @@ export default {
 
     const showConetntTypeList = [1]
     const showCountTypeList = [2, 3, 4, 5, 6]
+    const showTextInputTypeList = [10]
+
+    const placeholderMap = {
+      10: '填写格式为：ad-slot,ad-format,ad-layout-key',
+    }
 
     const getSidebarList = () => {
       authApi.getSidebarList().then((res) => {
@@ -340,6 +365,8 @@ export default {
       sidebarSettingsTemplate,
       showConetntTypeList,
       showCountTypeList,
+      showTextInputTypeList,
+      placeholderMap,
       handleSideBarCommand,
       sidebarSettingsSubmit,
       sidebarSettingsDelete,

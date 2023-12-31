@@ -142,6 +142,9 @@
             <template v-else-if="item.type === 9">
               <Archive />
             </template>
+            <template v-else-if="item.type === 10">
+              <AdsbygoogleHave :ad="item.content" />
+            </template>
           </div>
         </div>
       </div>

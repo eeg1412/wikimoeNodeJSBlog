@@ -8,7 +8,7 @@ var sidebars = new Schema({
   content: { type: String },
   // 计数
   count: { type: Number, default: 1 },
-  // 1:自定义 2:热门文章 3:最新评论 4:标签云 5:随机文章 6:相册 8:分类 9:归档
+  // 1:自定义 2:热门文章 3:最新评论 4:标签云 5:随机文章 6:相册 8:分类 9:归档 10:谷歌广告
   type: {
     type: Number,
     // 必填
