@@ -35,10 +35,14 @@
           :modules="[SwiperPagination, SwiperMousewheel]"
           :slides-per-view="1"
           :loop="false"
-          :mousewheel="imageGroup.length > 1"
+          :mousewheel="{
+            releaseOnEdges: true,
+          }"
           :pagination="{
             type: 'fraction',
           }"
+          @slideChangeTransitionStart="slideChangeTransitionStart"
+          @slideChangeTransitionEnd="slideChangeTransitionEnd"
         >
           <SwiperSlide v-for="(item, index) in imageGroup" :key="item._id">
             <!-- 四张图以内 -->
@@ -96,6 +100,8 @@
   </div>
 </template>
 <script setup>
+import { ref } from 'vue'
+
 // props
 const props = defineProps({
   coverImages: {
@@ -135,6 +141,12 @@ const dataHrefList = computed(() => {
     }
   })
 })
+const slideChangeTransitionStart = (swiper) => {
+  swiper.params.mousewheel.releaseOnEdges = false
+}
+const slideChangeTransitionEnd = (swiper) => {
+  swiper.params.mousewheel.releaseOnEdges = true
+}
 </script>
 <style scoped>
 .blog-tweet-1img-list-body {
