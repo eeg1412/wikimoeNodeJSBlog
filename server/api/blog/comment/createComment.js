@@ -31,7 +31,9 @@ module.exports = async function (req, res, next) {
     content,
     nickname,
     uuid,
-    ip: ip
+    ip: ip,
+    deviceInfo: utils.deviceUAInfoUtils(req),
+    ipInfo: await utils.IP2LocationUtils(ip, null, null, false)
   }
   if (email) {
     params.email = email
@@ -166,10 +168,6 @@ module.exports = async function (req, res, next) {
       status: params.status
     })
     userApiLog.info(`comment:${content} create success`)
-    // 异步更新设备信息
-    utils.deviceUtils(req, data._id, commentUtils)
-    // 异步更新ip信息
-    utils.IP2LocationUtils(ip, data._id, commentUtils)
     if (params.status === 1) {
       // 异步更新文章评论数
       postUtils.updateOne({ _id: post }, { $inc: { comnum: 1 } }, true)

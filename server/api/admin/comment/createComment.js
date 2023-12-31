@@ -20,7 +20,9 @@ module.exports = async function (req, res, next) {
     top,
     // 因为是后台接口，所以默认通过审核
     status: 1,
-    ip: ip
+    ip: ip,
+    deviceInfo: utils.deviceUAInfoUtils(req),
+    ipInfo: await utils.IP2LocationUtils(ip, null, null, false)
   }
   const rule = [
     {
@@ -65,10 +67,6 @@ module.exports = async function (req, res, next) {
     })
     adminApiLog.info(`comment:${content} create success`)
     cacheDataUtils.getCommentList()
-    // 异步更新设备信息
-    utils.deviceUtils(req, data._id, commentUtils)
-    // 异步更新ip信息
-    utils.IP2LocationUtils(ip, data._id, commentUtils)
     // 异步更新文章评论数
     postUtils.updateOne({ _id: post }, { $inc: { comnum: 1 } })
     // 发送邮件通知
