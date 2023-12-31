@@ -216,18 +216,7 @@ export default {
     }
 
     const setBanner = (crop, element) => {
-      authApi
-        .updateBannerImg({
-          _id: element._id,
-          img: crop,
-        })
-        .then((res) => {
-          // 更新图片
-          element.img = res.data.data.img
-        })
-        .catch((err) => {
-          console.log(err)
-        })
+      element.img = crop
     }
 
     onMounted(() => {

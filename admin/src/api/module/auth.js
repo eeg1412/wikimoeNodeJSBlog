@@ -370,11 +370,11 @@ export default function (api) {
       })
     },
     // put /banner/update/img
-    updateBannerImg (data) {
-      return api.put('/banner/update/img', data, {
-        shouldAdminJWT: true
-      })
-    },
+    // updateBannerImg (data) {
+    //   return api.put('/banner/update/img', data, {
+    //     shouldAdminJWT: true
+    //   })
+    // },
     // put /banner/update/taxis
     updateBannerTaxis (data) {
       return api.put('/banner/update/taxis', data, {
