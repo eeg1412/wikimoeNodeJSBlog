@@ -267,6 +267,9 @@ onMounted(async () => {
   // observer.observe(layoutRightBox.value)
   pageLoading.value = false
   setWindowHeight()
+  setTimeout(() => {
+    setWindowHeight()
+  }, 1000)
   window.addEventListener('resize', setWindowHeightResize)
 })
 onUnmounted(() => {
