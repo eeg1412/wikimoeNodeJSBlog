@@ -101,4 +101,24 @@ GOOGLE_ADSENSE_POST_DETAIL_BT="文章底部广告，填写格式为：ad-slot,ad
 yarn build
 ```
 
-编译后生成 .output 文件夹，通过 node 运行即可。
+### 进入编译文件夹
+
+```
+cd build
+```
+
+### 运行
+
+linux
+
+```
+yarn start-linux
+```
+
+windows
+
+```
+yarn start-windows
+```
+
+※在 blog/build/package.json 中可以修改运行端口
