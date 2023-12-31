@@ -62,4 +62,11 @@ export default defineNuxtConfig({
   colorMode: {
     preference: 'light',
   },
+  nitro: {
+    output: {
+      dir: 'build/.output',
+      serverDir: 'build/.output/server',
+      publicDir: 'build/.output/public',
+    },
+  },
 })
