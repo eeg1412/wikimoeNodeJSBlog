@@ -50,8 +50,10 @@ module.exports = async function (req, res, next) {
     res.status(400).json({ errors })
     return
   }
-  // 校验除了type1以外的其他侧边栏是否存在
-  if (params.type !== 1) {
+  // 允许创建多个type的列表
+  const multipleType = [1, 10]
+  // 校验除了multipleType以外的其他侧边栏是否存在
+  if (!multipleType.includes(params.type)) {
     const sidebar = await sidebarUtils.findOne({ type: params.type })
     if (sidebar) {
       res.status(400).json({
