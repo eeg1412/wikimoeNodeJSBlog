@@ -294,6 +294,15 @@ const adminRouteSetting = [
     roleType: null,
     role: null
   },
+  // put updatePostEditorVersion
+  {
+    path: '/post/update/editorversion',
+    method: 'put',
+    middleware: [checkAuth],
+    controller: require('../api/admin/post/updatePostEditorVersion'),
+    roleType: null,
+    role: null
+  },
   // delete /post/delete
   {
     path: '/post/delete',

@@ -381,6 +381,12 @@ export default function (api) {
         shouldAdminJWT: true
       })
     },
+    // put '/post/update/editorversion'
+    updatePostEditorVersion (data) {
+      return api.put('/post/update/editorversion', data, {
+        shouldAdminJWT: true
+      })
+    },
     // get /readerlog/list
     getReaderlogList (data) {
       return api.get('/readerlog/list', {

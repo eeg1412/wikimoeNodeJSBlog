@@ -59,6 +59,19 @@
                 ></el-input>
               </el-tab-pane>
             </el-tabs>
+            <div class="mt10 w_10 old-content-body" v-if="oldPostEditorContent">
+              <div class="fb">旧编辑器内容（刷新后删除）：</div>
+              <div v-html="oldPostEditorContent"></div>
+            </div>
+            <div class="mt10" v-if="postEditorVersion < 5">
+              <!-- 升级按钮 -->
+              <el-button
+                type="danger"
+                @click="updatePostEditorVersion"
+                class="mb10"
+                >清空内容并升级编辑器版本</el-button
+              >
+            </div>
           </el-form-item>
 
           <!-- 摘要 -->
@@ -559,6 +572,30 @@ export default {
       }, 1000 * 60 * 2)
     }
 
+    // 升级编辑器版本
+    const oldPostEditorContent = ref(null)
+    const updatePostEditorVersion = () => {
+      ElMessageBox.confirm(
+        '升级编辑器版本后，富文本编辑器的内容将会被清空，确定要升级吗？',
+        '提示',
+        {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning',
+        }
+      )
+        .then(() => {
+          authApi
+            .updatePostEditorVersion({ id: form.id, __v: form.__v })
+            .then(() => {
+              oldPostEditorContent.value = form.content
+              ElMessage.success('升级成功')
+              getPostDetail()
+            })
+        })
+        .catch(() => {})
+    }
+
     onMounted(() => {
       getPostDetail()
       getTagList()
@@ -598,6 +635,9 @@ export default {
       attachmentDrag,
       // template
       templateList,
+      // 升级编辑器版本
+      oldPostEditorContent,
+      updatePostEditorVersion,
     }
   },
 }
@@ -634,10 +674,17 @@ export default {
 .post-cover-image-item.type-add {
   border: 1px dashed #ccc;
 }
+.old-content-body {
+  border: 1px solid #dcdfe6;
+  padding: 10px;
+}
 </style>
 <style>
 .post-editor-body .el-tabs__content {
   overflow: visible;
   z-index: 1;
+}
+.old-content-body img {
+  max-width: 100%;
 }
 </style>
