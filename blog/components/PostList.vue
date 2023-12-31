@@ -61,7 +61,7 @@
             <div class="post-list-tags-body" v-if="item.tags.length > 0">
               <template v-for="(tag, index) in item.tags" :key="index">
                 <NuxtLink
-                  class="post-list-tag-item"
+                  class="post-list-tag-item hover:underline"
                   :to="{
                     name: 'postListTag',
                     params: { tagid: tag._id, page: 1 },
