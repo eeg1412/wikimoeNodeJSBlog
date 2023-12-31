@@ -254,6 +254,10 @@ watch(
   (newVal, oldVal) => {
     leftMenuActive.value = false
     rightSidebarActive.value = false
+    setWindowHeight()
+    setTimeout(() => {
+      setWindowHeight()
+    }, 2000)
   }
 )
 
