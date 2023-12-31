@@ -14,9 +14,13 @@ await getOptions()
 const { options } = storeToRefs(optionStore)
 useHead({
   titleTemplate: (titleChunk) => {
-    return titleChunk
-      ? `${options.value.siteTitle} - ${titleChunk}`
-      : options.value.siteTitle
+    if (!titleChunk) {
+      return options.value.siteTitle
+    } else if (titleChunk === options.value.siteSubTitle) {
+      return `${options.value.siteTitle} | ${titleChunk}`
+    } else {
+      return `${titleChunk} - ${options.value.siteTitle}`
+    }
   },
   title: options.value.siteSubTitle,
   meta: [

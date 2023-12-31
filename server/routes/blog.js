@@ -135,6 +135,20 @@ const blogRouteSetting = [
     middleware: [],
     controller: require('../api/blog/bangumi/getBangumiYearList'),
   },
+  // getSortDetail
+  {
+    path: '/sort/detail',
+    method: 'get',
+    middleware: [],
+    controller: require('../api/blog/sort/getSortDetail'),
+  },
+  // getTagDetail
+  {
+    path: '/tag/detail',
+    method: 'get',
+    middleware: [],
+    controller: require('../api/blog/tag/getTagDetail'),
+  },
 ]
 
 blogRouteSetting.forEach(item => {
