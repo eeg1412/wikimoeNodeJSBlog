@@ -92,7 +92,7 @@ yarn install
 NUXT_API_API_DOMAIN="填写API的HTTP地址，如：http://localhost:3011"
 GOOGLE_ADSENSE_ID="如果需要设置谷歌广告，填写谷歌广告ID"
 GOOGLE_ADSENSE_TEST_MODE="是否启用测试模式 1 为启用，0 为不启用"
-GOOGLE_ADSENSE_HOME_BT="首页底部广告，填写格式为：ad-slot,ad-format,ad-layout-key"
+GOOGLE_ADSENSE_POST_DETAIL_BT="文章底部广告，填写格式为：ad-slot,ad-format,ad-layout-key"
 ```
 
 ### 编译
