@@ -44,10 +44,14 @@ const goPostDetail = (e, item, middle) => {
 
   let id = item.post._id
   const alias = item.post.alias
+  const postType = item.post.type
   if (alias) {
     id = alias
   }
-  const routeName = 'postDetail'
+  let routeName = 'postDetail'
+  if (postType === 3) {
+    routeName = 'pageDetail'
+  }
   // 如果middle为true，就在新标签页打开
   if (middle) {
     // resolveUrl
