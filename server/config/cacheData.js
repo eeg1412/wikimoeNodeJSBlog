@@ -108,7 +108,7 @@ exports.getCommentList = async function (req, res, next) {
   if (!commentSidebar) {
     global.$cacheData.commentList = null
     // reject
-    return Promise.reject(new Error('不存在type为3的侧边栏'))
+    return []
   }
   // 存在type为3的侧边栏,获取count
   const count = commentSidebar.count || 0
@@ -116,7 +116,7 @@ exports.getCommentList = async function (req, res, next) {
   if (count <= 0) {
     global.$cacheData.commentList = null
     // reject
-    return Promise.reject(new Error('count小于等于0，不获取最新评论列表'))
+    return []
   }
   const sort = {
     date: -1,

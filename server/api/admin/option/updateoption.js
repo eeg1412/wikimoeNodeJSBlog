@@ -3,6 +3,7 @@ const utils = require('../../../utils/utils')
 const log4js = require('log4js')
 const adminApiLog = log4js.getLogger('adminApi')
 const globalConfigUtils = require('../../../config/globalConfig')
+const cacheDataUtils = require('../../../config/cacheData')
 
 module.exports = async function (req, res, next) {
   const optionList = req.body.optionList || []
@@ -52,6 +53,7 @@ module.exports = async function (req, res, next) {
     })
   }
   globalConfigUtils.initGlobalConfig()
+  cacheDataUtils.getPostArchiveList()
   // 返回结果
   res.send({
     data: resList
