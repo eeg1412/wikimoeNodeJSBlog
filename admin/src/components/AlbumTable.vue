@@ -72,6 +72,7 @@
     @success="attachmentUploadSuccess"
     @onAttachmentsDelete="attachmentUploadSuccess"
     @onAttachmentsAlbumChange="attachmentUploadSuccess"
+    @onDialogClose="attachmentUploadSuccess"
     ref="attachmentsDialogRef"
   />
 </template>

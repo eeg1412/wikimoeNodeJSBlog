@@ -6,7 +6,8 @@
     :close-on-click-modal="false"
     align-center
     class="attachments-dialog"
-    @closed="clearSelectedImageList"
+    @closed="onDialogClosed"
+    @close="onDialogClose"
     append-to-body
     @paste="handlePaste"
   >
@@ -17,12 +18,14 @@
             v-model="albumId"
             placeholder="请选择相册"
             clearable
+            filterable
+            remote
+            :remote-method="searchAlbumsRemote"
             @change="changeAlbum"
-            @clear="changeAlbum"
             class="attachments-form-item"
           >
             <el-option
-              v-for="item in albumList"
+              v-for="item in albumListCom"
               :key="item._id"
               :label="item.name"
               :value="item._id"
@@ -226,6 +229,8 @@ export default {
     'onAttachmentsDelete',
     'onAttachmentsAlbumChange',
     'selectAttachments',
+    'onDialogClosed',
+    'onDialogClose',
   ],
   setup(props, { emit }) {
     const visible = ref(false)
@@ -234,7 +239,11 @@ export default {
     const open = async () => {
       attachmentList.value = []
       albumId.value = props.albumIdProp
-      await getAlbumList()
+      if (albumId.value) {
+        await getAlbumDetail()
+      } else {
+        await getAlbumList()
+      }
       if (!albumId.value && albumList.value.length > 0) {
         albumId.value = albumList.value[0]._id || ''
       }
@@ -247,15 +256,54 @@ export default {
     }
 
     const albumList = ref([])
+    const keyword = ref('')
+    const albumListCom = computed(() => {
+      // 如果存在keyword，就添加一个添加选项
+      if (keyword.value) {
+        return [
+          ...albumList.value,
+          {
+            _id: -1,
+            name: `添加相册「${keyword.value}」`,
+          },
+        ]
+      }
+      return albumList.value
+    })
     const getAlbumList = async () => {
       const params = {
         page: 1,
-        size: 999999,
-        keyword: '',
+        size: 10,
+        keyword: keyword.value,
       }
-      await authApi.getAlbumList(params).then((res) => {
+      await authApi.getAlbumList(params, { noLoading: true }).then((res) => {
         albumList.value = res.data.list
       })
+    }
+    const getAlbumDetail = async (id) => {
+      const params = {
+        id: id || albumId.value,
+      }
+      await authApi
+        .getAlbumDetail(params)
+        .then((res) => {
+          albumList.value = [res.data.data]
+        })
+        .catch(() => {})
+    }
+    let searchTimer = null
+    const searchAlbumsRemote = async (query) => {
+      clearTimeout(searchTimer)
+      // value是id,如果是-1，就创建相册
+      if (albumId.value === -1) {
+        await createAlbum()
+        changeAlbum(albumId.value)
+      } else {
+        searchTimer = setTimeout(() => {
+          keyword.value = query
+          getAlbumList()
+        }, 100)
+      }
     }
 
     const headers = ref({})
@@ -322,7 +370,25 @@ export default {
         })
     }
 
-    const changeAlbum = () => {
+    const createAlbum = async () => {
+      const params = {
+        name: keyword.value,
+      }
+      const res = await authApi.createAlbum(params).catch(() => {
+        return null
+      })
+      if (res?.data?.data?._id) {
+        await getAlbumDetail(res.data.data._id)
+        albumId.value = res.data.data._id
+      } else {
+        albumId.value = ''
+        keyword.value = ''
+      }
+    }
+    const changeAlbum = async (value) => {
+      if (value === -1) {
+        return
+      }
       params.album = albumId.value
       clearSelectedImageList()
       getAttachmentList(true, true)
@@ -507,6 +573,16 @@ export default {
       }
     }
 
+    // clearSelectedImageList
+    const onDialogClosed = () => {
+      clearSelectedImageList()
+      emit('onDialogClosed')
+    }
+
+    const onDialogClose = () => {
+      emit('onDialogClose')
+    }
+
     // 监听 params.page 的变化
     watch(
       () => params.page,
@@ -530,6 +606,8 @@ export default {
       albumId,
       open,
       albumList,
+      albumListCom,
+      searchAlbumsRemote,
       params,
       total,
       getAttachmentList,
@@ -552,6 +630,8 @@ export default {
       clearSelectedImageList,
       selectAttachmentsOk,
       handlePaste,
+      onDialogClosed,
+      onDialogClose,
     }
   },
 }

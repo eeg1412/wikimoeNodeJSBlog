@@ -89,10 +89,11 @@ export default function (api) {
       })
     },
     // get album/list
-    getAlbumList (data) {
+    getAlbumList (data, options = {}) {
       return api.get('/album/list', {
         params: data,
-        shouldAdminJWT: true
+        shouldAdminJWT: true,
+        ...options
       })
     },
     // get album/detail
