@@ -318,7 +318,7 @@ export default {
             }
           })
           type.value = res.data.data.type
-          // TODO: 旧文章采用v4富文本编辑器，新文章采用v5富文本编辑器
+          // 旧文章采用v4富文本编辑器，新文章采用v5富文本编辑器
           postEditorVersion.value = res.data.data.editorVersion || 5
           form.id = res.data.data._id
         })
