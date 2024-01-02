@@ -47,9 +47,9 @@
                       <div>
                         <!-- 添加图片按钮 -->
                         <Cropper
-                          :aspectRatio="880 / 350"
-                          :width="880"
-                          :height="350"
+                          :aspectRatio="1320 / 525"
+                          :width="1320"
+                          :height="525"
                           :src="element.img"
                           @crop="(crop) => setBanner(crop, element)"
                         ></Cropper>

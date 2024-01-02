@@ -291,7 +291,7 @@ onUnmounted(() => {
   justify-content: space-between;
   align-items: stretch;
   margin: 10px;
-  max-width: 1220px;
+  max-width: 1300px;
   width: 100%;
   margin: 0 auto;
   margin-bottom: 20px;
@@ -364,7 +364,7 @@ onUnmounted(() => {
   background: #171717;
 }
 .blog-footer-content-body {
-  max-width: 1220px;
+  max-width: 1300px;
   padding: 0 20px;
   padding-top: 35px;
   margin: 0 auto;
@@ -570,7 +570,7 @@ onUnmounted(() => {
     @apply bg-white;
   }
   .blog-top-bar-body {
-    max-width: 1220px;
+    max-width: 1300px;
     margin: 0 auto;
     padding: 0 10px;
     height: 60px;
@@ -664,7 +664,7 @@ onUnmounted(() => {
 /* .google-ad-bt {
   max-height: 20vh;
   background: #fff;
-  max-width: 1220px;
+  max-width: 1300px;
   margin: 0 auto;
   margin-bottom: 20px;
   margin-top: 20px;

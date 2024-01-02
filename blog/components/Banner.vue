@@ -27,8 +27,8 @@
             class="top-banner-list-item-img"
             :src="item.img"
             :alt="item.title"
-            :width="880"
-            :height="300"
+            :width="1320"
+            :height="525"
             loading="lazy"
           />
           <!-- title -->
@@ -68,7 +68,7 @@ const openLink = (item, midClick) => {
 }
 .top-banner-list-item {
   width: 100%;
-  /* padding 比例是 880/350 */
+  /* padding 比例是 39.77% */
   padding-bottom: 39.77%;
   position: relative;
   z-index: 1;
