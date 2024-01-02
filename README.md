@@ -4,7 +4,10 @@
 
 ## 说明
 
-项目分为三个部分  
+![image](https://github.com/eeg1412/wikimoeNodeJSBlog/assets/27753071/997d9cb4-56fc-4886-b155-bb5102fd20b9)
+
+
+项目框架如上图，分为三个部分  
 server：博客 api 部分  
 admin：博客管理后台部分  
 blog：博客部分
