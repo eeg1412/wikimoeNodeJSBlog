@@ -1,10 +1,9 @@
 <template>
   <div class="empty-body">
     <div class="empty-body-content">
-      <!-- 文字 -->
-      <div class="flex items-center justify-center mt-10">
-        <UIcon name="i-heroicons-circle-stack" class="mr-2" />
-        暂无数据
+      <div>
+        <!-- img/nodata.webp -->
+        <img src="/img/nodata.webp" width="1280" height="1280" alt="nodata" />
       </div>
     </div>
   </div>
@@ -13,11 +12,11 @@
 <style scoped>
 .empty-body {
   width: 100%;
-  padding: 100px 0;
+  padding: 40px 0;
 }
 .empty-body-content {
   text-align: center;
-  color: #999;
   font-size: 18px;
+  position: relative;
 }
 </style>
