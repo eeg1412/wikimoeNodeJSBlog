@@ -25,6 +25,16 @@ app.use('/content', function (req, res, next) {
   utils.referrerRecord(req.headers.referer, 'assets')
   next();
 }, express.static(path.join(__dirname, 'public/content')));
+// up_works referrerRecord
+app.use('/up_works', function (req, res, next) {
+  utils.referrerRecord(req.headers.referer, 'assets')
+  next();
+}, express.static(path.join(__dirname, 'public/up_works')));
+// web_demo referrerRecord
+app.use('/web_demo', function (req, res, next) {
+  utils.referrerRecord(req.headers.referer, 'assets')
+  next();
+}, express.static(path.join(__dirname, 'public/web_demo')));
 // app.use(express.static(path.join(__dirname, 'public')));
 
 app.use((err, req, res, next) => {
