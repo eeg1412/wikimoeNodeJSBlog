@@ -215,4 +215,12 @@ onMounted(() => {
   -ms-user-select: none;
   user-select: none;
 }
+.html-content-body table {
+  @apply table-auto border-collapse;
+}
+
+.html-content-body td,
+.html-content-body th {
+  @apply border;
+}
 </style>
