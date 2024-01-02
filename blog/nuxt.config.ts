@@ -55,6 +55,12 @@ export default defineNuxtConfig({
     '/upload/**': {
       proxy: `${process.env.NUXT_API_API_DOMAIN}/upload/**`,
     },
+    '/up_works/**': {
+      proxy: `${process.env.NUXT_API_API_DOMAIN}/up_works/**`,
+    },
+    '/web_demo/**': {
+      proxy: `${process.env.NUXT_API_API_DOMAIN}/web_demo/**`,
+    },
     '/api/blog/**': {
       proxy: `${process.env.NUXT_API_API_DOMAIN}/api/blog/**`,
     },
