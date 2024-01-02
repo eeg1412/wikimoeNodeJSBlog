@@ -206,6 +206,7 @@ const goSearch = () => {
   router.push({
     path: `/post/list/keyword/${keyword.value}/1`,
   })
+  keyword.value = ''
 }
 
 const layoutRightBox = ref(null)
