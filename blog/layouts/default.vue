@@ -508,6 +508,10 @@ onUnmounted(() => {
 @media (max-width: 1024px) {
   .blog-layout-body {
     margin-bottom: 0px;
+    min-height: calc(100vh - 105px);
+    min-height: calc(100vh - 105px);
+    padding-top: 60px;
+    margin-top: 0px;
   }
   .blog-top-bar-right-body-item.menu-btn {
     display: flex;
@@ -597,9 +601,6 @@ onUnmounted(() => {
     display: none;
     align-items: center;
     cursor: pointer;
-  }
-  .blog-layout-body {
-    margin-top: 60px;
   }
   .blog-layout-content-body {
     margin-left: 5px;
