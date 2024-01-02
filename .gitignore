@@ -9,6 +9,8 @@ node_modules
 /server/public/upload/bangumi/*
 /server/public/content/uploadfile/*
 /server/public/admin/*
+/server/public/up_works/*
+/server/public/web_demo/*
 /server/config/globalConfig.json
 /server/uploadCache/*
 /server/utils/ip2location/*
