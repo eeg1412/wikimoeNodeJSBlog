@@ -1,7 +1,7 @@
 <template>
   <div>
     <div
-      class="ml20 mr20 mt10 mb10 bg-primary-400 text-white pl-4 pr-4 pt-1 pb-1 rounded-full block text-center"
+      class="text-primary-400 pt-2 pb-2 block text-center border-solid border-b border-gray-200"
     >
       分类：{{ data.sortname }}
     </div>
