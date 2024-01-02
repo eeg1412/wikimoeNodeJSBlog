@@ -1,5 +1,7 @@
 <template>
-  <PostList />
+  <div>
+    <PostList />
+  </div>
 </template>
 <script setup>
 definePageMeta({
