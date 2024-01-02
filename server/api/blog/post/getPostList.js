@@ -30,6 +30,10 @@ module.exports = async function (req, res, next) {
   }
   // 如果keyword存在，就加入查询条件
   if (keyword) {
+    // 如果keyword超过20个字符，就截取前20个字符
+    if (keyword.length > 20) {
+      keyword = keyword.substring(0, 20)
+    }
     // 检索title和content
     params.$or = [
       {

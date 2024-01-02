@@ -9,6 +9,15 @@ const cacheDataUtils = require('../../../config/cacheData')
 module.exports = async function (req, res, next) {
 
   const { post, parent, content, nickname, email, url } = req.body
+  // 如果content超过500个字符，就报错
+  if (content?.length > 500) {
+    res.status(400).json({
+      errors: [{
+        message: '评论内容不能超过500个字符'
+      }]
+    })
+    return
+  }
   // 获取全局配置
   const { siteEnableComment, siteCommentInterval, siteEnableCommentReview } = global.$globalConfig.commentSettings
   // 如果siteEnableComment为false，则不允许评论
