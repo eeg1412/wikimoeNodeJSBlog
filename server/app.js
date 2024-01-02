@@ -47,6 +47,14 @@ app.use((err, req, res, next) => {
 app.use('/api/admin', adminRouter);
 app.use('/api/blog', blogRouter);
 app.use('/rss', rssRouter);
+// 所有非/admin路由，都返回404
+app.use((req, res, next) => {
+  if (!req.path.startsWith('/admin')) {
+    res.status(404).send('Not found');
+  } else {
+    next();
+  }
+});
 
 app.use(history({
   index: '/admin/index.html'
