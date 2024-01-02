@@ -1,4 +1,4 @@
-# 猛男自用——维基萌博客系统
+# 猛男自用的【维基萌博客系统】
 ![N`AG~U3E547WKDN{J P2H22](https://github.com/eeg1412/wikimoeNodeJSBlog/assets/27753071/4b5177e5-6f1b-414b-938b-336c0b7a68ed)
 
 
