@@ -48,7 +48,7 @@ const props = defineProps({
   margin-right: -20px;
 }
 .my-page-avatar {
-  margin-top: -38px;
+  margin-top: -40px;
   border: 4px solid #fff;
 }
 </style>
