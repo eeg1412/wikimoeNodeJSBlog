@@ -11,6 +11,7 @@ node_modules
 /server/public/admin/*
 /server/public/up_works/*
 /server/public/web_demo/*
+/server/public/ucloudImg/*
 /server/config/globalConfig.json
 /server/uploadCache/*
 /server/utils/ip2location/*
