@@ -221,6 +221,6 @@ onMounted(() => {
 
 .html-content-body td,
 .html-content-body th {
-  @apply border;
+  @apply border p-2;
 }
 </style>
