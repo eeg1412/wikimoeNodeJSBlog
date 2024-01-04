@@ -54,7 +54,7 @@ useHead({
       content: options.value.siteUrl + options.value.siteDefaultCover,
     },
     // twitter
-    { name: 'twitter:card', content: 'summary_large_image' },
+    { name: 'twitter:card', content: 'summary' },
     { name: 'twitter:site', content: `@${options.value.siteTitle}` },
     { name: 'twitter:title', content: options.value.siteTitle },
     { name: 'twitter:description', content: options.value.siteDescription },
