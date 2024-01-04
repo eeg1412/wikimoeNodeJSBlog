@@ -18,5 +18,7 @@ const { data } = await getTagDetailApi({
 useSeoMeta({
   title: data.value.data.tagname,
   ogTitle: data.value.data.tagname,
+  // twitter
+  twitterTitle: data.value.data.tagname,
 })
 </script>

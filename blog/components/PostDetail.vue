@@ -622,18 +622,56 @@ const runtimeConfig = useRuntimeConfig()
 const GOOGLE_ADSENSE_POST_DETAIL_BT =
   runtimeConfig.public.GOOGLE_ADSENSE_POST_DETAIL_BT || null
 
+// 过滤HTML标签
+const filterHtmlTag = (str) => {
+  if (!str) {
+    return ''
+  }
+  // 过滤 <style> 和 <script> 标签及其内容，其他 HTML 标签、换行符和空格
+  return str.replace(
+    /<(style|script)[^>]*>[\s\S]*?<\/\1>|<[^>]+>|\r?\n|\s/g,
+    ''
+  )
+}
 // 设置SEO
+const seoImage = computed(() => {
+  return postData.value?.data?.coverImages[0]?.thumfor
+    ? options.value.siteUrl + postData.value?.data?.coverImages[0]?.thumfor
+    : options.value.siteUrl + options.value.siteDefaultCover
+})
+const seoTitle = computed(() => {
+  let newTitle =
+    postData.value?.data?.title || postData.value?.data?.excerpt || ''
+  // 超过60个字符，截取
+  if (newTitle.length > 60) {
+    newTitle = newTitle.slice(0, 60)
+  }
+  return newTitle
+})
+const seoDescription = computed(() => {
+  let newDescription =
+    postData.value?.data?.excerpt ||
+    filterHtmlTag(postData.value?.data?.content) ||
+    ''
+  // 超过200个字符，截取
+  if (newDescription.length > 200) {
+    newDescription = newDescription.slice(0, 200)
+  }
+  return newDescription
+})
 useSeoMeta({
-  title: postData.value?.data?.title || postData.value?.data?.excerpt || '',
-  ogTitle: postData.value?.data?.title || '',
-  description: postData.value?.data?.excerpt || '',
+  title: seoTitle.value,
+  ogTitle: seoTitle.value,
+  description: seoDescription.value,
   keywords:
     postData.value?.data?.tags.map((item) => item.tagname).join(',') ||
     options.value.siteKeywords,
-  ogDescription: postData.value?.data?.excerpt || '',
-  ogImage: postData.value?.data?.coverImages[0]?.thumfor
-    ? options.value.siteUrl + postData.value?.data?.coverImages[0]?.thumfor
-    : options.value.siteUrl + options.value.siteDefaultCover,
+  ogDescription: seoDescription.value,
+  ogImage: seoImage.value,
+  // twitter
+  twitterTitle: seoTitle.value,
+  twitterDescription: seoDescription.value,
+  twitterImage: seoImage.value,
 })
 onMounted(() => {
   getCommentList()

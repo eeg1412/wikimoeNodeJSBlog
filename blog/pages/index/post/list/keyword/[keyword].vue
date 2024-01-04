@@ -16,5 +16,7 @@ useSeoMeta({
   title: keyword,
   ogTitle: keyword,
   keywords: keyword,
+  // twitter
+  twitterTitle: keyword,
 })
 </script>

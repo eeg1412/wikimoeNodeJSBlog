@@ -20,5 +20,8 @@ useSeoMeta({
   title: data.value.sortname,
   ogTitle: data.value.sortname,
   description: data.value.description,
+  // twitter
+  twitterTitle: data.value.sortname,
+  twitterDescription: data.value.description,
 })
 </script>

@@ -17,5 +17,7 @@ const title = `归档${year}年${month}月`
 useSeoMeta({
   title: title,
   ogTitle: title,
+  // twitter
+  twitterTitle: title,
 })
 </script>

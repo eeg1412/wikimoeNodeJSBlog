@@ -55,6 +55,13 @@ useHead({
     },
     // twitter
     { name: 'twitter:card', content: 'summary_large_image' },
+    { name: 'twitter:site', content: `@${options.value.siteTitle}` },
+    { name: 'twitter:title', content: options.value.siteTitle },
+    { name: 'twitter:description', content: options.value.siteDescription },
+    {
+      name: 'twitter:image',
+      content: options.value.siteUrl + options.value.siteDefaultCover,
+    },
   ],
   link: [
     {
