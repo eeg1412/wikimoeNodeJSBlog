@@ -634,12 +634,12 @@ const filterHtmlTag = (str) => {
   )
 }
 // 设置SEO
-const seoImage = computed(() => {
+const seoImageSet = () => {
   return postData.value?.data?.coverImages[0]?.thumfor
     ? options.value.siteUrl + postData.value?.data?.coverImages[0]?.thumfor
     : options.value.siteUrl + options.value.siteDefaultCover
-})
-const seoTitle = computed(() => {
+}
+const seoTitleSet = () => {
   let newTitle =
     postData.value?.data?.title || postData.value?.data?.excerpt || ''
   // 超过60个字符，截取
@@ -647,8 +647,8 @@ const seoTitle = computed(() => {
     newTitle = newTitle.slice(0, 60)
   }
   return newTitle
-})
-const seoDescription = computed(() => {
+}
+const seoDescriptionSet = () => {
   let newDescription =
     postData.value?.data?.excerpt ||
     filterHtmlTag(postData.value?.data?.content) ||
@@ -658,20 +658,31 @@ const seoDescription = computed(() => {
     newDescription = newDescription.slice(0, 200)
   }
   return newDescription
-})
+}
+const seoKeywordsSet = () => {
+  // 先判断 postData.value?.data?.tags 是否存在，存在就用，不存在就用 options.value.siteKeywords
+  if (postData.value?.data?.tags?.length > 0) {
+    return postData.value?.data?.tags.map((item) => item.tagname).join(',')
+  } else {
+    return options.value.siteKeywords
+  }
+}
+
+const seoImage = seoImageSet()
+const seoTitle = seoTitleSet()
+const seoDescription = seoDescriptionSet()
+const seoKeywords = seoKeywordsSet()
 useSeoMeta({
-  title: seoTitle.value,
-  ogTitle: seoTitle.value,
-  description: seoDescription.value,
-  keywords:
-    postData.value?.data?.tags.map((item) => item.tagname).join(',') ||
-    options.value.siteKeywords,
-  ogDescription: seoDescription.value,
-  ogImage: seoImage.value,
+  title: seoTitle,
+  ogTitle: seoTitle,
+  description: seoDescription,
+  keywords: seoKeywords,
+  ogDescription: seoDescription,
+  ogImage: seoImage,
   // twitter
-  twitterTitle: seoTitle.value,
-  twitterDescription: seoDescription.value,
-  twitterImage: seoImage.value,
+  twitterTitle: seoTitle,
+  twitterDescription: seoDescription,
+  twitterImage: seoImage,
 })
 onMounted(() => {
   getCommentList()
