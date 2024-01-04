@@ -35,6 +35,11 @@ app.use('/web_demo', function (req, res, next) {
   utils.referrerRecord(req.headers.referer, 'assets')
   next();
 }, express.static(path.join(__dirname, 'public/web_demo')));
+// ucloudImg referrerRecord
+app.use('/ucloudImg', function (req, res, next) {
+  utils.referrerRecord(req.headers.referer, 'assets')
+  next();
+}, express.static(path.join(__dirname, 'public/ucloudImg')));
 // app.use(express.static(path.join(__dirname, 'public')));
 
 app.use((err, req, res, next) => {

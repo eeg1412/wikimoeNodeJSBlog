@@ -61,6 +61,10 @@ export default defineNuxtConfig({
     '/web_demo/**': {
       proxy: `${process.env.NUXT_API_API_DOMAIN}/web_demo/**`,
     },
+    // ucloudImg
+    '/ucloudImg/**': {
+      proxy: `${process.env.NUXT_API_API_DOMAIN}/ucloudImg/**`,
+    },
     '/api/blog/**': {
       proxy: `${process.env.NUXT_API_API_DOMAIN}/api/blog/**`,
     },
