@@ -16,9 +16,8 @@
           作者：{{ postData.data.author.nickname
           }}<span class="tenten">·</span>时间：{{
             formatDate(postData.data.date)
-          }}<span class="tenten">·</span
-          ><span class="post_sort_link_span" v-if="postData.data.sort"
-            >分类 :
+          }}<span class="post_sort_link_span" v-if="postData.data.sort"
+            ><span class="tenten">·</span><span>分类：</span>
             <NuxtLink
               class="common-a"
               :to="{
