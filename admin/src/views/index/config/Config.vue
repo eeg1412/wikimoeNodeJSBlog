@@ -44,9 +44,9 @@
           <!-- siteDefaultCover -->
           <el-form-item label="默认封面图" prop="siteDefaultCover">
             <Cropper
-              :aspectRatio="672 / 324"
-              :width="672"
-              :height="324"
+              :aspectRatio="1344 / 648"
+              :width="1344"
+              :height="648"
               :src="siteSettingsForm.siteDefaultCover"
               @crop="setSiteDefaultCover"
             ></Cropper>
