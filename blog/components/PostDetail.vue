@@ -730,6 +730,9 @@ onMounted(() => {
   font-size: 16px;
   line-height: 1.5;
   margin-bottom: 10px;
+  /* 支持换行 */
+  white-space: pre-wrap;
+  word-break: break-word;
 }
 .post-detail-tags-body {
   margin-top: 5px;
