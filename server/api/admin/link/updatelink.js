@@ -2,6 +2,8 @@ const linkUtils = require('../../../mongodb/utils/links')
 const utils = require('../../../utils/utils')
 const log4js = require('log4js')
 const adminApiLog = log4js.getLogger('adminApi')
+const fs = require('fs')
+const path = require('path');
 
 module.exports = async function (req, res, next) {
   const { id, __v } = req.body
@@ -69,6 +71,7 @@ module.exports = async function (req, res, next) {
     try {
       const imgRes = utils.base64ToFile(icon, path, fileName)
       params['icon'] = `/upload/linkicon/${imgRes.fileNameAll}?v=${Date.now()}`
+      params['iconPath'] = imgRes.filepath
     } catch (error) {
       res.status(400).json({
         errors: [{

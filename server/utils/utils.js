@@ -150,12 +150,20 @@ exports.checkEnv = function () {
 }
 
 // base64转图片文件
-exports.base64ToFile = function (base64, destpath, fileName) {
+exports.base64ToFile = function (base64, destpath, fileName, options = {}) {
   const base64Data = base64.replace(/^data:image\/\w+;base64,/, '')
   const dataBuffer = Buffer.from(base64Data, 'base64')
   // 文件名后缀
   const extension = base64.match(/data:image\/(\w+);base64,/)[1]
   const fileNameAll = `${fileName}.${extension}`
+  if (options.createDir) {
+    // 判断文件夹是否存在，不存在则创建
+    const destpathToPath = path.join(destpath)
+    if (!fs.existsSync(destpathToPath)) {
+      fs.mkdirSync(destpathToPath, { recursive: true });
+    }
+  }
+
   const filepath = path.join(destpath, fileNameAll)
   fs.writeFileSync(filepath, dataBuffer)
   return {

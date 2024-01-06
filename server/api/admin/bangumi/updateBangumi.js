@@ -38,11 +38,29 @@ module.exports = async function (req, res, next) {
 
   const base64Reg = /^data:image\/\w+;base64,/
   if (cover && base64Reg.test(cover)) {
-    const path = './public/upload/bangumi/'
+    // 查询旧数据
+    const oldData = await bangumiUtils.findOne({ _id: id, __v })
+    if (!oldData) {
+      res.status(400).json({
+        errors: [{
+          message: '该数据不存在或已被更新'
+        }]
+      })
+      return
+    }
+    const coverFolder = oldData.coverFolder
+    let path = './public/upload/bangumi/'
+    if (coverFolder) {
+      path = path + coverFolder + '/'
+    }
     const fileName = id
     try {
-      const imgRes = utils.base64ToFile(cover, path, fileName)
-      params['cover'] = `/upload/bangumi/${imgRes.fileNameAll}?v=${Date.now()}`
+      const imgRes = utils.base64ToFile(cover, path, fileName, { createDir: true })
+      let baseCover = '/upload/bangumi/'
+      // 拼接文件夹
+      baseCover = baseCover + coverFolder + '/'
+      params['cover'] = `${baseCover}${imgRes.fileNameAll}?v=${Date.now()}`
+      params['coverFileName'] = imgRes.fileNameAll
     } catch (error) {
       res.status(400).json({
         errors: [{

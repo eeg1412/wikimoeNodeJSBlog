@@ -7,6 +7,10 @@ var links = new Schema({
     type: String,
     default: ''
   },
+  iconPath: {
+    type: String,
+    default: null
+  },
   // sitename 网站名称字段
   sitename: {
     type: String,

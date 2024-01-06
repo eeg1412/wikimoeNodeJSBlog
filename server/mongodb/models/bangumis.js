@@ -10,6 +10,14 @@ var bangumis = new Schema({
   cover: {
     type: String,
   },
+  coverFolder: {
+    type: String,
+    default: null
+  },
+  coverFileName: {
+    type: String,
+    default: null
+  },
   // 简评
   summary: {
     type: String,
