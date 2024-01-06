@@ -25,17 +25,24 @@ module.exports = async function (req, res, next) {
   }
   // 如果keyword存在，就加入查询条件
   if (keyword) {
+    const escapedKeyword = utils.escapeSpecialChars(keyword);
     // 检索title和content
     params.$or = [
       {
         title: {
-          $regex: keyword,
+          $regex: escapedKeyword,
           $options: 'i'
         }
       },
       {
         content: {
-          $regex: keyword,
+          $regex: escapedKeyword,
+          $options: 'i'
+        }
+      },
+      {
+        excerpt: {
+          $regex: escapedKeyword,
           $options: 'i'
         }
       }

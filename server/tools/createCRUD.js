@@ -325,6 +325,7 @@ const findTemplate = (tableName, chineseName) => {
     }
     // 如果keyword存在，就加入查询条件
     if (keyword) {
+      keyword = utils.escapeSpecialChars(keyword)
       params.${tableName}name = new RegExp(keyword, 'i')
     }
   

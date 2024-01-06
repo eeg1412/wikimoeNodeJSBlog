@@ -20,6 +20,7 @@ module.exports = async function (req, res, next) {
   }
   // 如果keyword存在，就加入查询条件
   if (keyword) {
+    keyword = utils.escapeSpecialChars(keyword)
     params.tagname = new RegExp(keyword, 'i')
   }
 

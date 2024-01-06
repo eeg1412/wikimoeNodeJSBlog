@@ -34,17 +34,18 @@ module.exports = async function (req, res, next) {
     if (keyword.length > 20) {
       keyword = keyword.substring(0, 20)
     }
+    const escapedKeyword = utils.escapeSpecialChars(keyword);
     // 检索title和excerpt
     params.$or = [
       {
         title: {
-          $regex: keyword,
+          $regex: escapedKeyword,
           $options: 'i'
         }
       },
       {
         excerpt: {
-          $regex: keyword,
+          $regex: escapedKeyword,
           $options: 'i'
         }
       }

@@ -526,3 +526,8 @@ exports.referrerRecord = function (referrer, referrerType) {
   }
 
 }
+
+exports.escapeSpecialChars = function (keyword) {
+  // 匹配正则表达式中的特殊字符
+  return keyword.replace(/[-[\]{}()*+!<=:?.\/\\^$|#\s,]/g, '\\$&');
+}

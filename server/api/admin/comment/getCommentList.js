@@ -19,6 +19,7 @@ module.exports = async function (req, res, next) {
   const params = {
   }
   if (keyword) {
+    keyword = utils.escapeSpecialChars(keyword)
     params.content = new RegExp(keyword, 'i')
   }
   // 因为是query，所以要转换成数字
