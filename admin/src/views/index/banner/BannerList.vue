@@ -266,4 +266,9 @@ export default {
   width: 100%;
   height: auto;
 }
+.banner-list-body .el-upload,
+.banner-list-body .avatar-uploader-icon {
+  width: 100%;
+  box-sizing: border-box;
+}
 </style>
