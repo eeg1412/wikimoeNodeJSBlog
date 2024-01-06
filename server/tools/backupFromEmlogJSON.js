@@ -265,6 +265,48 @@ const init = async () => {
   // 转换twitter表
   const twitterList = []
   const twitterEmlogList = data[tablePrefix + 'twitter']
+  const twitterEmojiMap = {
+    "耶": "🙌",
+    "呵呵": "😄",
+    "悲伤": "😢",
+    "抓狂": "😖",
+    "衰": "😞",
+    "花心": "😍",
+    "哼": "😤",
+    "泪": "😭",
+    "害羞": "😳",
+    "酷": "😎",
+    "晕": "😵",
+    "挤眼": "😉",
+    "鬼脸": "😜",
+    "汗": "😓",
+    "吃惊": "😱",
+    "发呆": "😐",
+    "闭嘴": "🤐",
+    "撇嘴": "😒",
+    "疑问": "❓",
+    "睡觉": "😴",
+    "NO": "🚫",
+    "大哭": "😭",
+    "爱你": "😘",
+    "嘻嘻": "😁",
+    "生病": "🤒",
+    "偷笑": "😏",
+    "思考": "🤔",
+    "玫瑰": "🌹",
+    "心": "❤️",
+    "伤心": "💔",
+    "咖啡": "☕",
+    "音乐": "🎵",
+    "下雨": "🌧️",
+    "晴天": "☀️",
+    "星星": "⭐",
+    "月亮": "🌙"
+  };
+  const updatedEmojiMap = {};
+  Object.keys(twitterEmojiMap).forEach(key => {
+    updatedEmojiMap[`[${key}]`] = twitterEmojiMap[key];
+  });
   // 遍历twitterEmlogList,转换格式
   const twitterAttachPromiseList = []
   for (let i = 0; i < twitterEmlogList.length; i++) {
@@ -303,10 +345,13 @@ const init = async () => {
       twitterAttachPromiseList.push(promise)
     }
     await Promise.all(twitterAttachPromiseList)
-
+    // 更改 twitterEmlog.content 中的表情
+    const twitterContent = twitterEmlog.content?.replace(/\[(.*?)\]/g, (match, p1) => {
+      return updatedEmojiMap[match] || match;
+    });
     const twitter = {
       tid: twitterEmlog.id,
-      excerpt: twitterEmlog.content,
+      excerpt: twitterContent,
       date: date,
       author: userData._id,
       type: 2,
@@ -333,16 +378,59 @@ const init = async () => {
   const commentList = []
   const commentEmlogList = data[tablePrefix + 'comment']
   const commentMap = {} // key: emlog的cid, value: mongodb的_id
+  const commentEmojiMap = {
+    "@(墨镜)": "😎",
+    "@(瞌睡)": "😴",
+    "@(怜悯)": "😢",
+    "@(绝望)": "😱",
+    "@(面无表情)": "😐",
+    "@(坏掉啦)": "🤯",
+    "@(嫌弃)": "😒",
+    "@(醉了)": "🥴",
+    "@(卖萌)": "😊",
+    "@(呕吐)": "🤮",
+    "@(鼓掌)": "👏",
+    "@(喔)": "😮",
+    "@(哭笑)": "😂",
+    "@(高兴)": "😃",
+    "@(抛媚眼)": "😉",
+    "@(自信)": "😏",
+    "@(汗)": "😓",
+    "@(惊讶)": "😲",
+    "@(调皮)": "😜",
+    "@(囧)": "😖",
+    "@(迷上)": "😍",
+    "@(昏厥)": "😵",
+    "@(难过)": "😔",
+    "@(晕)": "😵‍💫",
+    "@(笑)": "😄",
+    "@(触手)": "🐙",
+    "@(大哭)": "😭",
+    "@(摇头)": "🙅‍♂️",
+    "@(剪刀)": "✂️",
+    "@(石头)": "🪨",
+    "@(布)": "📃",
+    "@(剪刀手)": "✌️",
+    "@(顶)": "👍",
+    "@(踩)": "👎",
+    "@(OK哒)": "👌",
+    "@(恶魔)": "😈",
+    "@(天使)": "👼",
+    "@(礼花)": "🎉"
+  };
   // 遍历commentEmlogList,转换格式
   commentEmlogList.forEach(commentEmlog => {
     const date = new Date(commentEmlog.date * 1000)
+    const commentContent = commentEmlog.comment?.replace(/@\((.*?)\)/g, (match, p1) => {
+      return commentEmojiMap[match] || match;
+    });
     const comment = {
       post: postIdMap[commentEmlog.gid],
       parent: null,//暂时不处理
       pid: commentEmlog.pid,
       cid: commentEmlog.cid,
       date: date,
-      content: commentEmlog.comment,
+      content: commentContent,
       top: false,
       nickname: commentEmlog.poster,
       email: commentEmlog.mail,
