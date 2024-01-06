@@ -19,6 +19,17 @@
             @crop="setIcon"
             :src="form.icon"
           />
+          <div class="w_10 mt5">
+            <el-button
+              v-if="form.icon"
+              type="danger"
+              size="mini"
+              @click="form.icon = ''"
+            >
+              删除图标
+            </el-button>
+          </div>
+          <!-- 删除图标按钮 -->
         </el-form-item>
         <el-form-item label="网站名称" prop="sitename">
           <el-input

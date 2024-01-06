@@ -3,7 +3,7 @@ const utils = require('../../../utils/utils')
 const log4js = require('log4js')
 const adminApiLog = log4js.getLogger('adminApi')
 const fs = require('fs')
-const path = require('path');
+const nodePath = require('path');
 
 module.exports = async function (req, res, next) {
   const { id, __v } = req.body
@@ -80,6 +80,18 @@ module.exports = async function (req, res, next) {
       })
       throw new Error(error)
     }
+  } else if (icon === '') {
+    // 删除图标
+    const oldData = await linkUtils.findOne({ _id: id, __v })
+    if (oldData && oldData.iconPath) {
+      try {
+        fs.unlinkSync(nodePath.join('./', oldData.iconPath))
+      } catch (error) {
+        adminApiLog.error(`link delete icon fail, ${JSON.stringify(error)}`)
+      }
+    }
+    params['icon'] = null
+    params['iconPath'] = null
   }
   // updateOne
   linkUtils.updateOne({ _id: id, __v }, params).then((data) => {
