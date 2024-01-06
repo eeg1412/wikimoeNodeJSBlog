@@ -18,6 +18,33 @@ module.exports = async function (req, res, next) {
     })
     return
   }
+  // nickname 20个字符以内
+  if (nickname?.length > 20) {
+    res.status(400).json({
+      errors: [{
+        message: '昵称不能超过20个字符'
+      }]
+    })
+    return
+  }
+  // url 200个字符以内
+  if (url?.length > 200) {
+    res.status(400).json({
+      errors: [{
+        message: 'url不能超过200个字符'
+      }]
+    })
+    return
+  }
+  // email 50个字符以内
+  if (email?.length > 100) {
+    res.status(400).json({
+      errors: [{
+        message: '邮箱地址不能超过100个字符'
+      }]
+    })
+    return
+  }
   // 获取全局配置
   const { siteEnableComment, siteCommentInterval, siteEnableCommentReview } = global.$globalConfig.commentSettings
   // 如果siteEnableComment为false，则不允许评论
