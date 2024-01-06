@@ -30,6 +30,15 @@ module.exports = async function (req, res, next) {
     isdefault: isdefault ? true : false,
     newtab: newtab ? true : false,
   }
+  // 如果状态为1，img必填
+  if (status === 1 && !img) {
+    res.status(400).json({
+      errors: [{
+        message: '图片不能为空'
+      }]
+    })
+    return
+  }
   if (img) {
     //base64正则
     const base64Reg = /^data:image\/\w+;base64,/
