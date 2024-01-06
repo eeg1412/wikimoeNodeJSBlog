@@ -34,7 +34,7 @@ module.exports = async function (req, res, next) {
     if (keyword.length > 20) {
       keyword = keyword.substring(0, 20)
     }
-    // 检索title和content
+    // 检索title和excerpt
     params.$or = [
       {
         title: {
@@ -43,7 +43,7 @@ module.exports = async function (req, res, next) {
         }
       },
       {
-        content: {
+        excerpt: {
           $regex: keyword,
           $options: 'i'
         }
