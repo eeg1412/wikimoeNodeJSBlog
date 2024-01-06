@@ -518,6 +518,9 @@ export default {
       siteLogo: [
         { required: true, message: '请上传站点LOGO', trigger: 'blur' },
       ],
+      siteFavicon: [
+        { required: true, message: '请上传站点图标', trigger: 'blur' },
+      ],
       // siteDefaultCover
       siteDefaultCover: [
         { required: true, message: '请上传默认封面图', trigger: 'blur' },
