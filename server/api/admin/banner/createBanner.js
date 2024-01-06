@@ -12,7 +12,6 @@ module.exports = async function (req, res, next) {
   const params = {
     title: title || '',
     taxis: taxis || 0,
-    img: img || '',
     link: link || '',
   }
   // save

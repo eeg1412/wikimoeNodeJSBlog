@@ -8,6 +8,7 @@ var banners = new Schema({
   taxis: { type: Number, default: 0 },
   // banner图片
   img: { type: String },
+  imgPath: { type: String, default: null },
   // link
   link: { type: String },
   // 是否新窗口打开 
