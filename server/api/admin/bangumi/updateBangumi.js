@@ -3,6 +3,8 @@ const utils = require('../../../utils/utils')
 const log4js = require('log4js')
 const adminApiLog = log4js.getLogger('adminApi')
 const cacheDataUtils = require('../../../config/cacheData')
+const fs = require('fs');
+const nodePath = require('path')
 
 module.exports = async function (req, res, next) {
   // banguminame	String	是	否	无	追番名称
@@ -27,7 +29,6 @@ module.exports = async function (req, res, next) {
   // 校验格式
   const params = {
     title,
-    cover,
     summary,
     rating,
     year,
@@ -36,18 +37,17 @@ module.exports = async function (req, res, next) {
     status
   }
 
+  const oldData = await bangumiUtils.findOne({ _id: id, __v })
+  if (!oldData) {
+    res.status(400).json({
+      errors: [{
+        message: '该数据不存在或已被更新'
+      }]
+    })
+    return
+  }
   const base64Reg = /^data:image\/\w+;base64,/
   if (cover && base64Reg.test(cover)) {
-    // 查询旧数据
-    const oldData = await bangumiUtils.findOne({ _id: id, __v })
-    if (!oldData) {
-      res.status(400).json({
-        errors: [{
-          message: '该数据不存在或已被更新'
-        }]
-      })
-      return
-    }
     const coverFolder = oldData.coverFolder
     let path = './public/upload/bangumi/'
     if (coverFolder) {
@@ -69,6 +69,25 @@ module.exports = async function (req, res, next) {
       })
       throw new Error(error)
     }
+  } else if (cover === '' && oldData.coverFileName) {
+    // 删除封面
+    const coverFolder = oldData.coverFolder
+    let path = './public/upload/bangumi/'
+    path = path + coverFolder + '/'
+    const fileName = oldData.coverFileName
+    try {
+      fs.unlinkSync(nodePath.join(path, fileName))
+    } catch (error) {
+      adminApiLog.error(`bangumi update cover fail, ${JSON.stringify(error)}`)
+      res.status(400).json({
+        errors: [{
+          message: '旧图片删除失败'
+        }]
+      })
+      return
+    }
+    params['cover'] = null
+    params['coverFileName'] = null
   }
 
   // updateOne

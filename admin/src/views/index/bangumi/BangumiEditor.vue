@@ -31,6 +31,16 @@
             :src="form.cover"
             @crop="setCover"
           ></Cropper>
+          <div class="w_10 mt5">
+            <el-button
+              v-if="form.cover"
+              type="danger"
+              size="mini"
+              @click="form.cover = ''"
+            >
+              删除封面
+            </el-button>
+          </div>
         </el-form-item>
         <!-- 简评用textarea -->
         <el-form-item label="简评" prop="summary">
