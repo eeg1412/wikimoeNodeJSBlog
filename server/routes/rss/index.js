@@ -42,7 +42,7 @@ router.get('/', async function (req, res, next) {
   list.forEach((item) => {
     const { title, excerpt, content, _id, author } = item
     feed.addItem({
-      title,
+      title: title || excerpt,
       id: _id,
       link: `${siteUrl}/post/${_id}`,
       description: excerpt || content,
