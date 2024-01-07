@@ -39,17 +39,8 @@ module.exports = async function (req, res, next) {
     })
     return
   }
-  if (img) {
-    //base64正则
-    const base64Reg = /^data:image\/\w+;base64,/
-    if (!base64Reg.test(img)) {
-      res.status(400).json({
-        errors: [{
-          message: '图片格式不正确'
-        }]
-      })
-      return
-    }
+  const base64Reg = /^data:image\/\w+;base64,/
+  if (img && base64Reg.test(img)) {
     // img是base64，需要转换成图片并储存
     const path = './public/upload/banner/'
     const fileName = _id
