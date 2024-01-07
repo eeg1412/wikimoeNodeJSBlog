@@ -1,13 +1,17 @@
 # 猛男自用的【维基萌博客系统】
-![N`AG~U3E547WKDN{J P2H22](https://github.com/eeg1412/wikimoeNodeJSBlog/assets/27753071/4b5177e5-6f1b-414b-938b-336c0b7a68ed)
 
+![N`AG~U3E547WKDN{J P2H22](https://github.com/eeg1412/wikimoeNodeJSBlog/assets/27753071/4b5177e5-6f1b-414b-938b-336c0b7a68ed)
 
 ## 说明
 
+【维基萌博客系统】推荐 Node.js 20 版本和 mongodb 6 版本。  
+其他版本也许可以跑，但是没测试过。
+
+【维基萌博客系统】的架构如下图所示：
+
 ![image](https://github.com/eeg1412/wikimoeNodeJSBlog/assets/27753071/997d9cb4-56fc-4886-b155-bb5102fd20b9)
 
-
-项目框架如上图，分为三个部分  
+项目目录分为三个部分  
 server：博客 api 部分  
 admin：博客管理后台部分  
 blog：博客部分
