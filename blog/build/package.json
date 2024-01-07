@@ -1,6 +1,6 @@
 {
   "scripts": {
-    "start-linux": "NITRO_PORT=3003 node .output/server/index.mjs",
-    "start-windows": "set NITRO_PORT=3003 && node .output/server/index.mjs"
+    "start-linux": "NITRO_PORT=3007 node .output/server/index.mjs",
+    "start-windows": "set NITRO_PORT=3007 && node .output/server/index.mjs"
   }
 }
