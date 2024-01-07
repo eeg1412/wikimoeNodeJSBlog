@@ -2,6 +2,7 @@ var express = require('express')
 var router = express.Router()
 const Feed = require('feed').Feed;
 const postUtils = require('../../mongodb/utils/posts')
+const moment = require('moment-timezone');
 
 router.get('/', async function (req, res, next) {
   const config = global.$globalConfig?.rssSettings || {}
@@ -40,9 +41,17 @@ router.get('/', async function (req, res, next) {
     },
   });
   list.forEach((item) => {
-    const { title, excerpt, content, _id, author } = item
+    const { title, excerpt, content, _id, author, type, date } = item
+    let newTitle = title
+    if (type === 2) {
+      // 推文时，标题为【nickname在xxxx年xx月xx日xx点xx分发表了推文】
+      const authorName = author.nickname
+      const siteTimeZone = global.$globalConfig.siteSettings.siteTimeZone || 'Asia/Shanghai'
+      const dateStr = moment(date).tz(siteTimeZone).format('YYYY年MM月DD日HH点mm分')
+      newTitle = `${authorName}在${dateStr}发布了一篇推文`
+    }
     feed.addItem({
-      title: title || excerpt,
+      title: newTitle,
       id: _id,
       link: `${siteUrl}/post/${_id}`,
       description: excerpt || content,
