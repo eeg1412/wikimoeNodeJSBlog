@@ -40,7 +40,7 @@
         <!-- 来源 referrer -->
         <el-table-column prop="referrer" label="来源">
           <template #default="{ row }">
-            <a :href="row.referrer" target="_blank">{{ row.referrer }}</a>
+            <div>{{ row.referrer }}</div>
           </template>
         </el-table-column>
         <!-- 来源类型 referrerType -->
