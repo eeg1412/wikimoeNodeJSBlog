@@ -52,6 +52,11 @@ app.use((err, req, res, next) => {
 app.use('/api/admin', adminRouter);
 app.use('/api/blog', blogRouter);
 app.use('/rss', rssRouter);
+// robots.txt
+app.use('/robots.txt', function (req, res) {
+  res.type('text/plain');
+  res.send("User-agent: *\nDisallow: /");
+});
 // 所有第一级路径不是/admin的，都返回404
 app.use((req, res, next) => {
   const firstLevelPath = req.path.split('/')[1];
