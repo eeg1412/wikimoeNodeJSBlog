@@ -56,7 +56,7 @@
             <div v-if="item.type === 1">
               {{ item.excerpt || '发表了一篇博文' }}
             </div>
-            <div v-else class="whitespace-pre">{{ item.excerpt }}</div>
+            <div v-else class="whitespace-pre-wrap">{{ item.excerpt }}</div>
             <!-- tags -->
             <div class="post-list-tags-body" v-if="item.tags.length > 0">
               <template v-for="(tag, index) in item.tags" :key="index">
