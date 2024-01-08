@@ -310,6 +310,11 @@ exports.sendEmail = function (to, content, subject) {
     console.error('请在后台设置邮箱')
     return
   }
+  // emailSender 和 to 不能相同
+  if (emailSender === to) {
+    console.error('emailSender 和 to 不能相同')
+    return
+  }
   const transporter = nodemailer.createTransport({
     host: emailSmtpHost,
     port: emailSmtpPort,
