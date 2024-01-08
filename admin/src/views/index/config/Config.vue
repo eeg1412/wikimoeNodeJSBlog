@@ -58,7 +58,10 @@
             <el-input v-model="siteSettingsForm.siteKeywords"></el-input>
           </el-form-item>
           <el-form-item label="站点地址" prop="siteUrl">
-            <el-input v-model="siteSettingsForm.siteUrl"></el-input>
+            <el-input
+              v-model="siteSettingsForm.siteUrl"
+              @blur="onSiteUrlBlur"
+            ></el-input>
           </el-form-item>
           <el-form-item label="每页显示" prop="sitePageSize">
             <!-- 数字 1-100 -->
@@ -510,6 +513,10 @@ export default {
       // 你所在时区
       siteTimeZone: '',
     })
+    const onSiteUrlBlur = () => {
+      // 去掉最末尾的斜杠
+      siteSettingsForm.siteUrl = siteSettingsForm.siteUrl.replace(/\/$/, '')
+    }
     const siteSettingsRules = {
       siteTitle: [
         { required: true, message: '请输入站点标题', trigger: 'blur' },
@@ -885,6 +892,7 @@ export default {
       // 网站设置
       siteSettingsFormRef,
       siteSettingsForm,
+      onSiteUrlBlur,
       siteSettingsRules,
       siteSettingsSubmit,
       // 评论设置
