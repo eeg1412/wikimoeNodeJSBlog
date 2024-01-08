@@ -167,6 +167,16 @@ onMounted(() => {
 .html-content-body a:hover {
   @apply text-primary-500;
 }
+.html-content-body ul li {
+  @apply list-disc list-inside;
+}
+.html-content-body ol li {
+  @apply list-decimal list-inside;
+}
+.html-content-body code {
+  @apply px-1 py-0.5 rounded-md bg-gray-800 text-white;
+}
+
 .html-content-body p {
   line-height: 2;
 }
