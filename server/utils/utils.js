@@ -371,6 +371,7 @@ exports.sendCommentAddNotice = function (post, comment) {
     const { siteUrl, siteTitle } = siteSettings
     const { title, _id, alias, excerpt } = post
     let { nickname, content, user } = comment
+    content = this.escapeHtml(content)
     if (user) {
       nickname = user.nickname
     }
@@ -459,7 +460,9 @@ exports.sendReplyCommentNotice = async function (post, comment) {
     const { siteUrl, siteTitle } = siteSettings
     const { title, _id, alias, excerpt } = post
     let { nickname, content } = comment
+    content = this.escapeHtml(content)
     let { nickname: parentNickname, content: parentContent } = parentComment
+    parentContent = this.escapeHtml(parentContent)
     if (commentIsAdmin) {
       nickname = commentUser.nickname
     }
@@ -530,4 +533,14 @@ exports.referrerRecord = function (referrer, referrerType) {
 exports.escapeSpecialChars = function (keyword) {
   // 匹配正则表达式中的特殊字符
   return keyword.replace(/[-[\]{}()*+!<=:?.\/\\^$|#\s,]/g, '\\$&');
+}
+// 转义html
+exports.escapeHtml = function (unsafe) {
+  if (!unsafe) {
+    return ''
+  }
+  return unsafe
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;");
 }
