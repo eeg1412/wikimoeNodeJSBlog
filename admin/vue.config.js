@@ -14,7 +14,7 @@ module.exports = defineConfig({
     port: 8079,
     proxy: {
       "/api": {
-        target: "http://127.0.0.1:3011/api",
+        target: "http://127.0.0.1:3006/api",
         changeOrigin: true,
         pathRewrite: {
           "/api": "",
@@ -22,7 +22,7 @@ module.exports = defineConfig({
       },
       // content
       "/content/uploadfile": {
-        target: "http://127.0.0.1:3011/content/uploadfile",
+        target: "http://127.0.0.1:3006/content/uploadfile",
         changeOrigin: true,
         pathRewrite: {
           "/content/uploadfile": "",
@@ -30,7 +30,7 @@ module.exports = defineConfig({
       },
       // upload
       "/upload": {
-        target: "http://127.0.0.1:3011/upload",
+        target: "http://127.0.0.1:3006/upload",
         changeOrigin: true,
         pathRewrite: {
           "/upload": "",
