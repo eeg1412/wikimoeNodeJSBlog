@@ -161,6 +161,9 @@ onMounted(() => {
   height: auto !important;
   display: inline;
 }
+.html-content-body a {
+  @apply text-primary-500;
+}
 .html-content-body a:hover {
   @apply text-primary-500;
 }

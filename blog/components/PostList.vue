@@ -102,7 +102,7 @@
               </div>
               <!-- title -->
               <div
-                class="post-list-title-body border border-gray-200 border-solid group-hover:border-primary-300"
+                class="post-list-title-body border border-gray-200 border-solid group-hover:border-primary-300 bg-white"
               >
                 <div class="group-hover:text-primary-500">{{ item.title }}</div>
               </div>
