@@ -121,9 +121,9 @@ const onSubmit = (event) => {
     .then((res) => {
       console.log(res)
       // 清空表单
-      form.nickname = ''
-      form.email = ''
-      form.url = ''
+      // form.nickname = ''
+      // form.email = ''
+      // form.url = ''
       form.content = ''
       const dataStatus = res.status
       // 0是审核中，1是审核通过
