@@ -82,6 +82,11 @@
             <div>系统版本号：{{ row.deviceInfo?.os?.version }}</div>
             <div>浏览器：{{ row.deviceInfo?.browser?.name }}</div>
             <div>浏览器版本号： {{ row.deviceInfo?.browser?.version }}</div>
+            <div>
+              是否为机器人：
+              <el-tag v-if="row.isBot" type="danger">是</el-tag>
+              <el-tag v-else type="success">否</el-tag>
+            </div>
           </template>
         </el-table-column>
         <!-- 来源 referrer -->

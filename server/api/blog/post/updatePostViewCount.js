@@ -111,6 +111,7 @@ module.exports = async function (req, res, next) {
         targetId: id,
         content: content,
       },
+      isBot: utils.isSearchEngine(req),
       deviceInfo: utils.deviceUAInfoUtils(req),
       ipInfo: await utils.IP2LocationUtils(ip, null, null, false),
       ip: ip

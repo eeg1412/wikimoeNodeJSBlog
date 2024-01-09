@@ -176,6 +176,7 @@ module.exports = async function (req, res, next) {
       targetId: id,
       content: content,
     },
+    isBot: utils.isSearchEngine(req),
     deviceInfo: params.deviceInfo,
     ipInfo: params.ipInfo,
     ip: ip

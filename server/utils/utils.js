@@ -565,3 +565,35 @@ exports.setReferrer = function (referrer) {
 
   return null
 }
+// 检查是否是bot
+exports.isSearchEngine = function (req) {
+  const ua = req.get('user-agent')
+  if (!ua) {
+    return false
+  }
+  const searchEngines = [
+    'googlebot',
+    'baiduspider',
+    'yandex',
+    'bingbot',
+    'slurp',
+    'duckduckbot',
+    'sogou',
+    'exabot',
+    'facebot',
+    'ia_archiver',
+    'facebookexternalhit',
+    'twitterbot',
+    'rogerbot',
+    'msnbot',
+    'bingbot',
+  ];
+  const userAgentLowerCase = ua.toLowerCase();
+  for (let i = 0; i < searchEngines.length; i++) {
+    if (userAgentLowerCase.includes(searchEngines[i])) {
+      return true;
+    }
+  }
+
+  return false;
+}

@@ -53,7 +53,12 @@ module.exports = async function (req, res, next) {
     {
       $match: {
         createdAt: { $gte: startDate.toDate(), $lte: endDate.toDate() },
-        action: { $in: vistorActionList }
+        action: { $in: vistorActionList },
+        $or: [
+          { isBot: false },
+          { isBot: { $exists: false } }
+        ]
+        // isBot: false
       }
     },
     {
@@ -71,8 +76,17 @@ module.exports = async function (req, res, next) {
       }
     }
   ]);
-  // send
-  res.send({
-    data: result[0]
-  })
+  // 检查结果
+  let data;
+  if (result.length > 0) {
+    data = result[0];
+  } else {
+    data = {
+      pv: 0,
+      uniqueIPCount: 0
+    };
+  }
+
+  // 发送响应
+  res.send({ data });
 }
