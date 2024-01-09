@@ -96,7 +96,7 @@ const goPostDetail = (e, item, middle) => {
 }
 .comment-latest-item-date {
   color: #999;
-  font-size: 12px;
+  font-size: 13px;
   font-weight: 400;
 }
 </style>

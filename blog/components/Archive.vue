@@ -57,7 +57,7 @@ const archiveList = computed(() => {
 .archive-list-item-link {
   display: inline-block;
   padding: 5px;
-  font-size: 12px;
+  font-size: 13px;
   transition: all 0.3s;
 }
 </style>

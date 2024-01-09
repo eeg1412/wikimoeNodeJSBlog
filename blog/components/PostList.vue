@@ -440,6 +440,9 @@ onMounted(() => {
   padding: 15px;
   padding-bottom: 0px;
 } */
+.post-list-body {
+  font-size: 15px;
+}
 .post-list-body-item {
   @apply border-solid border-b border-gray-200;
   padding: 20px;

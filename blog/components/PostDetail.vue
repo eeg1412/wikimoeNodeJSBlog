@@ -91,10 +91,13 @@
       </template>
     </div>
     <!-- 文章内容 -->
-    <HtmlContent
-      :content="postData.data.content"
+    <div
+      class="post-html-content-body"
       v-if="postData.data.type === 1 || postData.data.type === 3"
-    />
+    >
+      <HtmlContent :content="postData.data.content" />
+    </div>
+
     <div
       v-else-if="postData.data.type === 2"
       class="post-tweet-detail-content-body"
@@ -718,7 +721,7 @@ onMounted(() => {
   font-weight: 700;
 }
 .post-extra {
-  font-size: 12px;
+  font-size: 13px;
   line-height: 1.5;
 }
 /* 推文 */
@@ -770,7 +773,7 @@ onMounted(() => {
   margin-right: 10px;
 }
 .comment-list-item-date {
-  font-size: 12px;
+  font-size: 13px;
   color: #949494;
 }
 .comment-list-item-parent-content,
@@ -785,13 +788,13 @@ onMounted(() => {
   padding: 3px 10px;
   margin: 10px 0;
   color: #949494;
-  font-size: 12px;
+  font-size: 13px;
   background: #f9f9f9;
   border-radius: 3px;
 }
 .comment-list-item-content {
-  font-size: 14px;
-  line-height: 1.5;
+  font-size: 15px;
+  line-height: 1.6;
 }
 .comment-list-item-btns {
   margin-top: 10px;
@@ -816,5 +819,9 @@ onMounted(() => {
   display: flex;
   justify-content: center;
   margin-top: 20px;
+}
+.post-html-content-body,
+.post-tweet-detail-content-body {
+  font-size: 15px;
 }
 </style>
