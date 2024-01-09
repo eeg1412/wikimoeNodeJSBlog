@@ -793,7 +793,7 @@ onMounted(() => {
   border-radius: 3px;
 }
 .comment-list-item-content {
-  font-size: 15px;
+  font-size: 14px;
   line-height: 1.6;
 }
 .comment-list-item-btns {
