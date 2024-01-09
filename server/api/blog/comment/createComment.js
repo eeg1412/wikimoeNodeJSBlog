@@ -56,6 +56,28 @@ module.exports = async function (req, res, next) {
     })
     return
   }
+  // 校验敏感词
+  const mint = global.$Mint
+  // 如果没有mint，报错
+  if (!mint) {
+    res.status(400).json({
+      errors: [{
+        message: '评论发送失败'
+      }]
+    })
+    return
+  }
+  // 校验敏感词
+  const mintRes = mint.verify(content)
+  // 如果有敏感词，报错
+  if (!mintRes) {
+    res.status(400).json({
+      errors: [{
+        message: '评论内容中有不恰当的词汇，请修改后再试'
+      }]
+    })
+    return
+  }
   // 从header中获取uuid
   const uuid = req.headers['x-request-id']
 

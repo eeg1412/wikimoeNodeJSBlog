@@ -1,6 +1,7 @@
 const fs = require('fs');
 var path = require('path');
 const optionUtils = require('../mongodb/utils/options')
+const { Mint } = require('mint-filter')
 
 
 const initGlobalConfig = async () => {
@@ -85,6 +86,13 @@ const initGlobalConfig = async () => {
     // 通知评论者模板
     emailSendToCommenterTemplate: '',
   }
+  // 其他配置
+  const otherSettingsConfig = {
+    // 引用白名单
+    siteReferrerWhiteList: [],
+    // 禁止评论关键词
+    siteBannedKeywordList: [],
+  }
 
 
   // 写一个函数，先判断原始类型，再将字符串转换为对应的类型
@@ -114,6 +122,7 @@ const initGlobalConfig = async () => {
       commentSettings: commentSettingsConfig,
       rssSettings: rssSettingsConfig,
       emailSettings: emailSettingsConfig,
+      otherSettings: otherSettingsConfig,
     }
     // 将data转换为object
     const obj = {}
@@ -126,8 +135,10 @@ const initGlobalConfig = async () => {
     formatResToForm(config.commentSettings, obj)
     formatResToForm(config.rssSettings, obj)
     formatResToForm(config.emailSettings, obj)
+    formatResToForm(config.otherSettings, obj)
     // 将配置挂载到global上
     global.$globalConfig = config;
+    global.$Mint = new Mint(config.otherSettings.siteBannedKeywordList)
     const showConfig = JSON.parse(JSON.stringify(config));
     // 将emailSettings.emailPassword设置为****
     showConfig.emailSettings.emailPassword = '****';

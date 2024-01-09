@@ -358,6 +358,37 @@
           </el-form-item>
         </el-form>
       </el-tab-pane>
+      <!-- 其他设置 -->
+      <el-tab-pane label="其他设置" name="other">
+        <el-form
+          :model="otherSettingsForm"
+          :rules="otherSettingsRules"
+          ref="otherSettingsFormRef"
+          label-width="120px"
+        >
+          <el-form-item label="引用域名白名单" prop="siteReferrerWhiteList">
+            <el-input
+              type="textarea"
+              v-model="otherSettingsForm.siteReferrerWhiteList"
+              placeholder="英文逗号隔开"
+            ></el-input>
+          </el-form-item>
+
+          <el-form-item label="敏感关键词" prop="siteBannedKeywordList">
+            <el-input
+              type="textarea"
+              v-model="otherSettingsForm.siteBannedKeywordList"
+              placeholder="英文逗号隔开"
+            ></el-input>
+          </el-form-item>
+
+          <el-form-item>
+            <el-button type="primary" @click="otherSettingsSubmit"
+              >提交</el-button
+            >
+          </el-form-item>
+        </el-form>
+      </el-tab-pane>
     </el-tabs>
   </div>
 </template>
@@ -434,6 +465,7 @@ export default {
         formatResToForm(commentSettingsForm, obj)
         formatResToForm(rssSettingsForm, obj)
         formatResToForm(emailSettingsForm, obj)
+        formatResToForm(otherSettingsForm, obj)
       })
     }
     // 写一个函数将res的data转换为obj
@@ -775,6 +807,42 @@ export default {
         }
       })
     }
+    // 其他设置
+    const otherSettingsFormRef = ref(null)
+    const otherSettingsForm = reactive({
+      // 引用白名单
+      siteReferrerWhiteList: '',
+      // 禁止评论关键词
+      siteBannedKeywordList: '',
+    })
+    const otherSettingsRules = {}
+    const otherSettingsSubmit = () => {
+      otherSettingsFormRef.value.validate((valid) => {
+        if (valid) {
+          const params = []
+          Object.keys(otherSettingsForm).forEach((key) => {
+            params.push({
+              name: key,
+              value: otherSettingsForm[key],
+            })
+          })
+          authApi
+            .updateOption({ optionList: params })
+            .then((res) => {
+              const obj = formatResToObj(res.data.data)
+              formatResToForm(otherSettingsForm, obj)
+              store.dispatch('setOptions')
+
+              ElMessage.success('更新成功')
+            })
+            .catch((err) => {
+              console.log(err)
+            })
+        } else {
+          return false
+        }
+      })
+    }
 
     const timeZones = ref([
       // 时区列表
@@ -916,6 +984,11 @@ export default {
       emailSettingsRules,
       emailSendOptions,
       emailSettingsSubmit,
+      // 其他设置
+      otherSettingsFormRef,
+      otherSettingsForm,
+      otherSettingsRules,
+      otherSettingsSubmit,
     }
   },
 }

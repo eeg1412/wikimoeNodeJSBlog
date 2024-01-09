@@ -495,13 +495,13 @@ exports.sendReplyCommentNotice = async function (post, comment) {
     this.sendEmail(to, contentHtml, subject)
   }
 }
-// 获取.env的REFERRER_DOMAIN_WHITELIST
-const referrerDomainWhitelist = process.env.REFERRER_DOMAIN_WHITELIST ? process.env.REFERRER_DOMAIN_WHITELIST.split(',') : []
 const referrerRecordTimerMap = {}
 // 引用记录传入参数是referrer和type
 exports.referrerRecord = function (referrer, referrerType) {
+  // 获取otherSettings siteReferrerWhiteList
+  const referrerDomainWhitelist = global.$globalConfig?.otherSettings?.siteReferrerWhiteList || []
   if (referrerDomainWhitelist.length === 0) {
-    console.warn('REFERRER_DOMAIN_WHITELIST为空，不记录referrer')
+    console.warn('引用白名单为空，不记录referrer')
     return
   }
   if (referrer) {
@@ -509,7 +509,7 @@ exports.referrerRecord = function (referrer, referrerType) {
     if (referrer.length > 300) {
       referrer = referrer.substring(0, 300)
     }
-    // 如果referrer存在，就判断referrer是否在REFERRER_DOMAIN_WHITELIST中
+    // 如果referrer存在，就判断referrer是否在referrerDomainWhitelist中
     const isReferrerDomainWhitelist = referrerDomainWhitelist.some((item) => {
       // list中仅包含域名，不包含协议和路径
       return referrer.includes(item)
