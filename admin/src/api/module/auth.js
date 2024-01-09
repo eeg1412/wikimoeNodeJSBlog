@@ -312,6 +312,13 @@ export default function (api) {
         shouldAdminJWT: true
       })
     },
+    // get /dashboard/visitor
+    getDashboardVisitor (data) {
+      return api.get('/dashboard/visitor', {
+        params: data,
+        shouldAdminJWT: true
+      })
+    },
     // get /sidebar/list
     getSidebarList (data) {
       return api.get('/sidebar/list', {

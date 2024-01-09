@@ -50,3 +50,9 @@ exports.count = async function (filters) {
   // document查询
   return await readerlogsModel.countDocuments(filters);
 }
+
+// aggregate
+exports.aggregate = async function (aggregates) {
+  // document查询
+  return await readerlogsModel.aggregate(aggregates);
+}

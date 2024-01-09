@@ -1,35 +1,68 @@
 <template>
-  <div class="common-right-panel-form common-limit-width" v-if="data">
+  <div class="common-right-panel-form" v-if="data">
     <div class="pb20">
       <el-breadcrumb separator="/">
         <el-breadcrumb-item>首页</el-breadcrumb-item>
       </el-breadcrumb>
     </div>
-    <div class="el-descriptions__header">
-      <div class="el-descriptions__title">站点统计</div>
-      <div class="el-descriptions__extra"></div>
+    <div>
+      <div class="el-descriptions__header">
+        <div class="el-descriptions__title">站点统计</div>
+        <div class="el-descriptions__extra"></div>
+      </div>
+      <el-row>
+        <el-col :span="8">
+          <el-statistic title="博客文章" :value="data.postCount" />
+        </el-col>
+        <el-col :span="8">
+          <el-statistic title="评论数" :value="data.commentCount">
+            <template #suffix
+              ><span v-if="data.unAuditCommentCount > 0"
+                >(<span class="pointer cRed" @click="goCommentAudit">{{
+                  data.unAuditCommentCount
+                }}</span
+                >)</span
+              ></template
+            >
+          </el-statistic>
+        </el-col>
+        <el-col :span="8">
+          <el-statistic title="媒体数" :value="data.attachmentCount" />
+        </el-col>
+      </el-row>
+      <el-divider />
     </div>
-    <el-row>
-      <el-col :span="8">
-        <el-statistic title="博客文章" :value="data.postCount" />
-      </el-col>
-      <el-col :span="8">
-        <el-statistic title="评论数" :value="data.commentCount">
-          <template #suffix
-            ><span v-if="data.unAuditCommentCount > 0"
-              >(<span class="pointer cRed" @click="goCommentAudit">{{
-                data.unAuditCommentCount
-              }}</span
-              >)</span
-            ></template
+    <!-- 访客统计 -->
+    <div>
+      <div class="el-descriptions__header">
+        <div class="el-descriptions__title">访客统计</div>
+        <div class="el-descriptions__extra">
+          <el-select
+            v-model="timeRangeType"
+            placeholder="请选择时间范围"
+            @change="getDashboardVisitor"
           >
-        </el-statistic>
-      </el-col>
-      <el-col :span="8">
-        <el-statistic title="媒体数" :value="data.attachmentCount" />
-      </el-col>
-    </el-row>
-    <el-divider />
+            <el-option
+              v-for="item in timeRangeTypeList"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value"
+            ></el-option>
+          </el-select>
+        </div>
+      </div>
+      <el-row>
+        <!-- PV -->
+        <el-col :span="8">
+          <el-statistic title="PV" :value="visitorData.pv" />
+        </el-col>
+        <!-- IP -->
+        <el-col :span="8">
+          <el-statistic title="IP" :value="visitorData.uniqueIPCount" />
+        </el-col>
+      </el-row>
+      <el-divider />
+    </div>
     <el-descriptions title="服务器信息">
       <el-descriptions-item label="NodeJs版本">{{
         data.nodeVersion
@@ -107,13 +140,38 @@ export default {
       })
     }
 
+    const timeRangeTypeList = [
+      { value: 'today', label: '今天' },
+      { value: 'yesterday', label: '昨天' },
+      { value: 'week', label: '本周' },
+      { value: 'month', label: '本月' },
+      { value: 'year', label: '今年' },
+      { value: 'all', label: '全部' },
+    ]
+    const timeRangeType = ref('today')
+    const visitorData = ref(null)
+    const getDashboardVisitor = () => {
+      authApi
+        .getDashboardVisitor({
+          timeRangeType: timeRangeType.value,
+        })
+        .then((res) => {
+          visitorData.value = res.data.data
+        })
+    }
+
     onMounted(() => {
       getDashboard()
+      getDashboardVisitor()
     })
 
     return {
       data,
       goCommentAudit,
+      timeRangeTypeList,
+      timeRangeType,
+      visitorData,
+      getDashboardVisitor,
     }
   },
 }

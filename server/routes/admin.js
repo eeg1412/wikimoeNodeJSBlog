@@ -474,6 +474,15 @@ const adminRouteSetting = [
     roleType: null,
     role: null
   },
+  // get getVisitor
+  {
+    path: '/dashboard/visitor',
+    method: 'get',
+    middleware: [checkAuth],
+    controller: require('../api/admin/dashboard/getVisitor'),
+    roleType: null,
+    role: null
+  },
   // get /sidebar/list
   {
     path: '/sidebar/list',
