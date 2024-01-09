@@ -67,11 +67,51 @@
           </template>
         </el-table-column>
         <!-- 状态 0未审核，1通过，2未通过 -->
-        <el-table-column prop="status" label="状态" width="90">
+        <el-table-column prop="status" label="状态" min-width="110">
           <template #default="{ row }">
-            <el-tag v-if="row.status === 0" type="info">待审核</el-tag>
-            <el-tag v-else-if="row.status === 1" type="success">通过</el-tag>
-            <el-tag v-else-if="row.status === 2" type="danger">未通过</el-tag>
+            <el-dropdown
+              trigger="click"
+              @command="applyComment(row._id, $event, row.__v)"
+            >
+              <el-button
+                size="small"
+                :type="
+                  row.status === 0
+                    ? 'info'
+                    : row.status === 1
+                    ? 'success'
+                    : 'danger'
+                "
+              >
+                {{
+                  row.status === 0
+                    ? '待审核'
+                    : row.status === 1
+                    ? '通过'
+                    : '未通过'
+                }}
+                <el-icon class="el-icon--right"><arrow-down /></el-icon>
+              </el-button>
+              <template #dropdown>
+                <el-dropdown-menu>
+                  <el-dropdown-item v-if="row.status !== 0" :command="0"
+                    >待审核</el-dropdown-item
+                  >
+                  <el-dropdown-item
+                    v-if="row.status !== 1"
+                    :command="1"
+                    class="cGreen1A7"
+                    >通过</el-dropdown-item
+                  >
+                  <el-dropdown-item
+                    v-if="row.status !== 2"
+                    :command="2"
+                    class="cRed"
+                    >未通过</el-dropdown-item
+                  >
+                </el-dropdown-menu>
+              </template>
+            </el-dropdown>
           </template>
         </el-table-column>
         <!-- 点赞 -->
@@ -332,6 +372,21 @@ export default {
         }
       })
     }
+    // 审核评论
+    const applyComment = (id, status, __v) => {
+      const params = {
+        id,
+        status,
+        __v,
+      }
+      authApi
+        .applyComment(params)
+        .then(() => {
+          ElMessage.success('操作成功')
+          getCommentList()
+        })
+        .catch(() => {})
+    }
 
     onMounted(() => {
       initParams()
@@ -354,6 +409,8 @@ export default {
       openCommentForm,
       closeCommentForm,
       submitCommentForm,
+      // 审核评论
+      applyComment,
     }
   },
 }

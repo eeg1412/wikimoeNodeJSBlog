@@ -42,12 +42,32 @@
           <el-switch v-model="form.top"></el-switch>
         </el-form-item>
         <el-form-item label="状态" prop="status">
-          <el-select v-model="form.status" placeholder="请选择状态">
-            <el-option label="待审核" :value="0"></el-option>
-            <el-option label="通过" :value="1"></el-option>
-            <el-option label="未通过" :value="2"></el-option>
-          </el-select>
+          <el-radio-group v-model="form.status">
+            <el-radio :label="0">待审核</el-radio>
+            <el-radio :label="1">通过</el-radio>
+            <el-radio :label="2">未通过</el-radio>
+          </el-radio-group>
         </el-form-item>
+        <template v-if="form.status === 1">
+          <!-- replyFlag switch -->
+          <el-form-item label="是否回复" prop="replyFlag">
+            <el-switch v-model="replyFlag"></el-switch>
+          </el-form-item>
+          <!-- replyFlag -->
+          <template v-if="replyFlag">
+            <el-form-item label="回复内容" prop="reply.content">
+              <el-input
+                v-model="form.reply.content"
+                type="textarea"
+                :rows="5"
+                placeholder="请输入回复内容"
+              ></el-input>
+            </el-form-item>
+            <el-form-item label="是否置顶" prop="reply.top">
+              <el-switch v-model="form.reply.top"></el-switch>
+            </el-form-item>
+          </template>
+        </template>
         <el-form-item>
           <el-button type="primary" @click="submit">提交</el-button>
         </el-form-item>
@@ -72,8 +92,16 @@ export default {
       url: '',
       email: '',
       status: 0,
+      reply: {
+        post: '',
+        content: '',
+        parent: '',
+        top: false,
+      },
       __v: null,
     })
+    // 回复Flag
+    const replyFlag = ref(false)
     const detailData = ref({})
     const rules = computed(() => {
       const ruleList = {
@@ -94,6 +122,11 @@ export default {
           },
         ]
       }
+      if (replyFlag.value) {
+        ruleList['reply.content'] = [
+          { required: true, message: '请输入回复内容', trigger: 'blur' },
+        ]
+      }
       return ruleList
     })
     const formRef = ref(null)
@@ -102,9 +135,8 @@ export default {
         if (!valid) {
           return false
         }
-        const data = {
-          ...form,
-        }
+        const data = JSON.parse(JSON.stringify(form))
+        delete data.reply
         // 编辑
         data.id = id.value
         data.__v = form.__v
@@ -117,6 +149,16 @@ export default {
         authApi
           .updateComment(data)
           .then(() => {
+            if (replyFlag.value && data.status === 1) {
+              // 回复
+              const replyData = JSON.parse(JSON.stringify(form.reply))
+              authApi.createComment(replyData).then((res) => {
+                router.push({
+                  name: 'CommentList',
+                })
+              })
+              return
+            }
             router.push({
               name: 'CommentList',
             })
@@ -140,6 +182,14 @@ export default {
           form.email = res.data.data.email
           form.status = res.data.data.status
           form.__v = res.data.data.__v
+          form.reply.post = res.data.data.post._id
+          const user = res.data.data.user
+          if (user) {
+            form.reply.content = `@${user.nickname}：`
+          } else {
+            form.reply.content = `@${res.data.data.nickname}：`
+          }
+          form.reply.parent = res.data.data._id
         })
         .catch(() => {})
     }
@@ -152,6 +202,7 @@ export default {
     return {
       id,
       form,
+      replyFlag,
       detailData,
       rules,
       formRef,

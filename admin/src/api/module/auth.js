@@ -215,6 +215,12 @@ export default function (api) {
         shouldAdminJWT: true
       })
     },
+    // put /comment/apply
+    applyComment (data) {
+      return api.put('/comment/apply', data, {
+        shouldAdminJWT: true
+      })
+    },
     // get /link/list
     getLinkList (data) {
       return api.get('/link/list', {

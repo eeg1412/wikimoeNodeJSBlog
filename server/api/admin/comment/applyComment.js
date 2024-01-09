@@ -6,7 +6,7 @@ const adminApiLog = log4js.getLogger('adminApi')
 const cacheDataUtils = require('../../../config/cacheData')
 
 module.exports = async function (req, res, next) {
-  const { content, top, nickname, url, email, status, id, __v } = req.body
+  const { status, id, __v } = req.body
   if (!id) {
     res.status(400).json({
       errors: [{
@@ -24,46 +24,22 @@ module.exports = async function (req, res, next) {
     })
     return
   }
+  // status只能是0 1 2
+  const statusList = [0, 1, 2]
+  if (!statusList.includes(status)) {
+    res.status(400).json({
+      errors: [{
+        message: 'status状态不正确'
+      }]
+    })
+    return
+  }
 
   const params = {
+    status
   }
 
-  if (content) {
-    params.content = content
-  }
-  // 如果top是boolean类型，那么就更新，否则不更新
-  if (typeof top === 'boolean') {
-    params.top = top
-  }
   // 评论状态,0待审核,1已审核,2未通过
-  // 如果status是0-2的整数 ，那么就更新，否则不更新
-  // 转换成整数
-  const statusInt = parseInt(status)
-  if (statusInt >= 0 && statusInt <= 2) {
-    params.status = statusInt
-  }
-  // 如果nickname，url，email是字符串，那么就更新，否则不更新
-  if (typeof nickname === 'string') {
-    params.nickname = nickname
-  }
-  if (typeof url === 'string') {
-    params.url = url
-  }
-  if (typeof email === 'string') {
-    if (email) {
-      // 正则校验email
-      const emailReg = /^(\w-*\.*)+@(\w-?)+(\.\w{2,})+$/
-      if (!emailReg.test(email)) {
-        res.status(400).json({
-          errors: [{
-            message: '邮箱格式不正确'
-          }]
-        })
-        return
-      }
-    }
-    params.email = email
-  }
 
   // 获取评论信息
   const commentInfo = await commentUtils.findOne({ _id: id, __v })

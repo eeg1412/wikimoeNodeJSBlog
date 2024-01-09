@@ -357,6 +357,15 @@ const adminRouteSetting = [
     roleType: null,
     role: null
   },
+  // put /comment/apply applyComment
+  {
+    path: '/comment/apply',
+    method: 'put',
+    middleware: [checkAuth],
+    controller: require('../api/admin/comment/applyComment'),
+    roleType: null,
+    role: null
+  },
   // get /link/list
   {
     path: '/link/list',
