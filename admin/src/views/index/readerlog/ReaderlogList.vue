@@ -44,10 +44,12 @@
               <div v-else-if="row.data.content">
                 {{ row.data.content }}
               </div>
-              <div v-else-if="row.data.target && row.data.targetId">
+              <div
+                v-else-if="targetToName(row.data.target) && row.data.targetId"
+              >
                 <router-link
                   :to="{
-                    name: row.data.target,
+                    name: targetToName(row.data.target),
                     params: { id: row.data.targetId },
                   }"
                   >{{ row.data.targetId }}</router-link
@@ -82,6 +84,8 @@
             <div>浏览器版本号： {{ row.deviceInfo?.browser?.version }}</div>
           </template>
         </el-table-column>
+        <!-- 来源 referrer -->
+        <el-table-column prop="referrer" label="来源" min-width="200" />
         <!-- createdAt -->
         <el-table-column prop="createdAt" label="创建时间" width="180">
           <template #default="{ row }">
@@ -154,6 +158,8 @@ export default {
     const targetToName = (target) => {
       const targetMap = {
         post: 'PostEdit',
+        sort: 'SortEdit',
+        tag: 'TagEdit',
       }
       if (targetMap[target]) {
         return targetMap[target]

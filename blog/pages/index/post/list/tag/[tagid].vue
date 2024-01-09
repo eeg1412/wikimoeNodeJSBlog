@@ -10,6 +10,7 @@
 </template>
 <script setup>
 import { getTagDetailApi } from '@/api/tag'
+import { postLogCreateApi } from '@/api/log'
 const route = useRoute()
 const tagid = route.params.tagid
 const { data } = await getTagDetailApi({
@@ -20,5 +21,12 @@ useSeoMeta({
   ogTitle: data.value.data.tagname,
   // twitter
   twitterTitle: data.value.data.tagname,
+})
+onMounted(() => {
+  postLogCreateApi({
+    action: 'postListTag',
+    tagid: tagid,
+    tagname: data.value.data.tagname,
+  })
 })
 </script>

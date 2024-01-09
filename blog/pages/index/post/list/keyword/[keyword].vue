@@ -9,6 +9,8 @@
   </div>
 </template>
 <script setup>
+import { postLogCreateApi } from '@/api/log'
+
 const route = useRoute()
 const keyword = route.params.keyword || ''
 // 设置SEO
@@ -18,5 +20,11 @@ useSeoMeta({
   keywords: keyword,
   // twitter
   twitterTitle: keyword,
+})
+onMounted(() => {
+  postLogCreateApi({
+    action: 'postListKeyword',
+    keyword: keyword,
+  })
 })
 </script>

@@ -10,6 +10,8 @@
 </template>
 <script setup>
 import { getSortDetailApi } from '@/api/sort'
+import { postLogCreateApi } from '@/api/log'
+
 const route = useRoute()
 const sortid = route.params.sortid
 
@@ -23,5 +25,12 @@ useSeoMeta({
   // twitter
   twitterTitle: data.value.sortname,
   twitterDescription: data.value.description,
+})
+onMounted(() => {
+  postLogCreateApi({
+    action: 'postListSort',
+    sortid: data.value._id,
+    sortname: data.value.sortname,
+  })
 })
 </script>

@@ -553,3 +553,15 @@ exports.escapeHtml = function (unsafe) {
     .replace(/</g, "&lt;")
     .replace(/>/g, "&gt;");
 }
+
+// get referrer 参数是req
+exports.setReferrer = function (referrer) {
+  if (referrer) {
+    if (referrer.length > 300) {
+      referrer = referrer.substring(0, 300)
+    }
+    return referrer
+  }
+
+  return null
+}

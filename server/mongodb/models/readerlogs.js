@@ -12,7 +12,10 @@ var readerlogs = new Schema({
     type: String,
     required: true,
   },
-  // data
+  referrer: {
+    type: String,
+    default: ''
+  },
   // data
   data: {
     // object

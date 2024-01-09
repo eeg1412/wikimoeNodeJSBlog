@@ -9,6 +9,8 @@
   </div>
 </template>
 <script setup>
+import { postLogCreateApi } from '@/api/log'
+
 const route = useRoute()
 const year = route.params.year
 const month = route.params.month
@@ -19,5 +21,11 @@ useSeoMeta({
   ogTitle: title,
   // twitter
   twitterTitle: title,
+})
+onMounted(() => {
+  postLogCreateApi({
+    action: 'postListArchive',
+    title: title,
+  })
 })
 </script>

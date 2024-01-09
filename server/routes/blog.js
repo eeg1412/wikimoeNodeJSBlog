@@ -149,6 +149,13 @@ const blogRouteSetting = [
     middleware: [],
     controller: require('../api/blog/tag/getTagDetail'),
   },
+  // createLog
+  {
+    path: '/log/create',
+    method: 'post',
+    middleware: [],
+    controller: require('../api/blog/log/createLog'),
+  },
 ]
 
 blogRouteSetting.forEach(item => {

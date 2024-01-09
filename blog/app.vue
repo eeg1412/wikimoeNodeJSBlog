@@ -8,6 +8,7 @@
 <script setup>
 import { useOptionStore } from '@/store/options'
 import { storeToRefs } from 'pinia'
+import { postLogCreateApi } from '@/api/log'
 const optionStore = useOptionStore()
 const { getOptions } = optionStore
 await getOptions()
@@ -71,9 +72,18 @@ useHead({
     },
   ],
 })
+const postLogCreate = () => {
+  const referrer = document.referrer
+  postLogCreateApi({
+    referrer: referrer,
+    action: 'open',
+  })
+}
 onMounted(() => {
   // 检查uuid
   checkUuid()
+  // 获取referrer
+  postLogCreate()
 })
 </script>
 <style scoped>
