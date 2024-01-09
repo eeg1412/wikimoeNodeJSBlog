@@ -505,6 +505,10 @@ exports.referrerRecord = function (referrer, referrerType) {
     return
   }
   if (referrer) {
+    // referrer最大长度为300
+    if (referrer.length > 300) {
+      referrer = referrer.substring(0, 300)
+    }
     // 如果referrer存在，就判断referrer是否在REFERRER_DOMAIN_WHITELIST中
     const isReferrerDomainWhitelist = referrerDomainWhitelist.some((item) => {
       // list中仅包含域名，不包含协议和路径

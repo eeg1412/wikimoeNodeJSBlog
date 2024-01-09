@@ -32,6 +32,10 @@ module.exports = async function (req, res, next) {
   if (!utils.isUUID(uuid)) {
     return
   }
+  // 判断id是否符合格式
+  if (!utils.isObjectId(id)) {
+    return
+  }
 
   // 根据ip或uuid， 查询 readerlogUtils.count 中action字段 postView 当天的数据量是否超过1000条
   const readerlogCount = await readerlogUtils.count({

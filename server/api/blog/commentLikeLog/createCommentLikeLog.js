@@ -14,6 +14,15 @@ module.exports = async function (req, res, next) {
     comment: id,
     uuid,
   }
+  // 判断id是否符合格式
+  if (!utils.isObjectId(id)) {
+    res.status(400).json({
+      errors: [{
+        message: '更新失败，id格式错误'
+      }]
+    })
+    return
+  }
   // 校验格式
   const params = {
     like,
