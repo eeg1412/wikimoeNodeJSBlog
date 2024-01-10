@@ -47,7 +47,7 @@ router.get('/', async function (req, res, next) {
       // 推文时，标题为【nickname在xxxx年xx月xx日xx点xx分发表了推文】
       const authorName = author.nickname
       const siteTimeZone = global.$globalConfig.siteSettings.siteTimeZone || 'Asia/Shanghai'
-      const dateStr = moment(date).tz(siteTimeZone).format('YYYY年MM月DD日HH点mm分')
+      const dateStr = moment(date).tz(siteTimeZone).format('YYYY年M月D日H点m分')
       newTitle = `${authorName}在${dateStr}发布了一篇推文`
     }
     feed.addItem({
