@@ -8,8 +8,20 @@
     </div>
     <UForm :state="form" @submit="onSubmit">
       <div class="flex flex-col space-y-2">
+        <div class="flex justify-between items-center">
+          <div>
+            <ClientOnly>
+              <Emoji @emojiClick="emojiClick" />
+            </ClientOnly>
+          </div>
+          <div></div>
+        </div>
         <UFormGroup name="content" :error="error.content">
-          <UTextarea placeholder="说点什么吧..." v-model="form.content" />
+          <UTextarea
+            ref="contentRef"
+            placeholder="说点什么吧..."
+            v-model="form.content"
+          />
         </UFormGroup>
 
         <div
@@ -157,6 +169,22 @@ const onSubmit = (event) => {
         })
       }
     })
+}
+const contentRef = ref(null)
+const emojiClick = (item) => {
+  const startPos = contentRef.value.textarea.selectionStart
+  const endPos = contentRef.value.textarea.selectionEnd
+  const emojiLength = item.length
+  form.content =
+    form.content.substring(0, startPos) +
+    item +
+    form.content.substring(endPos, form.content.length)
+  // 使用 nextTick 来确保 DOM 已经更新
+  nextTick(() => {
+    contentRef.value.textarea.focus()
+    contentRef.value.textarea.selectionStart = startPos + emojiLength
+    contentRef.value.textarea.selectionEnd = startPos + emojiLength
+  })
 }
 </script>
 <style scoped></style>

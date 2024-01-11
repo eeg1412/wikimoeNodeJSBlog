@@ -1,4 +1,6 @@
 import PhotoSwipeLightbox from 'photoswipe/lightbox'
+import emoji from '@/utils/emoji.json'
+
 console.log(process.client)
 let lightbox: any = null
 if (process.client) {
@@ -114,4 +116,9 @@ export const checkUuid = () => {
     localStorage.setItem('uuid', storedUuid)
   }
   return storedUuid
+}
+
+// 获取emoji
+export const getEmoji = () => {
+  return emoji
 }
