@@ -627,10 +627,9 @@ summary {
 html,
 body {
   font-size: 16px;
-  font-family: 'Apple Color Emoji', 'Segoe UI Emoji', 'Noto Color Emoji',
-    -apple-system, BlinkMacSystemFont, Helvetica Neue, PingFang SC,
-    Microsoft YaHei, Source Han Sans SC, Noto Sans CJK SC, WenQuanYi Micro Hei,
-    sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, Helvetica Neue,
+    'Segoe UI Emoji', 'Noto Color Emoji', PingFang SC, Microsoft YaHei,
+    Source Han Sans SC, Noto Sans CJK SC, WenQuanYi Micro Hei, sans-serif;
   color: #171717;
   width: 100%;
   height: 100%;
