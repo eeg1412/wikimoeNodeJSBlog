@@ -4,7 +4,7 @@
       >表情</UButton
     >
     <template #panel="{ close }">
-      <div class="p-2 w-[480px] flex max-w-[90vw]">
+      <div class="p-2 w-[470px] flex max-w-[90vw]">
         <div>
           <UTabs
             v-model="seletedEmojiIndex"
