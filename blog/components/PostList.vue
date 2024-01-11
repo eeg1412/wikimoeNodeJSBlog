@@ -108,7 +108,10 @@
               </div>
             </div>
           </template>
-          <div v-else-if="item.type === 2" class="post-list-tweet-cover-body">
+          <div
+            v-else-if="item.type === 2 && item.coverImages.length > 0"
+            class="post-list-tweet-cover-body"
+          >
             <TweetImgList :coverImages="item.coverImages" />
           </div>
           <!-- 统计信息左边阅读数 右边点赞数 -->
