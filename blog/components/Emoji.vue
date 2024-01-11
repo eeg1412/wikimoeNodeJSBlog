@@ -88,6 +88,7 @@ const setUsedEmoji = (item) => {
 }
 const emojiBtnClick = () => {
   emojiInit()
+  emits('emojiBtnClick')
 }
 const emojiInit = () => {
   getUsedEmoji()

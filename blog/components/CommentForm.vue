@@ -11,7 +11,7 @@
         <div class="flex justify-between items-center">
           <div>
             <ClientOnly>
-              <Emoji @emojiClick="emojiClick" />
+              <Emoji @emojiClick="emojiClick" @emojiBtnClick="emojiBtnClick" />
             </ClientOnly>
           </div>
           <div></div>
@@ -186,6 +186,11 @@ const emojiClick = (item) => {
     contentRef.value.textarea.selectionStart = startPos + emojiLength
     contentRef.value.textarea.selectionEnd = startPos + emojiLength
   })
+}
+
+const emojiBtnClick = () => {
+  // 取消聚焦
+  contentRef.value.textarea.blur()
 }
 </script>
 <style scoped></style>
