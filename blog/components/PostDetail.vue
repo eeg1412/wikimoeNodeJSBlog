@@ -171,11 +171,7 @@
     <ClientOnly>
       <div class="comment-list-body">
         <!-- 评论form -->
-        <CommentForm
-          :postid="postid"
-          :commentid="commentid"
-          @refresh="refreshCommentList"
-        />
+        <CommentForm :postid="postid" @refresh="refreshCommentList" />
         <div class="relative">
           <DivLoading :loading="commentLoading" />
           <!-- 评论 -->
@@ -276,6 +272,7 @@
                   <div class="mt-5">
                     <!-- 回复表单 -->
                     <CommentForm
+                      :id="`${item._id}-reply`"
                       :postid="postid"
                       :commentid="commentid"
                       :parentNickname="item.nickname || item.user?.nickname"
@@ -433,6 +430,17 @@ const commentListRef = ref(null)
 const commentid = ref('')
 const openComment = (id) => {
   commentid.value = id
+  nextTick(() => {
+    // 根据id找textarea
+    const textareaBlock = document.getElementById(`${id}-reply`)
+    // 找到.comment-form-textarea 下的textarea
+    const textarea = textareaBlock.querySelector(
+      '.comment-form-textarea textarea'
+    )
+    if (textarea) {
+      textarea.focus()
+    }
+  })
 }
 const closeComment = () => {
   commentid.value = ''

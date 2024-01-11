@@ -18,6 +18,7 @@
         </div>
         <UFormGroup name="content" :error="error.content">
           <UTextarea
+            class="comment-form-textarea"
             ref="contentRef"
             placeholder="说点什么吧..."
             v-model="form.content"
