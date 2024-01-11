@@ -1,6 +1,10 @@
 <template>
   <UPopover :popper="{ arrow: true }">
-    <UButton color="white" variant="solid" size="xs" @click="emojiBtnClick"
+    <UButton
+      color="white"
+      size="xs"
+      icon="i-heroicons-face-smile"
+      @click="emojiBtnClick"
       >表情</UButton
     >
     <template #panel="{ close }">

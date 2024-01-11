@@ -8,13 +8,46 @@
     </div>
     <UForm :state="form" @submit="onSubmit">
       <div class="flex flex-col space-y-2">
-        <div class="flex justify-between items-center">
+        <div class="flex items-center">
           <div>
             <ClientOnly>
               <Emoji @emojiClick="emojiClick" @emojiBtnClick="emojiBtnClick" />
             </ClientOnly>
           </div>
-          <div></div>
+          <div class="ml-2">
+            <UPopover :popper="{ arrow: true }">
+              <!-- 设置按钮 -->
+              <UButton
+                size="xs"
+                color="white"
+                icon="i-heroicons-cog-6-tooth"
+                @click="emojiBtnClick"
+              />
+              <template #panel="{ close }">
+                <div class="p-3">
+                  <div>
+                    <!-- UCheckbox  提交后保存个人信息 -->
+                    <UCheckbox
+                      v-model="commentSetting.commentSaveUserInfo"
+                      :label="`提交后保存此个人信息`"
+                      :ui="{ inner: 'ms-0 flex flex-col' }"
+                    />
+                  </div>
+                  <div class="mt-2 flex justify-center items-center">
+                    <!-- 立即清除个人信息 按钮 -->
+                    <UButton
+                      size="xs"
+                      color="primary"
+                      icon="i-heroicons-trash"
+                      @click="removeUserInfo"
+                    >
+                      立即清除个人信息
+                    </UButton>
+                  </div>
+                </div>
+              </template>
+            </UPopover>
+          </div>
         </div>
         <UFormGroup name="content" :error="error.content">
           <UTextarea
@@ -121,6 +154,12 @@ const onSubmit = (event) => {
   if (Object.keys(error.value).length > 0) {
     return
   }
+  if (commentSetting.commentSaveUserInfo) {
+    // 将nickname, email, url保存到localStorage
+    localStorage.setItem('commentNickname', event.data.nickname)
+    localStorage.setItem('commentEmail', event.data.email)
+    localStorage.setItem('commentUrl', event.data.url)
+  }
   // 提交
   console.log(event.data)
   getCommentCreateApi({
@@ -192,5 +231,64 @@ const emojiBtnClick = () => {
   // 取消聚焦
   contentRef.value.textarea.blur()
 }
+
+// 保存个人信息
+const commentSetting = reactive({
+  commentSaveUserInfo: false,
+})
+const initCommentSaveUserInfo = () => {
+  const commentNickname = localStorage.getItem('commentNickname')
+  const commentEmail = localStorage.getItem('commentEmail')
+  const commentUrl = localStorage.getItem('commentUrl')
+  if (commentNickname) {
+    form.nickname = commentNickname
+  }
+  if (commentEmail) {
+    form.email = commentEmail
+  }
+  if (commentUrl) {
+    form.url = commentUrl
+  }
+  const commentSettingStr = localStorage.getItem('commentSetting')
+  if (commentSettingStr) {
+    try {
+      const commentSettingObj = JSON.parse(commentSettingStr)
+      for (const key in commentSettingObj) {
+        if (commentSetting.hasOwnProperty(key)) {
+          if (commentSettingObj[key] !== undefined) {
+            commentSetting[key] = commentSettingObj[key]
+          }
+        }
+      }
+    } catch (error) {
+      console.log(error)
+    }
+  }
+}
+const removeUserInfo = () => {
+  localStorage.removeItem('commentNickname')
+  localStorage.removeItem('commentEmail')
+  localStorage.removeItem('commentUrl')
+  // 提示
+  toast.add({
+    title: '已清除个人信息',
+    icon: 'i-heroicons-check-circle',
+    color: 'green',
+  })
+}
+// 深度watch commentSetting
+watch(
+  () => commentSetting,
+  (newVal, oldVal) => {
+    localStorage.setItem('commentSetting', JSON.stringify(newVal))
+  },
+  {
+    deep: true,
+  }
+)
+
+onMounted(() => {
+  initCommentSaveUserInfo()
+})
 </script>
 <style scoped></style>
