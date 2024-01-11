@@ -39,7 +39,7 @@
             type="textarea"
             :rows="5"
             placeholder="请输入评论内容"
-            ref="commentDialogContentRef"
+            ref="commentContentRef"
           ></el-input>
         </el-form-item>
         <el-form-item label="是否置顶" prop="top">
@@ -71,7 +71,7 @@
                 type="textarea"
                 :rows="5"
                 placeholder="请输入回复内容"
-                ref="commentDialogContentRef2"
+                ref="commentContentRef2"
               ></el-input>
             </el-form-item>
             <el-form-item label="是否置顶" prop="reply.top">
@@ -209,45 +209,43 @@ export default {
         .catch(() => {})
     }
 
-    const commentDialogContentRef = ref(null)
-    const commentDialogContentRef2 = ref(null)
+    const commentContentRef = ref(null)
+    const commentContentRef2 = ref(null)
     const emojiClick = (item) => {
       const content = form.content
-      const start = commentDialogContentRef.value.textarea.selectionStart
-      const end = commentDialogContentRef.value.textarea.selectionEnd
+      const start = commentContentRef.value.textarea.selectionStart
+      const end = commentContentRef.value.textarea.selectionEnd
       form.content = content.slice(0, start) + item + content.slice(end)
 
       // 设置光标位置
       nextTick(() => {
+        commentContentRef.value.textarea.focus()
         const newCursorPos = start + item.length
-        commentDialogContentRef.value.textarea.setSelectionRange(
-          newCursorPos,
-          newCursorPos
-        )
+        commentContentRef.value.textarea.selectionStart = newCursorPos
+        commentContentRef.value.textarea.selectionEnd = newCursorPos
       })
     }
     const emojiBtnClick = () => {
       // 失去焦点
-      commentDialogContentRef.value.textarea.blur()
+      commentContentRef.value.textarea.blur()
     }
     const emojiClick2 = (item) => {
       const content = form.reply.content
-      const start = commentDialogContentRef2.value.textarea.selectionStart
-      const end = commentDialogContentRef2.value.textarea.selectionEnd
+      const start = commentContentRef2.value.textarea.selectionStart
+      const end = commentContentRef2.value.textarea.selectionEnd
       form.reply.content = content.slice(0, start) + item + content.slice(end)
 
       // 设置光标位置
       nextTick(() => {
+        commentContentRef2.value.textarea.focus()
         const newCursorPos = start + item.length
-        commentDialogContentRef2.value.textarea.setSelectionRange(
-          newCursorPos,
-          newCursorPos
-        )
+        commentContentRef2.value.textarea.selectionStart = newCursorPos
+        commentContentRef2.value.textarea.selectionEnd = newCursorPos
       })
     }
     const emojiBtnClick2 = () => {
       // 失去焦点
-      commentDialogContentRef2.value.textarea.blur()
+      commentContentRef2.value.textarea.blur()
     }
 
     onMounted(() => {
@@ -263,10 +261,10 @@ export default {
       rules,
       formRef,
       submit,
-      commentDialogContentRef,
+      commentContentRef,
       emojiClick,
       emojiBtnClick,
-      commentDialogContentRef2,
+      commentContentRef2,
       emojiClick2,
       emojiBtnClick2,
     }

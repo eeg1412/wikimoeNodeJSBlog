@@ -388,6 +388,12 @@ export default {
       const start = commentDialogContentRef.value.textarea.selectionStart
       const end = commentDialogContentRef.value.textarea.selectionEnd
       commentForm.content = content.slice(0, start) + item + content.slice(end)
+      nextTick(() => {
+        commentDialogContentRef.value.textarea.focus()
+        const newCursorPos = start + item.length
+        commentDialogContentRef.value.textarea.selectionStart = newCursorPos
+        commentDialogContentRef.value.textarea.selectionEnd = newCursorPos
+      })
     }
     const emojiBtnClick = () => {
       // 失去焦点
