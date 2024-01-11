@@ -93,7 +93,7 @@ const props = defineProps({
     default: '',
   },
   parentNickname: {
-    type: Object,
+    type: String,
     default: null,
   },
 })
