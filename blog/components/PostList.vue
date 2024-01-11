@@ -482,7 +482,7 @@ onMounted(() => {
 .post-list-info-bottom-body {
   display: flex;
   justify-content: space-between;
-  font-size: 13px;
+  font-size: 14px;
 }
 .post-list-page-body {
   @apply text-gray-400;
