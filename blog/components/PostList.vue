@@ -95,8 +95,8 @@
                   class="post-list-blog-cover-img border-t border-l border-r border-gray-200 border-solid group-hover:border-primary-300"
                   :src="defaultCover"
                   :alt="item.title"
-                  width="1344px"
-                  height="648px"
+                  :width="1344"
+                  :height="648"
                   v-else
                 />
               </div>
