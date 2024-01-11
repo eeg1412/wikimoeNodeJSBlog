@@ -203,6 +203,7 @@
       :close-on-click-modal="false"
       align-center
       append-to-body
+      :lock-scroll="false"
       title="回复评论"
     >
       <el-form
@@ -225,10 +226,14 @@
           </div>
         </el-form-item>
         <el-form-item label="回复内容" prop="content">
+          <div class="w_10">
+            <Emoji @emojiClick="emojiClick" @emojiBtnClick="emojiBtnClick" />
+          </div>
           <el-input
             type="textarea"
             v-model="commentForm.content"
             rows="5"
+            ref="commentDialogContentRef"
           ></el-input>
         </el-form-item>
         <el-form-item label="置顶" prop="top">
@@ -248,9 +253,13 @@
 import { useRoute, useRouter } from 'vue-router'
 import { authApi } from '@/api'
 import { ElMessage, ElMessageBox } from 'element-plus'
-import { onMounted, reactive, ref, watch } from 'vue'
+import { nextTick, onMounted, reactive, ref, watch } from 'vue'
+import Emoji from '@/components/Emoji.vue'
 import { setSessionParams, getSessionParams } from '@/utils/utils'
 export default {
+  components: {
+    Emoji,
+  },
   setup() {
     const route = useRoute()
     const router = useRouter()
@@ -372,6 +381,18 @@ export default {
         }
       })
     }
+    const commentDialogContentRef = ref(null)
+    const emojiClick = (item) => {
+      console.log(commentDialogContentRef.value)
+      const content = commentForm.content
+      const start = commentDialogContentRef.value.textarea.selectionStart
+      const end = commentDialogContentRef.value.textarea.selectionEnd
+      commentForm.content = content.slice(0, start) + item + content.slice(end)
+    }
+    const emojiBtnClick = () => {
+      // 失去焦点
+      commentDialogContentRef.value.textarea.blur()
+    }
     // 审核评论
     const applyComment = (id, status, __v) => {
       const params = {
@@ -409,6 +430,9 @@ export default {
       openCommentForm,
       closeCommentForm,
       submitCommentForm,
+      commentDialogContentRef,
+      emojiClick,
+      emojiBtnClick,
       // 审核评论
       applyComment,
     }
