@@ -43,6 +43,15 @@
           active: leftMenuActive,
         }"
       >
+        <!-- 关闭按钮 -->
+        <div
+          class="justify-between layout-close-btn-body type-l layout-mobile-navi-btn-body"
+        >
+          <div class="text-xl font-bold">导航</div>
+          <div class="text-xl cursor-pointer" @click="toggleLeftMenu">
+            <UIcon name="i-heroicons-x-mark" />
+          </div>
+        </div>
         <div
           class="blog-layout-sticky custom-scroll blog-layout-info-menu blog-layout-info-menu-bg"
           :class="{
@@ -59,12 +68,6 @@
             <!-- siteDescription -->
             <div class="blog-layout-desc">
               <p>{{ options.siteDescription }}</p>
-            </div>
-          </div>
-          <!-- 关闭按钮 -->
-          <div class="justify-end layout-close-btn-body type-l">
-            <div class="text-xl cursor-pointer" @click="toggleLeftMenu">
-              <UIcon name="i-heroicons-x-mark" />
             </div>
           </div>
           <!-- 导航 -->
@@ -87,7 +90,8 @@
       >
         <div class="blog-layout-right-top-body">
           <!-- 关闭按钮 -->
-          <div class="justify-end mb-5 layout-close-btn-body type-r">
+          <div class="justify-between mb-5 layout-close-btn-body type-r">
+            <div class="text-xl font-bold">侧边栏</div>
             <div class="text-xl cursor-pointer" @click="toggleRightSidebar">
               <UIcon name="i-heroicons-x-mark" />
             </div>
@@ -377,6 +381,13 @@ onUnmounted(() => {
 .layout-close-btn-body {
   display: none;
 }
+.layout-mobile-navi-btn-body {
+  padding: 20px;
+  background: #fffdfd;
+  position: sticky;
+  top: -20px;
+  z-index: 2;
+}
 .blog-layout-right-box {
   padding: 0 20px 20px 20px;
   position: sticky;
@@ -520,6 +531,10 @@ onUnmounted(() => {
   .layout-close-btn-body.type-l {
     display: flex;
   }
+  .blog-layout-info-menu-bg,
+  .blog-layout-sidebar-body {
+    padding-top: 0px;
+  }
   .blog-layout-left-body {
     transform: translateX(-100%);
     opacity: 0;
@@ -540,6 +555,9 @@ onUnmounted(() => {
   }
   .blog-layout-sticky {
     background-image: none;
+    /* 去掉圆角 */
+    border-top-left-radius: 0px;
+    border-bottom-left-radius: 0px;
   }
   .blog-layout-left-top-info-body {
     display: none;
