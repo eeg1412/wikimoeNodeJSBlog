@@ -197,6 +197,7 @@ const slideChangeTransitionEnd = (swiper) => {
   border-radius: 20px;
   /* border: 1px solid #e2e2e2; */
   overflow: hidden;
+  isolation: isolate;
 }
 .blog-tweet-img-swiper-item {
   width: 100%;
