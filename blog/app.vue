@@ -44,6 +44,20 @@ useHead({
       title: 'RSS',
       href: options.value.siteUrl + '/rss',
     },
+    // rss for blog
+    {
+      rel: 'alternate',
+      type: 'application/rss+xml',
+      title: 'RSS for blog',
+      href: options.value.siteUrl + '/rss/1',
+    },
+    // rss for tweet
+    {
+      rel: 'alternate',
+      type: 'application/rss+xml',
+      title: 'RSS for tweet',
+      href: options.value.siteUrl + '/rss/2',
+    },
     // OGP
     { property: 'og:type', content: 'website' },
     { property: 'og:site_name', content: options.value.siteTitle },
