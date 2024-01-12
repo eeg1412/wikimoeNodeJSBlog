@@ -20,6 +20,10 @@ var readerlogs = new Schema({
     type: Boolean,
     default: false
   },
+  botName: {
+    type: String,
+    default: ''
+  },
   // data
   data: {
     // object

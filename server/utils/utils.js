@@ -588,12 +588,18 @@ exports.isSearchEngine = function (req) {
     'msnbot',
     'bingbot',
   ];
+  const res = {
+    isBot: false,
+    botName: '',
+  };
   const userAgentLowerCase = ua.toLowerCase();
   for (let i = 0; i < searchEngines.length; i++) {
     if (userAgentLowerCase.includes(searchEngines[i])) {
-      return true;
+      res.isBot = true;
+      res.botName = searchEngines[i];
+      return res;
     }
   }
 
-  return false;
+  return res;
 }
