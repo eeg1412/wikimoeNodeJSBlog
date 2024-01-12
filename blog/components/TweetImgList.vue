@@ -9,14 +9,8 @@
       v-if="coverImages.length === 1"
     >
       <!-- 1张图时 -->
-      <div
-        class="blog-tweet-1img-list-body"
-        :style="{
-          width: `${coverImages[0].thumWidth || coverImages[0].width}px`,
-        }"
-      >
+      <div class="blog-tweet-1img-list-body">
         <WikimoeImage
-          class="mr5"
           :src="coverImages[0].thumfor || coverImages[0].filepath"
           :alt="coverImages[0].filename"
           :width="coverImages[0].thumWidth || coverImages[0].width"
@@ -168,16 +162,16 @@ const slideChangeTransitionEnd = (swiper) => {
 }
 .blog-tweet-img-list-body.cover-count-1 {
   grid-template-columns: 1fr;
-  height: 400px;
+  height: 350px;
 }
 .blog-tweet-img-list-body.cover-count-2 {
   grid-template-columns: repeat(2, 1fr);
-  height: 400px;
+  height: 350px;
 }
 .blog-tweet-img-list-body.cover-count-3 {
   grid-template-columns: 1fr 1fr;
   grid-auto-rows: auto;
-  height: 400px;
+  height: 350px;
 }
 .blog-tweet-img-list-body-no-swiper {
   margin-top: 2px;
@@ -197,7 +191,7 @@ const slideChangeTransitionEnd = (swiper) => {
 .blog-tweet-img-list-body.cover-count-4 {
   grid-template-columns: repeat(2, 1fr);
   grid-auto-rows: auto;
-  height: 400px;
+  height: 350px;
 }
 .blog-tweet-img-swiper-body {
   border-radius: 20px;
@@ -217,6 +211,21 @@ const slideChangeTransitionEnd = (swiper) => {
   height: 100%;
   border-radius: 20px;
 }
+/* 手机减少 .blog-tweet-img-list-body.cover-count-1 到 4 的高度 */
+@media screen and (max-width: 768px) {
+  .blog-tweet-img-list-body.cover-count-1 {
+    height: 200px;
+  }
+  .blog-tweet-img-list-body.cover-count-2 {
+    height: 200px;
+  }
+  .blog-tweet-img-list-body.cover-count-3 {
+    height: 200px;
+  }
+  .blog-tweet-img-list-body.cover-count-4 {
+    height: 200px;
+  }
+}
 </style>
 <style>
 .blog-tweet-img-swiper-body .swiper-pagination-fraction {
@@ -230,5 +239,11 @@ const slideChangeTransitionEnd = (swiper) => {
   padding: 2px 10px !important;
   border-radius: 20px !important;
   font-size: 14px !important;
+}
+.blog-tweet-img-list-body.cover-count-1-1 .wikimoe-image {
+  width: auto;
+  height: auto;
+  max-width: 100%;
+  max-height: 50vh;
 }
 </style>
