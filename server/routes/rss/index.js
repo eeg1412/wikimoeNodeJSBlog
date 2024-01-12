@@ -4,7 +4,8 @@ const Feed = require('feed').Feed;
 const postUtils = require('../../mongodb/utils/posts')
 const moment = require('moment-timezone');
 
-router.get('/', async function (req, res, next) {
+router.get('/:type?', async function (req, res, next) {
+  const type = req.params.type
   const config = global.$globalConfig?.rssSettings || {}
   const { siteEnableRss, siteRssMaxCount } = config
   const siteSettings = global.$globalConfig?.siteSettings || {}
@@ -19,6 +20,12 @@ router.get('/', async function (req, res, next) {
     type: {
       $in: [1, 2]
     }
+  }
+  if (type === '1') {
+    params.type = 1
+  }
+  if (type === '2') {
+    params.type = 2
   }
   const sort = {
     date: -1,
@@ -43,18 +50,27 @@ router.get('/', async function (req, res, next) {
   list.forEach((item) => {
     const { title, excerpt, content, _id, author, type, date } = item
     let newTitle = title
+    let newContent = content
     if (type === 2) {
       // 推文时，标题为【nickname在xxxx年xx月xx日xx点xx分发表了推文】
       const authorName = author.nickname
       const siteTimeZone = global.$globalConfig.siteSettings.siteTimeZone || 'Asia/Shanghai'
       const dateStr = moment(date).tz(siteTimeZone).format('YYYY年M月D日H点m分')
       newTitle = `${authorName}在${dateStr}发布了一篇推文`
+      newContent = `<p>${excerpt}</p>`
+      // 换行符替换为br标签
+      newContent = newContent.replace(/\n/g, '<br/>')
+      // 遍历coverImages，以图片形式展示
+      const coverImages = item.coverImages || []
+      coverImages.forEach((image) => {
+        newContent += `<p><img src="${siteUrl}${image.thumfor || image.filepath}" alt="${image.name}" style="border-radius: 10px; margin-bottom: 10px; max-width: 100%;" /></p>`
+      })
     }
     feed.addItem({
       title: newTitle,
       id: _id,
       link: `${siteUrl}/post/${_id}`,
-      description: excerpt || content,
+      description: newContent,
       author: [
         {
           email: siteTitle,
