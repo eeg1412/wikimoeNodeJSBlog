@@ -53,10 +53,16 @@ router.get('/:type?', async function (req, res, next) {
     let newContent = content
     if (type === 2) {
       // 推文时，标题为【nickname在xxxx年xx月xx日xx点xx分发表了推文】
-      const authorName = author.nickname
-      const siteTimeZone = global.$globalConfig.siteSettings.siteTimeZone || 'Asia/Shanghai'
-      const dateStr = moment(date).tz(siteTimeZone).format('YYYY年M月D日H点m分')
-      newTitle = `${authorName}在${dateStr}发布了一篇推文`
+      // const authorName = author.nickname
+      // const siteTimeZone = global.$globalConfig.siteSettings.siteTimeZone || 'Asia/Shanghai'
+      // const dateStr = moment(date).tz(siteTimeZone).format('YYYY年M月D日H点m分')
+      // newTitle = `${authorName}在${dateStr}发布了一篇推文`
+
+      // 将excerpt设定为newTitle，最大长度为50，超过50的部分用...代替
+      newTitle = excerpt
+      if (newTitle.length > 50) {
+        newTitle = newTitle.substring(0, 50) + '...'
+      }
       newContent = `<p>${excerpt}</p>`
       // 换行符替换为br标签
       newContent = newContent.replace(/\n/g, '<br/>')
