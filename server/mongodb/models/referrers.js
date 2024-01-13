@@ -12,7 +12,6 @@ var referrers = new Schema({
     type: String,
     required: true,
   },
-  expireAt: { type: Date, expires: 31968000, default: Date.now }
-}, { timestamps: true });
+}, { capped: 15728640, timestamps: true });
 
 module.exports = mongoose.model('referrers', referrers);
