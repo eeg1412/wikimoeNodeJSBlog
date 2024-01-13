@@ -61,10 +61,11 @@ module.exports = async function (req, res, next) {
   }
   // 如果是年或者月，就按照天分组
   if (timeRangeType === 'year' || timeRangeType === 'month') {
+    const hour = startDate.format('HH')
     $addFields = {
       "formatDate": {
         $dateToString: {
-          format: "%Y-%m-%dT00:00:00.000Z",
+          format: `%Y-%m-%dT${hour}:00:00.000Z`,
           date: "$createdAt"
         }
       }
