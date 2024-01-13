@@ -9,6 +9,8 @@
 import { useOptionStore } from '@/store/options'
 import { storeToRefs } from 'pinia'
 import { postLogCreateApi } from '@/api/log'
+// const route = useRoute()
+// const router = useRouter()
 const optionStore = useOptionStore()
 const { getOptions } = optionStore
 await getOptions()
@@ -93,11 +95,53 @@ const postLogCreate = () => {
     action: 'open',
   })
 }
+
+// const checkLightbox = () => {
+//   const lightboxopen = route.query.lightboxopen
+//   if (lightboxopen === '1') {
+//     // 尝试去缓存获取 lastlightboxData
+//     const lastlightboxDataStr = localStorage.getItem('lastlightboxData')
+//     let lastlightboxData = null
+//     if (lastlightboxDataStr) {
+//       // try catch转成json
+//       try {
+//         lastlightboxData = JSON.parse(lastlightboxDataStr)
+//       } catch (error) {
+//         lastlightboxData = null
+//       }
+//       if (lastlightboxData) {
+//         loadAndOpenImg(lastlightboxData.index, lastlightboxData.dataSource)
+//       } else {
+//         // 没有缓存，清除参数
+//         const nowQuery = route.query
+//         delete nowQuery.lightboxopen
+//         router.replace({
+//           query: {
+//             ...nowQuery,
+//           },
+//         })
+//       }
+//     }
+//   }
+// }
+// // watch路由变化
+// watch(
+//   () => route.query.lightboxopen,
+//   (newValue, oldValue) => {
+//     if (newValue === '1') {
+//       checkLightbox()
+//     } else {
+//       // 关闭lightbox
+//       tryCloseLightbox()
+//     }
+//   }
+// )
 onMounted(() => {
   // 检查uuid
   checkUuid()
   // 获取referrer
   postLogCreate()
+  // checkLightbox()
 })
 </script>
 <style scoped>

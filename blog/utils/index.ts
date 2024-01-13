@@ -8,7 +8,32 @@ if (process.client) {
     pswpModule: () => import('photoswipe'),
   })
   lightbox.init()
+  // lightbox.on('change', () => {
+  //   // triggers when slide is switched, and at initialization
+  //   console.log('change', lightbox)
+  //   const dataSource = lightbox.options.dataSource
+  //   const currIndex = lightbox.pswp.currIndex
+  //   const data = {
+  //     index: currIndex,
+  //     dataSource,
+  //   }
+  //   // 存入localStorage
+  //   localStorage.setItem('lastlightboxData', JSON.stringify(data))
+  //   navigateTo({
+  //     query: {
+  //       lightboxopen: '1',
+  //     },
+  //   })
+  // })
+  // lightbox.on('close', () => {
+  //   console.log('close', lightbox)
+  //   window.history.back()
+  // })
 }
+
+// export function tryCloseLightbox() {
+//   lightbox && lightbox.pswp && lightbox.pswp.close()
+// }
 
 export function loadAndOpenImg(index: number, DataSource: [any]) {
   lightbox && lightbox.loadAndOpen(index, DataSource)
