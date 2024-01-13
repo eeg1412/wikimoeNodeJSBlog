@@ -228,15 +228,7 @@
           </div>
         </el-form-item>
         <el-form-item label="回复内容" prop="content">
-          <div class="w_10">
-            <Emoji @emojiClick="emojiClick" @emojiBtnClick="emojiBtnClick" />
-          </div>
-          <el-input
-            type="textarea"
-            v-model="commentForm.content"
-            rows="5"
-            ref="commentDialogContentRef"
-          ></el-input>
+          <EmojiTextarea v-model:value="commentForm.content" />
         </el-form-item>
         <el-form-item label="置顶" prop="top">
           <el-switch v-model="commentForm.top" />
@@ -256,11 +248,11 @@ import { useRoute, useRouter } from 'vue-router'
 import { authApi } from '@/api'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { nextTick, onMounted, reactive, ref, watch } from 'vue'
-import Emoji from '@/components/Emoji.vue'
+import EmojiTextarea from '@/components/EmojiTextarea.vue'
 import { setSessionParams, getSessionParams } from '@/utils/utils'
 export default {
   components: {
-    Emoji,
+    EmojiTextarea,
   },
   setup() {
     const route = useRoute()
@@ -383,24 +375,7 @@ export default {
         }
       })
     }
-    const commentDialogContentRef = ref(null)
-    const emojiClick = (item) => {
-      console.log(commentDialogContentRef.value)
-      const content = commentForm.content
-      const start = commentDialogContentRef.value.textarea.selectionStart
-      const end = commentDialogContentRef.value.textarea.selectionEnd
-      commentForm.content = content.slice(0, start) + item + content.slice(end)
-      nextTick(() => {
-        commentDialogContentRef.value.textarea.focus()
-        const newCursorPos = start + item.length
-        commentDialogContentRef.value.textarea.selectionStart = newCursorPos
-        commentDialogContentRef.value.textarea.selectionEnd = newCursorPos
-      })
-    }
-    const emojiBtnClick = () => {
-      // 失去焦点
-      commentDialogContentRef.value.textarea.blur()
-    }
+
     // 审核评论
     const applyComment = (id, status, __v) => {
       const params = {
@@ -438,9 +413,6 @@ export default {
       openCommentForm,
       closeCommentForm,
       submitCommentForm,
-      commentDialogContentRef,
-      emojiClick,
-      emojiBtnClick,
       // 审核评论
       applyComment,
     }

@@ -31,16 +31,10 @@
         </template>
 
         <el-form-item label="评论内容" prop="content">
-          <div class="w_10">
-            <Emoji @emojiClick="emojiClick" @emojiBtnClick="emojiBtnClick" />
-          </div>
-          <el-input
-            v-model="form.content"
-            type="textarea"
-            :rows="5"
+          <EmojiTextarea
+            v-model:value="form.content"
             placeholder="请输入评论内容"
-            ref="commentContentRef"
-          ></el-input>
+          />
         </el-form-item>
         <el-form-item label="是否置顶" prop="top">
           <el-switch v-model="form.top"></el-switch>
@@ -60,19 +54,10 @@
           <!-- replyFlag -->
           <template v-if="replyFlag">
             <el-form-item label="回复内容" prop="reply.content">
-              <div class="w_10">
-                <Emoji
-                  @emojiClick="emojiClick2"
-                  @emojiBtnClick="emojiBtnClick2"
-                />
-              </div>
-              <el-input
-                v-model="form.reply.content"
-                type="textarea"
-                :rows="5"
+              <EmojiTextarea
+                v-model:value="form.reply.content"
                 placeholder="请输入回复内容"
-                ref="commentContentRef2"
-              ></el-input>
+              />
             </el-form-item>
             <el-form-item label="是否置顶" prop="reply.top">
               <el-switch v-model="form.reply.top"></el-switch>
@@ -90,10 +75,10 @@
 import { useRouter, useRoute } from 'vue-router'
 import { computed, onMounted, reactive, ref, nextTick } from 'vue'
 import { authApi } from '@/api'
-import Emoji from '@/components/Emoji.vue'
+import EmojiTextarea from '@/components/EmojiTextarea.vue'
 export default {
   components: {
-    Emoji,
+    EmojiTextarea,
   },
   setup() {
     const router = useRouter()
@@ -209,45 +194,6 @@ export default {
         .catch(() => {})
     }
 
-    const commentContentRef = ref(null)
-    const commentContentRef2 = ref(null)
-    const emojiClick = (item) => {
-      const content = form.content
-      const start = commentContentRef.value.textarea.selectionStart
-      const end = commentContentRef.value.textarea.selectionEnd
-      form.content = content.slice(0, start) + item + content.slice(end)
-
-      // 设置光标位置
-      nextTick(() => {
-        commentContentRef.value.textarea.focus()
-        const newCursorPos = start + item.length
-        commentContentRef.value.textarea.selectionStart = newCursorPos
-        commentContentRef.value.textarea.selectionEnd = newCursorPos
-      })
-    }
-    const emojiBtnClick = () => {
-      // 失去焦点
-      commentContentRef.value.textarea.blur()
-    }
-    const emojiClick2 = (item) => {
-      const content = form.reply.content
-      const start = commentContentRef2.value.textarea.selectionStart
-      const end = commentContentRef2.value.textarea.selectionEnd
-      form.reply.content = content.slice(0, start) + item + content.slice(end)
-
-      // 设置光标位置
-      nextTick(() => {
-        commentContentRef2.value.textarea.focus()
-        const newCursorPos = start + item.length
-        commentContentRef2.value.textarea.selectionStart = newCursorPos
-        commentContentRef2.value.textarea.selectionEnd = newCursorPos
-      })
-    }
-    const emojiBtnClick2 = () => {
-      // 失去焦点
-      commentContentRef2.value.textarea.blur()
-    }
-
     onMounted(() => {
       if (id.value) {
         getCommentDetail()
@@ -261,12 +207,6 @@ export default {
       rules,
       formRef,
       submit,
-      commentContentRef,
-      emojiClick,
-      emojiBtnClick,
-      commentContentRef2,
-      emojiClick2,
-      emojiBtnClick2,
     }
   },
 }

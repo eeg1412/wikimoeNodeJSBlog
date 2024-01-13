@@ -280,11 +280,10 @@
         @submit.prevent="submitCommentForm"
       >
         <el-form-item label="内容" prop="content">
-          <el-input
-            type="textarea"
-            v-model="commentForm.content"
-            rows="5"
-          ></el-input>
+          <EmojiTextarea
+            v-model:value="commentForm.content"
+            placeholder="请输入评论内容"
+          />
         </el-form-item>
         <el-form-item label="置顶" prop="top">
           <el-switch v-model="commentForm.top" />
@@ -304,8 +303,12 @@ import { onMounted, ref, reactive, watch } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import { authApi } from '@/api'
 import { ElMessage, ElMessageBox } from 'element-plus'
+import EmojiTextarea from '@/components/EmojiTextarea.vue'
 import { setSessionParams, getSessionParams } from '@/utils/utils'
 export default {
+  components: {
+    EmojiTextarea,
+  },
   setup() {
     const router = useRouter()
     const route = useRoute()

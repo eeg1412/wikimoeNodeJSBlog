@@ -21,16 +21,11 @@
         <template v-if="type === 2">
           <!-- 内容 textarea -->
           <el-form-item label="推文" prop="title">
-            <div class="w_10">
-              <Emoji @emojiClick="emojiClick" @emojiBtnClick="emojiBtnClick" />
-            </div>
-            <el-input
-              type="textarea"
-              v-model="form.excerpt"
-              rows="10"
+            <EmojiTextarea
+              v-model:value="form.excerpt"
               placeholder="请输入推文"
-              ref="tweetContentRef"
-            ></el-input>
+              :rows="10"
+            />
           </el-form-item>
         </template>
         <template v-else>
@@ -257,7 +252,7 @@ import AttachmentsDialog from '@/components/AttachmentsDialog'
 import RichEditor4 from '@/components/RichEditor4'
 import RichEditor5 from '@/components/RichEditor5'
 import draggable from 'vuedraggable'
-import Emoji from '@/components/Emoji.vue'
+import EmojiTextarea from '@/components/EmojiTextarea.vue'
 
 export default {
   components: {
@@ -265,7 +260,7 @@ export default {
     RichEditor4,
     RichEditor5,
     draggable,
-    Emoji,
+    EmojiTextarea,
   },
   setup() {
     const router = useRouter()
@@ -602,26 +597,6 @@ export default {
         .catch(() => {})
     }
 
-    const tweetContentRef = ref(null)
-    const emojiClick = (item) => {
-      const content = form.excerpt
-      const start = tweetContentRef.value.textarea.selectionStart
-      const end = tweetContentRef.value.textarea.selectionEnd
-      form.excerpt = content.slice(0, start) + item + content.slice(end)
-
-      // 设置光标位置
-      nextTick(() => {
-        tweetContentRef.value.textarea.focus()
-        const newCursorPos = start + item.length
-        tweetContentRef.value.textarea.selectionStart = newCursorPos
-        tweetContentRef.value.textarea.selectionEnd = newCursorPos
-      })
-    }
-    const emojiBtnClick = () => {
-      // 失去焦点
-      tweetContentRef.value.textarea.blur()
-    }
-
     onMounted(() => {
       getPostDetail()
       getTagList()
@@ -664,10 +639,6 @@ export default {
       // 升级编辑器版本
       oldPostEditorContent,
       updatePostEditorVersion,
-      // emoji
-      tweetContentRef,
-      emojiClick,
-      emojiBtnClick,
     }
   },
 }
