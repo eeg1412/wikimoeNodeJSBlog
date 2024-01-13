@@ -44,3 +44,9 @@ exports.deleteOne = async function (filters) {
   // document查询
   return await rsslogsModel.deleteOne(filters);
 }
+
+// 聚合
+exports.aggregate = async function (parmas) {
+  // document查询
+  return await rsslogsModel.aggregate(parmas);
+}

@@ -3,11 +3,12 @@ const log4js = require('log4js')
 const adminApiLog = log4js.getLogger('adminApi')
 const moment = require('moment-timezone');
 const readerlogUtils = require('../../../mongodb/utils/readerlogs')
+const rsslogUtils = require('../../../mongodb/utils/rsslogs')
 
 
 module.exports = async function (req, res, next) {
   const timeRangeType = req.query.timeRangeType
-  const timeRangeTypeList = ['today', 'yesterday', 'week', 'month', 'year', 'all']
+  const timeRangeTypeList = ['today', 'yesterday', 'week', 'month', 'year']
   // 判断timeRangeType是否符合格式
   if (!timeRangeTypeList.includes(timeRangeType)) {
     // 报错
@@ -40,53 +41,179 @@ module.exports = async function (req, res, next) {
       endDate = moment().tz(siteTimeZone).endOf('month');
       break;
     case 'year':
-      startDate = moment().tz(siteTimeZone).startOf('year');
-      endDate = moment().tz(siteTimeZone).endOf('year');
+      startDate = moment().tz(siteTimeZone).subtract(1, 'years');
+      endDate = moment().tz(siteTimeZone);
       break;
-    case 'all':
-      startDate = moment(0).tz(siteTimeZone);  // 1970-01-01
-      endDate = moment().tz(siteTimeZone);  // 现在
+    default:
       break;
   }
-  // 执行统计
-  const result = await readerlogUtils.aggregate([
+
+  // 打印开始日期和结束日期
+  // console.log(startDate.toDate(), endDate.toDate())
+
+  let $addFields = {
+    "formatDate": {
+      $dateToString: {
+        format: "%Y-%m-%dT%H:00:00.000Z",
+        date: "$createdAt"
+      }
+    }
+  }
+  // 如果是年或者月，就按照天分组
+  if (timeRangeType === 'year' || timeRangeType === 'month') {
+    $addFields = {
+      "formatDate": {
+        $dateToString: {
+          format: "%Y-%m-%dT00:00:00.000Z",
+          date: "$createdAt"
+        }
+      }
+    }
+  }
+
+  const pipeline = [
     {
       $match: {
         createdAt: { $gte: startDate.toDate(), $lte: endDate.toDate() },
         action: { $in: vistorActionList },
-        $or: [
-          { isBot: false },
-          { isBot: { $exists: false } }
+      }
+    },
+    {
+      $addFields,
+    },
+    {
+      $facet: {
+        "pv": [
+          { $match: { isBot: false } },
+          {
+            $group: {
+              _id: "$formatDate",
+              count: { $sum: 1 }
+            }
+          }
+        ],
+        "pvCount": [
+          { $match: { isBot: false } },
+          {
+            $count: "count"
+          }
+        ],
+        "robotAccess": [
+          { $match: { isBot: true } },
+          {
+            $group: {
+              _id: "$formatDate",
+              count: { $sum: 1 }
+            }
+          }
+        ],
+        "robotAccessCount": [
+          { $match: { isBot: true } },
+          {
+            $count: "count"
+          }
+        ],
+        "uniqueIPTimeLine": [
+          { $match: { isBot: false } },
+          {
+            $group: {
+              _id: { hour: "$formatDate", ip: "$ip" }
+            }
+          },
+          {
+            $group: {
+              _id: "$_id.hour",
+              count: { $sum: 1 }
+            }
+          }
+        ],
+        "uniqueIPCount": [
+          { $match: { isBot: false } },
+          {
+            $group: {
+              _id: "$ip"
+            }
+          },
+          {
+            $count: "count"
+          }
         ]
-        // isBot: false
-      }
-    },
-    {
-      $group: {
-        _id: null,
-        pv: { $sum: 1 },
-        uniqueIPs: { $addToSet: '$ip' }
-      }
-    },
-    {
-      $project: {
-        _id: 0,
-        pv: 1,
-        uniqueIPCount: { $size: '$uniqueIPs' }
       }
     }
-  ]);
-  // 检查结果
-  let data;
-  if (result.length > 0) {
-    data = result[0];
-  } else {
-    data = {
-      pv: 0,
-      uniqueIPCount: 0
-    };
+  ]
+  const readData = await readerlogUtils.aggregate(pipeline).catch(err => {
+    adminApiLog.error(err)
+    return false
+  })
+  if (!readData) {
+    res.status(500).json({
+      errors: [{
+        message: '数据库查询错误'
+      }]
+    })
+    return
   }
 
+  const rssPipeline = [
+    {
+      $match: {
+        createdAt: { $gte: startDate.toDate(), $lte: endDate.toDate() },
+      }
+    },
+    {
+      $addFields,
+    },
+    {
+      $facet: {
+        "rssTimeLine": [
+          {
+            $group: {
+              _id: "$formatDate",
+              count: { $sum: 1 }
+            }
+          }
+        ],
+        "rssCount": [
+          {
+            $count: "count"
+          }
+        ]
+      }
+    }
+  ]
+  const rssData = await rsslogUtils.aggregate(rssPipeline).catch(err => {
+    adminApiLog.error(err)
+    return false
+  }).catch(err => {
+    adminApiLog.error(err)
+    return false
+  })
+
+
+  let sendData = {
+    pv: [],
+    pvCount: 0,
+    robotAccess: [],
+    robotAccessCount: 0,
+    uniqueIPTimeLine: [],
+    uniqueIPCount: 0,
+    rssTimeLine: [],
+    rssCount: 0
+  }
+  if (readData.length > 0) {
+    sendData.pv = readData[0]?.pv || []
+    sendData.pvCount = readData[0]?.pvCount[0]?.count || 0
+    sendData.robotAccess = readData[0]?.robotAccess || []
+    sendData.robotAccessCount = readData[0]?.robotAccessCount[0]?.count || 0
+    sendData.uniqueIPTimeLine = readData[0]?.uniqueIPTimeLine || []
+    sendData.uniqueIPCount = readData[0]?.uniqueIPCount[0]?.count || 0
+  }
+  if (rssData.length > 0) {
+    sendData.rssTimeLine = rssData[0]?.rssTimeLine || []
+    sendData.rssCount = rssData[0]?.rssCount[0]?.count || 0
+  }
+
+
   // 发送响应
-  res.send({ data });
+  res.send(sendData);
 }

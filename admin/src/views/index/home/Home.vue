@@ -53,12 +53,23 @@
       </div>
       <el-row>
         <!-- PV -->
-        <el-col :span="8">
-          <el-statistic title="PV" :value="visitorData.pv" />
+        <el-col :span="6" :xs="12">
+          <el-statistic title="PV" :value="visitorData.pvCount" />
         </el-col>
         <!-- IP -->
-        <el-col :span="8">
+        <el-col :span="6" :xs="12">
           <el-statistic title="IP" :value="visitorData.uniqueIPCount" />
+        </el-col>
+        <!-- 机器人访问 -->
+        <el-col :span="6" :xs="12">
+          <el-statistic
+            title="机器人访问"
+            :value="visitorData.robotAccessCount"
+          />
+        </el-col>
+        <!-- rss访问 -->
+        <el-col :span="6" :xs="12">
+          <el-statistic title="RSS访问" :value="visitorData.rssCount" />
         </el-col>
       </el-row>
       <el-divider />
@@ -145,8 +156,7 @@ export default {
       { value: 'yesterday', label: '昨天' },
       { value: 'week', label: '本周' },
       { value: 'month', label: '本月' },
-      { value: 'year', label: '今年' },
-      { value: 'all', label: '全部' },
+      { value: 'year', label: '过去一年' },
     ]
     const timeRangeType = ref('today')
     const visitorData = ref(null)
@@ -156,7 +166,7 @@ export default {
           timeRangeType: timeRangeType.value,
         })
         .then((res) => {
-          visitorData.value = res.data.data
+          visitorData.value = res.data
         })
     }
 
