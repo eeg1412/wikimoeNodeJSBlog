@@ -166,6 +166,16 @@
                 <i class="fas fa-user-clock pr10"></i>
                 <template #title>读者访问日志</template>
               </el-menu-item>
+              <!-- RSS访问日志 RsslogList -->
+              <el-menu-item
+                index="RsslogList"
+                @click="removeParam('RsslogList')"
+                @click.middle="openNewTab('RsslogList')"
+                :route="{ name: 'RsslogList' }"
+              >
+                <i class="fas fa-rss pr10"></i>
+                <template #title>RSS访问日志</template>
+              </el-menu-item>
               <!-- 邮件发送日志  EmailSendHistoryList -->
               <el-menu-item
                 index="EmailSendHistoryList"

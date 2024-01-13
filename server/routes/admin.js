@@ -681,6 +681,15 @@ const adminRouteSetting = [
     roleType: null,
     role: null
   },
+  // getRsslogList
+  {
+    path: '/rsslog/list',
+    method: 'get',
+    middleware: [checkAuth],
+    controller: require('../api/admin/rsslog/getRsslogList'),
+    roleType: null,
+    role: null
+  },
 ]
 
 adminRouteSetting.forEach(item => {

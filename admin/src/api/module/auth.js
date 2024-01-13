@@ -457,5 +457,12 @@ export default function (api) {
         shouldAdminJWT: true
       })
     },
+    // get /rsslog/list
+    getRsslogList (data) {
+      return api.get('/rsslog/list', {
+        params: data,
+        shouldAdminJWT: true
+      })
+    },
   }
 }

@@ -181,6 +181,12 @@ const routes = [
         name: 'ReferrerList',
         component: () => import(/* webpackChunkName: "ReferrerList" */ '../views/index/referrer/ReferrerList.vue')
       },
+      // RsslogList
+      {
+        path: '/rsslog/list',
+        name: 'RsslogList',
+        component: () => import(/* webpackChunkName: "RsslogList" */ '../views/index/rsslog/RsslogList.vue')
+      },
       // config
       {
         path: '/config',
