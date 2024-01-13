@@ -38,7 +38,7 @@
     <div class="mb20">
       <el-table :data="referrerList" row-key="_id" border>
         <!-- 来源 referrer -->
-        <el-table-column prop="referrer" label="来源">
+        <el-table-column prop="referrer" label="来源" min-width="200">
           <template #default="{ row }">
             <div>{{ row.referrer }}</div>
           </template>
