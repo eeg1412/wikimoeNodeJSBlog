@@ -115,7 +115,6 @@ router.get('/:type?', async function (req, res, next) {
         rsslogParams.reader = uaUrl[0]
       }
       await rsslogUtils.save(rsslogParams)
-      console.log('rsslog saved')
     }, 1000 * 60 * 60)
   }
 })
