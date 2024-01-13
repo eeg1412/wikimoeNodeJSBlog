@@ -219,8 +219,9 @@ export default {
         },
         x: {
           ticks: {
-            maxRotation: 45,
-            minRotation: 45,
+            display: false,
+            maxRotation: 90,
+            minRotation: 90,
           },
         },
       },
@@ -341,7 +342,7 @@ export default {
 </script>
 <style scoped>
 .home-chart-body {
-  height: 300px;
+  height: 200px;
   margin-top: 20px;
   width: 100%;
   box-sizing: border-box;
