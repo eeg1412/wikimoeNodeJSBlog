@@ -228,7 +228,11 @@ export default {
     }
     const pvCartData = computed(() => {
       if (visitorData.value) {
-        const data = visitorData.value.pv
+        let data = visitorData.value.pv
+        // data的ID格式是2024-01-13T08:00:00.000Z 按照这个时间字符串排序
+        data = data.sort((a, b) => {
+          return a._id > b._id ? 1 : -1
+        })
         const labels = []
         const values = []
         data.forEach((item) => {
@@ -251,7 +255,11 @@ export default {
     })
     const uniqueIPTimeLineData = computed(() => {
       if (visitorData.value) {
-        const data = visitorData.value.uniqueIPTimeLine
+        let data = visitorData.value.uniqueIPTimeLine
+        // data的ID格式是2024-01-13T08:00:00.000Z 按照这个时间字符串排序
+        data = data.sort((a, b) => {
+          return a._id > b._id ? 1 : -1
+        })
         const labels = []
         const values = []
         data.forEach((item) => {
@@ -274,7 +282,11 @@ export default {
     })
     const robotAccessData = computed(() => {
       if (visitorData.value) {
-        const data = visitorData.value.robotAccess
+        let data = visitorData.value.robotAccess
+        // data的ID格式是2024-01-13T08:00:00.000Z 按照这个时间字符串排序
+        data = data.sort((a, b) => {
+          return a._id > b._id ? 1 : -1
+        })
         const labels = []
         const values = []
         data.forEach((item) => {
@@ -297,7 +309,11 @@ export default {
     })
     const rssTimeLineData = computed(() => {
       if (visitorData.value) {
-        const data = visitorData.value.rssTimeLine
+        let data = visitorData.value.rssTimeLine
+        // data的ID格式是2024-01-13T08:00:00.000Z 按照这个时间字符串排序
+        data = data.sort((a, b) => {
+          return a._id > b._id ? 1 : -1
+        })
         const labels = []
         const values = []
         data.forEach((item) => {
