@@ -55,10 +55,16 @@
         <!-- PV -->
         <el-col :span="6" :xs="12">
           <el-statistic title="PV" :value="visitorData.pvCount" />
+          <div class="home-chart-body">
+            <Line :data="pvCartData" :options="chartOptions" />
+          </div>
         </el-col>
         <!-- IP -->
         <el-col :span="6" :xs="12">
           <el-statistic title="IP" :value="visitorData.uniqueIPCount" />
+          <div class="home-chart-body">
+            <Line :data="uniqueIPTimeLineData" :options="chartOptions"></Line>
+          </div>
         </el-col>
         <!-- 机器人访问 -->
         <el-col :span="6" :xs="12">
@@ -66,10 +72,16 @@
             title="机器人访问"
             :value="visitorData.robotAccessCount"
           />
+          <div class="home-chart-body">
+            <Line :data="robotAccessData" :options="chartOptions"></Line>
+          </div>
         </el-col>
         <!-- rss访问 -->
         <el-col :span="6" :xs="12">
           <el-statistic title="RSS访问" :value="visitorData.rssCount" />
+          <div class="home-chart-body">
+            <Line :data="rssTimeLineData" :options="chartOptions"></Line>
+          </div>
         </el-col>
       </el-row>
       <el-divider />
@@ -114,11 +126,34 @@
 </template>
 <script>
 import { onMounted, reactive, ref, computed } from 'vue'
+import moment from 'moment'
 import store from '@/store'
 import { useRoute, useRouter } from 'vue-router'
 import { authApi } from '@/api'
+import {
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  Title,
+  Tooltip,
+  Legend,
+} from 'chart.js'
+import { Line } from 'vue-chartjs'
+ChartJS.register(
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  Title,
+  Tooltip
+)
 
 export default {
+  components: {
+    Line,
+  },
   setup() {
     const route = useRoute()
     const router = useRouter()
@@ -170,6 +205,119 @@ export default {
         })
     }
 
+    // chart
+    const chartOptions = {
+      responsive: true,
+      maintainAspectRatio: false,
+      scales: {
+        y: {
+          ticks: {
+            beginAtZero: true,
+            precision: 0,
+            stepSize: 1,
+          },
+        },
+        x: {
+          ticks: {
+            maxRotation: 45,
+            minRotation: 45,
+          },
+        },
+      },
+    }
+    const pvCartData = computed(() => {
+      if (visitorData.value) {
+        const data = visitorData.value.pv
+        const labels = []
+        const values = []
+        data.forEach((item) => {
+          // _id 为日期 2024-01-13T07:00:00.000Z
+          labels.push(moment(item._id).format('YYYY/MM/DD HH:mm'))
+          values.push(item.count)
+        })
+        return {
+          labels,
+          datasets: [
+            {
+              label: 'PV',
+              data: values,
+              borderColor: '#409EFF',
+            },
+          ],
+        }
+      }
+      return {}
+    })
+    const uniqueIPTimeLineData = computed(() => {
+      if (visitorData.value) {
+        const data = visitorData.value.uniqueIPTimeLine
+        const labels = []
+        const values = []
+        data.forEach((item) => {
+          // _id 为日期 2024-01-13T07:00:00.000Z
+          labels.push(moment(item._id).format('YYYY/MM/DD HH:mm'))
+          values.push(item.count)
+        })
+        return {
+          labels,
+          datasets: [
+            {
+              label: 'IP',
+              data: values,
+              borderColor: '#409EFF',
+            },
+          ],
+        }
+      }
+      return {}
+    })
+    const robotAccessData = computed(() => {
+      if (visitorData.value) {
+        const data = visitorData.value.robotAccess
+        const labels = []
+        const values = []
+        data.forEach((item) => {
+          // _id 为日期 2024-01-13T07:00:00.000Z
+          labels.push(moment(item._id).format('YYYY/MM/DD HH:mm'))
+          values.push(item.count)
+        })
+        return {
+          labels,
+          datasets: [
+            {
+              label: '机器人访问',
+              data: values,
+              borderColor: '#409EFF',
+            },
+          ],
+        }
+      }
+      return {}
+    })
+    const rssTimeLineData = computed(() => {
+      if (visitorData.value) {
+        const data = visitorData.value.rssTimeLine
+        const labels = []
+        const values = []
+        data.forEach((item) => {
+          // _id 为日期 2024-01-13T07:00:00.000Z
+          labels.push(moment(item._id).format('YYYY/MM/DD HH:mm'))
+          values.push(item.count)
+        })
+        return {
+          labels,
+          datasets: [
+            {
+              label: 'RSS访问',
+              data: values,
+              borderColor: '#409EFF',
+            },
+          ],
+        }
+      }
+      return {}
+    })
+
     onMounted(() => {
       getDashboard()
       getDashboardVisitor()
@@ -182,8 +330,21 @@ export default {
       timeRangeType,
       visitorData,
       getDashboardVisitor,
+      chartOptions,
+      pvCartData,
+      uniqueIPTimeLineData,
+      robotAccessData,
+      rssTimeLineData,
     }
   },
 }
 </script>
-<style lang=""></style>
+<style scoped>
+.home-chart-body {
+  height: 300px;
+  margin-top: 20px;
+  width: 100%;
+  box-sizing: border-box;
+  padding: 5px;
+}
+</style>
