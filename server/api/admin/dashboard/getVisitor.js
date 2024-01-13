@@ -79,6 +79,13 @@ module.exports = async function (req, res, next) {
         action: { $in: vistorActionList },
       }
     },
+    // 按时间和id排序
+    {
+      $sort: {
+        createdAt: 1,
+        _id: 1
+      }
+    },
     {
       $addFields,
     },
@@ -159,6 +166,13 @@ module.exports = async function (req, res, next) {
     {
       $match: {
         createdAt: { $gte: startDate.toDate(), $lte: endDate.toDate() },
+      }
+    },
+    // 按时间和id排序
+    {
+      $sort: {
+        createdAt: 1,
+        _id: 1
       }
     },
     {
