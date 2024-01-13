@@ -75,6 +75,8 @@
             <div>系统版本号：{{ row.deviceInfo?.os?.version }}</div>
             <div>浏览器：{{ row.deviceInfo?.browser?.name }}</div>
             <div>浏览器版本号： {{ row.deviceInfo?.browser?.version }}</div>
+            <!-- ua -->
+            <div>UA：{{ row.deviceInfo?.ua }}</div>
           </template>
         </el-table-column>
       </el-table>

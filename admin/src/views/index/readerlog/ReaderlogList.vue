@@ -88,6 +88,8 @@
               <el-tag v-else type="success">否</el-tag>
             </div>
             <div v-if="row.isBot">机器人类型：{{ row.botName }}</div>
+            <!-- ua -->
+            <div>UA：{{ row.deviceInfo?.ua }}</div>
           </template>
         </el-table-column>
         <!-- 来源 referrer -->
