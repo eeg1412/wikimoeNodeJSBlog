@@ -21,7 +21,6 @@ var rsslogs = new Schema({
     type: String,
     default: ''
   },
-  expireAt: { type: Date, expires: 31968000, default: Date.now }
-}, { timestamps: true });
+}, { capped: 15728640, timestamps: true });
 
 module.exports = mongoose.model('rsslogs', rsslogs);

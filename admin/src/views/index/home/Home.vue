@@ -53,34 +53,27 @@
       </div>
       <el-row>
         <!-- PV -->
-        <el-col :span="6" :xs="12">
+        <el-col :span="8" :xs="12">
           <el-statistic title="PV" :value="visitorData.pvCount" />
           <div class="home-chart-body">
             <Line :data="pvCartData" :options="chartOptions" />
           </div>
         </el-col>
         <!-- IP -->
-        <el-col :span="6" :xs="12">
+        <el-col :span="8" :xs="12">
           <el-statistic title="IP" :value="visitorData.uniqueIPCount" />
           <div class="home-chart-body">
             <Line :data="uniqueIPTimeLineData" :options="chartOptions"></Line>
           </div>
         </el-col>
         <!-- 机器人访问 -->
-        <el-col :span="6" :xs="12">
+        <el-col :span="8" :xs="24">
           <el-statistic
             title="机器人访问"
             :value="visitorData.robotAccessCount"
           />
           <div class="home-chart-body">
             <Line :data="robotAccessData" :options="chartOptions"></Line>
-          </div>
-        </el-col>
-        <!-- rss访问 -->
-        <el-col :span="6" :xs="12">
-          <el-statistic title="RSS访问" :value="visitorData.rssCount" />
-          <div class="home-chart-body">
-            <Line :data="rssTimeLineData" :options="chartOptions"></Line>
           </div>
         </el-col>
       </el-row>
@@ -307,33 +300,6 @@ export default {
       }
       return {}
     })
-    const rssTimeLineData = computed(() => {
-      if (visitorData.value) {
-        let data = visitorData.value.rssTimeLine
-        // data的ID格式是2024-01-13T08:00:00.000Z 按照这个时间字符串排序
-        data = data.sort((a, b) => {
-          return a._id > b._id ? 1 : -1
-        })
-        const labels = []
-        const values = []
-        data.forEach((item) => {
-          // _id 为日期 2024-01-13T07:00:00.000Z
-          labels.push(moment(item._id).format('YYYY/MM/DD HH:mm'))
-          values.push(item.count)
-        })
-        return {
-          labels,
-          datasets: [
-            {
-              label: 'RSS访问',
-              data: values,
-              borderColor: '#409EFF',
-            },
-          ],
-        }
-      }
-      return {}
-    })
 
     onMounted(() => {
       getDashboard()
@@ -351,7 +317,6 @@ export default {
       pvCartData,
       uniqueIPTimeLineData,
       robotAccessData,
-      rssTimeLineData,
     }
   },
 }

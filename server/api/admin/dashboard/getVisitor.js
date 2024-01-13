@@ -3,7 +3,6 @@ const log4js = require('log4js')
 const adminApiLog = log4js.getLogger('adminApi')
 const moment = require('moment-timezone');
 const readerlogUtils = require('../../../mongodb/utils/readerlogs')
-const rsslogUtils = require('../../../mongodb/utils/rsslogs')
 
 
 module.exports = async function (req, res, next) {
@@ -163,48 +162,6 @@ module.exports = async function (req, res, next) {
     return
   }
 
-  const rssPipeline = [
-    {
-      $match: {
-        createdAt: { $gte: startDate.toDate(), $lte: endDate.toDate() },
-      }
-    },
-    // 按时间和id排序
-    {
-      $sort: {
-        createdAt: 1,
-        _id: 1
-      }
-    },
-    {
-      $addFields,
-    },
-    {
-      $facet: {
-        "rssTimeLine": [
-          {
-            $group: {
-              _id: "$formatDate",
-              count: { $sum: 1 }
-            }
-          }
-        ],
-        "rssCount": [
-          {
-            $count: "count"
-          }
-        ]
-      }
-    }
-  ]
-  const rssData = await rsslogUtils.aggregate(rssPipeline).catch(err => {
-    adminApiLog.error(err)
-    return false
-  }).catch(err => {
-    adminApiLog.error(err)
-    return false
-  })
-
 
   let sendData = {
     pv: [],
@@ -213,8 +170,6 @@ module.exports = async function (req, res, next) {
     robotAccessCount: 0,
     uniqueIPTimeLine: [],
     uniqueIPCount: 0,
-    rssTimeLine: [],
-    rssCount: 0
   }
   if (readData.length > 0) {
     sendData.pv = readData[0]?.pv || []
@@ -224,11 +179,6 @@ module.exports = async function (req, res, next) {
     sendData.uniqueIPTimeLine = readData[0]?.uniqueIPTimeLine || []
     sendData.uniqueIPCount = readData[0]?.uniqueIPCount[0]?.count || 0
   }
-  if (rssData.length > 0) {
-    sendData.rssTimeLine = rssData[0]?.rssTimeLine || []
-    sendData.rssCount = rssData[0]?.rssCount[0]?.count || 0
-  }
-
 
   // 发送响应
   res.send(sendData);

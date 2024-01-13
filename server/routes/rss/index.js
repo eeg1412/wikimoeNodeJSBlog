@@ -5,9 +5,6 @@ const postUtils = require('../../mongodb/utils/posts')
 const rsslogUtils = require('../../mongodb/utils/rsslogs')
 const utils = require('../../utils/utils')
 // const moment = require('moment-timezone');
-const logTimerMap = {
-
-}
 router.get('/:type?', async function (req, res, next) {
   const type = req.params.type
   const config = global.$globalConfig?.rssSettings || {}
@@ -95,28 +92,23 @@ router.get('/:type?', async function (req, res, next) {
 
   // 记录日志
   const ip = utils.getUserIp(req)
-  if (!logTimerMap[ip]) {
-    logTimerMap[ip] = setTimeout(async () => {
-      delete logTimerMap[ip]
-      const rsslogParams = {
-        ip: ip,
-        ipInfo: await utils.IP2LocationUtils(ip, null, null, false),
-        deviceInfo: utils.deviceUAInfoUtils(req),
-        rssPath: req.path
-      }
-      let uaStr = req.headers['user-agent'] || ''
-      // 最多1000个字符
-      if (uaStr.length > 1000) {
-        uaStr = uaStr.substring(0, 1000)
-      }
-      // 查找ua里面的url链接
-      const uaUrl = uaStr.match(/(https?:\/\/[^\s;)]+)/g)
-      if (uaUrl && uaUrl.length > 0) {
-        rsslogParams.reader = uaUrl[0]
-      }
-      await rsslogUtils.save(rsslogParams)
-    }, 1000 * 60 * 60)
+  const rsslogParams = {
+    ip: ip,
+    ipInfo: await utils.IP2LocationUtils(ip, null, null, false),
+    deviceInfo: utils.deviceUAInfoUtils(req),
+    rssPath: req.path
   }
+  let uaStr = req.headers['user-agent'] || ''
+  // 最多1000个字符
+  if (uaStr.length > 1000) {
+    uaStr = uaStr.substring(0, 1000)
+  }
+  // 查找ua里面的url链接
+  const uaUrl = uaStr.match(/(https?:\/\/[^\s;)]+)/g)
+  if (uaUrl && uaUrl.length > 0) {
+    rsslogParams.reader = uaUrl[0]
+  }
+  await rsslogUtils.save(rsslogParams)
 })
 
 module.exports = router
