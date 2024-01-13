@@ -52,8 +52,8 @@ var readerlogs = new Schema({
     type: Object,
     default: {}
   },
-
-}, { capped: 15728640, timestamps: true });
+  expireAt: { type: Date, expires: 31968000, default: Date.now }
+}, { timestamps: true });
 // timestamps:
 // createdAt
 // updatedAt
