@@ -8,32 +8,68 @@ if (process.client) {
     pswpModule: () => import('photoswipe'),
   })
   lightbox.init()
-  // lightbox.on('change', () => {
-  //   // triggers when slide is switched, and at initialization
-  //   console.log('change', lightbox)
-  //   const dataSource = lightbox.options.dataSource
-  //   const currIndex = lightbox.pswp.currIndex
-  //   const data = {
-  //     index: currIndex,
-  //     dataSource,
-  //   }
-  //   // 存入localStorage
-  //   localStorage.setItem('lastlightboxData', JSON.stringify(data))
-  //   navigateTo({
-  //     query: {
-  //       lightboxopen: '1',
-  //     },
-  //   })
-  // })
-  // lightbox.on('close', () => {
-  //   console.log('close', lightbox)
-  //   window.history.back()
-  // })
+  lightbox.on('change', () => {
+    // triggers when slide is switched, and at initialization
+    console.log('change', lightbox)
+    const dataSource = lightbox.options.dataSource
+    const currIndex = lightbox.pswp.currIndex
+    const data = {
+      index: currIndex,
+      dataSource,
+    }
+    // 存入session
+    sessionStorage.setItem('lastlightboxData', JSON.stringify(data))
+    if (window.location.hash !== '#lightboxopen') {
+      window.history.pushState(null, '', '#lightboxopen')
+    }
+  })
+  lightbox.on('close', () => {
+    console.log('close', lightbox)
+    if (window.location.hash === '#lightboxopen') {
+      window.history.back()
+    }
+    // 清除session
+    sessionStorage.removeItem('lastlightboxData')
+  })
+  // 监听hash变化
+  window.addEventListener('hashchange', () => {
+    console.log('hashchange', lightbox)
+    if (window.location.hash !== '#lightboxopen') {
+      tryCloseLightbox()
+    }
+  })
+  checkLightbox()
 }
 
-// export function tryCloseLightbox() {
-//   lightbox && lightbox.pswp && lightbox.pswp.close()
-// }
+export function checkLightbox() {
+  const lightboxopen = window.location.hash === '#lightboxopen'
+  if (lightboxopen) {
+    // 尝试去缓存获取 lastlightboxData
+    const lastlightboxDataStr = sessionStorage.getItem('lastlightboxData')
+    let lastlightboxData = null
+    if (lastlightboxDataStr) {
+      // try catch转成json
+      try {
+        lastlightboxData = JSON.parse(lastlightboxDataStr)
+      } catch (error) {
+        lastlightboxData = null
+      }
+      if (lastlightboxData) {
+        loadAndOpenImg(lastlightboxData.index, lastlightboxData.dataSource)
+      } else {
+        // 没有缓存，清除参数
+        window.location.hash = ''
+      }
+    } else {
+      // 没有缓存，清除参数
+      window.location.hash = ''
+    }
+  }
+}
+
+export function tryCloseLightbox() {
+  lightbox && lightbox.pswp && lightbox.pswp.close()
+}
 
 export function loadAndOpenImg(index: number, DataSource: [any]) {
   lightbox && lightbox.loadAndOpen(index, DataSource)
