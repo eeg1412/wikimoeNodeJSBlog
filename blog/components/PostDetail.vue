@@ -645,8 +645,8 @@ const filterHtmlTag = (str) => {
 }
 // 设置SEO
 const seoImageSet = () => {
-  return postData.value?.data?.coverImages[0]?.thumfor
-    ? options.value.siteUrl + postData.value?.data?.coverImages[0]?.thumfor
+  return postData.value?.data?.coverImages[0]?.filepath
+    ? options.value.siteUrl + postData.value?.data?.coverImages[0]?.filepath
     : options.value.siteUrl + options.value.siteDefaultCover
 }
 const seoTitleSet = () => {
