@@ -645,9 +645,17 @@ const filterHtmlTag = (str) => {
 }
 // 设置SEO
 const seoImageSet = () => {
-  return postData.value?.data?.coverImages[0]?.filepath
-    ? options.value.siteUrl + postData.value?.data?.coverImages[0]?.filepath
-    : options.value.siteUrl + options.value.siteDefaultCover
+  let newImage = options.value.siteUrl + options.value.siteDefaultCover
+  if (postData.value?.data?.coverImages?.length > 0) {
+    if (postData.value?.data?.coverImages[0]?.thumfor) {
+      newImage =
+        options.value.siteUrl + postData.value?.data?.coverImages[0]?.thumfor
+    } else {
+      newImage =
+        options.value.siteUrl + postData.value?.data?.coverImages[0]?.filepath
+    }
+  }
+  return newImage
 }
 const seoTitleSet = () => {
   let newTitle =
