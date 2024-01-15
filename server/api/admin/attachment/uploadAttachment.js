@@ -1,35 +1,12 @@
 const sharp = require('sharp');
 const path = require('path');
 const fs = require('fs')
+const utils = require('../../../utils/utils')
 const albumUtils = require('../../../mongodb/utils/albums')
 const attachmentsUtils = require('../../../mongodb/utils/attachments')
 
-const imageCompress = async (toExtname, fileData, animated = false, newWidth, newHeight, imgSettingCompressQuality, filePath) => {
-  const imageData = sharp(fileData, {
-    animated,
-  })
-  if (newWidth && newHeight) {
-    imageData.resize(newWidth, newHeight)
-  }
-  switch (toExtname) {
-    case '.webp':
-      await imageData.webp({ quality: imgSettingCompressQuality }).toFile(filePath)
-      break;
-    case '.jpg':
-    case '.jpeg':
-      await imageData.jpeg({ quality: imgSettingCompressQuality }).toFile(filePath)
-      break;
-    case '.png':
-      await imageData.png({ quality: imgSettingCompressQuality }).toFile(filePath)
-      break;
-    default:
-      await imageData.toFile(filePath)
-      break;
-  }
-}
-
 module.exports = async function (req, res, next) {
-  const { file } = req
+  let { file } = req
   const headers = req.headers
   const albumid = headers['albumid']
   if (!global.$globalConfig) {
@@ -156,8 +133,7 @@ module.exports = async function (req, res, next) {
       fs.mkdirSync(yearMonthPath)
     }
 
-    const image = sharp(fileData)
-    const imageInfo = await image.metadata()
+    let imageInfo = await utils.imageMetadata(fileData)
     // 读取图片信息
     const { width, height } = imageInfo
     updateAttachment.width = width
@@ -184,7 +160,7 @@ module.exports = async function (req, res, next) {
 
         // 压缩图片为webp 保存到 filePath 路径下
         const thumbnailPath = path.join(yearMonthPath, 'thum-' + attachmentId + '.webp')
-        await imageCompress('.webp', fileData, animated, newWidth, newHeight, imgSettingThumbnailQuality, thumbnailPath)
+        await utils.imageCompress('.webp', fileData, animated, newWidth, newHeight, imgSettingThumbnailQuality, thumbnailPath)
         updateAttachment.thumfor = thumbnailPath
       }
     }
@@ -209,12 +185,12 @@ module.exports = async function (req, res, next) {
         updateAttachment.width = newWidth
         updateAttachment.height = newHeight
         // 压缩图片为webp 保存到 filePath 路径下
-        await imageCompress(imgSettingEnableImgCompressWebp ? '.webp' : extname, fileData, animated, newWidth, newHeight, imgSettingCompressQuality, filePath)
+        await utils.imageCompress(imgSettingEnableImgCompressWebp ? '.webp' : extname, fileData, animated, newWidth, newHeight, imgSettingCompressQuality, filePath)
 
 
       } else {
         // 原尺寸压缩
-        await imageCompress(imgSettingEnableImgCompressWebp ? '.webp' : extname, fileData, animated, null, null, imgSettingCompressQuality, filePath)
+        await utils.imageCompress(imgSettingEnableImgCompressWebp ? '.webp' : extname, fileData, animated, null, null, imgSettingCompressQuality, filePath)
       }
       updateAttachment.filepath = filePath
     } else {
@@ -223,9 +199,6 @@ module.exports = async function (req, res, next) {
       fs.writeFileSync(filePath, fileData)
       updateAttachment.filepath = filePath
     }
-    // 释放内存
-    fileData = null
-    file.buffer = null
     // 更新数据库
     // 获取文件的filesize
     const stats = fs.statSync(filePath)
@@ -251,7 +224,8 @@ module.exports = async function (req, res, next) {
     // 查询最新的附件信息
     const attachmentData = await attachmentsUtils.findOne({ _id: attachmentId })
 
-
+    // 释放内存
+    imageInfo = null
     // 发送响应
     res.send(attachmentData)
   } catch (err) {
@@ -265,8 +239,12 @@ module.exports = async function (req, res, next) {
         message: '文件上传失败'
       }]
     })
-    // 释放内存
+  } finally {
+    // 无论是否发生异常，都释放内存
     fileData = null
-    file.buffer = null
+    if (file) {
+      file.buffer = null
+      file = null
+    }
   }
 }

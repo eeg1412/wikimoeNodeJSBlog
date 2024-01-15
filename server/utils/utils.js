@@ -11,6 +11,7 @@ const emailSendHistoryUtils = require('../mongodb/utils/emailSendHistorys')
 const postUtils = require('../mongodb/utils/posts')
 const commentUtils = require('../mongodb/utils/comments')
 const referrerUtils = require('../mongodb/utils/referrers')
+const sharp = require('sharp');
 
 exports.creatSha256Str = function (str) {
   const sha256 = crypto.createHash('sha256')
@@ -603,3 +604,38 @@ exports.isSearchEngine = function (req) {
 
   return res;
 }
+
+sharp.cache(false)
+
+exports.imageCompress = async (toExtname, fileData, animated = false, newWidth, newHeight, imgSettingCompressQuality, filePath) => {
+  let imageData = sharp(fileData, {
+    animated,
+  })
+  if (newWidth && newHeight) {
+    imageData.resize(newWidth, newHeight)
+  }
+  switch (toExtname) {
+    case '.webp':
+      await imageData.webp({ quality: imgSettingCompressQuality }).toFile(filePath)
+      break;
+    case '.jpg':
+    case '.jpeg':
+      await imageData.jpeg({ quality: imgSettingCompressQuality }).toFile(filePath)
+      break;
+    case '.png':
+      await imageData.png({ quality: imgSettingCompressQuality }).toFile(filePath)
+      break;
+    default:
+      await imageData.toFile(filePath)
+      break;
+  }
+  // 释放内存
+  imageData = null
+}
+
+exports.imageMetadata = async (fileData) => {
+  const image = sharp(fileData)
+  const imageInfo = await image.metadata()
+  return imageInfo
+}
+
