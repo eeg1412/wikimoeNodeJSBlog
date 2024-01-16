@@ -55,14 +55,17 @@
         <!-- PV -->
         <el-col :span="8" :xs="12">
           <el-statistic title="PV" :value="visitorData.pvCount" />
-          <div class="home-chart-body">
+          <div class="home-chart-body" v-if="pvCartData.labels.length > 0">
             <Line :data="pvCartData" :options="chartOptions" />
           </div>
         </el-col>
         <!-- IP -->
         <el-col :span="8" :xs="12">
           <el-statistic title="IP" :value="visitorData.uniqueIPCount" />
-          <div class="home-chart-body">
+          <div
+            class="home-chart-body"
+            v-if="uniqueIPTimeLineData.labels.length > 0"
+          >
             <Line :data="uniqueIPTimeLineData" :options="chartOptions"></Line>
           </div>
         </el-col>
@@ -72,7 +75,7 @@
             title="机器人访问"
             :value="visitorData.robotAccessCount"
           />
-          <div class="home-chart-body">
+          <div class="home-chart-body" v-if="robotAccessData.labels.length > 0">
             <Line :data="robotAccessData" :options="chartOptions"></Line>
           </div>
         </el-col>
@@ -202,6 +205,10 @@ export default {
     const chartOptions = {
       responsive: true,
       maintainAspectRatio: false,
+      interaction: {
+        mode: 'index',
+        intersect: false,
+      },
       scales: {
         y: {
           ticks: {
@@ -212,9 +219,7 @@ export default {
         },
         x: {
           ticks: {
-            display: false,
-            maxRotation: 90,
-            minRotation: 90,
+            // display: false,
           },
         },
       },
@@ -230,7 +235,10 @@ export default {
         const values = []
         data.forEach((item) => {
           // _id 为日期 2024-01-13T07:00:00.000Z
-          labels.push(moment(item._id).format('YYYY/MM/DD HH:mm'))
+          let f = moment(item._id).format('YYYY/MM/DD HH:mm')
+          // 空格换行
+          f = f.split(' ')
+          labels.push(f)
           values.push(item.count)
         })
         return {
@@ -257,7 +265,10 @@ export default {
         const values = []
         data.forEach((item) => {
           // _id 为日期 2024-01-13T07:00:00.000Z
-          labels.push(moment(item._id).format('YYYY/MM/DD HH:mm'))
+          let f = moment(item._id).format('YYYY/MM/DD HH:mm')
+          // 空格换行
+          f = f.split(' ')
+          labels.push(f)
           values.push(item.count)
         })
         return {
@@ -284,7 +295,10 @@ export default {
         const values = []
         data.forEach((item) => {
           // _id 为日期 2024-01-13T07:00:00.000Z
-          labels.push(moment(item._id).format('YYYY/MM/DD HH:mm'))
+          let f = moment(item._id).format('YYYY/MM/DD HH:mm')
+          // 空格换行
+          f = f.split(' ')
+          labels.push(f)
           values.push(item.count)
         })
         return {
