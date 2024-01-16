@@ -107,7 +107,7 @@ const initHljs = () => {
   const codeList = htmlContent.value.querySelectorAll('pre')
   codeList.forEach((block) => {
     // 去掉block前后的空格和空行
-    block.innerHTML = block.innerHTML.trim()
+    block.textContent = block.textContent.trim()
     hljs.highlightBlock(block)
     const lines = (block.textContent + '\n').split('\n').length - 1
     block.setAttribute(
