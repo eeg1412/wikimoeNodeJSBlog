@@ -683,7 +683,7 @@ export default {
 <style>
 .post-editor-body .el-tabs__content {
   overflow: visible;
-  z-index: 1;
+  z-index: 3;
 }
 .old-content-body img {
   max-width: 100%;
