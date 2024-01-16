@@ -219,6 +219,8 @@ export default {
         },
         x: {
           ticks: {
+            // 禁止倾斜
+            maxRotation: 0,
             // display: false,
           },
         },
