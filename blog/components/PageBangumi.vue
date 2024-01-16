@@ -142,6 +142,13 @@
       </div>
       <DivLoading :loading="bangumiLoading" />
     </div>
+    <div class="p-2" v-if="total > 0">
+      共计追番<span class="text-primary pl-1 pr-1">{{ total }}</span
+      >部，当前季度追番<span class="text-primary pl-1 pr-1">{{
+        bangumiList.length
+      }}</span
+      >部
+    </div>
   </div>
 </template>
 <script setup>
@@ -154,7 +161,7 @@ import {
 const { data: yearListData } = await getBangumiYearListApi()
 
 const yearList = computed(() => {
-  const list = yearListData.value?.data || []
+  const list = yearListData.value?.data.list || []
   //  遍历list，将其中的seasons 数组从小到大排序
   list.forEach((item) => {
     item.seasonList.sort((a, b) => {
@@ -162,6 +169,9 @@ const yearList = computed(() => {
     })
   })
   return list
+})
+const total = computed(() => {
+  return yearListData.value.data.total || 0
 })
 const selectYear = ref(null)
 const yearPageSize = ref(4)

@@ -215,25 +215,50 @@ exports.getBangumiYearList = async function (req, res, next) {
         }
       },
       {
-        $group: {
-          _id: "$year",
-          seasons: { $addToSet: "$season" }
-        }
-      },
-      {
-        $project: {
-          _id: 0,
-          year: "$_id",
-          seasonList: "$seasons"
-        }
-      },
-      {
-        $sort: {
-          'year': -1
+        $facet: {
+          count: [
+            {
+              $count: "total"
+            }
+          ],
+          data: [
+            {
+              $group: {
+                _id: "$year",
+                seasons: { $addToSet: "$season" }
+              }
+            },
+            {
+              $project: {
+                _id: 0,
+                year: "$_id",
+                seasonList: "$seasons"
+              }
+            },
+            {
+              $sort: {
+                'year': -1
+              }
+            }
+          ]
         }
       }
     ]).then((data) => {
-      global.$cacheData.bangumiYearList = data
+      let base = {
+        total: 0,
+        list: []
+      }
+      const data_ = data[0]
+      if (data_) {
+        if (data_.count.length > 0) {
+          base.total = data_.count[0].total
+        }
+        if (data_.data.length > 0) {
+          base.list = data_.data
+        }
+      }
+
+      global.$cacheData.bangumiYearList = base
       resolve(data)
       console.info('bangumiYearList get success')
     }).catch((err) => {
