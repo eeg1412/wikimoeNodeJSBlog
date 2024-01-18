@@ -139,3 +139,28 @@ export const formatDate = (value, format = 'YYYY/MM/DD HH:mm:ss') => {
     }
     return moment(value).format(format);
 }
+
+export const formatResToForm = (form, obj) => {
+    Object.keys(form).forEach((key) => {
+        if (obj[key]) {
+            // 判断form[key]的类型，有数字，字符串，布尔，数组，但是value只有字符串，所以需要转换
+            if (typeof form[key] === 'number') {
+                form[key] = Number(obj[key])
+            } else if (typeof form[key] === 'boolean') {
+                form[key] = obj[key] === 'true'
+            } else if (Array.isArray(form[key])) {
+                form[key] = obj[key].split(',')
+            } else {
+                form[key] = obj[key]
+            }
+        }
+    })
+}
+
+export const formatResToObj = (data) => {
+    const obj = {}
+    data.forEach((item) => {
+        obj[item.name] = item.value
+    })
+    return obj
+}

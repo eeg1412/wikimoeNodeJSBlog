@@ -1,0 +1,337 @@
+<template>
+  <el-form
+    :model="siteSettingsForm"
+    :rules="siteSettingsRules"
+    ref="siteSettingsFormRef"
+    label-width="120px"
+  >
+    <el-form-item label="站点标题" prop="siteTitle">
+      <el-input v-model="siteSettingsForm.siteTitle"></el-input>
+    </el-form-item>
+    <el-form-item label="站点副标题" prop="siteSubTitle">
+      <el-input v-model="siteSettingsForm.siteSubTitle"></el-input>
+    </el-form-item>
+    <el-form-item label="站点LOGO" prop="siteLogo">
+      <el-upload
+        class="avatar-uploader"
+        :show-file-list="false"
+        :auto-upload="false"
+        :on-change="setSiteLogo"
+        accept="image/*"
+      >
+        <img
+          v-if="siteSettingsForm.siteLogo"
+          :src="siteSettingsForm.siteLogo"
+          class="avatar"
+        />
+        <el-icon v-else class="avatar-uploader-icon"><Plus /></el-icon>
+      </el-upload>
+    </el-form-item>
+    <!-- siteFavicon -->
+    <el-form-item label="站点图标" prop="siteFavicon">
+      <Cropper
+        :aspectRatio="256 / 256"
+        :width="256"
+        :height="256"
+        :src="siteSettingsForm.siteFavicon"
+        @crop="setSiteFavicon"
+      ></Cropper>
+    </el-form-item>
+    <!-- siteDefaultCover -->
+    <el-form-item label="默认封面图" prop="siteDefaultCover">
+      <Cropper
+        :aspectRatio="1344 / 648"
+        :width="1344"
+        :height="648"
+        :src="siteSettingsForm.siteDefaultCover"
+        @crop="setSiteDefaultCover"
+      ></Cropper>
+    </el-form-item>
+    <el-form-item label="站点描述" prop="siteDescription">
+      <el-input v-model="siteSettingsForm.siteDescription"></el-input>
+    </el-form-item>
+    <el-form-item label="站点关键词" prop="siteKeywords">
+      <el-input v-model="siteSettingsForm.siteKeywords"></el-input>
+    </el-form-item>
+    <el-form-item label="站点地址" prop="siteUrl">
+      <el-input
+        v-model="siteSettingsForm.siteUrl"
+        @blur="onSiteUrlBlur"
+      ></el-input>
+    </el-form-item>
+    <el-form-item label="每页显示" prop="sitePageSize">
+      <!-- 数字 1-100 -->
+      <el-input-number
+        v-model="siteSettingsForm.sitePageSize"
+        controls-position="right"
+        :min="1"
+        :max="100"
+        :step="1"
+      ></el-input-number>
+    </el-form-item>
+    <el-form-item label="所在时区" prop="siteTimeZone">
+      <el-select v-model="siteSettingsForm.siteTimeZone">
+        <el-option
+          v-for="item in timeZones"
+          :key="item.value"
+          :label="item.label"
+          :value="item.value"
+        ></el-option>
+      </el-select>
+    </el-form-item>
+
+    <el-form-item>
+      <el-button type="primary" @click="siteSettingsSubmit">提交</el-button>
+    </el-form-item>
+  </el-form>
+</template>
+<script>
+import { formatResToForm, formatResToObj } from '@/utils/utils'
+import { ref, reactive, onMounted } from 'vue'
+import { authApi } from '@/api'
+import store from '@/store'
+import { ElMessage, ElMessageBox } from 'element-plus'
+export default {
+  setup(props, { emit }) {
+    // 网站设置
+    const siteSettingsFormRef = ref(null)
+    const siteSettingsForm = reactive({
+      // 站点标题
+      siteTitle: '',
+      // 站点副标题
+      siteSubTitle: '',
+      // 站点LOGO
+      siteLogo: '',
+      // 站点图标
+      siteFavicon: '',
+      // 默认封面图
+      siteDefaultCover: '',
+      // 站点描述
+      siteDescription: '',
+      // 站点关键词
+      siteKeywords: '',
+      // 站点地址
+      siteUrl: '',
+      // 每页显示
+      sitePageSize: 10,
+      // 你所在时区
+      siteTimeZone: '',
+    })
+    const onSiteUrlBlur = () => {
+      // 去掉最末尾的斜杠
+      siteSettingsForm.siteUrl = siteSettingsForm.siteUrl.replace(/\/$/, '')
+    }
+    const siteSettingsRules = {
+      siteTitle: [
+        { required: true, message: '请输入站点标题', trigger: 'blur' },
+      ],
+      // logo
+      siteLogo: [
+        { required: true, message: '请上传站点LOGO', trigger: 'blur' },
+      ],
+      siteFavicon: [
+        { required: true, message: '请上传站点图标', trigger: 'blur' },
+      ],
+      // siteDefaultCover
+      siteDefaultCover: [
+        { required: true, message: '请上传默认封面图', trigger: 'blur' },
+      ],
+      siteUrl: [{ required: true, message: '请输入站点地址', trigger: 'blur' }],
+      sitePageSize: [
+        { required: true, message: '请输入每页显示', trigger: 'blur' },
+      ],
+      siteTimeZone: [
+        { required: true, message: '请选择你所在时区', trigger: 'blur' },
+      ],
+    }
+    const setSiteLogo = (file) => {
+      // file to base64
+      const reader = new FileReader()
+      reader.readAsDataURL(file.raw)
+      reader.onload = (e) => {
+        // base64转webp 0.8质量
+        const img = new Image()
+        img.src = e.target.result
+        img.onload = () => {
+          const canvas = document.createElement('canvas')
+          const ctx = canvas.getContext('2d')
+          canvas.width = img.width
+          canvas.height = img.height
+          ctx.drawImage(img, 0, 0, img.width, img.height)
+          const base64 = canvas.toDataURL('image/webp', 0.8)
+          siteSettingsForm.siteLogo = base64
+        }
+      }
+    }
+    const setSiteDefaultCover = (crop) => {
+      siteSettingsForm.siteDefaultCover = crop
+    }
+    const setSiteFavicon = (crop) => {
+      siteSettingsForm.siteFavicon = crop
+    }
+    const siteSettingsSubmit = () => {
+      siteSettingsFormRef.value.validate((valid) => {
+        if (valid) {
+          const params = []
+          Object.keys(siteSettingsForm).forEach((key) => {
+            params.push({
+              name: key,
+              value: siteSettingsForm[key],
+            })
+          })
+          authApi
+            .updateOption({ optionList: params })
+            .then((res) => {
+              const obj = formatResToObj(res.data.data)
+              formatResToForm(siteSettingsForm, obj)
+              store.dispatch('setOptions')
+              emit('submitSuccess')
+              ElMessage.success('更新成功')
+            })
+            .catch((err) => {
+              console.log(err)
+            })
+        } else {
+          return false
+        }
+      })
+    }
+
+    const getOptionList = () => {
+      // 将siteSettingsForm的key转换为数组
+      const params = {
+        nameList: [],
+      }
+      Object.keys(siteSettingsForm).forEach((key) => {
+        params.nameList.push(key)
+      })
+      authApi.getOptionList(params).then((res) => {
+        // res.data.data是数组，需要转换为对象
+        const obj = formatResToObj(res.data.data)
+        formatResToForm(siteSettingsForm, obj)
+      })
+    }
+
+    const timeZones = ref([
+      // 时区列表
+      {
+        label: 'UTC-12:00 国际日期变更线西',
+        value: 'Etc/GMT+12',
+      },
+      {
+        label: 'UTC-11:00 美国萨摩亚群岛',
+        value: 'Pacific/Pago_Pago',
+      },
+      {
+        label: 'UTC-10:00 夏威夷',
+        value: 'Pacific/Honolulu',
+      },
+      {
+        label: 'UTC-09:00 美国阿拉斯加州',
+        value: 'America/Anchorage',
+      },
+      {
+        label: 'UTC-08:00 美国加利福尼亚州',
+        value: 'America/Los_Angeles',
+      },
+      {
+        label: 'UTC-07:00 美国科罗拉多州',
+        value: 'America/Denver',
+      },
+      {
+        label: 'UTC-06:00 美国德克萨斯州',
+        value: 'America/Chicago',
+      },
+      {
+        label: 'UTC-05:00 美国纽约州',
+        value: 'America/New_York',
+      },
+      {
+        label: 'UTC-04:00 加拿大魁北克省',
+        value: 'America/Halifax',
+      },
+      {
+        label: 'UTC-03:00 巴西利亚',
+        value: 'America/Sao_Paulo',
+      },
+      {
+        label: 'UTC-02:00 大西洋中部',
+        value: 'Atlantic/South_Georgia',
+      },
+      {
+        label: 'UTC-01:00 佛得角群岛',
+        value: 'Atlantic/Cape_Verde',
+      },
+      {
+        label: 'UTC+00:00 英国伦敦',
+        value: 'Europe/London',
+      },
+      {
+        label: 'UTC+01:00 德国柏林',
+        value: 'Europe/Berlin',
+      },
+      {
+        label: 'UTC+02:00 乌克兰基辅',
+        value: 'Europe/Kiev',
+      },
+      {
+        label: 'UTC+03:00 俄罗斯莫斯科',
+        value: 'Europe/Moscow',
+      },
+      {
+        label: 'UTC+04:00 亚美尼亚埃里温',
+        value: 'Asia/Yerevan',
+      },
+      {
+        label: 'UTC+05:00 乌兹别克斯坦塔什干',
+        value: 'Asia/Tashkent',
+      },
+      {
+        label: 'UTC+06:00 哈萨克斯坦阿拉木图',
+        value: 'Asia/Almaty',
+      },
+      {
+        label: 'UTC+07:00 越南河内',
+        value: 'Asia/Bangkok',
+      },
+      {
+        label: 'UTC+08:00 中国北京',
+        value: 'Asia/Shanghai',
+      },
+      {
+        label: 'UTC+09:00 日本东京',
+        value: 'Asia/Tokyo',
+      },
+      {
+        label: 'UTC+10:00 澳大利亚悉尼',
+        value: 'Australia/Sydney',
+      },
+      {
+        label: 'UTC+11:00 纽埃阿洛菲',
+        value: 'Pacific/Niue',
+      },
+      {
+        label: 'UTC+12:00 新西兰惠灵顿',
+        value: 'Pacific/Auckland',
+      },
+    ])
+
+    onMounted(() => {
+      getOptionList()
+    })
+
+    return {
+      siteSettingsFormRef,
+      siteSettingsForm,
+      siteSettingsRules,
+      setSiteLogo,
+      setSiteDefaultCover,
+      setSiteFavicon,
+      siteSettingsSubmit,
+      onSiteUrlBlur,
+      timeZones,
+    }
+  },
+}
+</script>
+<style lang=""></style>
