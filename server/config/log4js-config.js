@@ -11,14 +11,18 @@ module.exports = {
             filename: 'log/system/info/info.log',
             pattern: 'yyyy-MM-dd',
             keepFileExt: true,
-            alwaysIncludePattern: true
+            alwaysIncludePattern: true,
+            numBackups: 30,
+            compress: true
         },
         systemErrorLogFile: {
             type: 'dateFile',
             filename: 'log/system/error/error.log',
             pattern: 'yyyy-MM-dd',
             keepFileExt: true,
-            alwaysIncludePattern: true
+            alwaysIncludePattern: true,
+            numBackups: 30,
+            compress: true
         },
         systemLog: {
             type: 'logLevelFilter',
@@ -36,14 +40,18 @@ module.exports = {
             filename: 'log/access/info/info.log',
             pattern: 'yyyy-MM-dd',
             keepFileExt: true,
-            alwaysIncludePattern: true
+            alwaysIncludePattern: true,
+            numBackups: 30,
+            compress: true
         },
         accessErrorLogFile: {
             type: 'dateFile',
             filename: 'log/access/error/error.log',
             pattern: 'yyyy-MM-dd',
             keepFileExt: true,
-            alwaysIncludePattern: true
+            alwaysIncludePattern: true,
+            numBackups: 30,
+            compress: true
         },
         accessLog: {
             type: 'logLevelFilter',
@@ -61,14 +69,18 @@ module.exports = {
             filename: 'log/user/info/info.log',
             pattern: 'yyyy-MM-dd',
             keepFileExt: true,
-            alwaysIncludePattern: true
+            alwaysIncludePattern: true,
+            numBackups: 30,
+            compress: true
         },
         userApiErrorLogFile: {
             type: 'dateFile',
             filename: 'log/user/error/error.log',
             pattern: 'yyyy-MM-dd',
             keepFileExt: true,
-            alwaysIncludePattern: true
+            alwaysIncludePattern: true,
+            numBackups: 30,
+            compress: true
         },
         userApiLog: {
             type: 'logLevelFilter',
@@ -86,14 +98,18 @@ module.exports = {
             filename: 'log/admin/info/info.log',
             pattern: 'yyyy-MM-dd',
             keepFileExt: true,
-            alwaysIncludePattern: true
+            alwaysIncludePattern: true,
+            numBackups: 30,
+            compress: true
         },
         adminApiErrorLogFile: {
             type: 'dateFile',
             filename: 'log/admin/error/error.log',
             pattern: 'yyyy-MM-dd',
             keepFileExt: true,
-            alwaysIncludePattern: true
+            alwaysIncludePattern: true,
+            numBackups: 30,
+            compress: true
         },
         adminApiLog: {
             type: 'logLevelFilter',
