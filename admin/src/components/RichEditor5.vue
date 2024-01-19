@@ -22,8 +22,6 @@
 </template>
 
 <script>
-import '@wangeditor/editor/dist/css/style.css' // 引入 css
-
 import { onBeforeUnmount, ref, shallowRef, onMounted, computed } from 'vue'
 import { Editor, Toolbar } from '@wangeditor/editor-for-vue'
 import AttachmentsDialog from '@/components/AttachmentsDialog'
@@ -300,11 +298,15 @@ export default {
   },
 }
 </script>
+<style>
+@import '@wangeditor/editor/dist/css/style.css';
+</style>
 <style scoped>
 .editor-body {
   border: 1px solid #ccc;
   line-height: 1.15;
   z-index: 2;
   width: 100%;
+  box-sizing: border-box;
 }
 </style>
