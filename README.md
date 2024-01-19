@@ -2,6 +2,10 @@
 
 ![N`AG~U3E547WKDN{J P2H22](https://github.com/eeg1412/wikimoeNodeJSBlog/assets/27753071/4b5177e5-6f1b-414b-938b-336c0b7a68ed)
 
+## 当前已知问题
+
+1. 在 Windows 环境中运行开发版 blog 会出现图片加载失败的现象，这是因为 Nuxt.js 所使用的 Nitro 在开发模式中反代有并发问题导致的，build 之后在 Linux 下运行是不会出现这个问题的（Windows 服务器未验证）。
+
 ## 说明
 
 【维基萌博客系统】推荐 Node.js 20 版本和 mongodb 6 版本。  
