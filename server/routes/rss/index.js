@@ -22,10 +22,10 @@ router.get('/:type?', async function (req, res, next) {
       $in: [1, 2]
     }
   }
-  if (type === '1') {
+  if (type === 'blog') {
     params.type = 1
   }
-  if (type === '2') {
+  if (type === 'tweet') {
     params.type = 2
   }
   const sort = {
@@ -87,7 +87,7 @@ router.get('/:type?', async function (req, res, next) {
       date: new Date(item.date),
     });
   })
-  res.set('Content-Type', 'text/xml');
+  res.set('Content-Type', 'application/rss+xml; charset=UTF-8');
   res.send(feed.rss2());
 
   // 记录日志

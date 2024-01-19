@@ -50,14 +50,14 @@ useHead({
       rel: 'alternate',
       type: 'application/rss+xml',
       title: 'RSS for blog',
-      href: options.value.siteUrl + '/rss/1',
+      href: options.value.siteUrl + '/rss/blog',
     },
     // rss for tweet
     {
       rel: 'alternate',
       type: 'application/rss+xml',
       title: 'RSS for tweet',
-      href: options.value.siteUrl + '/rss/2',
+      href: options.value.siteUrl + '/rss/tweet',
     },
     // OGP
     { property: 'og:type', content: 'website' },

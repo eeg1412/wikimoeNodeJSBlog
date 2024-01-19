@@ -49,11 +49,11 @@ export default defineNuxtConfig({
     '/rss': {
       proxy: `${process.env.NUXT_API_API_DOMAIN}/rss`,
     },
-    '/rss/1': {
-      proxy: `${process.env.NUXT_API_API_DOMAIN}/rss/1`,
+    '/rss/blog': {
+      proxy: `${process.env.NUXT_API_API_DOMAIN}/rss/blog`,
     },
-    '/rss/2': {
-      proxy: `${process.env.NUXT_API_API_DOMAIN}/rss/2`,
+    '/rss/tweet': {
+      proxy: `${process.env.NUXT_API_API_DOMAIN}/rss/tweet`,
     },
     '/content/**': {
       proxy: `${process.env.NUXT_API_API_DOMAIN}/content/**`,
