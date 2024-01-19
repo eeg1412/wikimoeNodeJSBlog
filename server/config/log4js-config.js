@@ -6,7 +6,7 @@ module.exports = {
         consoleLog: {
             type: 'console',
         },
-        systemLogFile: {
+        systemMainLogFile: {
             type: 'dateFile',
             filename: 'log/system/info/info.log',
             pattern: 'yyyy-MM-dd',
@@ -15,7 +15,7 @@ module.exports = {
             numBackups: 30,
             compress: true
         },
-        systemErrorLogFile: {
+        systemMainErrorLogFile: {
             type: 'dateFile',
             filename: 'log/system/error/error.log',
             pattern: 'yyyy-MM-dd',
@@ -24,15 +24,15 @@ module.exports = {
             numBackups: 30,
             compress: true
         },
-        systemLog: {
+        systemMainLog: {
             type: 'logLevelFilter',
-            appender: 'systemLogFile',
+            appender: 'systemMainLogFile',
             level: 'INFO',
             maxLevel: 'WARN'
         },
-        systemErrorLog: {
+        systemMainErrorLog: {
             type: 'logLevelFilter',
-            appender: 'systemErrorLogFile',
+            appender: 'systemMainErrorLogFile',
             level: 'ERROR',
         },
         accessLogFile: {
@@ -140,8 +140,8 @@ module.exports = {
             appenders: ['consoleLog', 'accessLog', 'accessErrorLog'],
             level: 'ALL'
         },
-        system: {
-            appenders: ['consoleLog', 'systemLog', 'systemErrorLog'],
+        systemMain: {
+            appenders: ['consoleLog', 'systemMainLog', 'systemMainErrorLog'],
             level: 'ALL'
         },
     },
