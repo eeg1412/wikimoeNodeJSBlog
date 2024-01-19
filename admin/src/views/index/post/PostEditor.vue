@@ -253,6 +253,7 @@ import RichEditor4 from '@/components/RichEditor4'
 import RichEditor5 from '@/components/RichEditor5'
 import draggable from 'vuedraggable'
 import EmojiTextarea from '@/components/EmojiTextarea.vue'
+import { onBeforeRouteLeave } from 'vue-router'
 
 export default {
   components: {
@@ -382,10 +383,12 @@ export default {
 
     const rules = reactive({})
     const formRef = ref(null)
+    let submitSuccessFlag = false
     const submit = () => {
       authApi.updatePost(form).then(() => {
         // 成功消息
         ElMessage.success('保存成功')
+        submitSuccessFlag = true
         router.push({
           name: 'PostList',
         })
@@ -597,14 +600,43 @@ export default {
         .catch(() => {})
     }
 
+    onBeforeRouteLeave(async (to, from, next) => {
+      if (submitSuccessFlag) {
+        next()
+      } else {
+        await ElMessageBox.confirm(
+          '你确定要离开吗？未保存的更改将会丢失。',
+          '提示',
+          {
+            confirmButtonText: '确定',
+            cancelButtonText: '取消',
+            type: 'warning',
+          }
+        )
+          .then(() => {
+            next()
+          })
+          .catch(() => {
+            next(false)
+          })
+      }
+    })
+
+    const beforeUnloadEvent = (e) => {
+      e.preventDefault()
+      e.returnValue = ''
+    }
+
     onMounted(() => {
       getPostDetail()
       getTagList()
       getSortList()
       setAutoSaveTimer()
+      window.addEventListener('beforeunload', beforeUnloadEvent)
     })
     onUnmounted(() => {
       clearInterval(autoSaveTimer)
+      window.removeEventListener('beforeunload', beforeUnloadEvent)
     })
     return {
       type,
