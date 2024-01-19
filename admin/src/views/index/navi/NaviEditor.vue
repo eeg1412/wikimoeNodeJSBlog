@@ -33,12 +33,13 @@
           <el-input-number v-model="form.taxis" :min="0"></el-input-number>
         </el-form-item>
         <el-form-item label="父导航" prop="parent">
-          <el-select v-model="form.parent" placeholder="请选择父导航">
+          <el-select v-model="form.parent" clearable placeholder="请选择父导航">
             <el-option
               v-for="item in naviList"
               :key="item._id"
               :label="item.naviname"
               :value="item._id"
+              :disabled="item._id === id"
             ></el-option>
           </el-select>
         </el-form-item>

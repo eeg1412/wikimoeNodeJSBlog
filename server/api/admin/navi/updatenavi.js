@@ -34,6 +34,15 @@ module.exports = async function (req, res, next) {
     })
     return
   }
+  // parent 不能和 id 相同
+  if (parent === id) {
+    res.status(400).json({
+      errors: [{
+        message: '父级不能和自己相同'
+      }]
+    })
+    return
+  }
   // 校验格式
   const params = {
     naviname: naviname,
