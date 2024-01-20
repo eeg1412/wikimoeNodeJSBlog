@@ -6,6 +6,7 @@
     "start": "node ./bin/www",
     "create": "node ./tools/createUser",
     "createCRUD": "node ./tools/createCRUD",
+    "sumPostComment": "node ./tools/sumPostComment",
     "backupFromEmlogJSON": "node ./tools/backupFromEmlogJSON"
   },
   "dependencies": {
