@@ -41,6 +41,7 @@
             v-model="timeRangeType"
             placeholder="请选择时间范围"
             @change="getDashboardVisitor"
+            style="width: 120px"
           >
             <el-option
               v-for="item in timeRangeTypeList"
@@ -51,7 +52,7 @@
           </el-select>
         </div>
       </div>
-      <el-row>
+      <el-row v-if="visitorData">
         <!-- PV -->
         <el-col :span="8" :xs="12">
           <el-statistic title="PV" :value="visitorData.pvCount" />
