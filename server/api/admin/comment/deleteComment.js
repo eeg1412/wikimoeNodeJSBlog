@@ -45,8 +45,11 @@ module.exports = async function (req, res, next) {
     // 记录
     adminApiLog.info(`comment delete success`)
     // 更新文章评论数
-    postUtils.updateOne({ _id: commentInfo.post }, { $inc: { comnum: -1 } })
-    cacheDataUtils.getSidebarList()
+    // 如果commentInfo的status为1，则更新文章评论数
+    if (commentInfo.status === 1) {
+      postUtils.updateOne({ _id: commentInfo.post }, { $inc: { comnum: -1 } })
+      cacheDataUtils.getSidebarList()
+    }
   }).catch((err) => {
     res.status(400).json({
       errors: [{
