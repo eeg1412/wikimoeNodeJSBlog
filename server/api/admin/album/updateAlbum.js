@@ -71,6 +71,6 @@ module.exports = async function (req, res, next) {
         message: '相册更新失败'
       }]
     })
-    adminApiLog.error(`album:${name} update fail, ${JSON.stringify(err)}`)
+    adminApiLog.error(`album:${name} update fail, ${logErrorToText(err)}`)
   })
 }

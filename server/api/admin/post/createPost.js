@@ -37,7 +37,7 @@ module.exports = async function (req, res, next) {
         message: '创建文章失败'
       }]
     })
-    adminApiLog.error(`post create fail, ${JSON.stringify(err)}`)
+    adminApiLog.error(`post create fail, ${logErrorToText(err)}`)
   })
 
 }

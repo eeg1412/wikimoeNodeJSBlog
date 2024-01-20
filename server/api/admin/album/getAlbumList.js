@@ -43,6 +43,6 @@ module.exports = async function (req, res, next) {
         message: '相册列表获取失败'
       }]
     })
-    adminApiLog.error(`album list get fail, ${JSON.stringify(err)}`)
+    adminApiLog.error(`album list get fail, ${logErrorToText(err)}`)
   })
 }

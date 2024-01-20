@@ -35,7 +35,7 @@ module.exports = async function (req, res, next) {
         message: '标签创建失败'
       }]
     })
-    adminApiLog.error(`tag:${tagname} create fail, ${JSON.stringify(err)}`)
+    adminApiLog.error(`tag:${tagname} create fail, ${logErrorToText(err)}`)
   })
 
 }

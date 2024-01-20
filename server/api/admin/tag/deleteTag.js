@@ -34,6 +34,6 @@ module.exports = async function (req, res, next) {
         message: '删除失败'
       }]
     })
-    adminApiLog.error(`tag delete fail, ${JSON.stringify(err)}`)
+    adminApiLog.error(`tag delete fail, ${logErrorToText(err)}`)
   })
 }

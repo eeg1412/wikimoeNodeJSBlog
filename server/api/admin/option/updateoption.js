@@ -49,7 +49,7 @@ module.exports = async function (req, res, next) {
       resList.push(data.toJSON())
       adminApiLog.info(`option update success , ${JSON.stringify(data)}`)
     }).catch((err) => {
-      adminApiLog.error(`option update fail, ${JSON.stringify(err)}`)
+      adminApiLog.error(`option update fail, ${logErrorToText(err)}`)
     })
   }
   globalConfigUtils.initGlobalConfig()

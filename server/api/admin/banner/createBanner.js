@@ -27,7 +27,7 @@ module.exports = async function (req, res, next) {
         message: '横幅创建失败'
       }]
     })
-    adminApiLog.error(`banner create fail, ${JSON.stringify(err)}`)
+    adminApiLog.error(`banner create fail, ${logErrorToText(err)}`)
   })
 
 }

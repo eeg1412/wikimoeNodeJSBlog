@@ -80,7 +80,7 @@ module.exports = async function (req, res, next) {
         message: '更新失败'
       }]
     })
-    adminApiLog.error(`banner update fail, ${JSON.stringify(err)}`)
+    adminApiLog.error(`banner update fail, ${logErrorToText(err)}`)
   })
 
 

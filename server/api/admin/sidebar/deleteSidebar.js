@@ -37,6 +37,6 @@ module.exports = async function (req, res, next) {
         message: '删除失败'
       }]
     })
-    adminApiLog.error(`sidebar delete fail, ${JSON.stringify(err)}`)
+    adminApiLog.error(`sidebar delete fail, ${logErrorToText(err)}`)
   })
 }

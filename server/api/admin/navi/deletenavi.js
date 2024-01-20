@@ -36,6 +36,6 @@ module.exports = async function (req, res, next) {
         message: '删除失败'
       }]
     })
-    adminApiLog.error(`navi delete fail, ${JSON.stringify(err)}`)
+    adminApiLog.error(`navi delete fail, ${logErrorToText(err)}`)
   })
 }

@@ -30,6 +30,6 @@ module.exports = async function (req, res, next) {
         message: '标签更新失败'
       }]
     })
-    adminApiLog.error(`tag update usetime fail, ${JSON.stringify(err)}`)
+    adminApiLog.error(`tag update usetime fail, ${logErrorToText(err)}`)
   })
 }

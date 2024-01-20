@@ -61,7 +61,7 @@ module.exports = async function (req, res, next) {
         message: '追番创建失败'
       }]
     })
-    adminApiLog.error(`bangumi create fail, ${JSON.stringify(err)}`)
+    adminApiLog.error(`bangumi create fail, ${logErrorToText(err)}`)
   })
 
 }

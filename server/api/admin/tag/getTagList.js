@@ -41,6 +41,6 @@ module.exports = async function (req, res, next) {
         message: '分类列表获取失败'
       }]
     })
-    adminApiLog.error(`tag list get fail, ${JSON.stringify(err)}`)
+    adminApiLog.error(`tag list get fail, ${logErrorToText(err)}`)
   })
 }

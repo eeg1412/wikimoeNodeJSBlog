@@ -80,7 +80,7 @@ module.exports = async function (req, res, next) {
         message: '评论创建失败'
       }]
     })
-    adminApiLog.error(`comment:${content} create fail, ${JSON.stringify(err)}`)
+    adminApiLog.error(`comment:${content} create fail, ${logErrorToText(err)}`)
   })
 
 }

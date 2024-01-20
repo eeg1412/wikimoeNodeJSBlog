@@ -102,6 +102,6 @@ module.exports = async function (req, res, next) {
         message: '分类更新失败'
       }]
     })
-    adminApiLog.error(`sort:${sortname} update fail, ${JSON.stringify(err)}`)
+    adminApiLog.error(`sort:${sortname} update fail, ${logErrorToText(err)}`)
   })
 }

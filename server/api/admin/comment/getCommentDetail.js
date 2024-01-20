@@ -32,6 +32,6 @@ module.exports = async function (req, res, next) {
         message: '评论详情获取失败'
       }]
     })
-    adminApiLog.error(`comment detail get fail, ${JSON.stringify(err)}`)
+    adminApiLog.error(`comment detail get fail, ${logErrorToText(err)}`)
   })
 }

@@ -46,6 +46,6 @@ module.exports = async function (req, res, next) {
         message: '媒体列表获取失败'
       }]
     })
-    adminApiLog.error(`attachment list get fail, ${JSON.stringify(err)}`)
+    adminApiLog.error(`attachment list get fail, ${logErrorToText(err)}`)
   })
 }

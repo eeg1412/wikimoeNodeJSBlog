@@ -32,6 +32,6 @@ module.exports = async function (req, res, next) {
         message: '友链详情获取失败'
       }]
     })
-    adminApiLog.error(`link detail get fail, ${JSON.stringify(err)}`)
+    adminApiLog.error(`link detail get fail, ${logErrorToText(err)}`)
   })
 }

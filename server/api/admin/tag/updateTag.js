@@ -60,6 +60,6 @@ module.exports = async function (req, res, next) {
         message: '标签更新失败'
       }]
     })
-    adminApiLog.error(`tag:${tagname} update fail, ${JSON.stringify(err)}`)
+    adminApiLog.error(`tag:${tagname} update fail, ${logErrorToText(err)}`)
   })
 }

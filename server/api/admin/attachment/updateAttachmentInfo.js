@@ -61,6 +61,6 @@ module.exports = async function (req, res, next) {
         message: '媒体更新失败'
       }]
     })
-    adminApiLog.error(`attachment:${name} update fail, ${JSON.stringify(err)}`)
+    adminApiLog.error(`attachment:${name} update fail, ${logErrorToText(err)}`)
   })
 }

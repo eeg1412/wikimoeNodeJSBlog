@@ -62,7 +62,7 @@ module.exports = async function (req, res, next) {
         message: '侧边栏更新失败'
       }]
     })
-    adminApiLog.error(`sidebar update fail, ${JSON.stringify(err)}`)
+    adminApiLog.error(`sidebar update fail, ${logErrorToText(err)}`)
   })
 
 }

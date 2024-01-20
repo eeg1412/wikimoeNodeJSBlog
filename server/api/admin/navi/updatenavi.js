@@ -88,6 +88,6 @@ module.exports = async function (req, res, next) {
         message: '导航更新失败'
       }]
     })
-    adminApiLog.error(`navi update fail, ${JSON.stringify(err)}`)
+    adminApiLog.error(`navi update fail, ${logErrorToText(err)}`)
   })
 }

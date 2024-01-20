@@ -135,7 +135,7 @@ module.exports = async function (req, res, next) {
           message: '更新失败'
         }]
       })
-      userApiLog.error(`postLikeLog create fail, ${JSON.stringify(err)}`)
+      userApiLog.error(`postLikeLog create fail, ${logErrorToText(err)}`)
       return
     })
   }
@@ -184,7 +184,7 @@ module.exports = async function (req, res, next) {
   readerlogUtils.save(readerlogParams).then((data) => {
     userApiLog.info(`post like log create success`)
   }).catch((err) => {
-    userApiLog.error(`post like log create fail, ${JSON.stringify(err)}`)
+    userApiLog.error(`post like log create fail, ${logErrorToText(err)}`)
   })
 }
 

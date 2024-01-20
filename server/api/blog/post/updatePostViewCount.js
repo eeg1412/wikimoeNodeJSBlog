@@ -119,10 +119,10 @@ module.exports = async function (req, res, next) {
     readerlogUtils.save(readerlogParams).then((data) => {
       userApiLog.info(`post view log create success`)
     }).catch((err) => {
-      userApiLog.error(`post view log create fail, ${JSON.stringify(err)}`)
+      userApiLog.error(`post view log create fail, ${logErrorToText(err)}`)
     })
   }).catch((err) => {
-    userApiLog.error(`post view update fail, ${JSON.stringify(err)}`)
+    userApiLog.error(`post view update fail, ${logErrorToText(err)}`)
   })
 
 }

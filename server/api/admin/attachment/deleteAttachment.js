@@ -80,7 +80,7 @@ module.exports = async function (req, res, next) {
           message: '删除失败'
         }]
       })
-      adminApiLog.error(`album:${attachmentData.album} count - 1 fail, ${JSON.stringify(err)}`)
+      adminApiLog.error(`album:${attachmentData.album} count - 1 fail, ${logErrorToText(err)}`)
     })
   }).catch((err) => {
     res.status(400).json({
@@ -88,6 +88,6 @@ module.exports = async function (req, res, next) {
         message: '删除失败'
       }]
     })
-    adminApiLog.error(`attachment delete fail, ${JSON.stringify(err)}`)
+    adminApiLog.error(`attachment delete fail, ${logErrorToText(err)}`)
   })
 }

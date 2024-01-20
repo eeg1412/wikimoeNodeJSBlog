@@ -54,6 +54,6 @@ module.exports = async function (req, res, next) {
         message: '文章详情获取失败'
       }]
     })
-    userApiLog.error(`post detail get fail, ${JSON.stringify(err)}`)
+    userApiLog.error(`post detail get fail, ${logErrorToText(err)}`)
   })
 }

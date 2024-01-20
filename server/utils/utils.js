@@ -639,7 +639,7 @@ exports.imageMetadata = async (fileData) => {
   return imageInfo
 }
 
-exports.errorToText = (error) => {
+exports.logErrorToText = (error) => {
   const errorType = typeof error
   if (errorType === 'string') {
     return error
@@ -651,3 +651,4 @@ exports.errorToText = (error) => {
     return JSON.stringify(error)
   }
 }
+global.logErrorToText = this.logErrorToText

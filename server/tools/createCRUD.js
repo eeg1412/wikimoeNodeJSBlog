@@ -139,7 +139,7 @@ module.exports = async function (req, res, next) {
         message: '${chineseName}创建失败'
       }]
     })
-    adminApiLog.error(\`${tableName} create fail, \${JSON.stringify(err)}\`)
+    adminApiLog.error(\`${tableName} create fail, \${logErrorToText(err)}\`)
   })
 
 }
@@ -198,7 +198,7 @@ module.exports = async function (req, res, next) {
         message: '删除失败'
       }]
     })
-    adminApiLog.error(\`${tableName} delete fail, \${JSON.stringify(err)}\`)
+    adminApiLog.error(\`${tableName} delete fail, \${logErrorToText(err)}\`)
   })
 }`
   // 写入文件
@@ -281,7 +281,7 @@ module.exports = async function (req, res, next) {
         message: '${chineseName}更新失败'
       }]
     })
-    adminApiLog.error(\`${tableName} update fail, \${JSON.stringify(err)}\`)
+    adminApiLog.error(\`${tableName} update fail, \${logErrorToText(err)}\`)
   })
 }
 `
@@ -403,7 +403,7 @@ const findOneTemplate = (tableName, chineseName) => {
           message: '${chineseName}详情获取失败'
         }]
       })
-      adminApiLog.error(\`${tableName} detail get fail, \${JSON.stringify(err)}\`)
+      adminApiLog.error(\`${tableName} detail get fail, \${logErrorToText(err)}\`)
     })
   }
 `

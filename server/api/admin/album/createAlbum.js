@@ -46,7 +46,7 @@ module.exports = async function (req, res, next) {
         message: '相册创建失败'
       }]
     })
-    adminApiLog.error(`album:${name} create fail, ${JSON.stringify(err)}`)
+    adminApiLog.error(`album:${name} create fail, ${logErrorToText(err)}`)
   })
 
 }

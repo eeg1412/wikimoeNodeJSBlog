@@ -77,7 +77,7 @@ module.exports = async function (req, res, next) {
         message: '侧边栏创建失败'
       }]
     })
-    adminApiLog.error(`sidebar create fail, ${JSON.stringify(err)}`)
+    adminApiLog.error(`sidebar create fail, ${logErrorToText(err)}`)
   })
 
 }

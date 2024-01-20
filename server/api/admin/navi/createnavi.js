@@ -90,7 +90,7 @@ module.exports = async function (req, res, next) {
         message: '导航创建失败'
       }]
     })
-    adminApiLog.error(`navi create fail, ${JSON.stringify(err)}`)
+    adminApiLog.error(`navi create fail, ${logErrorToText(err)}`)
   })
 
 }

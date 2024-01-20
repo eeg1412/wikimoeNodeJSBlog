@@ -33,6 +33,6 @@ module.exports = async function (req, res, next) {
         message: '分类详情获取失败'
       }]
     })
-    adminApiLog.error(`sort detail get fail, ${JSON.stringify(err)}`)
+    adminApiLog.error(`sort detail get fail, ${logErrorToText(err)}`)
   })
 }

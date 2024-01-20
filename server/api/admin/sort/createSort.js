@@ -66,7 +66,7 @@ module.exports = async function (req, res, next) {
         message: '分类创建失败'
       }]
     })
-    adminApiLog.error(`sort:${sortname} create fail, ${JSON.stringify(err)}`)
+    adminApiLog.error(`sort:${sortname} create fail, ${logErrorToText(err)}`)
   })
 
 }

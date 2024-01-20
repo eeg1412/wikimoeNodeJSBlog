@@ -238,6 +238,6 @@ module.exports = async function (req, res, next) {
         message: '文章列表获取失败'
       }]
     })
-    userApiLog.error(`post list get fail, ${JSON.stringify(err)}`)
+    userApiLog.error(`post list get fail, ${logErrorToText(err)}`)
   })
 }

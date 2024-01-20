@@ -113,6 +113,6 @@ module.exports = async function (req, res, next) {
         message: '友链更新失败'
       }]
     })
-    adminApiLog.error(`link update fail, ${JSON.stringify(err)}`)
+    adminApiLog.error(`link update fail, ${logErrorToText(err)}`)
   })
 }

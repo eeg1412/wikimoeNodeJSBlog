@@ -64,6 +64,6 @@ module.exports = async function (req, res, next) {
         message: '删除失败'
       }]
     })
-    adminApiLog.error(`link delete fail, ${JSON.stringify(err)}`)
+    adminApiLog.error(`link delete fail, ${logErrorToText(err)}`)
   })
 }

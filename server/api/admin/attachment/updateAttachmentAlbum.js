@@ -88,7 +88,7 @@ module.exports = async function (req, res, next) {
             message: '更新目标相册计数时失败'
           }]
         })
-        adminApiLog.error(`attachment album update fail, ${JSON.stringify(err)}`)
+        adminApiLog.error(`attachment album update fail, ${logErrorToText(err)}`)
         return
       })
     }).catch((err) => {
@@ -97,7 +97,7 @@ module.exports = async function (req, res, next) {
           message: '更新源相册计数时失败'
         }]
       })
-      adminApiLog.error(`attachment album update fail, ${JSON.stringify(err)}`)
+      adminApiLog.error(`attachment album update fail, ${logErrorToText(err)}`)
       return
     })
   }).catch((err) => {
@@ -106,7 +106,7 @@ module.exports = async function (req, res, next) {
         message: '更新失败'
       }]
     })
-    adminApiLog.error(`attachment album update fail, ${JSON.stringify(err)}`)
+    adminApiLog.error(`attachment album update fail, ${logErrorToText(err)}`)
   })
 
 

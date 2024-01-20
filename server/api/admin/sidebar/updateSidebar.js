@@ -49,7 +49,7 @@ module.exports = async function (req, res, next) {
     cacheDataUtils.getSidebarList()
   }).catch((err) => {
     // 记录
-    adminApiLog.error(`sidebar update fail, ${JSON.stringify(err)}`)
+    adminApiLog.error(`sidebar update fail, ${logErrorToText(err)}`)
     // 报错
     res.status(400).json({
       errors: [{

@@ -244,7 +244,7 @@ module.exports = async function (req, res, next) {
         message: '评论创建失败'
       }]
     })
-    userApiLog.error(`comment:${content} create fail, ${JSON.stringify(err)}`)
+    userApiLog.error(`comment:${content} create fail, ${logErrorToText(err)}`)
   })
 
 }

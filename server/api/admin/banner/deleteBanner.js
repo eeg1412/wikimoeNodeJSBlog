@@ -67,6 +67,6 @@ module.exports = async function (req, res, next) {
         message: '删除失败'
       }]
     })
-    adminApiLog.error(`banner delete fail, ${JSON.stringify(err)}`)
+    adminApiLog.error(`banner delete fail, ${logErrorToText(err)}`)
   })
 }

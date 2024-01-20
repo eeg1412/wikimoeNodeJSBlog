@@ -111,6 +111,6 @@ module.exports = async function (req, res, next) {
         message: '追番更新失败'
       }]
     })
-    adminApiLog.error(`bangumi update fail, ${JSON.stringify(err)}`)
+    adminApiLog.error(`bangumi update fail, ${logErrorToText(err)}`)
   })
 }

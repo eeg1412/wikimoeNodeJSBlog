@@ -124,6 +124,6 @@ module.exports = async function (req, res, next) {
         message: '评论更新失败'
       }]
     })
-    adminApiLog.error(`comment:${id} update fail, ${JSON.stringify(err)}`)
+    adminApiLog.error(`comment:${id} update fail, ${logErrorToText(err)}`)
   })
 }

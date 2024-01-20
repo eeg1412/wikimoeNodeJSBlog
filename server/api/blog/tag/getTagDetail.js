@@ -32,6 +32,6 @@ module.exports = async function (req, res, next) {
         message: '标签详情获取失败'
       }]
     })
-    userApiLog.error(`tag detail get fail, ${JSON.stringify(err)}`)
+    userApiLog.error(`tag detail get fail, ${logErrorToText(err)}`)
   })
 }

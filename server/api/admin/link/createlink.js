@@ -112,7 +112,7 @@ module.exports = async function (req, res, next) {
         message: '友链创建失败'
       }]
     })
-    adminApiLog.error(`link create fail, ${JSON.stringify(err)}`)
+    adminApiLog.error(`link create fail, ${logErrorToText(err)}`)
   })
 
 }

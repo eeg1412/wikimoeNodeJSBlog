@@ -203,7 +203,7 @@ module.exports = async function (req, res, next) {
         message: '更新文章失败'
       }]
     })
-    adminApiLog.error(`post update fail, ${JSON.stringify(err)}`)
+    adminApiLog.error(`post update fail, ${logErrorToText(err)}`)
   })
 
 }
