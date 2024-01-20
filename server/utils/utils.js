@@ -375,7 +375,7 @@ exports.sendCommentAddNotice = function (post, comment) {
   // 判断emailEnable为true，且emailSendOptions包含字符串receiveComment
   if (emailEnable && emailSendOptions.includes('receiveComment')) {
     const { siteUrl, siteTitle } = siteSettings
-    const { title, _id, alias, excerpt } = post
+    const { title, excerpt } = post
     let { nickname, content, user } = comment
     content = this.escapeHtml(content)
     if (user) {
@@ -393,7 +393,7 @@ exports.sendCommentAddNotice = function (post, comment) {
     // 开始替换
     contentHtml = contentHtml.replace(/\${comment}/g, content)
     contentHtml = contentHtml.replace(/\${nickname}/g, nickname)
-    contentHtml = contentHtml.replace(/\${title}/g, `<a href="${siteUrl}/post/${alias || _id}">${title || excerpt}</a>`)
+    contentHtml = contentHtml.replace(/\${title}/g, `<a href="${this.getPostPagePath(post)}">${title || excerpt}</a>`)
     contentHtml = contentHtml.replace(/\${siteTitle}/g, `<a href="${siteUrl}">${siteTitle}</a>`)
     this.sendEmail(to, contentHtml, subject)
   }
@@ -464,7 +464,7 @@ exports.sendReplyCommentNotice = async function (post, comment) {
   // 判断emailEnable为true，且emailSendOptions包含字符串receiveComment
   if (emailEnable && emailSendOptions.includes('replyComment')) {
     const { siteUrl, siteTitle } = siteSettings
-    const { title, _id, alias, excerpt } = post
+    const { title, excerpt } = post
     let { nickname, content } = comment
     content = this.escapeHtml(content)
     let { nickname: parentNickname, content: parentContent } = parentComment
@@ -489,13 +489,39 @@ exports.sendReplyCommentNotice = async function (post, comment) {
     // 开始替换
     contentHtml = contentHtml.replace(/\${comment}/g, content)
     contentHtml = contentHtml.replace(/\${nickname}/g, nickname)
-    contentHtml = contentHtml.replace(/\${title}/g, `<a href="${siteUrl}/post/${alias || _id}">${title || excerpt}</a>`)
+    contentHtml = contentHtml.replace(/\${title}/g, `<a href="${this.getPostPagePath(post)}">${title || excerpt}</a>`)
     contentHtml = contentHtml.replace(/\${siteTitle}/g, `<a href="${siteUrl}">${siteTitle}</a>`)
     contentHtml = contentHtml.replace(/\${parentComment}/g, parentContent)
     contentHtml = contentHtml.replace(/\${parentNickname}/g, parentNickname)
     this.sendEmail(to, contentHtml, subject)
   }
 }
+
+exports.getPostPagePath = (postData) => {
+  // 先判断type是1，2还是3，1和2跳转到/post/id，3跳转到/page/id
+  // 如果有别名，就跳转到别名，没有别名就跳转到id
+  const siteSettings = global.$globalConfig.siteSettings
+  const { siteUrl } = siteSettings
+  if (!siteUrl) {
+    throw new Error('siteUrl不存在,请在后台设置')
+  }
+  let path
+  if (postData.type === 1 || postData.type === 2) {
+    path = '/post/'
+  } else if (postData.type === 3) {
+    path = '/page/'
+  } else {
+    throw new Error('type类型错误')
+  }
+
+  if (postData.alias) {
+    path += postData.alias
+  } else {
+    path += postData._id
+  }
+  return siteUrl + path
+}
+
 const referrerRecordTimerMap = {}
 // 引用记录传入参数是referrer和type
 exports.referrerRecord = function (referrer, referrerType) {
