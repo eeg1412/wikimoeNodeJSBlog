@@ -228,6 +228,11 @@
                 </el-button>
               </div>
               <div class="fr pt5">
+                <el-button type="primary" circle text @click="goToBlog">
+                  <i class="fas fa-home"></i>
+                </el-button>
+              </div>
+              <div class="fr pt5">
                 <el-button
                   type="primary"
                   circle
@@ -237,13 +242,6 @@
                   <i class="fas fa-user-edit"></i>
                 </el-button>
               </div>
-              <template v-if="siteUrl">
-                <div class="fr pt5">
-                  <el-button type="primary" circle text @click="goToBlog">
-                    <i class="fas fa-home"></i>
-                  </el-button>
-                </div>
-              </template>
               <div class="fr pt10 mr10 fb">
                 {{ adminInfo.nickname }}
               </div>
@@ -274,6 +272,7 @@ import {
 } from '@element-plus/icons-vue'
 import { authApi } from '@/api'
 import store from '@/store'
+import { ElMessage, ElMessageBox } from 'element-plus'
 
 export default {
   setup() {
@@ -307,6 +306,11 @@ export default {
     })
 
     const goToBlog = () => {
+      // 如果没有设置站点地址，报错
+      if (!siteUrl.value) {
+        ElMessage.error('请先设置站点地址')
+        return
+      }
       window.open(siteUrl.value, '_blank')
     }
 
