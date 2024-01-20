@@ -167,15 +167,16 @@
                 {{ titleLimit(row.title || row.excerpt) }}
               </div>
               <!-- 点击打开按钮 -->
-              <div class="dib ml5">
-                <el-button
-                  type="primary"
-                  size="small"
-                  text
-                  circle
-                  @click="openPage(row)"
+              <div class="dib ml5 vt">
+                <el-link type="primary" @click="openPage(row)"
                   ><i class="fas fa-external-link-alt"></i
-                ></el-button>
+                ></el-link>
+              </div>
+              <!-- 点击复制按钮 -->
+              <div class="dib ml5 vt">
+                <el-link type="primary" @click="copyPage(row)"
+                  ><i class="far fa-clone"></i
+                ></el-link>
               </div>
             </div>
           </template>
@@ -317,7 +318,11 @@ import { useRouter, useRoute } from 'vue-router'
 import { authApi } from '@/api'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import EmojiTextarea from '@/components/EmojiTextarea.vue'
-import { setSessionParams, getSessionParams } from '@/utils/utils'
+import {
+  setSessionParams,
+  getSessionParams,
+  copyToClipboard,
+} from '@/utils/utils'
 import store from '@/store'
 export default {
   components: {
@@ -535,6 +540,15 @@ export default {
     })
 
     const openPage = (row) => {
+      const path = getPostPagePath(row)
+      // 使用 window.open 方法在新窗口中打开 URL
+      window.open(path, '_blank')
+    }
+    const copyPage = (row) => {
+      const path = getPostPagePath(row)
+      copyToClipboard(path)
+    }
+    const getPostPagePath = (row) => {
       // 先判断type是1，2还是3，1和2跳转到/post/id，3跳转到/page/id
       // 如果有别名，就跳转到别名，没有别名就跳转到id
       let path
@@ -552,9 +566,7 @@ export default {
       } else {
         path += row._id
       }
-
-      // 使用 window.open 方法在新窗口中打开 URL
-      window.open(siteUrl.value + path, '_blank')
+      return siteUrl.value + path
     }
 
     // 监听 params.page 的变化
@@ -600,6 +612,7 @@ export default {
       closeCommentForm,
       submitCommentForm,
       openPage,
+      copyPage,
     }
   },
 }

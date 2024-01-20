@@ -1,5 +1,5 @@
 import store from "@/store";
-import { ElLoading } from 'element-plus'
+import { ElLoading, ElMessage } from 'element-plus'
 import moment from "moment";
 
 let loading = null
@@ -163,4 +163,17 @@ export const formatResToObj = (data) => {
         obj[item.name] = item.value
     })
     return obj
+}
+export const copyToClipboard = (text) => {
+    navigator.clipboard.writeText(text).then(() => {
+        ElMessage({
+            message: '复制成功',
+            type: 'success'
+        });
+    }).catch(err => {
+        ElMessage({
+            message: '复制失败',
+            type: 'error'
+        });
+    });
 }
