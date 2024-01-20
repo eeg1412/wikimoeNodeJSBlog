@@ -223,24 +223,28 @@
             </div>
             <template v-if="adminInfo">
               <div class="fr pt5">
-                <el-button
-                  type="primary"
-                  circle
-                  text
-                  :icon="SwitchButton"
-                  @click="logout"
-                ></el-button>
+                <el-button type="primary" circle text @click="logout">
+                  <i class="fas fa-sign-out-alt"></i>
+                </el-button>
               </div>
               <div class="fr pt5">
                 <el-button
                   type="primary"
                   circle
                   text
-                  :icon="Setting"
                   @click="goLoginUserEditor"
-                ></el-button>
+                >
+                  <i class="fas fa-user-edit"></i>
+                </el-button>
               </div>
-              <div class="fr pt10 mr10">
+              <template v-if="siteUrl">
+                <div class="fr pt5">
+                  <el-button type="primary" circle text @click="goToBlog">
+                    <i class="fas fa-home"></i>
+                  </el-button>
+                </div>
+              </template>
+              <div class="fr pt10 mr10 fb">
                 {{ adminInfo.nickname }}
               </div>
             </template>
@@ -266,6 +270,7 @@ import {
   DArrowLeft,
   Grid,
   Close,
+  HomeFilled,
 } from '@element-plus/icons-vue'
 import { authApi } from '@/api'
 import store from '@/store'
@@ -297,6 +302,13 @@ export default {
     const adminInfo = computed(() => {
       return store.getters.adminInfo
     })
+    const siteUrl = computed(() => {
+      return store.getters.siteUrl
+    })
+
+    const goToBlog = () => {
+      window.open(siteUrl.value, '_blank')
+    }
 
     const goLoginUserEditor = () => {
       router.push({
@@ -333,10 +345,13 @@ export default {
       DArrowLeft,
       Grid,
       Close,
+      HomeFilled,
       activeIndex,
       removeParam,
       logout,
       adminInfo,
+      siteUrl,
+      goToBlog,
       goLoginUserEditor,
       isCollapse,
       switchCollapse,
