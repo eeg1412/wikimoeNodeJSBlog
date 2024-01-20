@@ -1,5 +1,5 @@
 <template>
-  <div class="editor-body">
+  <div class="editor-body richeditor-5">
     <Toolbar
       style="border-bottom: 1px solid #ccc"
       :editor="editorRef"
@@ -300,6 +300,9 @@ export default {
 </script>
 <style>
 @import '@wangeditor/editor/dist/css/style.css';
+.editor-body.richeditor-5 .w-e-modal {
+  padding: 20px 15px 0;
+}
 </style>
 <style scoped>
 .editor-body {
