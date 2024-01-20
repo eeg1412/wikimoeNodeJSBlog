@@ -43,9 +43,9 @@
             placeholder="请输入网站URL"
           ></el-input>
         </el-form-item>
-        <el-form-item label="RSS地址" prop="rss">
+        <!-- <el-form-item label="RSS地址" prop="rss">
           <el-input v-model="form.rss" placeholder="请输入RSS地址"></el-input>
-        </el-form-item>
+        </el-form-item> -->
         <el-form-item label="描述" prop="description">
           <el-input
             v-model="form.description"
