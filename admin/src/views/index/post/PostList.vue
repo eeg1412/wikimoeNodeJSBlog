@@ -162,8 +162,21 @@
         </el-table-column>
         <el-table-column prop="title" label="标题/推文" width="320">
           <template #default="{ row }">
-            <div :title="row.title || row.excerpt">
-              {{ titleLimit(row.title || row.excerpt) }}
+            <div>
+              <div :title="row.title || row.excerpt" class="dib">
+                {{ titleLimit(row.title || row.excerpt) }}
+              </div>
+              <!-- 点击打开按钮 -->
+              <div class="dib ml5">
+                <el-button
+                  type="primary"
+                  size="small"
+                  text
+                  circle
+                  @click="openPage(row)"
+                  ><i class="fas fa-external-link-alt"></i
+                ></el-button>
+              </div>
             </div>
           </template>
         </el-table-column>
@@ -299,12 +312,13 @@
   </div>
 </template>
 <script>
-import { onMounted, ref, reactive, watch } from 'vue'
+import { onMounted, ref, reactive, watch, computed } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import { authApi } from '@/api'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import EmojiTextarea from '@/components/EmojiTextarea.vue'
 import { setSessionParams, getSessionParams } from '@/utils/utils'
+import store from '@/store'
 export default {
   components: {
     EmojiTextarea,
@@ -516,6 +530,33 @@ export default {
       })
     }
 
+    const siteUrl = computed(() => {
+      return store.getters.siteUrl
+    })
+
+    const openPage = (row) => {
+      // 先判断type是1，2还是3，1和2跳转到/post/id，3跳转到/page/id
+      // 如果有别名，就跳转到别名，没有别名就跳转到id
+      let path
+      if (row.type === 1 || row.type === 2) {
+        path = '/post/'
+      } else if (row.type === 3) {
+        path = '/page/'
+      } else {
+        console.error('Invalid row type:', row.type)
+        return
+      }
+
+      if (row.alias) {
+        path += row.alias
+      } else {
+        path += row._id
+      }
+
+      // 使用 window.open 方法在新窗口中打开 URL
+      window.open(siteUrl.value + path, '_blank')
+    }
+
     // 监听 params.page 的变化
     watch(
       () => params.page,
@@ -558,6 +599,7 @@ export default {
       openCommentForm,
       closeCommentForm,
       submitCommentForm,
+      openPage,
     }
   },
 }
