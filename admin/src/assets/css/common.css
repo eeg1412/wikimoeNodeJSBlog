@@ -897,3 +897,6 @@ input[type='password'] {
   height: 128px;
   text-align: center;
 }
+.common-top-search-form-body .el-select {
+  min-width: 120px;
+}
