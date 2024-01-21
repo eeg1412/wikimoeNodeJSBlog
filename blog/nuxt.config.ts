@@ -85,4 +85,16 @@ export default defineNuxtConfig({
       publicDir: 'build/.output/public',
     },
   },
+  vite: {
+    esbuild: {
+      drop: ['debugger'],
+      pure: [
+        'console.log',
+        'console.error',
+        'console.warn',
+        'console.debug',
+        'console.trace',
+      ],
+    },
+  },
 })
