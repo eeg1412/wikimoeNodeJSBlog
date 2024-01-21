@@ -146,6 +146,7 @@ ChartJS.register(
   Title,
   Tooltip
 )
+moment.locale('zh-cn')
 
 export default {
   components: {
@@ -238,7 +239,7 @@ export default {
         const values = []
         data.forEach((item) => {
           // _id 为日期 2024-01-13T07:00:00.000Z
-          let f = moment(item._id).format('YYYY/MM/DD HH:mm')
+          let f = moment(item._id).format('YYYY/MM/DD dddd HH:mm')
           // 空格换行
           f = f.split(' ')
           labels.push(f)
@@ -268,7 +269,7 @@ export default {
         const values = []
         data.forEach((item) => {
           // _id 为日期 2024-01-13T07:00:00.000Z
-          let f = moment(item._id).format('YYYY/MM/DD HH:mm')
+          let f = moment(item._id).format('YYYY/MM/DD dddd HH:mm')
           // 空格换行
           f = f.split(' ')
           labels.push(f)
@@ -298,7 +299,7 @@ export default {
         const values = []
         data.forEach((item) => {
           // _id 为日期 2024-01-13T07:00:00.000Z
-          let f = moment(item._id).format('YYYY/MM/DD HH:mm')
+          let f = moment(item._id).format('YYYY/MM/DD dddd HH:mm')
           // 空格换行
           f = f.split(' ')
           labels.push(f)
