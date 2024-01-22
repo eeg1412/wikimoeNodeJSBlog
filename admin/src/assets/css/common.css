@@ -900,3 +900,26 @@ input[type='password'] {
 .common-top-search-form-body .el-select {
   min-width: 120px;
 }
+.common-top-search-form-body .el-input {
+  width: 170px;
+}
+.list-table-body {
+  height: calc(100vh - 300px);
+  height: calc(100dvh - 250px);
+  min-height: 200px;
+}
+.list-table-body.no-search {
+  height: calc(100vh - 250px);
+  height: calc(100dvh - 200px);
+  min-height: 200px;
+}
+.list-table-body.no-page {
+  height: calc(100vh - 250px);
+  height: calc(100dvh - 200px);
+  min-height: 200px;
+}
+.list-table-body.no-search.no-page {
+  height: calc(100vh - 230px);
+  height: calc(100dvh - 180px);
+  min-height: 200px;
+}

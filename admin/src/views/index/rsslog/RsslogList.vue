@@ -8,6 +8,44 @@
     <div class="clearfix pb20">
       <div class="fl common-top-search-form-body">
         <!-- 检索用 -->
+        <el-form
+          :inline="true"
+          :model="params"
+          @submit.prevent
+          class="demo-form-inline"
+          @keypress.enter="getRsslogList(true)"
+        >
+          <!-- ip -->
+          <el-form-item>
+            <el-input
+              v-model="params.ip"
+              clearable
+              placeholder="请输入ip"
+            ></el-input>
+          </el-form-item>
+          <!-- rssPath -->
+          <el-form-item>
+            <el-input
+              v-model="params.rssPath"
+              clearable
+              placeholder="请输入RSS路径"
+            ></el-input>
+          </el-form-item>
+          <!-- reader -->
+          <el-form-item>
+            <el-input
+              v-model="params.reader"
+              clearable
+              placeholder="请输入阅读器"
+            ></el-input>
+          </el-form-item>
+
+          <el-form-item>
+            <el-button type="primary" @click="getRsslogList(true)"
+              >搜索</el-button
+            >
+          </el-form-item>
+        </el-form>
       </div>
       <div class="fr">
         <!-- 按钮用 -->
@@ -15,13 +53,27 @@
       </div>
     </div>
     <!-- RSS访问记录 -->
-    <div class="mb20">
-      <el-table :data="rsslogList" row-key="_id" border>
+    <div class="mb20 list-table-body">
+      <el-table height="100%" :data="rsslogList" row-key="_id" border>
         <!-- IP信息 -->
         <el-table-column prop="ip" label="IP信息" width="200">
           <template #default="{ row }">
-            <div>
-              {{ row.ip }}
+            <div v-if="row.ip">
+              <div class="dib">{{ row.ip }}</div>
+              <!-- 查询按钮 -->
+              <div class="dib ml5 vt">
+                <el-link
+                  type="primary"
+                  @click="addParamsAndSearch('ip', row.ip)"
+                  ><i class="fa fa-search"></i
+                ></el-link>
+              </div>
+              <!-- 点击复制按钮 -->
+              <div class="dib ml5 vt">
+                <el-link type="primary" @click="copyToClipboard(row.ip)"
+                  ><i class="far fa-clone"></i
+                ></el-link>
+              </div>
             </div>
             <div>
               {{ row.ipInfo?.countryLong }} {{ row.ipInfo?.city
@@ -43,15 +95,35 @@
           </template>
         </el-table-column>
         <!-- 阅读器 -->
-        <el-table-column prop="reader" label="阅读器" min-width="200">
+        <el-table-column prop="reader" label="阅读器" min-width="300">
           <template #default="{ row }">
-            <div>{{ row.reader }}</div>
+            <div v-if="row.reader">
+              <div class="dib word-break">{{ row.reader }}</div>
+              <!-- 查询按钮 -->
+              <div class="dib ml5 vt">
+                <el-link
+                  type="primary"
+                  @click="addParamsAndSearch('reader', row.reader)"
+                  ><i class="fa fa-search"></i
+                ></el-link>
+              </div>
+            </div>
           </template>
         </el-table-column>
         <!-- rssPath -->
-        <el-table-column prop="rssPath" label="RSS路径" min-width="66">
+        <el-table-column prop="rssPath" label="RSS路径" min-width="86">
           <template #default="{ row }">
-            <div>{{ row.rssPath }}</div>
+            <div v-if="row.rssPath">
+              <div class="dib">{{ row.rssPath }}</div>
+              <!-- 查询按钮 -->
+              <div class="dib ml5 vt">
+                <el-link
+                  type="primary"
+                  @click="addParamsAndSearch('rssPath', row.rssPath)"
+                  ><i class="fa fa-search"></i
+                ></el-link>
+              </div>
+            </div>
           </template>
         </el-table-column>
         <!-- createdAt -->
@@ -69,6 +141,8 @@
         background
         layout="total, prev, pager, next"
         :total="total"
+        :pager-count="5"
+        small
         v-model:current-page="params.page"
       />
     </div>
@@ -79,7 +153,11 @@ import { useRoute, useRouter } from 'vue-router'
 import { authApi } from '@/api'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { onMounted, reactive, ref, watch } from 'vue'
-import { setSessionParams, getSessionParams } from '@/utils/utils'
+import {
+  setSessionParams,
+  getSessionParams,
+  copyToClipboard,
+} from '@/utils/utils'
 export default {
   setup() {
     const route = useRoute()
@@ -87,6 +165,9 @@ export default {
     const params = reactive({
       page: 1,
       size: 10,
+      ip: '',
+      rssPath: '',
+      reader: '',
       keyword: '',
     })
     const total = ref(0)
@@ -106,6 +187,11 @@ export default {
         })
     }
 
+    const addParamsAndSearch = (key, value) => {
+      params[key] = value
+      getRsslogList(true)
+    }
+
     // 监听 params.page 的变化
     watch(
       () => params.page,
@@ -120,6 +206,9 @@ export default {
         params.page = sessionParams.page
         params.size = sessionParams.size
         params.keyword = sessionParams.keyword
+        params.ip = sessionParams.ip
+        params.rssPath = sessionParams.rssPath
+        params.reader = sessionParams.reader
       }
     }
     onMounted(() => {
@@ -127,10 +216,13 @@ export default {
       getRsslogList()
     })
     return {
+      copyToClipboard,
       rsslogList,
       params,
       total,
       getRsslogList,
+      // 搜索
+      addParamsAndSearch,
     }
   },
 }

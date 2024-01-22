@@ -117,10 +117,11 @@
         </el-dropdown>
       </div>
     </div>
-    <div class="mb20">
+    <div class="mb20 list-table-body">
       <el-table
         :data="list"
         row-key="_id"
+        height="100%"
         border
         @sort-change="tableSortChange"
         :default-sort="defaultSort"
@@ -272,6 +273,8 @@
         class="fr"
         background
         layout="total, prev, pager, next"
+        :pager-count="5"
+        small
         :total="total"
         v-model:current-page="params.page"
       />
@@ -343,6 +346,7 @@ export default {
       size: 10,
       keyword: '',
       type: null,
+      status: null,
       sorttype: null,
       sort: null,
       tags: [],
@@ -355,6 +359,7 @@ export default {
         params.size = sessionParams.size
         params.keyword = sessionParams.keyword
         params.type = sessionParams.type
+        params.status = sessionParams.status
         params.sorttype = sessionParams.sorttype
         params.sort = sessionParams.sort
         params.tags = sessionParams.tags || []
@@ -483,6 +488,12 @@ export default {
           tagsIsLoading.value = false
         })
     }
+    const getTagDetail = (id) => {
+      authApi.getTagDetail({ id }).then((res) => {
+        const data = res.data.data
+        tagList.value.push(data)
+      })
+    }
     let queryTagsTimer = null
     const queryTags = (query) => {
       if (queryTagsTimer) {
@@ -581,7 +592,13 @@ export default {
       initParams()
       getPostList()
       getSortList()
-      getTagList()
+      if (params.tags.length) {
+        params.tags.forEach((tagId) => {
+          getTagDetail(tagId)
+        })
+      } else {
+        getTagList()
+      }
     })
     return {
       params,

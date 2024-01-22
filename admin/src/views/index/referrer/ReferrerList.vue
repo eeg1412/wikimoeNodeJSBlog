@@ -35,8 +35,8 @@
       </div>
     </div>
     <!-- 引用记录 -->
-    <div class="mb20">
-      <el-table :data="referrerList" row-key="_id" border>
+    <div class="mb20 list-table-body">
+      <el-table height="100%" :data="referrerList" row-key="_id" border>
         <!-- 来源 referrer -->
         <el-table-column prop="referrer" label="来源" min-width="200">
           <template #default="{ row }">
@@ -64,6 +64,8 @@
         background
         layout="total, prev, pager, next"
         :total="total"
+        :pager-count="5"
+        small
         v-model:current-page="params.page"
       />
     </div>

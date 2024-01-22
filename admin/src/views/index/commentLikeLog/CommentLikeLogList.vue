@@ -8,6 +8,36 @@
     <div class="clearfix pb20">
       <div class="fl common-top-search-form-body">
         <!-- 检索用 -->
+        <el-form
+          :inline="true"
+          :model="params"
+          @submit.prevent
+          class="demo-form-inline"
+          @keypress.enter="getCommentLikeLogList(true)"
+        >
+          <!-- ip -->
+          <el-form-item>
+            <el-input
+              v-model="params.ip"
+              clearable
+              placeholder="请输入ip"
+            ></el-input>
+          </el-form-item>
+          <!-- uuid -->
+          <el-form-item>
+            <el-input
+              v-model="params.uuid"
+              clearable
+              placeholder="请输入uuid"
+            ></el-input>
+          </el-form-item>
+
+          <el-form-item>
+            <el-button type="primary" @click="getCommentLikeLogList(true)"
+              >搜索</el-button
+            >
+          </el-form-item>
+        </el-form>
       </div>
       <div class="fr">
         <!-- 按钮用 -->
@@ -15,8 +45,8 @@
       </div>
     </div>
     <!-- 评论点赞记录 -->
-    <div class="mb20">
-      <el-table :data="commentLikeLogList" row-key="_id" border>
+    <div class="mb20 list-table-body">
+      <el-table height="100%" :data="commentLikeLogList" row-key="_id" border>
         <el-table-column label="评论" min-width="180">
           <template #default="{ row }">
             <div :title="row.comment.content">
@@ -25,7 +55,27 @@
           </template>
         </el-table-column>
         <!-- uuid -->
-        <el-table-column prop="uuid" label="uuid" width="315" />
+        <el-table-column prop="uuid" label="uuid" width="330">
+          <template #default="{ row }">
+            <div v-if="row.uuid">
+              <div class="dib">{{ row.uuid }}</div>
+              <!-- 查询按钮 -->
+              <div class="dib ml5 vt">
+                <el-link
+                  type="primary"
+                  @click="addParamsAndSearch('uuid', row.uuid)"
+                  ><i class="fa fa-search"></i
+                ></el-link>
+              </div>
+              <!-- 点击复制按钮 -->
+              <div class="dib ml5 vt">
+                <el-link type="primary" @click="copyToClipboard(row.uuid)"
+                  ><i class="far fa-clone"></i
+                ></el-link>
+              </div>
+            </div>
+          </template>
+        </el-table-column>
         <!-- like 内容用tag -->
         <el-table-column prop="like" label="点赞" width="100">
           <template #default="{ row }">
@@ -57,8 +107,22 @@
         <!-- IP信息 -->
         <el-table-column prop="ip" label="IP信息" width="200">
           <template #default="{ row }">
-            <div>
-              {{ row.ip }}
+            <div v-if="row.ip">
+              <div class="dib">{{ row.ip }}</div>
+              <!-- 查询按钮 -->
+              <div class="dib ml5 vt">
+                <el-link
+                  type="primary"
+                  @click="addParamsAndSearch('ip', row.ip)"
+                  ><i class="fa fa-search"></i
+                ></el-link>
+              </div>
+              <!-- 点击复制按钮 -->
+              <div class="dib ml5 vt">
+                <el-link type="primary" @click="copyToClipboard(row.ip)"
+                  ><i class="far fa-clone"></i
+                ></el-link>
+              </div>
             </div>
             <div>
               {{ row.ipInfo?.countryLong }} {{ row.ipInfo?.city
@@ -88,6 +152,8 @@
         background
         layout="total, prev, pager, next"
         :total="total"
+        :pager-count="5"
+        small
         v-model:current-page="params.page"
       />
     </div>
@@ -98,7 +164,11 @@ import { useRoute, useRouter } from 'vue-router'
 import { authApi } from '@/api'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { onMounted, reactive, ref, watch } from 'vue'
-import { setSessionParams, getSessionParams } from '@/utils/utils'
+import {
+  setSessionParams,
+  getSessionParams,
+  copyToClipboard,
+} from '@/utils/utils'
 export default {
   setup() {
     const route = useRoute()
@@ -107,6 +177,8 @@ export default {
     const params = reactive({
       page: 1,
       size: 10,
+      ip: '',
+      uuid: '',
       keyword: '',
     })
     const total = ref(0)
@@ -139,6 +211,8 @@ export default {
         params.page = sessionParams.page
         params.size = sessionParams.size
         params.keyword = sessionParams.keyword
+        params.ip = sessionParams.ip
+        params.uuid = sessionParams.uuid
       }
     }
     const titleLimit = (title) => {
@@ -148,16 +222,23 @@ export default {
       }
       return title_
     }
+    const addParamsAndSearch = (key, value) => {
+      params[key] = value
+      getCommentLikeLogList(true)
+    }
     onMounted(() => {
       initParams()
       getCommentLikeLogList()
     })
     return {
+      copyToClipboard,
       commentLikeLogList,
       params,
       total,
       getCommentLikeLogList,
       titleLimit,
+      // 搜索
+      addParamsAndSearch,
     }
   },
 }

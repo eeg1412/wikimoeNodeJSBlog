@@ -33,8 +33,14 @@
       </div>
     </div>
     <!-- tags -->
-    <div class="mb20">
-      <el-table :data="tagList" row-key="_id" border default-expand-all>
+    <div class="mb20 list-table-body">
+      <el-table
+        height="100%"
+        :data="tagList"
+        row-key="_id"
+        border
+        default-expand-all
+      >
         <el-table-column prop="tagname" label="标签名称" />
         <!-- 最后一次使用时间 -->
         <el-table-column prop="last_use_time" label="最终使用时间">
@@ -62,6 +68,8 @@
         background
         layout="total, prev, pager, next"
         :total="total"
+        :pager-count="5"
+        small
         v-model:current-page="params.page"
       />
     </div>

@@ -4,7 +4,7 @@ const log4js = require('log4js')
 const adminApiLog = log4js.getLogger('adminApi')
 
 module.exports = async function (req, res, next) {
-  let { page, size } = req.query
+  let { page, size, ip, rssPath, reader } = req.query
   page = parseInt(page)
   size = parseInt(size)
   // 判断page和size是否为数字
@@ -19,6 +19,17 @@ module.exports = async function (req, res, next) {
   const params = {
   }
 
+  if (ip) {
+    ip = utils.escapeSpecialChars(ip)
+    params.ip = new RegExp(ip, 'i')
+  }
+  if (rssPath) {
+    params.rssPath = rssPath
+  }
+  if (reader) {
+    reader = utils.escapeSpecialChars(reader)
+    params.reader = new RegExp(reader, 'i')
+  }
 
   const sort = {
     _id: -1

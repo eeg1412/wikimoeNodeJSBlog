@@ -22,6 +22,22 @@
               placeholder="请输入评论内容"
             ></el-input>
           </el-form-item>
+          <!-- ip -->
+          <el-form-item>
+            <el-input
+              v-model="params.ip"
+              clearable
+              placeholder="请输入ip"
+            ></el-input>
+          </el-form-item>
+          <!-- uuid -->
+          <el-form-item>
+            <el-input
+              v-model="params.uuid"
+              clearable
+              placeholder="请输入uuid"
+            ></el-input>
+          </el-form-item>
           <!-- 状态 -->
           <el-form-item>
             <el-select
@@ -46,8 +62,8 @@
       </div>
     </div>
     <!-- comments -->
-    <div class="mb20">
-      <el-table :data="commentList" row-key="_id" border>
+    <div class="mb20 list-table-body">
+      <el-table :data="commentList" height="100%" row-key="_id" border>
         <!-- 评论文章 -->
         <el-table-column label="评论文章/推文" width="180">
           <template #default="{ row }">
@@ -144,8 +160,22 @@
         <!-- IP信息 -->
         <el-table-column prop="ip" label="IP信息" width="200">
           <template #default="{ row }">
-            <div>
-              {{ row.ip }}
+            <div v-if="row.ip">
+              <div class="dib">{{ row.ip }}</div>
+              <!-- 查询按钮 -->
+              <div class="dib ml5 vt">
+                <el-link
+                  type="primary"
+                  @click="addParamsAndSearch('ip', row.ip)"
+                  ><i class="fa fa-search"></i
+                ></el-link>
+              </div>
+              <!-- 点击复制按钮 -->
+              <div class="dib ml5 vt">
+                <el-link type="primary" @click="copyToClipboard(row.ip)"
+                  ><i class="far fa-clone"></i
+                ></el-link>
+              </div>
             </div>
             <div>
               {{ row.ipInfo?.countryLong }} {{ row.ipInfo?.city
@@ -167,7 +197,27 @@
           </template>
         </el-table-column>
         <!-- uuid -->
-        <el-table-column prop="uuid" label="uuid" width="315" />
+        <el-table-column prop="uuid" label="uuid" width="330">
+          <template #default="{ row }">
+            <div v-if="row.uuid">
+              <div class="dib">{{ row.uuid }}</div>
+              <!-- 查询按钮 -->
+              <div class="dib ml5 vt">
+                <el-link
+                  type="primary"
+                  @click="addParamsAndSearch('uuid', row.uuid)"
+                  ><i class="fa fa-search"></i
+                ></el-link>
+              </div>
+              <!-- 点击复制按钮 -->
+              <div class="dib ml5 vt">
+                <el-link type="primary" @click="copyToClipboard(row.uuid)"
+                  ><i class="far fa-clone"></i
+                ></el-link>
+              </div>
+            </div>
+          </template>
+        </el-table-column>
 
         <el-table-column label="操作" width="170" fixed="right">
           <template #default="{ row }">
@@ -194,6 +244,8 @@
         background
         layout="total, prev, pager, next"
         :total="total"
+        :pager-count="5"
+        small
         v-model:current-page="params.page"
       />
     </div>
@@ -249,7 +301,11 @@ import { authApi } from '@/api'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { nextTick, onMounted, reactive, ref, watch } from 'vue'
 import EmojiTextarea from '@/components/EmojiTextarea.vue'
-import { setSessionParams, getSessionParams } from '@/utils/utils'
+import {
+  setSessionParams,
+  getSessionParams,
+  copyToClipboard,
+} from '@/utils/utils'
 export default {
   components: {
     EmojiTextarea,
@@ -262,6 +318,8 @@ export default {
       page: 1,
       size: 10,
       keyword: '',
+      ip: '',
+      uuid: '',
       status: '',
     })
     const total = ref(0)
@@ -331,8 +389,10 @@ export default {
       if (sessionParams) {
         params.page = sessionParams.page
         params.size = sessionParams.size
-        ;(params.keyword = sessionParams.keyword),
-          (params.status = sessionParams.status)
+        params.keyword = sessionParams.keyword
+        params.status = sessionParams.status
+        params.ip = sessionParams.ip
+        params.uuid = sessionParams.uuid
       }
     }
 
@@ -392,11 +452,17 @@ export default {
         .catch(() => {})
     }
 
+    const addParamsAndSearch = (key, value) => {
+      params[key] = value
+      getCommentList(true)
+    }
+
     onMounted(() => {
       initParams()
       getCommentList()
     })
     return {
+      copyToClipboard,
       commentList,
       params,
       total,
@@ -415,6 +481,8 @@ export default {
       submitCommentForm,
       // 审核评论
       applyComment,
+      // 搜索
+      addParamsAndSearch,
     }
   },
 }

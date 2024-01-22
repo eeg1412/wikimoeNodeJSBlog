@@ -35,8 +35,8 @@
       </div>
     </div>
     <!-- 友链 -->
-    <div class="mb20">
-      <el-table :data="linkList" row-key="_id" border>
+    <div class="mb20 list-table-body">
+      <el-table height="100%" :data="linkList" row-key="_id" border>
         <!-- 图标 -->
         <el-table-column label="图标" width="90">
           <template #default="{ row }">
@@ -79,6 +79,8 @@
         background
         layout="total, prev, pager, next"
         :total="total"
+        :pager-count="5"
+        small
         v-model:current-page="params.page"
       />
     </div>

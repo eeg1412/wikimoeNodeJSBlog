@@ -18,8 +18,24 @@
           <el-form-item>
             <el-input
               v-model="params.keyword"
+              clearable
               placeholder="请输入关键词"
             ></el-input>
+          </el-form-item>
+          <!-- 发送对象 -->
+          <el-form-item>
+            <el-input
+              v-model="params.to"
+              clearable
+              placeholder="请输入发送对象"
+            ></el-input>
+          </el-form-item>
+          <!-- status -->
+          <el-form-item>
+            <el-select v-model="params.status" placeholder="发送状态" clearable>
+              <el-option label="发送成功" :value="1"></el-option>
+              <el-option label="发送失败" :value="0"></el-option>
+            </el-select>
           </el-form-item>
           <el-form-item>
             <el-button type="primary" @click="getEmailSendHistoryList(true)"
@@ -33,8 +49,8 @@
       </div>
     </div>
     <!-- 邮件发送记录 -->
-    <div class="mb20">
-      <el-table :data="emailSendHistoryList" row-key="_id" border>
+    <div class="mb20 list-table-body">
+      <el-table height="100%" :data="emailSendHistoryList" row-key="_id" border>
         <!-- // 发送对象
         to: {
           type: String,
@@ -51,7 +67,27 @@
           type: Number,
           default: 0
         }, -->
-        <el-table-column label="发送对象" prop="to"></el-table-column>
+        <el-table-column label="发送对象" prop="to" min-width="150px">
+          <template #default="{ row }">
+            <div v-if="row.to">
+              <div class="dib">{{ row.to }}</div>
+              <!-- 查询按钮 -->
+              <div class="dib ml5 vt">
+                <el-link
+                  type="primary"
+                  @click="addParamsAndSearch('to', row.to)"
+                  ><i class="fa fa-search"></i
+                ></el-link>
+              </div>
+              <!-- 点击复制按钮 -->
+              <div class="dib ml5 vt">
+                <el-link type="primary" @click="copyToClipboard(row.to)"
+                  ><i class="far fa-clone"></i
+                ></el-link>
+              </div>
+            </div>
+          </template>
+        </el-table-column>
         <el-table-column label="发送内容" prop="content">
           <template #default="{ row }">
             <div v-html="row.content"></div>
@@ -83,6 +119,8 @@
         background
         layout="total, prev, pager, next"
         :total="total"
+        :pager-count="5"
+        small
         v-model:current-page="params.page"
       />
     </div>
@@ -93,7 +131,11 @@ import { useRoute, useRouter } from 'vue-router'
 import { authApi } from '@/api'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { onMounted, reactive, ref, watch } from 'vue'
-import { setSessionParams, getSessionParams } from '@/utils/utils'
+import {
+  setSessionParams,
+  getSessionParams,
+  copyToClipboard,
+} from '@/utils/utils'
 export default {
   setup() {
     const route = useRoute()
@@ -102,6 +144,8 @@ export default {
     const params = reactive({
       page: 1,
       size: 10,
+      to: '',
+      status: null,
       keyword: '',
     })
     const total = ref(0)
@@ -124,6 +168,10 @@ export default {
       router.push({
         name: 'EmailSendHistoryAdd',
       })
+    }
+    const addParamsAndSearch = (key, value) => {
+      params[key] = value
+      getEmailSendHistoryList(true)
     }
     // 监听 params.page 的变化
     watch(
@@ -168,6 +216,8 @@ export default {
         params.page = sessionParams.page
         params.size = sessionParams.size
         params.keyword = sessionParams.keyword
+        params.to = sessionParams.to
+        params.status = sessionParams.status
       }
     }
     onMounted(() => {
@@ -175,6 +225,7 @@ export default {
       getEmailSendHistoryList()
     })
     return {
+      copyToClipboard,
       emailSendHistoryList,
       params,
       total,
@@ -182,6 +233,8 @@ export default {
       handleAdd,
       goEdit,
       deleteEmailSendHistory,
+      // 搜索
+      addParamsAndSearch,
     }
   },
 }

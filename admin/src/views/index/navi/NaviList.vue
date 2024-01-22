@@ -16,9 +16,15 @@
       </div>
     </div>
     <!-- 导航 -->
-    <div class="mb20">
-      <el-table :data="naviList" row-key="_id" border default-expand-all>
-        <el-table-column prop="naviname" label="导航名称" min-width="100px" />
+    <div class="mb20 list-table-body no-page">
+      <el-table
+        height="100%"
+        :data="naviList"
+        row-key="_id"
+        border
+        default-expand-all
+      >
+        <el-table-column prop="naviname" label="导航名称" min-width="150px" />
         <el-table-column prop="url" label="导航URL" min-width="250px" />
         <el-table-column prop="newtab" label="新标签打开" width="110px">
           <template #default="{ row }">

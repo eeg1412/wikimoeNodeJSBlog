@@ -30,8 +30,14 @@
       </div>
     </div>
     <!-- albums -->
-    <div class="mb20">
-      <el-table :data="albumList" row-key="_id" border default-expand-all>
+    <div class="mb20 list-table-body">
+      <el-table
+        height="100%"
+        :data="albumList"
+        row-key="_id"
+        border
+        default-expand-all
+      >
         <el-table-column prop="name" label="相册名称" />
         <el-table-column prop="count" label="媒体数" width="80" />
 
@@ -58,6 +64,8 @@
         background
         layout="total, prev, pager, next"
         :total="total"
+        :pager-count="5"
+        small
         v-model:current-page="params.page"
       />
     </div>

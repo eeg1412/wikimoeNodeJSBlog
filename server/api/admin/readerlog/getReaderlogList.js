@@ -4,7 +4,7 @@ const log4js = require('log4js')
 const adminApiLog = log4js.getLogger('adminApi')
 
 module.exports = async function (req, res, next) {
-  let { page, size } = req.query
+  let { page, size, ip, uuid } = req.query
   page = parseInt(page)
   size = parseInt(size)
   // 判断page和size是否为数字
@@ -17,6 +17,15 @@ module.exports = async function (req, res, next) {
     return
   }
   const params = {
+  }
+
+  if (ip) {
+    ip = utils.escapeSpecialChars(ip)
+    params.ip = new RegExp(ip, 'i')
+  }
+  if (uuid) {
+    uuid = utils.escapeSpecialChars(uuid)
+    params.uuid = new RegExp(uuid, 'i')
   }
 
 

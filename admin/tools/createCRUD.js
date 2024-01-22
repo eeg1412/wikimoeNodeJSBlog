@@ -53,8 +53,8 @@ const listTemplate = (tableName, chineseName) => {
       </div>
     </div>
     <!-- ${chineseName} -->
-    <div class="mb20">
-      <el-table :data="${tableName}List" row-key="_id" border>
+    <div class="mb20 list-table-body">
+      <el-table height="100%" :data="${tableName}List" row-key="_id" border>
         <el-table-column label="操作" width="140" fixed="right">
           <template #default="{ row }">
             <el-button type="primary" size="small" @click="goEdit(row._id)"
@@ -74,6 +74,8 @@ const listTemplate = (tableName, chineseName) => {
         background
         layout="total, prev, pager, next"
         :total="total"
+        :pager-count="5"
+        small
         v-model:current-page="params.page"
       />
     </div>

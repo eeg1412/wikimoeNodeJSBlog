@@ -15,8 +15,14 @@
         <el-button type="primary" @click="handleAdd">追加</el-button>
       </div>
     </div>
-    <div>
-      <el-table :data="list" row-key="_id" border default-expand-all>
+    <div class="list-table-body no-search no-page">
+      <el-table
+        height="100%"
+        :data="list"
+        row-key="_id"
+        border
+        default-expand-all
+      >
         <el-table-column prop="sortname" label="分类名称" />
         <el-table-column prop="alias" label="分类别名" />
         <el-table-column prop="taxis" label="排序值" />

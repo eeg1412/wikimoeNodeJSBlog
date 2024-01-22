@@ -70,8 +70,8 @@
       </div>
     </div>
     <!-- 追番 -->
-    <div class="mb20">
-      <el-table :data="bangumiList" row-key="_id" border>
+    <div class="mb20 list-table-body">
+      <el-table height="100%" :data="bangumiList" row-key="_id" border>
         <!-- 封面 cover -->
         <el-table-column label="封面" width="90">
           <template #default="{ row }">
@@ -142,6 +142,8 @@
         background
         layout="total, prev, pager, next"
         :total="total"
+        :pager-count="5"
+        small
         v-model:current-page="params.page"
       />
     </div>
@@ -164,6 +166,7 @@ export default {
       keyword: '',
       year: null,
       season: null,
+      status: null,
     })
     const total = ref(0)
     const getBangumiList = (resetPage) => {
@@ -229,6 +232,9 @@ export default {
         params.page = sessionParams.page
         params.size = sessionParams.size
         params.keyword = sessionParams.keyword
+        params.year = sessionParams.year
+        params.season = sessionParams.season
+        params.status = sessionParams.status
       }
     }
     onMounted(() => {

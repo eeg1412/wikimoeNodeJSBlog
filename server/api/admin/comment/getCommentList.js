@@ -4,7 +4,7 @@ const log4js = require('log4js')
 const adminApiLog = log4js.getLogger('adminApi')
 
 module.exports = async function (req, res, next) {
-  let { page, size, keyword, status } = req.query
+  let { page, size, keyword, ip, uuid, status } = req.query
   page = parseInt(page)
   size = parseInt(size)
   // 判断page和size是否为数字
@@ -21,6 +21,14 @@ module.exports = async function (req, res, next) {
   if (keyword) {
     keyword = utils.escapeSpecialChars(keyword)
     params.content = new RegExp(keyword, 'i')
+  }
+  if (ip) {
+    ip = utils.escapeSpecialChars(ip)
+    params.ip = new RegExp(ip, 'i')
+  }
+  if (uuid) {
+    uuid = utils.escapeSpecialChars(uuid)
+    params.uuid = new RegExp(uuid, 'i')
   }
   // 因为是query，所以要转换成数字
   if (status) {
