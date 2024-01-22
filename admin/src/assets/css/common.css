@@ -852,11 +852,11 @@ input[type='password'] {
 }
 .custom-scroll {
   scrollbar-width: thin;
-  scrollbar-color: rgba(255, 255, 255, 0) transparent;
 }
 
 .custom-scroll:hover,
 .custom-scroll.scroll-not-hide {
+  scrollbar-width: thin;
   scrollbar-color: #bbb transparent;
 }
 .el-upload-dragger,
