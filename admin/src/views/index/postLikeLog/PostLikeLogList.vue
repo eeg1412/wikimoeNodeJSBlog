@@ -105,7 +105,7 @@
           </template>
         </el-table-column>
         <!-- IP信息 -->
-        <el-table-column prop="ip" label="IP信息" width="320">
+        <el-table-column prop="ip" label="IP信息" width="350">
           <template #default="{ row }">
             <div v-if="row.ip">
               <div class="dib word-break">{{ row.ip }}</div>
