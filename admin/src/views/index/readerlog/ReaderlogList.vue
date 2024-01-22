@@ -54,7 +54,7 @@
     <div class="mb20 list-table-body">
       <el-table height="100%" :data="readerlogList" row-key="_id" border>
         <!-- uuid -->
-        <el-table-column prop="uuid" label="uuid" width="330">
+        <el-table-column prop="uuid" label="uuid" width="350">
           <template #default="{ row }">
             <div v-if="row.uuid">
               <div class="dib">{{ row.uuid }}</div>
