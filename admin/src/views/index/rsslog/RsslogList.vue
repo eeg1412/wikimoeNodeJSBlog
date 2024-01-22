@@ -56,10 +56,10 @@
     <div class="mb20 list-table-body">
       <el-table height="100%" :data="rsslogList" row-key="_id" border>
         <!-- IP信息 -->
-        <el-table-column prop="ip" label="IP信息" width="200">
+        <el-table-column prop="ip" label="IP信息" width="320">
           <template #default="{ row }">
             <div v-if="row.ip">
-              <div class="dib">{{ row.ip }}</div>
+              <div class="dib word-break">{{ row.ip }}</div>
               <!-- 查询按钮 -->
               <div class="dib ml5 vt">
                 <el-link
