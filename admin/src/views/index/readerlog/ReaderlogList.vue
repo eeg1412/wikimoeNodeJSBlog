@@ -31,7 +31,13 @@
               placeholder="请输入uuid"
             ></el-input>
           </el-form-item>
-
+          <!-- isBot true false -->
+          <el-form-item>
+            <el-select v-model="params.isBot" placeholder="机器人" clearable>
+              <el-option label="是" value="1"></el-option>
+              <el-option label="否" value="0"></el-option>
+            </el-select>
+          </el-form-item>
           <el-form-item>
             <el-button type="primary" @click="getReaderlogList(true)"
               >搜索</el-button
@@ -202,6 +208,7 @@ export default {
       ip: '',
       uuid: '',
       keyword: '',
+      isBot: null,
     })
     const total = ref(0)
     const getReaderlogList = (resetPage) => {
@@ -239,6 +246,7 @@ export default {
         params.keyword = sessionParams.keyword
         params.ip = sessionParams.ip
         params.uuid = sessionParams.uuid
+        params.isBot = sessionParams.isBot
       }
     }
     const targetToName = (target) => {

@@ -614,6 +614,7 @@ exports.isSearchEngine = function (req) {
     'rogerbot',
     'msnbot',
     'bingbot',
+    'AhrefsBot',
   ];
   const res = {
     isBot: false,
