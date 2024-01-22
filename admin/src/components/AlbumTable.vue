@@ -67,6 +67,7 @@
         :pager-count="5"
         small
         v-model:current-page="params.page"
+        v-model:page-size="params.size"
       />
     </div>
     <AlbumEditorDialog
@@ -104,7 +105,7 @@ export default {
       default: () => {
         return {
           page: 1,
-          size: 10,
+          size: 50,
           keyword: '',
         }
       },
@@ -118,7 +119,7 @@ export default {
     const id = ref(null)
     const params = reactive({
       page: 1,
-      size: 10,
+      size: 50,
       keyword: '',
     })
     const total = ref(0)

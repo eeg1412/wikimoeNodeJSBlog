@@ -77,6 +77,7 @@ const listTemplate = (tableName, chineseName) => {
         :pager-count="5"
         small
         v-model:current-page="params.page"
+        v-model:page-size="params.size"
       />
     </div>
   </div>
@@ -94,7 +95,7 @@ export default {
     const ${tableName}List = ref([])
     const params = reactive({
       page: 1,
-      size: 10,
+      size: 50,
       keyword: '',
     })
     const total = ref(0)

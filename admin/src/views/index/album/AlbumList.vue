@@ -24,7 +24,7 @@ export default {
     const router = useRouter()
     const params = reactive({
       page: 1,
-      size: 10,
+      size: 50,
       keyword: '',
     })
 

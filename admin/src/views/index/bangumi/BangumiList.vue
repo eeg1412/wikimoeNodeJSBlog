@@ -145,6 +145,7 @@
         :pager-count="5"
         small
         v-model:current-page="params.page"
+        v-model:page-size="params.size"
       />
     </div>
   </div>
@@ -162,7 +163,7 @@ export default {
     const bangumiList = ref([])
     const params = reactive({
       page: 1,
-      size: 10,
+      size: 50,
       keyword: '',
       year: null,
       season: null,

@@ -277,6 +277,7 @@
         small
         :total="total"
         v-model:current-page="params.page"
+        v-model:page-size="params.size"
       />
     </div>
     <!-- 添加评论弹窗 -->
@@ -343,7 +344,7 @@ export default {
     // console.log(htmlContent)
     const params = reactive({
       page: 1,
-      size: 10,
+      size: 50,
       keyword: '',
       type: null,
       status: null,
