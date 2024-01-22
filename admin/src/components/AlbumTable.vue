@@ -37,6 +37,7 @@
         row-key="_id"
         border
         default-expand-all
+        :key="updateCount"
       >
         <el-table-column prop="name" label="相册名称" />
         <el-table-column prop="count" label="媒体数" width="80" />
@@ -123,6 +124,7 @@ export default {
       keyword: '',
     })
     const total = ref(0)
+    const updateCount = ref(0)
     const getAlbumList = (resetPage) => {
       if (resetPage) {
         params.page = 1
@@ -132,6 +134,7 @@ export default {
         .then((res) => {
           albumList.value = res.data.list
           total.value = res.data.total
+          updateCount.value++
           emit('paramsChange', params)
         })
         .catch((err) => {
@@ -215,6 +218,7 @@ export default {
       id,
       params,
       total,
+      updateCount,
       getAlbumList,
       editorShow,
       handleAdd,

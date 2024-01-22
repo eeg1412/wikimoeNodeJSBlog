@@ -125,6 +125,7 @@
         border
         @sort-change="tableSortChange"
         :default-sort="defaultSort"
+        :key="updateCount"
       >
         <!-- //   - title	标题字段
           // - date	日期字段
@@ -390,6 +391,7 @@ export default {
         })
         .catch(() => {})
     }
+    const updateCount = ref(0)
     const getPostList = (resetPage, resetKeyword) => {
       if (resetPage) {
         params.page = 1
@@ -400,6 +402,7 @@ export default {
       authApi.getPostList(params).then((res) => {
         list.value = res.data.list
         total.value = res.data.total
+        updateCount.value++
         setSessionParams(route.name, params)
       })
     }
@@ -607,6 +610,7 @@ export default {
       list,
       goEdit,
       deletePost,
+      updateCount,
       getPostList,
       handleAdd,
       handlePostCommand,

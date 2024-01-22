@@ -50,7 +50,13 @@
     </div>
     <!-- 邮件发送记录 -->
     <div class="mb20 list-table-body">
-      <el-table height="100%" :data="emailSendHistoryList" row-key="_id" border>
+      <el-table
+        :key="updateCount"
+        height="100%"
+        :data="emailSendHistoryList"
+        row-key="_id"
+        border
+      >
         <!-- // 发送对象
         to: {
           type: String,
@@ -150,6 +156,7 @@ export default {
       keyword: '',
     })
     const total = ref(0)
+    const updateCount = ref(0)
     const getEmailSendHistoryList = (resetPage) => {
       if (resetPage) {
         params.page = 1
@@ -159,6 +166,7 @@ export default {
         .then((res) => {
           emailSendHistoryList.value = res.data.list
           total.value = res.data.total
+          updateCount.value++
           setSessionParams(route.name, params)
         })
         .catch((err) => {
@@ -230,6 +238,7 @@ export default {
       emailSendHistoryList,
       params,
       total,
+      updateCount,
       getEmailSendHistoryList,
       handleAdd,
       goEdit,

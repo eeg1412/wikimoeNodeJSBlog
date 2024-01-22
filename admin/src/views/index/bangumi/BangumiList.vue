@@ -71,7 +71,13 @@
     </div>
     <!-- 追番 -->
     <div class="mb20 list-table-body">
-      <el-table height="100%" :data="bangumiList" row-key="_id" border>
+      <el-table
+        :key="updateCount"
+        height="100%"
+        :data="bangumiList"
+        row-key="_id"
+        border
+      >
         <!-- 封面 cover -->
         <el-table-column label="封面" width="90">
           <template #default="{ row }">
@@ -170,6 +176,7 @@ export default {
       status: null,
     })
     const total = ref(0)
+    const updateCount = ref(0)
     const getBangumiList = (resetPage) => {
       if (resetPage) {
         params.page = 1
@@ -179,6 +186,7 @@ export default {
         .then((res) => {
           bangumiList.value = res.data.list
           total.value = res.data.total
+          updateCount.value++
           setSessionParams(route.name, params)
         })
         .catch((err) => {
@@ -246,6 +254,7 @@ export default {
       bangumiList,
       params,
       total,
+      updateCount,
       getBangumiList,
       handleAdd,
       goEdit,

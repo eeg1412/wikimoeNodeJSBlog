@@ -63,7 +63,13 @@
     </div>
     <!-- comments -->
     <div class="mb20 list-table-body">
-      <el-table :data="commentList" height="100%" row-key="_id" border>
+      <el-table
+        :key="updateCount"
+        :data="commentList"
+        height="100%"
+        row-key="_id"
+        border
+      >
         <!-- 评论文章 -->
         <el-table-column label="评论文章/推文" width="180">
           <template #default="{ row }">
@@ -331,6 +337,7 @@ export default {
       status: '',
     })
     const total = ref(0)
+    const updateCount = ref(0)
     const getCommentList = (resetPage) => {
       if (resetPage) {
         params.page = 1
@@ -340,6 +347,7 @@ export default {
         .then((res) => {
           commentList.value = res.data.list
           total.value = res.data.total
+          updateCount.value++
           setSessionParams(route.name, params)
         })
         .catch((err) => {
@@ -506,6 +514,7 @@ export default {
       commentList,
       params,
       total,
+      updateCount,
       getCommentList,
       goEdit,
       deleteComment,

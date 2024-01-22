@@ -36,7 +36,13 @@
     </div>
     <!-- 引用记录 -->
     <div class="mb20 list-table-body">
-      <el-table height="100%" :data="referrerList" row-key="_id" border>
+      <el-table
+        :key="updateCount"
+        height="100%"
+        :data="referrerList"
+        row-key="_id"
+        border
+      >
         <!-- 来源 referrer -->
         <el-table-column prop="referrer" label="来源" min-width="200">
           <template #default="{ row }">
@@ -89,6 +95,7 @@ export default {
       keyword: '',
     })
     const total = ref(0)
+    const updateCount = ref(0)
     const getReferrerList = (resetPage) => {
       if (resetPage) {
         params.page = 1
@@ -98,6 +105,7 @@ export default {
         .then((res) => {
           referrerList.value = res.data.list
           total.value = res.data.total
+          updateCount.value++
           setSessionParams(route.name, params)
         })
         .catch((err) => {
@@ -162,6 +170,7 @@ export default {
       referrerList,
       params,
       total,
+      updateCount,
       getReferrerList,
       handleAdd,
       goEdit,

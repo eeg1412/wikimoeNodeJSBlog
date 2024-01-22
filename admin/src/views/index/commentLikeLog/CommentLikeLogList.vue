@@ -46,7 +46,13 @@
     </div>
     <!-- 评论点赞记录 -->
     <div class="mb20 list-table-body">
-      <el-table height="100%" :data="commentLikeLogList" row-key="_id" border>
+      <el-table
+        :key="updateCount"
+        height="100%"
+        :data="commentLikeLogList"
+        row-key="_id"
+        border
+      >
         <el-table-column label="评论" min-width="180">
           <template #default="{ row }">
             <div :title="row.comment.content">
@@ -183,6 +189,7 @@ export default {
       keyword: '',
     })
     const total = ref(0)
+    const updateCount = ref(0)
     const getCommentLikeLogList = (resetPage) => {
       if (resetPage) {
         params.page = 1
@@ -192,6 +199,7 @@ export default {
         .then((res) => {
           commentLikeLogList.value = res.data.list
           total.value = res.data.total
+          updateCount.value++
           setSessionParams(route.name, params)
         })
         .catch((err) => {
@@ -236,6 +244,7 @@ export default {
       commentLikeLogList,
       params,
       total,
+      updateCount,
       getCommentLikeLogList,
       titleLimit,
       // 搜索

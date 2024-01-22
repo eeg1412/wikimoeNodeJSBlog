@@ -52,7 +52,13 @@
     </div>
     <!-- 读者访问日志 -->
     <div class="mb20 list-table-body">
-      <el-table height="100%" :data="readerlogList" row-key="_id" border>
+      <el-table
+        :key="updateCount"
+        height="100%"
+        :data="readerlogList"
+        row-key="_id"
+        border
+      >
         <!-- uuid -->
         <el-table-column prop="uuid" label="uuid" width="350">
           <template #default="{ row }">
@@ -212,6 +218,7 @@ export default {
       isBot: null,
     })
     const total = ref(0)
+    const updateCount = ref(0)
     const getReaderlogList = (resetPage) => {
       if (resetPage) {
         params.page = 1
@@ -231,6 +238,7 @@ export default {
           })
           readerlogList.value = list
           total.value = res.data.total
+          updateCount.value++
           setSessionParams(route.name, params)
         })
         .catch((err) => {
@@ -308,6 +316,7 @@ export default {
       readerlogList,
       params,
       total,
+      updateCount,
       getReaderlogList,
       targetToPath,
       // 搜索

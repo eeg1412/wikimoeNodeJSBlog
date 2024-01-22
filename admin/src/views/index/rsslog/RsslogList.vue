@@ -54,7 +54,13 @@
     </div>
     <!-- RSS访问记录 -->
     <div class="mb20 list-table-body">
-      <el-table height="100%" :data="rsslogList" row-key="_id" border>
+      <el-table
+        :key="updateCount"
+        height="100%"
+        :data="rsslogList"
+        row-key="_id"
+        border
+      >
         <!-- IP信息 -->
         <el-table-column prop="ip" label="IP信息" width="350">
           <template #default="{ row }">
@@ -172,6 +178,7 @@ export default {
       keyword: '',
     })
     const total = ref(0)
+    const updateCount = ref(0)
     const getRsslogList = (resetPage) => {
       if (resetPage) {
         params.page = 1
@@ -181,6 +188,7 @@ export default {
         .then((res) => {
           rsslogList.value = res.data.list
           total.value = res.data.total
+          updateCount.value++
           setSessionParams(route.name, params)
         })
         .catch((err) => {
@@ -221,6 +229,7 @@ export default {
       rsslogList,
       params,
       total,
+      updateCount,
       getRsslogList,
       // 搜索
       addParamsAndSearch,
