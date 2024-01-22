@@ -99,15 +99,30 @@ module.exports = async function (req, res, next) {
     //   default: {}
     // },
     let content = data.title || data.excerpt
+    const type = data.type
     // 控制content长度在20字，超过...
     if (content.length > 20) {
       content = content.substring(0, 20) + '...'
+    }
+    let target = ''
+    switch (type) {
+      case 1:
+        target = 'blog'
+        break
+      case 2:
+        target = 'tweet'
+        break
+      case 3:
+        target = 'page'
+        break
+      default:
+        break
     }
     const readerlogParams = {
       uuid: uuid,
       action: 'postView',
       data: {
-        target: 'post',
+        target: target,
         targetId: id,
         content: content,
       },

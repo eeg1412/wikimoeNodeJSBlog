@@ -41,7 +41,23 @@
         border
         default-expand-all
       >
-        <el-table-column prop="tagname" label="标签名称" />
+        <el-table-column prop="tagname" label="标签名称" min-width="300">
+          <template #default="{ row }">
+            <div class="dib">{{ row.tagname }}</div>
+            <!-- 点击打开按钮 -->
+            <div class="dib ml5 vt">
+              <el-link type="primary" @click="goToBlog(row)"
+                ><i class="fas fa-external-link-alt"></i
+              ></el-link>
+            </div>
+            <!-- 点击复制按钮 -->
+            <div class="dib ml5 vt">
+              <el-link type="primary" @click="copyPage(row)"
+                ><i class="far fa-clone"></i
+              ></el-link>
+            </div>
+          </template>
+        </el-table-column>
         <!-- 最后一次使用时间 -->
         <el-table-column prop="last_use_time" label="最终使用时间">
           <template #default="{ row }">
@@ -80,8 +96,11 @@
 import { useRoute, useRouter } from 'vue-router'
 import { authApi } from '@/api'
 import { ElMessage, ElMessageBox } from 'element-plus'
-import { onMounted, reactive, ref, watch } from 'vue'
+import { onMounted, reactive, ref, watch, computed } from 'vue'
 import { setSessionParams, getSessionParams } from '@/utils/utils'
+import store from '@/store'
+import { copyToClipboard } from '@/utils/utils'
+
 export default {
   setup() {
     const route = useRoute()
@@ -158,6 +177,27 @@ export default {
         params.keyword = sessionParams.keyword
       }
     }
+
+    const siteUrl = computed(() => {
+      return store.getters.siteUrl
+    })
+
+    const getPath = (row) => {
+      if (!siteUrl.value) {
+        ElMessage.error('请先设置站点地址')
+        return
+      }
+      return `${siteUrl.value}/post/list/tag/${row._id}/1`
+    }
+    const goToBlog = (row) => {
+      const url = getPath(row)
+      window.open(url, '_blank')
+    }
+    const copyPage = (row) => {
+      const url = getPath(row)
+      copyToClipboard(url)
+    }
+
     onMounted(() => {
       initParams()
       getTagList()
@@ -170,6 +210,8 @@ export default {
       handleAdd,
       goEdit,
       deleteTag,
+      goToBlog,
+      copyPage,
     }
   },
 }

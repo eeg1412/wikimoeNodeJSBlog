@@ -67,8 +67,14 @@
         <!-- 评论文章 -->
         <el-table-column label="评论文章/推文" width="180">
           <template #default="{ row }">
-            <div :title="row.post.title || row.post.excerpt">
+            <div :title="row.post.title || row.post.excerpt" class="dib">
               {{ titleLimit(row.post.title || row.post.excerpt) }}
+            </div>
+            <!-- 点击打开按钮 -->
+            <div class="dib ml5 vt">
+              <el-link type="primary" @click="goToBlog(row)"
+                ><i class="fas fa-external-link-alt"></i
+              ></el-link>
             </div>
           </template>
         </el-table-column>
@@ -300,13 +306,14 @@
 import { useRoute, useRouter } from 'vue-router'
 import { authApi } from '@/api'
 import { ElMessage, ElMessageBox } from 'element-plus'
-import { nextTick, onMounted, reactive, ref, watch } from 'vue'
+import { nextTick, onMounted, reactive, ref, watch, computed } from 'vue'
 import EmojiTextarea from '@/components/EmojiTextarea.vue'
 import {
   setSessionParams,
   getSessionParams,
   copyToClipboard,
 } from '@/utils/utils'
+import store from '@/store'
 export default {
   components: {
     EmojiTextarea,
@@ -458,6 +465,38 @@ export default {
       getCommentList(true)
     }
 
+    const siteUrl = computed(() => {
+      return store.getters.siteUrl
+    })
+
+    const getPath = (row) => {
+      if (!siteUrl.value) {
+        ElMessage.error('请先设置站点地址')
+        return
+      }
+      let path
+      const post = row.post
+      if (post.type === 1 || post.type === 2) {
+        path = '/post/'
+      } else if (post.type === 3) {
+        path = '/page/'
+      } else {
+        console.error('Invalid row type:', post.type)
+        return
+      }
+
+      if (post.alias) {
+        path += post.alias
+      } else {
+        path += post._id
+      }
+      return siteUrl.value + path
+    }
+    const goToBlog = (row) => {
+      const url = getPath(row)
+      window.open(url, '_blank')
+    }
+
     onMounted(() => {
       initParams()
       getCommentList()
@@ -484,6 +523,7 @@ export default {
       applyComment,
       // 搜索
       addParamsAndSearch,
+      goToBlog,
     }
   },
 }

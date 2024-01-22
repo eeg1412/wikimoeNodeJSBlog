@@ -23,7 +23,23 @@
         border
         default-expand-all
       >
-        <el-table-column prop="sortname" label="分类名称" />
+        <el-table-column prop="sortname" label="分类名称" min-width="300">
+          <template #default="{ row }">
+            <div class="dib">{{ row.sortname }}</div>
+            <!-- 点击打开按钮 -->
+            <div class="dib ml5 vt">
+              <el-link type="primary" @click="goToBlog(row)"
+                ><i class="fas fa-external-link-alt"></i
+              ></el-link>
+            </div>
+            <!-- 点击复制按钮 -->
+            <div class="dib ml5 vt">
+              <el-link type="primary" @click="copyPage(row)"
+                ><i class="far fa-clone"></i
+              ></el-link>
+            </div>
+          </template>
+        </el-table-column>
         <el-table-column prop="alias" label="分类别名" />
         <el-table-column prop="taxis" label="排序值" />
         <el-table-column prop="description" label="分类描述" />
@@ -42,10 +58,12 @@
   </div>
 </template>
 <script>
-import { onMounted, ref } from 'vue'
+import { onMounted, ref, computed } from 'vue'
 import { useRouter } from 'vue-router'
 import { authApi } from '@/api'
 import { ElMessage, ElMessageBox } from 'element-plus'
+import store from '@/store'
+import { copyToClipboard } from '@/utils/utils'
 
 export default {
   setup() {
@@ -92,6 +110,25 @@ export default {
         })
         .catch(() => {})
     }
+    const siteUrl = computed(() => {
+      return store.getters.siteUrl
+    })
+
+    const getPath = (row) => {
+      if (!siteUrl.value) {
+        ElMessage.error('请先设置站点地址')
+        return
+      }
+      return `${siteUrl.value}/post/list/sort/${row.alias || row._id}/1`
+    }
+    const goToBlog = (row) => {
+      const url = getPath(row)
+      window.open(url, '_blank')
+    }
+    const copyPage = (row) => {
+      const url = getPath(row)
+      copyToClipboard(url)
+    }
     onMounted(() => {
       getSortList()
     })
@@ -100,6 +137,8 @@ export default {
       list,
       goEdit,
       deleteSort,
+      goToBlog,
+      copyPage,
     }
   },
 }

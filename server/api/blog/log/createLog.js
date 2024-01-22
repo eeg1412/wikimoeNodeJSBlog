@@ -33,6 +33,7 @@ module.exports = async function (req, res, next) {
       if (!title) {
         return
       }
+      target = 'archive'
       content = title
       break;
     case 'postListKeyword':

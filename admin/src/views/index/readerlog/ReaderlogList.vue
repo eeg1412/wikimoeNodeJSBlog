@@ -84,32 +84,32 @@
               <!-- 如果 target targetId content 三者都有则显示跳转到对应页面的链接，否则优先显示content，没有再显示targetId -->
               <div
                 v-if="
-                  targetToName(row.data.target) &&
+                  targetToPath(row.data.target) &&
                   row.data.targetId &&
                   row.data.content
                 "
               >
-                <router-link
-                  :to="{
-                    name: targetToName(row.data.target),
-                    params: { id: row.data.targetId },
-                  }"
-                  >{{ row.data.content }}</router-link
-                >
+                <div class="dib">{{ row.data.content }}</div>
+                <!-- 点击打开按钮 -->
+                <div class="dib ml5 vt">
+                  <el-link type="primary" @click="goToBlog(row)"
+                    ><i class="fas fa-external-link-alt"></i
+                  ></el-link>
+                </div>
               </div>
               <div v-else-if="row.data.content">
                 {{ row.data.content }}
               </div>
               <div
-                v-else-if="targetToName(row.data.target) && row.data.targetId"
+                v-else-if="targetToPath(row.data.target) && row.data.targetId"
               >
-                <router-link
-                  :to="{
-                    name: targetToName(row.data.target),
-                    params: { id: row.data.targetId },
-                  }"
-                  >{{ row.data.targetId }}</router-link
-                >
+                <div class="dib">{{ row.data.content }}</div>
+                <!-- 点击打开按钮 -->
+                <div class="dib ml5 vt">
+                  <el-link type="primary" @click="goToBlog(row)"
+                    ><i class="fas fa-external-link-alt"></i
+                  ></el-link>
+                </div>
               </div>
               <div v-else>
                 {{ row.data.targetId }}
@@ -191,12 +191,13 @@
 import { useRoute, useRouter } from 'vue-router'
 import { authApi } from '@/api'
 import { ElMessage, ElMessageBox } from 'element-plus'
-import { onMounted, reactive, ref, watch } from 'vue'
+import { onMounted, reactive, ref, watch, computed } from 'vue'
 import {
   setSessionParams,
   getSessionParams,
   copyToClipboard,
 } from '@/utils/utils'
+import store from '@/store'
 export default {
   setup() {
     const route = useRoute()
@@ -218,7 +219,17 @@ export default {
       authApi
         .getReaderlogList(params)
         .then((res) => {
-          readerlogList.value = res.data.list
+          const list = res.data.list
+          // 查询action是postListArchive 时，将title中的年月提取出来，放到targetId中
+          list.forEach((item) => {
+            if (item.action === 'postListArchive' && item.data.content) {
+              const title = item.data.content
+              const year = title.slice(2, 6)
+              const month = title.slice(7, 9)
+              item.data.targetId = `${year}/${month}`
+            }
+          })
+          readerlogList.value = list
           total.value = res.data.total
           setSessionParams(route.name, params)
         })
@@ -249,11 +260,14 @@ export default {
         params.isBot = sessionParams.isBot
       }
     }
-    const targetToName = (target) => {
+    const targetToPath = (target) => {
       const targetMap = {
-        post: 'PostEdit',
-        sort: 'SortEdit',
-        tag: 'TagEdit',
+        blog: '/post/{id}',
+        tweet: '/post/{id}',
+        page: '/page/{id}',
+        sort: '/post/list/sort/{id}/1',
+        tag: '/post/list/tag/{id}/1',
+        archive: '/post/list/archive/{id}/1',
       }
       if (targetMap[target]) {
         return targetMap[target]
@@ -261,6 +275,30 @@ export default {
         return null
       }
     }
+
+    const siteUrl = computed(() => {
+      return store.getters.siteUrl
+    })
+
+    const getPath = (row) => {
+      if (!siteUrl.value) {
+        ElMessage.error('请先设置站点地址')
+        return
+      }
+      let path = targetToPath(row.data.target)
+      if (!path) {
+        return
+      }
+      let targetId = row.data.targetId
+      path = path.replace('{id}', targetId)
+
+      return siteUrl.value + path
+    }
+    const goToBlog = (row) => {
+      const url = getPath(row)
+      window.open(url, '_blank')
+    }
+
     onMounted(() => {
       initParams()
       getReaderlogList()
@@ -271,9 +309,10 @@ export default {
       params,
       total,
       getReaderlogList,
-      targetToName,
+      targetToPath,
       // 搜索
       addParamsAndSearch,
+      goToBlog,
     }
   },
 }
