@@ -34,7 +34,8 @@ module.exports = async function (req, res, next) {
 
 
   const sort = {
-    _id: -1
+    rating: -1,
+    _id: -1,
   }
   bangumiUtils.find(params, sort, '_id cover label rating season status summary title year').then((data) => {
     // 返回格式list,total
