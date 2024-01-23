@@ -70,6 +70,7 @@
               multiple
               filterable
               remote
+              :automatic-dropdown="true"
               :remote-method="queryTags"
               :loading="tagsIsLoading"
             >
@@ -600,8 +601,6 @@ export default {
         params.tags.forEach((tagId) => {
           getTagDetail(tagId)
         })
-      } else {
-        getTagList()
       }
     })
     return {

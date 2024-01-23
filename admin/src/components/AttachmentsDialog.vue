@@ -22,6 +22,7 @@
             remote
             :remote-method="searchAlbumsRemote"
             @change="changeAlbum"
+            :automatic-dropdown="true"
             class="attachments-form-item"
           >
             <el-option

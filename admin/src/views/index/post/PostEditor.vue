@@ -157,6 +157,7 @@
             filterable
             remote
             :remote-method="queryTags"
+            :automatic-dropdown="true"
             default-first-option
             :reserve-keyword="false"
             :loading="tagsIsLoading"
@@ -323,6 +324,9 @@ export default {
           // 旧文章采用v4富文本编辑器，新文章采用v5富文本编辑器
           postEditorVersion.value = res.data.data.editorVersion || 5
           form.id = res.data.data._id
+          if (res.data.data.tags?.length > 0) {
+            tagList.value = res.data.data.tags
+          }
         })
         .catch((err) => {
           console.error(err)
@@ -629,7 +633,6 @@ export default {
 
     onMounted(() => {
       getPostDetail()
-      getTagList()
       getSortList()
       setAutoSaveTimer()
       window.addEventListener('beforeunload', beforeUnloadEvent)
