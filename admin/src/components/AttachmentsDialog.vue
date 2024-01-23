@@ -138,7 +138,14 @@
               />
             </div>
             <template #reference>
-              <el-button size="small" plain @click.stop>
+              <el-button
+                size="small"
+                :type="
+                  options.noCompress || options.noThumbnail ? 'primary' : ''
+                "
+                :plain="!options.noCompress && !options.noThumbnail"
+                @click.stop
+              >
                 <el-icon><Setting /></el-icon><span class="pl3">设置</span>
               </el-button>
             </template>
