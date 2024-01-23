@@ -161,6 +161,12 @@ onMounted(() => {
   height: auto !important;
   display: inline;
 }
+.html-content-body iframe {
+  max-width: 100% !important;
+}
+.html-content-body video {
+  max-width: 100% !important;
+}
 .html-content-body a {
   @apply text-primary-500;
 }
