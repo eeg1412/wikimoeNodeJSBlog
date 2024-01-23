@@ -171,6 +171,7 @@ module.exports = async function (req, res, next) {
       // 开启压缩
       if (imgSettingEnableImgCompressWebp) {
         filePath = path.join(yearMonthPath, attachmentId + '.webp')
+        attachment.mimetype = 'image/webp'
       } else {
         filePath = path.join(yearMonthPath, attachmentId + extname)
       }
@@ -209,7 +210,7 @@ module.exports = async function (req, res, next) {
     // 将updateAttachment的filepath和thumfor前面的public去掉，并将\替换为/
     updateAttachment.filepath = updateAttachment.filepath.replace('public', '').replace(/\\/g, '/')
     updateAttachment.thumfor = updateAttachment.thumfor.replace('public', '').replace(/\\/g, '/')
-    // emlog的filepath前面多了./，thumfor指向附件的id，而不是缩略图的路径
+    updateAttachment.mimetype = attachment.mimetype
 
     const updateRes = await attachmentsUtils.updateOne({ _id: attachmentId }, updateAttachment)
     if (updateRes.modifiedCount === 0) {
