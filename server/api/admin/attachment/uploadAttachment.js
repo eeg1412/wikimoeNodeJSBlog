@@ -9,6 +9,8 @@ module.exports = async function (req, res, next) {
   let { file } = req
   const headers = req.headers
   const albumid = headers['albumid']
+  const noCompress = headers['x-no-compress'] === '1' ? true : false
+  const noThumbnail = headers['x-no-thumbnail'] === '1' ? true : false
   if (!global.$globalConfig) {
     // 报错500
     res.status(500).json({
@@ -142,7 +144,7 @@ module.exports = async function (req, res, next) {
     // 配置
     const { imgSettingCompressQuality, imgSettingCompressMaxSize, imgSettingEnableImgCompressWebp, imgSettingThumbnailQuality, imgSettingEnableImgCompress } = config
     // 如果开启了图片缩略图
-    if (config.imgSettingEnableImgThumbnail) {
+    if (config.imgSettingEnableImgThumbnail && !noThumbnail) {
       // 开启缩略图
       const { imgSettingThumbnailMaxSize } = config
       // 如果图片尺寸大于最长边
@@ -165,7 +167,7 @@ module.exports = async function (req, res, next) {
       }
     }
 
-    if (imgSettingEnableImgCompress) {
+    if (imgSettingEnableImgCompress && !noCompress) {
       // 开启压缩
       if (imgSettingEnableImgCompressWebp) {
         filePath = path.join(yearMonthPath, attachmentId + '.webp')
