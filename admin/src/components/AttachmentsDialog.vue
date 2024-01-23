@@ -120,20 +120,29 @@
         <div class="el-upload__text" v-show="albumId">拖动文件或点击上传</div>
         <div class="el-upload__text" v-show="!albumId">请选择相册后上传</div>
         <div class="mt5">
-          <!-- 不压缩图片checkbox -->
-          <el-checkbox
-            @click.stop
-            size="small"
-            v-model="options.noCompress"
-            label="不压缩图片"
-          />
-          <!-- 不生成缩略图 checkbox -->
-          <el-checkbox
-            @click.stop
-            size="small"
-            v-model="options.noThumbnail"
-            label="不生成缩略图"
-          />
+          <el-popover placement="bottom" :width="200" trigger="click">
+            <div>
+              <!-- 不压缩图片checkbox -->
+              <el-checkbox
+                @click.stop
+                size="small"
+                v-model="options.noCompress"
+                label="不压缩图片"
+              />
+              <!-- 不生成缩略图 checkbox -->
+              <el-checkbox
+                @click.stop
+                size="small"
+                v-model="options.noThumbnail"
+                label="不生成缩略图"
+              />
+            </div>
+            <template #reference>
+              <el-button size="small" type="primary" @click.stop>
+                <el-icon><Setting /></el-icon><span class="pl3">设置</span>
+              </el-button>
+            </template>
+          </el-popover>
         </div>
       </el-upload>
       <div class="custom-scroll scroll-not-hide attachments-list-body clearfix">
