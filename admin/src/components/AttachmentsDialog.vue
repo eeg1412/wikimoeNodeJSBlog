@@ -138,7 +138,7 @@
               />
             </div>
             <template #reference>
-              <el-button size="small" type="primary" @click.stop>
+              <el-button size="small" plain @click.stop>
                 <el-icon><Setting /></el-icon><span class="pl3">设置</span>
               </el-button>
             </template>
