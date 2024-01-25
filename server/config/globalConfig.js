@@ -21,6 +21,12 @@ const initGlobalConfig = async () => {
     imgSettingThumbnailQuality: 40,
     // 图片缩略图最长边
     imgSettingThumbnailMaxSize: 680,
+    // 视频最压缩长边
+    videoSettingCompressMaxSize: 480,
+    // 视频压缩码率
+    videoSettingCompressBitrate: 500,
+    // 视频压缩帧率
+    videoSettingCompressFps: 30,
   }
 
   const siteSettingsConfig = {

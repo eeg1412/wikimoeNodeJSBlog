@@ -9,7 +9,7 @@
       <el-switch v-model="mediaForm.imgSettingEnableImgCompress"></el-switch>
     </el-form-item>
     <div class="config-border-item">
-      <div class="config-border-item-title">
+      <div class="config-border-item-title mb5">
         图片压缩设置<span class="config-border-item-tip"
           >※当开启图片压缩时生效</span
         >
@@ -47,7 +47,7 @@
       <el-switch v-model="mediaForm.imgSettingEnableImgThumbnail"></el-switch>
     </el-form-item>
     <div class="config-border-item">
-      <div class="config-border-item-title">
+      <div class="config-border-item-title mb5">
         缩略图设置<span class="config-border-item-tip"
           >※当开启缩略图时生效</span
         >
@@ -107,11 +107,41 @@
           >
         </div>
       </el-form-item>
-      <div class="config-border-item-title">
+      <div class="config-border-item-title mb5">
         视频压缩设置<span class="config-border-item-tip"
           >※安装FFmpeg后生效</span
         >
       </div>
+      <!-- 视频最压缩长边 -->
+      <el-form-item label="视频最压缩长边">
+        <!-- 数字 1-4096 -->
+        <el-input-number
+          v-model="mediaForm.videoSettingCompressMaxSize"
+          controls-position="right"
+          :min="1"
+          :step="1"
+        ></el-input-number>
+      </el-form-item>
+      <!-- 视频压缩码率 -->
+      <el-form-item label="视频压缩码率">
+        <!-- 数字 1-4096 -->
+        <el-input-number
+          v-model="mediaForm.videoSettingCompressBitrate"
+          controls-position="right"
+          :min="1"
+          :step="1"
+        ></el-input-number>
+      </el-form-item>
+      <!-- 视频压缩帧率 -->
+      <el-form-item label="视频压缩帧率">
+        <!-- 数字 1-4096 -->
+        <el-input-number
+          v-model="mediaForm.videoSettingCompressFps"
+          controls-position="right"
+          :min="1"
+          :step="1"
+        ></el-input-number>
+      </el-form-item>
     </div>
     <el-form-item>
       <el-button type="primary" @click="mediaSubmit">提交</el-button>
@@ -156,6 +186,12 @@ export default {
       imgSettingEnableImgThumbnail: false,
       imgSettingThumbnailQuality: 40,
       imgSettingThumbnailMaxSize: 680,
+      // 视频最压缩长边
+      videoSettingCompressMaxSize: 480,
+      // 视频压缩码率
+      videoSettingCompressBitrate: 500,
+      // 视频压缩帧率
+      videoSettingCompressFps: 30,
     })
     const mediaRules = {
       imgSettingCompressQuality: [
