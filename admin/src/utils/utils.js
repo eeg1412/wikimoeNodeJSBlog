@@ -2,6 +2,7 @@ import store from "@/store";
 import { ElLoading, ElMessage } from 'element-plus'
 import moment from "moment";
 import { get, set, delMany } from 'idb-keyval'
+import { FFmpeg } from '@ffmpeg/ffmpeg'
 
 let loading = null
 
@@ -237,4 +238,52 @@ export const getFFmpegInstalled = async () => {
     const core = await get('ffmpeg-core.js')
     const wasm = await get('ffmpeg-core.wasm')
     return core && wasm
+}
+
+const retrieveBlob = async (key, type) => {
+    const buffer = await get(key)
+    if (!buffer) {
+        ElMessage.error(`Failed to retrieve from IndexedDB: ${key}`)
+        throw new Error(`Failed to retrieve from IndexedDB: ${key}`)
+    }
+    const blob = new Blob([buffer], { type });
+    return URL.createObjectURL(blob);
+}
+export const initFFmpeg = async () => {
+    const ffmpeg = new FFmpeg();
+    await ffmpeg.load({
+        coreURL: await retrieveBlob(
+            `ffmpeg-core.js`,
+            'text/javascript',
+        ),
+        wasmURL: await retrieveBlob(
+            `ffmpeg-core.wasm`,
+            'application/wasm',
+        ),
+    });
+    return ffmpeg
+}
+
+export const execFFmpeg = async (ffmpeg, file, args, outputFileName) => {
+    try {
+        await ffmpeg.writeFile(
+            'input',
+            new Uint8Array(await file.arrayBuffer()),
+        );
+        await ffmpeg.exec([...args]);
+
+        const data = (await ffmpeg.readFile(outputFileName));
+        return new File([data.buffer], outputFileName, { type: 'video/mp4' });
+    } finally {
+        try {
+            await ffmpeg.deleteFile('input');
+        } catch {
+            //
+        }
+        try {
+            await ffmpeg.deleteFile(outputFileName);
+        } catch {
+            //
+        }
+    }
 }

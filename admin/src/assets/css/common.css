@@ -807,6 +807,11 @@ input[type='password'] {
   justify-content: center;
   align-items: center;
 }
+/* 顶部对起 */
+.flexTop {
+  justify-content: center;
+  align-items: flex-start;
+}
 .pointer {
   cursor: pointer;
 }

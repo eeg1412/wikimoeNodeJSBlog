@@ -102,56 +102,66 @@
           </div>
         </div>
       </div>
-      <el-upload
-        v-show="selectedImageList.length <= 0"
-        class="attachments-upload"
-        drag
-        action="/api/admin/attachment/upload"
-        multiple
-        v-model:file-list="fileList"
-        :accept="'image/*'"
-        :headers="headers"
-        :on-success="handleSuccess"
-        :on-error="handleError"
-        :disabled="!albumId"
-        :class="albumId ? '' : 'attachments-upload-disabled'"
-      >
-        <el-icon class="el-icon--upload"><upload-filled /></el-icon>
-        <div class="el-upload__text" v-show="albumId">拖动文件或点击上传</div>
-        <div class="el-upload__text" v-show="!albumId">请选择相册后上传</div>
-        <div class="mt5">
-          <el-popover placement="bottom" :width="200" trigger="click">
-            <div>
-              <!-- 不压缩图片checkbox -->
-              <el-checkbox
-                @click.stop
-                size="small"
-                v-model="options.noCompress"
-                label="不压缩图片"
-              />
-              <!-- 不生成缩略图 checkbox -->
-              <el-checkbox
-                @click.stop
-                size="small"
-                v-model="options.noThumbnail"
-                label="不生成缩略图"
-              />
+      <div v-show="selectedImageList.length <= 0" class="dflex flexTop">
+        <div class="w_05">
+          <el-upload
+            class="attachments-upload"
+            drag
+            action="/api/admin/attachment/upload"
+            multiple
+            v-model:file-list="fileList"
+            :accept="'image/*'"
+            :headers="headers"
+            :on-success="handleSuccess"
+            :on-error="handleError"
+            :disabled="!albumId"
+            :class="albumId ? '' : 'attachments-upload-disabled'"
+          >
+            <el-icon class="el-icon--upload"><Picture /></el-icon>
+            <div class="el-upload__text" v-show="albumId">
+              拖动文件或点击上传
             </div>
-            <template #reference>
-              <el-button
-                size="small"
-                :type="
-                  options.noCompress || options.noThumbnail ? 'primary' : ''
-                "
-                :plain="!options.noCompress && !options.noThumbnail"
-                @click.stop
-              >
-                <el-icon><Setting /></el-icon><span class="pl3">设置</span>
-              </el-button>
-            </template>
-          </el-popover>
+            <div class="el-upload__text" v-show="!albumId">
+              请选择相册后上传
+            </div>
+            <div class="mt5">
+              <el-popover placement="bottom" :width="200" trigger="click">
+                <div>
+                  <!-- 不压缩图片checkbox -->
+                  <el-checkbox
+                    @click.stop
+                    size="small"
+                    v-model="options.noCompress"
+                    label="不压缩图片"
+                  />
+                  <!-- 不生成缩略图 checkbox -->
+                  <el-checkbox
+                    @click.stop
+                    size="small"
+                    v-model="options.noThumbnail"
+                    label="不生成缩略图"
+                  />
+                </div>
+                <template #reference>
+                  <el-button
+                    size="small"
+                    :type="
+                      options.noCompress || options.noThumbnail ? 'primary' : ''
+                    "
+                    :plain="!options.noCompress && !options.noThumbnail"
+                    @click.stop
+                  >
+                    <el-icon><Setting /></el-icon><span class="pl3">设置</span>
+                  </el-button>
+                </template>
+              </el-popover>
+            </div>
+          </el-upload>
         </div>
-      </el-upload>
+
+        <div class="w_05"><VideoUploader :albumId="albumId" /></div>
+      </div>
+
       <div class="custom-scroll scroll-not-hide attachments-list-body clearfix">
         <template v-if="attachmentList.length > 0">
           <div
@@ -234,6 +244,7 @@ import {
 import store from '@/store'
 // AttachmentImage
 import AttachmentImage from '@/components/AttachmentImage.vue'
+import VideoUploader from '@/components/VideoUploader.vue'
 import { Delete, Close, SetUp, Select, Search } from '@element-plus/icons-vue'
 import axios from 'axios'
 import { showLoading, hideLoading } from '@/utils/utils'
@@ -241,6 +252,7 @@ import { showLoading, hideLoading } from '@/utils/utils'
 export default {
   components: {
     AttachmentImage,
+    VideoUploader,
   },
   props: {
     albumIdProp: {
