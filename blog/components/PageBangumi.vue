@@ -91,7 +91,7 @@
             :key="bangumi.id"
             class="flex h-32"
           >
-            <div class="h-32 flex-shrink-0 relative">
+            <div class="h-32 flex-shrink-0 relative bangumi-cover-body">
               <WikimoeImage
                 class="w-full rounded bangumi-cover"
                 :src="bangumi.cover || '/img/nopic400-565.png'"
@@ -281,5 +281,10 @@ const selectSeasonHandle = async (season, close) => {
 .page-bangumi-body .bangumi-cover {
   height: 100%;
   width: auto;
+}
+</style>
+<style scoped>
+.bangumi-cover-body {
+  width: 90px;
 }
 </style>
