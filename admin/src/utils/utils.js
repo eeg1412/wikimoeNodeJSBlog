@@ -1,6 +1,7 @@
 import store from "@/store";
 import { ElLoading, ElMessage } from 'element-plus'
 import moment from "moment";
+import { get, set, delMany } from 'idb-keyval'
 
 let loading = null
 
@@ -176,4 +177,64 @@ export const copyToClipboard = (text) => {
             type: 'error'
         });
     });
+}
+
+
+
+// 安装ffmepg
+const coreURL = `/@ffmpeg/core@0.12.6/dist/esm/ffmpeg-core.js`
+const wasmURL = `/@ffmpeg/core@0.12.6/dist/esm/ffmpeg-core.wasm`
+
+
+export const installBufferToIndexedDB = async (key, url) => {
+    const response = await fetch(url)
+    // if not ok, throw error
+    if (!response.ok) {
+        ElMessage.error(`Unable to fetch: ${url}`)
+        throw new Error(`Unable to fetch: ${url}`)
+    }
+    const reader = response.body?.getReader()
+    if (!reader) {
+        ElMessage.error(`Unable to fetch: ${url}`)
+        throw new Error(`Unable to fetch: ${url}`)
+    }
+    let receivedLength = 0
+    const chunks = []
+
+    // eslint-disable-next-line no-constant-condition
+    while (true) {
+        const { done, value } = await reader.read()
+
+        if (done) {
+            break
+        }
+
+        chunks.push(value)
+        receivedLength += value.length
+    }
+
+    const buffer = await new Blob(chunks).arrayBuffer()
+
+    try {
+        set(key, buffer)
+        console.log(`Saved to IndexedDB: ${url}`)
+    } catch {
+        ElMessage.error(`Failed to save to IndexedDB: ${url}`)
+        console.warn(`Failed to save to IndexedDB: ${url}`)
+    }
+}
+
+export const installFFmpeg = async (baseUrl) => {
+    await installBufferToIndexedDB('ffmpeg-core.js', baseUrl + coreURL)
+    await installBufferToIndexedDB('ffmpeg-core.wasm', baseUrl + wasmURL)
+}
+
+export const uninstallFFmpeg = async () => {
+    await delMany(['ffmpeg-core.js', 'ffmpeg-core.wasm'])
+}
+
+export const getFFmpegInstalled = async () => {
+    const core = await get('ffmpeg-core.js')
+    const wasm = await get('ffmpeg-core.wasm')
+    return core && wasm
 }
