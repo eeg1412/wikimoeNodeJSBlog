@@ -19,7 +19,9 @@
               <!-- 设置按钮 -->
               <UButton
                 size="xs"
-                color="white"
+                :color="
+                  commentSetting.commentSaveUserInfo ? 'primary' : 'white'
+                "
                 icon="i-heroicons-cog-6-tooth"
                 @click="emojiBtnClick"
               />
