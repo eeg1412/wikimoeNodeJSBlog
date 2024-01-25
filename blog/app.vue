@@ -38,6 +38,8 @@ useHead({
       itemprop: 'image',
       content: options.value.siteUrl + options.value.siteDefaultCover,
     },
+    // theme-color
+    { name: 'theme-color', content: '#ef90a7' },
     // rel="alternate" type="application/rss+xml" title="RSS"
     {
       rel: 'alternate',
