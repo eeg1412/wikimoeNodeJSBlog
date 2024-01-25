@@ -55,6 +55,7 @@
     align-center
     append-to-body
     @closed="onClosed"
+    class="video-uploader-dialog"
   >
     <div v-if="step === 1">
       <div class="mb5">
@@ -152,7 +153,13 @@
       ></video>
       <div class="pt5 pb5">视频封面：</div>
       <div>
-        <img class="video-upload-video" :src="outputVideoCoverUrl" />
+        <img
+          class="video-upload-video"
+          v-if="outputVideoCoverUrl"
+          :src="outputVideoCoverUrl"
+        />
+        <div v-else>视频封面图生成中...</div>
+        <!-- TODO:加一个更改封面图的功能 -->
       </div>
       <!-- 上传按钮 -->
       <div class="mt5">
@@ -160,12 +167,18 @@
           type="primary"
           size="small"
           :loading="videoLoading"
+          :disabled="!outputVideoCoverUrl || !outputVideoUrl"
           @click="tryUploadVideo"
         >
           上传
         </el-button>
         <!-- 下载 -->
-        <el-button type="primary" size="small" @click="tryDownloadVideo">
+        <el-button
+          type="primary"
+          size="small"
+          @click="tryDownloadVideo"
+          v-if="!options.noCompress"
+        >
           下载
         </el-button>
       </div>
@@ -191,14 +204,6 @@ export default {
     const options = reactive({
       noCompress: false,
     })
-    const headers = computed(() => {
-      return {
-        Authorization: `Bearer ${store.getters.adminToken}`,
-        AlbumId: props.albumId,
-        'x-no-compress': options.noCompress ? '1' : '0',
-        'x-no-thumbnail': options.noThumbnail ? '1' : '0',
-      }
-    })
 
     const videoUrl = ref('')
     const videoRef = ref(null)
@@ -212,15 +217,26 @@ export default {
         ElMessage.error('文件大小不能超过500M')
         return
       }
-      videoUrl.value = URL.createObjectURL(file)
-      editorVisible.value = true
-      nextTick(() => {
-        videoForm.startTime = 0
-        // 将endTime设置为视频结束时间
-        videoForm.endTime = videoRef.value.onloadedmetadata = () => {
-          videoForm.endTime = videoRef.value.duration
-        }
-      })
+      if (options.noCompress) {
+        // 直接跳转第三步
+        step.value = 3
+        editorVisible.value = true
+        outputVideoUrl.value = URL.createObjectURL(file)
+        outputVideoSize.value = file.size
+        nextTick(() => {
+          tryGetVideoCover()
+        })
+      } else {
+        videoUrl.value = URL.createObjectURL(file)
+        editorVisible.value = true
+        nextTick(() => {
+          videoForm.startTime = 0
+          // 将endTime设置为视频结束时间
+          videoForm.endTime = videoRef.value.onloadedmetadata = () => {
+            videoForm.endTime = videoRef.value.duration
+          }
+        })
+      }
     }
     const videoForm = reactive({
       // 开始时间
@@ -338,10 +354,14 @@ export default {
             canvas.height = video.videoHeight
             ctx.drawImage(video, 0, 0, canvas.width, canvas.height)
             // 转成webp
-            canvas.toBlob((blob) => {
-              outputVideoCoverUrl.value = URL.createObjectURL(blob)
-              resolve()
-            }, 'image/webp')
+            canvas.toBlob(
+              (blob) => {
+                outputVideoCoverUrl.value = URL.createObjectURL(blob)
+                resolve()
+              },
+              'image/webp',
+              0.3
+            )
           }, 1000)
         }
       })
@@ -443,6 +463,21 @@ export default {
       formData.append('width', outputVideoRef.value.videoWidth)
       // 视频高度
       formData.append('height', outputVideoRef.value.videoHeight)
+      // albumid
+      formData.append('albumid', props.albumId)
+      // filename
+      formData.append('filename', fileRawName)
+      authApi
+        .uploadAttachmentVideo(formData)
+        .then((res) => {
+          emit('onVideoUploaded', res)
+          ElMessage.success('上传成功')
+          // 关闭弹窗
+          editorVisible.value = false
+        })
+        .finally(() => {
+          videoLoading.value = false
+        })
     }
     const tryDownloadVideo = () => {
       const a = document.createElement('a')
@@ -502,5 +537,10 @@ export default {
   word-break: break-all;
   white-space: pre-wrap;
   margin-top: auto;
+}
+</style>
+<style>
+.video-uploader-dialog .el-dialog__body {
+  padding-top: 0px;
 }
 </style>

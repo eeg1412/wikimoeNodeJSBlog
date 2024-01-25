@@ -159,7 +159,12 @@
           </el-upload>
         </div>
 
-        <div class="w_05"><VideoUploader :albumId="albumId" /></div>
+        <div class="w_05">
+          <VideoUploader
+            :albumId="albumId"
+            @onVideoUploaded="onVideoUploaded"
+          />
+        </div>
       </div>
 
       <div class="custom-scroll scroll-not-hide attachments-list-body clearfix">
@@ -643,6 +648,10 @@ export default {
       emit('onDialogClose')
     }
 
+    const onVideoUploaded = (res) => {
+      handleSuccess(res)
+    }
+
     // 监听 params.page 的变化
     watch(
       () => params.page,
@@ -693,6 +702,7 @@ export default {
       handlePaste,
       onDialogClosed,
       onDialogClose,
+      onVideoUploaded,
     }
   },
 }

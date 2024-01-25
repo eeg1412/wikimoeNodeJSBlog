@@ -222,6 +222,15 @@ const adminRouteSetting = [
     roleType: null,
     role: null
   },
+  // post /attachment/upload/video
+  {
+    path: '/attachment/upload/video',
+    method: 'post',
+    middleware: [checkAuth, upload.fields([{ name: 'video', maxCount: 1 }, { name: 'cover', maxCount: 1 }])],
+    controller: require('../api/admin/attachment/uploadAttachmentVideo'),
+    roleType: null,
+    role: null
+  },
   // get /attachment/list
   {
     path: '/attachment/list',

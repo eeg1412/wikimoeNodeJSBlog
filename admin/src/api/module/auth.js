@@ -148,6 +148,12 @@ export default function (api) {
         shouldAdminJWT: true
       })
     },
+    // post /attachment/upload/video
+    uploadAttachmentVideo (data) {
+      return api.post('/attachment/upload/video', data, {
+        shouldAdminJWT: true
+      })
+    },
     // post /post/create
     createPost (data) {
       return api.post('/post/create', data, {
