@@ -177,7 +177,7 @@ export default {
     const goCommentAudit = () => {
       sessionStorage.setItem(
         'CommentList',
-        '{"page":1,"size":10,"keyword":"","status":0}'
+        '{"page":1,"size":50,"keyword":"","status":0}'
       )
       router.push({
         name: 'CommentList',
