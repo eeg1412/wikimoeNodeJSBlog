@@ -1,11 +1,13 @@
 <template>
   <div
     class="blog-tweet-img-list-wrap"
+    ref="blogTweetImgListWrapRef"
     :class="`cover-count-${coverImages.length}`"
     v-if="coverImages.length > 0"
   >
     <div
       class="blog-tweet-img-list-body cover-count-1-1"
+      :style="`width: ${oneItemWidth}px; height: ${oneItemHeight}px;`"
       v-if="coverImages.length === 1"
     >
       <!-- 1张图时 -->
@@ -13,8 +15,8 @@
         <WikimoeImage
           :src="coverImages[0].thumfor || coverImages[0].filepath"
           :alt="coverImages[0].filename"
-          :width="coverImages[0].thumWidth || coverImages[0].width"
-          :height="coverImages[0].thumHeight || coverImages[0].height"
+          :width="oneItemWidth"
+          :height="oneItemHeight"
           :data-href="coverImages[0].filepath"
           :dataHrefList="dataHrefList"
           :dataHrefIndex="0"
@@ -27,8 +29,7 @@
         <video
           :src="coverImages[0].filepath"
           controls
-          :width="coverImages[0].width"
-          :height="coverImages[0].height"
+          :style="`width: ${oneItemWidth}px; height: ${oneItemHeight}px;`"
           :poster="coverImages[0].thumfor"
           :id="`${componentUUID}-${coverImages[0]._id}`"
           muted
@@ -178,7 +179,7 @@
   </div>
 </template>
 <script setup>
-import { nextTick, onMounted, ref } from 'vue'
+import { nextTick, onMounted, onUnmounted, ref } from 'vue'
 
 // props
 const props = defineProps({
@@ -233,10 +234,10 @@ const dataHrefList = computed(() => {
 })
 const slideChangeTransitionStart = (swiper) => {
   swiper.params.mousewheel.releaseOnEdges = false
-  videoPlayId.value = null
 }
 const slideChangeTransitionEnd = (swiper) => {
   swiper.params.mousewheel.releaseOnEdges = true
+  videoPlayId.value = null
 }
 
 const videoPlayId = ref(null)
@@ -248,8 +249,54 @@ const videoPlay = (id) => {
   })
 }
 const componentUUID = ref(null)
+const blogTweetImgListWrapRef = ref(null)
+const oneItemWidth = ref(null)
+const oneItemHeight = ref(null)
+let resizeTimer = null
+const sumSize = () => {
+  const width = blogTweetImgListWrapRef.value.offsetWidth
+  const height = window.innerHeight
+  const coverImages = props.coverImages
+  const oneItem = coverImages[0]
+  let oneItemWidth_ = oneItem.thumWidth || oneItem.width
+  let oneItemHeight_ = oneItem.thumHeight || oneItem.height
+  // 如果宽大于父级,就缩小
+  if (oneItemWidth_ > width) {
+    const scale = width / oneItemWidth_
+    oneItemWidth_ = width
+    oneItemHeight_ = oneItemHeight_ * scale
+  }
+  // 如果高度大于半个屏幕，就缩小
+  if (oneItemHeight > height / 2) {
+    const scale = height / 2 / oneItemHeight_
+    oneItemWidth_ = oneItemWidth_ * scale
+    oneItemHeight = height / 2
+  }
+  oneItemWidth.value = Math.floor(oneItemWidth_)
+  oneItemHeight.value = Math.floor(oneItemHeight_)
+}
+const sumSizeThrottle = () => {
+  if (resizeTimer) {
+    clearTimeout(resizeTimer)
+  }
+  resizeTimer = setTimeout(() => {
+    sumSize()
+  }, 100)
+}
 onMounted(() => {
   componentUUID.value = uuid()
+  const coverImages = props.coverImages
+  if (coverImages.length === 1) {
+    sumSize()
+    // 监听窗口变化
+    window.addEventListener('resize', sumSizeThrottle)
+  }
+})
+onUnmounted(() => {
+  const coverImages = props.coverImages
+  if (coverImages.length === 1) {
+    window.removeEventListener('resize', sumSizeThrottle)
+  }
 })
 </script>
 <style scoped>
@@ -366,10 +413,10 @@ onMounted(() => {
   border-radius: 20px !important;
   font-size: 14px !important;
 }
-.blog-tweet-img-list-body.cover-count-1-1 .wikimoe-image {
+/* .blog-tweet-img-list-body.cover-count-1-1 .wikimoe-image {
   width: auto;
   height: auto;
   max-width: 100%;
   max-height: 50vh;
-}
+} */
 </style>
