@@ -22,6 +22,7 @@
             remote
             :remote-method="searchAlbumsRemote"
             @change="changeAlbum"
+            @visible-change="checkAlbumId"
             :automatic-dropdown="true"
             class="attachments-form-item"
           >
@@ -350,18 +351,18 @@ export default {
         .catch(() => {})
     }
     let searchTimer = null
-    const searchAlbumsRemote = async (query) => {
-      clearTimeout(searchTimer)
-      // value是id,如果是-1，就创建相册
-      if (albumId.value === -1) {
+    const checkAlbumId = async (visible) => {
+      if (albumId.value === -1 && !visible) {
         await createAlbum()
         changeAlbum(albumId.value)
-      } else {
-        searchTimer = setTimeout(() => {
-          keyword.value = query
-          getAlbumList()
-        }, 100)
       }
+    }
+    const searchAlbumsRemote = async (query) => {
+      clearTimeout(searchTimer)
+      searchTimer = setTimeout(() => {
+        keyword.value = query
+        getAlbumList()
+      }, 100)
     }
 
     const headers = ref({})
@@ -693,6 +694,7 @@ export default {
       open,
       albumList,
       albumListCom,
+      checkAlbumId,
       searchAlbumsRemote,
       params,
       total,
