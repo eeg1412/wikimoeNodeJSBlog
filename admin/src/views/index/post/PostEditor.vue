@@ -112,8 +112,7 @@
                   <el-image
                     :src="element.thumfor || element.filepath"
                     fit="contain"
-                    :preview-src-list="[element.filepath]"
-                    :preview-teleported="true"
+                    @click="openPreviewer(element)"
                     style="width: 100%; height: 100%"
                   />
                   <!-- 删除按钮 -->
@@ -255,6 +254,7 @@ import RichEditor5 from '@/components/RichEditor5'
 import draggable from 'vuedraggable'
 import EmojiTextarea from '@/components/EmojiTextarea.vue'
 import { onBeforeRouteLeave } from 'vue-router'
+import { loadAndOpenImg } from '@/utils'
 
 export default {
   components: {
@@ -631,6 +631,17 @@ export default {
       e.returnValue = ''
     }
 
+    const openPreviewer = (item) => {
+      const mimeType = item.mimeType
+      const { filepath, width, height } = item
+      loadAndOpenImg(0, {
+        src: filepath,
+        width,
+        height,
+        mimeType,
+      })
+    }
+
     onMounted(() => {
       getPostDetail()
       getSortList()
@@ -674,6 +685,7 @@ export default {
       // 升级编辑器版本
       oldPostEditorContent,
       updatePostEditorVersion,
+      openPreviewer,
     }
   },
 }

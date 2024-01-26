@@ -3,11 +3,51 @@ import { ElLoading, ElMessage } from 'element-plus'
 import moment from "moment";
 import { get, set, delMany } from 'idb-keyval'
 import { FFmpeg } from '@ffmpeg/ffmpeg'
+import PhotoSwipeLightbox from 'photoswipe/lightbox'
 
 let loading = null
 
 let loadingCount = 0;
 let loadingTimer = null;
+
+
+const lightbox = new PhotoSwipeLightbox({
+    pswpModule: () => import('photoswipe'),
+})
+lightbox.init()
+
+
+export function tryCloseLightbox () {
+    lightbox && lightbox.pswp && lightbox.pswp.close()
+}
+
+export function loadAndOpenImg (index, DataSource, isFromCache) {
+    let newDataSource = DataSource
+    if (!isFromCache) {
+        // 需要格式化数据
+        newDataSource.forEach((item, index) => {
+            const mimeType = item.mimeType
+            const { src, width, height } = item
+            if (mimeType && mimeType.indexOf('video') > -1) {
+                newDataSource[index] = {
+                    html: `<div class="previewer-video-body">
+                    <video 
+                      src="${src}"
+                      controls="controls" 
+                      playsinline="true" preload="auto"
+                      muted="muted"
+                      autoplay="autoplay"
+                      loop="loop"
+                      width="${width}"
+                      height="${height}"></video>
+                    </div>`,
+                }
+            }
+        })
+
+    }
+    lightbox && lightbox.loadAndOpen(index, newDataSource)
+}
 
 const startLoading = () => {
     store.dispatch("setLoading", true);

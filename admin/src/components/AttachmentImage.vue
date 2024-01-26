@@ -5,8 +5,7 @@
         :src="item.thumfor || item.filepath"
         fit="cover"
         loading="lazy"
-        :preview-src-list="[item.filepath]"
-        :preview-teleported="true"
+        @click="openPreviewer(item)"
         style="width: 100%; height: 100%"
       />
     </div>
@@ -69,6 +68,7 @@
 <script>
 import { computed, reactive, ref, watch } from 'vue'
 import { authApi } from '@/api'
+import { loadAndOpenImg } from '@/utils'
 export default {
   props: {
     item: {
@@ -118,6 +118,17 @@ export default {
       formName.name = props.item.name || ''
       showNameDialog.value = true
     }
+
+    const openPreviewer = (item) => {
+      const mimeType = item.mimeType
+      const { filepath, width, height } = item
+      loadAndOpenImg(0, {
+        src: filepath,
+        width,
+        height,
+        mimeType,
+      })
+    }
     return {
       onSelectorClick,
       showNameDialog,
@@ -126,6 +137,7 @@ export default {
       rulesName,
       submitName,
       toEditName,
+      openPreviewer,
     }
   },
 }
