@@ -67,6 +67,7 @@ module.exports = async function (req, res, next) {
   // 生成ObjectId
   const videoId = new ObjectId()
   const attachment = {
+    _id: videoId,
     name: filename || '',
     filename: filename || '',
     filesize: video.size,
