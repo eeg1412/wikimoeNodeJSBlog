@@ -2,10 +2,11 @@ const attachmentUtils = require('../../../mongodb/utils/attachments')
 const utils = require('../../../utils/utils')
 const log4js = require('log4js')
 const adminApiLog = log4js.getLogger('adminApi')
+const pathModule = require('path');
 
 module.exports = async function (req, res, next) {
   // name	String	是	否	无	媒体名称
-  const { name, id, __v } = req.body
+  const { name, id, __v, videoCover } = req.body
   if (!id) {
     res.status(400).json({
       errors: [{
@@ -40,6 +41,31 @@ module.exports = async function (req, res, next) {
     res.status(400).json({ errors })
     return
   }
+  // 校验是否存在
+  const oldData = await attachmentUtils.findOne({ _id: id })
+  if (!oldData) {
+    res.status(400).json({
+      errors: [{
+        message: '媒体不存在'
+      }]
+    })
+    return
+  }
+  const isVideo = oldData.mimeType.includes('video')
+  const base64Reg = /^data:image\/\w+;base64,/
+  // 如果是视频且有封面
+  if (isVideo && videoCover) {
+    // 如果是base64
+    if (base64Reg.test(videoCover)) {
+      // 保存新的封面
+      const oldFullpath = './' + oldData.thumfor
+      // path会携带路径和文件名，拆分成path和fileName
+      const path = pathModule.dirname(oldFullpath);  // '/user/local'
+      const fileName = pathModule.basename(oldFullpath);
+      utils.base64ToFile(videoCover, path, fileName, { createDir: false })
+    }
+  }
+
 
   // updateOne
   attachmentUtils.updateOne({ _id: id, __v }, params).then((data) => {
