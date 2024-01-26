@@ -94,7 +94,7 @@
         </template>
         <!-- coverImages 选择封面图 -->
         <el-form-item
-          label="文章图片"
+          :label="type === 2 ? '媒体内容' : '封面图'"
           prop="coverImages"
           class="blok-form-item"
         >
