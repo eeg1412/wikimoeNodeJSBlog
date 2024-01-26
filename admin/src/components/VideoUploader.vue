@@ -153,11 +153,13 @@
       ></video>
       <div class="pt5 pb5">视频封面：</div>
       <div>
-        <img
-          class="video-upload-video"
+        <Cropper
           v-if="outputVideoCoverUrl"
+          :width="outputVideoWidth"
+          :height="outputVideoHeight"
           :src="outputVideoCoverUrl"
-        />
+          @crop="setNewCover"
+        ></Cropper>
         <div v-else>视频封面图生成中...</div>
         <!-- TODO:加一个更改封面图的功能 -->
       </div>
@@ -186,7 +188,7 @@
   </el-dialog>
 </template>
 <script>
-import { computed, nextTick, onMounted, reactive, ref } from 'vue'
+import { computed, nextTick, onMounted, onUnmounted, reactive, ref } from 'vue'
 import store from '@/store'
 import { getFFmpegInstalled, initFFmpeg, execFFmpeg } from '@/utils/utils'
 import { authApi } from '@/api'
@@ -318,6 +320,8 @@ export default {
     const outputVideoRef = ref(null)
     const outputVideoUrl = ref('')
     const outputVideoSize = ref(0)
+    const outputVideoWidth = ref(0)
+    const outputVideoHeight = ref(0)
     const outputVideoSizeToMb = computed(() => {
       return (outputVideoSize.value / 1024 / 1024).toFixed(3)
     })
@@ -352,6 +356,8 @@ export default {
             const video = outputVideoRef.value
             canvas.width = video.videoWidth
             canvas.height = video.videoHeight
+            outputVideoWidth.value = video.videoWidth
+            outputVideoHeight.value = video.videoHeight
             ctx.drawImage(video, 0, 0, canvas.width, canvas.height)
             // 转成webp
             canvas.toBlob(
@@ -367,6 +373,12 @@ export default {
       })
       return promise
     }
+    const setNewCover = (crop) => {
+      // crop是base64,需要转换为blob
+      const blob = dataURLtoBlob(crop)
+      outputVideoCoverUrl.value = URL.createObjectURL(blob)
+    }
+
     const tryCompressVideo = async () => {
       videoLoading.value = true
       // 初始化ffmpeg
@@ -444,6 +456,8 @@ export default {
       fileRawName = ''
       step.value = 1
       outputVideoSize.value = 0
+      outputVideoWidth.value = 0
+      outputVideoHeight.value = 0
     }
 
     const tryUploadVideo = async () => {
@@ -489,6 +503,11 @@ export default {
       ffmpegInstalled.value = await getFFmpegInstalled()
       getOptionList()
     })
+    onUnmounted(() => {
+      if (ffmpeg) {
+        ffmpeg = null
+      }
+    })
     return {
       videoLoading,
       step,
@@ -503,11 +522,14 @@ export default {
       ffmpegInstalled,
       editorVisible,
       tryCompressVideo,
+      setNewCover,
       log,
       outputVideoRef,
       outputVideoUrl,
       outputVideoCoverUrl,
       outputVideoSize,
+      outputVideoWidth,
+      outputVideoHeight,
       outputVideoSizeToMb,
       onClosed,
       tryUploadVideo,
