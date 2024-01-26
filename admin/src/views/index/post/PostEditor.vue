@@ -110,7 +110,9 @@
               <template #item="{ element, index }">
                 <div class="post-cover-image-item">
                   <el-image
-                    :src="element.thumfor || element.filepath"
+                    :src="`${
+                      element.thumfor || element.filepath
+                    }?s=${$formatTimestamp(element.updatedAt)}`"
                     fit="contain"
                     @click="openPreviewer(element)"
                     style="width: 100%; height: 100%"

@@ -253,6 +253,9 @@ export default {
     const siteUrl = computed(() => {
       return store.state.siteUrl
     })
+    const getTime = () => {
+      return new Date().getTime()
+    }
     const selectAttachments = async (attachments) => {
       console.log(attachments)
       const editor = editorRef.value
@@ -272,15 +275,15 @@ export default {
           if (insertFnType === 'image') {
             insertFnPromise = insertFn_(
               item.thumfor
-                ? siteUrl.value + item.thumfor
-                : siteUrl.value + item.filepath,
+                ? `${siteUrl.value + item.thumfor}?t=${getTime()}`
+                : `${siteUrl.value + item.filepath}?t=${getTime()}`,
               item.filename,
-              siteUrl.value + item.filepath
+              `${siteUrl.value + item.filepath}?t=${getTime()}`
             )
           } else if (insertFnType === 'video') {
             insertFnPromise = insertFn_(
-              siteUrl.value + item.filepath,
-              siteUrl.value + item.thumfor
+              `${siteUrl.value + item.filepath}?t=${getTime()}`,
+              `${siteUrl.value + item.thumfor}?t=${getTime()}`
             )
           }
 
