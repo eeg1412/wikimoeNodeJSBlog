@@ -267,13 +267,23 @@ const sumSize = () => {
     oneItemHeight_ = oneItemHeight_ * scale
   }
   // 如果高度大于半个屏幕，就缩小
-  if (oneItemHeight > height / 2) {
-    const scale = height / 2 / oneItemHeight_
+  if (oneItemHeight_ > height / 2) {
+    let resizeHeight = height / 2
+    if (resizeHeight < 350) {
+      resizeHeight = 350
+    }
+    const scale = resizeHeight / oneItemHeight_
     oneItemWidth_ = oneItemWidth_ * scale
-    oneItemHeight = height / 2
+    oneItemHeight_ = resizeHeight
   }
-  oneItemWidth.value = Math.floor(oneItemWidth_)
-  oneItemHeight.value = Math.floor(oneItemHeight_)
+  oneItemWidth.value =
+    oneItemWidth_ % 2 === 0
+      ? Math.floor(oneItemWidth_)
+      : Math.floor(oneItemWidth_) - 1
+  oneItemHeight.value =
+    oneItemHeight_ % 2 === 0
+      ? Math.floor(oneItemHeight_)
+      : Math.floor(oneItemHeight_) - 1
 }
 const sumSizeThrottle = () => {
   if (resizeTimer) {
