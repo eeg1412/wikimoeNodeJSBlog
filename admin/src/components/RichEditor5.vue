@@ -227,15 +227,17 @@ export default {
         customBrowseAndUpload(insertFn) {
           console.log(insertFn)
           insertFn_ = insertFn
+          insertFnType = 'image'
           openAttachmentsDialog()
         },
       }
       // 自定义上传视频
-      editorConfig.MENU_CONF['uploadVideo'] = {
+      config.MENU_CONF['uploadVideo'] = {
         // 自定义选择视频
         customBrowseAndUpload(insertFn) {
           console.log(insertFn)
           insertFn_ = insertFn
+          insertFnType = 'video'
           openAttachmentsDialog()
         },
       }
@@ -243,6 +245,7 @@ export default {
     }
 
     let insertFn_ = null
+    let insertFnType = null
     const attachmentsDialogRef = ref(null)
     const openAttachmentsDialog = () => {
       attachmentsDialogRef.value.open()
@@ -265,13 +268,22 @@ export default {
 
       for (const item of attachments) {
         if (insertFn_) {
-          const insertFnPromise = insertFn_(
-            item.thumfor
-              ? siteUrl.value + item.thumfor
-              : siteUrl.value + item.filepath,
-            item.filename,
-            siteUrl.value + item.filepath
-          )
+          let insertFnPromise = null
+          if (insertFnType === 'image') {
+            insertFnPromise = insertFn_(
+              item.thumfor
+                ? siteUrl.value + item.thumfor
+                : siteUrl.value + item.filepath,
+              item.filename,
+              siteUrl.value + item.filepath
+            )
+          } else if (insertFnType === 'video') {
+            insertFnPromise = insertFn_(
+              siteUrl.value + item.filepath,
+              siteUrl.value + item.thumfor
+            )
+          }
+
           await insertFnPromise
           const editor = editorRef.value
           console.log(editor)

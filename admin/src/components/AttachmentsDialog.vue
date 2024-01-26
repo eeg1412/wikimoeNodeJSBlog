@@ -273,6 +273,12 @@ export default {
       type: Number,
       default: null,
     },
+    typeList: {
+      type: Array,
+      default: () => {
+        return ['image', 'video']
+      },
+    },
   },
   emits: [
     'success',
@@ -491,6 +497,13 @@ export default {
     })
     const selectedImageObjList = ref([])
     const onSelectorClick = (item) => {
+      // 查询类型是否符合
+      if (props.typeList.length > 0) {
+        if (!props.typeList.includes(item.mimetype.split('/')[0])) {
+          ElMessage.error('当前无法选择该类型的媒体文件')
+          return
+        }
+      }
       // 找到id
       const id = item._id
       // 如果selectedImageList中有这个id，就删除，否则就添加

@@ -152,9 +152,10 @@
         muted
       ></video>
       <div class="pt5 pb5">视频封面：</div>
-      <div>
+      <div class="max-width-cropper w_10">
         <Cropper
           v-if="outputVideoCoverUrl"
+          :aspectRatio="outputVideoWidth / outputVideoHeight"
           :width="outputVideoWidth"
           :height="outputVideoHeight"
           :src="outputVideoCoverUrl"
@@ -191,7 +192,12 @@
 <script>
 import { computed, nextTick, onMounted, onUnmounted, reactive, ref } from 'vue'
 import store from '@/store'
-import { getFFmpegInstalled, initFFmpeg, execFFmpeg } from '@/utils/utils'
+import {
+  getFFmpegInstalled,
+  initFFmpeg,
+  execFFmpeg,
+  dataURLtoBlob,
+} from '@/utils/utils'
 import { authApi } from '@/api'
 import { ElMessage } from 'element-plus'
 export default {
@@ -201,6 +207,7 @@ export default {
       default: '',
     },
   },
+  emits: ['onVideoUploaded'],
   setup(props, { emit }) {
     const videoLoading = ref(false)
     const step = ref(1)
@@ -374,6 +381,7 @@ export default {
       })
       return promise
     }
+
     const setNewCover = (crop) => {
       // crop是base64,需要转换为blob
       const blob = dataURLtoBlob(crop)

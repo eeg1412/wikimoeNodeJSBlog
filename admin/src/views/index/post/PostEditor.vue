@@ -115,6 +115,14 @@
                     @click="openPreviewer(element)"
                     style="width: 100%; height: 100%"
                   />
+                  <!-- 如果是视频 isVideo 中间显示播放图标 -->
+                  <div
+                    class="attachment-play-icon zoom-in"
+                    v-if="element.mimetype.includes('video')"
+                    @click="openPreviewer(element)"
+                  >
+                    <el-icon><VideoPlay /></el-icon>
+                  </div>
                   <!-- 删除按钮 -->
                   <div
                     class="post-cover-image-item-delete"
@@ -231,6 +239,7 @@
       :shouldSelectOk="true"
       ref="attachmentsDialogRef"
       :selectLimit="maxCoverLength - form.coverImages.length"
+      :typeList="attachmentsDialogType"
       @selectAttachments="selectAttachments"
     />
   </div>
@@ -254,7 +263,7 @@ import RichEditor5 from '@/components/RichEditor5'
 import draggable from 'vuedraggable'
 import EmojiTextarea from '@/components/EmojiTextarea.vue'
 import { onBeforeRouteLeave } from 'vue-router'
-import { loadAndOpenImg } from '@/utils'
+import { loadAndOpenImg } from '@/utils/utils'
 
 export default {
   components: {
@@ -503,6 +512,13 @@ export default {
     // attachments
     const attachmentsDialogRef = ref(null)
     const coverImageListObj = reactive({})
+    // attachments可选择类型，文章和页面的封面图只能是图片
+    const attachmentsDialogType = computed(() => {
+      if (type.value === 3 || type.value === 1) {
+        return ['image']
+      }
+      return ['image', 'video']
+    })
     const openAttachmentsDialog = () => {
       attachmentsDialogRef.value.open()
     }
@@ -632,14 +648,16 @@ export default {
     }
 
     const openPreviewer = (item) => {
-      const mimeType = item.mimeType
+      const mimetype = item.mimetype
       const { filepath, width, height } = item
-      loadAndOpenImg(0, {
-        src: filepath,
-        width,
-        height,
-        mimeType,
-      })
+      loadAndOpenImg(0, [
+        {
+          src: filepath,
+          width,
+          height,
+          mimetype,
+        },
+      ])
     }
 
     onMounted(() => {
@@ -676,6 +694,7 @@ export default {
       // attachments
       attachmentsDialogRef,
       coverImageListObj,
+      attachmentsDialogType,
       openAttachmentsDialog,
       selectAttachments,
       coverImagesDataList,

@@ -6,6 +6,7 @@ import ElementPlus from 'element-plus'
 import 'element-plus/dist/index.css'
 import 'cropperjs/dist/cropper.css';
 import '@/assets/css/common.css'
+import 'photoswipe/style.css'
 import * as ElementPlusIconsVue from '@element-plus/icons-vue'
 import Cropper from '@/components/Cropper.vue'
 import { formatDate } from '@/utils/utils'
@@ -21,5 +22,10 @@ app.use(ElementPlus, {
   locale: zhCn,
 }).use(store).use(router).mount('#app')
 
+// 时间转时间戳
+const formatTimestamp = (time) => {
+  return new Date(time).getTime()
+}
 app.config.globalProperties.$formatDate = formatDate;
+app.config.globalProperties.$formatTimestamp = formatTimestamp;
 

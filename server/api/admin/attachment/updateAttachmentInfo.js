@@ -51,17 +51,18 @@ module.exports = async function (req, res, next) {
     })
     return
   }
-  const isVideo = oldData.mimeType.includes('video')
+  const isVideo = oldData.mimetype.includes('video')
   const base64Reg = /^data:image\/\w+;base64,/
   // 如果是视频且有封面
   if (isVideo && videoCover) {
     // 如果是base64
     if (base64Reg.test(videoCover)) {
       // 保存新的封面
-      const oldFullpath = './' + oldData.thumfor
+      const oldFullpath = './public' + oldData.thumfor
       // path会携带路径和文件名，拆分成path和fileName
       const path = pathModule.dirname(oldFullpath);  // '/user/local'
-      const fileName = pathModule.basename(oldFullpath);
+      const ext = pathModule.extname(oldFullpath);
+      const fileName = pathModule.basename(oldFullpath, ext);
       utils.base64ToFile(videoCover, path, fileName, { createDir: false })
     }
   }

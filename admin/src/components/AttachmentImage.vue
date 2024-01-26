@@ -2,12 +2,23 @@
   <div class="attachment-image-body">
     <div class="attachment-image-content">
       <el-image
-        :src="item.thumfor || item.filepath"
+        :src="`${item.thumfor || item.filepath}?s=${$formatTimestamp(
+          item.updatedAt
+        )}`"
         fit="cover"
         loading="lazy"
         @click="openPreviewer(item)"
         style="width: 100%; height: 100%"
+        class="zoom-in"
       />
+    </div>
+    <!-- 如果是视频 isVideo 中间显示播放图标 -->
+    <div
+      class="attachment-play-icon zoom-in"
+      v-if="isVideo"
+      @click="openPreviewer(item)"
+    >
+      <el-icon><VideoPlay /></el-icon>
     </div>
     <div
       class="attachment-filename pointer"
@@ -42,13 +53,15 @@
       >
         <!-- 只有视频可以修改封面图 -->
         <el-form-item label="封面图" v-if="isVideo" prop="videoCover">
-          <Cropper
-            :aspectRatio="item.thumWidth / item.thumHeight"
-            :width="item.thumWidth"
-            :height="item.thumHeight"
-            :src="formName.videoCover"
-            @crop="setVideoCover"
-          ></Cropper>
+          <div class="w_10 max-width-cropper">
+            <Cropper
+              :aspectRatio="item.thumWidth / item.thumHeight"
+              :width="item.thumWidth"
+              :height="item.thumHeight"
+              :src="formName.videoCover"
+              @crop="setVideoCover"
+            ></Cropper>
+          </div>
         </el-form-item>
         <el-form-item label="媒体名称" prop="name">
           <el-input
@@ -78,7 +91,7 @@
 <script>
 import { computed, reactive, ref, watch } from 'vue'
 import { authApi } from '@/api'
-import { loadAndOpenImg } from '@/utils'
+import { loadAndOpenImg } from '@/utils/utils'
 export default {
   props: {
     item: {
@@ -133,17 +146,19 @@ export default {
     }
 
     const openPreviewer = (item) => {
-      const mimeType = item.mimeType
+      const mimetype = item.mimetype
       const { filepath, width, height } = item
-      loadAndOpenImg(0, {
-        src: filepath,
-        width,
-        height,
-        mimeType,
-      })
+      loadAndOpenImg(0, [
+        {
+          src: filepath,
+          width,
+          height,
+          mimetype,
+        },
+      ])
     }
     const isVideo = computed(() => {
-      return props.item.mimeType.includes('video')
+      return props.item.mimetype.includes('video')
     })
 
     const setVideoCover = (data) => {

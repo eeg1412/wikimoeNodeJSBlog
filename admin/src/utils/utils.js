@@ -15,6 +15,37 @@ const lightbox = new PhotoSwipeLightbox({
     pswpModule: () => import('photoswipe'),
 })
 lightbox.init()
+let videoTimer = null
+lightbox.on('change', () => {
+    // triggers when slide is switched, and at initialization
+    console.log('change', lightbox)
+    const currIndex = lightbox.pswp.currIndex
+    videoTimer && clearTimeout(videoTimer)
+    videoTimer = setTimeout(() => {
+        // 所有.previewer-video-body的video都暂停
+        const videos = document.querySelectorAll('.previewer-video-body video')
+        videos.forEach((video) => {
+            video.pause()
+        })
+        // 当前video播放
+        const video = document.querySelector(`#lightbox-video-${currIndex}`)
+        video && video.play()
+    }, 100)
+})
+lightbox.on('bindEvents', () => {
+    console.log('bindEvents');
+    const currIndex = lightbox.pswp.currIndex
+    videoTimer = setTimeout(() => {
+        // 所有.previewer-video-body的video都暂停
+        const videos = document.querySelectorAll('.previewer-video-body video')
+        videos.forEach((video) => {
+            video.pause()
+        })
+        // 当前video播放
+        const video = document.querySelector(`#lightbox-video-${currIndex}`)
+        video && video.play()
+    }, 500)
+});
 
 
 export function tryCloseLightbox () {
@@ -26,15 +57,17 @@ export function loadAndOpenImg (index, DataSource, isFromCache) {
     if (!isFromCache) {
         // 需要格式化数据
         newDataSource.forEach((item, index) => {
-            const mimeType = item.mimeType
+            const mimetype = item.mimetype
             const { src, width, height } = item
-            if (mimeType && mimeType.indexOf('video') > -1) {
+            if (mimetype && mimetype.indexOf('video') > -1) {
                 newDataSource[index] = {
                     html: `<div class="previewer-video-body">
                     <video 
                       src="${src}"
-                      controls="controls" 
-                      playsinline="true" preload="auto"
+                      id="lightbox-video-${index}"
+                      controls="controls"
+                      playsinline="true"
+                      preload="auto"
                       muted="muted"
                       autoplay="autoplay"
                       loop="loop"
@@ -326,4 +359,13 @@ export const execFFmpeg = async (ffmpeg, file, args, outputFileName) => {
             //
         }
     }
+}
+
+export const dataURLtoBlob = (dataurl) => {
+    let arr = dataurl.split(','), mime = arr[0].match(/:(.*?);/)[1],
+        bstr = atob(arr[1]), n = bstr.length, u8arr = new Uint8Array(n);
+    while (n--) {
+        u8arr[n] = bstr.charCodeAt(n);
+    }
+    return new Blob([u8arr], { type: mime });
 }
