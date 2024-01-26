@@ -158,6 +158,7 @@
           :width="outputVideoWidth"
           :height="outputVideoHeight"
           :src="outputVideoCoverUrl"
+          :putImageQuality="0.3"
           @crop="setNewCover"
         ></Cropper>
         <div v-else>视频封面图生成中...</div>
