@@ -1,6 +1,6 @@
 <template>
   <el-upload
-    class="attachments-upload"
+    class="attachments-upload mb20"
     drag
     :show-file-list="false"
     :auto-upload="false"
@@ -568,6 +568,9 @@ export default {
   word-break: break-all;
   white-space: pre-wrap;
   margin-top: auto;
+}
+.attachments-upload-disabled {
+  opacity: 0.3;
 }
 </style>
 <style>

@@ -103,7 +103,7 @@
         </div>
       </div>
       <div v-show="selectedImageList.length <= 0" class="dflex flexTop">
-        <div class="w_05">
+        <div class="w_10" v-if="typeList.includes('image')">
           <el-upload
             class="attachments-upload"
             drag
@@ -159,7 +159,7 @@
           </el-upload>
         </div>
 
-        <div class="w_05">
+        <div class="w_10" v-if="typeList.includes('video')">
           <VideoUploader
             :albumId="albumId"
             @onVideoUploaded="onVideoUploaded"
@@ -426,6 +426,7 @@ export default {
       if (resetKeyword) {
         params.keyword = ''
       }
+      params.typeList = props.typeList
       authApi
         .getAttachmentList(params)
         .then((res) => {
@@ -624,6 +625,9 @@ export default {
           if (blob.type.startsWith('image/')) {
             if (!albumId.value) {
               ElMessage.error('请先选择相册')
+              return
+            }
+            if (!props.typeList.includes('image')) {
               return
             }
             const formData = new FormData()

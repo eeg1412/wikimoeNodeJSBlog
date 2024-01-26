@@ -5,7 +5,7 @@ const log4js = require('log4js')
 const adminApiLog = log4js.getLogger('adminApi')
 
 module.exports = async function (req, res, next) {
-  let { page, size, keyword, album } = req.query
+  let { page, size, keyword, album, typeList } = req.query
   page = parseInt(page)
   size = parseInt(size)
   // 判断page和size是否为数字
@@ -26,6 +26,16 @@ module.exports = async function (req, res, next) {
   }
   if (album) {
     params.album = album
+  }
+  // 如果typeList是数组，就加入查询条件
+  if (typeList && Array.isArray(typeList)) {
+    // 针对mimetype进行查询,注意数据库中存储的是image/jpeg这种格式,但是typeList是image,video
+    const typeListReg = typeList.map((item) => {
+      return new RegExp(item, 'i')
+    })
+    params.mimetype = {
+      $in: typeListReg
+    }
   }
 
   // updatedAt越新越靠前，_id越新越靠前
