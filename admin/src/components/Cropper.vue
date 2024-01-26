@@ -150,11 +150,11 @@ export default {
       img.onload = () => {
         const canvas = document.createElement('canvas')
         const ctx = canvas.getContext('2d')
-        canvas.width = props.width
-        canvas.height = props.height
+        canvas.width = props.width || img.width
+        canvas.height = props.height || img.height
         ctx.imageSmoothingEnabled = true
         ctx.imageSmoothingQuality = 'high'
-        ctx.drawImage(img, 0, 0, props.width, props.height)
+        ctx.drawImage(img, 0, 0, canvas.width, canvas.height)
         const base64Resize = canvas.toDataURL(
           props.putImageType,
           props.putImageQuality
