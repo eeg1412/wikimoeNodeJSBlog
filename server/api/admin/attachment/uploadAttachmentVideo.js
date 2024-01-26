@@ -3,7 +3,7 @@ const fs = require('fs')
 const utils = require('../../../utils/utils')
 const albumUtils = require('../../../mongodb/utils/albums')
 const attachmentsUtils = require('../../../mongodb/utils/attachments')
-const ObjectId = require('mongodb').ObjectId
+const mongoose = require('mongoose');
 
 module.exports = async function (req, res, next) {
   let { width, height, albumid, filename, filesize } = req.body
@@ -65,7 +65,7 @@ module.exports = async function (req, res, next) {
 
   // 写入文件
   // 生成ObjectId
-  const videoId = new ObjectId()
+  const videoId = new mongoose.Types.ObjectId();
   const attachment = {
     _id: videoId,
     name: filename || '',
