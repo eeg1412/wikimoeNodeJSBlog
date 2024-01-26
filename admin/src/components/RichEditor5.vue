@@ -17,6 +17,7 @@
       :shouldSelectOk="true"
       ref="attachmentsDialogRef"
       @selectAttachments="selectAttachments"
+      :typeList="[insertFnType]"
     />
   </div>
 </template>
@@ -227,7 +228,7 @@ export default {
         customBrowseAndUpload(insertFn) {
           console.log(insertFn)
           insertFn_ = insertFn
-          insertFnType = 'image'
+          insertFnType.value = 'image'
           openAttachmentsDialog()
         },
       }
@@ -237,7 +238,7 @@ export default {
         customBrowseAndUpload(insertFn) {
           console.log(insertFn)
           insertFn_ = insertFn
-          insertFnType = 'video'
+          insertFnType.value = 'video'
           openAttachmentsDialog()
         },
       }
@@ -245,7 +246,7 @@ export default {
     }
 
     let insertFn_ = null
-    let insertFnType = null
+    const insertFnType = ref(null)
     const attachmentsDialogRef = ref(null)
     const openAttachmentsDialog = () => {
       attachmentsDialogRef.value.open()
@@ -272,7 +273,7 @@ export default {
       for (const item of attachments) {
         if (insertFn_) {
           let insertFnPromise = null
-          if (insertFnType === 'image') {
+          if (insertFnType.value === 'image') {
             insertFnPromise = insertFn_(
               item.thumfor
                 ? `${siteUrl.value + item.thumfor}?t=${getTime()}`
@@ -280,7 +281,7 @@ export default {
               item.filename,
               `${siteUrl.value + item.filepath}?t=${getTime()}`
             )
-          } else if (insertFnType === 'video') {
+          } else if (insertFnType.value === 'video') {
             insertFnPromise = insertFn_(
               `${siteUrl.value + item.filepath}?t=${getTime()}`,
               `${siteUrl.value + item.thumfor}?t=${getTime()}`
@@ -320,6 +321,7 @@ export default {
       editorConfig,
       handleCreated,
       // 媒体库
+      insertFnType,
       attachmentsDialogRef,
       openAttachmentsDialog,
       selectAttachments,
