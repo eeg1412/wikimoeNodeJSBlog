@@ -19,8 +19,40 @@
           :dataHrefList="dataHrefList"
           :dataHrefIndex="0"
           :clickStop="true"
+          :updatedAt="coverImages[0].updatedAt"
           loading="lazy"
+          :mimetype="coverImages[0].mimetype"
+          v-if="videoPlayId !== coverImages[0]._id"
         />
+        <video
+          :src="coverImages[0].filepath"
+          controls
+          :width="coverImages[0].width"
+          :height="coverImages[0].height"
+          :poster="coverImages[0].thumfor"
+          :id="`${componentUUID}-${coverImages[0]._id}`"
+          muted
+          loop
+          playsinline
+          class="blog-tweet-1img-list-body-video w-full h-auto object-contain"
+          @click.stop
+          v-else
+        ></video>
+        <!-- 如果是视频加上播放按钮 -->
+        <div
+          class="blog-tweet-img-list-body-item-video-mask absolute inset-0 flex items-center justify-center z-10"
+          v-if="
+            coverImages[0].mimetype.includes('video') &&
+            videoPlayId !== coverImages[0]._id
+          "
+          @click.stop="videoPlay(coverImages[0]._id)"
+        >
+          <UIcon
+            class="blog-tweet-img-list-body-item-video-mask-icon text-white"
+            name="i-heroicons-play-circle"
+            size="30"
+          />
+        </div>
       </div>
     </div>
     <template v-else>
@@ -58,7 +90,34 @@
                   :dataHrefIndex="index * 4 + indexChild"
                   :square="true"
                   :clickStop="true"
+                  :updatedAt="img.updatedAt"
+                  :mimetype="img.mimetype"
+                  v-if="videoPlayId !== img._id"
                 />
+                <video
+                  :src="img.filepath"
+                  controls
+                  :id="`${componentUUID}-${img._id}`"
+                  muted
+                  loop
+                  playsinline
+                  class="blog-tweet-1img-list-body-video w-full h-full object-contain bg-black self-stretch"
+                  @click.stop
+                  v-else
+                ></video>
+                <div
+                  class="blog-tweet-img-list-body-item-video-mask absolute inset-0 flex items-center justify-center z-10"
+                  @click.stop="videoPlay(img._id)"
+                  v-if="
+                    img.mimetype.includes('video') && videoPlayId !== img._id
+                  "
+                >
+                  <UIcon
+                    class="blog-tweet-img-list-body-item-video-mask-icon text-white"
+                    name="i-heroicons-play-circle"
+                    size="30"
+                  />
+                </div>
               </template>
             </div>
           </SwiperSlide>
@@ -85,7 +144,32 @@
                 :dataHrefIndex="index * 4 + indexChild"
                 :square="true"
                 :clickStop="true"
+                :updatedAt="img.updatedAt"
+                :mimetype="img.mimetype"
+                v-if="videoPlayId !== img._id"
               />
+              <video
+                :src="img.filepath"
+                controls
+                :id="`${componentUUID}-${img._id}`"
+                muted
+                loop
+                playsinline
+                class="blog-tweet-1img-list-body-video w-full h-full object-contain bg-black self-stretch"
+                @click.stop
+                v-else
+              ></video>
+              <div
+                class="blog-tweet-img-list-body-item-video-mask absolute inset-0 flex items-center justify-center z-10"
+                @click.stop="videoPlay(img._id)"
+                v-if="img.mimetype.includes('video') && videoPlayId !== img._id"
+              >
+                <UIcon
+                  class="blog-tweet-img-list-body-item-video-mask-icon text-white"
+                  name="i-heroicons-play-circle"
+                  size="30"
+                />
+              </div>
             </template>
           </div>
         </template>
@@ -94,7 +178,7 @@
   </div>
 </template>
 <script setup>
-import { ref } from 'vue'
+import { nextTick, onMounted, ref } from 'vue'
 
 // props
 const props = defineProps({
@@ -112,9 +196,20 @@ const imageGroup = computed(() => {
   // 如果图片大于4张，就每4张分一组
   const group = []
   let temp = []
+  let newGroupIndex = 0
   props.coverImages.forEach((item, index) => {
+    const mimetype = item.mimetype
+    if (mimetype.includes('video')) {
+      if (temp.length > 0) {
+        group.push(temp)
+        temp = []
+      }
+      group.push([item])
+      newGroupIndex = index + 1
+      return
+    }
     temp.push(item)
-    if (index % 4 === 3) {
+    if ((index - newGroupIndex) % 4 === 3) {
       group.push(temp)
       temp = []
     }
@@ -132,19 +227,35 @@ const dataHrefList = computed(() => {
       src: item.filepath,
       width: item.width,
       height: item.height,
+      mimetype: item.mimetype,
     }
   })
 })
 const slideChangeTransitionStart = (swiper) => {
   swiper.params.mousewheel.releaseOnEdges = false
+  videoPlayId.value = null
 }
 const slideChangeTransitionEnd = (swiper) => {
   swiper.params.mousewheel.releaseOnEdges = true
 }
+
+const videoPlayId = ref(null)
+const videoPlay = (id) => {
+  videoPlayId.value = id
+  nextTick(() => {
+    const video = document.getElementById(`${componentUUID.value}-${id}`)
+    video.play()
+  })
+}
+const componentUUID = ref(null)
+onMounted(() => {
+  componentUUID.value = uuid()
+})
 </script>
 <style scoped>
 .blog-tweet-1img-list-body {
   max-width: 100%;
+  position: relative;
 }
 .blog-tweet-img-list-body {
   /* grid */
@@ -153,6 +264,7 @@ const slideChangeTransitionEnd = (swiper) => {
   grid-gap: 2px;
   /* border-radius: 20px; */
   overflow: hidden;
+  position: relative;
 }
 .blog-tweet-img-list-body.cover-count-1-1 {
   /* 宽高跟着内容走 */
@@ -162,6 +274,9 @@ const slideChangeTransitionEnd = (swiper) => {
 }
 .blog-tweet-img-list-body.cover-count-1 {
   grid-template-columns: 1fr;
+  height: 350px;
+}
+.blog-tweet-img-list-body.cover-count-1 video {
   height: 350px;
 }
 .blog-tweet-img-list-body.cover-count-2 {
@@ -212,9 +327,19 @@ const slideChangeTransitionEnd = (swiper) => {
   height: 100%;
   border-radius: 20px;
 }
+.blog-tweet-img-list-body-item-video-mask {
+  background: rgba(0, 0, 0, 0.3);
+  cursor: pointer;
+}
+.blog-tweet-img-list-body-item-video-mask-icon {
+  font-size: 6rem;
+}
 /* 手机减少 .blog-tweet-img-list-body.cover-count-1 到 4 的高度 */
 @media screen and (max-width: 768px) {
   .blog-tweet-img-list-body.cover-count-1 {
+    height: 200px;
+  }
+  .blog-tweet-img-list-body.cover-count-1 video {
     height: 200px;
   }
   .blog-tweet-img-list-body.cover-count-2 {

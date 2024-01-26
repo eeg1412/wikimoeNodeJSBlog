@@ -8,6 +8,7 @@ if (process.client) {
     pswpModule: () => import('photoswipe'),
   })
   lightbox.init()
+  let videoTimer: any = null
   lightbox.on('change', () => {
     // triggers when slide is switched, and at initialization
     console.log('change', lightbox)
@@ -22,6 +23,21 @@ if (process.client) {
     if (window.location.hash !== '#lightboxopen') {
       window.history.pushState(null, '', '#lightboxopen')
     }
+    videoTimer && clearTimeout(videoTimer)
+    videoTimer = setTimeout(() => {
+      // 所有.previewer-video-body的video都暂停
+      const videos = document.querySelectorAll(
+        '.previewer-video-body video'
+      ) as NodeListOf<HTMLVideoElement>
+      videos.forEach((video) => {
+        video.pause()
+      })
+      // 当前video播放
+      const video = document.querySelector(
+        `#lightbox-video-${currIndex}`
+      ) as HTMLVideoElement
+      video && video.play()
+    }, 100)
   })
   lightbox.on('close', () => {
     console.log('close', lightbox)
@@ -30,6 +46,24 @@ if (process.client) {
     }
     // 清除session
     sessionStorage.removeItem('lastlightboxData')
+  })
+  lightbox.on('bindEvents', () => {
+    console.log('bindEvents')
+    const currIndex = lightbox.pswp.currIndex
+    videoTimer = setTimeout(() => {
+      // 所有.previewer-video-body的video都暂停
+      const videos = document.querySelectorAll(
+        '.previewer-video-body video'
+      ) as NodeListOf<HTMLVideoElement>
+      videos.forEach((video) => {
+        video.pause()
+      })
+      // 当前video播放
+      const video = document.querySelector(
+        `#lightbox-video-${currIndex}`
+      ) as HTMLVideoElement
+      video && video.play()
+    }, 500)
   })
   // 监听hash变化
   window.addEventListener('hashchange', () => {
@@ -55,7 +89,11 @@ export function checkLightbox() {
         lastlightboxData = null
       }
       if (lastlightboxData) {
-        loadAndOpenImg(lastlightboxData.index, lastlightboxData.dataSource)
+        loadAndOpenImg(
+          lastlightboxData.index,
+          lastlightboxData.dataSource,
+          true
+        )
       } else {
         // 没有缓存，清除参数
         window.location.hash = ''
@@ -71,8 +109,37 @@ export function tryCloseLightbox() {
   lightbox && lightbox.pswp && lightbox.pswp.close()
 }
 
-export function loadAndOpenImg(index: number, DataSource: [any]) {
-  lightbox && lightbox.loadAndOpen(index, DataSource)
+export function loadAndOpenImg(
+  index: number,
+  DataSource: [any],
+  isFromCache: boolean = false
+) {
+  let newDataSource = DataSource
+  if (!isFromCache) {
+    // 需要格式化数据
+    newDataSource.forEach((item, index) => {
+      const mimetype = item.mimetype
+      const { src, width, height } = item
+      if (mimetype && mimetype.indexOf('video') > -1) {
+        newDataSource[index] = {
+          html: `<div class="previewer-video-body">
+                    <video 
+                      src="${src}"
+                      id="lightbox-video-${index}"
+                      controls="controls"
+                      playsinline="true"
+                      preload="auto"
+                      muted="muted"
+                      autoplay="autoplay"
+                      loop="loop"
+                      width="${width}"
+                      height="${height}"></video>
+                    </div>`,
+        }
+      }
+    })
+  }
+  lightbox && lightbox.loadAndOpen(index, newDataSource)
 }
 
 // 格式化时间 支持1秒前、1分钟前、1小时前、1天前，超过1天显示具体时间，支持具体时间自定义格式

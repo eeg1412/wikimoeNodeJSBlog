@@ -3,7 +3,7 @@
     class="wikimoe-image"
     :class="{ 'pointer-zoom': dataHrefList }"
     @click="tryOpenHref"
-    :src="src"
+    :src="srcCom"
     :alt="alt"
     :width="scaledWidth"
     :height="scaledHeight"
@@ -59,6 +59,14 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
+  updatedAt: {
+    type: String,
+    default: null,
+  },
+  mimetype: {
+    type: String,
+    default: null,
+  },
 })
 
 // computed properties
@@ -91,12 +99,21 @@ const tryOpenHref = (e) => {
         src: item.src,
         width: item.width,
         height: item.height,
+        mimetype: item.mimetype,
       }
     })
     const index = props.dataHrefIndex || 0
     loadAndOpenImg(index, dataSource)
   }
 }
+
+const srcCom = computed(() => {
+  if (props.updatedAt) {
+    const time = new Date(props.updatedAt).getTime()
+    return `${props.src}?t=${time}`
+  }
+  return props.src
+})
 </script>
 
 <style scoped>
