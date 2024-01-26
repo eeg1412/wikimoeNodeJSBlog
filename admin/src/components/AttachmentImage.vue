@@ -40,6 +40,16 @@
         label-width="80px"
         @submit.prevent
       >
+        <!-- 只有视频可以修改封面图 -->
+        <el-form-item label="封面图" v-if="isVideo" prop="videoCover">
+          <Cropper
+            :aspectRatio="item.thumWidth / item.thumHeight"
+            :width="item.thumWidth"
+            :height="item.thumHeight"
+            :src="formName.videoCover"
+            @crop="setVideoCover"
+          ></Cropper>
+        </el-form-item>
         <el-form-item label="媒体名称" prop="name">
           <el-input
             v-model="formName.name"
@@ -91,6 +101,7 @@ export default {
     const showNameDialog = ref(false)
     const formNameRef = ref(null)
     const formName = reactive({
+      videoCover: '',
       name: '',
       description: '',
     })
@@ -105,6 +116,7 @@ export default {
         const params = {
           id: props.item._id,
           name: formName.name,
+          videoCover: formName.videoCover,
           description: formName.description,
           __v: props.item.__v,
         }
@@ -116,6 +128,7 @@ export default {
     }
     const toEditName = () => {
       formName.name = props.item.name || ''
+      formName.videoCover = props.item.thumfor || ''
       showNameDialog.value = true
     }
 
@@ -129,6 +142,13 @@ export default {
         mimeType,
       })
     }
+    const isVideo = computed(() => {
+      return props.item.mimeType.includes('video')
+    })
+
+    const setVideoCover = (data) => {
+      formName.videoCover = data
+    }
     return {
       onSelectorClick,
       showNameDialog,
@@ -138,6 +158,8 @@ export default {
       submitName,
       toEditName,
       openPreviewer,
+      isVideo,
+      setVideoCover,
     }
   },
 }
