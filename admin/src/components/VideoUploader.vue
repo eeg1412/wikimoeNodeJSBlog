@@ -185,6 +185,15 @@
         >
           下载
         </el-button>
+        <!-- 选择当前帧为封面 -->
+        <el-button
+          type="primary"
+          size="small"
+          @click="getVideoCover()"
+          v-if="!options.noCompress"
+        >
+          选择当前帧为封面
+        </el-button>
       </div>
     </div>
   </el-dialog>
@@ -359,27 +368,33 @@ export default {
         const video = outputVideoRef.value
         video.onloadeddata = () => {
           setTimeout(() => {
-            const canvas = document.createElement('canvas')
-            const ctx = canvas.getContext('2d')
-            const video = outputVideoRef.value
-            canvas.width = video.videoWidth
-            canvas.height = video.videoHeight
-            outputVideoWidth.value = video.videoWidth
-            outputVideoHeight.value = video.videoHeight
-            ctx.drawImage(video, 0, 0, canvas.width, canvas.height)
-            // 转成webp
-            canvas.toBlob(
-              (blob) => {
-                outputVideoCoverUrl.value = URL.createObjectURL(blob)
-                resolve()
-              },
-              'image/webp',
-              0.3
-            )
+            getVideoCover(resolve)
           }, 1000)
         }
       })
       return promise
+    }
+
+    const getVideoCover = (callback) => {
+      const canvas = document.createElement('canvas')
+      const ctx = canvas.getContext('2d')
+      const video = outputVideoRef.value
+      canvas.width = video.videoWidth
+      canvas.height = video.videoHeight
+      outputVideoWidth.value = video.videoWidth
+      outputVideoHeight.value = video.videoHeight
+      ctx.drawImage(video, 0, 0, canvas.width, canvas.height)
+      // 转成webp
+      canvas.toBlob(
+        (blob) => {
+          outputVideoCoverUrl.value = URL.createObjectURL(blob)
+          if (callback) {
+            callback()
+          }
+        },
+        'image/webp',
+        0.3
+      )
     }
 
     const setNewCover = (crop) => {
@@ -541,6 +556,8 @@ export default {
       outputVideoHeight,
       outputVideoSizeToMb,
       onClosed,
+      tryGetVideoCover,
+      getVideoCover,
       tryUploadVideo,
       tryDownloadVideo,
     }
