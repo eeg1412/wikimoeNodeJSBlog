@@ -344,6 +344,7 @@ onUnmounted(() => {
   display: inline-block;
   border-radius: 20px;
   max-width: 100%;
+  isolation: isolate;
 }
 .blog-tweet-img-list-body.cover-count-1 {
   grid-template-columns: 1fr;
