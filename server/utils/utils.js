@@ -718,4 +718,7 @@ exports.handleRangeRequest = (req, res, next, folder) => {
 
   res.writeHead(206, head);
   file.pipe(res);
+  res.on('close', () => {
+    file.destroy();
+  });
 }
