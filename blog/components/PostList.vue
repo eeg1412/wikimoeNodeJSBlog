@@ -53,7 +53,7 @@
 
           <!-- 简介/推文 -->
           <div class="post-list-excerpt-body">
-            <div v-if="item.type === 1">
+            <div class="whitespace-pre-wrap" v-if="item.type === 1">
               {{ item.excerpt || '发表了一篇博文' }}
             </div>
             <div v-else class="whitespace-pre-wrap">{{ item.excerpt }}</div>
