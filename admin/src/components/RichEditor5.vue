@@ -44,6 +44,43 @@ const imageToHtmlConf = {
   },
 }
 
+export function genSizeStyledIframeHtml(
+  iframeHtml,
+  width = 'auto',
+  height = 'auto'
+) {
+  const parser = new DOMParser()
+  const doc = parser.parseFromString(iframeHtml, 'text/html')
+  const iframe = doc.querySelector('iframe')
+
+  if (iframe) {
+    iframe.setAttribute('width', width)
+    iframe.setAttribute('height', height)
+    return iframe.outerHTML
+  }
+
+  return ''
+}
+const videoToHtmlConf = {
+  type: 'video',
+  elemToHtml: (elemNode) => {
+    const { src = '', poster = '', width = 'auto', height = 'auto' } = elemNode
+    let res = '<div data-w-e-type="video" data-w-e-is-void>\n'
+
+    if (src.trim().indexOf('<iframe ') === 0) {
+      // iframe 形式
+      const iframeHtml = genSizeStyledIframeHtml(src, width, height)
+      res += iframeHtml
+    } else {
+      // 其他，mp4 等 url 格式
+      res += `<video poster="${poster}" playsinline="true" preload="none" muted="muted" loop="loop" controls="true" width="${width}" height="${height}"><source src="${src}" type="video/mp4"/></video>`
+    }
+    res += '\n</div>'
+
+    return res
+  },
+}
+
 export function getStyleValue($elem, styleKey) {
   let res = ''
 
@@ -87,8 +124,10 @@ export const parseImgHtmlConf = {
   selector: 'img:not([data-w-e-type])', // data-w-e-type 属性，留给自定义元素，保证扩展性
   parseElemHtml: parseImgHtml,
 }
+
 Boot.registerElemToHtml(imageToHtmlConf)
 Boot.registerParseElemHtml(parseImgHtmlConf)
+Boot.registerElemToHtml(videoToHtmlConf)
 
 export default {
   props: {
