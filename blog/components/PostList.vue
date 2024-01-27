@@ -53,9 +53,8 @@
 
           <!-- 简介/推文 -->
           <div class="post-list-excerpt-body">
-            <div class="whitespace-pre-wrap" v-if="item.type === 1">
-              {{ item.excerpt || '发表了一篇博文' }}
-            </div>
+            <!-- prettier-ignore -->
+            <div class="whitespace-pre-wrap" v-if="item.type === 1">{{ item.excerpt || '发表了一篇博文' }}</div>
             <div v-else class="whitespace-pre-wrap">{{ item.excerpt }}</div>
             <!-- tags -->
             <div class="post-list-tags-body" v-if="item.tags.length > 0">
