@@ -149,7 +149,7 @@
         </el-form-item>
         <!-- 分类 -->
         <el-form-item label="分类" prop="sort">
-          <el-select v-model="form.sort" placeholder="请选择分类">
+          <el-select v-model="form.sort" clearable placeholder="请选择分类">
             <el-option
               v-for="item in sortList"
               :key="item._id"
@@ -400,6 +400,9 @@ export default {
     const formRef = ref(null)
     let submitSuccessFlag = false
     const submit = () => {
+      if (!form.sort) {
+        form.sort = null
+      }
       authApi.updatePost(form).then(() => {
         // 成功消息
         ElMessage.success('保存成功')
