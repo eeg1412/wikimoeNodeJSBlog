@@ -53,23 +53,28 @@ export default defineNuxtConfig({
       proxy: `${process.env.NUXT_API_API_DOMAIN}/rss/tweet`,
     },
     '/content/**': {
+      static: false,
       swr: false,
       proxy: `${process.env.NUXT_API_API_DOMAIN}/content/**`,
     },
     '/upload/**': {
+      static: false,
       swr: false,
       proxy: `${process.env.NUXT_API_API_DOMAIN}/upload/**`,
     },
     '/up_works/**': {
+      static: false,
       swr: false,
       proxy: `${process.env.NUXT_API_API_DOMAIN}/up_works/**`,
     },
     '/web_demo/**': {
+      static: false,
       swr: false,
       proxy: `${process.env.NUXT_API_API_DOMAIN}/web_demo/**`,
     },
     // ucloudImg
     '/ucloudImg/**': {
+      static: false,
       swr: false,
       proxy: `${process.env.NUXT_API_API_DOMAIN}/ucloudImg/**`,
     },
