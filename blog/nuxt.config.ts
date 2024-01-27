@@ -43,9 +43,6 @@ export default defineNuxtConfig({
     },
   },
   routeRules: {
-    '/api/admin/**': {
-      proxy: `${process.env.NUXT_API_API_DOMAIN}/api/admin/**`,
-    },
     '/rss': {
       proxy: `${process.env.NUXT_API_API_DOMAIN}/rss`,
     },
@@ -56,19 +53,24 @@ export default defineNuxtConfig({
       proxy: `${process.env.NUXT_API_API_DOMAIN}/rss/tweet`,
     },
     '/content/**': {
+      swr: false,
       proxy: `${process.env.NUXT_API_API_DOMAIN}/content/**`,
     },
     '/upload/**': {
+      swr: false,
       proxy: `${process.env.NUXT_API_API_DOMAIN}/upload/**`,
     },
     '/up_works/**': {
+      swr: false,
       proxy: `${process.env.NUXT_API_API_DOMAIN}/up_works/**`,
     },
     '/web_demo/**': {
+      swr: false,
       proxy: `${process.env.NUXT_API_API_DOMAIN}/web_demo/**`,
     },
     // ucloudImg
     '/ucloudImg/**': {
+      swr: false,
       proxy: `${process.env.NUXT_API_API_DOMAIN}/ucloudImg/**`,
     },
     '/api/blog/**': {
