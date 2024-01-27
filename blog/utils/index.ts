@@ -254,3 +254,18 @@ export const checkUuid = () => {
 export const getEmoji = () => {
   return emoji
 }
+
+export const videoUrlToBlob = async (url: string): Promise<string> => {
+  try {
+    const response = await fetch(url)
+    const blob = await response.blob()
+    return URL.createObjectURL(blob)
+  } catch (error) {
+    console.error('Error fetching video:', error)
+    throw error
+  }
+}
+
+export const revokeVideoObjectURL = (url: string) => {
+  URL.revokeObjectURL(url)
+}

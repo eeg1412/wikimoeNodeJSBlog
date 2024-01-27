@@ -25,34 +25,34 @@ const upLoadFolder = path.join(__dirname, 'public/upload')
 app.use('/upload', function (req, res, next) {
   utils.referrerRecord(req.headers.referer, 'assets')
   next();
-}, (req, res, next,) => utils.handleRangeRequest(req, res, next, upLoadFolder), express.static(upLoadFolder));
+}, express.static(upLoadFolder));
 
 const contentFolder = path.join(__dirname, 'public/content')
 app.use('/content', function (req, res, next) {
   utils.referrerRecord(req.headers.referer, 'assets')
   next();
-}, (req, res, next,) => utils.handleRangeRequest(req, res, next, contentFolder), express.static(contentFolder));
+}, express.static(contentFolder));
 
 // up_works referrerRecord
 const upWorksFolder = path.join(__dirname, 'public/up_works')
 app.use('/up_works', function (req, res, next) {
   utils.referrerRecord(req.headers.referer, 'assets')
   next();
-}, (req, res, next,) => utils.handleRangeRequest(req, res, next, upWorksFolder), express.static(upWorksFolder));
+}, express.static(upWorksFolder));
 
 // web_demo referrerRecord
 const webDemoFolder = path.join(__dirname, 'public/web_demo')
 app.use('/web_demo', function (req, res, next) {
   utils.referrerRecord(req.headers.referer, 'assets')
   next();
-}, (req, res, next,) => utils.handleRangeRequest(req, res, next, webDemoFolder), express.static(webDemoFolder));
+}, express.static(webDemoFolder));
 
 // ucloudImg referrerRecord
 const ucloudImgFolder = path.join(__dirname, 'public/ucloudImg')
 app.use('/ucloudImg', function (req, res, next) {
   utils.referrerRecord(req.headers.referer, 'assets')
   next();
-}, (req, res, next,) => utils.handleRangeRequest(req, res, next, ucloudImgFolder), express.static(ucloudImgFolder));
+}, express.static(ucloudImgFolder));
 // app.use(express.static(path.join(__dirname, 'public')));
 
 app.use((err, req, res, next) => {

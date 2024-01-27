@@ -37,10 +37,7 @@
           @click.stop
           v-else
         >
-          <source
-            :src="`${options.siteUrl}${coverImages[0].filepath}`"
-            type="video/mp4"
-          />
+          <source :src="videoPlayUrl" type="video/mp4" />
         </video>
         <!-- 如果是视频加上播放按钮 -->
         <div
@@ -49,11 +46,21 @@
             coverImages[0].mimetype.includes('video') &&
             videoPlayId !== coverImages[0]._id
           "
-          @click.stop="videoPlay(coverImages[0]._id)"
+          @click.stop="
+            videoPlay(
+              coverImages[0]._id,
+              `${options.siteUrl}${coverImages[0].filepath}`
+            )
+          "
         >
           <UIcon
             class="blog-tweet-img-list-body-item-video-mask-icon text-white"
-            name="i-heroicons-play-circle"
+            :class="{ 'animate-spin': videoIsLoading }"
+            :name="
+              videoIsLoading
+                ? 'i-heroicons-arrow-path'
+                : 'i-heroicons-play-circle'
+            "
             size="30"
           />
         </div>
@@ -108,14 +115,13 @@
                   @click.stop
                   v-else
                 >
-                  <source
-                    :src="`${options.siteUrl}${img.filepath}`"
-                    type="video/mp4"
-                  />
+                  <source :src="videoPlayUrl" type="video/mp4" />
                 </video>
                 <div
                   class="blog-tweet-img-list-body-item-video-mask absolute inset-0 flex items-center justify-center z-10"
-                  @click.stop="videoPlay(img._id)"
+                  @click.stop="
+                    videoPlay(img._id, `${options.siteUrl}${img.filepath}`)
+                  "
                   v-if="
                     img.mimetype.includes('video') && videoPlayId !== img._id
                   "
@@ -166,14 +172,13 @@
                 @click.stop
                 v-else
               >
-                <source
-                  :src="`${options.siteUrl}${img.filepath}`"
-                  type="video/mp4"
-                />
+                <source :src="videoPlayUrl" type="video/mp4" />
               </video>
               <div
                 class="blog-tweet-img-list-body-item-video-mask absolute inset-0 flex items-center justify-center z-10"
-                @click.stop="videoPlay(img._id)"
+                @click.stop="
+                  videoPlay(img._id, `${options.siteUrl}${img.filepath}`)
+                "
                 v-if="img.mimetype.includes('video') && videoPlayId !== img._id"
               >
                 <UIcon
@@ -257,12 +262,26 @@ const slideChangeTransitionEnd = (swiper) => {
 }
 
 const videoPlayId = ref(null)
-const videoPlay = (id) => {
-  videoPlayId.value = id
-  nextTick(() => {
-    const video = document.getElementById(`${componentUUID.value}-${id}`)
-    video.play()
-  })
+const videoPlayUrl = ref(null)
+const videoIsLoading = ref(false)
+const videoPlay = (id, url) => {
+  videoIsLoading.value = true
+  if (videoPlayUrl.value) {
+    revokeVideoObjectURL(videoPlayUrl.value)
+  }
+  videoUrlToBlob(url)
+    .then((blobUrl) => {
+      videoPlayUrl.value = blobUrl
+      // 获取id的images
+      videoPlayId.value = id
+      nextTick(() => {
+        const video = document.getElementById(`${componentUUID.value}-${id}`)
+        video.play()
+      })
+    })
+    .finally(() => {
+      videoIsLoading.value = false
+    })
 }
 const componentUUID = ref(null)
 const blogTweetImgListWrapRef = ref(null)
@@ -322,6 +341,9 @@ onUnmounted(() => {
   const coverImages = props.coverImages
   if (coverImages.length === 1) {
     window.removeEventListener('resize', sumSizeThrottle)
+  }
+  if (videoPlayUrl.value) {
+    revokeVideoObjectURL(videoPlayUrl.value)
   }
 })
 </script>
