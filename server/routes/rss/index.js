@@ -70,7 +70,13 @@ router.get('/:type?', async function (req, res, next) {
       // 遍历coverImages，以图片形式展示
       const coverImages = item.coverImages || []
       coverImages.forEach((image) => {
-        newContent += `<p><img src="${siteUrl}${image.thumfor || image.filepath}" alt="${image.name}" style="border-radius: 10px; margin-bottom: 10px; max-width: 100%;" /></p>`
+        const imageIsVideo = image.mimetype.startsWith('video')
+        const createdAt = new Date(image.createdAt).getTime()
+        if (imageIsVideo) {
+          newContent += `<p><video src="${siteUrl}${image.filepath}" controls="controls" playsinline="true" preload="none" muted="muted" poster="${siteUrl}${image.thumfor}?${createdAt}" loop="loop" style="border-radius: 10px; margin-bottom: 10px; max-width: 100%;"></video></p>`
+        } else {
+          newContent += `<p><img src="${siteUrl}${image.thumfor || image.filepath}" alt="${image.name}" style="border-radius: 10px; margin-bottom: 10px; max-width: 100%;" /></p>`
+        }
       })
     }
     feed.addItem({
