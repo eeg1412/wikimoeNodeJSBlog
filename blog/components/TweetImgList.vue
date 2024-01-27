@@ -30,7 +30,6 @@
           :src="coverImages[0].filepath"
           controls
           :style="`width: ${oneItemWidth}px; height: ${oneItemHeight}px;`"
-          :poster="coverImages[0].thumfor"
           :id="`${componentUUID}-${coverImages[0]._id}`"
           muted
           loop
@@ -193,6 +192,9 @@ const props = defineProps({
   },
 })
 
+const formatTimestamp = (date) => {
+  return new Date(date).getTime()
+}
 const imageGroup = computed(() => {
   // 如果图片大于4张，就每4张分一组
   const group = []
