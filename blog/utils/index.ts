@@ -124,7 +124,6 @@ export function loadAndOpenImg(
         newDataSource[index] = {
           html: `<div class="previewer-video-body">
                     <video 
-                      src="${src}"
                       id="lightbox-video-${index}"
                       controls="controls"
                       playsinline="true"
@@ -133,7 +132,12 @@ export function loadAndOpenImg(
                       autoplay="autoplay"
                       loop="loop"
                       width="${width}"
-                      height="${height}"></video>
+                      height="${height}">
+                      <source
+                        src="${src}"
+                        type="video/mp4"
+                      />
+                      </video>
                     </div>`,
         }
       }

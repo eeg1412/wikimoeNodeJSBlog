@@ -27,7 +27,6 @@
           v-if="videoPlayId !== coverImages[0]._id"
         />
         <video
-          :src="coverImages[0].filepath"
           controls
           :style="`width: ${oneItemWidth}px; height: ${oneItemHeight}px;`"
           :id="`${componentUUID}-${coverImages[0]._id}`"
@@ -37,7 +36,12 @@
           class="blog-tweet-1img-list-body-video w-full h-auto object-contain"
           @click.stop
           v-else
-        ></video>
+        >
+          <source
+            :src="`${options.siteUrl}${coverImages[0].filepath}`"
+            type="video/mp4"
+          />
+        </video>
         <!-- 如果是视频加上播放按钮 -->
         <div
           class="blog-tweet-img-list-body-item-video-mask absolute inset-0 flex items-center justify-center z-10"
@@ -95,7 +99,6 @@
                   v-if="videoPlayId !== img._id"
                 />
                 <video
-                  :src="img.filepath"
                   controls
                   :id="`${componentUUID}-${img._id}`"
                   muted
@@ -104,7 +107,12 @@
                   class="blog-tweet-1img-list-body-video w-full h-full object-contain bg-black self-stretch"
                   @click.stop
                   v-else
-                ></video>
+                >
+                  <source
+                    :src="`${options.siteUrl}${img.filepath}`"
+                    type="video/mp4"
+                  />
+                </video>
                 <div
                   class="blog-tweet-img-list-body-item-video-mask absolute inset-0 flex items-center justify-center z-10"
                   @click.stop="videoPlay(img._id)"
@@ -149,7 +157,6 @@
                 v-if="videoPlayId !== img._id"
               />
               <video
-                :src="img.filepath"
                 controls
                 :id="`${componentUUID}-${img._id}`"
                 muted
@@ -158,7 +165,12 @@
                 class="blog-tweet-1img-list-body-video w-full h-full object-contain bg-black self-stretch"
                 @click.stop
                 v-else
-              ></video>
+              >
+                <source
+                  :src="`${options.siteUrl}${img.filepath}`"
+                  type="video/mp4"
+                />
+              </video>
               <div
                 class="blog-tweet-img-list-body-item-video-mask absolute inset-0 flex items-center justify-center z-10"
                 @click.stop="videoPlay(img._id)"
@@ -179,6 +191,11 @@
 </template>
 <script setup>
 import { nextTick, onMounted, onUnmounted, ref } from 'vue'
+import { storeToRefs } from 'pinia'
+import { useOptionStore } from '@/store/options'
+
+const optionStore = useOptionStore()
+const { options } = storeToRefs(optionStore)
 
 // props
 const props = defineProps({

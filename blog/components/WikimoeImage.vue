@@ -15,6 +15,11 @@
 <script setup>
 import { computed } from 'vue'
 import { loadAndOpenImg } from '@/utils'
+import { storeToRefs } from 'pinia'
+import { useOptionStore } from '@/store/options'
+
+const optionStore = useOptionStore()
+const { options } = storeToRefs(optionStore)
 
 // props
 const props = defineProps({
@@ -96,7 +101,7 @@ const tryOpenHref = (e) => {
     const list = props.dataHrefList
     const dataSource = list.map((item) => {
       return {
-        src: item.src,
+        src: options.value.siteUrl + item.src,
         width: item.width,
         height: item.height,
         mimetype: item.mimetype,

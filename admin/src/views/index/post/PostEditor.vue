@@ -266,6 +266,7 @@ import draggable from 'vuedraggable'
 import EmojiTextarea from '@/components/EmojiTextarea.vue'
 import { onBeforeRouteLeave } from 'vue-router'
 import { loadAndOpenImg } from '@/utils/utils'
+import store from '@/store'
 
 export default {
   components: {
@@ -652,12 +653,15 @@ export default {
       e.returnValue = ''
     }
 
+    const siteUrl = computed(() => {
+      return store.getters.siteUrl
+    })
     const openPreviewer = (item) => {
       const mimetype = item.mimetype
       const { filepath, width, height } = item
       loadAndOpenImg(0, [
         {
-          src: filepath,
+          src: `${siteUrl.value}${filepath}`,
           width,
           height,
           mimetype,

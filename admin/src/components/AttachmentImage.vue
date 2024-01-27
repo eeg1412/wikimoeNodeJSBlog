@@ -92,6 +92,7 @@
 import { computed, reactive, ref, watch } from 'vue'
 import { authApi } from '@/api'
 import { loadAndOpenImg } from '@/utils/utils'
+import store from '@/store'
 export default {
   props: {
     item: {
@@ -145,12 +146,16 @@ export default {
       showNameDialog.value = true
     }
 
+    const siteUrl = computed(() => {
+      return store.getters.siteUrl
+    })
+
     const openPreviewer = (item) => {
       const mimetype = item.mimetype
       const { filepath, width, height } = item
       loadAndOpenImg(0, [
         {
-          src: filepath,
+          src: `${siteUrl.value}${filepath}`,
           width,
           height,
           mimetype,
