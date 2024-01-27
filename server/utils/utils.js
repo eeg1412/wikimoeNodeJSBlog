@@ -679,3 +679,43 @@ exports.logErrorToText = (error) => {
   }
 }
 global.logErrorToText = this.logErrorToText
+
+exports.handleRangeRequest = (req, res, next, folder) => {
+  const range = req.headers.range;
+  const unsafePath = path.join(folder, req.path);
+  const safePath = path.resolve(path.normalize(unsafePath));
+  if (!safePath.startsWith(path.resolve(folder))) {
+    return res.status(400).send('Invalid path');
+  }
+
+  if (!range) {
+    next();
+    return;
+  }
+
+  if (!fs.existsSync(safePath)) {
+    next();
+    return
+  }
+  const stat = fs.statSync(safePath);
+  const parts = range.replace(/bytes=/, "").split("-");
+  const start = parseInt(parts[0], 10);
+  const end = parts[1] ? parseInt(parts[1], 10) : stat.size - 1;
+
+  if (start >= stat.size) {
+    res.status(416).send('Requested range not satisfiable\n' + start + ' >= ' + stat.size);
+    return;
+  }
+
+  const chunksize = (end - start) + 1;
+  const file = fs.createReadStream(safePath, { start, end });
+  const head = {
+    'Content-Range': `bytes ${start}-${end}/${stat.size}`,
+    'Accept-Ranges': 'bytes',
+    'Content-Length': chunksize,
+    'Content-Type': 'video/mp4',
+  };
+
+  res.writeHead(206, head);
+  file.pipe(res);
+}

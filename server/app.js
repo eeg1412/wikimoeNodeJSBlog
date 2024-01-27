@@ -20,26 +20,39 @@ app.use(log4js.connectLogger(log4js.getLogger('access'), { level: 'auto' }))
 app.use(express.json({ limit: process.env.JSON_LIMT || '10mb' }));
 app.use(express.urlencoded({ extended: false, limit: process.env.URLENCODED_LIMT || '10mb' }));
 app.use(cookieParser());
-app.use('/upload', express.static(path.join(__dirname, 'public/upload')));
+
+const upLoadFolder = path.join(__dirname, 'public/upload')
+app.use('/upload', function (req, res, next) {
+  utils.referrerRecord(req.headers.referer, 'assets')
+  next();
+}, (req, res, next,) => utils.handleRangeRequest(req, res, next, upLoadFolder), express.static(upLoadFolder));
+
+const contentFolder = path.join(__dirname, 'public/content')
 app.use('/content', function (req, res, next) {
   utils.referrerRecord(req.headers.referer, 'assets')
   next();
-}, express.static(path.join(__dirname, 'public/content')));
+}, (req, res, next,) => utils.handleRangeRequest(req, res, next, contentFolder), express.static(contentFolder));
+
 // up_works referrerRecord
+const upWorksFolder = path.join(__dirname, 'public/up_works')
 app.use('/up_works', function (req, res, next) {
   utils.referrerRecord(req.headers.referer, 'assets')
   next();
-}, express.static(path.join(__dirname, 'public/up_works')));
+}, (req, res, next,) => utils.handleRangeRequest(req, res, next, upWorksFolder), express.static(upWorksFolder));
+
 // web_demo referrerRecord
+const webDemoFolder = path.join(__dirname, 'public/web_demo')
 app.use('/web_demo', function (req, res, next) {
   utils.referrerRecord(req.headers.referer, 'assets')
   next();
-}, express.static(path.join(__dirname, 'public/web_demo')));
+}, (req, res, next,) => utils.handleRangeRequest(req, res, next, webDemoFolder), express.static(webDemoFolder));
+
 // ucloudImg referrerRecord
+const ucloudImgFolder = path.join(__dirname, 'public/ucloudImg')
 app.use('/ucloudImg', function (req, res, next) {
   utils.referrerRecord(req.headers.referer, 'assets')
   next();
-}, express.static(path.join(__dirname, 'public/ucloudImg')));
+}, (req, res, next,) => utils.handleRangeRequest(req, res, next, ucloudImgFolder), express.static(ucloudImgFolder));
 // app.use(express.static(path.join(__dirname, 'public')));
 
 app.use((err, req, res, next) => {
