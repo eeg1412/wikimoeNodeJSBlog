@@ -72,7 +72,9 @@ const onClick = (e) => {
   if (dataHref) {
     // 正则判断是否是图片的链接 href
     const imageRegex = /\.(jpe?g|png|gif|bmp|svg|webp)$/i
-    if (imageRegex.test(dataHref)) {
+    // 去掉dataHref的?后面的参数
+    const dataHrefNoQuery = dataHref.split('?')[0]
+    if (imageRegex.test(dataHrefNoQuery)) {
       // 获取实际的图片宽高
       const img = new Image()
       img.src = dataHref
