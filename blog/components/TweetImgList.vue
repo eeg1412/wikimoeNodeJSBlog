@@ -134,55 +134,59 @@
       <div class="blog-tweet-img-swiper-body type-no-swiper" v-else>
         <template v-for="(item, index) in imageGroup" :key="item._id">
           <!-- 四张图以内 -->
-          <div
-            class="blog-tweet-img-list-body blog-tweet-img-list-body-no-swiper"
-            :class="`cover-count-${item.length}`"
-            v-if="item.length > 0"
-          >
-            <template v-for="(img, indexChild) in item" :key="index">
-              <WikimoeImage
-                class="blog-tweet-img-list-body-item"
-                :src="img.thumfor || img.filepath"
-                :alt="img.filename"
-                :width="img.thumWidth || img.width"
-                :height="img.thumHeight || img.height"
-                loading="lazy"
-                fit="cover"
-                :dataHrefList="dataHrefList"
-                :dataHrefIndex="index * 4 + indexChild"
-                :square="true"
-                :clickStop="true"
-                :updatedAt="img.updatedAt"
-                :mimetype="img.mimetype"
-                v-if="videoPlayId !== img._id"
-              />
-              <video
-                controls
-                :id="`${componentUUID}-${img._id}`"
-                muted
-                loop
-                playsinline
-                class="blog-tweet-1img-list-body-video w-full h-full object-contain bg-black self-stretch"
-                @click.stop
-                v-else
-              >
-                <source
-                  :src="`${options.siteUrl}${img.filepath}`"
-                  type="video/mp4"
+          <div class="blog-tweet-img-list-no-swiper-body">
+            <div
+              class="blog-tweet-img-list-body blog-tweet-img-list-body-no-swiper"
+              :class="`cover-count-${item.length}`"
+              v-if="item.length > 0"
+            >
+              <template v-for="(img, indexChild) in item" :key="index">
+                <WikimoeImage
+                  class="blog-tweet-img-list-body-item"
+                  :src="img.thumfor || img.filepath"
+                  :alt="img.filename"
+                  :width="img.thumWidth || img.width"
+                  :height="img.thumHeight || img.height"
+                  loading="lazy"
+                  fit="cover"
+                  :dataHrefList="dataHrefList"
+                  :dataHrefIndex="index * 4 + indexChild"
+                  :square="true"
+                  :clickStop="true"
+                  :updatedAt="img.updatedAt"
+                  :mimetype="img.mimetype"
+                  v-if="videoPlayId !== img._id"
                 />
-              </video>
-              <div
-                class="blog-tweet-img-list-body-item-video-mask absolute inset-0 flex items-center justify-center z-10"
-                @click.stop="videoPlay(img._id)"
-                v-if="img.mimetype.includes('video') && videoPlayId !== img._id"
-              >
-                <UIcon
-                  class="blog-tweet-img-list-body-item-video-mask-icon text-white"
-                  name="i-heroicons-play-circle"
-                  size="30"
-                />
-              </div>
-            </template>
+                <video
+                  controls
+                  :id="`${componentUUID}-${img._id}`"
+                  muted
+                  loop
+                  playsinline
+                  class="blog-tweet-1img-list-body-video w-full h-full object-contain bg-black self-stretch"
+                  @click.stop
+                  v-else
+                >
+                  <source
+                    :src="`${options.siteUrl}${img.filepath}`"
+                    type="video/mp4"
+                  />
+                </video>
+                <div
+                  class="blog-tweet-img-list-body-item-video-mask absolute inset-0 flex items-center justify-center z-10"
+                  @click.stop="videoPlay(img._id)"
+                  v-if="
+                    img.mimetype.includes('video') && videoPlayId !== img._id
+                  "
+                >
+                  <UIcon
+                    class="blog-tweet-img-list-body-item-video-mask-icon text-white"
+                    name="i-heroicons-play-circle"
+                    size="30"
+                  />
+                </div>
+              </template>
+            </div>
           </div>
         </template>
       </div>
@@ -326,6 +330,10 @@ onUnmounted(() => {
 })
 </script>
 <style scoped>
+.blog-tweet-img-list-no-swiper-body {
+  width: 100%;
+  aspect-ratio: 16 / 10;
+}
 .blog-tweet-1img-list-body {
   max-width: 100%;
   position: relative;
