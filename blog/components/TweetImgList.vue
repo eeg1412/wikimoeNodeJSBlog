@@ -348,19 +348,23 @@ onUnmounted(() => {
 }
 .blog-tweet-img-list-body.cover-count-1 {
   grid-template-columns: 1fr;
-  height: 350px;
+  width: 100%;
+  height: 100%;
 }
 .blog-tweet-img-list-body.cover-count-1 video {
-  height: 350px;
+  width: 100%;
+  height: 100%;
 }
 .blog-tweet-img-list-body.cover-count-2 {
   grid-template-columns: repeat(2, 1fr);
-  height: 350px;
+  width: 100%;
+  height: 100%;
 }
 .blog-tweet-img-list-body.cover-count-3 {
   grid-template-columns: 1fr 1fr;
   grid-auto-rows: auto;
-  height: 350px;
+  width: 100%;
+  height: 100%;
 }
 .blog-tweet-img-list-body-no-swiper {
   margin-top: 2px;
@@ -380,7 +384,8 @@ onUnmounted(() => {
 .blog-tweet-img-list-body.cover-count-4 {
   grid-template-columns: repeat(2, 1fr);
   grid-auto-rows: auto;
-  height: 350px;
+  width: 100%;
+  height: 100%;
 }
 .blog-tweet-img-swiper-body {
   border-radius: 20px;
@@ -408,26 +413,11 @@ onUnmounted(() => {
 .blog-tweet-img-list-body-item-video-mask-icon {
   font-size: 6rem;
 }
-/* 手机减少 .blog-tweet-img-list-body.cover-count-1 到 4 的高度 */
-@media screen and (max-width: 768px) {
-  .blog-tweet-img-list-body.cover-count-1 {
-    height: 200px;
-  }
-  .blog-tweet-img-list-body.cover-count-1 video {
-    height: 200px;
-  }
-  .blog-tweet-img-list-body.cover-count-2 {
-    height: 200px;
-  }
-  .blog-tweet-img-list-body.cover-count-3 {
-    height: 200px;
-  }
-  .blog-tweet-img-list-body.cover-count-4 {
-    height: 200px;
-  }
-}
 </style>
 <style>
+.blog-tweet-img-list-wrap .swiper-slide {
+  aspect-ratio: 16 / 10;
+}
 .blog-tweet-img-swiper-body .swiper-pagination-fraction {
   top: 13px !important;
   right: 16px !important;
