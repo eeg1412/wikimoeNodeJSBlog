@@ -273,19 +273,6 @@ const blogTweetImgListWrapRef = ref(null)
 const oneItemWidth = ref(null)
 const oneItemHeight = ref(null)
 let resizeTimer = null
-function adjustImageSize(itemWidth, itemHeight, parentWidth, screenHeight) {
-  const targetHeight1 = Math.max(screenHeight / 2, 350)
-  const targetWidth1 = itemWidth * (targetHeight1 / itemHeight)
-
-  const targetWidth2 = parentWidth
-  const targetHeight2 = itemHeight * (targetWidth2 / itemWidth)
-
-  if (targetWidth1 <= parentWidth) {
-    return { width: targetWidth1, height: targetHeight1 }
-  } else {
-    return { width: targetWidth2, height: targetHeight2 }
-  }
-}
 const sumSize = () => {
   const width = blogTweetImgListWrapRef.value.offsetWidth
   const height = window.screen.height
@@ -293,9 +280,28 @@ const sumSize = () => {
   const oneItem = coverImages[0]
   let oneItemWidth_ = oneItem.thumWidth || oneItem.width
   let oneItemHeight_ = oneItem.thumHeight || oneItem.height
-  const newSize = adjustImageSize(oneItemWidth_, oneItemHeight_, width, height)
-  oneItemWidth_ = newSize.width
-  oneItemHeight_ = newSize.height
+  // 如果宽大于父级,就缩小
+  if (oneItemWidth_ > width) {
+    const scale = width / oneItemWidth_
+    oneItemWidth_ = width
+    oneItemHeight_ = oneItemHeight_ * scale
+  }
+  // 如果高度大于半个屏幕，就缩小
+  if (oneItemHeight_ > height / 2) {
+    let resizeHeight = height / 2
+    if (resizeHeight < 350) {
+      resizeHeight = 350
+    }
+    const scale = resizeHeight / oneItemHeight_
+    oneItemWidth_ = oneItemWidth_ * scale
+    oneItemHeight_ = resizeHeight
+  }
+  // 再次检查宽度是否超过父级
+  if (oneItemWidth_ > width) {
+    const scale = width / oneItemWidth_
+    oneItemWidth_ = width
+    oneItemHeight_ = oneItemHeight_ * scale
+  }
   oneItemWidth.value =
     oneItemWidth_ % 2 === 0
       ? Math.floor(oneItemWidth_)
