@@ -275,7 +275,7 @@ const oneItemHeight = ref(null)
 let resizeTimer = null
 const sumSize = () => {
   const width = blogTweetImgListWrapRef.value.offsetWidth
-  const height = window.innerHeight
+  const height = window.screen.height
   const coverImages = props.coverImages
   const oneItem = coverImages[0]
   let oneItemWidth_ = oneItem.thumWidth || oneItem.width
@@ -295,6 +295,12 @@ const sumSize = () => {
     const scale = resizeHeight / oneItemHeight_
     oneItemWidth_ = oneItemWidth_ * scale
     oneItemHeight_ = resizeHeight
+  }
+  // 再次检查宽度是否超过父级
+  if (oneItemWidth_ > width) {
+    const scale = width / oneItemWidth_
+    oneItemWidth_ = width
+    oneItemHeight_ = oneItemHeight_ * scale
   }
   oneItemWidth.value =
     oneItemWidth_ % 2 === 0
