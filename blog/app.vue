@@ -55,6 +55,9 @@ useHead({
     }
   },
   title: options.value.siteSubTitle,
+  htmlAttrs: {
+    lang: 'zh-hans',
+  },
   meta: [
     { name: 'description', content: options.value.siteDescription },
     // name="keywords"
@@ -70,8 +73,6 @@ useHead({
     },
     // theme-color
     { name: 'theme-color', content: '#ef90a7' },
-    // rss
-    ...rssHead(),
     // OGP
     { property: 'og:type', content: 'website' },
     { property: 'og:site_name', content: options.value.siteTitle },
@@ -98,6 +99,8 @@ useHead({
       type: 'image/x-icon',
       href: options.value.siteFavicon,
     },
+    // rss
+    ...rssHead(),
   ],
 })
 const postLogCreate = () => {
