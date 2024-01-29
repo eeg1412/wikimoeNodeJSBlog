@@ -42,7 +42,7 @@ const imageToHtmlConf = {
       href ? ` data-href="${href}"` : ''
     }${width ? ` width="${width}"` : ''}${
       height ? ` height="${height}"` : ''
-    } style="${styleStr}"/>`
+    } style="${styleStr}">`
   },
 }
 
