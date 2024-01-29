@@ -56,7 +56,6 @@
           <UIcon
             class="blog-tweet-img-list-body-item-video-mask-icon text-white"
             name="i-heroicons-play-circle"
-            size="30"
           />
         </div>
       </div>
