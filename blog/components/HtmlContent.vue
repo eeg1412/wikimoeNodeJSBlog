@@ -110,43 +110,36 @@ const onClick = async (e) => {
     if (imageRegex.test(dataHrefNoQuery)) {
       let imgHeight = null
       let imgWidth = null
-      // 获取img标签的宽高
-      const imgWidAndHeight = getImgWidAndHeight(e)
-      if (imgWidAndHeight) {
-        imgHeight = imgWidAndHeight.height
-        imgWidth = imgWidAndHeight.width
-      } else {
-        // 获取实际的图片宽高
-        const img = new Image()
-        img.src = dataHref
-        const imgLoadPromise = new Promise((resolve, reject) => {
-          img.onload = () => {
-            resolve({
-              width: img.width,
-              height: img.height,
-            })
-          }
-          img.onerror = () => {
-            reject()
-          }
-        })
-        imgIsLoading.value = true
-        const promiseResult = await imgLoadPromise
-          .catch(() => {
-            // 报错
-            toast.add({
-              title: '图片加载失败',
-              icon: 'i-heroicons-x-circle',
-              color: 'red',
-            })
+      // 获取实际的图片宽高
+      const img = new Image()
+      img.src = dataHref
+      const imgLoadPromise = new Promise((resolve, reject) => {
+        img.onload = () => {
+          resolve({
+            width: img.width,
+            height: img.height,
           })
-          .finally(() => {
-            imgIsLoading.value = false
-          })
-        if (promiseResult) {
-          imgHeight = promiseResult.height
-          imgWidth = promiseResult.width
         }
+        img.onerror = () => {
+          reject()
+        }
+      })
+      imgIsLoading.value = true
+      const promiseResult = await imgLoadPromise
+        .catch(() => {
+          // 报错
+          toast.add({
+            title: '图片加载失败',
+            icon: 'i-heroicons-x-circle',
+            color: 'red',
+          })
+        })
+        .finally(() => {
+          imgIsLoading.value = false
+        })
+      if (promiseResult) {
+        imgHeight = promiseResult.height
+        imgWidth = promiseResult.width
       }
       // 判断imgHeight和imgWidth是否有值
       if (imgWidth && imgHeight) {
