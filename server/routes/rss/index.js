@@ -10,7 +10,7 @@ router.get('/:type?', async function (req, res, next) {
   const config = global.$globalConfig?.rssSettings || {}
   const { siteEnableRss, siteRssMaxCount } = config
   const siteSettings = global.$globalConfig?.siteSettings || {}
-  const { siteTitle, siteUrl, siteDescription } = siteSettings
+  const { siteTitle, siteUrl, siteDescription, siteLogo, siteFavicon } = siteSettings
   if (siteEnableRss !== true) {
     res.status(404).send('Not found')
     return
@@ -35,17 +35,23 @@ router.get('/:type?', async function (req, res, next) {
   const size = parseInt(siteRssMaxCount) || 1
   const data = await postUtils.findPage(params, sort, 1, size, undefined, { authorFilter: 'nickname' })
   const { list } = data
+  let feedLinksRss = `${siteUrl}/rss`
+  if (type === 'blog') {
+    feedLinksRss = `${siteUrl}/rss/blog`
+  } else if (type === 'tweet') {
+    feedLinksRss = `${siteUrl}/rss/tweet`
+  }
   const feed = new Feed({
     title: siteTitle,
     description: siteDescription,
     id: siteUrl,
     link: siteUrl,
     language: 'zh-CN',
-    image: `${siteUrl}/favicon.ico`,
-    favicon: `${siteUrl}/favicon.ico`,
+    image: `${siteUrl}${siteLogo}`,
+    favicon: `${siteUrl}${siteFavicon}`,
     generator: 'wikimoeBlog',
     feedLinks: {
-      rss: `${siteUrl}/rss`,
+      rss: feedLinksRss,
     },
   });
   list.forEach((item) => {
@@ -81,15 +87,9 @@ router.get('/:type?', async function (req, res, next) {
     }
     feed.addItem({
       title: newTitle,
-      id: _id,
+      id: `${siteUrl}/post/${_id}`,
       link: `${siteUrl}/post/${_id}`,
       description: newContent,
-      author: [
-        {
-          email: siteTitle,
-          name: author.nickname,
-        },
-      ],
       date: new Date(item.date),
     });
   })
