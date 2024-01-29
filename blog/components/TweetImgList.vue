@@ -7,7 +7,9 @@
   >
     <div
       class="blog-tweet-img-list-body cover-count-1-1"
-      :style="`width: ${oneItemWidth}px; height: ${oneItemHeight}px;`"
+      :style="`${oneItemWidth ? `width: ${oneItemWidth}px;` : ''} ${
+        oneItemHeight ? `height: ${oneItemHeight}px;` : ''
+      }`"
       v-if="coverImages.length === 1"
     >
       <!-- 1张图时 -->
@@ -92,7 +94,6 @@
                   fit="cover"
                   :dataHrefList="dataHrefList"
                   :dataHrefIndex="index * 4 + indexChild"
-                  :square="true"
                   :clickStop="true"
                   :updatedAt="img.updatedAt"
                   :mimetype="img.mimetype"
@@ -151,7 +152,6 @@
                   fit="cover"
                   :dataHrefList="dataHrefList"
                   :dataHrefIndex="index * 4 + indexChild"
-                  :square="true"
                   :clickStop="true"
                   :updatedAt="img.updatedAt"
                   :mimetype="img.mimetype"

@@ -77,12 +77,12 @@ const props = defineProps({
 // computed properties
 const scaledWidth = computed(() => {
   // calculate the scaled width based on the parent's width
-  return props.width ? `${props.width}px` : '100%'
+  return props.width ? `${props.width}` : ''
 })
 
 const scaledHeight = computed(() => {
   // calculate the scaled height based on the parent's height
-  return props.height ? `${props.height}px` : 'auto'
+  return props.height ? `${props.height}` : ''
 })
 
 const styleObject = computed(() => {
