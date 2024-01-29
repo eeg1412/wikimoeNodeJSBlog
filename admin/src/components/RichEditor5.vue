@@ -39,7 +39,7 @@ const imageToHtmlConf = {
     if (styWidth) styleStr += `width: ${styWidth};`
     if (styHeight) styleStr += `height: ${styHeight};`
     return `<img src="${src}" alt="${alt}"${
-      href ? ` data-href=${href}` : ''
+      href ? ` data-href="${href}"` : ''
     } width="${width}" height="${height}" style="${styleStr}"/>`
   },
 }
