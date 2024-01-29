@@ -18,7 +18,8 @@ module.exports = async function (req, res, next) {
   res.send({
     data: {
       ...global.$globalConfig.siteSettings,
-      ...global.$globalConfig.commentSettings
+      ...global.$globalConfig.commentSettings,
+      ...global.$globalConfig.rssSettings
     }
   })
 }

@@ -14,6 +14,36 @@ const optionStore = useOptionStore()
 const { getOptions } = optionStore
 await getOptions()
 const { options } = storeToRefs(optionStore)
+const siteEnableRss = options.value.siteEnableRss
+const rssHead = () => {
+  if (siteEnableRss) {
+    return [
+      // rel="alternate" type="application/rss+xml" title="RSS"
+      {
+        rel: 'alternate',
+        type: 'application/rss+xml',
+        title: 'RSS',
+        href: options.value.siteUrl + '/rss',
+      },
+      // rss for blog
+      {
+        rel: 'alternate',
+        type: 'application/rss+xml',
+        title: 'RSS for blog',
+        href: options.value.siteUrl + '/rss/blog',
+      },
+      // rss for tweet
+      {
+        rel: 'alternate',
+        type: 'application/rss+xml',
+        title: 'RSS for tweet',
+        href: options.value.siteUrl + '/rss/tweet',
+      },
+    ]
+  } else {
+    return []
+  }
+}
 useHead({
   titleTemplate: (titleChunk) => {
     if (!titleChunk) {
@@ -40,27 +70,8 @@ useHead({
     },
     // theme-color
     { name: 'theme-color', content: '#ef90a7' },
-    // rel="alternate" type="application/rss+xml" title="RSS"
-    {
-      rel: 'alternate',
-      type: 'application/rss+xml',
-      title: 'RSS',
-      href: options.value.siteUrl + '/rss',
-    },
-    // rss for blog
-    {
-      rel: 'alternate',
-      type: 'application/rss+xml',
-      title: 'RSS for blog',
-      href: options.value.siteUrl + '/rss/blog',
-    },
-    // rss for tweet
-    {
-      rel: 'alternate',
-      type: 'application/rss+xml',
-      title: 'RSS for tweet',
-      href: options.value.siteUrl + '/rss/tweet',
-    },
+    // rss
+    ...rssHead(),
     // OGP
     { property: 'og:type', content: 'website' },
     { property: 'og:site_name', content: options.value.siteTitle },
