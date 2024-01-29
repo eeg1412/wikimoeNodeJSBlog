@@ -374,6 +374,9 @@ export default {
 .editor-body.richeditor-5 .w-e-modal {
   padding: 20px 15px 0;
 }
+.richeditor-5 .w-e-text-container [data-slate-editor] .w-e-image-container {
+  margin: 0;
+}
 </style>
 <style scoped>
 .editor-body {
