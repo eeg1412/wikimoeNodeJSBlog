@@ -567,7 +567,8 @@ export default {
 <style scoped>
 .video-upload-video {
   max-width: 100%;
-  max-height: 100%;
+  max-height: calc(100vh - 600px);
+  min-height: 200px;
   width: auto;
   height: auto;
   display: block;
