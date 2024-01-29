@@ -6,6 +6,7 @@
         <img
           class="post-author-avatar"
           :src="postData.data.author.photo"
+          :alt="postData.data.author.nickname"
           width="50"
           height="50"
         />
@@ -36,6 +37,7 @@
         <img
           class="post-author-avatar"
           :src="postData.data.author.photo"
+          :alt="postData.data.author.nickname"
           width="50"
           height="50"
         />

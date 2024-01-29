@@ -16,7 +16,11 @@
       <div class="blog-top-bar-body">
         <div class="blog-top-bar-left-body">
           <nuxt-link to="/">
-            <img class="blog-top-bar-sitelogo" :src="options.siteLogo" />
+            <img
+              class="blog-top-bar-sitelogo"
+              :src="options.siteLogo"
+              :alt="options.siteTitle"
+            />
           </nuxt-link>
         </div>
         <div class="blog-top-bar-right-body">
@@ -62,7 +66,11 @@
             <!-- logo -->
             <div>
               <nuxt-link to="/">
-                <img class="blog-layout-sitelogo" :src="options.siteLogo" />
+                <img
+                  class="blog-layout-sitelogo"
+                  :src="options.siteLogo"
+                  :alt="options.siteTitle"
+                />
               </nuxt-link>
             </div>
             <!-- siteDescription -->

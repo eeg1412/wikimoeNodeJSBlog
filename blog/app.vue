@@ -64,13 +64,6 @@ useHead({
     { name: 'keywords', content: options.value.siteKeywords },
     // name="generator"
     { name: 'generator', content: 'wikimoeBlog' },
-    // itemprop="name"
-    { itemprop: 'name', content: options.value.siteTitle },
-    // itemprop="image"
-    {
-      itemprop: 'image',
-      content: options.value.siteUrl + options.value.siteDefaultCover,
-    },
     // theme-color
     { name: 'theme-color', content: '#ef90a7' },
     // OGP
