@@ -285,6 +285,6 @@ const selectSeasonHandle = async (season, close) => {
 </style>
 <style scoped>
 .bangumi-cover-body {
-  width: 90px;
+  width: 91px;
 }
 </style>
