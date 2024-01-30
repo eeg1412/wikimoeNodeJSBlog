@@ -108,6 +108,10 @@ GOOGLE_ADSENSE_TEST_MODE="是否启用测试模式 1 为启用，0 为不启用"
 GOOGLE_ADSENSE_POST_DETAIL_BT="文章底部广告，填写格式为：ad-slot,ad-format,ad-layout-key"
 ```
 
+### 配置谷歌广告 ads.txt （如果需要）
+
+在/blog/public/目录下放置 ads.txt 即可
+
 ### 编译
 
 ```
