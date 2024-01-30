@@ -6,15 +6,17 @@
       @click="onClick"
       ref="htmlContent"
     ></div>
-
+    <!-- v-if="imgIsLoading" -->
     <div
       class="fixed inset-0 flex items-center justify-center z-50 img-image-load-animate"
       v-if="imgIsLoading"
     >
-      <UIcon
-        class="img-loading-icon animate-spin text-white"
-        name="i-heroicons-arrow-path"
-      />
+      <div class="flex items-center justify-center bg-white p-2 rounded shadow">
+        <UIcon
+          class="img-loading-icon animate-spin text-primary-500"
+          name="i-heroicons-arrow-path"
+        /><span class="pl-2">图片加载中...</span>
+      </div>
     </div>
   </div>
 </template>
@@ -82,8 +84,8 @@ const getImgWidAndHeight = (e) => {
   // 检查是否为 img 标签
   if (target.tagName === 'IMG') {
     // 查看img标签是否包含width和height属性
-    const width = target.getAttribute('width')
-    const height = target.getAttribute('height')
+    const width = target.getAttribute('data-href-width')
+    const height = target.getAttribute('data-href-height')
     // 如果包含正则检查是否为数字
     if (width && height) {
       const numRegex = /^\d+$/
@@ -110,36 +112,43 @@ const onClick = async (e) => {
     if (imageRegex.test(dataHrefNoQuery)) {
       let imgHeight = null
       let imgWidth = null
-      // 获取实际的图片宽高
-      const img = new Image()
-      img.src = dataHref
-      const imgLoadPromise = new Promise((resolve, reject) => {
-        img.onload = () => {
-          resolve({
-            width: img.width,
-            height: img.height,
-          })
-        }
-        img.onerror = () => {
-          reject()
-        }
-      })
-      imgIsLoading.value = true
-      const promiseResult = await imgLoadPromise
-        .catch(() => {
-          // 报错
-          toast.add({
-            title: '图片加载失败',
-            icon: 'i-heroicons-x-circle',
-            color: 'red',
-          })
+      // 获取img标签的宽高
+      const imgWidAndHeight = getImgWidAndHeight(e)
+      if (imgWidAndHeight) {
+        imgHeight = imgWidAndHeight.height
+        imgWidth = imgWidAndHeight.width
+      } else {
+        // 获取实际的图片宽高
+        const img = new Image()
+        img.src = dataHref
+        const imgLoadPromise = new Promise((resolve, reject) => {
+          img.onload = () => {
+            resolve({
+              width: img.width,
+              height: img.height,
+            })
+          }
+          img.onerror = () => {
+            reject()
+          }
         })
-        .finally(() => {
-          imgIsLoading.value = false
-        })
-      if (promiseResult) {
-        imgHeight = promiseResult.height
-        imgWidth = promiseResult.width
+        imgIsLoading.value = true
+        const promiseResult = await imgLoadPromise
+          .catch(() => {
+            // 报错
+            toast.add({
+              title: '图片加载失败',
+              icon: 'i-heroicons-x-circle',
+              color: 'red',
+            })
+          })
+          .finally(() => {
+            imgIsLoading.value = false
+          })
+        if (promiseResult) {
+          imgHeight = promiseResult.height
+          imgWidth = promiseResult.width
+        }
       }
       // 判断imgHeight和imgWidth是否有值
       if (imgWidth && imgHeight) {
@@ -218,21 +227,21 @@ onMounted(() => {
   padding-top: 10px;
 }
 .img-loading-icon {
-  font-size: 40px;
+  font-size: 24px;
 }
 
 .img-image-load-animate {
-  animation: imgLoad 0s 1s forwards;
+  animation: imgLoad 0.5s 1s forwards;
 }
 .img-image-load-animate {
   opacity: 0;
 }
 /* CSS动画3秒钟后才让不透明度从0变为1 */
 @keyframes imgLoad {
-  0%,
-  90% {
+  0% {
     opacity: 0;
   }
+
   100% {
     opacity: 1;
   }

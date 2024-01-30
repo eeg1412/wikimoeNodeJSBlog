@@ -32,7 +32,16 @@ import store from '@/store'
 const imageToHtmlConf = {
   type: 'image',
   elemToHtml: (elemNode) => {
-    const { src, alt = '', href = '', style = {}, width, height } = elemNode
+    const {
+      src,
+      alt = '',
+      href = '',
+      style = {},
+      width,
+      height,
+      hrefWidth,
+      hrefHeight,
+    } = elemNode
     const { width: styWidth = '', height: styHeight = '' } = style
 
     let styleStr = ''
@@ -40,8 +49,10 @@ const imageToHtmlConf = {
     if (styHeight) styleStr += `height: ${styHeight};`
     return `<img src="${src}" alt="${alt}"${
       href ? ` data-href="${href}"` : ''
-    }${width ? ` width="${width}"` : ''}${
-      height ? ` height="${height}"` : ''
+    }${width ? ` width="${width}"` : ''}${height ? ` height="${height}"` : ''}${
+      hrefWidth ? ` data-href-width="${hrefWidth}"` : ''
+    }${
+      hrefHeight ? ` data-href-height="${hrefHeight}"` : ''
     } style="${styleStr}">`
   },
 }
@@ -113,6 +124,8 @@ function parseImgHtml(elem, children, editor) {
     alt: $elem.getAttribute('alt') || '',
     width: $elem.getAttribute('width') || '',
     height: $elem.getAttribute('height') || '',
+    hrefWidth: $elem.getAttribute('data-href-width') || '',
+    hrefHeight: $elem.getAttribute('data-href-height') || '',
     href,
     style: {
       width: getStyleValue($elem, 'width'),
@@ -337,6 +350,8 @@ export default {
             {
               width: item.thumWidth || item.width,
               height: item.thumHeight || item.height,
+              hrefWidth: item.width,
+              hrefHeight: item.height,
             },
             {
               match: (n) => {
