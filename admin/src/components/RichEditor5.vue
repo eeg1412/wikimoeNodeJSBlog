@@ -63,8 +63,15 @@ export function genSizeStyledIframeHtml(iframeHtml, width = '', height = '') {
   const iframe = doc.querySelector('iframe')
 
   if (iframe) {
-    iframe.setAttribute('width', width)
-    iframe.setAttribute('height', height)
+    if (width) iframe.setAttribute('width', width)
+    if (height) iframe.setAttribute('height', height)
+    if (width && height) {
+      // 设置style aspect-ratio
+      iframe.setAttribute(
+        'style',
+        `width: 100%; height: auto; aspect-ratio: ${width} / ${height};`
+      )
+    }
     return iframe.outerHTML
   }
 
