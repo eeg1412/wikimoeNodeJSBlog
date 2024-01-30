@@ -63,9 +63,9 @@ export function genSizeStyledIframeHtml(iframeHtml, width = '', height = '') {
   const iframe = doc.querySelector('iframe')
 
   if (iframe) {
-    if (width) iframe.setAttribute('width', width)
-    if (height) iframe.setAttribute('height', height)
-    if (width && height) {
+    if (width && width !== 'auto') iframe.setAttribute('width', width)
+    if (height && height !== 'auto') iframe.setAttribute('height', height)
+    if (width && height && width !== 'auto' && height !== 'auto') {
       // 设置style aspect-ratio
       iframe.setAttribute(
         'style',
@@ -89,7 +89,11 @@ const videoToHtmlConf = {
       res += iframeHtml
     } else {
       // 其他，mp4 等 url 格式
-      res += `<video poster="${poster}" playsinline="true" preload="none" muted="muted" loop="loop" controls="true" width="${width}" height="${height}"><source src="${src}" type="video/mp4"/></video>`
+      res += `<video poster="${poster}" playsinline="true" preload="none" muted="muted" loop="loop" controls="true"${
+        width && width !== 'auto' ? ` width="${width}"` : ''
+      }${
+        height && height !== 'auto' ? ` height="${height}"` : ''
+      }><source src="${src}" type="video/mp4"/></video>`
     }
     res += '\n</div>'
 
