@@ -16,3 +16,4 @@ node_modules
 /server/uploadCache/*
 /server/utils/ip2location/*
 /server/tools/backupFromEmlogJson/*
+/blog/public/ads.txt
