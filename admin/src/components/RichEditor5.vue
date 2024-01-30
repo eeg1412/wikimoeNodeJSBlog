@@ -57,11 +57,7 @@ const imageToHtmlConf = {
   },
 }
 
-export function genSizeStyledIframeHtml(
-  iframeHtml,
-  width = 'auto',
-  height = 'auto'
-) {
+export function genSizeStyledIframeHtml(iframeHtml, width = '', height = '') {
   const parser = new DOMParser()
   const doc = parser.parseFromString(iframeHtml, 'text/html')
   const iframe = doc.querySelector('iframe')
@@ -77,7 +73,7 @@ export function genSizeStyledIframeHtml(
 const videoToHtmlConf = {
   type: 'video',
   elemToHtml: (elemNode) => {
-    const { src = '', poster = '', width = 'auto', height = 'auto' } = elemNode
+    const { src = '', poster = '', width = '', height = '' } = elemNode
     let res = '<div data-w-e-type="video" data-w-e-is-void>\n'
 
     if (src.trim().indexOf('<iframe ') === 0) {
