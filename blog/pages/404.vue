@@ -8,7 +8,6 @@
       class="mt-5 w-full max-w-xl mx-auto"
       v-if="GOOGLE_ADSENSE_POST_DETAIL_BT"
     >
-      123
       <AdsbygoogleHave :ad="GOOGLE_ADSENSE_POST_DETAIL_BT" />
     </div>
   </div>
