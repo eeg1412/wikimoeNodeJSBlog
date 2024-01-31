@@ -26,6 +26,14 @@
               placeholder="请输入推文"
               :rows="10"
             />
+            <div
+              class="link-content"
+              v-if="tweetContentParseRes && coverImagesDataList.length === 0"
+              v-html="tweetContentParseRes.content"
+            ></div>
+            <div class="w_10">
+              ※在没有媒体内容时，第一个链接为BILIBILI时会解析出视频
+            </div>
           </el-form-item>
         </template>
         <template v-else>
@@ -669,6 +677,52 @@ export default {
       ])
     }
 
+    let tweetContentParseTimer = null
+    const tweetContentParseRes = ref(null)
+    const tweetContentParse = () => {
+      const type = form.type
+      let obj = null
+      if (type === 2) {
+        const excerpt = form.excerpt
+        // 解析里面的链接并转换成数组
+        const linkList = excerpt.match(/https?:\/\/[^\s]*[a-zA-Z0-9\/]/g)
+        console.log(linkList)
+        // 如果有链接取第一个，并解析下是不是https://www.bilibili.com/video/开头的
+        if (linkList && linkList.length > 0) {
+          const firstLink = linkList[0]
+          if (firstLink.startsWith('https://www.bilibili.com/video/')) {
+            // 这里可以添加处理链接的代码
+            // 获取https://www.bilibili.com/video/后面的id,注意可能后面还有参数，不要都获取了，然后拼接成iframe
+            // 使用 URL 类解析链接
+            const url = new URL(firstLink)
+            // 获取路径中的视频 ID
+            const videoId = url.pathname.split('/')[2]
+            // 创建一个 iframe
+            const iframe = `<iframe src="https://player.bilibili.com/player.html?bvid=${videoId}&autoplay=0" scrolling="no" border="0" frameborder="no" framespacing="0" allowfullscreen="true"> </iframe>`
+            obj = {
+              content: iframe,
+            }
+          }
+        }
+      }
+      return obj
+    }
+
+    // watch form.excerpt
+    watch(
+      () => form.excerpt,
+      (newVal, oldVal) => {
+        if (form.type === 2) {
+          if (tweetContentParseTimer) {
+            clearTimeout(tweetContentParseTimer)
+          }
+          tweetContentParseTimer = setTimeout(() => {
+            tweetContentParseRes.value = tweetContentParse()
+          }, 50)
+        }
+      }
+    )
+
     onMounted(() => {
       getPostDetail()
       getSortList()
@@ -714,6 +768,8 @@ export default {
       oldPostEditorContent,
       updatePostEditorVersion,
       openPreviewer,
+      // tweetContentParse
+      tweetContentParseRes,
     }
   },
 }
@@ -754,6 +810,10 @@ export default {
   border: 1px solid #dcdfe6;
   padding: 10px;
 }
+.link-content {
+  margin-top: 10px;
+  width: 100%;
+}
 </style>
 <style>
 .post-editor-body .el-tabs__content {
@@ -762,5 +822,10 @@ export default {
 }
 .old-content-body img {
   max-width: 100%;
+}
+.link-content iframe {
+  aspect-ratio: 16/9;
+  width: 100%;
+  border-radius: 20px;
 }
 </style>
