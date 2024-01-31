@@ -843,6 +843,8 @@ export default {
 .link-content iframe {
   aspect-ratio: 16/9;
   width: 100%;
+  height: auto;
+  max-width: 640px;
   border-radius: 20px;
 }
 </style>
