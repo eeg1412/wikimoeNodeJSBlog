@@ -27,10 +27,18 @@
               :rows="10"
             />
             <div
-              class="link-content"
               v-if="tweetContentParseRes && coverImagesDataList.length === 0"
-              v-html="tweetContentParseRes.content"
-            ></div>
+              class="w_10"
+            >
+              <div
+                class="link-content"
+                v-html="tweetContentParseRes.content"
+              ></div>
+              <div class="link-content-link">
+                {{ tweetContentParseRes.link }}
+              </div>
+            </div>
+
             <div class="w_10">
               ※在没有媒体内容时，第一个链接为BILIBILI时会解析出视频
             </div>
@@ -700,6 +708,7 @@ export default {
             // 创建一个 iframe
             const iframe = `<iframe src="https://player.bilibili.com/player.html?bvid=${videoId}&autoplay=0" scrolling="no" border="0" frameborder="no" framespacing="0" allowfullscreen="true"> </iframe>`
             obj = {
+              link: firstLink,
               content: iframe,
             }
           }
@@ -813,6 +822,11 @@ export default {
 .link-content {
   margin-top: 10px;
   width: 100%;
+}
+.link-content-link {
+  line-height: 18px;
+  font-size: 12px;
+  word-break: break-all;
 }
 </style>
 <style>
