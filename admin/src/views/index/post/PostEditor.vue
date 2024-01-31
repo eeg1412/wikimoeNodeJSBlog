@@ -707,7 +707,7 @@ export default {
           // 获取路径中的视频 ID
           const videoId = url.pathname.split('/')[2]
           // 创建一个 iframe
-          const iframe = `<iframe src="https://player.bilibili.com/player.html?bvid=${videoId}&autoplay=0" scrolling="no" border="0" frameborder="no" framespacing="0" allowfullscreen="true"> </iframe>`
+          const iframe = `<iframe src="https://www.bilibili.com/blackboard/html5mobileplayer.html?bvid=${videoId}&as_wide=1&danmaku=0&hasMuteButton=1" scrolling="no" border="0" frameborder="no" framespacing="0" allowfullscreen="true"> </iframe>`
           obj = {
             link: firstLink,
             content: iframe,
@@ -722,7 +722,7 @@ export default {
     watch(
       () => form.excerpt,
       (newVal, oldVal) => {
-        if (form.type === 2 && coverImagesDataList.length === 0) {
+        if (form.type === 2 && coverImagesDataList.value.length === 0) {
           if (tweetContentParseTimer) {
             clearTimeout(tweetContentParseTimer)
           }
