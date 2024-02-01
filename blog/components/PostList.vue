@@ -54,21 +54,45 @@
           <!-- 简介/推文 -->
           <div class="post-list-excerpt-body">
             <!-- prettier-ignore -->
-            <div class="whitespace-pre-wrap" v-if="item.type === 1">{{ item.excerpt || '发表了一篇博文' }}</div>
-            <div v-else class="whitespace-pre-wrap">{{ item.excerpt }}</div>
-            <!-- tags -->
-            <div class="post-list-tags-body" v-if="item.tags.length > 0">
-              <template v-for="(tag, index) in item.tags" :key="index">
-                <NuxtLink
-                  class="post-list-tag-item hover:underline"
-                  :to="{
-                    name: 'postListTag',
-                    params: { tagid: tag._id, page: 1 },
-                  }"
-                  >#{{ tag.tagname }}</NuxtLink
-                >
-              </template>
-            </div>
+            <template v-if="item.type === 1">
+              <div class="whitespace-pre-wrap" v-if="item.type === 1">{{ item.excerpt || '发表了一篇博文' }}</div>
+              <!-- tags -->
+              <div class="post-list-tags-body" v-if="item.tags.length > 0">
+                <template v-for="(tag, index) in item.tags" :key="index">
+                  <NuxtLink
+                    class="post-list-tag-item hover:underline"
+                    :to="{
+                      name: 'postListTag',
+                      params: { tagid: tag._id, page: 1 },
+                    }"
+                    >#{{ tag.tagname }}</NuxtLink
+                  >
+                </template>
+              </div>
+            </template>
+            <template v-else>
+              <TweetContent
+                :content="item.excerpt"
+                :coverLength="item?.coverImages?.length"
+              >
+                <!-- tags -->
+                <template v-slot:tags>
+                  <!-- tags -->
+                  <div class="post-list-tags-body" v-if="item.tags.length > 0">
+                    <template v-for="(tag, index) in item.tags" :key="index">
+                      <NuxtLink
+                        class="post-list-tag-item hover:underline"
+                        :to="{
+                          name: 'postListTag',
+                          params: { tagid: tag._id, page: 1 },
+                        }"
+                        >#{{ tag.tagname }}</NuxtLink
+                      >
+                    </template>
+                  </div>
+                </template>
+              </TweetContent>
+            </template>
           </div>
 
           <!-- 图片 -->

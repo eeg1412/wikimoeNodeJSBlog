@@ -98,20 +98,56 @@
       v-if="postData.data.type === 1 || postData.data.type === 3"
     >
       <HtmlContent :content="postData.data.content" />
+      <!-- tags -->
+      <div
+        class="post-detail-tags-body mt-1 mb-1"
+        v-if="postData.data.tags.length > 0"
+      >
+        <template v-for="(tag, index) in postData.data.tags" :key="index">
+          <NuxtLink
+            class="post-detail-tag-item"
+            :to="{
+              name: 'postListTag',
+              params: { tagid: tag._id, page: 1 },
+            }"
+            >#{{ tag.tagname }}</NuxtLink
+          >
+        </template>
+      </div>
     </div>
 
     <div
       v-else-if="postData.data.type === 2"
       class="post-tweet-detail-content-body"
     >
-      <div class="post-tweet-detail-content">{{ postData.data.excerpt }}</div>
-      <div class="post-tweet-detail-cover-list-body">
-        <TweetImgList
-          :coverImages="postData.data.coverImages"
-          :swiperMode="false"
-        />
+      <div class="post-tweet-detail-content">
+        <TweetContent
+          :content="postData.data.excerpt"
+          :coverLength="postData?.data?.coverImages?.length"
+        >
+          <!-- tags -->
+          <template v-slot:tags>
+            <!-- tags -->
+            <div
+              class="post-detail-tags-body mt-1 mb-1"
+              v-if="postData.data.tags.length > 0"
+            >
+              <template v-for="(tag, index) in postData.data.tags" :key="index">
+                <NuxtLink
+                  class="post-detail-tag-item"
+                  :to="{
+                    name: 'postListTag',
+                    params: { tagid: tag._id, page: 1 },
+                  }"
+                  >#{{ tag.tagname }}</NuxtLink
+                >
+              </template>
+            </div>
+          </template>
+        </TweetContent>
       </div>
     </div>
+
     <!-- 运行代码按钮 -->
     <div class="post-run-code-body mt-3 mb-5" v-if="code">
       <UButton
@@ -123,19 +159,19 @@
         @click="runCode"
       />
     </div>
-    <!-- tags -->
-    <div class="post-detail-tags-body" v-if="postData.data.tags.length > 0">
-      <template v-for="(tag, index) in postData.data.tags" :key="index">
-        <NuxtLink
-          class="post-detail-tag-item"
-          :to="{
-            name: 'postListTag',
-            params: { tagid: tag._id, page: 1 },
-          }"
-          >#{{ tag.tagname }}</NuxtLink
-        >
-      </template>
-    </div>
+    <!-- 推文图片 -->
+    <template v-if="postData.data.type === 2">
+      <div
+        class="post-tweet-detail-cover-list-body mt-3"
+        v-if="postData.data.coverImages.length > 0"
+      >
+        <TweetImgList
+          :coverImages="postData.data.coverImages"
+          :swiperMode="false"
+        />
+      </div>
+    </template>
+
     <!-- 点赞按钮 -->
     <div class="post-detail-like-body" v-if="likeListInited">
       <UButton
@@ -745,21 +781,17 @@ onMounted(() => {
 /* 推文 */
 .post-tweet-detail-content-body {
   padding-top: 10px;
-  margin-bottom: 10px;
 }
 .post-tweet-detail-content {
   font-size: 16px;
   line-height: 1.5;
-  margin-bottom: 10px;
   /* 支持换行 */
   white-space: pre-wrap;
   word-break: break-word;
 }
-.post-detail-tags-body {
-  margin-top: 5px;
-}
 .post-detail-tag-item {
   margin-right: 12px;
+  font-size: 16px;
   @apply text-primary-500;
 }
 .post-detail-like-body {
