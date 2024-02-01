@@ -850,15 +850,16 @@ input[type='password'] {
   border-radius: 4px;
   background-color: #bbb;
 }
-.custom-scroll {
+/* .custom-scroll {
   scrollbar-width: thin;
+  scrollbar-color: #bbb transparent;
 }
 
 .custom-scroll:hover,
 .custom-scroll.scroll-not-hide {
   scrollbar-width: thin;
   scrollbar-color: #bbb transparent;
-}
+} */
 .common-a:hover {
   @apply text-primary-500;
 }
