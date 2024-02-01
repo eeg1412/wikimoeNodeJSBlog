@@ -794,6 +794,9 @@ onMounted(() => {
   font-size: 16px;
   @apply text-primary-500;
 }
+.post-detail-tag-item:hover {
+  text-decoration: underline;
+}
 .post-detail-like-body {
   text-align: center;
   margin-top: 20px;
