@@ -134,6 +134,9 @@ const linkCover = computed(() => {
 .tweet-content-body a {
   word-break: break-all;
 }
+.tweet-content-body a:hover {
+  text-decoration: underline;
+}
 </style>
 <style>
 .tweet-content-link-cover-body iframe {
