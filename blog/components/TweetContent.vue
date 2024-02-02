@@ -12,13 +12,16 @@
   </div>
   <slot name="tags"></slot>
   <div
+    ref="observee"
     v-if="linkCover"
-    v-html="linkCover"
     class="tweet-content-link-cover-body mt-3 mb-3"
-  ></div>
+  >
+    <div v-html="linkCover" v-if="linkCoverShow"></div>
+    <div v-else class="tweet-content-link-cover-block bg-primary-500"></div>
+  </div>
 </template>
 <script setup>
-import { nextTick, ref } from 'vue'
+import { nextTick, onMounted, onUnmounted, ref } from 'vue'
 
 const props = defineProps({
   content: {
@@ -129,6 +132,30 @@ const linkCover = computed(() => {
   }
   return null
 })
+const observee = ref(null)
+let observer = null
+const linkCoverShow = ref(false)
+onMounted(() => {
+  nextTick(() => {
+    if (linkCover.value) {
+      observer = new IntersectionObserver((entries) => {
+        // 如果元素进入视口，entries[0].isIntersecting 将为 true
+        if (entries[0].isIntersecting) {
+          linkCoverShow.value = true
+          observer.disconnect()
+          observer = null
+        }
+      })
+      observer.observe(observee.value)
+    }
+  })
+})
+onUnmounted(() => {
+  if (observer) {
+    observer.disconnect()
+    observer = null
+  }
+})
 </script>
 <style scoped>
 .tweet-content-body a {
@@ -136,6 +163,12 @@ const linkCover = computed(() => {
 }
 .tweet-content-body a:hover {
   text-decoration: underline;
+}
+.tweet-content-link-cover-block {
+  aspect-ratio: 16/9;
+  width: 100%;
+  height: auto;
+  border-radius: 20px;
 }
 </style>
 <style>
