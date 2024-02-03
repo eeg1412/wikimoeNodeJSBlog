@@ -148,6 +148,17 @@ module.exports = async function (req, res, next) {
     return
   }
 
+  const allowRemark = postInfo.allowRemark
+  // 如果文章不允许评论，则报错
+  if (!allowRemark) {
+    res.status(400).json({
+      errors: [{
+        message: '文章不允许评论'
+      }]
+    })
+    return
+  }
+
   // 根据siteCommentInterval（单位秒） 判断该uuid/ip上次的评论时间（date）是否在siteCommentInterval秒内
   if (!siteCommentInterval) {
     res.status(400).json({

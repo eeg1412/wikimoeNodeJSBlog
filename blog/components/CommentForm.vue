@@ -1,5 +1,5 @@
 <template>
-  <div v-if="options.siteEnableComment">
+  <div v-if="options.siteEnableComment && allowRemark">
     <div
       class="mb-4 text-primary-500 font-bold text-base border-b border-dotted pb-3 border-gray-300"
       v-if="!commentid"
@@ -109,6 +109,9 @@
       </div>
     </UForm>
   </div>
+  <div class="text-center" v-else>
+    <span class="text-gray-500">评论已关闭</span>
+  </div>
 </template>
 <script setup>
 import { storeToRefs } from 'pinia'
@@ -131,6 +134,10 @@ const props = defineProps({
   parentNickname: {
     type: String,
     default: null,
+  },
+  allowRemark: {
+    type: Boolean,
+    default: false,
   },
 })
 const form = reactive({

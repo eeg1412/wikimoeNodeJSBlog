@@ -209,7 +209,11 @@
     <ClientOnly>
       <div class="comment-list-body">
         <!-- 评论form -->
-        <CommentForm :postid="postid" @refresh="refreshCommentList" />
+        <CommentForm
+          :postid="postid"
+          :allowRemark="postData.data.allowRemark"
+          @refresh="refreshCommentList"
+        />
         <div class="relative">
           <DivLoading :loading="commentLoading" />
           <!-- 评论 -->
@@ -288,7 +292,11 @@
                       v-else
                       >{{ formatNumber(item.likes) }}</UButton
                     >
-                    <template v-if="options.siteEnableComment">
+                    <template
+                      v-if="
+                        options.siteEnableComment && postData.data.allowRemark
+                      "
+                    >
                       <UButton
                         size="2xs"
                         color="white"
