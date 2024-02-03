@@ -323,6 +323,7 @@
                       :commentid="commentid"
                       :parentNickname="item.nickname || item.user?.nickname"
                       @refresh="refreshCommentList"
+                      :allowRemark="postData.data.allowRemark"
                       v-if="commentid === item._id"
                     />
                   </div>
