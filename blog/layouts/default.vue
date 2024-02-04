@@ -74,7 +74,7 @@
             </div>
           </div>
           <!-- 导航 -->
-          <ul class="blog-layout-sidebar-body">
+          <ul class="blog-layout-sidebar-body custom-scroll">
             <template v-for="(item, index) in naviList" :key="index">
               <NaviItem :item="item" :currentPath="currentPath" />
             </template>
@@ -337,8 +337,9 @@ onUnmounted(() => {
 }
 .blog-layout-info-menu {
   /* padding: 20px; */
-  min-height: 100vh;
-  min-height: 100dvh;
+  height: 100vh;
+  height: 100dvh;
+  overflow: auto;
   /* 左下角圆角 */
   /* border-bottom-left-radius: 20px; */
   display: flex;
@@ -384,7 +385,7 @@ onUnmounted(() => {
 }
 .blog-layout-sidebar-body {
   flex: 1;
-  min-height: 200px;
+  /* min-height: 200px; */
   box-sizing: border-box;
   padding: 20px;
   overflow: auto;
@@ -706,12 +707,13 @@ onUnmounted(() => {
     display: flex;
   }
 }
-/* 高度小于900时 blog-layout-info-menu-bg 的背景图片为none */
-/* @media (max-height: 900px) {
+/* 高度小于600时 blog-layout-info-menu-bg 的背景图片为none */
+@media (max-height: 600px) {
   .blog-layout-info-menu-bg {
     background-image: none;
+    display: none;
   }
-} */
+}
 /* .google-ad-bt {
   max-height: 20vh;
   background: #fff;
