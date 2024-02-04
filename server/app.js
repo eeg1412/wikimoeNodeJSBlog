@@ -84,5 +84,12 @@ app.use(history({
 }));
 app.use('/admin', express.static(path.join(__dirname, 'public/admin')));
 
+// setInterval(() => {
+//   const memoryUsage = process.memoryUsage();
+//   const rss = (memoryUsage.rss / 1024 / 1024).toFixed(2);
+//   const heapTotal = (memoryUsage.heapTotal / 1024 / 1024).toFixed(2);
+//   const heapUsed = (memoryUsage.heapUsed / 1024 / 1024).toFixed(2);
+//   console.log(`RSS: ${rss} MB, Heap Total: ${heapTotal} MB, Heap Used: ${heapUsed} MB`);
+// }, 1000);
 
 module.exports = app;
