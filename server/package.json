@@ -29,7 +29,7 @@
     "morgan": "~1.9.1",
     "multer": "^1.4.5-lts.1",
     "nodemailer": "^6.9.7",
-    "sharp": "^0.33.2",
+    "sharp": "0.32.6",
     "ua-parser-js": "^1.0.37",
     "validator": "^13.11.0"
   }
