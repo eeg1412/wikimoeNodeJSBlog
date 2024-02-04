@@ -56,12 +56,7 @@
             <UIcon name="i-heroicons-x-mark" />
           </div>
         </div>
-        <div
-          class="blog-layout-sticky custom-scroll blog-layout-info-menu blog-layout-info-menu-bg"
-          :class="{
-            'no-bg': naviList.length > 10,
-          }"
-        >
+        <div class="blog-layout-sticky custom-scroll blog-layout-info-menu">
           <div class="blog-layout-left-top-info-body">
             <!-- logo -->
             <div>
@@ -84,6 +79,10 @@
               <NaviItem :item="item" :currentPath="currentPath" />
             </template>
           </ul>
+          <!-- 图片 -->
+          <div
+            class="blog-layout-info-menu-bg blog-layout-info-menu-bt-img"
+          ></div>
         </div>
       </div>
       <div class="blog-layout-content-body">
@@ -337,12 +336,27 @@ onUnmounted(() => {
   border-bottom-right-radius: 20px;
 }
 .blog-layout-info-menu {
-  padding: 20px;
-  height: 100vh;
-  height: 100dvh;
-  overflow-y: auto;
+  /* padding: 20px; */
+  min-height: 100vh;
+  min-height: 100dvh;
+  /* 左下角圆角 */
+  /* border-bottom-left-radius: 20px; */
+  display: flex;
+  flex-direction: column;
+}
+.blog-layout-left-top-info-body,
+.blog-layout-info-menu-bt-img {
+  flex-shrink: 0;
+}
+.blog-layout-info-menu-bt-img {
+  height: 250px;
+  width: 100%;
   /* 左下角圆角 */
   border-bottom-left-radius: 20px;
+}
+.blog-layout-left-top-info-body {
+  padding: 20px 20px 0 20px;
+  box-sizing: border-box;
 }
 .blog-layout-info-menu-bg {
   background-image: url('/img/menuBg.png?v=2');
@@ -369,7 +383,11 @@ onUnmounted(() => {
   border-bottom: 1px solid #e2e2e2;
 }
 .blog-layout-sidebar-body {
-  padding-top: 18px;
+  flex: 1;
+  min-height: 200px;
+  box-sizing: border-box;
+  padding: 20px;
+  overflow: auto;
 }
 .blog-footer-body {
   width: 100%;
@@ -393,7 +411,7 @@ onUnmounted(() => {
   padding: 20px;
   background: #fffdfd;
   position: sticky;
-  top: -20px;
+  top: 0px;
   z-index: 2;
 }
 .blog-layout-right-box {
@@ -539,6 +557,9 @@ onUnmounted(() => {
   .layout-close-btn-body.type-l {
     display: flex;
   }
+  .blog-layout-info-menu-bt-img {
+    display: none;
+  }
   .blog-layout-info-menu-bg,
   .blog-layout-sidebar-body {
     padding-top: 0px;
@@ -556,6 +577,8 @@ onUnmounted(() => {
     height: 100%;
     border-right: 0px solid #fff7f9;
     background-color: #fffdfd;
+    display: block;
+    overflow: auto;
   }
   .blog-layout-left-body.active {
     transform: translateX(0%);
@@ -684,11 +707,11 @@ onUnmounted(() => {
   }
 }
 /* 高度小于900时 blog-layout-info-menu-bg 的背景图片为none */
-@media (max-height: 900px) {
+/* @media (max-height: 900px) {
   .blog-layout-info-menu-bg {
     background-image: none;
   }
-}
+} */
 /* .google-ad-bt {
   max-height: 20vh;
   background: #fff;
