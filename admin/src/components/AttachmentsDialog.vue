@@ -117,6 +117,7 @@
             :on-error="handleError"
             :disabled="!albumId"
             :class="albumId ? '' : 'attachments-upload-disabled'"
+            :http-request="uploadFile"
           >
             <el-icon class="el-icon--upload"><Picture /></el-icon>
             <div class="el-upload__text" v-show="albumId">
@@ -670,6 +671,65 @@ export default {
       handleSuccess(res)
     }
 
+    // 上传图片
+    const uploadQueue = ref([])
+    const uploading = ref(0)
+    const maxUploads = 1 // 最大并发数
+
+    const uploadFile = (file) => {
+      return new Promise((resolve, reject) => {
+        uploadQueue.value.push({ file, resolve, reject })
+
+        if (uploading.value < maxUploads) {
+          processQueue()
+        }
+      })
+    }
+
+    const processQueue = () => {
+      if (uploadQueue.value.length > 0 && uploading.value < maxUploads) {
+        uploading.value++
+        const { file, resolve, reject } = uploadQueue.value.shift()
+
+        const formData = new FormData()
+        formData.append('file', file.file)
+        // 将对应fileList.value的file.status改为uploading
+        fileList.value.forEach((item, index) => {
+          if (item.uid === file.file.uid) {
+            fileList.value[index].status = 'uploading'
+            // percentage
+            fileList.value[index].percentage = 0
+          }
+        })
+        axios
+          .post('/api/admin/attachment/upload', formData, {
+            headers: headers.value,
+            onUploadProgress: (progressEvent) => {
+              const percentCompleted = Math.round(
+                (progressEvent.loaded * 100) / progressEvent.total
+              )
+              fileList.value.forEach((item, index) => {
+                if (item.uid === file.file.uid) {
+                  fileList.value[index].status = 'uploading'
+                  // 更新上传进度
+                  fileList.value[index].percentage = percentCompleted
+                }
+              })
+            },
+          })
+          .then((response) => {
+            uploading.value--
+            processQueue()
+            resolve(response)
+          })
+          .catch((error) => {
+            uploading.value--
+            processQueue()
+            reject(error)
+          })
+      }
+    }
+
     // 监听 params.page 的变化
     watch(
       () => params.page,
@@ -722,6 +782,7 @@ export default {
       onDialogClosed,
       onDialogClose,
       onVideoUploaded,
+      uploadFile,
     }
   },
 }
