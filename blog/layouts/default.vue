@@ -168,6 +168,7 @@
         <a href="https://www.wikimoe.com/" target="_blank">wikimoeBlog</a>
       </div>
     </div>
+    <GoTop />
   </div>
 </template>
 <script setup>
