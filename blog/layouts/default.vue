@@ -566,6 +566,9 @@ onUnmounted(() => {
   .blog-layout-sidebar-body {
     padding-top: 0px;
   }
+  .blog-layout-info-menu {
+    height: auto;
+  }
   .blog-layout-left-body {
     transform: translateX(-100%);
     opacity: 0;
