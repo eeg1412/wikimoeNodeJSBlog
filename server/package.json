@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "start": "node ./bin/www",
-    "startWithJemalloc": "LD_PRELOAD=/usr/local/lib/libjemalloc.so.2 node ./bin/www",
+    "startWithJemalloc": "env LD_PRELOAD=/usr/local/lib/libjemalloc.so.2 node ./bin/www",
     "create": "node ./tools/createUser",
     "createCRUD": "node ./tools/createCRUD",
     "sumPostComment": "node ./tools/sumPostComment",
