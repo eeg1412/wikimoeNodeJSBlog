@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="el-descriptions__header">
-      <div class="el-descriptions__title">统计排名</div>
+      <div class="el-descriptions__title">排名统计</div>
       <div class="el-descriptions__extra">
         <el-select
           v-model="timeRangeType"
@@ -19,9 +19,9 @@
       </div>
     </div>
     <el-row v-if="rankData">
-      <!-- 文章阅读排行 rankData.readPostViewData -->
+      <!-- 文章阅读 rankData.readPostViewData -->
       <el-col :span="8" :xs="24" class="p10">
-        <div class="mb10 fb">文章阅读排行</div>
+        <div class="mb10 fb">文章阅读</div>
         <div class="mb10">
           <el-table
             :data="rankData.readPostViewData"
@@ -49,9 +49,9 @@
           </el-table>
         </div>
       </el-col>
-      <!-- 文章点赞排行统计 rankData.readPostLikeData -->
+      <!-- 文章点赞统计 rankData.readPostLikeData -->
       <el-col :span="8" :xs="24" class="p10">
-        <div class="mb10 fb">文章点赞排行</div>
+        <div class="mb10 fb">文章点赞</div>
         <div class="mb10">
           <el-table
             :data="rankData.readPostLikeData"
@@ -79,9 +79,9 @@
           </el-table>
         </div>
       </el-col>
-      <!-- 来源排行 rankData.readReferrerData -->
+      <!-- 来源 rankData.readReferrerData -->
       <el-col :span="8" :xs="24" class="p10">
-        <div class="mb10 fb">来源排行</div>
+        <div class="mb10 fb">来源</div>
         <div class="mb10">
           <el-table
             :data="rankData.readReferrerData"
@@ -97,9 +97,9 @@
           </el-table>
         </div>
       </el-col>
-      <!-- 分类排行 rankData.readPostListSortData -->
+      <!-- 分类 rankData.readPostListSortData -->
       <el-col :span="8" :xs="24" class="p10">
-        <div class="mb10 fb">分类排行</div>
+        <div class="mb10 fb">分类</div>
         <div class="mb10">
           <el-table
             :data="rankData.readPostListSortData"
@@ -115,9 +115,9 @@
           </el-table>
         </div>
       </el-col>
-      <!-- tag排行 rankData.readPostListTagData -->
+      <!-- tag rankData.readPostListTagData -->
       <el-col :span="8" :xs="24" class="p10">
-        <div class="mb10 fb">tag排行</div>
+        <div class="mb10 fb">标签</div>
         <div class="mb10">
           <el-table
             :data="rankData.readPostListTagData"
@@ -133,9 +133,9 @@
           </el-table>
         </div>
       </el-col>
-      <!-- 站内关键词排行 rankData.readPostListKeywordData -->
+      <!-- 站内关键词 rankData.readPostListKeywordData -->
       <el-col :span="8" :xs="24" class="p10">
-        <div class="mb10 fb">站内关键词排行</div>
+        <div class="mb10 fb">站内关键词</div>
         <div class="mb10">
           <el-table
             :data="rankData.readPostListKeywordData"
