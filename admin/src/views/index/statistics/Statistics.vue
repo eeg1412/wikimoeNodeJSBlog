@@ -28,7 +28,7 @@
       <el-row v-if="rankData">
         <!-- 文章阅读排行 rankData.readPostViewData -->
         <el-col :span="8" :xs="12" class="p5">
-          <div>文章阅读排行</div>
+          <div class="mt5 fb">文章阅读排行</div>
           <div class="mt10">
             <el-table
               :data="rankData.readPostViewData"
@@ -58,7 +58,7 @@
         </el-col>
         <!-- 文章点赞排行统计 rankData.readPostLikeData -->
         <el-col :span="8" :xs="12" class="p5">
-          <div>文章点赞排行</div>
+          <div class="mt5 fb">文章点赞排行</div>
           <div class="mt10">
             <el-table
               :data="rankData.readPostLikeData"
@@ -88,7 +88,7 @@
         </el-col>
         <!-- 来源排行 rankData.readReferrerData -->
         <el-col :span="8" :xs="12" class="p5">
-          <div>来源排行</div>
+          <div class="mt5 fb">来源排行</div>
           <div class="mt10">
             <el-table
               :data="rankData.readReferrerData"
@@ -96,6 +96,60 @@
               style="width: 100%"
             >
               <el-table-column prop="_id" label="来源"> </el-table-column>
+              <el-table-column
+                prop="count"
+                label="访问量"
+                width="80px"
+              ></el-table-column>
+            </el-table>
+          </div>
+        </el-col>
+        <!-- 分类排行 rankData.readPostListSortData -->
+        <el-col :span="8" :xs="12" class="p5">
+          <div class="mt5 fb">分类排行</div>
+          <div class="mt10">
+            <el-table
+              :data="rankData.readPostListSortData"
+              row-key="_id"
+              style="width: 100%"
+            >
+              <el-table-column prop="sortname" label="分类"> </el-table-column>
+              <el-table-column
+                prop="count"
+                label="访问量"
+                width="80px"
+              ></el-table-column>
+            </el-table>
+          </div>
+        </el-col>
+        <!-- tag排行 rankData.readPostListTagData -->
+        <el-col :span="8" :xs="12" class="p5">
+          <div class="mt5 fb">tag排行</div>
+          <div class="mt10">
+            <el-table
+              :data="rankData.readPostListTagData"
+              row-key="_id"
+              style="width: 100%"
+            >
+              <el-table-column prop="tagname" label="标签"> </el-table-column>
+              <el-table-column
+                prop="count"
+                label="访问量"
+                width="80px"
+              ></el-table-column>
+            </el-table>
+          </div>
+        </el-col>
+        <!-- 站内关键词排行 rankData.readPostListKeywordData -->
+        <el-col :span="8" :xs="12" class="p5">
+          <div class="mt5 fb">站内关键词排行</div>
+          <div class="mt10">
+            <el-table
+              :data="rankData.readPostListKeywordData"
+              row-key="_id"
+              style="width: 100%"
+            >
+              <el-table-column prop="_id" label="关键词"> </el-table-column>
               <el-table-column
                 prop="count"
                 label="访问量"

@@ -235,11 +235,176 @@ module.exports = async function (req, res, next) {
     return
   }
 
+  // 单位时间分类访问排行 postListSort
+  const readPostListSortPipeline = [
+    {
+      $match: {
+        createdAt: { $gte: startDate.toDate(), $lte: endDate.toDate() },
+        action: { $in: ['postListSort'] },
+        isBot: false
+      }
+    },
+    // 根据{data.targetId} 分组
+    {
+      $group: {
+        _id: "$data.targetId",
+        count: { $sum: 1 }
+      }
+    },
+    // 按照次数排序
+    {
+      $sort: {
+        count: -1
+      }
+    },
+    // 只取前10
+    {
+      $limit: 10
+    },
+    // 根据id查询sorts,只要返回id,sortname
+    {
+      $lookup: {
+        from: "sorts",
+        localField: "_id",
+        foreignField: "_id",
+        as: "sort"
+      }
+    },
+    {
+      $unwind: "$sort"
+    },
+    {
+      $project: {
+        _id: 1,
+        count: 1,
+        sortname: "$sort.sortname"
+      }
+    }
+  ]
+  const readPostListSortData = await readerlogUtils.aggregate(readPostListSortPipeline).catch(err => {
+    adminApiLog.error(err)
+    return false
+  })
+
+  if (!readPostListSortData) {
+    res.status(500).json({
+      errors: [{
+        message: '数据库查询错误'
+      }]
+    })
+    return
+  }
+
+  // 单位时间标签访问排行 postListTag
+  const readPostListTagPipeline = [
+    {
+      $match: {
+        createdAt: { $gte: startDate.toDate(), $lte: endDate.toDate() },
+        action: { $in: ['postListTag'] },
+        isBot: false
+      }
+    },
+    // 根据{data.targetId} 分组
+    {
+      $group: {
+        _id: "$data.targetId",
+        count: { $sum: 1 }
+      }
+    },
+    // 按照次数排序
+    {
+      $sort: {
+        count: -1
+      }
+    },
+    // 只取前10
+    {
+      $limit: 10
+    },
+    // 根据id查询tags,只要返回id,tagname
+    {
+      $lookup: {
+        from: "tags",
+        localField: "_id",
+        foreignField: "_id",
+        as: "tag"
+      }
+    },
+    {
+      $unwind: "$tag"
+    },
+    {
+      $project: {
+        _id: 1,
+        count: 1,
+        tagname: "$tag.tagname"
+      }
+    }
+  ]
+  const readPostListTagData = await readerlogUtils.aggregate(readPostListTagPipeline).catch(err => {
+    adminApiLog.error(err)
+    return false
+  })
+
+  if (!readPostListTagData) {
+    res.status(500).json({
+      errors: [{
+        message: '数据库查询错误'
+      }]
+    })
+    return
+  }
+
+  // 单位时间关键词搜索排行 postListKeyword
+  const readPostListKeywordPipeline = [
+    {
+      $match: {
+        createdAt: { $gte: startDate.toDate(), $lte: endDate.toDate() },
+        action: { $in: ['postListKeyword'] },
+        isBot: false
+      }
+    },
+    // 根据{data.content} 分组
+    {
+      $group: {
+        _id: "$data.content",
+        count: { $sum: 1 }
+      }
+    },
+    // 按照次数排序
+    {
+      $sort: {
+        count: -1
+      }
+    },
+    // 只取前10
+    {
+      $limit: 10
+    }
+  ]
+  const readPostListKeywordData = await readerlogUtils.aggregate(readPostListKeywordPipeline).catch(err => {
+    adminApiLog.error(err)
+    return false
+  })
+
+  if (!readPostListKeywordData) {
+    res.status(500).json({
+      errors: [{
+        message: '数据库查询错误'
+      }]
+    })
+    return
+  }
+
 
   let sendData = {
     readReferrerData: readReferrerData,
     readPostViewData: readPostViewData,
-    readPostLikeData: readPostLikeData
+    readPostLikeData: readPostLikeData,
+    readPostListSortData: readPostListSortData,
+    readPostListTagData: readPostListTagData,
+    readPostListKeywordData: readPostListKeywordData
+
   }
 
   // 发送响应
