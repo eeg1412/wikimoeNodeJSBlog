@@ -1,37 +1,39 @@
 <template>
-  <div class="common-right-panel-form" v-if="data">
-    <div class="pb20">
-      <el-breadcrumb separator="/">
-        <el-breadcrumb-item>首页</el-breadcrumb-item>
-      </el-breadcrumb>
-    </div>
-    <div>
-      <div class="el-descriptions__header">
-        <div class="el-descriptions__title">站点统计</div>
-        <div class="el-descriptions__extra"></div>
+  <div class="common-right-panel-form">
+    <template v-if="data">
+      <div class="pb20">
+        <el-breadcrumb separator="/">
+          <el-breadcrumb-item>首页</el-breadcrumb-item>
+        </el-breadcrumb>
       </div>
-      <el-row>
-        <el-col :span="8">
-          <el-statistic title="博客文章" :value="data.postCount" />
-        </el-col>
-        <el-col :span="8">
-          <el-statistic title="评论数" :value="data.commentCount">
-            <template #suffix
-              ><span v-if="data.unAuditCommentCount > 0"
-                >(<span class="pointer cRed" @click="goCommentAudit">{{
-                  data.unAuditCommentCount
-                }}</span
-                >)</span
-              ></template
-            >
-          </el-statistic>
-        </el-col>
-        <el-col :span="8">
-          <el-statistic title="媒体数" :value="data.attachmentCount" />
-        </el-col>
-      </el-row>
-      <el-divider />
-    </div>
+      <div>
+        <div class="el-descriptions__header">
+          <div class="el-descriptions__title">站点统计</div>
+          <div class="el-descriptions__extra"></div>
+        </div>
+        <el-row>
+          <el-col :span="8">
+            <el-statistic title="博客文章" :value="data.postCount" />
+          </el-col>
+          <el-col :span="8">
+            <el-statistic title="评论数" :value="data.commentCount">
+              <template #suffix
+                ><span v-if="data.unAuditCommentCount > 0"
+                  >(<span class="pointer cRed" @click="goCommentAudit">{{
+                    data.unAuditCommentCount
+                  }}</span
+                  >)</span
+                ></template
+              >
+            </el-statistic>
+          </el-col>
+          <el-col :span="8">
+            <el-statistic title="媒体数" :value="data.attachmentCount" />
+          </el-col>
+        </el-row>
+        <el-divider />
+      </div>
+    </template>
     <!-- 访客统计 -->
     <div>
       <div class="el-descriptions__header">
@@ -83,7 +85,9 @@
       </el-row>
       <el-divider />
     </div>
-    <el-descriptions title="服务器信息">
+    <Statistics />
+    <el-divider />
+    <el-descriptions title="服务器信息" v-if="data">
       <el-descriptions-item label="NodeJs版本">{{
         data.nodeVersion
       }}</el-descriptions-item>
@@ -138,6 +142,7 @@ import {
   Legend,
 } from 'chart.js'
 import { Line } from 'vue-chartjs'
+import Statistics from '@/components/Statistics.vue'
 ChartJS.register(
   CategoryScale,
   LinearScale,
@@ -151,6 +156,7 @@ moment.locale('zh-cn')
 export default {
   components: {
     Line,
+    Statistics,
   },
   setup() {
     const route = useRoute()

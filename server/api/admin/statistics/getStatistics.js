@@ -46,31 +46,6 @@ module.exports = async function (req, res, next) {
       break;
   }
 
-  // 打印开始日期和结束日期
-  // console.log(startDate.toDate(), endDate.toDate())
-  const offset = moment.tz(siteTimeZone).format('Z')
-  let $addFields = {
-    "formatDate": {
-      $dateToString: {
-        format: `%Y-%m-%dT%H:00:00.000${offset}`,
-        date: "$createdAt",
-        timezone: siteTimeZone
-      }
-    }
-  }
-  // 如果是年或者月，就按照天分组
-  if (timeRangeType === 'year' || timeRangeType === 'month') {
-    $addFields = {
-      "formatDate": {
-        $dateToString: {
-          format: `%Y-%m-%dT00:00:00.000${offset}`,
-          date: "$createdAt",
-          timezone: siteTimeZone
-        }
-      }
-    }
-  }
-
   // 来源站统计
   const readReferrerpipeline = [
     {
