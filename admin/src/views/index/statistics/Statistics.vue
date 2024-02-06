@@ -2,13 +2,13 @@
   <div class="common-right-panel-form">
     <div class="pb20">
       <el-breadcrumb separator="/">
-        <el-breadcrumb-item>访问统计</el-breadcrumb-item>
+        <el-breadcrumb-item>排名统计</el-breadcrumb-item>
       </el-breadcrumb>
     </div>
     <!-- 访客统计 -->
     <div>
       <div class="el-descriptions__header">
-        <div class="el-descriptions__title">排名统计</div>
+        <div class="el-descriptions__title"></div>
         <div class="el-descriptions__extra">
           <el-select
             v-model="timeRangeType"
@@ -27,9 +27,9 @@
       </div>
       <el-row v-if="rankData">
         <!-- 文章阅读排行 rankData.readPostViewData -->
-        <el-col :span="8" :xs="12" class="p5">
-          <div class="mt5 fb">文章阅读排行</div>
-          <div class="mt10">
+        <el-col :span="8" :xs="24" class="p10">
+          <div class="mb10 fb">文章阅读排行</div>
+          <div class="mb10">
             <el-table
               :data="rankData.readPostViewData"
               row-key="_id"
@@ -57,9 +57,9 @@
           </div>
         </el-col>
         <!-- 文章点赞排行统计 rankData.readPostLikeData -->
-        <el-col :span="8" :xs="12" class="p5">
-          <div class="mt5 fb">文章点赞排行</div>
-          <div class="mt10">
+        <el-col :span="8" :xs="24" class="p10">
+          <div class="mb10 fb">文章点赞排行</div>
+          <div class="mb10">
             <el-table
               :data="rankData.readPostLikeData"
               row-key="_id"
@@ -87,9 +87,9 @@
           </div>
         </el-col>
         <!-- 来源排行 rankData.readReferrerData -->
-        <el-col :span="8" :xs="12" class="p5">
-          <div class="mt5 fb">来源排行</div>
-          <div class="mt10">
+        <el-col :span="8" :xs="24" class="p10">
+          <div class="mb10 fb">来源排行</div>
+          <div class="mb10">
             <el-table
               :data="rankData.readReferrerData"
               row-key="_id"
@@ -105,9 +105,9 @@
           </div>
         </el-col>
         <!-- 分类排行 rankData.readPostListSortData -->
-        <el-col :span="8" :xs="12" class="p5">
-          <div class="mt5 fb">分类排行</div>
-          <div class="mt10">
+        <el-col :span="8" :xs="24" class="p10">
+          <div class="mb10 fb">分类排行</div>
+          <div class="mb10">
             <el-table
               :data="rankData.readPostListSortData"
               row-key="_id"
@@ -123,9 +123,9 @@
           </div>
         </el-col>
         <!-- tag排行 rankData.readPostListTagData -->
-        <el-col :span="8" :xs="12" class="p5">
-          <div class="mt5 fb">tag排行</div>
-          <div class="mt10">
+        <el-col :span="8" :xs="24" class="p10">
+          <div class="mb10 fb">tag排行</div>
+          <div class="mb10">
             <el-table
               :data="rankData.readPostListTagData"
               row-key="_id"
@@ -141,9 +141,9 @@
           </div>
         </el-col>
         <!-- 站内关键词排行 rankData.readPostListKeywordData -->
-        <el-col :span="8" :xs="12" class="p5">
-          <div class="mt5 fb">站内关键词排行</div>
-          <div class="mt10">
+        <el-col :span="8" :xs="24" class="p10">
+          <div class="mb10 fb">站内关键词排行</div>
+          <div class="mb10">
             <el-table
               :data="rankData.readPostListKeywordData"
               row-key="_id"
@@ -168,31 +168,9 @@ import moment from 'moment'
 import store from '@/store'
 import { useRoute, useRouter } from 'vue-router'
 import { authApi } from '@/api'
-import {
-  Chart as ChartJS,
-  CategoryScale,
-  LinearScale,
-  PointElement,
-  LineElement,
-  Title,
-  Tooltip,
-  Legend,
-} from 'chart.js'
-import { Line } from 'vue-chartjs'
-ChartJS.register(
-  CategoryScale,
-  LinearScale,
-  PointElement,
-  LineElement,
-  Title,
-  Tooltip
-)
 moment.locale('zh-cn')
 
 export default {
-  components: {
-    Line,
-  },
   setup() {
     const route = useRoute()
     const router = useRouter()
