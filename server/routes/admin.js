@@ -699,6 +699,15 @@ const adminRouteSetting = [
     roleType: null,
     role: null
   },
+  // getStatistics
+  {
+    path: '/statistics',
+    method: 'get',
+    middleware: [checkAuth],
+    controller: require('../api/admin/statistics/getStatistics'),
+    roleType: null,
+    role: null
+  },
 ]
 
 adminRouteSetting.forEach(item => {

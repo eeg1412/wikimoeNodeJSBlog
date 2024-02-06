@@ -197,7 +197,16 @@
                 <template #title>引用日志</template>
               </el-menu-item>
             </el-sub-menu>
-
+            <!-- 访问统计 Statistics -->
+            <el-menu-item
+              index="Statistics"
+              @click="removeParam('Statistics')"
+              @click.middle="openNewTab('Statistics')"
+              :route="{ name: 'Statistics' }"
+            >
+              <i class="fas fa-chart-bar pr10"></i>
+              <template #title>访问统计</template>
+            </el-menu-item>
             <!-- 设置 -->
             <el-menu-item
               index="Config"

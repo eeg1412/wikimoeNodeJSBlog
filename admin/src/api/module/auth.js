@@ -470,5 +470,12 @@ export default function (api) {
         shouldAdminJWT: true
       })
     },
+    // get /statistics
+    getStatistics (data) {
+      return api.get('/statistics', {
+        params: data,
+        shouldAdminJWT: true
+      })
+    },
   }
 }
