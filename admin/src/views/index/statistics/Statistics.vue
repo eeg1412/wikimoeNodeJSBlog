@@ -25,6 +25,86 @@
           </el-select>
         </div>
       </div>
+      <el-row v-if="rankData">
+        <!-- 文章阅读排行 rankData.readPostViewData -->
+        <el-col :span="8" :xs="12" class="p5">
+          <div>文章阅读排行</div>
+          <div class="mt10">
+            <el-table
+              :data="rankData.readPostViewData"
+              row-key="_id"
+              style="width: 100%"
+            >
+              <el-table-column prop="title" label="标题">
+                <template #default="{ row }">
+                  <!-- 判断type，如果是2就用 row.excerpt 否则用title -->
+                  <div>
+                    <div v-if="row.type === 2">
+                      {{ reduceText(row.excerpt) }}
+                    </div>
+                    <div v-else>
+                      {{ reduceText(row.title) }}
+                    </div>
+                  </div>
+                </template>
+              </el-table-column>
+              <el-table-column
+                prop="count"
+                label="阅读量"
+                width="80px"
+              ></el-table-column>
+            </el-table>
+          </div>
+        </el-col>
+        <!-- 文章点赞排行统计 rankData.readPostLikeData -->
+        <el-col :span="8" :xs="12" class="p5">
+          <div>文章点赞排行</div>
+          <div class="mt10">
+            <el-table
+              :data="rankData.readPostLikeData"
+              row-key="_id"
+              style="width: 100%"
+            >
+              <el-table-column prop="title" label="标题">
+                <template #default="{ row }">
+                  <!-- 判断type，如果是2就用 row.excerpt 否则用title -->
+                  <div>
+                    <div v-if="row.type === 2">
+                      {{ reduceText(row.excerpt) }}
+                    </div>
+                    <div v-else>
+                      {{ reduceText(row.title) }}
+                    </div>
+                  </div>
+                </template>
+              </el-table-column>
+              <el-table-column
+                prop="count"
+                label="点赞量"
+                width="80px"
+              ></el-table-column>
+            </el-table>
+          </div>
+        </el-col>
+        <!-- 来源排行 rankData.readReferrerData -->
+        <el-col :span="8" :xs="12" class="p5">
+          <div>来源排行</div>
+          <div class="mt10">
+            <el-table
+              :data="rankData.readReferrerData"
+              row-key="_id"
+              style="width: 100%"
+            >
+              <el-table-column prop="_id" label="来源"> </el-table-column>
+              <el-table-column
+                prop="count"
+                label="访问量"
+                width="80px"
+              ></el-table-column>
+            </el-table>
+          </div>
+        </el-col>
+      </el-row>
     </div>
   </div>
 </template>
@@ -81,14 +161,24 @@ export default {
         })
     }
 
+    // 缩减文字到20字的方法
+    const reduceText = (text) => {
+      if (text.length > 20) {
+        return text.substring(0, 20) + '...'
+      }
+      return text
+    }
+
     onMounted(() => {
       getStatistics()
     })
 
     return {
+      rankData,
       timeRangeTypeList,
       timeRangeType,
       getStatistics,
+      reduceText,
     }
   },
 }
