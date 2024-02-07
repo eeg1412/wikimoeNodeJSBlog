@@ -1,5 +1,5 @@
 <template>
-  <div v-if="postsData">
+  <div>
     <div class="post-list-body">
       <div v-if="postsData?.list.length > 0">
         <div

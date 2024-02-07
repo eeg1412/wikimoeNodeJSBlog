@@ -1,6 +1,5 @@
 <template>
   <div
-    v-if="options"
     :class="{
       'page-loading': pageLoading,
     }"
