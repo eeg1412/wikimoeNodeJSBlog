@@ -28,6 +28,16 @@ import { Editor, Toolbar } from '@wangeditor/editor-for-vue'
 import AttachmentsDialog from '@/components/AttachmentsDialog'
 import { Boot, DomEditor, SlateTransforms } from '@wangeditor/editor'
 import store from '@/store'
+import { i18nAddResources } from '@wangeditor/editor'
+
+i18nAddResources('zh-CN', {
+  videoModule: {
+    uploadVideo: '视频媒体库',
+  },
+  uploadImgModule: {
+    uploadImage: '图片媒体库',
+  },
+})
 
 const imageToHtmlConf = {
   type: 'image',
