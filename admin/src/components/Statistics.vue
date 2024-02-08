@@ -31,13 +31,19 @@
             <el-table-column prop="title" label="标题">
               <template #default="{ row }">
                 <!-- 判断type，如果是2就用 row.excerpt 否则用title -->
-                <div>
+                <div class="dib">
                   <div v-if="row.type === 2">
                     {{ reduceText(row.excerpt) }}
                   </div>
                   <div v-else>
                     {{ reduceText(row.title) }}
                   </div>
+                </div>
+                <!-- 点击打开按钮 -->
+                <div class="dib ml5 vt">
+                  <el-link type="primary" @click="openPage(row)"
+                    ><i class="fas fa-external-link-alt"></i
+                  ></el-link>
                 </div>
               </template>
             </el-table-column>
@@ -61,13 +67,19 @@
             <el-table-column prop="title" label="标题">
               <template #default="{ row }">
                 <!-- 判断type，如果是2就用 row.excerpt 否则用title -->
-                <div>
+                <div class="dib">
                   <div v-if="row.type === 2">
                     {{ reduceText(row.excerpt) }}
                   </div>
                   <div v-else>
                     {{ reduceText(row.title) }}
                   </div>
+                </div>
+                <!-- 点击打开按钮 -->
+                <div class="dib ml5 vt">
+                  <el-link type="primary" @click="openPage(row)"
+                    ><i class="fas fa-external-link-alt"></i
+                  ></el-link>
                 </div>
               </template>
             </el-table-column>
@@ -156,10 +168,9 @@
 </template>
 <script>
 import { onMounted, reactive, ref, computed } from 'vue'
-import moment from 'moment'
 import { useRoute, useRouter } from 'vue-router'
 import { authApi } from '@/api'
-moment.locale('zh-cn')
+import store from '@/store'
 
 export default {
   setup() {
@@ -192,6 +203,36 @@ export default {
       return text
     }
 
+    const siteUrl = computed(() => {
+      return store.getters.siteUrl
+    })
+
+    const openPage = (row) => {
+      const path = getPostPagePath(row)
+      // 使用 window.open 方法在新窗口中打开 URL
+      window.open(path, '_blank')
+    }
+    const getPostPagePath = (row) => {
+      // 先判断type是1，2还是3，1和2跳转到/post/id，3跳转到/page/id
+      // 如果有别名，就跳转到别名，没有别名就跳转到id
+      let path
+      if (row.type === 1 || row.type === 2) {
+        path = '/post/'
+      } else if (row.type === 3) {
+        path = '/page/'
+      } else {
+        console.error('Invalid row type:', row.type)
+        return
+      }
+
+      if (row.alias) {
+        path += row.alias
+      } else {
+        path += row._id
+      }
+      return siteUrl.value + path
+    }
+
     onMounted(() => {
       getStatistics()
     })
@@ -202,6 +243,7 @@ export default {
       timeRangeType,
       getStatistics,
       reduceText,
+      openPage,
     }
   },
 }
