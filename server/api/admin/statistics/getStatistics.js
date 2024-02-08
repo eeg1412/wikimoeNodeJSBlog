@@ -3,6 +3,7 @@ const log4js = require('log4js')
 const adminApiLog = log4js.getLogger('adminApi')
 const moment = require('moment-timezone');
 const readerlogUtils = require('../../../mongodb/utils/readerlogs')
+const postLikeLogUtils = require('../../../mongodb/utils/postLikeLogs')
 
 
 module.exports = async function (req, res, next) {
@@ -152,15 +153,14 @@ module.exports = async function (req, res, next) {
   const readPostLikePipeline = [
     {
       $match: {
-        createdAt: { $gte: startDate.toDate(), $lte: endDate.toDate() },
-        action: { $in: ['postLike'] },
-        isBot: false
+        date: { $gte: startDate.toDate(), $lte: endDate.toDate() },
+        like: true
       }
     },
-    // 根据{data.targetId} 分组
+    // 根据{post} 分组
     {
       $group: {
-        _id: "$data.targetId",
+        _id: "$post",
         count: { $sum: 1 }
       }
     },
@@ -196,7 +196,7 @@ module.exports = async function (req, res, next) {
       }
     }
   ]
-  const readPostLikeData = await readerlogUtils.aggregate(readPostLikePipeline).catch(err => {
+  const readPostLikeData = await postLikeLogUtils.aggregate(readPostLikePipeline).catch(err => {
     adminApiLog.error(err)
     return false
   })
