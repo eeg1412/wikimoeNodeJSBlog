@@ -18,6 +18,6 @@ var emailSendHistorys = new Schema({
     type: Number,
     default: 0
   },
-}, { timestamps: true });
+}, { capped: 15728640, timestamps: true });
 
 module.exports = mongoose.model('emailSendHistorys', emailSendHistorys);
