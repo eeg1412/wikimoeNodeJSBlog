@@ -103,6 +103,16 @@ module.exports = async function (req, res, next) {
   }
 
   let data = null
+  // 查询comment
+  const comment = await commentUtils.findOne({ _id: id }, 'content')
+  if (!comment) {
+    res.status(400).json({
+      errors: [{
+        message: '更新失败，评论不存在'
+      }]
+    })
+    return
+  }
   params.ipInfo = await utils.IP2LocationUtils(ip, null, null, false)
   if (oldData) {
     // 如果oldData存在，则更新
@@ -161,8 +171,7 @@ module.exports = async function (req, res, next) {
     likes = -1
   }
   commentUtils.updateOne({ _id: id }, { $inc: { likes: likes } }, true)
-  // 查询comment
-  const comment = await commentUtils.findOne({ _id: id }, 'content')
+
   let content = comment.content
   // 控制content长度在20字，超过...
   if (content.length > 20) {

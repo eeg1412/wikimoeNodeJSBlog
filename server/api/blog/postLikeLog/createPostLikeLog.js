@@ -103,6 +103,16 @@ module.exports = async function (req, res, next) {
   }
 
   let data = null
+  // 查询post
+  const post = await postUtils.findOne({ _id: id }, 'title excerpt type')
+  if (!post) {
+    res.status(400).json({
+      errors: [{
+        message: '更新失败'
+      }]
+    })
+    return
+  }
   params.ipInfo = await utils.IP2LocationUtils(ip, null, null, false)
   if (oldData) {
     // 如果oldData存在，则更新
@@ -140,6 +150,11 @@ module.exports = async function (req, res, next) {
     })
   }
   if (!data) {
+    res.status(400).json({
+      errors: [{
+        message: '更新失败'
+      }]
+    })
     return
   }
 
@@ -160,19 +175,34 @@ module.exports = async function (req, res, next) {
   } else {
     likes = -1
   }
+
   postUtils.updateOne({ _id: id }, { $inc: { likes: likes } }, true)
-  // 查询post
-  const post = await postUtils.findOne({ _id: id }, 'title excerpt')
+
   let content = post.title || post.excerpt
   // 控制content长度在20字，超过...
   if (content.length > 20) {
     content = content.substring(0, 20) + '...'
   }
+  let target = null
+  switch (post.type) {
+    case 1:
+      target = 'blog'
+      break;
+    case 2:
+      target = 'tweet'
+      break;
+    case 3:
+      target = 'page'
+      break;
+
+    default:
+      break;
+  }
   const readerlogParams = {
     uuid: uuid,
     action: like ? 'postLike' : 'postDislike',
     data: {
-      target: 'post',
+      target: target,
       targetId: id,
       content: content,
     },
