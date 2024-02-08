@@ -94,7 +94,7 @@
             </div>
           </template>
         </el-table-column>
-        <el-table-column label="发送内容" prop="content">
+        <el-table-column label="发送内容" prop="content" min-width="300px">
           <template #default="{ row }">
             <div v-html="row.content"></div>
           </template>
