@@ -67,7 +67,8 @@ module.exports = async function (req, res, next) {
     // 按照次数排序
     {
       $sort: {
-        count: -1
+        count: -1,
+        _id: -1
       }
     },
     // 只取前10
@@ -106,7 +107,8 @@ module.exports = async function (req, res, next) {
     // 按照次数排序
     {
       $sort: {
-        count: -1
+        count: -1,
+        _id: -1
       }
     },
     // 只取前10
@@ -167,7 +169,8 @@ module.exports = async function (req, res, next) {
     // 按照次数排序
     {
       $sort: {
-        count: -1
+        count: -1,
+        _id: -1
       }
     },
     // 只取前10
@@ -229,7 +232,8 @@ module.exports = async function (req, res, next) {
     // 按照次数排序
     {
       $sort: {
-        count: -1
+        count: -1,
+        _id: -1
       }
     },
     // 只取前10
@@ -289,7 +293,8 @@ module.exports = async function (req, res, next) {
     // 按照次数排序
     {
       $sort: {
-        count: -1
+        count: -1,
+        _id: -1
       }
     },
     // 只取前10
@@ -349,7 +354,8 @@ module.exports = async function (req, res, next) {
     // 按照次数排序
     {
       $sort: {
-        count: -1
+        count: -1,
+        _id: -1
       }
     },
     // 只取前10
