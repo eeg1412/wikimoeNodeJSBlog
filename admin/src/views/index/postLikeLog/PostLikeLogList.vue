@@ -56,7 +56,7 @@
         <el-table-column label="文章/推文" min-width="180">
           <template #default="{ row }">
             <div :title="row.post.title || row.post.excerpt" class="dib">
-              {{ row.post.title || row.post.excerpt }}
+              {{ titleLimit(row.post.title || row.post.excerpt) }}
             </div>
             <!-- 点击打开按钮 -->
             <div class="dib ml5 vt">
