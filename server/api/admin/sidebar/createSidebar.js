@@ -71,6 +71,7 @@ module.exports = async function (req, res, next) {
     })
     adminApiLog.info(`sidebar create success`)
     cacheDataUtils.getSidebarList()
+    utils.reflushBlogCache()
   }).catch((err) => {
     res.status(400).json({
       errors: [{

@@ -730,7 +730,10 @@ exports.reflushBlogCache = async () => {
     return
   }
   reflushBlogCacheTimer = setTimeout(async () => {
-    blogCachesUtils.deleteMany({})
+    console.info('刷新blogCache')
+    blogCachesUtils.deleteMany({}).then(() => {
+      console.info('blogCache刷新成功')
+    })
     reflushBlogCacheTimer = null
-  }, 1000 * 5)
+  }, 1000 * 2)
 }

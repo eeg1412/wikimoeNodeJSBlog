@@ -94,6 +94,7 @@ module.exports = async function (req, res, next) {
     }
 
     cacheDataUtils.getCommentList()
+    utils.reflushBlogCache()
   }).catch((err) => {
     res.status(400).json({
       errors: [{

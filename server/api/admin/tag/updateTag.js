@@ -53,6 +53,7 @@ module.exports = async function (req, res, next) {
     res.send({
       data: data
     })
+    utils.reflushBlogCache()
     adminApiLog.info(`tag:${tagname} update success`)
   }).catch((err) => {
     res.status(400).json({

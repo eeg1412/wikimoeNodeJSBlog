@@ -105,6 +105,7 @@ module.exports = async function (req, res, next) {
     res.send({
       data: data
     })
+    utils.reflushBlogCache()
     adminApiLog.info(`link create success`)
   }).catch((err) => {
     res.status(400).json({

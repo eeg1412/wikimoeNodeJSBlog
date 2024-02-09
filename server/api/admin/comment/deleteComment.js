@@ -48,7 +48,8 @@ module.exports = async function (req, res, next) {
     // 如果commentInfo的status为1，则更新文章评论数
     if (commentInfo.status === 1) {
       postUtils.updateOne({ _id: commentInfo.post }, { $inc: { comnum: -1 } })
-      cacheDataUtils.getSidebarList()
+      cacheDataUtils.getCommentList()
+      utils.reflushBlogCache()
     }
   }).catch((err) => {
     res.status(400).json({

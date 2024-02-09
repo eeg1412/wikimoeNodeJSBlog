@@ -58,6 +58,7 @@ module.exports = async function (req, res, next) {
         message: '删除成功'
       }
     })
+    utils.reflushBlogCache()
   }).catch((err) => {
     res.status(400).json({
       errors: [{

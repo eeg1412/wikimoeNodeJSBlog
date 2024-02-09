@@ -73,6 +73,7 @@ module.exports = async function (req, res, next) {
     if (parent) {
       utils.sendReplyCommentNotice(postInfo, String(data._id))
     }
+    utils.reflushBlogCache()
   }).catch((err) => {
     console.error(err)
     res.status(400).json({

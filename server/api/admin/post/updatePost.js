@@ -197,6 +197,7 @@ module.exports = async function (req, res, next) {
     if (post.status !== status) {
       cacheDataUtils.getPostArchiveList()
     }
+    utils.reflushBlogCache()
   }).catch((err) => {
     res.status(400).json({
       errors: [{

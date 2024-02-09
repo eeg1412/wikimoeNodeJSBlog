@@ -54,6 +54,7 @@ module.exports = async function (req, res, next) {
   }
   globalConfigUtils.initGlobalConfig()
   cacheDataUtils.getPostArchiveList()
+  utils.reflushBlogCache()
   // 返回结果
   res.send({
     data: resList

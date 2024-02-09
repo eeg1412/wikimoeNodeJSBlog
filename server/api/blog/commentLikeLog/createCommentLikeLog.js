@@ -191,6 +191,7 @@ module.exports = async function (req, res, next) {
     ip: ip
   }
   readerlogUtils.save(readerlogParams).then((data) => {
+    utils.reflushBlogCache()
     userApiLog.info(`comment like log create success`)
   }).catch((err) => {
     userApiLog.error(`comment like log create fail, ${logErrorToText(err)}`)

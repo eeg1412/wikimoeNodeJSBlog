@@ -82,6 +82,7 @@ module.exports = async function (req, res, next) {
     })
     adminApiLog.info(`navi update success`)
     cacheDataUtils.getNaviList()
+    utils.reflushBlogCache()
   }).catch((err) => {
     res.status(400).json({
       errors: [{

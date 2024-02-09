@@ -96,6 +96,7 @@ module.exports = async function (req, res, next) {
     })
     adminApiLog.info(`sort:${sortname} update success`)
     cacheDataUtils.getSortList()
+    utils.reflushBlogCache()
   }).catch((err) => {
     res.status(400).json({
       errors: [{
