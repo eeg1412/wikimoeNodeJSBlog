@@ -18,7 +18,12 @@
           {{ item.nickname }}
         </div>
         <div class="comment-latest-item-date">
-          {{ fromNow(item.date) }}
+          <ClientOnly
+            >{{ fromNow(item.date, 'yyyy-MM-dd')
+            }}<template #fallback>{{
+              formatDate(item.date, 'yyyy-MM-dd')
+            }}</template>
+          </ClientOnly>
         </div>
         <!-- 评论内容 -->
         <div class="comment-latest-item-comment-body">

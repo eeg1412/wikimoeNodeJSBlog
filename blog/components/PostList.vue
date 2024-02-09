@@ -23,10 +23,16 @@
           <div class="clearfix">
             <div class="post-list-info-body fl">
               <span class="fb">{{ item.author?.nickname }}</span
-              ><span class="tenten">·</span
-              ><span class="cGray94" :title="formatDate(item.date)">{{
-                fromNow(item.date, 'yyyy-MM-dd')
-              }}</span
+              ><span class="tenten">·</span>
+              <ClientOnly
+                ><span class="cGray94" :title="formatDate(item.date)">{{
+                  fromNow(item.date, 'yyyy-MM-dd')
+                }}</span
+                ><template #fallback
+                  ><span class="cGray94">{{
+                    formatDate(item.date, 'yyyy-MM-dd')
+                  }}</span></template
+                > </ClientOnly
               ><template v-if="item.sort"
                 ><span class="tenten">·</span
                 ><NuxtLink

@@ -260,7 +260,12 @@
                       </div>
                     </div>
                     <div class="comment-list-item-date">
-                      {{ fromNow(item.date) }}
+                      <ClientOnly
+                        >{{ fromNow(item.date, 'yyyy-MM-dd')
+                        }}<template #fallback>{{
+                          formatDate(item.date, 'yyyy-MM-dd')
+                        }}</template>
+                      </ClientOnly>
                     </div>
                   </div>
                   <blockquote
