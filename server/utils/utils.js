@@ -11,6 +11,7 @@ const emailSendHistoryUtils = require('../mongodb/utils/emailSendHistorys')
 const postUtils = require('../mongodb/utils/posts')
 const commentUtils = require('../mongodb/utils/comments')
 const referrerUtils = require('../mongodb/utils/referrers')
+const blogCachesUtils = require('../mongodb/utils/blogCaches')
 const sharp = require('sharp');
 
 exports.creatSha256Str = function (str) {
@@ -721,4 +722,15 @@ exports.handleRangeRequest = (req, res, next, folder) => {
   res.on('close', () => {
     file.destroy();
   });
+}
+
+let reflushBlogCacheTimer = null
+exports.reflushBlogCache = async () => {
+  if (reflushBlogCacheTimer) {
+    return
+  }
+  reflushBlogCacheTimer = setTimeout(async () => {
+    blogCachesUtils.deleteMany({})
+    reflushBlogCacheTimer = null
+  }, 1000 * 5)
 }

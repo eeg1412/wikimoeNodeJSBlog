@@ -106,6 +106,8 @@ NUXT_API_API_DOMAIN="填写API的HTTP地址，如：http://localhost:3006"
 GOOGLE_ADSENSE_ID="如果需要设置谷歌广告，填写谷歌广告ID"
 GOOGLE_ADSENSE_TEST_MODE="是否启用测试模式 1 为启用，0 为不启用"
 GOOGLE_ADSENSE_POST_DETAIL_BT="文章底部广告，填写格式为：ad-slot,ad-format,ad-layout-key"
+MONGODB_URI="填写mongodb地址"
+MONGODB_DB_NAME="填写mongodb地址DB名"
 ```
 
 ### 配置谷歌广告 ads.txt （如果需要）
