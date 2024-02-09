@@ -15,7 +15,7 @@ if (process.env.GOOGLE_ADSENSE_ID) {
     process.env.GOOGLE_ADSENSE_POST_DETAIL_BT || null
 }
 // 缓存时间
-const cacheTime = 24 * 60 * 60
+const cacheTime = 1 * 60 * 60
 export default defineNuxtConfig({
   app: {
     head: {
@@ -47,15 +47,12 @@ export default defineNuxtConfig({
   routeRules: {
     '/rss': {
       proxy: `${process.env.NUXT_API_API_DOMAIN}/rss`,
-      swr: cacheTime,
     },
     '/rss/blog': {
       proxy: `${process.env.NUXT_API_API_DOMAIN}/rss/blog`,
-      swr: cacheTime,
     },
     '/rss/tweet': {
       proxy: `${process.env.NUXT_API_API_DOMAIN}/rss/tweet`,
-      swr: cacheTime,
     },
     '/content/**': {
       proxy: `${process.env.NUXT_API_API_DOMAIN}/content/**`,
