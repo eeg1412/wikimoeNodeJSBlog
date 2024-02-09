@@ -11,7 +11,6 @@ const emailSendHistoryUtils = require('../mongodb/utils/emailSendHistorys')
 const postUtils = require('../mongodb/utils/posts')
 const commentUtils = require('../mongodb/utils/comments')
 const referrerUtils = require('../mongodb/utils/referrers')
-const blogCachesUtils = require('../mongodb/utils/blogCaches')
 const sharp = require('sharp');
 
 exports.creatSha256Str = function (str) {
@@ -724,16 +723,16 @@ exports.handleRangeRequest = (req, res, next, folder) => {
   });
 }
 
-let reflushBlogCacheTimer = null
-exports.reflushBlogCache = async () => {
-  if (reflushBlogCacheTimer) {
-    return
-  }
-  reflushBlogCacheTimer = setTimeout(async () => {
-    console.info('刷新blogCache')
-    blogCachesUtils.deleteMany({}).then(() => {
-      console.info('blogCache刷新成功')
-    })
-    reflushBlogCacheTimer = null
-  }, 1000 * 2)
-}
+// let reflushBlogCacheTimer = null
+// exports.reflushBlogCache = async () => {
+//   if (reflushBlogCacheTimer) {
+//     return
+//   }
+//   reflushBlogCacheTimer = setTimeout(async () => {
+//     console.info('刷新blogCache')
+//     blogCachesUtils.deleteMany({}).then(() => {
+//       console.info('blogCache刷新成功')
+//     })
+//     reflushBlogCacheTimer = null
+//   }, 1000 * 2)
+// }

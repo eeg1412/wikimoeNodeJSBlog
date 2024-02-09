@@ -15,7 +15,7 @@ if (process.env.GOOGLE_ADSENSE_ID) {
     process.env.GOOGLE_ADSENSE_POST_DETAIL_BT || null
 }
 // 缓存时间
-const cacheTime = 2
+const cacheTime = 10
 export default defineNuxtConfig({
   app: {
     head: {
