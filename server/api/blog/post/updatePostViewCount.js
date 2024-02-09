@@ -69,7 +69,7 @@ module.exports = async function (req, res, next) {
   // 更新
   postUtils.findOneAndUpdate({ _id: id }, params, { new: true }).then(async (data) => {
     userApiLog.info(`post view update success`)
-    // utils.reflushBlogCache()
+    // // utils.reflushBlogCache()
     // 添加阅读日志
     // 操作者的uuid
     // uuid: {

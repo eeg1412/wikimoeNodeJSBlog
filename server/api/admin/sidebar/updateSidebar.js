@@ -47,7 +47,7 @@ module.exports = async function (req, res, next) {
       data: data
     })
     cacheDataUtils.getSidebarList()
-    utils.reflushBlogCache()
+    // utils.reflushBlogCache()
   }).catch((err) => {
     // 记录
     adminApiLog.error(`sidebar update fail, ${logErrorToText(err)}`)

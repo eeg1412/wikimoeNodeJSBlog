@@ -241,7 +241,7 @@ module.exports = async function (req, res, next) {
       // 异步更新文章评论数
       postUtils.updateOne({ _id: post }, { $inc: { comnum: 1 } }, true)
       cacheDataUtils.getCommentList()
-      utils.reflushBlogCache()
+      // utils.reflushBlogCache()
     }
     utils.sendCommentAddNotice(postInfo, data)
     if (sendParentMailFlag) {

@@ -56,7 +56,7 @@ module.exports = async function (req, res, next) {
     })
     adminApiLog.info(`sidebar update success`)
     cacheDataUtils.getSidebarList()
-    utils.reflushBlogCache()
+    // utils.reflushBlogCache()
   }).catch((err) => {
     res.status(400).json({
       errors: [{

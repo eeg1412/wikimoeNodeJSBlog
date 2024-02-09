@@ -105,7 +105,7 @@ module.exports = async function (req, res, next) {
     })
     adminApiLog.info(`bangumi update success`)
     cacheDataUtils.getBangumiYearList()
-    utils.reflushBlogCache()
+    // utils.reflushBlogCache()
   }).catch((err) => {
     res.status(400).json({
       errors: [{

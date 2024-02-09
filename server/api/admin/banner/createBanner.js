@@ -21,7 +21,7 @@ module.exports = async function (req, res, next) {
     })
     adminApiLog.info(`banner create success`)
     cacheDataUtils.getBannerList()
-    utils.reflushBlogCache()
+    // utils.reflushBlogCache()
   }).catch((err) => {
     res.status(400).json({
       errors: [{

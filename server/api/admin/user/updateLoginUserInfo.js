@@ -92,5 +92,5 @@ module.exports = async function (req, res, next) {
   }
   adminApiLog.info(`admin:${req.admin.nickname} - ${req.admin._id} update profile,IP:${IP}`)
   res.send({})
-  utils.reflushBlogCache()
+  // utils.reflushBlogCache()
 }

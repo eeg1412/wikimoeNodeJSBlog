@@ -49,7 +49,7 @@ module.exports = async function (req, res, next) {
     if (commentInfo.status === 1) {
       postUtils.updateOne({ _id: commentInfo.post }, { $inc: { comnum: -1 } })
       cacheDataUtils.getCommentList()
-      utils.reflushBlogCache()
+      // utils.reflushBlogCache()
     }
   }).catch((err) => {
     res.status(400).json({

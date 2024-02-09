@@ -30,7 +30,7 @@ module.exports = async function (req, res, next) {
       }
     })
     cacheDataUtils.getNaviList()
-    utils.reflushBlogCache()
+    // utils.reflushBlogCache()
   }).catch((err) => {
     res.status(400).json({
       errors: [{

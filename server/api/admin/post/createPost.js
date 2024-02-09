@@ -31,7 +31,7 @@ module.exports = async function (req, res, next) {
     })
     adminApiLog.info(`post create success`)
     cacheDataUtils.getPostArchiveList()
-    utils.reflushBlogCache()
+    // utils.reflushBlogCache()
   }).catch((err) => {
     res.status(400).json({
       errors: [{
