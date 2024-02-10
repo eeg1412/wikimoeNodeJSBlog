@@ -477,5 +477,17 @@ export default function (api) {
         shouldAdminJWT: true
       })
     },
+    // get /blogcacheinfo
+    getBlogCacheInfo () {
+      return api.get('/blogcacheinfo', {
+        shouldAdminJWT: true
+      })
+    },
+    // delete /blogcache/deleteall
+    deleteBlogCacheAll () {
+      return api.delete('/blogcache/deleteall', {
+        shouldAdminJWT: true
+      })
+    },
   }
 }

@@ -18,3 +18,9 @@ exports.deleteMany = async function (parmas) {
   // document查询
   return await blogCachesModel.deleteMany(parmas);
 }
+
+// count
+exports.count = async function (parmas) {
+  // document查询
+  return await blogCachesModel.countDocuments(parmas);
+}

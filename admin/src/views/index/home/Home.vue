@@ -87,6 +87,49 @@
     </div>
     <Statistics />
     <el-divider />
+    <div v-if="blogCacheInfo">
+      <div class="el-descriptions__header">
+        <div class="el-descriptions__title">博客页面缓存</div>
+        <div class="el-descriptions__extra"></div>
+      </div>
+      <el-row>
+        <el-col :span="8">
+          <div class="el-statistic">
+            <div class="el-statistic__head">缓存数量</div>
+            <div class="el-statistic__content">
+              <span class="el-statistic__number">{{
+                blogCacheInfo.blogCacheCount
+              }}</span>
+            </div>
+          </div>
+        </el-col>
+        <el-col :span="16">
+          <div class="el-statistic">
+            <div class="el-statistic__head">缓存占用（MB）</div>
+            <div class="el-statistic__content">
+              <span class="el-statistic__number">{{
+                blogCacheInfo.blogCacheSize
+              }}</span>
+              <div class="el-statistic__suffix" v-if="blogCacheInfo.isCapped">
+                /30
+              </div>
+              <div class="el-statistic__suffix ml10">
+                <!-- 删除按钮 -->
+                <el-link
+                  type="danger"
+                  @click="clearBlogCache"
+                  v-if="blogCacheInfo.blogCacheCount > 0"
+                >
+                  <!-- 垃圾桶图标 -->
+                  <i class="fas fa-trash-alt"></i>
+                </el-link>
+              </div>
+            </div>
+          </div>
+        </el-col>
+      </el-row>
+    </div>
+    <el-divider />
     <el-descriptions title="服务器信息" v-if="data">
       <el-descriptions-item label="NodeJs版本">{{
         data.nodeVersion
@@ -131,6 +174,7 @@ import moment from 'moment'
 import store from '@/store'
 import { useRoute, useRouter } from 'vue-router'
 import { authApi } from '@/api'
+import { ElMessage, ElMessageBox } from 'element-plus'
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -325,9 +369,32 @@ export default {
       return {}
     })
 
+    const blogCacheInfo = ref(null)
+    const getBlogCacheInfo = () => {
+      authApi.getBlogCacheInfo().then((res) => {
+        blogCacheInfo.value = res.data.data
+      })
+    }
+
+    const clearBlogCache = () => {
+      ElMessageBox.confirm('确定要清空缓存吗？', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning',
+      })
+        .then(() => {
+          authApi.deleteBlogCacheAll().then(() => {
+            ElMessage.success('清空成功')
+            getBlogCacheInfo()
+          })
+        })
+        .catch(() => {})
+    }
+
     onMounted(() => {
       getDashboard()
       getDashboardVisitor()
+      getBlogCacheInfo()
     })
 
     return {
@@ -341,6 +408,8 @@ export default {
       pvCartData,
       uniqueIPTimeLineData,
       robotAccessData,
+      blogCacheInfo,
+      clearBlogCache,
     }
   },
 }

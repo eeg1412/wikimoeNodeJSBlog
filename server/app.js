@@ -4,7 +4,8 @@ const log4js = require('log4js')
 var path = require('path');
 var cookieParser = require('cookie-parser');
 // var logger = require('morgan');
-require('./mongodb')
+const $mongodDB = require('./mongodb')
+global.$mongodDB = $mongodDB
 var history = require('connect-history-api-fallback');
 
 var adminRouter = require('./routes/admin');
