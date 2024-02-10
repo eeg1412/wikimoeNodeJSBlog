@@ -10,12 +10,15 @@ module.exports = async function (req, res, next) {
   const stats = await db.stats()
   const isCapped = await db.isCapped()
   const blogCacheSize = stats.size
+  const blogCacheMaxSize = stats.maxSize || 0
   // 转换成MB
   const blogCacheSizeMB = blogCacheSize / 1024 / 1024
+  const blogCacheMaxSizeMB = blogCacheMaxSize / 1024 / 1024
   const blogCacheCount = await blogCachesUtils.count()
 
   const data = {
     blogCacheSize: blogCacheSizeMB.toFixed(3),
+    blogCacheMaxSize: blogCacheMaxSizeMB.toFixed(3),
     blogCacheCount,
     isCapped
   }

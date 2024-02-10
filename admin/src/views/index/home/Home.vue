@@ -108,10 +108,10 @@
             <div class="el-statistic__head">缓存占用（MB）</div>
             <div class="el-statistic__content">
               <span class="el-statistic__number">{{
-                blogCacheInfo.blogCacheSize
+                removeEndZero(blogCacheInfo.blogCacheSize)
               }}</span>
               <div class="el-statistic__suffix" v-if="blogCacheInfo.isCapped">
-                /150
+                /{{ removeEndZero(blogCacheInfo.blogCacheMaxSize) }}
               </div>
               <div class="el-statistic__suffix ml10">
                 <!-- 删除按钮 -->
@@ -391,6 +391,12 @@ export default {
         .catch(() => {})
     }
 
+    // 去掉末尾0的方法
+    const removeEndZero = (numStr) => {
+      let result = numStr.replace(/\.?0+$/, '')
+      return result
+    }
+
     onMounted(() => {
       getDashboard()
       getDashboardVisitor()
@@ -410,6 +416,7 @@ export default {
       robotAccessData,
       blogCacheInfo,
       clearBlogCache,
+      removeEndZero,
     }
   },
 }
