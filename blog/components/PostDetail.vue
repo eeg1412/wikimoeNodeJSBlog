@@ -182,7 +182,7 @@
         :label="`${formatNumber(postData.data.likes)}点赞`"
         :trailing="false"
         :loading="likeListLoading || likePostIsLoading"
-        v-if="checkIsLike()"
+        v-if="postData.data.isLike"
         @click="likePost"
       />
       <UButton
@@ -612,6 +612,7 @@ const postLikeLogList = () => {
   postLikeLogListApi({ postIdList })
     .then((res) => {
       likeList.value = res.list
+      checkIsLike()
     })
     .finally(() => {
       likeListInited.value = true
@@ -621,9 +622,11 @@ const postLikeLogList = () => {
 const checkIsLike = () => {
   const likeData = likeList.value.find((item) => item.post === postid)
   if (likeData) {
-    return likeData.like
-  } else {
-    return false
+    postData.value.data.isLike = likeData.like
+    if (likeData.like && postData.value.data.likes === 0) {
+      // 缓存补偿
+      postData.value.data.likes = 1
+    }
   }
 }
 const getLikeDataByPostId = () => {
@@ -641,7 +644,7 @@ const likePost = () => {
     return
   }
   // 如果找到了，判断里面的Like，没有就是false
-  let like = checkIsLike()
+  let like = postData.value.data.isLike
   const __v = getLikeDataByPostId()?.__v
   likePostIsLoading.value = true
 
@@ -659,6 +662,7 @@ const likePost = () => {
         ? postData.value.data.likes + 1
         : postData.value.data.likes - 1
       postData.value.data.likes = newLikeCount
+      postData.value.data.isLike = newLike
     })
     .catch((err) => {
       console.log(err)

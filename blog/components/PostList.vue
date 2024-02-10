@@ -165,7 +165,7 @@
 
             <div
               class="dflex flexCenter cursor-pointer hover:text-primary-500"
-              :class="checkIsLike(item._id) ? 'text-primary-500' : 'cGray94'"
+              :class="item.isLike ? 'text-primary-500' : 'cGray94'"
               @click.stop="likePost(item._id)"
               v-if="likeListInited"
             >
@@ -173,7 +173,7 @@
               <UIcon
                 class="mr5"
                 name="i-heroicons-heart-solid"
-                v-if="checkIsLike(item._id)"
+                v-if="item.isLike"
               />
               <!-- heart-outline -->
               <UIcon class="mr5" name="i-heroicons-heart" v-else />
@@ -392,6 +392,16 @@ const postLikeLogList = () => {
   postLikeLogListApi({ postIdList })
     .then((res) => {
       likeList.value = res.list
+      postsData.value.list.forEach((item, index) => {
+        const likeData = res.list.find((likeItem) => likeItem.post === item._id)
+        if (likeData && likeData.like) {
+          if (item.likes === 0) {
+            // 延迟补偿
+            postsData.value.list[index].likes = 1
+          }
+          postsData.value.list[index].isLike = likeData.like
+        }
+      })
     })
     .finally(() => {
       likeListInited.value = true
@@ -443,6 +453,7 @@ const likePost = (postId) => {
       const post = postsData.value.list[postIndex]
       const newLikeCount = newLike ? post.likes + 1 : post.likes - 1
       postsData.value.list[postIndex].likes = newLikeCount
+      postsData.value.list[postIndex].isLike = newLike
     })
     .catch((err) => {
       console.log(err)
