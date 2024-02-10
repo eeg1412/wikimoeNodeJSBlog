@@ -16,6 +16,7 @@ if (process.env.GOOGLE_ADSENSE_ID) {
 }
 // 缓存时间
 const cacheTime = 10
+const staleMaxAge = 60 * 60
 export default defineNuxtConfig({
   app: {
     head: {
@@ -73,9 +74,24 @@ export default defineNuxtConfig({
     '/api/blog/**': {
       proxy: `${process.env.NUXT_API_API_DOMAIN}/api/blog/**`,
     },
-    '/': { swr: cacheTime },
-    '/page/**': { swr: cacheTime },
-    '/post/**': { swr: cacheTime },
+    '/': {
+      swr: cacheTime,
+      cache: {
+        staleMaxAge: staleMaxAge,
+      },
+    },
+    '/page/**': {
+      swr: cacheTime,
+      cache: {
+        staleMaxAge: staleMaxAge,
+      },
+    },
+    '/post/**': {
+      swr: cacheTime,
+      cache: {
+        staleMaxAge: staleMaxAge,
+      },
+    },
   },
   colorMode: {
     preference: 'light',
