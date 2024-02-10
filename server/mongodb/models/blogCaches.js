@@ -17,6 +17,6 @@ var blogCaches = new Schema({
     default: Date.now
   },
 
-}, { capped: 157286400 });
+}, { capped: 31457280 });
 
 module.exports = mongoose.model('blogcaches', blogCaches);
