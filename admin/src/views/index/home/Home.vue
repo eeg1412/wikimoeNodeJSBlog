@@ -111,7 +111,7 @@
                 blogCacheInfo.blogCacheSize
               }}</span>
               <div class="el-statistic__suffix" v-if="blogCacheInfo.isCapped">
-                /30
+                /150
               </div>
               <div class="el-statistic__suffix ml10">
                 <!-- 删除按钮 -->
