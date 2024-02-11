@@ -15,8 +15,68 @@ if (process.env.GOOGLE_ADSENSE_ID) {
     process.env.GOOGLE_ADSENSE_POST_DETAIL_BT || null
 }
 // 缓存时间
-const cacheTime = 10
-const staleMaxAge = 60 * 60
+const cacheTime = process.env.SWR_CACHE_MAXAGE
+  ? Number(process.env.SWR_CACHE_MAXAGE)
+  : 10
+const staleMaxAge = process.env.SWR_CACHE_STALEMAXAGE
+  ? Number(process.env.SWR_CACHE_STALEMAXAGE)
+  : 3600
+
+let routeRules = {
+  '/rss': {
+    proxy: `${process.env.NUXT_API_API_DOMAIN}/rss`,
+  },
+  '/rss/blog': {
+    proxy: `${process.env.NUXT_API_API_DOMAIN}/rss/blog`,
+  },
+  '/rss/tweet': {
+    proxy: `${process.env.NUXT_API_API_DOMAIN}/rss/tweet`,
+  },
+  '/content/**': {
+    proxy: `${process.env.NUXT_API_API_DOMAIN}/content/**`,
+  },
+  '/upload/**': {
+    proxy: `${process.env.NUXT_API_API_DOMAIN}/upload/**`,
+  },
+  '/up_works/**': {
+    proxy: `${process.env.NUXT_API_API_DOMAIN}/up_works/**`,
+  },
+  '/web_demo/**': {
+    proxy: `${process.env.NUXT_API_API_DOMAIN}/web_demo/**`,
+  },
+  // ucloudImg
+  '/ucloudImg/**': {
+    proxy: `${process.env.NUXT_API_API_DOMAIN}/ucloudImg/**`,
+  },
+  '/api/blog/**': {
+    proxy: `${process.env.NUXT_API_API_DOMAIN}/api/blog/**`,
+  },
+}
+// 如果开启了SWR
+if (process.env.SWR_ENABLED === '1') {
+  const swrRules = {
+    '/': {
+      swr: cacheTime,
+      cache: {
+        staleMaxAge: staleMaxAge,
+      },
+    },
+    '/page/**': {
+      swr: cacheTime,
+      cache: {
+        staleMaxAge: staleMaxAge,
+      },
+    },
+    '/post/**': {
+      swr: cacheTime,
+      cache: {
+        staleMaxAge: staleMaxAge,
+      },
+    },
+  }
+  routeRules = { ...routeRules, ...swrRules }
+}
+console.log('routeRules', routeRules)
 export default defineNuxtConfig({
   app: {
     head: {
@@ -45,54 +105,7 @@ export default defineNuxtConfig({
       ...publicRuntimeConfigPlus,
     },
   },
-  routeRules: {
-    '/rss': {
-      proxy: `${process.env.NUXT_API_API_DOMAIN}/rss`,
-    },
-    '/rss/blog': {
-      proxy: `${process.env.NUXT_API_API_DOMAIN}/rss/blog`,
-    },
-    '/rss/tweet': {
-      proxy: `${process.env.NUXT_API_API_DOMAIN}/rss/tweet`,
-    },
-    '/content/**': {
-      proxy: `${process.env.NUXT_API_API_DOMAIN}/content/**`,
-    },
-    '/upload/**': {
-      proxy: `${process.env.NUXT_API_API_DOMAIN}/upload/**`,
-    },
-    '/up_works/**': {
-      proxy: `${process.env.NUXT_API_API_DOMAIN}/up_works/**`,
-    },
-    '/web_demo/**': {
-      proxy: `${process.env.NUXT_API_API_DOMAIN}/web_demo/**`,
-    },
-    // ucloudImg
-    '/ucloudImg/**': {
-      proxy: `${process.env.NUXT_API_API_DOMAIN}/ucloudImg/**`,
-    },
-    '/api/blog/**': {
-      proxy: `${process.env.NUXT_API_API_DOMAIN}/api/blog/**`,
-    },
-    '/': {
-      swr: cacheTime,
-      cache: {
-        staleMaxAge: staleMaxAge,
-      },
-    },
-    '/page/**': {
-      swr: cacheTime,
-      cache: {
-        staleMaxAge: staleMaxAge,
-      },
-    },
-    '/post/**': {
-      swr: cacheTime,
-      cache: {
-        staleMaxAge: staleMaxAge,
-      },
-    },
-  },
+  routeRules,
   colorMode: {
     preference: 'light',
   },
