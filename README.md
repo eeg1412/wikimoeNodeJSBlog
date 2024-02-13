@@ -109,8 +109,8 @@ GOOGLE_ADSENSE_POST_DETAIL_BT="文章底部广告，填写格式为：ad-slot,ad
 SWR_ENABLED="设置为1时打开SWR缓存，将会消耗大量内存提升访问速度"
 SWR_CACHE_MAXAGE="SWR缓存时间，单位秒，默认10秒"
 SWR_CACHE_STALEMAXAGE="staleMaxAge的时间，单位秒，默认3600秒"
-MONGODB_URI="填写mongodb地址"
-MONGODB_DB_NAME="填写mongodb对应的DB名"
+CACHE_MAX_PAGE="开启SWR时的缓存页面数量，默认10个页面"
+CACHE_TTL="缓存的过期时间，单位毫秒，默认60000毫秒"
 ```
 
 ### 配置谷歌广告 ads.txt （如果需要）

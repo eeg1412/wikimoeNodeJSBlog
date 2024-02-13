@@ -76,6 +76,12 @@ if (process.env.SWR_ENABLED === '1') {
   }
   routeRules = { ...routeRules, ...swrRules }
 }
+const CACHE_MAX_PAGE = process.env.CACHE_MAX_PAGE
+  ? Number(process.env.CACHE_MAX_PAGE)
+  : 10
+const CACHE_TTL = process.env.CACHE_TTL ? Number(process.env.CACHE_TTL) : 60000
+console.log('缓存最大页面数量', CACHE_MAX_PAGE)
+console.log('缓存时间', CACHE_TTL)
 console.log('routeRules', routeRules)
 export default defineNuxtConfig({
   app: {
@@ -117,18 +123,20 @@ export default defineNuxtConfig({
     },
     storage: {
       cache: {
-        driver: 'mongodb',
-        connectionString: process.env.MONGODB_URI,
-        databaseName: process.env.MONGODB_DB_NAME,
-        collectionName: 'blogcaches',
+        driver: 'lruCache',
+        max: CACHE_MAX_PAGE,
+        ttl: CACHE_TTL,
+        updateAgeOnGet: true,
+        updateAgeOnHas: true,
       },
     },
     devStorage: {
       cache: {
-        driver: 'mongodb',
-        connectionString: process.env.MONGODB_URI,
-        databaseName: process.env.MONGODB_DB_NAME,
-        collectionName: 'blogcaches',
+        driver: 'lruCache',
+        max: CACHE_MAX_PAGE,
+        ttl: CACHE_TTL,
+        updateAgeOnGet: true,
+        updateAgeOnHas: true,
       },
     },
   },

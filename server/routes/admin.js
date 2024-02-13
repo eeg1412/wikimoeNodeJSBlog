@@ -708,24 +708,6 @@ const adminRouteSetting = [
     roleType: null,
     role: null
   },
-  // getBlogCacheInfo
-  {
-    path: '/blogcacheinfo',
-    method: 'get',
-    middleware: [checkAuth],
-    controller: require('../api/admin/blogCache/getBlogCacheInfo'),
-    roleType: null,
-    role: null
-  },
-  // deleteBlogCacheAll
-  {
-    path: '/blogcache/deleteall',
-    method: 'delete',
-    middleware: [checkAuth],
-    controller: require('../api/admin/blogCache/deleteBlogCacheAll'),
-    roleType: null,
-    role: null
-  },
 ]
 
 adminRouteSetting.forEach(item => {
