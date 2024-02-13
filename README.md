@@ -110,7 +110,7 @@ SWR_ENABLED="设置为1时打开SWR缓存，将会消耗大量内存提升访问
 SWR_CACHE_MAXAGE="SWR缓存时间，单位秒，默认10秒"
 SWR_CACHE_STALEMAXAGE="staleMaxAge的时间，单位秒，默认3600秒"
 MONGODB_URI="填写mongodb地址"
-MONGODB_DB_NAME="填写mongodb地址DB名"
+MONGODB_DB_NAME="填写mongodb对应的DB名"
 ```
 
 ### 配置谷歌广告 ads.txt （如果需要）
