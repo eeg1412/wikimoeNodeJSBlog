@@ -20,7 +20,6 @@
     "@nuxtjs/google-adsense": "^3.0.0",
     "@pinia/nuxt": "^0.5.1",
     "highlight.js": "^11.9.0",
-    "mongodb": "^6.3.0",
     "nuxt-swiper": "^1.2.2",
     "photoswipe": "^5.4.3"
   }
