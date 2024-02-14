@@ -207,6 +207,14 @@
             v-model="form.alias"
             placeholder="请输入文章别名（用于别名访问）"
           ></el-input>
+          <!-- 重置别名按钮 -->
+          <el-button
+            type="primary"
+            size="small"
+            class="mt10"
+            @click="resetRandomAlias"
+            >随机别名</el-button
+          >
         </el-form-item>
         <!-- 模板选择 -->
         <el-form-item label="模板选择" prop="template" v-if="type === 3">
@@ -295,6 +303,7 @@ export default {
   setup() {
     const router = useRouter()
     const route = useRoute()
+    const isNew = route.query.new === '1'
     const id = ref(route.params.id)
     const type = ref(null)
     const postEditorVersion = ref(null)
@@ -317,6 +326,16 @@ export default {
       }
       return 1
     })
+    const generateRandomString = (length) => {
+      const characters = 'abcdefghijklmnopqrstuvwxyz0123456789'
+      let result = ''
+      for (let i = 0; i < length; i++) {
+        result += characters.charAt(
+          Math.floor(Math.random() * characters.length)
+        )
+      }
+      return result
+    }
     let isIniting = ref(true)
     const getPostDetail = () => {
       authApi
@@ -341,6 +360,13 @@ export default {
                 res.data.data[key].forEach((item) => {
                   coverImageListObj[item._id] = item
                 })
+                break
+              case 'alias':
+                if (isNew) {
+                  form[key] = res.data.data[key] || generateRandomString(8)
+                } else {
+                  form[key] = res.data.data[key]
+                }
                 break
 
               default:
@@ -375,6 +401,11 @@ export default {
         .finally(() => {
           isIniting.value = false
         })
+    }
+
+    // 重新设置随机别名
+    const resetRandomAlias = () => {
+      form.alias = generateRandomString(8)
     }
 
     const form = reactive({
@@ -753,6 +784,7 @@ export default {
       maxCoverLength,
       // form
       form,
+      resetRandomAlias,
       rules,
       formRef,
       submit,

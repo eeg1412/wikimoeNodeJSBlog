@@ -194,7 +194,7 @@
             {{ $formatDate(row.date) }}
           </template>
         </el-table-column>
-        <el-table-column prop="alias" label="别名" />
+        <el-table-column prop="alias" label="别名" min-width="100" />
         <el-table-column prop="author" label="作者" width="100">
           <template #default="{ row }">
             {{ row.author.nickname }}
@@ -413,6 +413,9 @@ export default {
           name: 'PostEdit',
           params: {
             id: res.data.data._id,
+          },
+          query: {
+            new: '1',
           },
         })
       })
