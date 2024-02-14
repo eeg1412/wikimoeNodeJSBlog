@@ -55,7 +55,7 @@ router.get('/:type?', async function (req, res, next) {
     },
   });
   list.forEach((item) => {
-    const { title, excerpt, content, _id, author, type, date } = item
+    const { title, excerpt, content, _id, author, type, date, alias } = item
     let newTitle = title
     let newContent = content
     if (type === 2) {
@@ -87,8 +87,8 @@ router.get('/:type?', async function (req, res, next) {
     }
     feed.addItem({
       title: newTitle,
-      id: `${siteUrl}/post/${_id}`,
-      link: `${siteUrl}/post/${_id}`,
+      id: `${siteUrl}/post/${alias || _id}`,
+      link: `${siteUrl}/post/${alias || _id}`,
       description: newContent,
       date: new Date(item.date),
     });
