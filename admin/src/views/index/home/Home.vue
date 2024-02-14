@@ -12,10 +12,16 @@
           <div class="el-descriptions__extra"></div>
         </div>
         <el-row>
-          <el-col :span="8">
-            <el-statistic title="博客文章" :value="data.postCount" />
+          <el-col :span="8" :xs="12" class="mb15">
+            <el-statistic title="博文数量" :value="data.postCount.blogCount" />
           </el-col>
-          <el-col :span="8">
+          <el-col :span="8" :xs="12" class="mb15">
+            <el-statistic title="推文数量" :value="data.postCount.tweetCount" />
+          </el-col>
+          <el-col :span="8" :xs="12" class="mb15">
+            <el-statistic title="页面数量" :value="data.postCount.pageCount" />
+          </el-col>
+          <el-col :span="8" :xs="12" class="mb15">
             <el-statistic title="评论数" :value="data.commentCount">
               <template #suffix
                 ><span v-if="data.unAuditCommentCount > 0"
@@ -27,8 +33,17 @@
               >
             </el-statistic>
           </el-col>
-          <el-col :span="8">
-            <el-statistic title="媒体数" :value="data.attachmentCount" />
+          <el-col :span="8" :xs="12" class="mb15">
+            <el-statistic
+              title="文章阅读数"
+              :value="data.postCount.totalViews"
+            />
+          </el-col>
+          <el-col :span="8" :xs="12" class="mb15">
+            <el-statistic
+              title="文章点赞数"
+              :value="data.postCount.totalLikes"
+            />
           </el-col>
         </el-row>
         <el-divider />

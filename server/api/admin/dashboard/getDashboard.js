@@ -12,10 +12,44 @@ module.exports = async function (req, res, next) {
   const commentCount = await commentUtils.count({})
   // 获取未审核评论总数
   const unAuditCommentCount = await commentUtils.count({ status: 0 })
-  // 2. 获取附件总数
-  const attachmentCount = await attachmentUtils.count({})
-  // 3. 获取文章总数
-  const postCount = await postUtils.count({})
+  const pipeline = [
+    {
+      $group: {
+        _id: null,
+        totalViews: { $sum: "$views" },
+        totalLikes: { $sum: "$likes" },
+        blogCount: {
+          $sum: {
+            $cond: [{ $eq: ["$type", 1] }, 1, 0]
+          }
+        },
+        tweetCount: {
+          $sum: {
+            $cond: [{ $eq: ["$type", 2] }, 1, 0]
+          }
+        },
+        pageCount: {
+          $sum: {
+            $cond: [{ $eq: ["$type", 3] }, 1, 0]
+          }
+        }
+      }
+    }
+  ];
+
+  let postCount = {
+    totalViews: 0,
+    totalLikes: 0,
+    blogCount: 0,
+    tweetCount: 0,
+    pageCount: 0
+  }
+  const postCountRes = await postUtils.aggregate(pipeline)
+  if (postCountRes.length > 0) {
+    postCount = postCountRes[0]
+    // 删除_id
+    delete postCount._id
+  }
   // JSON_LIMT="50mb"
   // URLENCODED_LIMT="50mb"
   // 返回以上数据
@@ -39,7 +73,6 @@ module.exports = async function (req, res, next) {
     data: {
       commentCount,
       unAuditCommentCount,
-      attachmentCount,
       postCount,
       jsonLimit,
       urlencodedLimit,
