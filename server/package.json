@@ -12,6 +12,7 @@
     "backupFromEmlogJSON": "node ./tools/backupFromEmlogJSON"
   },
   "dependencies": {
+    "async-lock": "^1.4.1",
     "bcryptjs": "^2.4.3",
     "chalk": "^4.1.2",
     "connect-history-api-fallback": "^2.0.0",

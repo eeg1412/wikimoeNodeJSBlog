@@ -12,6 +12,8 @@ const postUtils = require('../mongodb/utils/posts')
 const commentUtils = require('../mongodb/utils/comments')
 const referrerUtils = require('../mongodb/utils/referrers')
 const sharp = require('sharp');
+const AsyncLock = require('async-lock');
+const lock = new AsyncLock({ timeout: 60000 });
 
 exports.creatSha256Str = function (str) {
   const sha256 = crypto.createHash('sha256')
@@ -722,6 +724,15 @@ exports.handleRangeRequest = (req, res, next, folder) => {
     file.destroy();
   });
 }
+
+// async-lock
+exports.executeInLock = (key, fn) => {
+  return lock.acquire(key, () => {
+    return fn()
+  })
+}
+
+
 
 // let reflushBlogCacheTimer = null
 // exports.reflushBlogCache = async () => {
