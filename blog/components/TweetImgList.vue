@@ -35,7 +35,7 @@
           muted
           loop
           playsinline
-          class="blog-tweet-1img-list-body-video w-full h-auto object-contain"
+          class="blog-tweet-1img-list-body-video bg-black"
           @click.stop
           v-else
         >
@@ -104,7 +104,7 @@
                   muted
                   loop
                   playsinline
-                  class="blog-tweet-1img-list-body-video w-full h-full object-contain bg-black self-stretch"
+                  class="blog-tweet-1img-list-body-video bg-black self-stretch"
                   @click.stop
                   v-else
                 >
@@ -162,7 +162,7 @@
                   muted
                   loop
                   playsinline
-                  class="blog-tweet-1img-list-body-video w-full h-full object-contain bg-black self-stretch"
+                  class="blog-tweet-1img-list-body-video bg-black self-stretch"
                   @click.stop
                   v-else
                 >
@@ -370,7 +370,9 @@ onUnmounted(() => {
 }
 .blog-tweet-img-list-body.cover-count-1 video {
   width: 100%;
-  height: 100%;
+  object-fit: contain;
+  /* 16 / 9 */
+  aspect-ratio: 16 / 9;
 }
 .blog-tweet-img-list-body.cover-count-2 {
   grid-template-columns: repeat(2, 1fr);
