@@ -169,11 +169,17 @@
               @click.stop="likePost(item._id)"
               v-if="likeListInited"
             >
+              <!-- 加载 -->
+              <UIcon
+                class="mr5 animate-spin"
+                name="i-heroicons-arrow-path"
+                v-if="likePostIsLoading[item._id] === true"
+              />
               <!-- heart -->
               <UIcon
                 class="mr5"
                 name="i-heroicons-heart-solid"
-                v-if="item.isLike"
+                v-else-if="item.isLike"
               />
               <!-- heart-outline -->
               <UIcon class="mr5" name="i-heroicons-heart" v-else />
@@ -425,15 +431,15 @@ const getLikeDataByPostId = (postId) => {
   }
 }
 
-const likePostIsLoading = ref(false)
+const likePostIsLoading = reactive({})
 const likePost = (postId) => {
-  if (likePostIsLoading.value) {
+  if (likePostIsLoading[postId]) {
     return
   }
   // 如果找到了，判断里面的Like，没有就是false
   let like = checkIsLike(postId)
   const __v = getLikeDataByPostId(postId)?.__v
-  likePostIsLoading.value = true
+  likePostIsLoading[postId] = true
 
   postLikeLogApi({ id: postId, like: !like, __v })
     .then((res) => {
@@ -470,7 +476,7 @@ const likePost = (postId) => {
       }
     })
     .finally(() => {
-      likePostIsLoading.value = false
+      likePostIsLoading[postId] = false
     })
 }
 

@@ -103,7 +103,9 @@
           </div>
 
           <div class="w-full sm:w-20">
-            <UButton :block="true" type="submit">提交</UButton>
+            <UButton :block="true" type="submit" :loading="commentIsSending"
+              ><template v-if="!commentIsSending">提交</template></UButton
+            >
           </div>
         </div>
       </div>
@@ -149,7 +151,11 @@ const form = reactive({
 const emits = defineEmits()
 
 const error = ref({})
+const commentIsSending = ref(false)
 const onSubmit = (event) => {
+  if (commentIsSending.value) {
+    return
+  }
   // 清空error
   error.value = {}
   // 检查nickname和content是否为空
@@ -171,6 +177,7 @@ const onSubmit = (event) => {
   }
   // 提交
   console.log(event.data)
+  commentIsSending.value = true
   getCommentCreateApi({
     post: props.postid,
     parent: props.commentid,
@@ -217,6 +224,9 @@ const onSubmit = (event) => {
           })
         })
       }
+    })
+    .finally(() => {
+      commentIsSending.value = false
     })
 }
 const contentRef = ref(null)

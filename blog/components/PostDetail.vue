@@ -286,6 +286,7 @@
                       color="primary"
                       v-if="checkIsCommentLike(item._id)"
                       @click="likeComment(item._id)"
+                      :loading="likeCommentIsLoading[item._id] === true"
                       >{{ formatNumber(item.likes) }}</UButton
                     >
                     <UButton
@@ -294,6 +295,7 @@
                       color="white"
                       variant="solid"
                       @click="likeComment(item._id)"
+                      :loading="likeCommentIsLoading[item._id] === true"
                       v-else
                       >{{ formatNumber(item.likes) }}</UButton
                     >
@@ -545,15 +547,15 @@ const getLikeDataByCommentId = (commentId) => {
   }
 }
 
-const likeCommentIsLoading = ref(false)
+const likeCommentIsLoading = reactive({})
 const likeComment = (commentId) => {
-  if (likeCommentIsLoading.value) {
+  if (likeCommentIsLoading[commentId]) {
     return
   }
   // 如果找到了，判断里面的Like，没有就是false
   let like = checkIsCommentLike(commentId)
   const __v = getLikeDataByCommentId(commentId)?.__v
-  likeCommentIsLoading.value = true
+  likeCommentIsLoading[commentId] = true
 
   postCommentLikeLogApi({ id: commentId, like: !like, __v })
     .then((res) => {
@@ -591,7 +593,7 @@ const likeComment = (commentId) => {
       }
     })
     .finally(() => {
-      likeCommentIsLoading.value = false
+      likeCommentIsLoading[commentId] = false
     })
 }
 
