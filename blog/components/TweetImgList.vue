@@ -337,7 +337,11 @@ onUnmounted(() => {
 <style scoped>
 .blog-tweet-img-list-no-swiper-body {
   width: 100%;
-  aspect-ratio: 16 / 10;
+  aspect-ratio: 16 / 9;
+  margin-bottom: 2px;
+}
+.blog-tweet-img-list-no-swiper-body:last-child {
+  margin-bottom: 0;
 }
 .blog-tweet-1img-list-body {
   max-width: 100%;
@@ -429,7 +433,7 @@ onUnmounted(() => {
 </style>
 <style>
 .blog-tweet-img-list-wrap .swiper-slide {
-  aspect-ratio: 16 / 10;
+  aspect-ratio: 16 / 9;
 }
 .blog-tweet-img-swiper-body .swiper-pagination-fraction {
   top: 13px !important;

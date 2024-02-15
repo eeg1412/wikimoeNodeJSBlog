@@ -83,6 +83,9 @@ const goPostDetail = (e, item, middle) => {
   /* 顶部对齐 */
   align-items: flex-start;
 }
+.comment-latest-item-body:last-child {
+  border-bottom: none;
+}
 .comment-latest-item-avatar-body {
   margin-right: 10px;
 }
