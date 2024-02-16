@@ -510,7 +510,7 @@ onMounted(() => {
   margin-bottom: 12px;
 }
 .post-list-tag-item {
-  margin-right: 12px;
+  margin-right: 9px;
   @apply text-primary-500;
 }
 .post-list-blog-panel {
