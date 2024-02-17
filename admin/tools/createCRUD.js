@@ -54,7 +54,7 @@ const listTemplate = (tableName, chineseName) => {
     </div>
     <!-- ${chineseName} -->
     <div class="mb20 list-table-body">
-      <el-table height="100%" :data="${tableName}List" row-key="_id" border>
+      <el-table height="100%" :data="${tableName}List" row-key="_id" ref="tableRef" border>
         <el-table-column label="操作" width="140" fixed="right">
           <template #default="{ row }">
             <el-button type="primary" size="small" @click="goEdit(row._id)"
@@ -99,6 +99,7 @@ export default {
       keyword: '',
     })
     const total = ref(0)
+    const tableRef = ref(null)
     const get${tableNameFirstLetter}List = (resetPage) => {
       if (resetPage) {
         params.page = 1
@@ -108,6 +109,7 @@ export default {
         .then((res) => {
           ${tableName}List.value = res.data.list
           total.value = res.data.total
+          tableRef.value.scrollTo({ top: 0 })
           setSessionParams(route.name, params)
         })
         .catch((err) => {
@@ -172,6 +174,7 @@ export default {
       ${tableName}List,
       params,
       total,
+      tableRef,
       get${tableNameFirstLetter}List,
       handleAdd,
       goEdit,
