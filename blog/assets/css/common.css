@@ -895,3 +895,6 @@ input[type='password'] {
   max-width: 100%;
   max-height: 100%;
 }
+ins.adsbygoogle[data-ad-status='unfilled'] {
+  display: none !important;
+}
