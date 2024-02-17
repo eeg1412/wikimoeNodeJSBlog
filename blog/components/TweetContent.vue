@@ -42,10 +42,12 @@ const contentJson = computed(() => {
       getContent: (link) => {
         const url = new URL(link)
         const videoId = url.pathname.split('/')[2]
+        const p = url.searchParams.get('p') || ''
 
         return {
           text: `哔哩哔哩视频-${videoId}`,
           id: videoId,
+          ext: { p },
         }
       },
     },
@@ -85,12 +87,14 @@ const contentJson = computed(() => {
         type: 'link',
         url: link,
         text: link,
+        ext: {},
       }
       if (linkTypeItem) {
-        const { text, id } = linkTypeItem.getContent(link)
+        const { text, id, ext } = linkTypeItem.getContent(link)
         linkObj.linkTypeName = linkTypeItem.linkTypeName
         linkObj.text = text
         linkObj.id = id
+        linkObj.ext = ext
       }
       contentJsonArray.push(linkObj)
       // 将excerpt重新赋值为分割后的字符串
@@ -113,8 +117,8 @@ const linkCover = computed(() => {
     const coverDatabase = [
       {
         linkTypeName: 'bilibili-video',
-        getCover: (id) => {
-          return `<iframe src="https://www.bilibili.com/blackboard/html5mobileplayer.html?bvid=${id}&as_wide=1&danmaku=0&hasMuteButton=1" scrolling="no" border="0" frameborder="no" framespacing="0" allowfullscreen="true"> </iframe>`
+        getCover: (id, ext) => {
+          return `<iframe src="https://www.bilibili.com/blackboard/html5mobileplayer.html?bvid=${id}&p=${ext.p}&as_wide=1&danmaku=0&hasMuteButton=1" scrolling="no" border="0" frameborder="no" framespacing="0" allowfullscreen="true"> </iframe>`
         },
       },
     ]
@@ -126,7 +130,7 @@ const linkCover = computed(() => {
         (item) => item.linkTypeName === linkCoverItem.linkTypeName
       )
       if (coverItem) {
-        return coverItem.getCover(linkCoverItem.id)
+        return coverItem.getCover(linkCoverItem.id, linkCoverItem.ext)
       }
     }
   }

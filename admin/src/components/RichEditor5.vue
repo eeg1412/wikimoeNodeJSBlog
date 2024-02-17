@@ -336,7 +336,7 @@ export default {
             const url = new URL(videoSrc)
             const bvid =
               url.searchParams.get('bvid') || url.pathname.split('/')[2]
-            const p = url.searchParams.get('p')
+            const p = url.searchParams.get('p') || ''
             videoSrc = `<iframe src="https://www.bilibili.com/blackboard/html5mobileplayer.html?bvid=${bvid}&p=${p}&as_wide=1&danmaku=0&hasMuteButton=1" scrolling="no" border="0" frameborder="no" framespacing="0" allowfullscreen="true" width="1280" height="720" style="width: 100%; height: auto; aspect-ratio: 1280 / 720;"> </iframe>`
           }
           return videoSrc

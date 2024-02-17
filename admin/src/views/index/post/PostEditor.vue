@@ -737,8 +737,9 @@ export default {
           const url = new URL(firstLink)
           // 获取路径中的视频 ID
           const videoId = url.pathname.split('/')[2]
+          const p = url.searchParams.get('p') || ''
           // 创建一个 iframe
-          const iframe = `<iframe src="https://www.bilibili.com/blackboard/html5mobileplayer.html?bvid=${videoId}&as_wide=1&danmaku=0&hasMuteButton=1" scrolling="no" border="0" frameborder="no" framespacing="0" allowfullscreen="true"> </iframe>`
+          const iframe = `<iframe src="https://www.bilibili.com/blackboard/html5mobileplayer.html?bvid=${videoId}&p=${p}&as_wide=1&danmaku=0&hasMuteButton=1" scrolling="no" border="0" frameborder="no" framespacing="0" allowfullscreen="true"> </iframe>`
           obj = {
             link: firstLink,
             content: iframe,
