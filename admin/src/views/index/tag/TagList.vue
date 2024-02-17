@@ -40,7 +40,7 @@
         row-key="_id"
         border
         default-expand-all
-        :key="updateCount"
+        ref="tableRef"
       >
         <el-table-column prop="tagname" label="标签名称" min-width="300">
           <template #default="{ row }">
@@ -113,7 +113,7 @@ export default {
       keyword: '',
     })
     const total = ref(0)
-    const updateCount = ref(0)
+    const tableRef = ref(null)
     const getTagList = (resetPage) => {
       if (resetPage) {
         params.page = 1
@@ -123,7 +123,7 @@ export default {
         .then((res) => {
           tagList.value = res.data.list
           total.value = res.data.total
-          updateCount.value++
+          tableRef.value.scrollTo({ top: 0 })
           setSessionParams(route.name, params)
         })
         .catch((err) => {
@@ -209,7 +209,7 @@ export default {
       tagList,
       params,
       total,
-      updateCount,
+      tableRef,
       getTagList,
       handleAdd,
       goEdit,

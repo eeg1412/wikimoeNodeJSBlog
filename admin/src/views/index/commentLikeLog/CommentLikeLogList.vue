@@ -47,7 +47,7 @@
     <!-- 评论点赞记录 -->
     <div class="mb20 list-table-body">
       <el-table
-        :key="updateCount"
+        ref="tableRef"
         height="100%"
         :data="commentLikeLogList"
         row-key="_id"
@@ -189,7 +189,7 @@ export default {
       keyword: '',
     })
     const total = ref(0)
-    const updateCount = ref(0)
+    const tableRef = ref(null)
     const getCommentLikeLogList = (resetPage) => {
       if (resetPage) {
         params.page = 1
@@ -199,7 +199,7 @@ export default {
         .then((res) => {
           commentLikeLogList.value = res.data.list
           total.value = res.data.total
-          updateCount.value++
+          tableRef.value.scrollTo({ top: 0 })
           setSessionParams(route.name, params)
         })
         .catch((err) => {
@@ -244,7 +244,7 @@ export default {
       commentLikeLogList,
       params,
       total,
-      updateCount,
+      tableRef,
       getCommentLikeLogList,
       titleLimit,
       // 搜索

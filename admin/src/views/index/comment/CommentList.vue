@@ -64,7 +64,7 @@
     <!-- comments -->
     <div class="mb20 list-table-body">
       <el-table
-        :key="updateCount"
+        ref="tableRef"
         :data="commentList"
         height="100%"
         row-key="_id"
@@ -337,7 +337,7 @@ export default {
       status: '',
     })
     const total = ref(0)
-    const updateCount = ref(0)
+    const tableRef = ref(null)
     const getCommentList = (resetPage) => {
       if (resetPage) {
         params.page = 1
@@ -347,7 +347,7 @@ export default {
         .then((res) => {
           commentList.value = res.data.list
           total.value = res.data.total
-          updateCount.value++
+          tableRef.value.scrollTo({ top: 0 })
           setSessionParams(route.name, params)
         })
         .catch((err) => {
@@ -514,7 +514,7 @@ export default {
       commentList,
       params,
       total,
-      updateCount,
+      tableRef,
       getCommentList,
       goEdit,
       deleteComment,
