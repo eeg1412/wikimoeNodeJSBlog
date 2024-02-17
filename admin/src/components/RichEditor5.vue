@@ -313,6 +313,35 @@ export default {
           openAttachmentsDialog()
         },
       }
+      config.MENU_CONF['insertVideo'] = {
+        onInsertedVideo(videoNode) {
+          if (videoNode == null) return
+
+          const { src } = videoNode
+          console.log('inserted video', src)
+        },
+        checkVideo: (src, poster) => {
+          if (!src) {
+            return false
+          }
+          return true
+        },
+        parseVideoSrc: (videoSrc) => {
+          if (videoSrc.indexOf('<iframe') !== -1) {
+            // 如果是 iframe 形式，直接返回
+            return videoSrc
+          }
+          if (videoSrc.indexOf('.bilibili.com') !== -1) {
+            // 如果是，解析url里的bvid和p参数
+            const url = new URL(videoSrc)
+            const bvid =
+              url.searchParams.get('bvid') || url.pathname.split('/')[2]
+            const p = url.searchParams.get('p')
+            videoSrc = `<iframe src="https://www.bilibili.com/blackboard/html5mobileplayer.html?bvid=${bvid}&p=${p}&as_wide=1&danmaku=0&hasMuteButton=1" scrolling="no" border="0" frameborder="no" framespacing="0" allowfullscreen="true" width="1280" height="720" style="width: 100%; height: auto; aspect-ratio: 1280 / 720;"> </iframe>`
+          }
+          return videoSrc
+        },
+      }
       console.log(config)
     }
 
