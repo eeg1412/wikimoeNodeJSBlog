@@ -22,7 +22,6 @@
             remote
             :remote-method="searchAlbumsRemote"
             @change="changeAlbum"
-            @visible-change="checkAlbumId"
             :automatic-dropdown="true"
             class="attachments-form-item"
           >
@@ -215,15 +214,25 @@
   >
     <div class="dflex flexCenter">
       <div class="pl10 pr10">转移至：</div>
-      <el-select v-model="toAlbumId" placeholder="请选择相册">
-        <el-option
-          v-for="item in albumList"
-          :key="item._id"
-          :label="item.name"
-          :value="item._id"
-          v-show="item._id !== albumId"
-        />
-      </el-select>
+      <div class="to-album-select-body">
+        <el-select
+          v-model="toAlbumId"
+          clearable
+          filterable
+          remote
+          :remote-method="searchToAlbumsRemote"
+          :automatic-dropdown="true"
+          placeholder="请选择相册"
+        >
+          <el-option
+            v-for="item in toAlbumList"
+            :key="item._id"
+            :label="item.name"
+            :value="item._id"
+            v-show="item._id !== albumId"
+          />
+        </el-select>
+      </div>
     </div>
     <template #footer>
       <span class="dialog-footer">
@@ -339,6 +348,26 @@ export default {
       await authApi.getAlbumList(params, { noLoading: true }).then((res) => {
         albumList.value = res.data.list
       })
+    }
+    const getToAlbumList = async (isTo) => {
+      const params = {
+        page: 1,
+        size: 10,
+        keyword: toKeyword.value,
+      }
+      await authApi.getAlbumList(params, { noLoading: true }).then((res) => {
+        toAlbumList.value = res.data.list
+      })
+    }
+    const toKeyword = ref('')
+    const toAlbumList = ref([])
+    let searchToTimer = null
+    const searchToAlbumsRemote = async (query) => {
+      clearTimeout(searchToTimer)
+      searchToTimer = setTimeout(() => {
+        toKeyword.value = query
+        getToAlbumList()
+      }, 100)
     }
     const getAlbumDetail = async (id) => {
       const params = {
@@ -754,7 +783,9 @@ export default {
       open,
       albumList,
       albumListCom,
+      toAlbumList,
       checkAlbumId,
+      searchToAlbumsRemote,
       searchAlbumsRemote,
       params,
       total,
@@ -881,5 +912,8 @@ export default {
   height: 40px;
   border-radius: 4px;
   background-color: #bbb;
+}
+.to-album-select-body {
+  width: 70%;
 }
 </style>
