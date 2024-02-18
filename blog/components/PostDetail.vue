@@ -23,7 +23,10 @@
               class="common-a"
               :to="{
                 name: 'postListSort',
-                params: { sortid: postData.data.sort._id, page: 1 },
+                params: {
+                  sortid: postData.data.sort.alias || postData.data.sort._id,
+                  page: 1,
+                },
               }"
             >
               {{ postData.data.sort.sortname }}
@@ -54,7 +57,10 @@
                 class="common-a"
                 :to="{
                   name: 'postListSort',
-                  params: { sortid: postData.data.sort._id, page: 1 },
+                  params: {
+                    sortid: postData.data.sort.alias || postData.data.sort._id,
+                    page: 1,
+                  },
                 }"
               >
                 {{ postData.data.sort.sortname }}

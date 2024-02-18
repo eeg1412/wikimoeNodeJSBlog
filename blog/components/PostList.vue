@@ -39,7 +39,10 @@
                   class="cGray94 common-a"
                   :to="{
                     name: 'postListSort',
-                    params: { sortid: item.sort._id, page: 1 },
+                    params: {
+                      sortid: item.sort.alias || item.sort._id,
+                      page: 1,
+                    },
                   }"
                   v-if="item.sort"
                 >
