@@ -292,6 +292,10 @@ onMounted(() => {
   position: relative;
   padding-left: 3.5em;
 }
+/* blockquote */
+.html-content-body blockquote {
+  @apply border-l-4 border-primary-300 p-2 mt-2 mb-2 text-gray-500 bg-gray-50;
+}
 .html-content-body pre::-webkit-scrollbar {
   width: 6px;
   height: 6px;

@@ -862,14 +862,7 @@ onMounted(() => {
   word-break: break-word;
 }
 .comment-list-item-parent-content {
-  border: none;
-  border-left: 5px solid #eee;
-  padding: 3px 10px;
-  margin: 10px 0;
-  color: #949494;
-  font-size: 13px;
-  background: #f9f9f9;
-  border-radius: 3px;
+  @apply border-l-4 border-primary-300 p-2 mt-2 mb-2 text-gray-500 bg-gray-50;
 }
 .comment-list-item-content {
   font-size: 14px;
