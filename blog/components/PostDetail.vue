@@ -862,7 +862,7 @@ onMounted(() => {
   word-break: break-word;
 }
 .comment-list-item-parent-content {
-  @apply border-l-4 border-primary-300 p-2 mt-2 mb-2 text-gray-500 bg-gray-50;
+  @apply border-l-4 border-gray-200 p-2 mt-2 mb-2 text-gray-500 bg-gray-50 rounded-md;
 }
 .comment-list-item-content {
   font-size: 14px;
