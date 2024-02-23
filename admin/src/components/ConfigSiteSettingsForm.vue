@@ -79,6 +79,14 @@
         ></el-option>
       </el-select>
     </el-form-item>
+    <!-- 页面底部信息 -->
+    <el-form-item label="页面底部信息" prop="siteFooterInfo">
+      <el-input
+        type="textarea"
+        v-model="siteSettingsForm.siteFooterInfo"
+        placeholder="显示在页面底部，可以填写备案信息，支持HTML。"
+      ></el-input>
+    </el-form-item>
 
     <el-form-item>
       <el-button type="primary" @click="siteSettingsSubmit">提交</el-button>
@@ -116,6 +124,8 @@ export default {
       sitePageSize: 10,
       // 你所在时区
       siteTimeZone: '',
+      // 页面底部信息
+      siteFooterInfo: '',
     })
     const onSiteUrlBlur = () => {
       // 去掉最末尾的斜杠

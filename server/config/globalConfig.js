@@ -50,6 +50,8 @@ const initGlobalConfig = async () => {
     sitePageSize: 10,
     // 你所在时区
     siteTimeZone: '',
+    // 页面底部信息
+    siteFooterInfo: '',
   }
   const commentSettingsConfig = {
     // 开启评论

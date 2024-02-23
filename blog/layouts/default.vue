@@ -163,8 +163,22 @@
     <!-- footer Powered by wikimoeBlog -->
     <div class="blog-footer-body">
       <div class="blog-footer-content-body">
-        <span>Powered by </span>
-        <a href="https://www.wikimoe.com/" target="_blank">wikimoeBlog</a>
+        <div>
+          <!-- copyright -->
+          <span
+            ><span class="font-serif">©</span> {{ nowYear }}
+            {{ options.siteTitle }}</span
+          >
+        </div>
+        <div
+          v-html="options.siteFooterInfo"
+          v-if="options.siteFooterInfo"
+          class="whitespace-pre-wrap"
+        ></div>
+        <div>
+          <span>Powered by </span>
+          <a href="https://www.wikimoe.com/" target="_blank">wikimoeBlog</a>
+        </div>
       </div>
     </div>
     <GoTop />
@@ -260,6 +274,8 @@ const toggleLeftMenu = () => {
 const toggleRightSidebar = () => {
   rightSidebarActive.value = !rightSidebarActive.value
 }
+
+const nowYear = new Date().getFullYear()
 // 检测到路由跳转时关闭左右菜单
 watch(
   () => route.path,
@@ -392,15 +408,17 @@ onUnmounted(() => {
 }
 .blog-footer-body {
   width: 100%;
-  height: 105px;
+  padding: 35px 0;
   background: #171717;
+  text-align: center;
 }
 .blog-footer-content-body {
   max-width: 1300px;
   padding: 0 20px;
-  padding-top: 35px;
   margin: 0 auto;
   color: #ffffff;
+  line-height: 24px;
+  font-size: 15px;
 }
 .blog-top-bar {
   display: none;
