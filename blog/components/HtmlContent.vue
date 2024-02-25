@@ -262,6 +262,14 @@ onMounted(() => {
 .html-content-body video {
   max-width: 100% !important;
 }
+.html-content-body h1,
+.html-content-body h2,
+.html-content-body h3,
+.html-content-body h4,
+.html-content-body h5,
+.html-content-body h6 {
+  font-weight: bold;
+}
 .html-content-body a {
   @apply text-primary-500;
 }
