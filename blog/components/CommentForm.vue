@@ -77,7 +77,7 @@
             </UFormGroup>
           </div>
           <div class="w-full sm:w-1/3">
-            <UFormGroup name="email">
+            <UFormGroup name="email" :error="error.email">
               <UInput
                 class="flex-grow"
                 icon="i-heroicons-at-symbol"
@@ -89,7 +89,7 @@
             /></UFormGroup>
           </div>
           <div class="w-full sm:w-1/3">
-            <UFormGroup name="url">
+            <UFormGroup name="url" :error="error.url">
               <UInput
                 class="flex-grow"
                 icon="i-heroicons-link"
@@ -161,9 +161,51 @@ const onSubmit = (event) => {
   // 检查nickname和content是否为空
   if (!event.data.nickname) {
     error.value.nickname = true
+    // 提示
+    setTimeout(() => {
+      toast.add({
+        title: '昵称不能为空',
+        icon: 'i-heroicons-x-circle',
+        color: 'red',
+      })
+    }, 0)
   }
   if (!event.data.content) {
     error.value.content = true
+    // 提示
+    setTimeout(() => {
+      toast.add({
+        title: '内容不能为空',
+        icon: 'i-heroicons-x-circle',
+        color: 'red',
+      })
+    }, 0)
+  }
+  // 如果有url，校验url的格式
+  if (event.data.url) {
+    // 如果没有http或https开头，就加上
+    if (
+      !event.data.url.startsWith('http://') &&
+      !event.data.url.startsWith('https://')
+    ) {
+      event.data.url = 'https://' + event.data.url
+    }
+  }
+  // 校验邮箱地址
+  if (event.data.email) {
+    const emailReg =
+      /^[a-zA-Z0-9_+-]+(\.[a-zA-Z0-9_+-]+)*@([a-zA-Z0-9][a-zA-Z0-9-]*[a-zA-Z0-9]*\.)+[a-zA-Z]{2,}$/
+    if (!emailReg.test(event.data.email)) {
+      error.value.email = true
+      // 提示
+      setTimeout(() => {
+        toast.add({
+          title: '邮箱格式不正确',
+          icon: 'i-heroicons-x-circle',
+          color: 'red',
+        })
+      }, 0)
+    }
   }
   // 如果有错误，就不提交
   if (Object.keys(error.value).length > 0) {
