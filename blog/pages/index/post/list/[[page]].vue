@@ -7,6 +7,7 @@
 import { postLogCreateApi } from '@/api/log'
 definePageMeta({
   alias: ['/'],
+  path: '/post/list/:page?/:type?',
   name: 'postList',
 })
 onMounted(() => {
