@@ -1,5 +1,6 @@
 <template>
   <div>
+    <PostListTypeTab />
     <div class="post-list-body">
       <div v-if="postsData?.list.length > 0">
         <div
@@ -265,6 +266,8 @@ const sortid = route.params.sortid || ''
 const year = route.params.year || ''
 const month = route.params.month || ''
 const tagid = route.params.tagid || ''
+const listType = route.params.type || ''
+
 const apiType = computed(() => {
   switch (routeName.value) {
     case 'postList':
@@ -303,24 +306,28 @@ const routePagination = computed(() => {
         name: routeName.value,
         params: {
           page: 1,
+          type: listType,
         },
       }
       to.lastRoute = {
         name: routeName.value,
         params: {
           page: totalPage.value,
+          type: listType,
         },
       }
       to.prevRoute = {
         name: routeName.value,
         params: {
           page: page - 1,
+          type: listType,
         },
       }
       to.nextRoute = {
         name: routeName.value,
         params: {
           page: page + 1,
+          type: listType,
         },
       }
       break
