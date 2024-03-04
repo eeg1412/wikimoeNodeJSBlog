@@ -52,11 +52,31 @@ module.exports = async function (req, res, next) {
     ]
   }
   // 如果type存在，就加入查询条件
-  if (type) {
+  if (Array.isArray(type)) {
+    // 校验type是否是数组，且只能是1和2
+    if (type.some(item => ![1, 2].includes(parseInt(item)))) {
+      res.status(400).json({
+        errors: [{
+          message: 'type参数错误'
+        }]
+      })
+      return
+    }
     params.type =
     {
       $in: type
     }
+  } else if (type) {
+    // 校验type是否是1和2
+    if (![1, 2].includes(parseInt(type))) {
+      res.status(400).json({
+        errors: [{
+          message: 'type参数错误'
+        }]
+      })
+      return
+    }
+    params.type = parseInt(type)
   }
 
   // 如果sort存在，就加入查询条件
