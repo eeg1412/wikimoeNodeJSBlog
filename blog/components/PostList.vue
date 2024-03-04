@@ -176,7 +176,7 @@
               <UIcon
                 class="mr5 animate-spin"
                 name="i-heroicons-arrow-path"
-                v-if="likePostIsLoading[item._id] === true"
+                v-if="getLikePostIsLoading(item._id)"
               />
               <!-- heart -->
               <UIcon
@@ -435,6 +435,9 @@ const getLikeDataByPostId = (postId) => {
 }
 
 const likePostIsLoading = reactive({})
+const getLikePostIsLoading = (postId) => {
+  return likePostIsLoading[postId] === true
+}
 const likePost = (postId) => {
   if (likePostIsLoading[postId]) {
     return
