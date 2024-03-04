@@ -338,7 +338,27 @@ const routePagination = computed(() => {
   return to
 })
 
-const [postsDataResponse] = await Promise.all([
+const getPostsApiPromise = new Promise((resolve, reject) => {
+  // 校验page是否为正整数，listType是否为blogs/tweets/空字符串
+  if (!/^\d+$/.test(page) || !['blogs', 'tweets', ''].includes(listType)) {
+    showError({
+      statusCode: 400,
+      message: '参数错误',
+    })
+    reject('参数错误')
+    return
+  }
+  let type = ''
+  switch (listType) {
+    case 'blogs':
+      type = 1
+      break
+    case 'tweets':
+      type = 2
+      break
+    default:
+      break
+  }
   getPostsApi({
     page,
     keyword,
@@ -347,8 +367,17 @@ const [postsDataResponse] = await Promise.all([
     year,
     month,
     tags: tagid ? [tagid] : null,
-  }),
-])
+    type,
+  })
+    .then((res) => {
+      resolve(res)
+    })
+    .catch((err) => {
+      reject(err)
+    })
+})
+
+const [postsDataResponse] = await Promise.all([getPostsApiPromise])
 
 const { data: postsData } = postsDataResponse
 
@@ -510,7 +539,7 @@ onMounted(() => {
   padding: 20px;
 }
 .post-list-body-item:first-child {
-  padding-top: 8px;
+  padding-top: 10px;
 }
 .post-list-info-body {
   margin-bottom: 5px;
