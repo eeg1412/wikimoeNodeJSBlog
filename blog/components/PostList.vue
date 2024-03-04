@@ -509,6 +509,9 @@ onMounted(() => {
   @apply border-solid border-b border-gray-200;
   padding: 20px;
 }
+.post-list-body-item:first-child {
+  padding-top: 8px;
+}
 .post-list-info-body {
   margin-bottom: 5px;
 }
