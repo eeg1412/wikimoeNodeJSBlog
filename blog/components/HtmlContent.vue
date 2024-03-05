@@ -272,6 +272,7 @@ onMounted(() => {
 }
 .html-content-body a {
   @apply text-primary-500;
+  word-break: break-all;
 }
 .html-content-body a:hover {
   @apply text-primary-500;
