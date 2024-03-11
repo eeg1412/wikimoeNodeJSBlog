@@ -39,8 +39,8 @@
         </el-form-item>
         <el-form-item label="封面" prop="cover">
           <Cropper
-            :maxWidth="1280"
-            :maxHeight="1280"
+            :maxWidth="480"
+            :maxHeight="480"
             :src="form.cover"
             @crop="setCover"
           ></Cropper>
