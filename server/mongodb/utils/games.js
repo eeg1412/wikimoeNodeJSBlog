@@ -10,13 +10,13 @@ exports.save = async function (parmas) {
 
 exports.findOne = async function (parmas, projection) {
   // document查询
-  return await gamesModel.findOne(parmas, projection);
+  return await gamesModel.findOne(parmas, projection).populate('gamePlatform').populate('screenshotAlbum');
 }
 
 // 查找所有
 exports.find = async function (parmas, sort, projection) {
   // document查询
-  return await gamesModel.find(parmas, projection).sort(sort);
+  return await gamesModel.find(parmas, projection).populate('gamePlatform').populate('screenshotAlbum').sort(sort);
 }
 
 // 分页查询
