@@ -105,28 +105,46 @@
             <el-row
               v-for="(item, index) in form.urlList"
               :key="index"
-              class="mb10 url-link-row"
+              class="mb20 url-link-row"
             >
               <el-col :span="24">
-                <div class="mb10">
-                  <el-input
-                    v-model="form.urlList[index].text"
-                    placeholder="链接名称"
+                <div class="mb20">
+                  <el-form-item
+                    :prop="'urlList.' + index + '.text'"
+                    :rules="{
+                      required: true,
+                      message: '请输入链接名称',
+                      trigger: 'blur',
+                    }"
                   >
-                  </el-input>
+                    <el-input
+                      v-model="form.urlList[index].text"
+                      placeholder="链接名称"
+                    >
+                    </el-input>
+                  </el-form-item>
                 </div>
 
                 <div>
-                  <el-input
-                    v-model="form.urlList[index].url"
-                    placeholder="链接URL"
+                  <el-form-item
+                    :prop="'urlList.' + index + '.url'"
+                    :rules="{
+                      required: true,
+                      message: '请输入链接名称',
+                      trigger: 'blur',
+                    }"
                   >
-                    <template #append>
-                      <el-button @click="form.urlList.splice(index, 1)"
-                        ><el-icon><DeleteFilled /></el-icon>
-                      </el-button>
-                    </template>
-                  </el-input>
+                    <el-input
+                      v-model="form.urlList[index].url"
+                      placeholder="链接URL"
+                    >
+                      <template #append>
+                        <el-button @click="form.urlList.splice(index, 1)"
+                          ><el-icon><DeleteFilled /></el-icon>
+                        </el-button>
+                      </template>
+                    </el-input>
+                  </el-form-item>
                 </div>
               </el-col>
             </el-row>
@@ -253,6 +271,34 @@ export default {
     const rules = reactive({
       // title
       title: [{ required: true, message: '请输入标题', trigger: 'blur' }],
+      startTime: [
+        {
+          validator: (rule, value, callback) => {
+            if (form.endTime && !value) {
+              callback(new Error('请选择游戏结束时间'))
+            } else {
+              callback()
+            }
+          },
+          trigger: 'blur',
+        },
+      ],
+      endTime: [
+        {
+          validator: (rule, value, callback) => {
+            if (
+              value &&
+              form.startTime &&
+              new Date(value) < new Date(form.startTime)
+            ) {
+              callback(new Error('结束时间不能在开始时间之前'))
+            } else {
+              callback()
+            }
+          },
+          trigger: 'blur',
+        },
+      ],
     })
     const formRef = ref(null)
     const submit = () => {
@@ -421,6 +467,6 @@ export default {
 }
 .url-link-row {
   border: 1px solid #eee;
-  padding: 10px;
+  padding: 20px;
 }
 </style>
