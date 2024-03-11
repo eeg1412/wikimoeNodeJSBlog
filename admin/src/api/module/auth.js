@@ -477,5 +477,72 @@ export default function (api) {
         shouldAdminJWT: true
       })
     },
+    // post /gameplatform/create
+    createGamePlatform (data) {
+      return api.post('/gameplatform/create', data, {
+        shouldAdminJWT: true
+      })
+    },
+    // get /gameplatform/list
+    getGamePlatformList (data, options = {}) {
+      return api.get('/gameplatform/list', {
+        params: data,
+        shouldAdminJWT: true,
+        ...options
+      })
+    },
+    // put /gameplatform/update
+    updateGamePlatform (data) {
+      return api.put('/gameplatform/update', data, {
+        shouldAdminJWT: true
+      })
+    },
+    // delete /gameplatform/delete
+    deleteGamePlatform (data) {
+      return api.delete('/gameplatform/delete', {
+        params: data,
+        shouldAdminJWT: true
+      })
+    },
+    // get /gameplatform/detail
+    getGamePlatformDetail (data) {
+      return api.get('/gameplatform/detail', {
+        params: data,
+        shouldAdminJWT: true
+      })
+    },
+    // post /game/create
+    createGame (data) {
+      return api.post('/game/create', data, {
+        shouldAdminJWT: true
+      })
+    },
+    // get /game/list
+    getGameList (data) {
+      return api.get('/game/list', {
+        params: data,
+        shouldAdminJWT: true
+      })
+    },
+    // get /game/detail
+    getGameDetail (data) {
+      return api.get('/game/detail', {
+        params: data,
+        shouldAdminJWT: true
+      })
+    },
+    // put /game/update
+    updateGame (data) {
+      return api.put('/game/update', data, {
+        shouldAdminJWT: true
+      })
+    },
+    // delete /game/delete
+    deleteGame (data) {
+      return api.delete('/game/delete', {
+        params: data,
+        shouldAdminJWT: true
+      })
+    },
   }
 }

@@ -131,6 +131,32 @@
               <i class="fas fa-tv pr10"></i>
               <template #title>追番</template>
             </el-menu-item>
+            <el-sub-menu index="game">
+              <template #title>
+                <!-- 游戏 -->
+                <i class="fas fa-gamepad pr10"></i>游戏
+              </template>
+              <!-- 游戏平台 GamePlatformList -->
+              <el-menu-item
+                index="GamePlatformList"
+                @click="removeParam('GamePlatformList')"
+                @click.middle="openNewTab('GamePlatformList')"
+                :route="{ name: 'GamePlatformList' }"
+              >
+                <i class="fas fa-gamepad pr10"></i>
+                <template #title>游戏平台</template>
+              </el-menu-item>
+              <!-- 游戏列表 GameList -->
+              <el-menu-item
+                index="GameList"
+                @click="removeParam('GameList')"
+                @click.middle="openNewTab('GameList')"
+                :route="{ name: 'GameList' }"
+              >
+                <i class="fas fa-gamepad pr10"></i>
+                <template #title>游戏列表</template>
+              </el-menu-item>
+            </el-sub-menu>
             <el-sub-menu index="history">
               <template #title>
                 <!-- 日志图标 -->

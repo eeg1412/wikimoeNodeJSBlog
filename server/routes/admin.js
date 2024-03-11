@@ -708,6 +708,96 @@ const adminRouteSetting = [
     roleType: null,
     role: null
   },
+  // createGamePlatform
+  {
+    path: '/gameplatform/create',
+    method: 'post',
+    middleware: [checkAuth],
+    controller: require('../api/admin/gamePlatform/createGamePlatform'),
+    roleType: null,
+    role: null
+  },
+  // deleteGamePlatform
+  {
+    path: '/gameplatform/delete',
+    method: 'delete',
+    middleware: [checkAuth],
+    controller: require('../api/admin/gamePlatform/deleteGamePlatform'),
+    roleType: null,
+    role: null
+  },
+  // getGamePlatformDetail
+  {
+    path: '/gameplatform/detail',
+    method: 'get',
+    middleware: [checkAuth],
+    controller: require('../api/admin/gamePlatform/getGamePlatformDetail'),
+    roleType: null,
+    role: null
+  },
+  // getGamePlatformList
+  {
+    path: '/gameplatform/list',
+    method: 'get',
+    middleware: [checkAuth],
+    controller: require('../api/admin/gamePlatform/getGamePlatformList'),
+    roleType: null,
+    role: null
+  },
+  // updateGamePlatform
+  {
+    path: '/gameplatform/update',
+    method: 'put',
+    middleware: [checkAuth],
+    controller: require('../api/admin/gamePlatform/updateGamePlatform'),
+    roleType: null,
+    role: null
+  },
+  // createGame
+  {
+    path: '/game/create',
+    method: 'post',
+    middleware: [checkAuth],
+    controller: require('../api/admin/game/createGame'),
+    roleType: null,
+    role: null
+  },
+  // deleteGame
+  {
+    path: '/game/delete',
+    method: 'delete',
+    middleware: [checkAuth],
+    controller: require('../api/admin/game/deleteGame'),
+    roleType: null,
+    role: null
+  },
+  // getGameDetail
+  {
+    path: '/game/detail',
+    method: 'get',
+    middleware: [checkAuth],
+    controller: require('../api/admin/game/getGameDetail'),
+    roleType: null,
+    role: null
+  },
+  // getGameList
+  {
+    path: '/game/list',
+    method: 'get',
+    middleware: [checkAuth],
+    controller: require('../api/admin/game/getGameList'),
+    roleType: null,
+    role: null
+  },
+  // updateGame
+  {
+    path: '/game/update',
+    method: 'put',
+    middleware: [checkAuth],
+    controller: require('../api/admin/game/updateGame'),
+    roleType: null,
+    role: null
+  },
 ]
 
 adminRouteSetting.forEach(item => {

@@ -32,12 +32,7 @@
             @crop="setCover"
           ></Cropper>
           <div class="w_10 mt5">
-            <el-button
-              v-if="form.cover"
-              type="danger"
-              size="mini"
-              @click="form.cover = ''"
-            >
+            <el-button v-if="form.cover" type="danger" @click="form.cover = ''">
               删除封面
             </el-button>
           </div>

@@ -187,6 +187,30 @@ const routes = [
         name: 'RsslogList',
         component: () => import(/* webpackChunkName: "RsslogList" */ '../views/index/rsslog/RsslogList.vue')
       },
+      // GamePlatformList
+      {
+        path: '/gameplatform/list',
+        name: 'GamePlatformList',
+        component: () => import(/* webpackChunkName: "GamePlatformList" */ '../views/index/gamePlatform/GamePlatformList.vue')
+      },
+      // GameList
+      {
+        path: '/game/list',
+        name: 'GameList',
+        component: () => import(/* webpackChunkName: "GameList" */ '../views/index/game/GameList.vue')
+      },
+      // GameEditor
+      {
+        path: '/game/editor/:id',
+        name: 'GameEdit',
+        component: () => import(/* webpackChunkName: "GameEditor" */ '../views/index/game/GameEditor.vue')
+      },
+      // GameEditor
+      {
+        path: '/game/add',
+        name: 'GameAdd',
+        component: () => import(/* webpackChunkName: "GameEditor" */ '../views/index/game/GameEditor.vue')
+      },
       // config
       {
         path: '/config',

@@ -7,6 +7,7 @@ node_modules
 /server/public/upload/banner/*
 /server/public/upload/siteImg/*
 /server/public/upload/bangumi/*
+/server/public/upload/gameCover/*
 /server/public/content/uploadfile/*
 /server/public/admin/*
 /server/public/up_works/*
