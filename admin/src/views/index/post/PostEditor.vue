@@ -164,7 +164,7 @@
           <div v-if="coverImagesDataList.length > 1">※可以拖动改变顺序</div>
         </el-form-item>
         <!-- 分类 -->
-        <el-form-item label="分类" prop="sort">
+        <el-form-item label="分类" prop="sort" v-if="type !== 3">
           <el-select v-model="form.sort" clearable placeholder="请选择分类">
             <el-option
               v-for="item in sortList"
@@ -175,7 +175,7 @@
           </el-select>
         </el-form-item>
         <!-- tags -->
-        <el-form-item label="标签" prop="tags">
+        <el-form-item label="标签" prop="tags" v-if="type !== 3">
           <el-select
             v-model="form.tags"
             multiple
@@ -241,11 +241,11 @@
           <el-switch v-model="form.allowRemark"></el-switch>
         </el-form-item>
         <!-- 是否置顶 -->
-        <el-form-item label="是否置顶" prop="top">
+        <el-form-item label="是否置顶" prop="top" v-if="type !== 3">
           <el-switch v-model="form.top"></el-switch>
         </el-form-item>
         <!-- 分类置顶 -->
-        <el-form-item label="分类置顶" prop="sortop">
+        <el-form-item label="分类置顶" prop="sortop" v-if="type !== 3">
           <el-switch v-model="form.sortop"></el-switch>
         </el-form-item>
         <!-- 状态 -->
@@ -604,7 +604,7 @@ export default {
     })
     const attachmentDrag = ref(false)
     // template
-    // 模板选项 about:关于页面, link: 友情链接页面, almanac:程序员老黄历, bangumi:追番
+    // 模板选项 about:关于页面, link: 友情链接页面, almanac:程序员老黄历, bangumi:追番,gameList:游戏列表
     const templateList = ref([
       {
         label: '关于',
@@ -621,6 +621,10 @@ export default {
       {
         label: '追番',
         value: 'bangumi',
+      },
+      {
+        label: '游戏列表',
+        value: 'gameList',
       },
     ])
 
