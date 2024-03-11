@@ -60,7 +60,17 @@
         <!-- 标题 title -->
         <el-table-column prop="title" label="标题" min-width="200px" />
         <!-- 平台 -->
-        <el-table-column prop="gamePlatform.name" label="平台" width="100px" />
+        <el-table-column label="平台" width="100px">
+          <template #default="{ row }">
+            <div
+              :style="{ backgroundColor: row.gamePlatform.color }"
+              class="game-platform-block"
+              v-if="row.gamePlatform"
+            >
+              {{ row.gamePlatform.name }}
+            </div>
+          </template>
+        </el-table-column>
         <!-- 简评 -->
         <el-table-column prop="summary" label="简评" min-width="250px" />
         <!-- 评分 rating -->
@@ -237,4 +247,12 @@ export default {
   },
 }
 </script>
-<style lang=""></style>
+<style scoped>
+.game-platform-block {
+  display: inline-block;
+  padding: 2px 6px;
+  color: #fff;
+  border-radius: 4px;
+  font-size: 12px;
+}
+</style>
