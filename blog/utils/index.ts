@@ -224,8 +224,9 @@ export function formatNumber(num: number) {
 }
 
 export const limitStr = (str: string, len: number) => {
-  if (str.length > len) {
-    return str.substring(0, len) + '...'
+  const strArray = Array.from(str)
+  if (strArray.length > len) {
+    return strArray.slice(0, len).join('') + '...'
   }
   return str
 }

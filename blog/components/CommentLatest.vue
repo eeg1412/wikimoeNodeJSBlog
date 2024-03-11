@@ -26,8 +26,8 @@
           </ClientOnly>
         </div>
         <!-- 评论内容 -->
-        <div class="comment-latest-item-comment-body">
-          {{ limitStr(item.content, 28) }}
+        <div class="comment-latest-item-comment-body line-clamp-2">
+          {{ item.content }}
         </div>
       </div>
     </div>
