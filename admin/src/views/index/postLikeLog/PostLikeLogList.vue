@@ -237,9 +237,11 @@ export default {
       }
     }
     const titleLimit = (title) => {
-      let title_ = title || ''
+      let title_ = Array.from(title || '')
       if (title_.length > 20) {
-        title_ = title_.slice(0, 20) + '...'
+        title_ = title_.slice(0, 20).join('') + '...'
+      } else {
+        title_ = title_.join('')
       }
       return title_
     }
