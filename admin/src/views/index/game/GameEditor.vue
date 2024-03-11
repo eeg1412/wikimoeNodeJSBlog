@@ -22,6 +22,7 @@
             :remote-method="queryGamePlatformList"
             :loading="gamePlatformListIsLoading"
             placeholder="请选择"
+            style="width: calc(100% - 100px)"
           >
             <el-option
               v-for="item in gamePlatformList"
@@ -30,6 +31,8 @@
               :value="item._id"
             ></el-option>
           </el-select>
+          <!-- 追加按钮 -->
+          <el-button type="primary" class="ml5" @click="open">追加 </el-button>
         </el-form-item>
         <el-form-item label="标题" prop="title">
           <el-input v-model="form.title"></el-input>
@@ -183,13 +186,18 @@
         </el-form-item>
       </el-form>
     </div>
+    <GamePlatformEditor ref="GamePlatformEditorRef" />
   </div>
 </template>
 <script>
 import { useRouter, useRoute } from 'vue-router'
 import { onMounted, reactive, ref } from 'vue'
 import { authApi } from '@/api'
+import GamePlatformEditor from '@/components/GamePlatformEditor.vue'
 export default {
+  components: {
+    GamePlatformEditor,
+  },
   setup() {
     const router = useRouter()
     const route = useRoute()
@@ -433,6 +441,11 @@ export default {
       }, 300)
     }
 
+    const GamePlatformEditorRef = ref(null)
+    const open = () => {
+      GamePlatformEditorRef.value.open()
+    }
+
     onMounted(() => {
       if (id.value) {
         getGameDetail()
@@ -454,6 +467,8 @@ export default {
       screenshotAlbumList,
       screenshotAlbumListIsLoading,
       queryScreenshotAlbumList,
+      GamePlatformEditorRef,
+      open,
     }
   },
 }
