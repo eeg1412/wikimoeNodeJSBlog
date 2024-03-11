@@ -97,6 +97,10 @@
       <template v-if="pageTemplate === 'bangumi'">
         <PageBangumi />
       </template>
+      <!-- gameList -->
+      <template v-if="pageTemplate === 'gameList'">
+        <PageGameList />
+      </template>
     </div>
     <!-- 文章内容 -->
     <div
