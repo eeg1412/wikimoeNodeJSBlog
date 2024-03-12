@@ -163,6 +163,13 @@ const blogRouteSetting = [
     middleware: [],
     controller: require('../api/blog/game/getGamePlatformList'),
   },
+  // getAttachmentList
+  {
+    path: '/attachment/list',
+    method: 'get',
+    middleware: [],
+    controller: require('../api/blog/attachment/getAttachmentList'),
+  },
   // createLog
   {
     path: '/log/create',
