@@ -296,3 +296,17 @@ export const getACGDuration = (startTime: string, endTime?: string) => {
     )}个月`
   }
 }
+
+export const ratingToText = (rating: number) => {
+  if (rating >= 90) return '神作'
+  if (rating >= 80) return '佳作'
+  if (rating >= 70) return '良作'
+  if (rating >= 60) return '还行'
+  if (rating >= 50) return '劣作'
+  if (rating >= 40) return '差'
+  if (rating >= 30) return '烂作'
+  if (rating >= 20) return '烂差'
+  if (rating >= 10) return '迷'
+  if (rating >= 1) return '???'
+  return '暂无评分'
+}

@@ -260,19 +260,6 @@ const setDataHrefList = (cover) => {
     },
   ]
 }
-// 评分转文字
-const ratingToText = (rating) => {
-  if (rating >= 90) return '神作'
-  if (rating >= 80) return '佳作'
-  if (rating >= 70) return '良作'
-  if (rating >= 60) return '还行'
-  if (rating >= 50) return '劣作'
-  if (rating >= 40) return '差'
-  if (rating >= 30) return '烂作'
-  if (rating >= 20) return '烂差'
-  if (rating >= 10) return '迷'
-  return '暂无评分'
-}
 
 const gameLoading = ref(false)
 const listRef = ref(null)
