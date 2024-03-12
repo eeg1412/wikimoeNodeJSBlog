@@ -149,6 +149,20 @@ const blogRouteSetting = [
     middleware: [],
     controller: require('../api/blog/tag/getTagDetail'),
   },
+  // getGameList
+  {
+    path: '/game/list',
+    method: 'get',
+    middleware: [],
+    controller: require('../api/blog/game/getGameList'),
+  },
+  // getGamePlatformList
+  {
+    path: '/game/platform/list',
+    method: 'get',
+    middleware: [],
+    controller: require('../api/blog/game/getGamePlatformList'),
+  },
   // createLog
   {
     path: '/log/create',

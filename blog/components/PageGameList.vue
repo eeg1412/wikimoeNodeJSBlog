@@ -1,10 +1,10 @@
 <template>
   <div class="pt-2 pb-2 page-game-body">
-    <div class="flex items-center" v-if="selectYear && selectSeason">
+    <div class="flex items-center">
       <!-- 顶部年份季度选择 -->
       <UPopover :popper="{ arrow: true }">
         <UButton
-          :label="`${selectYear}年`"
+          :label="`${selectPlatformData.name}`"
           size="sm"
           variant="soft"
           trailing-icon="i-heroicons-chevron-down-20-solid"
@@ -12,53 +12,76 @@
         />
 
         <template #panel="{ close }">
-          <div class="p-4 w-60">
-            <!-- 年份选择表 -->
+          <div class="p-4 w-60 max-h-96 overflow-auto">
+            <!-- 平台选择器 -->
             <div class="flex flex-wrap">
+              <div class="p-2 mr-1 mb-1">
+                <UButton
+                  label="全部平台"
+                  size="sm"
+                  :variant="selectPlatformData._id === null ? 'solid' : 'ghost'"
+                  @click="
+                    selectPlatform({ name: '全部平台', _id: null }, close)
+                  "
+                />
+              </div>
               <div
-                v-for="year in yearPageList"
-                :key="year.year"
-                class="w-1/2 p-2"
+                v-for="item in gamePlatformList"
+                :key="item._id"
+                class="p-2 mr-1 mb-1"
               >
                 <UButton
-                  :label="`${year.year}年`"
+                  :label="`${item.name}`"
                   size="sm"
-                  :variant="year.year === selectYear ? 'solid' : 'ghost'"
-                  @click="selectYearHandle(year.year, close)"
+                  :variant="
+                    item._id === selectPlatformData._id ? 'solid' : 'ghost'
+                  "
+                  @click="selectPlatform(item, close)"
                 />
               </div>
             </div>
-            <!-- 翻页器 -->
-            <div class="flex justify-between items-center mt-4">
-              <UButton
-                :disabled="yearPage === 1"
-                size="sm"
-                variant="ghost"
-                @click="yearPage--"
+          </div>
+        </template>
+      </UPopover>
+      <UPopover :popper="{ arrow: true }">
+        <UButton
+          :label="`${sortTypeMap[params.sortType]}`"
+          size="sm"
+          variant="soft"
+          trailing-icon="i-heroicons-chevron-down-20-solid"
+          class="mr-3"
+        />
+
+        <template #panel="{ close }">
+          <div class="p-4 w-80 max-h-96 overflow-auto">
+            <!-- 排序选择器 -->
+            <div class="flex flex-wrap">
+              <div
+                class="p-2 mr-1 mb-1"
+                v-for="(item, index) in sortTypeList"
+                :key="item.value"
               >
-                <UIcon class="mr5" name="i-heroicons-chevron-left" />
-              </UButton>
-              <span class="mx-4 text-gray-500"
-                >{{ yearPage }}/{{ yearTotalPage }}</span
-              >
-              <UButton
-                :disabled="yearPage === yearTotalPage"
-                size="sm"
-                variant="ghost"
-                @click="yearPage++"
-              >
-                <UIcon class="mr5" name="i-heroicons-chevron-right" />
-              </UButton>
+                <UButton
+                  :label="item.label"
+                  size="sm"
+                  :variant="params.sortType === item.value ? 'solid' : 'ghost'"
+                  @click="selectType(item.value, close)"
+                />
+              </div>
             </div>
           </div>
         </template>
       </UPopover>
     </div>
-    <div class="relative">
-      <!-- 追番列表 -->
+    <div class="relative" ref="listRef">
+      <!-- 列表 -->
       <div v-if="gameList.length > 0" class="mt-5">
         <div class="grid gap-3 md:grid-cols-2">
-          <div v-for="game in gameList" :key="game.id" class="flex">
+          <div
+            v-for="game in gameList"
+            :key="game.id"
+            class="flex border-b border-gray-200 border-dashed pb-3 mb-3"
+          >
             <div class="flex-shrink-0 relative game-cover-body">
               <div class="relative">
                 <WikimoeImage
@@ -106,34 +129,57 @@
                 <span
                   class="games-platform-block"
                   :style="{
-                    backgroundColor: '#ff4d4f',
+                    backgroundColor: game.gamePlatform.color,
                   }"
-                  >NS</span
+                  v-if="game.gamePlatform"
+                  >{{ game.gamePlatform.name }}</span
                 >{{ game.title }}
               </div>
               <!-- 链接 -->
               <div class="text-sm mb-1 text-gray-500 flex-shrink-0">
                 <a
-                  href="www.bilibili.com"
+                  :href="url.url"
                   target="_blank"
                   class="inline-flex items-center text-primary mr-2"
+                  v-for="(url, index) in game.urlList"
+                  :key="index"
                 >
                   <UIcon name="i-heroicons-link" class="align-middle mr-1" />
-                  录像视频
+                  {{ url.text }}
                 </a>
                 <a
-                  href="www.bilibili.com"
-                  target="_blank"
+                  href="javascript:;"
                   class="inline-flex items-center text-primary mr-2"
+                  v-if="game.screenshotAlbum"
                 >
                   <UIcon name="i-heroicons-photo" class="align-middle mr-1" />
                   游戏截图
                 </a>
               </div>
               <!-- 用时 -->
-              <div class="text-sm mb-1 text-gray-500 flex-shrink-0">
-                已用时：100分钟
-              </div>
+              <UPopover
+                :popper="{ offsetDistance: 0, placement: 'bottom-start' }"
+                v-if="game.startTime"
+              >
+                <div
+                  class="text-sm mb-1 text-gray-400 flex-shrink-0 pointer w_10 flex items-center"
+                >
+                  <UIcon
+                    name="i-heroicons-clock"
+                    class="align-middle mr-1"
+                  />用时{{ getACGDuration(game.startTime, game.endTime) }}
+                </div>
+                <template #panel>
+                  <div class="px-2 py-1">
+                    {{
+                      `${formatDate(game.startTime)} ~ ${
+                        game.endTime ? formatDate(game.endTime) : '至今'
+                      }`
+                    }}
+                  </div>
+                </template>
+              </UPopover>
+
               <!-- prettier-ignore -->
               <div class="text-sm whitespace-pre-line text-gray-500 flex-grow" v-if="game.summary">{{ game.summary }}</div>
               <div v-else class="text-sm flex-grow text-gray-400">暂无简评</div>
@@ -146,99 +192,71 @@
       </div>
       <DivLoading :loading="gameLoading" />
     </div>
-    <div class="p-2" v-if="total > 0">
-      共计追番<span class="text-primary pl-1 pr-1">{{ total }}</span
-      >部，当前季度追番<span class="text-primary pl-1 pr-1">{{
-        gameList.length
-      }}</span
-      >部
+    <div class="p-2 flex justify-between items-center" v-if="total > 0">
+      <div>
+        共<span class="text-primary pl-1 pr-1">{{ total }}</span
+        >部游戏
+      </div>
+      <div>
+        <UButton
+          icon="i-heroicons-chevron-left"
+          size="2xs"
+          color="primary"
+          square
+          variant="outline"
+          class="mr-1"
+          :disabled="!hasPrev"
+          @click="toPrev"
+        />
+        <UButton
+          icon="i-heroicons-chevron-right"
+          size="2xs"
+          color="primary"
+          square
+          variant="outline"
+          :disabled="!hasNext"
+          @click="toNext"
+        />
+      </div>
     </div>
   </div>
 </template>
 <script setup>
-import {
-  getBangumiListApi,
-  getBangumiYearListApi,
-  getBangumiListApiFetch,
-} from '@/api/bangumi'
+import { getGameListApi, getGamePlatformListApi } from '@/api/game'
 
-const { data: yearListData } = await getBangumiYearListApi()
+// 平台
+const gamePlatformList = ref([])
+const selectPlatformData = ref({
+  name: '全部平台',
+  _id: null,
+})
 
-const yearList = computed(() => {
-  const list = yearListData.value?.data.list || []
-  //  遍历list，将其中的seasons 数组从小到大排序
-  list.forEach((item) => {
-    item.seasonList.sort((a, b) => {
-      return a - b
-    })
-  })
-  return list
+// 游戏列表
+const size = 20
+const params = reactive({
+  page: 1,
+  sortType: 'startTime',
 })
-const total = computed(() => {
-  return yearListData.value.data.total || 0
-})
-const selectYear = ref(null)
-const yearPageSize = ref(4)
-const yearPage = ref(1)
-const yearTotalPage = computed(() => {
-  return Math.ceil(yearList.value.length / yearPageSize.value)
-})
-// 当前页的年份列表
-const yearPageList = computed(() => {
-  const start = (yearPage.value - 1) * yearPageSize.value
-  const end = start + yearPageSize.value
-  return yearList.value.slice(start, end)
-})
-// watch selectYear
-
-const selectSeason = ref(null)
-const selectSeasonList = computed(() => {
-  // yearList.value
-  const year = selectYear.value
-  if (!year) return []
-  const yearItem = yearList.value.find((item) => item.year === year)
-  return yearItem?.seasonList || []
-})
-const initYearSeason = () => {
-  const lastYear = yearList.value[0] || null
-  if (lastYear) {
-    selectYear.value = lastYear.year || null
-    selectSeason.value =
-      lastYear.seasonList[lastYear.seasonList.length - 1] || null
-  }
-}
-initYearSeason()
-// 如果年份和季度都存在，就获取番剧列表
 const gameList = ref([])
-if (selectYear.value && selectSeason.value) {
-  const params = {
-    year: selectYear.value,
-    season: selectSeason.value,
-  }
-  await getBangumiListApi(params).then((res) => {
-    gameList.value = res.data.value.data
-  })
-}
-const seasonToName = (season) => {
-  switch (season) {
-    case 1:
-      return '冬季新番'
-    case 2:
-      return '春季新番'
-    case 3:
-      return '夏季新番'
-    case 4:
-      return '秋季新番'
-    default:
-      return ''
-  }
-}
+const total = ref(0)
+
+// 获取数据
+await Promise.all([
+  getGamePlatformListApi().then((res) => {
+    gamePlatformList.value = res.data.value.data
+  }),
+  getGameListApi(params).then((res) => {
+    gameList.value = res.data.value.list
+    total.value = res.data.value.total
+  }),
+])
+const hasPrev = computed(() => params.page > 1)
+const hasNext = computed(() => params.page * size < total.value)
+
 const setDataHrefList = (cover) => {
   return [
     {
       src: cover,
-      width: 400,
-      height: 565,
     },
   ]
 }
@@ -257,22 +275,65 @@ const ratingToText = (rating) => {
 }
 
 const gameLoading = ref(false)
-const fetchBangumiList = async () => {
-  const params = {
-    year: selectYear.value,
-    season: selectSeason.value,
-  }
+const listRef = ref(null)
+const fetchGameList = async () => {
   gameLoading.value = true
-  const res = await getBangumiListApi(params)
-  gameList.value = res?.data?.value?.data || []
+  const newParams = {
+    ...params,
+    gamePlatformId: selectPlatformData.value?._id,
+  }
+  const res = await getGameListApi(newParams)
+  gameList.value = res?.data?.value?.list || []
+  total.value = res?.data?.value?.total || 0
   gameLoading.value = false
+  nextTick(() => {
+    if (listRef.value) {
+      const rect = listRef.value.getBoundingClientRect()
+      window.scrollBy({
+        top: rect.top - 200,
+        behavior: 'smooth',
+      })
+    }
+  })
 }
-// 选择了年份
-const selectYearHandle = async (year, close) => {
-  if (close) close()
-  selectYear.value = year
-  selectSeason.value = selectSeasonList.value[0]
-  await fetchBangumiList()
+const toPrev = () => {
+  if (hasPrev.value) {
+    params.page--
+    fetchGameList()
+  }
+}
+const toNext = () => {
+  if (hasNext.value) {
+    params.page++
+    fetchGameList()
+  }
+}
+
+const selectPlatform = (item, close) => {
+  selectPlatformData.value = item
+  params.page = 1
+  fetchGameList()
+  close()
+}
+
+const sortTypeMap = {
+  startTime: '按开始时间排序',
+  rating: '按评分排序',
+}
+const sortTypeList = [
+  {
+    label: '按开始时间排序',
+    value: 'startTime',
+  },
+  {
+    label: '按评分排序',
+    value: 'rating',
+  },
+]
+const selectType = (type, close) => {
+  params.sortType = type
+  fetchGameList()
+  close()
 }
 </script>
 <style>
@@ -292,11 +353,5 @@ const selectYearHandle = async (year, close) => {
   font-size: 12px;
   margin-right: 5px;
   border-radius: 5px;
-}
-/* 手机 */
-@media (max-width: 768px) {
-  .game-cover-body {
-    width: 100px;
-  }
 }
 </style>

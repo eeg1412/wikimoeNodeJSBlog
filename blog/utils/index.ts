@@ -270,3 +270,29 @@ export const videoUrlToBlob = async (url: string): Promise<string> => {
 export const revokeVideoObjectURL = (url: string) => {
   URL.revokeObjectURL(url)
 }
+
+// 传入开始时间和结束时间，如果结束时间不存在用现在的时间，计算两个时间差，1天以内返回x小时，1天以上返回x天，1周以上返回x周x天，1个月以上返回x个月x天，1年以上返回x年x月
+export const getACGDuration = (startTime: string, endTime?: string) => {
+  const start = new Date(startTime).getTime()
+  const end = endTime ? new Date(endTime).getTime() : Date.now()
+  const diff = end - start
+  const day = 1000 * 60 * 60 * 24
+  const week = day * 7
+  const month = day * 30
+  const year = day * 365
+  if (diff < day) {
+    return `${Math.floor(diff / (1000 * 60 * 60))}小时`
+  } else if (diff < week) {
+    return `${Math.floor(diff / day)}天`
+  } else if (diff < month) {
+    return `${Math.floor(diff / week)}周${Math.floor((diff % week) / day)}天`
+  } else if (diff < year) {
+    return `${Math.floor(diff / month)}个月${Math.floor(
+      (diff % month) / day
+    )}天`
+  } else {
+    return `${Math.floor(diff / year)}年${Math.floor(
+      (diff % year) / month
+    )}个月`
+  }
+}
