@@ -53,7 +53,7 @@
         />
 
         <template #panel="{ close }">
-          <div class="p-4 w-80 max-h-96 overflow-auto">
+          <div class="p-4">
             <!-- 排序选择器 -->
             <div class="flex flex-wrap">
               <div
