@@ -10,19 +10,19 @@ exports.save = async function (parmas) {
 
 exports.findOne = async function (parmas, projection) {
   // document查询
-  return await gamesModel.findOne(parmas, projection).populate('gamePlatform').populate('screenshotAlbum');
+  return await gamesModel.findOne(parmas, projection).populate('gamePlatform', '_id name color').populate('screenshotAlbum', '_id name');
 }
 
 // 查找所有
 exports.find = async function (parmas, sort, projection) {
   // document查询
-  return await gamesModel.find(parmas, projection).populate('gamePlatform').populate('screenshotAlbum').sort(sort);
+  return await gamesModel.find(parmas, projection).populate('gamePlatform', '_id name color').populate('screenshotAlbum', '_id name').sort(sort);
 }
 
 // 分页查询
 exports.findPage = async function (parmas, sort, page, limit, projection) {
   // document查询
-  const list = await gamesModel.find(parmas, projection).populate('gamePlatform').populate('screenshotAlbum').sort(sort).skip((page - 1) * limit).limit(limit);
+  const list = await gamesModel.find(parmas, projection).populate('gamePlatform', '_id name color').populate('screenshotAlbum', '_id name').sort(sort).skip((page - 1) * limit).limit(limit);
   const total = await gamesModel.countDocuments(parmas);
   // 查询失败
   if (!list || total === undefined) {
