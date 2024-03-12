@@ -136,7 +136,10 @@
                 >{{ game.title }}
               </div>
               <!-- 链接 -->
-              <div class="text-sm mb-1 text-gray-500 flex-shrink-0">
+              <div
+                class="text-sm mb-1 text-gray-500 flex-shrink-0"
+                v-if="game.urlList.length > 0"
+              >
                 <a
                   :href="url.url"
                   target="_blank"
