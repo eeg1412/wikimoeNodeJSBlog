@@ -280,21 +280,25 @@ export const getACGDuration = (startTime: string, endTime?: string) => {
   const week = day * 7
   const month = day * 30
   const year = day * 365
+  let result = ''
   if (diff < day) {
-    return `${Math.floor(diff / (1000 * 60 * 60))}小时`
+    result = `${Math.floor(diff / (1000 * 60 * 60))}小时`
   } else if (diff < week) {
-    return `${Math.floor(diff / day)}天`
+    result = `${Math.floor(diff / day)}天`
   } else if (diff < month) {
-    return `${Math.floor(diff / week)}周${Math.floor((diff % week) / day)}天`
+    const weeks = Math.floor(diff / week)
+    const days = Math.floor((diff % week) / day)
+    result = `${weeks}周${days ? days + '天' : ''}`
   } else if (diff < year) {
-    return `${Math.floor(diff / month)}个月${Math.floor(
-      (diff % month) / day
-    )}天`
+    const months = Math.floor(diff / month)
+    const days = Math.floor((diff % month) / day)
+    result = `${months}个月${days ? days + '天' : ''}`
   } else {
-    return `${Math.floor(diff / year)}年${Math.floor(
-      (diff % year) / month
-    )}个月`
+    const years = Math.floor(diff / year)
+    const months = Math.floor((diff % year) / month)
+    result = `${years}年${months ? months + '个月' : ''}`
   }
+  return result
 }
 
 export const ratingToText = (rating: number) => {
