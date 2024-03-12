@@ -93,20 +93,42 @@ const styleObject = computed(() => {
   return obj
 })
 
-const tryOpenHref = (e) => {
+const tryOpenHref = async (e) => {
   if (props.clickStop) {
     e.stopPropagation()
   }
   if (props.dataHref || props.dataHrefList) {
     const list = props.dataHrefList
-    const dataSource = list.map((item) => {
-      return {
-        src: options.value.siteUrl + item.src,
-        width: item.width,
-        height: item.height,
-        mimetype: item.mimetype,
-      }
-    })
+    const dataSource = await Promise.all(
+      list.map(async (item) => {
+        const src = options.value.siteUrl + item.src
+        // 如果width和height有一个不存在就读取图片的宽高
+        let width = item.width
+        let height = item.height
+        if (!width || !height) {
+          const img = new Image()
+          img.src = src
+          await new Promise((resolve, reject) => {
+            img.onload = () => {
+              resolve()
+            }
+            // error 事件会在图片加载错误时触发。
+            img.onerror = (err) => {
+              console.error(err)
+              reject(err)
+            }
+          })
+          width = img.width
+          height = img.height
+        }
+        return {
+          src: src,
+          width: width,
+          height: height,
+          mimetype: item.mimetype,
+        }
+      })
+    )
     const index = props.dataHrefIndex || 0
     loadAndOpenImg(index, dataSource)
   }
