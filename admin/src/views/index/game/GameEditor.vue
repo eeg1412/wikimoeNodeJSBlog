@@ -317,6 +317,13 @@ export default {
         const data = {
           ...form,
         }
+        // 如果平台和相册为空则改为null
+        if (!data.gamePlatform) {
+          data.gamePlatform = null
+        }
+        if (!data.screenshotAlbum) {
+          data.screenshotAlbum = null
+        }
         if (id.value) {
           // 编辑
           data.id = id.value
