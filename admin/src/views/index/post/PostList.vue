@@ -485,25 +485,22 @@ export default {
     // tags
     const tagList = ref([])
     const tagsIsLoading = ref(false)
-    const getTagList = (tagKeyword = null) => {
+    const getTagList = (tagKeyword = null, options = {}) => {
       if (tagsIsLoading.value) {
         return
       }
       tagsIsLoading.value = true
       authApi
-        .getTagList({ keyword: tagKeyword, size: 100, page: 1 }, true)
+        .getTagList(
+          { keyword: tagKeyword, size: 100, page: 1, ...options },
+          true
+        )
         .then((res) => {
           tagList.value = res.data.list
         })
         .finally(() => {
           tagsIsLoading.value = false
         })
-    }
-    const getTagDetail = (id) => {
-      authApi.getTagDetail({ id }).then((res) => {
-        const data = res.data.data
-        tagList.value.push(data)
-      })
     }
     let queryTagsTimer = null
     const queryTags = (query) => {
@@ -604,9 +601,7 @@ export default {
       getPostList()
       getSortList()
       if (params.tags.length) {
-        params.tags.forEach((tagId) => {
-          getTagDetail(tagId)
-        })
+        getTagList(null, { idList: params.tags, size: 999999 })
       }
     })
     return {
