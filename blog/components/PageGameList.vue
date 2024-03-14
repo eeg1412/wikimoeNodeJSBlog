@@ -83,7 +83,9 @@
             class="flex border-b border-gray-200 border-dashed pb-3 mb-3"
           >
             <div class="flex-shrink-0 relative game-cover-body">
-              <div class="relative">
+              <div
+                class="relative h-32 flex justify-center items-center border border-solid border-gray-300 rounded-md p-1 bg-primary-50"
+              >
                 <WikimoeImage
                   class="w-full rounded game-cover"
                   :src="game.cover || '/img/nopic400-565.png'"
@@ -95,7 +97,7 @@
                     game.cover ? setDataHrefList(game.cover) : null
                   "
                   loading="lazy"
-                  fit="cover"
+                  fit="contain"
                 />
                 <div class="absolute bottom-0 left-0 p-1">
                   <UBadge
