@@ -143,6 +143,7 @@ export default {
     const toEditName = () => {
       formName.name = props.item.name || ''
       formName.videoCover = props.item.thumfor || ''
+      formName.description = props.item.description || ''
       showNameDialog.value = true
     }
 
