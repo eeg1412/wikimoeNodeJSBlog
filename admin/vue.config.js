@@ -1,5 +1,21 @@
 const { defineConfig } = require('@vue/cli-service')
+const TerserPlugin = require('terser-webpack-plugin')
+
 module.exports = defineConfig({
+  // 不打包console.log
+  configureWebpack: {
+    optimization: {
+      minimizer: [
+        new TerserPlugin({
+          terserOptions: {
+            compress: {
+              drop_console: true,
+            },
+          },
+        }),
+      ],
+    },
+  },
   transpileDependencies: true,
   // 打包目录到../server/public/admin/
   outputDir: "../server/public/admin/",
