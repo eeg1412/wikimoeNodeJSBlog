@@ -898,3 +898,11 @@ input[type='password'] {
 ins.adsbygoogle[data-ad-status='unfilled'] {
   display: none !important;
 }
+.pswp__custom-caption {
+  width: auto;
+  max-width: 1200px;
+  position: absolute;
+  left: 50%;
+  bottom: 16px;
+  transform: translateX(-50%);
+}
