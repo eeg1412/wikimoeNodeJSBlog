@@ -6,7 +6,7 @@ const pathModule = require('path');
 
 module.exports = async function (req, res, next) {
   // name	String	是	否	无	媒体名称
-  const { name, id, __v, videoCover } = req.body
+  const { name, description, id, __v, videoCover } = req.body
   if (!id) {
     res.status(400).json({
       errors: [{
@@ -27,6 +27,7 @@ module.exports = async function (req, res, next) {
   // 校验格式
   const params = {
     name: name,
+    description: description || ''
   }
   const rule = [
     {
