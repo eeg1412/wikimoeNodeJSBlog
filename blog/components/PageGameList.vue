@@ -138,7 +138,7 @@
               <!-- 链接 -->
               <div
                 class="text-sm mb-1 text-gray-500 flex-shrink-0"
-                v-if="game.urlList.length > 0"
+                v-if="game.urlList.length > 0 || game.screenshotAlbum"
               >
                 <a
                   :href="url.url"
@@ -154,6 +154,7 @@
                   href="javascript:;"
                   class="inline-flex items-center text-primary mr-2"
                   v-if="game.screenshotAlbum"
+                  @click="showAlbum(game.screenshotAlbum._id)"
                 >
                   <UIcon name="i-heroicons-photo" class="align-middle mr-1" />
                   游戏截图
@@ -223,6 +224,7 @@
       </div>
     </div>
   </div>
+  <AlbumPhotoSwipe v-model:show="albumShow" :albumId="activeAlbumId" />
 </template>
 <script setup>
 import { getGameListApi, getGamePlatformListApi } from '@/api/game'
@@ -324,6 +326,14 @@ const selectType = (type, close) => {
   params.sortType = type
   fetchGameList()
   close()
+}
+
+// 相册
+const albumShow = ref(false)
+const activeAlbumId = ref('')
+const showAlbum = (id) => {
+  activeAlbumId.value = id
+  albumShow.value = true
 }
 </script>
 <style>
