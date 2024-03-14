@@ -30,7 +30,7 @@
               @click.middle="openNewTab('Home')"
               :route="{ name: 'Home' }"
             >
-              <i class="fas fa-home pr10"></i>
+              <i class="fas fa-fw fa-home pr10"></i>
               <template #title>面板</template>
             </el-menu-item>
             <el-menu-item
@@ -39,7 +39,7 @@
               @click.middle="openNewTab('SortList')"
               :route="{ name: 'SortList' }"
             >
-              <i class="fas fa-folder pr10"></i>
+              <i class="fas fa-fw fa-folder pr10"></i>
               <template #title>分类</template>
             </el-menu-item>
             <!-- 标签 -->
@@ -49,7 +49,7 @@
               @click.middle="openNewTab('TagList')"
               :route="{ name: 'TagList' }"
             >
-              <i class="fas fa-tags pr10"></i>
+              <i class="fas fa-fw fa-tags pr10"></i>
               <template #title>标签</template>
             </el-menu-item>
             <!-- 媒体库 -->
@@ -59,7 +59,7 @@
               @click.middle="openNewTab('AlbumList')"
               :route="{ name: 'AlbumList' }"
             >
-              <i class="fas fa-images pr10"></i>
+              <i class="fas fa-fw fa-images pr10"></i>
               <template #title>媒体库</template>
             </el-menu-item>
             <el-menu-item
@@ -68,7 +68,7 @@
               @click.middle="openNewTab('PostList')"
               :route="{ name: 'PostList' }"
             >
-              <i class="fas fa-newspaper pr10"></i>
+              <i class="fas fa-fw fa-newspaper pr10"></i>
               <template #title>文章</template>
             </el-menu-item>
             <!-- 评论 -->
@@ -78,7 +78,7 @@
               @click.middle="openNewTab('CommentList')"
               :route="{ name: 'CommentList' }"
             >
-              <i class="fas fa-comments pr10"></i>
+              <i class="fas fa-fw fa-comments pr10"></i>
               <template #title>评论</template>
             </el-menu-item>
             <!-- 友链 -->
@@ -88,7 +88,7 @@
               @click.middle="openNewTab('LinkList')"
               :route="{ name: 'LinkList' }"
             >
-              <i class="fas fa-link pr10"></i>
+              <i class="fas fa-fw fa-link pr10"></i>
               <template #title>友链</template>
             </el-menu-item>
             <!-- 导航 -->
@@ -98,7 +98,7 @@
               @click.middle="openNewTab('NaviList')"
               :route="{ name: 'NaviList' }"
             >
-              <i class="fas fa-compass pr10"></i>
+              <i class="fas fa-fw fa-compass pr10"></i>
               <template #title>导航</template>
             </el-menu-item>
             <!-- 侧边栏 -->
@@ -108,7 +108,7 @@
               @click.middle="openNewTab('SidebarList')"
               :route="{ name: 'SidebarList' }"
             >
-              <i class="fas fa-columns pr10"></i>
+              <i class="fas fa-fw fa-columns pr10"></i>
               <template #title>侧边栏</template>
             </el-menu-item>
             <!-- 横幅 -->
@@ -118,7 +118,7 @@
               @click.middle="openNewTab('BannerList')"
               :route="{ name: 'BannerList' }"
             >
-              <i class="fas fa-image pr10"></i>
+              <i class="fas fa-fw fa-image pr10"></i>
               <template #title>横幅</template>
             </el-menu-item>
             <!-- 追番 BangumiList -->
@@ -128,13 +128,13 @@
               @click.middle="openNewTab('BangumiList')"
               :route="{ name: 'BangumiList' }"
             >
-              <i class="fas fa-tv pr10"></i>
+              <i class="fas fa-fw fa-tv pr10"></i>
               <template #title>追番</template>
             </el-menu-item>
             <el-sub-menu index="game">
               <template #title>
                 <!-- 游戏 -->
-                <i class="fas fa-gamepad pr10"></i>游戏
+                <i class="fas fa-fw fa-gamepad pr10"></i>游戏
               </template>
               <!-- 游戏平台 GamePlatformList -->
               <el-menu-item
@@ -143,7 +143,7 @@
                 @click.middle="openNewTab('GamePlatformList')"
                 :route="{ name: 'GamePlatformList' }"
               >
-                <i class="fas fa-gamepad pr10"></i>
+                <i class="fas fa-fw fa-gamepad pr10"></i>
                 <template #title>游戏平台</template>
               </el-menu-item>
               <!-- 游戏列表 GameList -->
@@ -153,14 +153,14 @@
                 @click.middle="openNewTab('GameList')"
                 :route="{ name: 'GameList' }"
               >
-                <i class="fas fa-gamepad pr10"></i>
+                <i class="fas fa-fw fa-gamepad pr10"></i>
                 <template #title>游戏列表</template>
               </el-menu-item>
             </el-sub-menu>
             <el-sub-menu index="history">
               <template #title>
                 <!-- 日志图标 -->
-                <i class="fas fa-book pr10"></i>日志
+                <i class="fas fa-fw fa-book pr10"></i>日志
               </template>
               <!-- 文章点赞日志 PostLikeLogList -->
               <el-menu-item
@@ -169,7 +169,7 @@
                 @click.middle="openNewTab('PostLikeLogList')"
                 :route="{ name: 'PostLikeLogList' }"
               >
-                <i class="fas fa-thumbs-up pr10"></i>
+                <i class="fas fa-fw fa-thumbs-up pr10"></i>
                 <template #title> 文章点赞日志</template>
               </el-menu-item>
               <!-- 评论点赞日志 CommentLikeLogList -->
@@ -179,7 +179,7 @@
                 @click.middle="openNewTab('CommentLikeLogList')"
                 :route="{ name: 'CommentLikeLogList' }"
               >
-                <i class="fas fa-thumbs-up pr10"></i>
+                <i class="fas fa-fw fa-thumbs-up pr10"></i>
                 <template #title>评论点赞日志</template>
               </el-menu-item>
               <!-- 读者访问日志 ReaderlogList -->
@@ -189,7 +189,7 @@
                 @click.middle="openNewTab('ReaderlogList')"
                 :route="{ name: 'ReaderlogList' }"
               >
-                <i class="fas fa-user-clock pr10"></i>
+                <i class="fas fa-fw fa-user-clock pr10"></i>
                 <template #title>读者访问日志</template>
               </el-menu-item>
               <!-- RSS访问日志 RsslogList -->
@@ -199,7 +199,7 @@
                 @click.middle="openNewTab('RsslogList')"
                 :route="{ name: 'RsslogList' }"
               >
-                <i class="fas fa-rss pr10"></i>
+                <i class="fas fa-fw fa-rss pr10"></i>
                 <template #title>RSS访问日志</template>
               </el-menu-item>
               <!-- 邮件发送日志  EmailSendHistoryList -->
@@ -209,7 +209,7 @@
                 @click.middle="openNewTab('EmailSendHistoryList')"
                 :route="{ name: 'EmailSendHistoryList' }"
               >
-                <i class="fas fa-envelope pr10"></i>
+                <i class="fas fa-fw fa-envelope pr10"></i>
                 <template #title>邮件发送日志</template>
               </el-menu-item>
               <!-- 引用日志 ReferrerList -->
@@ -219,7 +219,7 @@
                 @click.middle="openNewTab('ReferrerList')"
                 :route="{ name: 'ReferrerList' }"
               >
-                <i class="fas fa-external-link-alt pr10"></i>
+                <i class="fas fa-fw fa-external-link-alt pr10"></i>
                 <template #title>引用日志</template>
               </el-menu-item>
             </el-sub-menu>
@@ -230,7 +230,7 @@
               @click.middle="openNewTab('Config')"
               :route="{ name: 'Config' }"
             >
-              <i class="fas fa-cog pr10"></i>
+              <i class="fas fa-fw fa-cog pr10"></i>
               <template #title>设置</template>
             </el-menu-item>
           </el-menu>
@@ -249,12 +249,12 @@
             <template v-if="adminInfo">
               <div class="fr pt5">
                 <el-button type="primary" circle text @click="logout">
-                  <i class="fas fa-sign-out-alt"></i>
+                  <i class="fas fa-fw fa-sign-out-alt"></i>
                 </el-button>
               </div>
               <div class="fr pt5">
                 <el-button type="primary" circle text @click="goToBlog">
-                  <i class="fas fa-home"></i>
+                  <i class="fas fa-fw fa-home"></i>
                 </el-button>
               </div>
               <div class="fr pt5">
@@ -264,7 +264,7 @@
                   text
                   @click="goLoginUserEditor"
                 >
-                  <i class="fas fa-user-edit"></i>
+                  <i class="fas fa-fw fa-user-edit"></i>
                 </el-button>
               </div>
               <div class="fr pt10 mr10 fb">
