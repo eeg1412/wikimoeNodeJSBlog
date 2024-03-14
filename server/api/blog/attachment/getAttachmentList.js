@@ -25,7 +25,7 @@ module.exports = async function (req, res, next) {
     updatedAt: -1,
     _id: -1
   }
-  attachmentUtils.find(params, sort).then((data) => {
+  attachmentUtils.find(params, sort, 'album description filepath filename height mimetype name status thumHeight thumWidth thumfor width _id').then((data) => {
     // 返回格式list,total
     res.send({
       data: data,
