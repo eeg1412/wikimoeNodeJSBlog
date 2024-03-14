@@ -21,6 +21,40 @@
               placeholder="请输入游戏名称"
             ></el-input>
           </el-form-item>
+          <!-- 游戏平台 -->
+          <el-form-item>
+            <el-select
+              v-model="params.gamePlatform"
+              placeholder="请选择游戏平台"
+              clearable
+              style="width: 200px"
+              multiple
+              filterable
+              remote
+              :automatic-dropdown="true"
+              :remote-method="queryGamePlatformList"
+              :loading="gamePlatformListIsLoading"
+            >
+              <el-option
+                v-for="item in gamePlatformList"
+                :key="item._id"
+                :label="item.name"
+                :value="item._id"
+              ></el-option>
+            </el-select>
+          </el-form-item>
+          <!-- 状态 0不显示 1显示 -->
+          <el-form-item>
+            <el-select
+              v-model="params.status"
+              placeholder="请选择状态"
+              style="width: 100px"
+              clearable
+            >
+              <el-option label="显示" :value="1"></el-option>
+              <el-option label="不显示" :value="0"></el-option>
+            </el-select>
+          </el-form-item>
           <el-form-item>
             <el-button type="primary" @click="getGameList(true)"
               >搜索</el-button
@@ -161,6 +195,8 @@ export default {
       page: 1,
       size: 50,
       keyword: '',
+      gamePlatform: '',
+      status: '',
     })
     const total = ref(0)
     const tableRef = ref(null)
@@ -228,7 +264,43 @@ export default {
         params.page = sessionParams.page
         params.size = sessionParams.size
         params.keyword = sessionParams.keyword
+        params.gamePlatform = sessionParams.gamePlatform
+        params.status = sessionParams.status
+        if (params.gamePlatform) {
+          queryGamePlatformList(null, {
+            idList: params.gamePlatform,
+            size: 999999,
+          })
+        }
       }
+    }
+
+    // 游戏平台列表
+    const gamePlatformList = ref([])
+    const gamePlatformListIsLoading = ref(false)
+    const gamePlatformListTimer = null
+    const queryGamePlatformList = (query, options = {}) => {
+      if (gamePlatformListTimer) {
+        clearTimeout(gamePlatformListTimer)
+      }
+      setTimeout(() => {
+        gamePlatformListIsLoading.value = true
+        const params = {
+          keyword: query,
+          page: 1,
+          size: 50,
+          ...options,
+        }
+        authApi
+          .getGamePlatformList(params, { noLoading: true })
+          .then((res) => {
+            gamePlatformList.value = res.data.list
+          })
+          .catch(() => {})
+          .finally(() => {
+            gamePlatformListIsLoading.value = false
+          })
+      }, 300)
     }
     onMounted(() => {
       initParams()
@@ -243,6 +315,9 @@ export default {
       handleAdd,
       goEdit,
       deleteGame,
+      gamePlatformList,
+      gamePlatformListIsLoading,
+      queryGamePlatformList,
     }
   },
 }
