@@ -110,7 +110,7 @@
         <!-- 评分 rating -->
         <el-table-column prop="rating" label="评分" width="60px" />
         <!-- 标记 字符串数组 label -->
-        <el-table-column prop="label" label="标记">
+        <el-table-column prop="label" label="标记" min-width="140px">
           <template #default="{ row }">
             <el-tag v-for="item in row.label" :key="item" type="success">{{
               item
