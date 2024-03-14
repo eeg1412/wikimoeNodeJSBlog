@@ -108,7 +108,7 @@ const getList = async () => {
     return
   } else if (res.data.length <= 0) {
     toast.add({
-      title: '暂无图片',
+      title: '暂无内容',
       icon: 'i-heroicons-x-circle',
       color: 'red',
     })

@@ -157,7 +157,7 @@
                   @click="showAlbum(game.screenshotAlbum._id)"
                 >
                   <UIcon name="i-heroicons-photo" class="align-middle mr-1" />
-                  游戏截图
+                  相关截图
                 </a>
               </div>
               <!-- 用时 -->
