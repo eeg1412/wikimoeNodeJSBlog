@@ -899,10 +899,15 @@ ins.adsbygoogle[data-ad-status='unfilled'] {
   display: none !important;
 }
 .pswp__custom-caption {
-  width: auto;
-  max-width: 1200px;
   position: absolute;
-  left: 50%;
+  left: 32px;
+  right: 32px;
   bottom: 16px;
-  transform: translateX(-50%);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.album-photo-swipe .pswp__button--arrow--next,
+.album-photo-swipe .pswp__button--arrow--prev {
+  z-index: 9 !important;
 }
