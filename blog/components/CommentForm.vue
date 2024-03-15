@@ -295,7 +295,7 @@ const emojiBtnClick = () => {
 
 // 保存个人信息
 const commentSetting = reactive({
-  commentSaveUserInfo: false,
+  commentSaveUserInfo: true,
 })
 const initCommentSaveUserInfo = () => {
   const commentNickname = localStorage.getItem('commentNickname')
@@ -330,6 +330,10 @@ const removeUserInfo = () => {
   localStorage.removeItem('commentNickname')
   localStorage.removeItem('commentEmail')
   localStorage.removeItem('commentUrl')
+
+  form.nickname = ''
+  form.email = ''
+  form.url = ''
   // 提示
   toast.add({
     title: '已清除个人信息',
