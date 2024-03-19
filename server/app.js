@@ -26,34 +26,34 @@ const upLoadFolder = path.join(__dirname, 'public/upload')
 app.use('/upload', function (req, res, next) {
   utils.referrerRecord(req.headers.referer, 'assets')
   next();
-}, express.static(upLoadFolder));
+}, express.static(upLoadFolder, { maxAge: '365d' }));
 
 const contentFolder = path.join(__dirname, 'public/content')
 app.use('/content', function (req, res, next) {
   utils.referrerRecord(req.headers.referer, 'assets')
   next();
-}, express.static(contentFolder));
+}, express.static(contentFolder, { maxAge: '365d' }));
 
 // up_works referrerRecord
 const upWorksFolder = path.join(__dirname, 'public/up_works')
 app.use('/up_works', function (req, res, next) {
   utils.referrerRecord(req.headers.referer, 'assets')
   next();
-}, express.static(upWorksFolder));
+}, express.static(upWorksFolder, { maxAge: '365d' }));
 
 // web_demo referrerRecord
 const webDemoFolder = path.join(__dirname, 'public/web_demo')
 app.use('/web_demo', function (req, res, next) {
   utils.referrerRecord(req.headers.referer, 'assets')
   next();
-}, express.static(webDemoFolder));
+}, express.static(webDemoFolder, { maxAge: '365d' }));
 
 // ucloudImg referrerRecord
 const ucloudImgFolder = path.join(__dirname, 'public/ucloudImg')
 app.use('/ucloudImg', function (req, res, next) {
   utils.referrerRecord(req.headers.referer, 'assets')
   next();
-}, express.static(ucloudImgFolder));
+}, express.static(ucloudImgFolder, { maxAge: '365d' }));
 // app.use(express.static(path.join(__dirname, 'public')));
 
 app.use((err, req, res, next) => {
