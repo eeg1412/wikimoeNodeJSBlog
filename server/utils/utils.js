@@ -738,7 +738,7 @@ exports.getReaderlogsSize = async () => {
   const stats = await db.stats()
   const size = stats.size
   // 从环境变量获取最大大小,默认1GB
-  const maxReaderlogsSize = process.env.MAX_HISTORYLOGS_SIZE ? Number(process.env.MAX_HISTORYLOGS_SIZE) : 1024 * 1024 * 1024
+  const maxReaderlogsSize = process.env.MAX_HISTORYLOGS_SIZE ? Number(process.env.MAX_HISTORYLOGS_SIZE) : 1073741824
   // 是否超过最大大小
   const isExceedMaxSize = size > maxReaderlogsSize
   return {
@@ -755,7 +755,7 @@ exports.getPostLikeLogsSize = async () => {
   const stats = await db.stats()
   const size = stats.size
   // 从环境变量获取最大大小,默认1GB
-  const maxPostLikeLogsSize = process.env.MAX_HISTORYLOGS_SIZE ? Number(process.env.MAX_HISTORYLOGS_SIZE) : 1024 * 1024 * 1024
+  const maxPostLikeLogsSize = process.env.MAX_HISTORYLOGS_SIZE ? Number(process.env.MAX_HISTORYLOGS_SIZE) : 1073741824
   // 是否超过最大大小
   const isExceedMaxSize = size > maxPostLikeLogsSize
   return {
@@ -772,7 +772,7 @@ exports.getCommentLikeLogsSize = async () => {
   const stats = await db.stats()
   const size = stats.size
   // 从环境变量获取最大大小,默认1GB
-  const maxCommentLikeLogsSize = process.env.MAX_HISTORYLOGS_SIZE ? Number(process.env.MAX_HISTORYLOGS_SIZE) : 1024 * 1024 * 1024
+  const maxCommentLikeLogsSize = process.env.MAX_HISTORYLOGS_SIZE ? Number(process.env.MAX_HISTORYLOGS_SIZE) : 1073741824
   // 是否超过最大大小
   const isExceedMaxSize = size > maxCommentLikeLogsSize
   return {
