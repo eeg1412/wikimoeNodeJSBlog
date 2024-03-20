@@ -609,6 +609,24 @@ const adminRouteSetting = [
     roleType: null,
     role: null
   },
+  // getReaderlogStats
+  {
+    path: '/readerlog/stats',
+    method: 'get',
+    middleware: [checkAuth],
+    controller: require('../api/admin/readerlog/getReaderlogStats'),
+    roleType: null,
+    role: null
+  },
+  // deleteReaderlog
+  {
+    path: '/readerlog/delete',
+    method: 'delete',
+    middleware: [checkAuth],
+    controller: require('../api/admin/readerlog/deleteReaderlog'),
+    roleType: null,
+    role: null
+  },
   // getPostLikeLogList
   {
     path: '/postlikelog/list',

@@ -49,6 +49,11 @@ exports.deleteOne = async function (filters) {
   // document查询
   return await readerlogsModel.deleteOne(filters);
 }
+// 删除多个
+exports.deleteMany = async function (filters) {
+  // document查询
+  return await readerlogsModel.deleteMany(filters);
+}
 
 // count
 exports.count = async function (filters) {
