@@ -636,6 +636,24 @@ const adminRouteSetting = [
     roleType: null,
     role: null
   },
+  // getPostLikeLogStats
+  {
+    path: '/postlikelog/stats',
+    method: 'get',
+    middleware: [checkAuth],
+    controller: require('../api/admin/postLikeLog/getPostLikeLogStats'),
+    roleType: null,
+    role: null
+  },
+  // deletePostLikeLog
+  {
+    path: '/postlikelog/delete',
+    method: 'delete',
+    middleware: [checkAuth],
+    controller: require('../api/admin/postLikeLog/deletePostLikeLog'),
+    roleType: null,
+    role: null
+  },
   // getCommentLikeLogList
   {
     path: '/commentlikelog/list',

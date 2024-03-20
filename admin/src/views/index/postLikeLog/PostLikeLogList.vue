@@ -40,8 +40,12 @@
         </el-form>
       </div>
       <div class="fr">
+        {{ sizeMB }}MB / {{ maxlogsSizeMB }}MB
         <!-- 按钮用 -->
-        <!-- 追加 -->
+        <!-- 删除 -->
+        <el-button type="danger" class="ml5" @click="openDeleteDialog"
+          >删除</el-button
+        >
       </div>
     </div>
     <!-- 文章点赞记录 -->
@@ -170,6 +174,38 @@
         v-model:page-size="params.size"
       />
     </div>
+    <!-- 删除弹窗 里面填写开始结束时间 -->
+    <el-dialog
+      title="删除"
+      v-model="deleteDialogVisible"
+      align-center
+      :close-on-click-modal="false"
+      destroy-on-close
+    >
+      <el-form :model="deleteForm" :rules="deleteRules" ref="deleteDialogRef">
+        <el-form-item label="开始时间" prop="startTime">
+          <el-date-picker
+            v-model="deleteForm.startTime"
+            type="datetime"
+            placeholder="选择开始时间"
+          ></el-date-picker>
+        </el-form-item>
+        <el-form-item label="结束时间" prop="endTime">
+          <el-date-picker
+            v-model="deleteForm.endTime"
+            type="datetime"
+            placeholder="选择结束时间"
+          ></el-date-picker>
+        </el-form-item>
+      </el-form>
+
+      <template #footer>
+        <span class="dialog-footer">
+          <el-button @click="deleteDialogVisible = false">取消</el-button>
+          <el-button type="primary" @click="deletelog">确定</el-button>
+        </span>
+      </template>
+    </el-dialog>
   </div>
 </template>
 <script>
@@ -181,6 +217,7 @@ import {
   setSessionParams,
   getSessionParams,
   copyToClipboard,
+  formatDate,
 } from '@/utils/utils'
 import store from '@/store'
 
@@ -278,9 +315,105 @@ export default {
       window.open(url, '_blank')
     }
 
+    const stats = ref({
+      isExceedMaxSize: 0,
+      maxPostLikeLogsSize: 0,
+      size: 0,
+    })
+    const maxlogsSizeMB = computed(() => {
+      let size = (stats.value.maxPostLikeLogsSize / 1024 / 1024).toFixed(3)
+      return Number(size)
+    })
+
+    const sizeMB = computed(() => {
+      let size = (stats.value.size / 1024 / 1024).toFixed(3)
+      return Number(size)
+    })
+    const getlogStats = () => {
+      authApi.getPostLikeLogStats().then((res) => {
+        stats.value = res.data.stats
+      })
+    }
+
+    const deleteDialogVisible = ref(false)
+    const openDeleteDialog = () => {
+      // 清空表单
+      deleteForm.startTime = null
+      deleteForm.endTime = null
+      deleteDialogVisible.value = true
+    }
+    const deleteForm = reactive({
+      // 开始结束时间
+      startTime: null,
+      endTime: null,
+    })
+    const deleteRules = {
+      startTime: [
+        {
+          required: true,
+          message: '请选择开始时间',
+          trigger: 'blur',
+        },
+      ],
+      endTime: [
+        {
+          required: true,
+          message: '请选择结束时间',
+          trigger: 'blur',
+        },
+        {
+          validator: (rule, value, callback) => {
+            if (value && deleteForm.startTime && value < deleteForm.startTime) {
+              callback(new Error('结束时间必须在开始时间之后'))
+            } else {
+              callback()
+            }
+          },
+          trigger: 'blur',
+        },
+      ],
+    }
+    const deleteDialogRef = ref(null)
+    const deletelog = () => {
+      deleteDialogRef.value.validate((valid) => {
+        if (valid) {
+          // 确认删除
+          const text = `确定删除 ${formatDate(
+            deleteForm.startTime
+          )} 到 ${formatDate(deleteForm.endTime)} 的日志吗？`
+          ElMessageBox.confirm(text, '提示', {
+            confirmButtonText: '确定',
+            cancelButtonText: '取消',
+            type: 'warning',
+          })
+            .then(() => {
+              authApi
+                .deletePostLikeLog({
+                  startTime: deleteForm.startTime,
+                  endTime: deleteForm.endTime,
+                })
+                .then((res) => {
+                  const deletedCount = res.data.data.deletedCount
+                  ElMessage.success(
+                    '删除成功，共删除' + deletedCount + '条日志'
+                  )
+                  getPostLikeLogList(true)
+                  getlogStats()
+                  deleteDialogVisible.value = false
+                })
+                .catch((err) => {
+                  console.log(err)
+                })
+            })
+            .catch(() => {})
+        }
+      })
+    }
+
     onMounted(() => {
       initParams()
       getPostLikeLogList()
+      getlogStats()
     })
     return {
       copyToClipboard,
@@ -293,6 +426,15 @@ export default {
       // 搜索
       addParamsAndSearch,
       goToBlog,
+      stats,
+      maxlogsSizeMB,
+      sizeMB,
+      deleteDialogVisible,
+      deleteForm,
+      deleteRules,
+      openDeleteDialog,
+      deleteDialogRef,
+      deletelog,
     }
   },
 }

@@ -422,6 +422,19 @@ export default function (api) {
         shouldAdminJWT: true
       })
     },
+    // get '/postlikelog/stats'
+    getPostLikeLogStats () {
+      return api.get('/postlikelog/stats', {
+        shouldAdminJWT: true
+      })
+    },
+    // delete /postlikelog/delete
+    deletePostLikeLog (data) {
+      return api.delete('/postlikelog/delete', {
+        params: data,
+        shouldAdminJWT: true
+      })
+    },
     // get '/commentlikelog/list'
     getCommentLikeLogList (data) {
       return api.get('/commentlikelog/list', {

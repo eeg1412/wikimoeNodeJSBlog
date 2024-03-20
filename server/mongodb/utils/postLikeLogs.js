@@ -44,6 +44,11 @@ exports.deleteOne = async function (filters) {
   // document查询
   return await postLikeLogsModel.deleteOne(filters);
 }
+// 删除多个
+exports.deleteMany = async function (filters) {
+  // document查询
+  return await postLikeLogsModel.deleteMany(filters);
+}
 // findOneAndUpdate
 exports.findOneAndUpdate = async function (filters, parmas, options) {
   // document查询
