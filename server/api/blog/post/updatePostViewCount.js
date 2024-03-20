@@ -8,6 +8,10 @@ const userApiLog = log4js.getLogger('userApi')
 module.exports = async function (req, res, next) {
   res.send({
   })
+  const { isExceedMaxSize } = await utils.getReaderlogsSize()
+  if (isExceedMaxSize) {
+    throw new Error('readerlogs超出最大存储容量')
+  }
   // - title	标题字段
   // - date	日期字段
   // - content	内容字段
@@ -66,79 +70,56 @@ module.exports = async function (req, res, next) {
   }
 
 
-  // 更新
-  postUtils.findOneAndUpdate({ _id: id }, params, { new: true }).then(async (data) => {
-    userApiLog.info(`post view update success`)
-    // // utils.reflushBlogCache()
-    // 添加阅读日志
-    // 操作者的uuid
-    // uuid: {
-    //   type: String,
-    //   required: true,
-    // },
-    // // 操作了什么
-    // action: {
-    //   type: String,
-    //   required: true,
-    // },
-    // // data
-    // data: {
-    //   // object
-    //   type: Object,
-    //   default: {}
-    // },
-    // // ip
-    // ip: {
-    //   type: String,
-    // },
-    // ipInfo: {
-    //   type: Object,
-    //   default: {}
-    // },
-    // deviceInfo: {
-    //   type: Object,
-    //   default: {}
-    // },
-    let content = data.title || data.excerpt
-    const type = data.type
-    // 控制content长度在20字，超过...
-    if (content.length > 20) {
-      content = content.substring(0, 20) + '...'
-    }
-    let target = ''
-    switch (type) {
-      case 1:
-        target = 'blog'
-        break
-      case 2:
-        target = 'tweet'
-        break
-      case 3:
-        target = 'page'
-        break
-      default:
-        break
-    }
-    const readerlogParams = {
-      uuid: uuid,
-      action: 'postView',
-      data: {
-        target: target,
-        targetId: id,
-        content: content,
-      },
-      ...utils.isSearchEngine(req),
-      deviceInfo: utils.deviceUAInfoUtils(req),
-      ipInfo: await utils.IP2LocationUtils(ip, null, null, false),
-      ip: ip
-    }
-    readerlogUtils.save(readerlogParams).then((data) => {
-      userApiLog.info(`post view log create success`)
-    }).catch((err) => {
-      userApiLog.error(`post view log create fail, ${logErrorToText(err)}`)
-    })
+  const data = await postUtils.findOne({ _id: id })
+  if (!data) {
+    return
+  }
+  let content = data.title || data.excerpt
+  const type = data.type
+  // 控制content长度在20字，超过...
+  if (content.length > 20) {
+    content = content.substring(0, 20) + '...'
+  }
+  let target = ''
+  switch (type) {
+    case 1:
+      target = 'blog'
+      break
+    case 2:
+      target = 'tweet'
+      break
+    case 3:
+      target = 'page'
+      break
+    default:
+      break
+  }
+  const readerlogParams = {
+    uuid: uuid,
+    action: 'postView',
+    data: {
+      target: target,
+      targetId: id,
+      content: content,
+    },
+    ...utils.isSearchEngine(req),
+    deviceInfo: utils.deviceUAInfoUtils(req),
+    ipInfo: await utils.IP2LocationUtils(ip, null, null, false),
+    ip: ip
+  }
+  readerlogUtils.save(readerlogParams).then((data) => {
+    userApiLog.info(`post view log create success`)
   }).catch((err) => {
-    userApiLog.error(`post view update fail, ${logErrorToText(err)}`)
+    userApiLog.error(`post view log create fail, ${logErrorToText(err)}`)
   })
+
+  // 查询post的views是否超过20亿，如果超过20亿，不再增加
+  if (data.views + 1 >= 2000000000) {
+    userApiLog.error(`post view count exceed 2 billion`)
+    return
+  }
+
+  // 更新post的views
+  postUtils.updateOne({ _id: id }, params, true)
 
 }

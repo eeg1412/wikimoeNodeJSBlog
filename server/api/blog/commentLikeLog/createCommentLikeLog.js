@@ -7,6 +7,16 @@ const readerlogUtils = require('../../../mongodb/utils/readerlogs')
 
 module.exports = async function (req, res, next) {
   utils.executeInLock('createCommentLikeLog', async () => {
+    const { isExceedMaxSize } = await utils.getReaderlogsSize()
+    if (isExceedMaxSize) {
+      res.status(400).json({ errors: [{ message: '点赞失败，请稍后再试' }] })
+      throw new Error('readerlogs超出最大存储容量')
+    }
+    const { isExceedMaxSize: isExceedMaxSizeCommentLike } = await utils.getCommentLikeLogsSize()
+    if (isExceedMaxSizeCommentLike) {
+      res.status(400).json({ errors: [{ message: '点赞失败，请稍后再试' }] })
+      throw new Error('commentLikeLogs超出最大存储容量')
+    }
     const { like, id, __v } = req.body
     const uuid = req.headers['x-request-id']
     const ip = utils.getUserIp(req)
@@ -104,11 +114,20 @@ module.exports = async function (req, res, next) {
 
     let data = null
     // 查询comment
-    const comment = await commentUtils.findOne({ _id: id }, 'content')
+    const comment = await commentUtils.findOne({ _id: id }, 'content likes')
     if (!comment) {
       res.status(400).json({
         errors: [{
           message: '更新失败，评论不存在'
+        }]
+      })
+      return
+    }
+    // likes 如果大于 2000000000(20亿)，返回错误
+    if (comment.likes + 1 > 2000000000 && like) {
+      res.status(400).json({
+        errors: [{
+          message: '已超过最大点赞数'
         }]
       })
       return

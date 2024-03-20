@@ -1,6 +1,11 @@
 const readerlogsModel = require('../models/readerlogs');
+const utils = require('../../utils/utils');
 
 exports.save = async function (parmas) {
+  const { isExceedMaxSize } = await utils.getReaderlogsSize()
+  if (isExceedMaxSize) {
+    throw new Error('readerlogs超出最大存储容量')
+  }
   // document作成
   const readerlogs = new readerlogsModel(parmas);
   // document保存

@@ -732,7 +732,55 @@ exports.executeInLock = (key, fn) => {
   })
 }
 
+exports.getReaderlogsSize = async () => {
+  const mongodb = global.$mongodDB
+  const db = mongodb.db.collection('readerlogs')
+  const stats = await db.stats()
+  const size = stats.size
+  // 从环境变量获取最大大小,默认1GB
+  const maxReaderlogsSize = process.env.MAX_HISTORYLOGS_SIZE ? Number(process.env.MAX_HISTORYLOGS_SIZE) : 1024 * 1024 * 1024
+  // 是否超过最大大小
+  const isExceedMaxSize = size > maxReaderlogsSize
+  return {
+    size,
+    maxReaderlogsSize,
+    isExceedMaxSize,
+  }
+}
 
+// postLikeLogs
+exports.getPostLikeLogsSize = async () => {
+  const mongodb = global.$mongodDB
+  const db = mongodb.db.collection('postlikelogs')
+  const stats = await db.stats()
+  const size = stats.size
+  // 从环境变量获取最大大小,默认1GB
+  const maxPostLikeLogsSize = process.env.MAX_HISTORYLOGS_SIZE ? Number(process.env.MAX_HISTORYLOGS_SIZE) : 1024 * 1024 * 1024
+  // 是否超过最大大小
+  const isExceedMaxSize = size > maxPostLikeLogsSize
+  return {
+    size,
+    maxPostLikeLogsSize,
+    isExceedMaxSize,
+  }
+}
+
+// commentLikeLogs
+exports.getCommentLikeLogsSize = async () => {
+  const mongodb = global.$mongodDB
+  const db = mongodb.db.collection('commentlikelogs')
+  const stats = await db.stats()
+  const size = stats.size
+  // 从环境变量获取最大大小,默认1GB
+  const maxCommentLikeLogsSize = process.env.MAX_HISTORYLOGS_SIZE ? Number(process.env.MAX_HISTORYLOGS_SIZE) : 1024 * 1024 * 1024
+  // 是否超过最大大小
+  const isExceedMaxSize = size > maxCommentLikeLogsSize
+  return {
+    size,
+    maxCommentLikeLogsSize,
+    isExceedMaxSize,
+  }
+}
 
 // let reflushBlogCacheTimer = null
 // exports.reflushBlogCache = async () => {

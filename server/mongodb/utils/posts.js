@@ -37,7 +37,7 @@ exports.findPage = async function (parmas, sort, page, limit, projection, option
 exports.updateOne = async function (filters, parmas, isClient = false) {
   // document查询
   if (isClient) {
-    parmas.$inc = { client__v: 1, ...parmas.$inc }
+    parmas.$inc = { ...parmas.$inc }
   } else {
     parmas.$inc = { __v: 1, ...parmas.$inc }
   }
