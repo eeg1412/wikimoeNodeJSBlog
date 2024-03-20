@@ -663,6 +663,24 @@ const adminRouteSetting = [
     roleType: null,
     role: null
   },
+  // getCommentLikeLogStats
+  {
+    path: '/commentlikelog/stats',
+    method: 'get',
+    middleware: [checkAuth],
+    controller: require('../api/admin/commentLikeLog/getCommentLikeLogStats'),
+    roleType: null,
+    role: null
+  },
+  // deleteCommentLikeLog
+  {
+    path: '/commentlikelog/delete',
+    method: 'delete',
+    middleware: [checkAuth],
+    controller: require('../api/admin/commentLikeLog/deleteCommentLikeLog'),
+    roleType: null,
+    role: null
+  },
   // createBangumi
   {
     path: '/bangumi/create',

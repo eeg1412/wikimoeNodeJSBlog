@@ -442,6 +442,19 @@ export default function (api) {
         shouldAdminJWT: true
       })
     },
+    // get /commentlikelog/stats
+    getCommentLikeLogStats () {
+      return api.get('/commentlikelog/stats', {
+        shouldAdminJWT: true
+      })
+    },
+    // delete /commentlikelog/delete
+    deleteCommentLikeLog (data) {
+      return api.delete('/commentlikelog/delete', {
+        params: data,
+        shouldAdminJWT: true
+      })
+    },
     // /bangumi/create
     createBangumi (data) {
       return api.post('/bangumi/create', data, {

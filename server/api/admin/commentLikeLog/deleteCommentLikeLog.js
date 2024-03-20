@@ -1,4 +1,4 @@
-const postLikeLogUtils = require('../../../mongodb/utils/postLikeLogs')
+const commentLikeLogUtils = require('../../../mongodb/utils/commentLikeLogs')
 const utils = require('../../../utils/utils')
 const log4js = require('log4js')
 const adminApiLog = log4js.getLogger('adminApi')
@@ -48,7 +48,7 @@ module.exports = async function (req, res, next) {
     return
   }
   // 删除开始结束时间之间的数据
-  postLikeLogUtils.deleteMany({
+  commentLikeLogUtils.deleteMany({
     date: {
       $gte: new Date(startTime),
       $lte: new Date(endTime),
@@ -57,13 +57,13 @@ module.exports = async function (req, res, next) {
     res.send({
       data: data
     })
-    adminApiLog.info(`postLikeLog delete success`)
+    adminApiLog.info(`commentLikeLog delete success`)
   }).catch((err) => {
     res.status(400).json({
       errors: [{
-        message: '文章点赞日志删除失败'
+        message: '评论点赞日志删除失败'
       }]
     })
-    adminApiLog.error(`postLikeLog delete fail, ${logErrorToText(err)}`)
+    adminApiLog.error(`commentLikeLog delete fail, ${logErrorToText(err)}`)
   })
 }
