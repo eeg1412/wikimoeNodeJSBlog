@@ -102,6 +102,13 @@
           <PageGameList />
         </div>
       </template>
+      <!-- event -->
+      <template v-else-if="pageTemplate === 'event'">
+        <div>
+          <h2 class="post-title mb-3">{{ postData.data.title }}</h2>
+          <PageEvent />
+        </div>
+      </template>
       <template v-else>
         <div>
           <h2 class="post-title mb-3">{{ postData.data.title }}</h2>

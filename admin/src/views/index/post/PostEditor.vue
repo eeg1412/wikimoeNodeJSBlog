@@ -626,6 +626,11 @@ export default {
         label: '游戏列表',
         value: 'gameList',
       },
+      // 活动
+      {
+        label: '活动',
+        value: 'event',
+      },
     ])
 
     // auto save

@@ -170,6 +170,13 @@ const blogRouteSetting = [
     middleware: [],
     controller: require('../api/blog/attachment/getAttachmentList'),
   },
+  // getEventList
+  {
+    path: '/event/list',
+    method: 'get',
+    middleware: [],
+    controller: require('../api/blog/event/getEventList'),
+  },
   // createLog
   {
     path: '/log/create',
