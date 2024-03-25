@@ -8,7 +8,7 @@ import httpRequest from '~/api'
 
 const URL = `/event/list`
 const getEventListApiFetch = (params: any) => {
-  return httpRequest.get(URL, params)
+  return httpRequest.getFetch(URL, params)
 }
 
 export { getEventListApiFetch }

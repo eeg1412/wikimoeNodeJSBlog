@@ -47,18 +47,18 @@ module.exports = async function (req, res, next) {
     })
     return
   }
-  // 开始时间和结束时间的范围在1970年1月1日到服务器时间的20年之后
+  // 开始时间和结束时间的范围在1980年1月1日到服务器时间的21年之后
 
   // 将开始时间和结束时间转换为Date对象
   const startTime_ = new Date(startTime);
   const endTime_ = new Date(endTime);
 
-  // 获取1970年1月1日的日期
-  const earliestDate = new Date(1970, 0, 1);
+  // 获取1980年1月1日的日期
+  const earliestDate = new Date(1980, 0, 1);
 
   // 获取服务器时间的20年之后的日期
   const latestDate = new Date();
-  latestDate.setFullYear(latestDate.getFullYear() + 20);
+  latestDate.setFullYear(latestDate.getFullYear() + 21);
 
   // 检查开始时间和结束时间是否在有效范围内
   if (startTime_ < earliestDate || startTime_ > latestDate || endTime_ < earliestDate || endTime_ > latestDate) {
