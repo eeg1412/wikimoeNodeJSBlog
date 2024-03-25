@@ -834,6 +834,9 @@ input[type='password'] {
 .el-dialog {
   min-width: 320px;
 }
+.common-max-dialog {
+  max-width: 800px;
+}
 .custom-scroll::-webkit-scrollbar {
   width: 6px;
   height: 6px;

@@ -7,6 +7,7 @@
     :lock-scroll="false"
     :align-center="true"
     @closed="closeDialog"
+    class="common-max-dialog"
   >
     <div>
       <el-form :model="form" :rules="rules" ref="formRef" label-width="80px">
