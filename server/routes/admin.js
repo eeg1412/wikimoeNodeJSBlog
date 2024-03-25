@@ -852,6 +852,96 @@ const adminRouteSetting = [
     roleType: null,
     role: null
   },
+  // createEventtype
+  {
+    path: '/eventtype/create',
+    method: 'post',
+    middleware: [checkAuth],
+    controller: require('../api/admin/eventtype/createEventtype'),
+    roleType: null,
+    role: null
+  },
+  // deleteEventtype
+  {
+    path: '/eventtype/delete',
+    method: 'delete',
+    middleware: [checkAuth],
+    controller: require('../api/admin/eventtype/deleteEventtype'),
+    roleType: null,
+    role: null
+  },
+  // getEventtypeDetail
+  {
+    path: '/eventtype/detail',
+    method: 'get',
+    middleware: [checkAuth],
+    controller: require('../api/admin/eventtype/getEventtypeDetail'),
+    roleType: null,
+    role: null
+  },
+  // getEventtypeList
+  {
+    path: '/eventtype/list',
+    method: 'get',
+    middleware: [checkAuth],
+    controller: require('../api/admin/eventtype/getEventtypeList'),
+    roleType: null,
+    role: null
+  },
+  // updateEventtype
+  {
+    path: '/eventtype/update',
+    method: 'put',
+    middleware: [checkAuth],
+    controller: require('../api/admin/eventtype/updateEventtype'),
+    roleType: null,
+    role: null
+  },
+  // createEvent
+  {
+    path: '/event/create',
+    method: 'post',
+    middleware: [checkAuth],
+    controller: require('../api/admin/event/createEvent'),
+    roleType: null,
+    role: null
+  },
+  // deleteEvent
+  {
+    path: '/event/delete',
+    method: 'delete',
+    middleware: [checkAuth],
+    controller: require('../api/admin/event/deleteEvent'),
+    roleType: null,
+    role: null
+  },
+  // getEventDetail
+  {
+    path: '/event/detail',
+    method: 'get',
+    middleware: [checkAuth],
+    controller: require('../api/admin/event/getEventDetail'),
+    roleType: null,
+    role: null
+  },
+  // getEventList
+  {
+    path: '/event/list',
+    method: 'get',
+    middleware: [checkAuth],
+    controller: require('../api/admin/event/getEventList'),
+    roleType: null,
+    role: null
+  },
+  // updateEvent
+  {
+    path: '/event/update',
+    method: 'put',
+    middleware: [checkAuth],
+    controller: require('../api/admin/event/updateEvent'),
+    roleType: null,
+    role: null
+  },
 ]
 
 adminRouteSetting.forEach(item => {
