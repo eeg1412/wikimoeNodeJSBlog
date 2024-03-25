@@ -88,18 +88,24 @@
       <template v-else-if="pageTemplate === 'about'">
         <PageAbout :author="postData.data.author" />
       </template>
+      <!-- bangumi -->
+      <template v-else-if="pageTemplate === 'bangumi'">
+        <div>
+          <h2 class="post-title mb-3">{{ postData.data.title }}</h2>
+          <PageBangumi />
+        </div>
+      </template>
+      <!-- gameList -->
+      <template v-else-if="pageTemplate === 'gameList'">
+        <div>
+          <h2 class="post-title mb-3">{{ postData.data.title }}</h2>
+          <PageGameList />
+        </div>
+      </template>
       <template v-else>
         <div>
           <h2 class="post-title mb-3">{{ postData.data.title }}</h2>
         </div>
-      </template>
-      <!-- bangumi -->
-      <template v-if="pageTemplate === 'bangumi'">
-        <PageBangumi />
-      </template>
-      <!-- gameList -->
-      <template v-if="pageTemplate === 'gameList'">
-        <PageGameList />
       </template>
     </div>
     <!-- 文章内容 -->
