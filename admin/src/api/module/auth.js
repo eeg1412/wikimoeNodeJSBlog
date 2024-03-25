@@ -583,5 +583,72 @@ export default function (api) {
         shouldAdminJWT: true
       })
     },
+    // get /eventtype/list
+    getEventtypeList (data, noLoading = false) {
+      return api.get('/eventtype/list', {
+        params: data,
+        shouldAdminJWT: true,
+        noLoading
+      })
+    },
+    // get /eventtype/detail
+    getEventtypeDetail (data) {
+      return api.get('/eventtype/detail', {
+        params: data,
+        shouldAdminJWT: true
+      })
+    },
+    // post /eventtype/create
+    createEventtype (data) {
+      return api.post('/eventtype/create', data, {
+        shouldAdminJWT: true
+      })
+    },
+    // put /eventtype/update
+    updateEventtype (data) {
+      return api.put('/eventtype/update', data, {
+        shouldAdminJWT: true
+      })
+    },
+    // delete /eventtype/delete
+    deleteEventtype (data) {
+      return api.delete('/eventtype/delete', {
+        params: data,
+        shouldAdminJWT: true
+      })
+    },
+    // get /event/list
+    getEventList (data) {
+      return api.get('/event/list', {
+        params: data,
+        shouldAdminJWT: true
+      })
+    },
+    // post /event/create
+    createEvent (data) {
+      return api.post('/event/create', data, {
+        shouldAdminJWT: true
+      })
+    },
+    // put /event/update
+    updateEvent (data) {
+      return api.put('/event/update', data, {
+        shouldAdminJWT: true
+      })
+    },
+    // delete /event/delete
+    deleteEvent (data) {
+      return api.delete('/event/delete', {
+        params: data,
+        shouldAdminJWT: true
+      })
+    },
+    // get /event/detail
+    getEventDetail (data) {
+      return api.get('/event/detail', {
+        params: data,
+        shouldAdminJWT: true
+      })
+    },
   }
 }

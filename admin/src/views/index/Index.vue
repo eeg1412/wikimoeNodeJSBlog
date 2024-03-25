@@ -157,6 +157,32 @@
                 <template #title>游戏列表</template>
               </el-menu-item>
             </el-sub-menu>
+            <el-sub-menu index="event">
+              <template #title>
+                <!-- 活动 -->
+                <i class="fas fa-fw fa-calendar-alt pr10"></i>活动
+              </template>
+              <!-- 活动类型 -->
+              <el-menu-item
+                index="EventtypeList"
+                @click="removeParam('EventtypeList')"
+                @click.middle="openNewTab('EventtypeList')"
+                :route="{ name: 'EventtypeList' }"
+              >
+                <i class="fas fa-fw fa-calendar-alt pr10"></i>
+                <template #title>活动类型</template>
+              </el-menu-item>
+              <!-- 活动列表 EventList -->
+              <el-menu-item
+                index="EventList"
+                @click="removeParam('EventList')"
+                @click.middle="openNewTab('EventList')"
+                :route="{ name: 'EventList' }"
+              >
+                <i class="fas fa-fw fa-calendar-alt pr10"></i>
+                <template #title>活动列表</template>
+              </el-menu-item>
+            </el-sub-menu>
             <el-sub-menu index="history">
               <template #title>
                 <!-- 日志图标 -->

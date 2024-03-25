@@ -2,7 +2,7 @@ var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 // Schema
 var events = new Schema({
-  eventtypes: {
+  eventtype: {
     type: Schema.Types.ObjectId,
     ref: 'eventtypes',
   },

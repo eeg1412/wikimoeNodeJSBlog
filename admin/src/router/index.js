@@ -211,6 +211,30 @@ const routes = [
         name: 'GameAdd',
         component: () => import(/* webpackChunkName: "GameEditor" */ '../views/index/game/GameEditor.vue')
       },
+      // EventtypeList
+      {
+        path: '/eventtype/list',
+        name: 'EventtypeList',
+        component: () => import(/* webpackChunkName: "EventtypeList" */ '../views/index/eventtype/EventtypeList.vue')
+      },
+      // EventList
+      {
+        path: '/event/list',
+        name: 'EventList',
+        component: () => import(/* webpackChunkName: "EventList" */ '../views/index/event/EventList.vue')
+      },
+      // EventEditor
+      {
+        path: '/event/editor/:id',
+        name: 'EventEdit',
+        component: () => import(/* webpackChunkName: "EventEditor" */ '../views/index/event/EventEditor.vue')
+      },
+      // EventEditor
+      {
+        path: '/event/add',
+        name: 'EventAdd',
+        component: () => import(/* webpackChunkName: "EventEditor" */ '../views/index/event/EventEditor.vue')
+      },
       // config
       {
         path: '/config',

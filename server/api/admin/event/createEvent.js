@@ -5,10 +5,10 @@ const adminApiLog = log4js.getLogger('adminApi')
 
 module.exports = async function (req, res, next) {
 
-  const { eventtypes, title, color, urlList, content, startTime, endTime, status } = req.body
+  const { eventtype, title, color, urlList, content, startTime, endTime, status } = req.body
   // 校验格式
   const params = {
-    eventtypes, title, color, urlList, content, startTime, endTime, status
+    eventtype, title, color, urlList, content, startTime, endTime, status
   }
   const rule = [
     {

@@ -5,7 +5,7 @@ const adminApiLog = log4js.getLogger('adminApi')
 
 module.exports = async function (req, res, next) {
   // eventname	String	是	否	无	活动名称
-  const { eventtypes, title, color, urlList, content, startTime, endTime, status } = req.body
+  const { eventtype, title, color, urlList, content, startTime, endTime, status, id, __v } = req.body
   if (!id) {
     res.status(400).json({
       errors: [{
@@ -25,7 +25,7 @@ module.exports = async function (req, res, next) {
   }
   // 校验格式
   const params = {
-    eventtypes, title, color, urlList, content, startTime, endTime, status
+    eventtype, title, color, urlList, content, startTime, endTime, status
   }
   const rule = [
     {

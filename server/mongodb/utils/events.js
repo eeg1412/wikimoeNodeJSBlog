@@ -10,19 +10,19 @@ exports.save = async function (parmas) {
 
 exports.findOne = async function (parmas, projection) {
   // document查询
-  return await eventsModel.findOne(parmas, projection);
+  return await eventsModel.findOne(parmas, projection).populate('eventtype', '_id name color');
 }
 
 // 查找所有
 exports.find = async function (parmas, sort, projection) {
   // document查询
-  return await eventsModel.find(parmas, projection).sort(sort);
+  return await eventsModel.find(parmas, projection).populate('eventtype', '_id name color').sort(sort);
 }
 
 // 分页查询
 exports.findPage = async function (parmas, sort, page, limit, projection) {
   // document查询
-  const list = await eventsModel.find(parmas, projection).sort(sort).skip((page - 1) * limit).limit(limit);
+  const list = await eventsModel.find(parmas, projection).populate('eventtype', '_id name color').sort(sort).skip((page - 1) * limit).limit(limit);
   const total = await eventsModel.countDocuments(parmas);
   // 查询失败
   if (!list || total === undefined) {

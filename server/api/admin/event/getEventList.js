@@ -31,7 +31,7 @@ module.exports = async function (req, res, next) {
     startTime: -1,
     _id: -1,
   }
-  eventUtils.findPage(params, sort, page, size).then((data) => {
+  eventUtils.findPage(params, sort, page, size, '-content').then((data) => {
     // 返回格式list,total
     res.send({
       list: data.list,
