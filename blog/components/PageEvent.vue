@@ -50,7 +50,7 @@
           @eventClick="tryOpenEvent"
         />
         <div class="page-event-table-empty text-primary-500" v-else>
-          该月无事发生
+          <div v-if="!eventLoading">该月无事发生</div>
         </div>
       </div>
     </div>
@@ -128,6 +128,7 @@ const initTime = () => {
 const eventLoading = ref(false)
 const getList = async () => {
   eventLoading.value = true
+  eventList.value = []
   const res = await getEventListApiFetch({
     startTime: new Date(startTime.value).toISOString(),
     endTime: new Date(endTime.value).toISOString(),
