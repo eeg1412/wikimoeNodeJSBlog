@@ -17,7 +17,12 @@
           v-for="(day, index) in week"
           :key="index"
         >
-          <div class="calendar-day">
+          <div
+            class="calendar-day"
+            :class="{
+              'is-now': day.month === nowMonth && day.day === nowDay,
+            }"
+          >
             {{ day.day }}
           </div>
           <div v-for="dayEvent in day.dayEvents" :key="dayEvent.id">
@@ -53,6 +58,11 @@ const props = defineProps({
     default: moment(),
   },
 })
+
+// 今天的日子
+const nowDay = moment().date()
+// 今天的月份
+const nowMonth = moment().format('YYYY-MM')
 
 const currentDate = computed(() => {
   return moment(props.startTime)
@@ -220,7 +230,7 @@ onMounted(() => {})
 }
 .calendar-daily {
   flex: 1;
-  min-height: 125px;
+  min-height: 13vh;
   border-right: 1px solid;
   border-bottom: 1px solid;
   box-sizing: border-box;
@@ -234,6 +244,9 @@ onMounted(() => {})
 }
 .calendar-day {
   text-align: center;
+}
+.calendar-day.is-now {
+  @apply text-white bg-primary-500;
 }
 .calendar-youbi {
   flex: 1;
