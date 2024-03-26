@@ -82,11 +82,16 @@
       </div>
       <div class="custom-scroll scroll-not-hide page-event-current-event-body">
         <!-- 时间 -->
-        <div class="text-gray-700 text-md">
-          <span class="font-bold">时间：</span
-          >{{ formatDate(currentData.startTime) }} ~
-          {{ formatDate(currentData.endTime) }}
+        <div class="flex items-center">
+          <div class="flex items-center">
+            <UIcon name="i-heroicons-clock" />
+          </div>
+          <div class="text-gray-700 text-md ml-2">
+            {{ formatDate(currentData.startTime) }} ~
+            {{ formatDate(currentData.endTime) }}
+          </div>
         </div>
+
         <!-- 内容 -->
         <HtmlContent :content="currentData.content" />
         <!-- 相关链接 urlList -->
