@@ -43,40 +43,12 @@
         </div>
       </div>
       <div class="page-event-table-body custom-scroll scroll-not-hide">
-        <table class="page-event-table" v-if="eventList.length > 0">
-          <tbody>
-            <tr
-              v-for="(item, index) in tableData"
-              :key="index"
-              class="page-event-table-tr"
-            >
-              <td
-                class="page-event-table-td"
-                v-for="(tdItem, tdIndex) in item"
-                :key="tdIndex"
-                :rowspan="tdItem.rowspan"
-                :class="tdItem.class"
-              >
-                <div
-                  class="page-event-table-td-title"
-                  :class="{
-                    'no-start': tdItem.isNotStart,
-                    'no-end': tdItem.isNotEnd,
-                  }"
-                  :style="{
-                    backgroundColor: tdItem.color || '',
-                    height: tdItem.rowspan * 25 + 'px',
-                  }"
-                  @click="tryOpenEvent(tdItem)"
-                >
-                  <div class="page-event-table-td-title-text">
-                    {{ tdItem.title }}
-                  </div>
-                </div>
-              </td>
-            </tr>
-          </tbody>
-        </table>
+        <Calendar
+          :events="eventList"
+          :startTime="startTime"
+          v-if="eventList.length > 0"
+          @eventClick="tryOpenEvent"
+        />
         <div class="page-event-table-empty text-primary-500" v-else>
           该月无事发生
         </div>
@@ -163,97 +135,9 @@ const getList = async () => {
     console.log(err)
   })
   eventList.value = res?.list || []
-  setData()
   eventLoading.value = false
 }
 
-const tableData = ref([])
-const setData = () => {
-  tableData.value = []
-  // 根据startTime 获取这个月有多少天
-  // 获取startTime的Date对象
-  const date = new Date(startTime.value)
-  // 获取下个月的第一天
-  const firstDayOfNextMonth = new Date(
-    date.getFullYear(),
-    date.getMonth() + 1,
-    1
-  )
-  // 获取这个月的最后一天
-  const lastDayOfThisMonth = new Date(firstDayOfNextMonth - 1)
-  // 获取这个月有多少天
-  const daysInThisMonth = lastDayOfThisMonth.getDate()
-
-  // 根据活动列表生成数组
-  const eventListTableData = []
-  eventList.value.forEach((event) => {
-    let eventStartTime = new Date(event.startTime)
-    let eventEndTime = new Date(event.endTime)
-    let isNotStart = false
-    let isNotEnd = false
-    // 如果开始时间比startTime.value小，就设置为startTime.value
-    if (eventStartTime < startTime.value) {
-      eventStartTime = startTime.value
-      isNotStart = true
-    }
-    // 如果结束时间比endTime.value大，就设置为endTime.value
-    if (eventEndTime > endTime.value) {
-      eventEndTime = endTime.value
-      isNotEnd = true
-    }
-    const startDay = eventStartTime.getDate()
-    const endDay = eventEndTime.getDate()
-    const rowspan = endDay - startDay + 1
-    eventListTableData.push({
-      isNotStart,
-      isNotEnd,
-      eventtype: event.eventtype,
-      title: rowspan === 1 ? event.title[0] : event.title,
-      content: event.content,
-      startTime: event.startTime,
-      endTime: event.endTime,
-      startDay: startDay,
-      endDay: endDay,
-      class: 'event',
-      id: event._id,
-      color: event.color || event?.eventtype?.color || '#000',
-      rowspan,
-      urlList: event.urlList,
-    })
-  })
-  console.log(eventListTableData)
-  // 循环这个月的每一天
-  for (let i = 1; i <= daysInThisMonth; i++) {
-    const dataList = []
-    dataList.push({
-      title: String(i),
-      class: 'day',
-      rowspan: 1,
-    })
-    // 获取是周几
-    const week = new Date(date.getFullYear(), date.getMonth(), i).getDay()
-    const weekStrList = ['日', '一', '二', '三', '四', '五', '六']
-    dataList.push({
-      title: weekStrList[week],
-      class: 'week',
-      rowspan: 1,
-    })
-    eventListTableData.forEach((event) => {
-      if (i === event.startDay) {
-        dataList.push(event)
-      } else if (i > event.endDay || i < event.startDay) {
-        dataList.push({
-          title: '',
-          class: 'empty',
-          rowspan: 1,
-        })
-      }
-    })
-
-    tableData.value.push(dataList)
-  }
-  console.log(tableData.value)
-}
 // 开始时间和结束时间的范围在1980年1月1日到本地时间的20年之后
 // 20年之后的时间
 const maxDate = new Date(new Date().getFullYear() + 20, 11, 31)
@@ -325,10 +209,8 @@ const nextMonth = () => {
 const eventOpen = ref(false)
 const currentData = ref(null)
 const tryOpenEvent = (data) => {
-  if (data.class === 'event') {
-    currentData.value = data
-    eventOpen.value = true
-  }
+  currentData.value = data
+  eventOpen.value = true
 }
 
 onMounted(() => {
@@ -385,22 +267,9 @@ onMounted(() => {
   position: relative;
 }
 .page-event-table-body {
-  overflow: auto;
-  @apply bg-primary-50;
-}
-/* page-event-table-tr 斑马 */
-.page-event-table-tr:nth-child(odd) {
-  @apply bg-primary-50;
-}
-.page-event-table-tr:nth-child(even) {
-  @apply bg-white;
-}
-.page-event-table-td-title-text {
   overflow: hidden;
-  white-space: nowrap;
-  text-overflow: ellipsis;
-  height: 100%;
 }
+
 .page-event-month-year {
   @apply text-center;
   padding: 10px 5px;
@@ -409,12 +278,6 @@ onMounted(() => {
 }
 .page-event-table-empty {
   height: 500px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-.page-event-table-td.week .page-event-table-td-title-text,
-.page-event-table-td.day .page-event-table-td-title-text {
   display: flex;
   justify-content: center;
   align-items: center;
