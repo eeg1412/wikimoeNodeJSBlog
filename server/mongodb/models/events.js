@@ -5,6 +5,7 @@ var events = new Schema({
   eventtype: {
     type: Schema.Types.ObjectId,
     ref: 'eventtypes',
+    required: true
   },
   // 标题
   title: {

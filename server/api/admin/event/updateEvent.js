@@ -28,6 +28,13 @@ module.exports = async function (req, res, next) {
     eventtype, title, color, urlList, content, startTime, endTime, status
   }
   const rule = [
+    // eventtype
+    {
+      key: 'eventtype',
+      label: '活动类型',
+      type: 'isMongoId',
+      required: true
+    },
     {
       key: 'title',
       label: '活动名称',
