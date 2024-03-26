@@ -230,7 +230,7 @@ onMounted(() => {})
 }
 .calendar-daily {
   flex: 1;
-  min-height: 13vh;
+  min-height: 90px;
   border-right: 1px solid;
   border-bottom: 1px solid;
   box-sizing: border-box;
