@@ -220,9 +220,7 @@ const currentData = ref(null)
 const tryOpenEvent = (data) => {
   currentData.value = data
   addStyle()
-  nextTick(() => {
-    eventOpen.value = true
-  })
+  eventOpen.value = true
 }
 
 const styleId = generateRandomString(8)
