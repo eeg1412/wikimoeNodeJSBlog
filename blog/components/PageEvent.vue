@@ -219,14 +219,46 @@ const eventOpen = ref(false)
 const currentData = ref(null)
 const tryOpenEvent = (data) => {
   currentData.value = data
-  eventOpen.value = true
+  addStyle()
+  nextTick(() => {
+    eventOpen.value = true
+  })
 }
+
+const styleId = generateRandomString(8)
+const addStyle = () => {
+  const style = document.createElement('style')
+  style.id = styleId
+  style.innerHTML = `
+    html {
+        overflow: visible !important;
+        padding-right: 0 !important;
+      }
+    `
+  document.body.appendChild(style)
+}
+const removeStyle = () => {
+  const style = document.getElementById(styleId)
+  if (style) {
+    document.body.removeChild(style)
+  }
+}
+// watch eventOpen
+watch(eventOpen, (val) => {
+  // 如果打开在body末尾加上style标签，id为pageEvent
+  if (!val) {
+    removeStyle()
+  }
+})
 
 onMounted(() => {
   nextTick(() => {
     initTime()
     getList()
   })
+})
+onUnmounted(() => {
+  removeStyle()
 })
 </script>
 <style scoped>
