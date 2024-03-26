@@ -24,7 +24,9 @@
             <div
               v-if="dayEvent.width"
               class="calendar-event"
-              :style="`width:${dayEvent.width}%;background-color:${
+              :style="`width:calc(${dayEvent.width}% + ${
+                dayEvent.width / 100 - 1
+              }px);background-color:${
                 dayEvent.color || dayEvent.eventtype?.color || '#000000'
               }`"
               @click="eventClick(dayEvent)"
@@ -78,9 +80,9 @@ const getEndDate = () => {
 const getEventWidth = (start, end, day) => {
   let betweenDays = moment(end).diff(moment(start), 'days')
   if (betweenDays > 6 - day) {
-    return (6 - day) * 100 + 95
+    return (6 - day) * 100 + 100
   } else {
-    return betweenDays * 100 + 95
+    return betweenDays * 100 + 100
   }
 }
 
@@ -221,7 +223,7 @@ onMounted(() => {})
   min-height: 125px;
   border-right: 1px solid;
   border-bottom: 1px solid;
-  margin-right: -1px;
+  box-sizing: border-box;
   @apply border-primary-200;
 }
 .calendar-weekly:last-child .calendar-daily {
@@ -235,16 +237,19 @@ onMounted(() => {})
 }
 .calendar-youbi {
   flex: 1;
-  border-right: 1px solid #e0e0e0;
-  margin-right: -1px;
+  border-right: 1px solid;
+  box-sizing: border-box;
   text-align: center;
+  @apply bg-primary-50 border-primary-200;
 }
 .calendar-youbi:last-child {
   border-right: none;
 }
-.outside {
-  background-color: #f7f7f7;
-}
+/* .outside {
+  background-color: #fbfbfb;
+  color: #c0c0c0;
+  @apply bg-primary-50;
+} */
 .calendar-event {
   color: white;
   margin-bottom: 1px;

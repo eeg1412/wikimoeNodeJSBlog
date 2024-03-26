@@ -46,11 +46,14 @@
         <Calendar
           :events="eventList"
           :startTime="startTime"
-          v-if="eventList.length > 0"
+          v-show="eventList.length > 0"
           @eventClick="tryOpenEvent"
         />
-        <div class="page-event-table-empty text-primary-500" v-else>
-          <div v-if="!eventLoading">该月无事发生</div>
+        <div
+          class="page-event-table-empty text-primary-500"
+          v-show="eventList.length === 0"
+        >
+          <div v-show="!eventLoading">该月无事发生</div>
         </div>
       </div>
     </div>
