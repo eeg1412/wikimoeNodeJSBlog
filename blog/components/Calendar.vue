@@ -229,7 +229,8 @@ onMounted(() => {})
   /* border-left: 1px solid #e0e0e0; */
 }
 .calendar-daily {
-  flex: 1;
+  width: 14.2857%;
+  box-sizing: border-box;
   min-height: 90px;
   border-right: 1px solid;
   border-bottom: 1px solid;
@@ -249,7 +250,8 @@ onMounted(() => {})
   @apply text-white bg-primary-500;
 }
 .calendar-youbi {
-  flex: 1;
+  width: 14.2857%;
+  box-sizing: border-box;
   border-right: 1px solid;
   box-sizing: border-box;
   text-align: center;
