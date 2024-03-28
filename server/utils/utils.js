@@ -383,6 +383,7 @@ exports.sendCommentAddNotice = function (post, comment) {
     if (user) {
       nickname = user.nickname
     }
+    nickname = this.escapeHtml(nickname)
     const to = emailReceiver
     const subject = `【${siteTitle}】的文章/推文有了新的评论`
     let contentHtml = emailSendToMeTemplate
@@ -474,9 +475,11 @@ exports.sendReplyCommentNotice = async function (post, comment) {
     if (commentIsAdmin) {
       nickname = commentUser.nickname
     }
+    nickname = this.escapeHtml(nickname)
     if (parentCommentIsAdmin) {
       parentNickname = parentCommentUser.nickname
     }
+    parentNickname = this.escapeHtml(parentNickname)
     const to = parentCommentEmail
     const subject = `您在【${siteTitle}】发表的评论收到了回复`
     let contentHtml = emailSendToCommenterTemplate
