@@ -124,6 +124,32 @@ module.exports = async function (req, res, next) {
         type: 'isEmail',
         required: false,
       },
+      // url
+      {
+        key: 'url',
+        label: '网址',
+        type: 'isURL',
+        required: false,
+        // require_protocol- 如果设置为 true，则如果 URL 中不存在协议，则 isURL 将返回 false。
+        // require_valid_protocol- isURL 将检查 URL 的协议是否存在于协议选项中。
+        // protocols- 可以使用此选项修改有效协议。
+        // require_host- 如果设置为 false isURL 将不会检查 URL 中是否存在主机。
+        // require_port- 如果设置为 true isURL 将检查 URL 中是否存在端口。
+        // allow_protocol_relative_urls- 如果设置为 true 协议相对 URL 将被允许。
+        // allow_fragments- 如果设置为 false，则如果存在片段，则 isURL 将返回 false。
+        // allow_query_components- 如果设置为 false，则如果存在查询组件，isURL 将返回 false。
+        // validate_length- 如果设置为 false isURL 将跳过字符串长度验证（2083 个字符是 IE 最大 URL 长度）。
+        options: {
+          protocols: ['http', 'https'],
+          require_protocol: true,
+          require_host: true,
+          require_valid_protocol: true,
+          require_tld: true,
+          require_port: false,
+          allow_protocol_relative_urls: false,
+          validate_length: false,
+        },
+      },
       // uuid
       {
         key: 'uuid',
