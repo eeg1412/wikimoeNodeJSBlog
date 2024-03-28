@@ -21,6 +21,40 @@
               placeholder="请输入活动名称"
             ></el-input>
           </el-form-item>
+          <!-- 活动类型 -->
+          <el-form-item>
+            <el-select
+              v-model="params.eventtype"
+              placeholder="请选择活动类型"
+              clearable
+              style="width: 200px"
+              multiple
+              filterable
+              remote
+              :automatic-dropdown="true"
+              :remote-method="queryEventtypeList"
+              :loading="eventtypeListIsLoading"
+            >
+              <el-option
+                v-for="item in eventtypeList"
+                :key="item._id"
+                :label="item.name"
+                :value="item._id"
+              ></el-option>
+            </el-select>
+          </el-form-item>
+          <!-- 状态 0不显示 1显示 -->
+          <el-form-item>
+            <el-select
+              v-model="params.status"
+              placeholder="请选择状态"
+              style="width: 100px"
+              clearable
+            >
+              <el-option label="显示" :value="1"></el-option>
+              <el-option label="不显示" :value="0"></el-option>
+            </el-select>
+          </el-form-item>
           <el-form-item>
             <el-button type="primary" @click="getEventList(true)"
               >搜索</el-button
@@ -209,7 +243,42 @@ export default {
         params.page = sessionParams.page
         params.size = sessionParams.size
         params.keyword = sessionParams.keyword
+        params.eventtype = sessionParams.eventtype
+        params.status = sessionParams.status
+        if (params.eventtype) {
+          queryEventtypeList(null, {
+            idList: params.eventtype,
+            size: 999999,
+          })
+        }
       }
+    }
+    // 活动类型列表
+    const eventtypeList = ref([])
+    const eventtypeListIsLoading = ref(false)
+    const eventtypeListTimer = null
+    const queryEventtypeList = (query, options = {}) => {
+      if (eventtypeListTimer) {
+        clearTimeout(eventtypeListTimer)
+      }
+      setTimeout(() => {
+        eventtypeListIsLoading.value = true
+        const params = {
+          keyword: query,
+          page: 1,
+          size: 50,
+          ...options,
+        }
+        authApi
+          .getEventtypeList(params, { noLoading: true })
+          .then((res) => {
+            eventtypeList.value = res.data.list
+          })
+          .catch(() => {})
+          .finally(() => {
+            eventtypeListIsLoading.value = false
+          })
+      }, 300)
     }
     onMounted(() => {
       initParams()
@@ -224,6 +293,9 @@ export default {
       handleAdd,
       goEdit,
       deleteEvent,
+      eventtypeList,
+      eventtypeListIsLoading,
+      queryEventtypeList,
     }
   },
 }
