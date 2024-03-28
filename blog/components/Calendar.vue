@@ -275,6 +275,9 @@ onMounted(() => {})
   border-radius: 4px;
   padding-left: 4px;
   overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  padding-right: 4px;
   cursor: pointer;
 }
 </style>
