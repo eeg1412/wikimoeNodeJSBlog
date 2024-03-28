@@ -580,7 +580,10 @@ exports.escapeHtml = function (unsafe) {
   return unsafe
     .replace(/&/g, "&amp;")
     .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;");
+    .replace(/>/g, "&gt;")
+    .replace(/\$/g, '&#36;')
+    .replace(/{/g, '&#123;')
+    .replace(/}/g, '&#125;')
 }
 
 // get referrer 参数是req
