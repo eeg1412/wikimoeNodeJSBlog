@@ -244,10 +244,12 @@ const dataHrefList = computed(() => {
   // src width height
   return props.coverImages.map((item) => {
     return {
-      src: item.filepath,
+      filepath: item.filepath,
+      thumfor: item.thumfor,
       width: item.width,
       height: item.height,
       mimetype: item.mimetype,
+      description: item.description,
     }
   })
 })

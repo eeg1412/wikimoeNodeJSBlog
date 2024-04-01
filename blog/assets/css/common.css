@@ -907,7 +907,7 @@ ins.adsbygoogle[data-ad-status='unfilled'] {
   justify-content: center;
   align-items: center;
 }
-.album-photo-swipe .pswp__button--arrow--next,
-.album-photo-swipe .pswp__button--arrow--prev {
+.photo-swipe-photo-swipe .pswp__button--arrow--next,
+.photo-swipe-photo-swipe .pswp__button--arrow--prev {
   z-index: 9 !important;
 }

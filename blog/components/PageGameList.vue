@@ -226,7 +226,7 @@
       </div>
     </div>
   </div>
-  <AlbumPhotoSwipe v-model:show="albumShow" :albumId="activeAlbumId" />
+  <AlbumPhotoSwipe ref="AlbumPhotoSwipeRef" :albumId="activeAlbumId" />
 </template>
 <script setup>
 import { getGameListApi, getGamePlatformListApi } from '@/api/game'
@@ -263,7 +263,7 @@ const hasNext = computed(() => params.page * size < total.value)
 const setDataHrefList = (cover) => {
   return [
     {
-      src: cover,
+      filepath: cover,
     },
   ]
 }
@@ -331,11 +331,13 @@ const selectType = (type, close) => {
 }
 
 // 相册
-const albumShow = ref(false)
 const activeAlbumId = ref('')
+const AlbumPhotoSwipeRef = ref(null)
 const showAlbum = (id) => {
   activeAlbumId.value = id
-  albumShow.value = true
+  nextTick(() => {
+    AlbumPhotoSwipeRef.value.open()
+  })
 }
 </script>
 <style>

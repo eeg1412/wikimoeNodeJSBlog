@@ -232,7 +232,7 @@ const seasonToName = (season) => {
 const setDataHrefList = (cover) => {
   return [
     {
-      src: cover,
+      filepath: cover,
       width: 400,
       height: 565,
     },

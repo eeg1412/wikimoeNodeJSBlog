@@ -1,149 +1,27 @@
-import PhotoSwipeLightbox from 'photoswipe/lightbox'
 import emoji from '@/utils/emoji.json'
 
-console.log(process.client)
-let lightbox: any = null
-if (process.client) {
-  lightbox = new PhotoSwipeLightbox({
-    pswpModule: () => import('photoswipe'),
-  })
-  lightbox.init()
-  let videoTimer: any = null
-  lightbox.on('change', () => {
-    // triggers when slide is switched, and at initialization
-    console.log('change', lightbox)
-    const dataSource = lightbox.options.dataSource
-    const currIndex = lightbox.pswp.currIndex
-    const data = {
-      index: currIndex,
-      dataSource,
-    }
-    // 存入session
-    sessionStorage.setItem('lastlightboxData', JSON.stringify(data))
-    if (window.location.hash !== '#lightboxopen') {
-      window.history.pushState(null, '', '#lightboxopen')
-    }
-    videoTimer && clearTimeout(videoTimer)
-    videoTimer = setTimeout(() => {
-      // 所有.previewer-video-body的video都暂停
-      const videos = document.querySelectorAll(
-        '.previewer-video-body video'
-      ) as NodeListOf<HTMLVideoElement>
-      videos.forEach((video) => {
-        video.pause()
-      })
-      // 当前video播放
-      const video = document.querySelector(
-        `#lightbox-video-${currIndex}`
-      ) as HTMLVideoElement
-      video && video.play()
-    }, 100)
-  })
-  lightbox.on('close', () => {
-    console.log('close', lightbox)
-    if (window.location.hash === '#lightboxopen') {
-      window.history.back()
-    }
-    // 清除session
-    sessionStorage.removeItem('lastlightboxData')
-  })
-  lightbox.on('bindEvents', () => {
-    console.log('bindEvents')
-    const currIndex = lightbox.pswp.currIndex
-    videoTimer = setTimeout(() => {
-      // 所有.previewer-video-body的video都暂停
-      const videos = document.querySelectorAll(
-        '.previewer-video-body video'
-      ) as NodeListOf<HTMLVideoElement>
-      videos.forEach((video) => {
-        video.pause()
-      })
-      // 当前video播放
-      const video = document.querySelector(
-        `#lightbox-video-${currIndex}`
-      ) as HTMLVideoElement
-      video && video.play()
-    }, 500)
-  })
-  // 监听hash变化
-  window.addEventListener('hashchange', () => {
-    console.log('hashchange', lightbox)
-    if (window.location.hash !== '#lightboxopen') {
-      tryCloseLightbox()
-    }
-  })
-  checkLightbox()
+type OpenFunction = (
+  list: any[],
+  showIndex: number,
+  closeCallback?: () => void
+) => void
+
+let photoSwipe = {
+  open: null as OpenFunction | null,
 }
 
-export function checkLightbox() {
-  const lightboxopen = window.location.hash === '#lightboxopen'
-  if (lightboxopen) {
-    // 尝试去缓存获取 lastlightboxData
-    const lastlightboxDataStr = sessionStorage.getItem('lastlightboxData')
-    let lastlightboxData = null
-    if (lastlightboxDataStr) {
-      // try catch转成json
-      try {
-        lastlightboxData = JSON.parse(lastlightboxDataStr)
-      } catch (error) {
-        lastlightboxData = null
-      }
-      if (lastlightboxData) {
-        loadAndOpenImg(
-          lastlightboxData.index,
-          lastlightboxData.dataSource,
-          true
-        )
-      } else {
-        // 没有缓存，清除参数
-        window.location.hash = ''
-      }
-    } else {
-      // 没有缓存，清除参数
-      window.location.hash = ''
-    }
-  }
+export function setPhotoSwipe(open: OpenFunction) {
+  photoSwipe.open = open
 }
 
-export function tryCloseLightbox() {
-  lightbox && lightbox.pswp && lightbox.pswp.close()
-}
-
-export function loadAndOpenImg(
-  index: number,
-  DataSource: [any],
-  isFromCache: boolean = false
+export function openPhotoSwipe(
+  list: any[],
+  showIndex: number,
+  closeCallback?: () => void
 ) {
-  let newDataSource = DataSource
-  if (!isFromCache) {
-    // 需要格式化数据
-    newDataSource.forEach((item, index) => {
-      const mimetype = item.mimetype
-      const { src, width, height } = item
-      if (mimetype && mimetype.indexOf('video') > -1) {
-        newDataSource[index] = {
-          html: `<div class="previewer-video-body">
-                    <video 
-                      id="lightbox-video-${index}"
-                      controls="controls"
-                      playsinline="true"
-                      preload="auto"
-                      muted="muted"
-                      autoplay="autoplay"
-                      loop="loop"
-                      width="${width}"
-                      height="${height}">
-                      <source
-                        src="${src}"
-                        type="video/mp4"
-                      />
-                      </video>
-                    </div>`,
-        }
-      }
-    })
+  if (photoSwipe.open) {
+    photoSwipe.open(list, showIndex, closeCallback)
   }
-  lightbox && lightbox.loadAndOpen(index, newDataSource)
 }
 
 // 格式化时间 支持1秒前、1分钟前、1小时前、1天前，超过1天显示具体时间，支持具体时间自定义格式

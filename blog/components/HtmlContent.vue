@@ -21,7 +21,6 @@
   </div>
 </template>
 <script setup>
-import { loadAndOpenImg } from '@/utils'
 import 'highlight.js/styles/base16/dracula.css'
 import hljs from 'highlight.js'
 const toast = useToast()
@@ -159,7 +158,7 @@ const onClick = async (e) => {
             height: imgHeight,
           },
         ]
-        loadAndOpenImg(0, imgList)
+        openPhotoSwipe(imgList, 0)
       }
     } else {
       // dataHref 不是图片链接
