@@ -77,11 +77,7 @@
       <!-- 列表 -->
       <div v-if="gameList.length > 0" class="mt-5">
         <div class="grid gap-3 md:grid-cols-2">
-          <div
-            v-for="game in gameList"
-            :key="game.id"
-            class="flex border-b border-gray-200 border-dashed pb-3 mb-3"
-          >
+          <div v-for="game in gameList" :key="game.id" class="flex mb-1">
             <div class="flex-shrink-0 relative game-cover-body">
               <div
                 class="relative h-32 flex justify-center items-center border border-solid border-gray-300 rounded-md p-1"

@@ -89,7 +89,7 @@
           <div
             v-for="bangumi in bangumiList"
             :key="bangumi.id"
-            class="flex border-b border-gray-200 border-dashed pb-3 mb-3"
+            class="flex mb-1"
           >
             <div class="flex-shrink-0 relative bangumi-cover-body">
               <div
