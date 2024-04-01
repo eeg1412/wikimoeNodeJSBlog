@@ -80,6 +80,62 @@
             @blur="handleInputConfirm"
           ></el-input>
         </el-form-item>
+        <el-form-item label="附加链接" prop="urlList">
+          <!-- input循环urlList 有一个添加按钮和删除按钮 -->
+          <div class="w_10">
+            <el-row
+              v-for="(item, index) in form.urlList"
+              :key="index"
+              class="mb20 url-link-row"
+            >
+              <el-col :span="24">
+                <div class="mb20">
+                  <el-form-item
+                    :prop="'urlList.' + index + '.text'"
+                    :rules="{
+                      required: true,
+                      message: '请输入链接名称',
+                      trigger: 'blur',
+                    }"
+                  >
+                    <el-input
+                      v-model="form.urlList[index].text"
+                      placeholder="链接名称"
+                    >
+                    </el-input>
+                  </el-form-item>
+                </div>
+
+                <div>
+                  <el-form-item
+                    :prop="'urlList.' + index + '.url'"
+                    :rules="{
+                      required: true,
+                      message: '请输入链接名称',
+                      trigger: 'blur',
+                    }"
+                  >
+                    <el-input
+                      v-model="form.urlList[index].url"
+                      placeholder="链接URL"
+                    >
+                      <template #append>
+                        <el-button @click="form.urlList.splice(index, 1)"
+                          ><el-icon><DeleteFilled /></el-icon>
+                        </el-button>
+                      </template>
+                    </el-input>
+                  </el-form-item>
+                </div>
+              </el-col>
+            </el-row>
+            <el-button
+              type="primary"
+              @click="form.urlList.push({ text: '', url: '' })"
+              >添加
+            </el-button>
+          </div>
+        </el-form-item>
         <el-form-item label="状态" prop="status">
           <!-- radio 分别对应 0 1 不显示 显示 -->
           <el-radio-group v-model="form.status">
@@ -113,6 +169,7 @@ export default {
       year: 0,
       season: 1,
       label: [],
+      urlList: [],
       status: 0,
       __v: null,
     })

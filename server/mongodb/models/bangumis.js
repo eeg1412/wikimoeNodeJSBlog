@@ -34,6 +34,15 @@ var bangumis = new Schema({
   season: {
     type: Number,
   },
+  urlList: {
+    type: [
+      {
+        text: String,
+        url: String
+      }
+    ],
+    default: []
+  },
   // label 字符串数组
   label: {
     type: [String],
