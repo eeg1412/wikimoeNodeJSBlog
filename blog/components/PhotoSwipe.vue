@@ -34,7 +34,7 @@
                 :key="item._id"
               >
                 <div
-                  class="w-full h-full bg-cover bg-center bg-no-repeat rounded"
+                  class="w-full h-full bg-cover bg-center bg-no-repeat rounded bg-primary-200"
                   :class="{
                     'border-2 border-solid border-primary-500':
                       currentAttachmentId === item._id,
@@ -117,8 +117,8 @@ const loadImageDimensions = async (list) => {
       item._id = generateRandomString(8)
     }
     const mimetype = item.mimetype || ''
-    const width = item.width
-    const height = item.height
+    let width = item.width
+    let height = item.height
     if (item.src) {
       item.filepath = item.src
     }

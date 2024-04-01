@@ -97,81 +97,84 @@ const getImgWidAndHeight = (e) => {
       }
     }
   }
+  return {
+    width: null,
+    height: null,
+  }
+}
+const findATag = (e) => {
+  let target = e.target
+  while (target) {
+    if (target.tagName === 'A') {
+      return target
+    }
+    target = target.parentNode
+  }
   return null
 }
 const imgIsLoading = ref(false)
 // 点击事件
 const onClick = async (e) => {
-  const dataHref = getImgHref(e)
-  if (dataHref) {
-    // 正则判断是否是图片的链接 href
-    const imageRegex = /\.(jpe?g|png|gif|bmp|svg|webp)$/i
-    // 去掉dataHref的?后面的参数
-    const dataHrefNoQuery = dataHref.split('?')[0]
-    if (imageRegex.test(dataHrefNoQuery)) {
-      let imgHeight = null
-      let imgWidth = null
-      // 获取img标签的宽高
-      const imgWidAndHeight = getImgWidAndHeight(e)
-      if (imgWidAndHeight) {
-        imgHeight = imgWidAndHeight.height
-        imgWidth = imgWidAndHeight.width
-      } else {
-        // 获取实际的图片宽高
-        const img = new Image()
-        img.src = dataHref
-        const imgLoadPromise = new Promise((resolve, reject) => {
-          img.onload = () => {
-            resolve({
-              width: img.width,
-              height: img.height,
-            })
-          }
-          img.onerror = () => {
-            reject()
-          }
-        })
-        imgIsLoading.value = true
-        const promiseResult = await imgLoadPromise
-          .catch(() => {
-            // 报错
-            toast.add({
-              title: '图片加载失败',
-              icon: 'i-heroicons-x-circle',
-              color: 'red',
-            })
-          })
-          .finally(() => {
-            imgIsLoading.value = false
-          })
-        if (promiseResult) {
-          imgHeight = promiseResult.height
-          imgWidth = promiseResult.width
+  const tag = e.target.tagName
+  const aTag = findATag(e)
+  if (tag === 'IMG' && !aTag) {
+    // 获取htmlContent下的所有img和video标签，按照它们在htmlContent中的顺序
+    const mediaList = Array.from(
+      htmlContent.value.querySelectorAll('img, video')
+    )
+    // 获取当前点击的img标签在mediaList中的索引
+    const index = mediaList.findIndex((media) => {
+      return media === e.target
+    })
+
+    const imgList = []
+
+    mediaList.forEach((media) => {
+      let src = ''
+      let width = null
+      let height = null
+      let mimetype = ''
+      let thumfor = ''
+      if (media.tagName === 'IMG') {
+        const imgE = {
+          target: media,
         }
+        const imgWidAndHeight = getImgWidAndHeight(imgE)
+        thumfor = media.src
+        src = getImgHref(imgE) || media.src
+        width = imgWidAndHeight.width || media.width || null
+        height = imgWidAndHeight.height || media.height || null
+        mimetype = 'image'
+      } else if (media.tagName === 'VIDEO') {
+        // 获取source标签的src
+        const source = media.querySelector('source')
+        src = source.src || media.src
+        width = media.width || null
+        height = media.height || null
+        thumfor = media.poster
+        mimetype = 'video'
       }
-      // 判断imgHeight和imgWidth是否有值
-      if (imgWidth && imgHeight) {
-        const imgList = [
-          {
-            src: dataHref,
-            width: imgWidth,
-            height: imgHeight,
-          },
-        ]
-        openPhotoSwipe(imgList, 0)
-      }
-    } else {
-      // dataHref 不是图片链接
-      window.open(dataHref, '_blank')
-    }
+      imgList.push({
+        src,
+        width,
+        height,
+        mimetype,
+        thumfor,
+      })
+    })
+    openPhotoSwipe(imgList, index)
   }
 }
 // 中键点击事件
 const onMidClick = (e) => {
-  const dataHref = getImgHref(e)
-  if (dataHref) {
-    // 新窗口打开
-    window.open(dataHref, '_blank')
+  const tag = e.target.tagName
+  const aTag = findATag(e)
+  if (tag === 'IMG' && !aTag) {
+    const dataHref = getImgHref(e) || e.target.src
+    if (dataHref) {
+      // 新窗口打开
+      window.open(dataHref, '_blank')
+    }
   }
 }
 
@@ -247,7 +250,7 @@ onMounted(() => {
 }
 </style>
 <style>
-.html-content-body img[data-href] {
+.html-content-body img {
   @apply cursor-pointer;
 }
 .html-content-body img {
