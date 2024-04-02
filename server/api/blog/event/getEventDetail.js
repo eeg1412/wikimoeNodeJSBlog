@@ -44,7 +44,7 @@ module.exports = async function (req, res, next) {
   }).catch((err) => {
     res.status(400).json({
       errors: [{
-        message: '活动列表获取失败'
+        message: '活动详情获取失败'
       }]
     })
     userApiLog.error(`event get fail, ${JSON.stringify(err)
