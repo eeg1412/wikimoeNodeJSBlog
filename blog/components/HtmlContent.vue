@@ -6,19 +6,20 @@
       @click="onClick"
       ref="htmlContent"
     ></div>
-    <!-- v-if="imgIsLoading" -->
+    <!-- v-if="contentIsLoading" -->
     <div
       class="fixed inset-0 flex items-center justify-center z-50 img-image-load-animate"
-      v-if="imgIsLoading"
+      v-if="contentIsLoading"
     >
       <div class="flex items-center justify-center bg-white p-2 rounded shadow">
         <UIcon
           class="img-loading-icon animate-spin text-primary-500"
           name="i-heroicons-arrow-path"
-        /><span class="pl-2">图片加载中...</span>
+        /><span class="pl-2">加载中...</span>
       </div>
     </div>
   </div>
+  <EventDialog v-model:show="eventOpen" :currentData="currentEventData" />
 </template>
 <script setup>
 import { getEventDetailApiFetch } from '@/api/event'
@@ -113,7 +114,7 @@ const findATag = (e) => {
   }
   return null
 }
-const imgIsLoading = ref(false)
+const contentIsLoading = ref(false)
 
 // 点击事件
 const onClick = async (e) => {
@@ -215,13 +216,17 @@ const onMidClick = (e) => {
   }
 }
 
+const eventOpen = ref(false)
+const currentEventData = ref(null)
 const getEventDetail = async (e) => {
+  contentIsLoading.value = true
   const id = e.target.getAttribute('data-id')
   getEventDetailApiFetch({
     id,
   })
     .then((res) => {
-      const data = res.data
+      currentEventData.value = res.data
+      eventOpen.value = true
     })
     .catch((err) => {
       console.log(err)
@@ -236,6 +241,9 @@ const getEventDetail = async (e) => {
           })
         })
       }
+    })
+    .finally(() => {
+      contentIsLoading.value = false
     })
 }
 
