@@ -1,4 +1,5 @@
 import { IButtonMenu, IDomEditor } from '@wangeditor/editor'
+import { isInsertSpanDisabled } from '@/utils/editorMenu/utils'
 
 class eventspanButtonMenu {
 
@@ -10,7 +11,7 @@ class eventspanButtonMenu {
 
   // 获取菜单执行时的 value ，用不到则返回空 字符串或 false
   getValue (editor) {
-    // return ' hello '
+    return ''
   }
 
   // 菜单是否需要激活（如选中加粗文本，“加粗”菜单会激活），用不到则返回 false
@@ -20,22 +21,14 @@ class eventspanButtonMenu {
 
   // 菜单是否需要禁用（如选中 H1 ，“引用”菜单被禁用），用不到则返回 false
   isDisabled (editor) {
-    return false
+    return isInsertSpanDisabled(editor)
   }
 
   // 点击菜单时触发的函数
   exec (editor, value) {
     if (this.isDisabled(editor)) return
-    // 获取当前选区文字
-    const text = editor.getSelectionText()
-    if (!text) return
-    // 插入节点
-    const eventspanElem = {
-      type: 'eventspan',
-      id: 'jfsjpsadjoifsjdf',
-      children: [{ text: text }],
-    }
-    editor.insertNode(eventspanElem)
+    if (!editor['openEventDialog']) return
+    editor['openEventDialog'](editor)
   }
 
 }

@@ -618,10 +618,11 @@ export default function (api) {
       })
     },
     // get /event/list
-    getEventList (data) {
+    getEventList (data, noLoading = false) {
       return api.get('/event/list', {
         params: data,
-        shouldAdminJWT: true
+        shouldAdminJWT: true,
+        noLoading
       })
     },
     // post /event/create

@@ -11,4 +11,10 @@ const getEventListApiFetch = (params: any) => {
   return httpRequest.getFetch(URL, params)
 }
 
-export { getEventListApiFetch }
+// /event/detail
+const URL_DETAIL = `/event/detail`
+const getEventDetailApiFetch = (params: any) => {
+  return httpRequest.getFetch(URL_DETAIL, params)
+}
+
+export { getEventListApiFetch, getEventDetailApiFetch }

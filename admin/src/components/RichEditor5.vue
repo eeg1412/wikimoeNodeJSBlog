@@ -19,6 +19,11 @@
       @selectAttachments="selectAttachments"
       :typeList="[insertFnType]"
     />
+    <RichEditorEventSelectorDialog
+      v-model:show="showEventDialog"
+      :text="eventText"
+      @ok="onEventDialogOk"
+    />
   </div>
 </template>
 
@@ -26,6 +31,7 @@
 import { onBeforeUnmount, ref, shallowRef, onMounted, computed } from 'vue'
 import { Editor, Toolbar } from '@wangeditor/editor-for-vue'
 import AttachmentsDialog from '@/components/AttachmentsDialog'
+import RichEditorEventSelectorDialog from '@/components/RichEditorEventSelectorDialog'
 import { Boot, DomEditor, SlateTransforms } from '@wangeditor/editor'
 import store from '@/store'
 
@@ -36,7 +42,12 @@ export default {
       default: '',
     },
   },
-  components: { Editor, Toolbar, AttachmentsDialog },
+  components: {
+    Editor,
+    Toolbar,
+    AttachmentsDialog,
+    RichEditorEventSelectorDialog,
+  },
   setup(props, { emit }) {
     // 编辑器实例，必须用 shallowRef
     const editorRef = shallowRef()
@@ -141,6 +152,7 @@ export default {
 
     const handleCreated = (editor) => {
       editorRef.value = editor // 记录 editor 实例，重要！
+      editor['openEventDialog'] = openEventDialog
       console.log(editor)
       const editorDom = editor.getEditableContainer()
       const { insertBreak } = editor
@@ -221,6 +233,7 @@ export default {
     const openAttachmentsDialog = () => {
       attachmentsDialogRef.value.open()
     }
+
     const siteUrl = computed(() => {
       return store.state.siteUrl
     })
@@ -285,6 +298,39 @@ export default {
       console.log(JSON.stringify(toolbar.getConfig().toolbarKeys))
     }
 
+    const showEventDialog = ref(false)
+    const eventText = ref('')
+    const openEventDialog = (editor) => {
+      const text = editor.getSelectionText()
+      eventText.value = text || ''
+      showEventDialog.value = true
+      // console.log(editor)
+      // attachmentsDialogRef.value.open()
+      // setTimeout(() => {
+      //   editor.restoreSelection()
+      //   const text = editor.getSelectionText()
+      //   if (!text) return
+      //   // 插入节点
+      //   const eventspanElem = {
+      //     type: 'eventspan',
+      //     id: 'jfsjpsadjoifsjdf',
+      //     children: [{ text: text }],
+      //   }
+      //   editor.insertNode(eventspanElem)
+      // }, 5000)
+    }
+    const onEventDialogOk = (form) => {
+      const editor = editorRef.value
+      // 插入节点
+      const eventspanElem = {
+        type: 'eventspan',
+        id: form.id,
+        children: [{ text: form.text }],
+      }
+      editor.restoreSelection()
+      editor.insertNode(eventspanElem)
+    }
+
     return {
       editorRef,
       valueHtml,
@@ -298,6 +344,11 @@ export default {
       openAttachmentsDialog,
       selectAttachments,
       handleBlur,
+      // 活动选择
+      showEventDialog,
+      eventText,
+      openEventDialog,
+      onEventDialogOk,
     }
   },
 }

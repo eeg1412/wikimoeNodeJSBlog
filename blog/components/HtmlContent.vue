@@ -21,6 +21,7 @@
   </div>
 </template>
 <script setup>
+import { getEventDetailApiFetch } from '@/api/event'
 import 'highlight.js/styles/base16/dracula.css'
 import hljs from 'highlight.js'
 const toast = useToast()
@@ -113,65 +114,92 @@ const findATag = (e) => {
   return null
 }
 const imgIsLoading = ref(false)
+
 // 点击事件
 const onClick = async (e) => {
-  const dataHref = getImgHref(e)
   const tag = e.target.tagName
   const aTag = findATag(e)
-  if (tag === 'IMG' && !aTag) {
-    const imageRegex = /\.(jpe?g|png|gif|bmp|svg|webp)$/i
-    // 去掉dataHref的?后面的参数
-    const dataHrefNoQuery = dataHref.split('?')[0]
-    if (imageRegex.test(dataHrefNoQuery)) {
-      // 获取htmlContent下的所有img和video标签，按照它们在htmlContent中的顺序
-      const mediaList = Array.from(
-        htmlContent.value.querySelectorAll('img, video')
-      )
-      // 获取当前点击的img标签在mediaList中的索引
-      const index = mediaList.findIndex((media) => {
-        return media === e.target
-      })
+  if (!aTag) {
+    switch (tag) {
+      case 'IMG':
+        clickOnImg(e)
+        break
+      // span
+      case 'SPAN':
+        clickOnSpan(e)
+        break
 
-      const imgList = []
-
-      mediaList.forEach((media) => {
-        let src = ''
-        let width = null
-        let height = null
-        let mimetype = ''
-        let thumfor = ''
-        if (media.tagName === 'IMG') {
-          const imgE = {
-            target: media,
-          }
-          const imgWidAndHeight = getImgWidAndHeight(imgE)
-          thumfor = media.src
-          src = getImgHref(imgE) || media.src
-          width = imgWidAndHeight.width || media.width || null
-          height = imgWidAndHeight.height || media.height || null
-          mimetype = 'image'
-        } else if (media.tagName === 'VIDEO') {
-          // 获取source标签的src
-          const source = media.querySelector('source')
-          src = source.src || media.src
-          width = media.width || null
-          height = media.height || null
-          thumfor = media.poster
-          mimetype = 'video'
-        }
-        imgList.push({
-          src,
-          width,
-          height,
-          mimetype,
-          thumfor,
-        })
-      })
-      openPhotoSwipe(imgList, index)
-    } else {
-      // 新窗口
-      window.open(dataHref, '_blank')
+      default:
+        break
     }
+  }
+}
+const clickOnSpan = (e) => {
+  // 获取span标签的data-w-e-type属性
+  const dataWType = e.target.getAttribute('data-w-e-type') || ''
+  switch (dataWType) {
+    case 'eventspan':
+      getEventDetail(e)
+      break
+
+    default:
+      break
+  }
+}
+const clickOnImg = (e) => {
+  const dataHref = getImgHref(e)
+  const imageRegex = /\.(jpe?g|png|gif|bmp|svg|webp)$/i
+  // 去掉dataHref的?后面的参数
+  const dataHrefNoQuery = dataHref.split('?')[0]
+  if (imageRegex.test(dataHrefNoQuery)) {
+    // 获取htmlContent下的所有img和video标签，按照它们在htmlContent中的顺序
+    const mediaList = Array.from(
+      htmlContent.value.querySelectorAll('img, video')
+    )
+    // 获取当前点击的img标签在mediaList中的索引
+    const index = mediaList.findIndex((media) => {
+      return media === e.target
+    })
+
+    const imgList = []
+
+    mediaList.forEach((media) => {
+      let src = ''
+      let width = null
+      let height = null
+      let mimetype = ''
+      let thumfor = ''
+      if (media.tagName === 'IMG') {
+        const imgE = {
+          target: media,
+        }
+        const imgWidAndHeight = getImgWidAndHeight(imgE)
+        thumfor = media.src
+        src = getImgHref(imgE) || media.src
+        width = imgWidAndHeight.width || media.width || null
+        height = imgWidAndHeight.height || media.height || null
+        mimetype = 'image'
+      } else if (media.tagName === 'VIDEO') {
+        // 获取source标签的src
+        const source = media.querySelector('source')
+        src = source.src || media.src
+        width = media.width || null
+        height = media.height || null
+        thumfor = media.poster
+        mimetype = 'video'
+      }
+      imgList.push({
+        src,
+        width,
+        height,
+        mimetype,
+        thumfor,
+      })
+    })
+    openPhotoSwipe(imgList, index)
+  } else {
+    // 新窗口
+    window.open(dataHref, '_blank')
   }
 }
 // 中键点击事件
@@ -185,6 +213,30 @@ const onMidClick = (e) => {
       window.open(dataHref, '_blank')
     }
   }
+}
+
+const getEventDetail = async (e) => {
+  const id = e.target.getAttribute('data-id')
+  getEventDetailApiFetch({
+    id,
+  })
+    .then((res) => {
+      const data = res.data
+    })
+    .catch((err) => {
+      console.log(err)
+      const errors = err.response?._data?.errors
+      if (errors) {
+        errors.forEach((item) => {
+          const message = item.message
+          toast.add({
+            title: message,
+            icon: 'i-heroicons-x-circle',
+            color: 'red',
+          })
+        })
+      }
+    })
 }
 
 const htmlContent = ref(null)
@@ -360,5 +412,8 @@ onMounted(() => {
 .html-content-body td,
 .html-content-body th {
   @apply border p-2;
+}
+.html-content-body span[data-w-e-type='eventspan'] {
+  @apply text-primary-500 cursor-pointer;
 }
 </style>
