@@ -122,6 +122,8 @@ export default {
         'undo',
         'redo',
         '|',
+        'eventspan',
+        '|',
         'fullScreen',
       ],
     }
