@@ -91,6 +91,7 @@ export default {
     })
     const rules = reactive({
       id: [{ required: true, message: '请选择活动', trigger: 'blur' }],
+      text: [{ required: true, message: '请输入文本', trigger: 'blur' }],
     })
     const formRef = ref(null)
     const submit = () => {

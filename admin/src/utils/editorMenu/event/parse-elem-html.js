@@ -15,10 +15,12 @@ function parseHtml (elem, children, editor) {
   //   children = [{ text: elem.textContent.replace(/\s+/gm, ' ') }]
   // }
   const id = elem.getAttribute('data-id') || ''
+  const textContent = elem.textContent || ''
   return {
     type: 'eventspan',
     id: id,
-    children, // void node 必须有一个空白 text
+    textContent: textContent,
+    children: [{ text: textContent }], // void node 必须有一个空白 text
   }
 }
 

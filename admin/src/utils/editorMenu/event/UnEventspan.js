@@ -34,10 +34,16 @@ class UnEventspan {
     if (this.isDisabled(editor)) return
 
     // 取消
-    Transforms.unwrapNodes(editor, {
-      match: n => n.type === 'eventspan',
-      split: true
+    let text = ''
+    Transforms.removeNodes(editor, {
+      match: n => {
+        if (n.type === 'eventspan') {
+          text = n.textContent
+          return true
+        }
+      }
     });
+    Transforms.insertText(editor, text)
   }
 }
 

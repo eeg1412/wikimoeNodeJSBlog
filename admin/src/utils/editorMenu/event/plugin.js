@@ -12,7 +12,7 @@ function withEventspan (editor) {
 
   newEditor.isVoid = elem => {
     const type = DomEditor.getNodeType(elem)
-    if (type === 'eventspan') return false // 针对 type: eventspan ，设置为 void
+    if (type === 'eventspan') return true // 针对 type: eventspan ，设置为 void
     return isVoid(elem)
   }
 

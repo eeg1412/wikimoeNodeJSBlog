@@ -365,6 +365,7 @@ export default {
       const eventspanElem = {
         type: 'eventspan',
         id: form.id,
+        textContent: form.text,
         children: [{ text: form.text }],
       }
       editor.restoreSelection()
