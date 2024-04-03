@@ -1,4 +1,5 @@
 import { IButtonMenu, IDomEditor } from '@wangeditor/editor'
+import { DomEditor } from '@wangeditor/core'
 import { isInsertSpanDisabled } from '@/utils/editorMenu/utils'
 
 class eventspanButtonMenu {

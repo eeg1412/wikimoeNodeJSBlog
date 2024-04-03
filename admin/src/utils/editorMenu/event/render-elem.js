@@ -5,8 +5,8 @@
 import { h } from 'snabbdom'
 
 function renderEventspan (elem, children, editor) {
-
   // 当前节点是否选中
+  console.log(children)
   const vnode = h(
     'span',
     {

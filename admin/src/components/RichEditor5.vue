@@ -141,6 +141,46 @@ export default {
     const editorConfig = {
       placeholder: '请输入内容...',
       autoFocus: false,
+      hoverbarKeys: {
+        // key 即 element type
+        link: {
+          menuKeys: ['editLink', 'unLink', 'viewLink'],
+        },
+        image: {
+          menuKeys: [
+            'imageWidth30',
+            'imageWidth50',
+            'imageWidth100',
+            'editImage',
+            'viewImageLink',
+            'deleteImage',
+          ],
+        },
+        pre: {
+          menuKeys: ['enter', 'codeBlock', 'codeSelectLang'],
+        },
+        table: {
+          menuKeys: [
+            'enter',
+            'tableHeader',
+            'tableFullWidth',
+            'insertTableRow',
+            'deleteTableRow',
+            'insertTableCol',
+            'deleteTableCol',
+            'deleteTable',
+          ],
+        },
+        divider: {
+          menuKeys: ['enter'],
+        },
+        video: {
+          menuKeys: ['enter', 'editVideoSize'],
+        },
+        eventspan: {
+          menuKeys: ['uneventspan'],
+        },
+      },
     }
 
     // 组件销毁时，也及时销毁编辑器
