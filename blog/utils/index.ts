@@ -154,13 +154,17 @@ export const getACGDuration = (startTime: string, endTime?: string) => {
   const start = new Date(startTime).getTime()
   const end = endTime ? new Date(endTime).getTime() : Date.now()
   const diff = end - start
-  const day = 1000 * 60 * 60 * 24
+  const minute = 1000 * 60
+  const hour = minute * 60
+  const day = hour * 24
   const week = day * 7
   const month = day * 30
   const year = day * 365
   let result = ''
-  if (diff < day) {
-    result = `${Math.floor(diff / (1000 * 60 * 60))}小时`
+  if (diff < hour) {
+    result = `${Math.floor(diff / minute)}分钟`
+  } else if (diff < day) {
+    result = `${Math.floor(diff / hour)}小时`
   } else if (diff < week) {
     result = `${Math.floor(diff / day)}天`
   } else if (diff < month) {
