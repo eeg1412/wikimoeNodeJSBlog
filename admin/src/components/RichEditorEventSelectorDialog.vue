@@ -53,6 +53,7 @@
 <script>
 import { computed, reactive, ref, watch } from 'vue'
 import { authApi } from '@/api'
+import { nextTick } from 'vue'
 export default {
   props: {
     show: {
@@ -74,6 +75,7 @@ export default {
       get() {
         if (props.id) {
           form.id = props.id
+          getEventDetail(props.id)
         }
         if (props.text) {
           form.text = props.text
@@ -99,8 +101,10 @@ export default {
         if (!valid) {
           return false
         }
-        emit('ok', form)
         showDialog.value = false
+        nextTick(() => {
+          emit('ok', form)
+        })
       })
     }
 
@@ -113,6 +117,16 @@ export default {
     const eventList = ref([])
     const eventListIsLoading = ref(false)
     const eventListTimer = null
+    const getEventDetail = (id) => {
+      authApi
+        .getEventDetail({
+          id,
+        })
+        .then((res) => {
+          eventList.value = [res.data.data]
+        })
+        .catch(() => {})
+    }
     const queryEventList = (query, options = {}) => {
       if (eventListTimer) {
         clearTimeout(eventListTimer)

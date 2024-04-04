@@ -22,13 +22,21 @@
     <RichEditorEventSelectorDialog
       v-model:show="showEventDialog"
       :text="eventText"
+      :id="eventId"
       @ok="onEventDialogOk"
     />
   </div>
 </template>
 
 <script>
-import { onBeforeUnmount, ref, shallowRef, onMounted, computed } from 'vue'
+import {
+  onBeforeUnmount,
+  ref,
+  shallowRef,
+  onMounted,
+  computed,
+  watch,
+} from 'vue'
 import { Editor, Toolbar } from '@wangeditor/editor-for-vue'
 import AttachmentsDialog from '@/components/AttachmentsDialog'
 import RichEditorEventSelectorDialog from '@/components/RichEditorEventSelectorDialog'
@@ -178,7 +186,7 @@ export default {
           menuKeys: ['enter', 'editVideoSize'],
         },
         eventspan: {
-          menuKeys: ['uneventspan'],
+          menuKeys: ['uneventspan', 'editeventspan'],
         },
       },
     }
@@ -340,36 +348,56 @@ export default {
 
     const showEventDialog = ref(false)
     const eventText = ref('')
-    const openEventDialog = (editor) => {
-      const text = editor.getSelectionText()
-      eventText.value = text || ''
+    const eventDialogEditMode = ref(false)
+    const eventId = ref(null)
+    const openEventDialog = (editor, editmode = false, node = null) => {
+      if (editmode) {
+        eventDialogEditMode.value = true
+        eventId.value = node.id
+        eventText.value = node.textContent
+      } else {
+        eventDialogEditMode.value = false
+        eventId.value = null
+        const text = editor.getSelectionText()
+        eventText.value = text || ''
+      }
       showEventDialog.value = true
-      // console.log(editor)
-      // attachmentsDialogRef.value.open()
-      // setTimeout(() => {
-      //   editor.restoreSelection()
-      //   const text = editor.getSelectionText()
-      //   if (!text) return
-      //   // 插入节点
-      //   const eventspanElem = {
-      //     type: 'eventspan',
-      //     id: 'jfsjpsadjoifsjdf',
-      //     children: [{ text: text }],
-      //   }
-      //   editor.insertNode(eventspanElem)
-      // }, 5000)
     }
+    watch(showEventDialog, (val) => {
+      if (!val) {
+        eventText.value = ''
+        eventId.value = null
+        editorRef.value.restoreSelection()
+      }
+    })
     const onEventDialogOk = (form) => {
       const editor = editorRef.value
-      // 插入节点
-      const eventspanElem = {
-        type: 'eventspan',
-        id: form.id,
-        textContent: form.text,
-        children: [{ text: form.text }],
+      if (eventDialogEditMode.value) {
+        // 编辑节点
+        SlateTransforms.setNodes(
+          editor,
+          {
+            id: form.id,
+            textContent: form.text,
+            children: [{ text: form.text }],
+          },
+          {
+            match: (n) => {
+              return n.type === 'eventspan'
+            },
+          }
+        )
+        editor.move(1)
+      } else {
+        // 插入节点
+        const eventspanElem = {
+          type: 'eventspan',
+          id: form.id,
+          textContent: form.text,
+          children: [{ text: form.text }],
+        }
+        editor.insertNode(eventspanElem)
       }
-      editor.restoreSelection()
-      editor.insertNode(eventspanElem)
     }
 
     return {
@@ -387,7 +415,9 @@ export default {
       handleBlur,
       // 活动选择
       showEventDialog,
+      eventDialogEditMode,
       eventText,
+      eventId,
       openEventDialog,
       onEventDialogOk,
     }
