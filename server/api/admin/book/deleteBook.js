@@ -13,6 +13,38 @@ module.exports = async function (req, res, next) {
     })
     return
   }
+
+  // 删除cover
+  // 获取旧数据
+  const oldData = await bookUtils.findOne({ _id: id })
+  if (!oldData) {
+    res.status(400).json({
+      errors: [{
+        message: '该数据不存在'
+      }]
+    })
+    return
+  }
+  // 删除cover
+  if (oldData.coverFileName) {
+    const coverFolder = oldData.coverFolder
+    let basePath = './public/upload/bookCover/'
+    // 拼接文件夹
+    basePath = basePath + coverFolder + '/'
+    let fileName = oldData.coverFileName
+    // 删除旧图片
+    try {
+      const oldPath = path.join(basePath, fileName)
+      fs.unlinkSync(oldPath)
+    } catch (error) {
+      res.status(400).json({
+        errors: [{
+          message: '旧图片删除失败'
+        }]
+      })
+      throw new Error(error)
+    }
+  }
   //  删除书籍
   bookUtils.deleteOne({ _id: id }).then((data) => {
     if (data.deletedCount === 0) {

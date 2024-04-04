@@ -4,12 +4,24 @@ const log4js = require('log4js')
 const adminApiLog = log4js.getLogger('adminApi')
 
 module.exports = async function (req, res, next) {
-
-  const {  } = req.body
+  const { name, color } = req.body
   // 校验格式
   const params = {
+    name, color
   }
   const rule = [
+    {
+      key: 'name',
+      label: '书籍类型名称',
+      type: null,
+      required: true
+    },
+    {
+      key: 'color',
+      label: '颜色',
+      type: null,
+      required: true
+    }
 
   ]
   const errors = utils.checkForm(params, rule)

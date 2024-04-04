@@ -5,7 +5,7 @@ const adminApiLog = log4js.getLogger('adminApi')
 
 module.exports = async function (req, res, next) {
   // booktypename	String	是	否	无	书籍类型名称
-  const { booktypename, id, __v } = req.body
+  const { name, color, id, __v } = req.body
   if (!id) {
     res.status(400).json({
       errors: [{
@@ -25,15 +25,22 @@ module.exports = async function (req, res, next) {
   }
   // 校验格式
   const params = {
-    booktypename: booktypename,
+    name: name,
+    color: color
   }
   const rule = [
     {
-      key: 'booktypename',
+      key: 'name',
       label: '书籍类型名称',
       type: null,
       required: true,
     },
+    {
+      key: 'color',
+      label: '颜色',
+      type: null,
+      required: true,
+    }
   ]
   const errors = utils.checkForm(params, rule)
   if (errors.length > 0) {

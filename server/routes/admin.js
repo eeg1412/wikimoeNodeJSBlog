@@ -942,6 +942,96 @@ const adminRouteSetting = [
     roleType: null,
     role: null
   },
+  // createBooktype
+  {
+    path: '/booktype/create',
+    method: 'post',
+    middleware: [checkAuth],
+    controller: require('../api/admin/booktype/createBooktype'),
+    roleType: null,
+    role: null
+  },
+  // deleteBooktype
+  {
+    path: '/booktype/delete',
+    method: 'delete',
+    middleware: [checkAuth],
+    controller: require('../api/admin/booktype/deleteBooktype'),
+    roleType: null,
+    role: null
+  },
+  // getBooktypeDetail
+  {
+    path: '/booktype/detail',
+    method: 'get',
+    middleware: [checkAuth],
+    controller: require('../api/admin/booktype/getBooktypeDetail'),
+    roleType: null,
+    role: null
+  },
+  // getBooktypeList
+  {
+    path: '/booktype/list',
+    method: 'get',
+    middleware: [checkAuth],
+    controller: require('../api/admin/booktype/getBooktypeList'),
+    roleType: null,
+    role: null
+  },
+  // updateBooktype
+  {
+    path: '/booktype/update',
+    method: 'put',
+    middleware: [checkAuth],
+    controller: require('../api/admin/booktype/updateBooktype'),
+    roleType: null,
+    role: null
+  },
+  // createBook
+  {
+    path: '/book/create',
+    method: 'post',
+    middleware: [checkAuth],
+    controller: require('../api/admin/book/createBook'),
+    roleType: null,
+    role: null
+  },
+  // deleteBook
+  {
+    path: '/book/delete',
+    method: 'delete',
+    middleware: [checkAuth],
+    controller: require('../api/admin/book/deleteBook'),
+    roleType: null,
+    role: null
+  },
+  // getBookDetail
+  {
+    path: '/book/detail',
+    method: 'get',
+    middleware: [checkAuth],
+    controller: require('../api/admin/book/getBookDetail'),
+    roleType: null,
+    role: null
+  },
+  // getBookList
+  {
+    path: '/book/list',
+    method: 'get',
+    middleware: [checkAuth],
+    controller: require('../api/admin/book/getBookList'),
+    roleType: null,
+    role: null
+  },
+  // updateBook
+  {
+    path: '/book/update',
+    method: 'put',
+    middleware: [checkAuth],
+    controller: require('../api/admin/book/updateBook'),
+    roleType: null,
+    role: null
+  },
 ]
 
 adminRouteSetting.forEach(item => {
