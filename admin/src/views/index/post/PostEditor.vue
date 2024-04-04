@@ -626,6 +626,11 @@ export default {
         label: '游戏列表',
         value: 'gameList',
       },
+      // book
+      {
+        label: '书籍',
+        value: 'book',
+      },
       // 活动
       {
         label: '活动',
