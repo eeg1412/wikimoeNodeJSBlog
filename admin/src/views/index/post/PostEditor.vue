@@ -226,53 +226,53 @@
               ></el-option>
             </el-select>
           </el-form-item>
+          <!-- game -->
+          <el-form-item label="关联游戏" prop="game">
+            <el-select
+              v-model="form.gameList"
+              multiple
+              filterable
+              remote
+              :remote-method="queryGames"
+              :automatic-dropdown="true"
+              default-first-option
+              :reserve-keyword="false"
+              :loading="gameIsLoading"
+              placeholder="请选择游戏"
+              style="width: 100%"
+            >
+              <el-option
+                v-for="item in gameList"
+                :key="item._id"
+                :label="item.title"
+                :value="item._id"
+              ></el-option>
+            </el-select>
+          </el-form-item>
+          <!-- book -->
+          <el-form-item label="关联书籍" prop="book">
+            <el-select
+              v-model="form.bookList"
+              multiple
+              filterable
+              remote
+              :remote-method="queryBooks"
+              :automatic-dropdown="true"
+              default-first-option
+              :reserve-keyword="false"
+              :loading="bookIsLoading"
+              placeholder="请选择书籍"
+              style="width: 100%"
+            >
+              <el-option
+                v-for="item in bookList"
+                :key="item._id"
+                :label="item.title"
+                :value="item._id"
+              ></el-option>
+            </el-select>
+          </el-form-item>
         </template>
-        <!-- game -->
-        <el-form-item label="关联游戏" prop="game">
-          <el-select
-            v-model="form.gameList"
-            multiple
-            filterable
-            remote
-            :remote-method="queryGames"
-            :automatic-dropdown="true"
-            default-first-option
-            :reserve-keyword="false"
-            :loading="gameIsLoading"
-            placeholder="请选择游戏"
-            style="width: 100%"
-          >
-            <el-option
-              v-for="item in gameList"
-              :key="item._id"
-              :label="item.title"
-              :value="item._id"
-            ></el-option>
-          </el-select>
-        </el-form-item>
-        <!-- book -->
-        <el-form-item label="关联书籍" prop="book">
-          <el-select
-            v-model="form.bookList"
-            multiple
-            filterable
-            remote
-            :remote-method="queryBooks"
-            :automatic-dropdown="true"
-            default-first-option
-            :reserve-keyword="false"
-            :loading="bookIsLoading"
-            placeholder="请选择书籍"
-            style="width: 100%"
-          >
-            <el-option
-              v-for="item in bookList"
-              :key="item._id"
-              :label="item.title"
-              :value="item._id"
-            ></el-option>
-          </el-select>
-        </el-form-item>
         <!-- 文章别名 -->
         <el-form-item label="文章别名" prop="alias">
           <el-input
