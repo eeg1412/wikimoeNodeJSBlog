@@ -1,7 +1,7 @@
 <template>
   <div class="flex-shrink-0 relative bangumi-cover-body">
     <div
-      class="relative flex justify-center items-center border border-solid border-gray-300 rounded-md p-1"
+      class="relative content-h-139 flex justify-center items-center border border-solid border-gray-300 rounded-md p-1"
     >
       <WikimoeImage
         class="w-full rounded bangumi-cover"

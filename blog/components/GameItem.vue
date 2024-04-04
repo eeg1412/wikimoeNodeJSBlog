@@ -1,7 +1,7 @@
 <template>
   <div class="flex-shrink-0 relative game-cover-body">
     <div
-      class="relative h-32 flex justify-center items-center border border-solid border-gray-300 rounded-md p-1"
+      class="relative content-h-139 flex justify-center items-center border border-solid border-gray-300 rounded-md p-1"
     >
       <WikimoeImage
         class="w-full rounded game-cover"
