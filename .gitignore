@@ -8,6 +8,7 @@ node_modules
 /server/public/upload/siteImg/*
 /server/public/upload/bangumi/*
 /server/public/upload/gameCover/*
+/server/public/upload/bookCover/*
 /server/public/content/uploadfile/*
 /server/public/admin/*
 /server/public/up_works/*
