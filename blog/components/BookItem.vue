@@ -1,0 +1,113 @@
+<template>
+  <div class="flex-shrink-0 relative book-cover-body">
+    <div
+      class="relative h-32 flex justify-center items-center border border-solid border-gray-300 rounded-md p-1"
+    >
+      <WikimoeImage
+        class="w-full rounded book-cover"
+        :src="book.cover || '/img/nopic400-565.png'"
+        :alt="book.title"
+        :width="400"
+        :height="565"
+        :data-href="book.cover"
+        :data-href-list="book.cover ? setDataHrefList(book.cover) : null"
+        loading="lazy"
+        fit="contain"
+      />
+      <div class="absolute bottom-0 left-0 p-1">
+        <UBadge
+          v-for="(label, index) in book.label"
+          :key="index"
+          size="xs"
+          class="mr-1"
+        >
+          {{ label }}
+        </UBadge>
+      </div>
+    </div>
+    <Rating :rating="book.rating" />
+  </div>
+  <div class="pl-3 w-full flex flex-col">
+    <div class="font-bold mb-1 line-clamp-2 flex-shrink-0">
+      <span
+        class="books-platform-block"
+        :style="{
+          backgroundColor: book.booktype.color,
+        }"
+        v-if="book.booktype"
+        >{{ book.booktype.name }}</span
+      >{{ book.title }}
+    </div>
+    <!-- 链接 -->
+    <div
+      class="text-sm mb-1 text-gray-500 flex-shrink-0"
+      v-if="book.urlList.length > 0"
+    >
+      <a
+        :href="url.url"
+        target="_blank"
+        class="inline-flex items-center text-primary mr-2"
+        v-for="(url, index) in book.urlList"
+        :key="index"
+      >
+        <UIcon name="i-heroicons-link" class="align-middle mr-1" />
+        {{ url.text }}
+      </a>
+    </div>
+    <!-- 用时 -->
+    <UPopover
+      :popper="{ offsetDistance: 0, placement: 'bottom-start' }"
+      v-if="book.startTime"
+    >
+      <div
+        class="text-sm mb-1 text-gray-400 flex-shrink-0 pointer w_10 flex items-center"
+      >
+        <UIcon name="i-heroicons-clock" class="align-middle mr-1" />用时{{
+          getACGDuration(book.startTime, book.endTime)
+        }}
+      </div>
+      <template #panel>
+        <div class="px-2 py-1">
+          {{
+            `${formatDate(book.startTime)} ~ ${
+              book.endTime ? formatDate(book.endTime) : '至今'
+            }`
+          }}
+        </div>
+      </template>
+    </UPopover>
+
+    <!-- prettier-ignore -->
+    <div class="text-sm whitespace-pre-line text-gray-500 flex-grow" v-if="book.summary">{{ book.summary }}</div>
+    <div v-else class="text-sm flex-grow text-gray-400">暂无简评</div>
+  </div>
+</template>
+<script setup>
+const props = defineProps({
+  book: {
+    type: Object,
+    required: true,
+  },
+})
+
+const setDataHrefList = (cover) => {
+  return [
+    {
+      filepath: cover,
+    },
+  ]
+}
+</script>
+<style scoped>
+.book-cover-body {
+  width: 100px;
+}
+.books-platform-block {
+  color: #fff;
+  padding: 2px 5px;
+  border-radius: 2px;
+  font-size: 12px;
+  margin-right: 5px;
+  border-radius: 5px;
+}
+</style>

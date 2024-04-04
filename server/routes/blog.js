@@ -163,6 +163,20 @@ const blogRouteSetting = [
     middleware: [],
     controller: require('../api/blog/game/getGamePlatformList'),
   },
+  // getBookList
+  {
+    path: '/book/list',
+    method: 'get',
+    middleware: [],
+    controller: require('../api/blog/book/getBookList'),
+  },
+  // getBooktypeList
+  {
+    path: '/booktype/list',
+    method: 'get',
+    middleware: [],
+    controller: require('../api/blog/book/getBooktypeList'),
+  },
   // getAttachmentList
   {
     path: '/attachment/list',

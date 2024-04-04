@@ -629,7 +629,7 @@ export default {
       // book
       {
         label: '书籍',
-        value: 'book',
+        value: 'bookList',
       },
       // 活动
       {
