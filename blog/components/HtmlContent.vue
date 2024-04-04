@@ -148,7 +148,7 @@ const clickOnSpan = (e) => {
   }
 }
 const clickOnImg = (e) => {
-  const dataHref = getImgHref(e)
+  const dataHref = getImgHref(e) || e.target?.src || ''
   const imageRegex = /\.(jpe?g|png|gif|bmp|svg|webp)$/i
   // 去掉dataHref的?后面的参数
   const dataHrefNoQuery = dataHref.split('?')[0]
@@ -200,7 +200,9 @@ const clickOnImg = (e) => {
     openPhotoSwipe(imgList, index)
   } else {
     // 新窗口
-    window.open(dataHref, '_blank')
+    if (dataHref) {
+      window.open(dataHref, '_blank')
+    }
   }
 }
 // 中键点击事件
