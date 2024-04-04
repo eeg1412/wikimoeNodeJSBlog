@@ -232,6 +232,11 @@
     <div class="post-detail-like-body dflex flexCenter" v-else>
       <USkeleton class="h-9 w-[90px]" />
     </div>
+    <PostACG
+      :bangumiList="postData.data.bangumiList"
+      :gameList="postData.data.gameList"
+      :bookList="postData.data.bookList"
+    />
     <!-- 广告 -->
     <div class="google-ad-post-detail" v-if="GOOGLE_ADSENSE_POST_DETAIL_BT">
       <AdsbygoogleHave :ad="GOOGLE_ADSENSE_POST_DETAIL_BT" />
