@@ -26,7 +26,7 @@ module.exports = async function (req, res, next) {
   // - coverImages  博客时是封面图片字段，页面时是页面图片字段
   // - __v  版本号字段
   const id = req.body.id
-  let { title, date, content, excerpt, alias, sort, tags, top, sortop, status, allowRemark, template, code, coverImages, __v } = req.body
+  let { title, date, content, excerpt, alias, sort, tags, top, sortop, status, allowRemark, template, code, coverImages, bangumiList, gameList, bookList, __v } = req.body
   // 校验id是否存在
   if (!id) {
     res.status(400).json({
@@ -58,6 +58,39 @@ module.exports = async function (req, res, next) {
     return
   }
 
+  // 用 validator.isMongoId 校验 bangumiList, gameList, bookList
+  for (let i = 0; i < bangumiList.length; i++) {
+    if (!validator.isMongoId(bangumiList[i])) {
+      res.status(400).json({
+        errors: [{
+          message: 'bangumiList格式错误'
+        }]
+      })
+      return
+    }
+  }
+  for (let i = 0; i < gameList.length; i++) {
+    if (!validator.isMongoId(gameList[i])) {
+      res.status(400).json({
+        errors: [{
+          message: 'gameList格式错误'
+        }]
+      })
+      return
+    }
+  }
+  for (let i = 0; i < bookList.length; i++) {
+    if (!validator.isMongoId(bookList[i])) {
+      res.status(400).json({
+        errors: [{
+          message: 'bookList格式错误'
+        }]
+      })
+      return
+    }
+  }
+
+
   // 1blog,2tweet,3page
   const type = post.type
   const params = {
@@ -75,6 +108,9 @@ module.exports = async function (req, res, next) {
     template: template,
     code: code,
     coverImages: coverImages,
+    bangumiList: bangumiList,
+    gameList: gameList,
+    bookList: bookList
   }
   const rules = [
     {

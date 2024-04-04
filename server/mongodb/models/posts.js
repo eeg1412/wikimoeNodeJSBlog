@@ -101,6 +101,9 @@ var posts = new Schema({
     default: 0
   },
   coverImages: [{ type: Schema.ObjectId, ref: 'attachments' }],
+  bangumiList: [{ type: Schema.ObjectId, ref: 'bangumis', default: [] }],
+  gameList: [{ type: Schema.ObjectId, ref: 'games', default: [] }],
+  bookList: [{ type: Schema.ObjectId, ref: 'books', default: [] }],
 }, { timestamps: true });
 
 module.exports = mongoose.model('posts', posts);

@@ -174,31 +174,103 @@
             ></el-option>
           </el-select>
         </el-form-item>
-        <!-- tags -->
-        <el-form-item label="标签" prop="tags" v-if="type !== 3">
+
+        <template v-if="type !== 3">
+          <!-- tags -->
+          <el-form-item label="标签" prop="tags">
+            <el-select
+              v-model="form.tags"
+              multiple
+              filterable
+              remote
+              :remote-method="queryTags"
+              :automatic-dropdown="true"
+              default-first-option
+              :reserve-keyword="false"
+              :loading="tagsIsLoading"
+              placeholder="请选择标签"
+              style="width: 100%"
+            >
+              <el-option
+                v-for="item in tagList"
+                :key="item._id"
+                :label="item.tagname"
+                :value="item._id"
+              >
+                <template v-if="item.isNew">
+                  {{ `创建新标签「${item.tagname}」` }}
+                </template>
+              </el-option>
+            </el-select>
+          </el-form-item>
+          <!-- bangumi -->
+          <el-form-item label="关联番剧" prop="bangumi">
+            <el-select
+              v-model="form.bangumiList"
+              multiple
+              filterable
+              remote
+              :remote-method="queryBangumis"
+              :automatic-dropdown="true"
+              default-first-option
+              :reserve-keyword="false"
+              :loading="banggumiIsLoading"
+              placeholder="请选择番剧"
+              style="width: 100%"
+            >
+              <el-option
+                v-for="item in bangumiList"
+                :key="item._id"
+                :label="item.title"
+                :value="item._id"
+              ></el-option>
+            </el-select>
+          </el-form-item>
+        </template>
+        <!-- game -->
+        <el-form-item label="关联游戏" prop="game">
           <el-select
-            v-model="form.tags"
+            v-model="form.gameList"
             multiple
             filterable
             remote
-            :remote-method="queryTags"
+            :remote-method="queryGames"
             :automatic-dropdown="true"
             default-first-option
             :reserve-keyword="false"
-            :loading="tagsIsLoading"
-            placeholder="请选择标签"
+            :loading="gameIsLoading"
+            placeholder="请选择游戏"
             style="width: 100%"
           >
             <el-option
-              v-for="item in tagList"
+              v-for="item in gameList"
               :key="item._id"
-              :label="item.tagname"
+              :label="item.title"
               :value="item._id"
-            >
-              <template v-if="item.isNew">
-                {{ `创建新标签「${item.tagname}」` }}
-              </template>
-            </el-option>
+            ></el-option>
+          </el-select>
+        </el-form-item>
+        <!-- book -->
+        <el-form-item label="关联书籍" prop="book">
+          <el-select
+            v-model="form.bookList"
+            multiple
+            filterable
+            remote
+            :remote-method="queryBooks"
+            :automatic-dropdown="true"
+            default-first-option
+            :reserve-keyword="false"
+            :loading="bookIsLoading"
+            placeholder="请选择书籍"
+            style="width: 100%"
+          >
+            <el-option
+              v-for="item in bookList"
+              :key="item._id"
+              :label="item.title"
+              :value="item._id"
+            ></el-option>
           </el-select>
         </el-form-item>
         <!-- 文章别名 -->
@@ -355,6 +427,18 @@ export default {
                 form[key] = res.data.data[key].map((item) => item._id)
                 tagList.value = res.data.data[key]
                 break
+              case 'bangumiList':
+                form[key] = res.data.data[key].map((item) => item._id)
+                bangumiList.value = res.data.data[key]
+                break
+              case 'gameList':
+                form[key] = res.data.data[key].map((item) => item._id)
+                gameList.value = res.data.data[key]
+                break
+              case 'bookList':
+                form[key] = res.data.data[key].map((item) => item._id)
+                bookList.value = res.data.data[key]
+                break
               case 'coverImages':
                 form[key] = res.data.data[key].map((item) => item._id)
                 res.data.data[key].forEach((item) => {
@@ -378,9 +462,6 @@ export default {
           // 旧文章采用v4富文本编辑器，新文章采用v5富文本编辑器
           postEditorVersion.value = res.data.data.editorVersion || 5
           form.id = res.data.data._id
-          if (res.data.data.tags?.length > 0) {
-            tagList.value = res.data.data.tags
-          }
         })
         .catch((err) => {
           console.error(err)
@@ -433,6 +514,9 @@ export default {
       sort: null,
       type: null,
       tags: [],
+      bangumiList: [],
+      gameList: [],
+      bookList: [],
       top: false,
       sortop: false,
       status: 0,
@@ -542,6 +626,87 @@ export default {
         }
       }
     )
+
+    // bangumi
+    const bangumiList = ref([])
+    const banggumiIsLoading = ref(false)
+    const getBangumiList = (bangumiKeyword = null) => {
+      if (banggumiIsLoading.value) {
+        return
+      }
+      banggumiIsLoading.value = true
+      authApi
+        .getBangumiList({ keyword: bangumiKeyword, size: 10, page: 1 }, true)
+        .then((res) => {
+          bangumiList.value = res.data.list
+        })
+        .finally(() => {
+          banggumiIsLoading.value = false
+        })
+    }
+    let queryBangumisTimer = null
+    const queryBangumis = (query) => {
+      if (queryBangumisTimer) {
+        clearTimeout(queryBangumisTimer)
+      }
+      queryBangumisTimer = setTimeout(() => {
+        getBangumiList(query)
+      }, 50)
+    }
+    // game
+    const gameList = ref([])
+    const gameIsLoading = ref(false)
+    const getGameList = (gameKeyword = null) => {
+      if (gameIsLoading.value) {
+        return
+      }
+      gameIsLoading.value = true
+      authApi
+        .getGameList({ keyword: gameKeyword, size: 10, page: 1 }, true)
+        .then((res) => {
+          gameList.value = res.data.list
+        })
+        .finally(() => {
+          gameIsLoading.value = false
+        })
+    }
+    let queryGamesTimer = null
+    const queryGames = (query) => {
+      if (queryGamesTimer) {
+        clearTimeout(queryGamesTimer)
+      }
+      queryGamesTimer = setTimeout(() => {
+        getGameList(query)
+      }, 50)
+    }
+
+    // book
+    const bookList = ref([])
+    const bookIsLoading = ref(false)
+    const getBookList = (bookKeyword = null) => {
+      if (bookIsLoading.value) {
+        return
+      }
+      bookIsLoading.value = true
+      authApi
+        .getBookList({ keyword: bookKeyword, size: 10, page: 1 }, true)
+        .then((res) => {
+          bookList.value = res.data.list
+        })
+        .finally(() => {
+          bookIsLoading.value = false
+        })
+    }
+    let queryBooksTimer = null
+    const queryBooks = (query) => {
+      if (queryBooksTimer) {
+        clearTimeout(queryBooksTimer)
+      }
+      queryBooksTimer = setTimeout(() => {
+        getBookList(query)
+      }, 50)
+    }
+
     // sorts
     const sortList = ref([])
     const getSortList = () => {
@@ -604,7 +769,7 @@ export default {
     })
     const attachmentDrag = ref(false)
     // template
-    // 模板选项 about:关于页面, link: 友情链接页面, almanac:程序员老黄历, bangumi:追番,gameList:游戏列表
+    // 模板选项 about:关于页面, link: 友情链接页面, almanac:程序员老黄历, bangumi:番剧,gameList:游戏列表
     const templateList = ref([
       {
         label: '关于',
@@ -619,7 +784,7 @@ export default {
         value: 'almanac',
       },
       {
-        label: '追番',
+        label: '番剧',
         value: 'bangumi',
       },
       {
@@ -811,6 +976,18 @@ export default {
       tagList,
       tagsIsLoading,
       queryTags,
+      // bangumi
+      bangumiList,
+      banggumiIsLoading,
+      queryBangumis,
+      // game
+      gameList,
+      gameIsLoading,
+      queryGames,
+      // book
+      bookList,
+      bookIsLoading,
+      queryBooks,
       // sorts
       sortList,
       // attachments

@@ -10,7 +10,29 @@ exports.save = async function (parmas) {
 
 exports.findOne = async function (parmas, projection, options = {}) {
   // document查询
-  return await postsModel.findOne(parmas, projection).populate('author', options.authorFilter || 'nickname _id photo').populate('sort').populate('tags').populate('coverImages');
+  return await postsModel.findOne(parmas, projection).populate('author', options.authorFilter || 'nickname _id photo').populate('sort').populate('tags').populate('coverImages').populate(
+    {
+      path: 'bangumiList',
+      match: { status: 1 },
+      select: '-coverFileName -coverFolder -createdAt -updatedAt',
+    }
+  ).populate({
+    path: 'gameList',
+    match: { status: 1 },
+    select: '-coverFileName -coverFolder -createdAt -updatedAt',
+    populate: {
+      path: 'gamePlatform',
+      select: '_id name color'
+    }
+  }).populate({
+    path: 'bookList',
+    match: { status: 1 },
+    select: '-coverFileName -coverFolder -createdAt -updatedAt',
+    populate: {
+      path: 'booktype',
+      select: '_id name color'
+    }
+  });
 }
 
 // 查找所有
