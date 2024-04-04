@@ -78,114 +78,7 @@
       <div v-if="gameList.length > 0" class="mt-5">
         <div class="grid gap-3 md:grid-cols-2">
           <div v-for="game in gameList" :key="game.id" class="flex mb-1">
-            <div class="flex-shrink-0 relative game-cover-body">
-              <div
-                class="relative h-32 flex justify-center items-center border border-solid border-gray-300 rounded-md p-1"
-              >
-                <WikimoeImage
-                  class="w-full rounded game-cover"
-                  :src="game.cover || '/img/nopic400-565.png'"
-                  :alt="game.title"
-                  :width="400"
-                  :height="565"
-                  :data-href="game.cover"
-                  :data-href-list="
-                    game.cover ? setDataHrefList(game.cover) : null
-                  "
-                  loading="lazy"
-                  fit="contain"
-                />
-                <div class="absolute bottom-0 left-0 p-1">
-                  <UBadge
-                    v-for="(label, index) in game.label"
-                    :key="index"
-                    size="xs"
-                    class="mr-1"
-                  >
-                    {{ label }}
-                  </UBadge>
-                </div>
-              </div>
-              <div class="mt-2">
-                <div
-                  v-if="game.rating"
-                  class="text-sm mb-1 text-primary border border-solid border-primary-400 text-center rounded"
-                >
-                  <span>{{ game.rating }}</span
-                  >分 | {{ ratingToText(game.rating) }}
-                </div>
-                <div
-                  v-else
-                  class="text-sm mb-1 text-primary border border-solid border-primary-400 text-center rounded"
-                >
-                  暂无评分
-                </div>
-              </div>
-            </div>
-            <div class="pl-3 w-full flex flex-col">
-              <div class="font-bold mb-1 line-clamp-2 flex-shrink-0">
-                <span
-                  class="games-platform-block"
-                  :style="{
-                    backgroundColor: game.gamePlatform.color,
-                  }"
-                  v-if="game.gamePlatform"
-                  >{{ game.gamePlatform.name }}</span
-                >{{ game.title }}
-              </div>
-              <!-- 链接 -->
-              <div
-                class="text-sm mb-1 text-gray-500 flex-shrink-0"
-                v-if="game.urlList.length > 0 || game.screenshotAlbum"
-              >
-                <a
-                  :href="url.url"
-                  target="_blank"
-                  class="inline-flex items-center text-primary mr-2"
-                  v-for="(url, index) in game.urlList"
-                  :key="index"
-                >
-                  <UIcon name="i-heroicons-link" class="align-middle mr-1" />
-                  {{ url.text }}
-                </a>
-                <a
-                  href="javascript:;"
-                  class="inline-flex items-center text-primary mr-2"
-                  v-if="game.screenshotAlbum"
-                  @click="showAlbum(game.screenshotAlbum._id)"
-                >
-                  <UIcon name="i-heroicons-photo" class="align-middle mr-1" />
-                  相关截图
-                </a>
-              </div>
-              <!-- 用时 -->
-              <UPopover
-                :popper="{ offsetDistance: 0, placement: 'bottom-start' }"
-                v-if="game.startTime"
-              >
-                <div
-                  class="text-sm mb-1 text-gray-400 flex-shrink-0 pointer w_10 flex items-center"
-                >
-                  <UIcon
-                    name="i-heroicons-clock"
-                    class="align-middle mr-1"
-                  />用时{{ getACGDuration(game.startTime, game.endTime) }}
-                </div>
-                <template #panel>
-                  <div class="px-2 py-1">
-                    {{
-                      `${formatDate(game.startTime)} ~ ${
-                        game.endTime ? formatDate(game.endTime) : '至今'
-                      }`
-                    }}
-                  </div>
-                </template>
-              </UPopover>
-
-              <!-- prettier-ignore -->
-              <div class="text-sm whitespace-pre-line text-gray-500 flex-grow" v-if="game.summary">{{ game.summary }}</div>
-              <div v-else class="text-sm flex-grow text-gray-400">暂无简评</div>
-            </div>
+            <GameItem :game="game" />
           </div>
         </div>
       </div>
@@ -222,7 +115,6 @@
       </div>
     </div>
   </div>
-  <AlbumPhotoSwipe ref="AlbumPhotoSwipeRef" :albumId="activeAlbumId" />
 </template>
 <script setup>
 import { getGameListApi, getGamePlatformListApi } from '@/api/game'
@@ -255,14 +147,6 @@ await Promise.all([
 ])
 const hasPrev = computed(() => params.page > 1)
 const hasNext = computed(() => params.page * size < total.value)
-
-const setDataHrefList = (cover) => {
-  return [
-    {
-      filepath: cover,
-    },
-  ]
-}
 
 const gameLoading = ref(false)
 const listRef = ref(null)
@@ -325,27 +209,5 @@ const selectType = (type, close) => {
   fetchGameList()
   close()
 }
-
-// 相册
-const activeAlbumId = ref('')
-const AlbumPhotoSwipeRef = ref(null)
-const showAlbum = (id) => {
-  activeAlbumId.value = id
-  nextTick(() => {
-    AlbumPhotoSwipeRef.value.open()
-  })
-}
 </script>
-<style scoped>
-.game-cover-body {
-  width: 100px;
-}
-.games-platform-block {
-  color: #fff;
-  padding: 2px 5px;
-  border-radius: 2px;
-  font-size: 12px;
-  margin-right: 5px;
-  border-radius: 5px;
-}
-</style>
+<style scoped></style>

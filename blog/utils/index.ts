@@ -201,3 +201,18 @@ export const generateRandomString = (length: number) => {
   }
   return result
 }
+
+export const seasonToName = (season: number) => {
+  switch (season) {
+    case 1:
+      return '冬季新番'
+    case 2:
+      return '春季新番'
+    case 3:
+      return '夏季新番'
+    case 4:
+      return '秋季新番'
+    default:
+      return ''
+  }
+}
