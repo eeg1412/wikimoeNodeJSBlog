@@ -469,10 +469,11 @@ export default function (api) {
       })
     },
     // get /bangumi/list
-    getBangumiList (data) {
+    getBangumiList (data, noLoading = false) {
       return api.get('/bangumi/list', {
         params: data,
-        shouldAdminJWT: true
+        shouldAdminJWT: true,
+        noLoading
       })
     },
     // get /bangumi/detail
@@ -557,10 +558,11 @@ export default function (api) {
       })
     },
     // get /game/list
-    getGameList (data) {
+    getGameList (data, noLoading = false) {
       return api.get('/game/list', {
         params: data,
-        shouldAdminJWT: true
+        shouldAdminJWT: true,
+        noLoading
       })
     },
     // get /game/detail
@@ -647,6 +649,74 @@ export default function (api) {
     // get /event/detail
     getEventDetail (data) {
       return api.get('/event/detail', {
+        params: data,
+        shouldAdminJWT: true
+      })
+    },
+    // post /booktype/create
+    createBooktype (data) {
+      return api.post('/booktype/create', data, {
+        shouldAdminJWT: true
+      })
+    },
+    // get /booktype/list
+    getBooktypeList (data, noLoading = false) {
+      return api.get('/booktype/list', {
+        params: data,
+        shouldAdminJWT: true,
+        noLoading
+      })
+    },
+    // get /booktype/detail
+    getBooktypeDetail (data) {
+      return api.get('/booktype/detail', {
+        params: data,
+        shouldAdminJWT: true
+      })
+    },
+    // put /booktype/update
+    updateBooktype (data) {
+      return api.put('/booktype/update', data, {
+        shouldAdminJWT: true
+      })
+    },
+    // delete /booktype/delete
+    deleteBooktype (data) {
+      return api.delete('/booktype/delete', {
+        params: data,
+        shouldAdminJWT: true
+      })
+    },
+    // post /book/create
+    createBook (data) {
+      return api.post('/book/create', data, {
+        shouldAdminJWT: true
+      })
+    },
+    // get /book/list
+    getBookList (data, noLoading = false) {
+      return api.get('/book/list', {
+        params: data,
+        shouldAdminJWT: true,
+        noLoading
+      })
+    },
+    // get /book/detail
+    getBookDetail (data) {
+      return api.get('/book/detail', {
+        params: data,
+        shouldAdminJWT: true
+      })
+    },
+    // put /book/update
+    updateBook (data) {
+      return api.put('/book/update', data, {
+        shouldAdminJWT: true
+      })
+    },
+    // delete /book/delete
+    deleteBook (data) {
+      return api.delete('/book/delete', {
         params: data,
         shouldAdminJWT: true
       })

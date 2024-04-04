@@ -2,7 +2,10 @@ var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 // Schema
 var books = new Schema({
-  booktype: { type: Schema.Types.ObjectId, ref: 'booktypes' },
+  booktype: {
+    type: Schema.Types.ObjectId, ref: 'booktypes',
+    required: true
+  },
   // 标题
   title: {
     type: String,

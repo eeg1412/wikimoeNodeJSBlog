@@ -157,6 +157,32 @@
                 <template #title>游戏列表</template>
               </el-menu-item>
             </el-sub-menu>
+            <el-sub-menu index="book">
+              <template #title>
+                <!-- 书籍 -->
+                <i class="fas fa-fw fa-book pr10"></i>书籍
+              </template>
+              <!-- 书籍类型 BooktypeList -->
+              <el-menu-item
+                index="BooktypeList"
+                @click="removeParam('BooktypeList')"
+                @click.middle="openNewTab('BooktypeList')"
+                :route="{ name: 'BooktypeList' }"
+              >
+                <i class="fas fa-fw fa-book pr10"></i>
+                <template #title>书籍类型</template>
+              </el-menu-item>
+              <!-- 书籍列表 BookList -->
+              <el-menu-item
+                index="BookList"
+                @click="removeParam('BookList')"
+                @click.middle="openNewTab('BookList')"
+                :route="{ name: 'BookList' }"
+              >
+                <i class="fas fa-fw fa-book pr10"></i>
+                <template #title>书籍列表</template>
+              </el-menu-item>
+            </el-sub-menu>
             <el-sub-menu index="event">
               <template #title>
                 <!-- 活动 -->

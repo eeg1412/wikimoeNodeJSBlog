@@ -38,6 +38,12 @@ module.exports = async function (req, res, next) {
       type: null,
       required: true
     },
+    {
+      key: 'booktype',
+      label: '书籍类型',
+      type: 'isMongoId',
+      required: true
+    }
 
   ]
   const errors = utils.checkForm(params, rule)
