@@ -927,4 +927,7 @@ onMounted(() => {
 .post-tweet-detail-content-body {
   font-size: 15px;
 }
+.google-ad-post-detail {
+  margin-top: 20px;
+}
 </style>
