@@ -157,6 +157,7 @@ export default {
         image: {
           menuKeys: [
             'imageWidth30',
+            'imageWidth33',
             'imageWidth50',
             'imageWidth100',
             'editImage',
