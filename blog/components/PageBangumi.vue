@@ -298,12 +298,6 @@ const selectSeasonHandle = async (season, close) => {
   await fetchBangumiList()
 }
 </script>
-<style>
-.page-bangumi-body .bangumi-cover {
-  height: 100%;
-  width: auto;
-}
-</style>
 <style scoped>
 .bangumi-cover-body {
   width: 100px;

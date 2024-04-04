@@ -336,12 +336,6 @@ const showAlbum = (id) => {
   })
 }
 </script>
-<style>
-.page-game-body .game-cover {
-  height: auto;
-  width: 100%;
-}
-</style>
 <style scoped>
 .game-cover-body {
   width: 100px;
