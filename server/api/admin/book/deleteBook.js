@@ -2,6 +2,8 @@ const bookUtils = require('../../../mongodb/utils/books')
 const utils = require('../../../utils/utils')
 const log4js = require('log4js')
 const adminApiLog = log4js.getLogger('adminApi')
+const fs = require('fs')
+const path = require('path');
 
 module.exports = async function (req, res, next) {
   const id = req.query.id
