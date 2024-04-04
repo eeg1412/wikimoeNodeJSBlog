@@ -60,7 +60,7 @@ module.exports = async function (req, res, next) {
   }).catch((err) => {
     res.status(400).json({
       errors: [{
-        message: '追番创建失败'
+        message: '番剧创建失败'
       }]
     })
     adminApiLog.error(`bangumi create fail, ${logErrorToText(err)}`)

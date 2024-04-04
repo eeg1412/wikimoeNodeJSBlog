@@ -3,7 +3,7 @@
     <div class="pb20">
       <el-breadcrumb separator="/">
         <el-breadcrumb-item :to="{ name: 'BangumiList' }"
-          >追番列表</el-breadcrumb-item
+          >番剧列表</el-breadcrumb-item
         >
         <el-breadcrumb-item v-if="id">编辑</el-breadcrumb-item>
         <el-breadcrumb-item v-else>追加</el-breadcrumb-item>

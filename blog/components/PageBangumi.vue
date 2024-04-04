@@ -83,7 +83,7 @@
       </UPopover>
     </div>
     <div class="relative">
-      <!-- 追番列表 -->
+      <!-- 番剧列表 -->
       <div v-if="bangumiList.length > 0" class="mt-5">
         <div class="grid md:grid-cols-2 gap-6">
           <div
@@ -101,7 +101,7 @@
       <DivLoading :loading="bangumiLoading" />
     </div>
     <div class="p-2" v-if="total > 0">
-      共计追番<span class="text-primary pl-1 pr-1">{{ total }}</span
+      共计番剧<span class="text-primary pl-1 pr-1">{{ total }}</span
       >部，当前季度追番<span class="text-primary pl-1 pr-1">{{
         bangumiList.length
       }}</span

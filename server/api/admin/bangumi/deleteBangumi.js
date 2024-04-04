@@ -48,7 +48,7 @@ module.exports = async function (req, res, next) {
     }
   }
 
-  //  删除追番
+  //  删除番剧
   bangumiUtils.deleteOne({ _id: id }).then((data) => {
     if (data.deletedCount === 0) {
       res.status(400).json({

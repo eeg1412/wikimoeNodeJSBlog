@@ -18,7 +18,7 @@ module.exports = async function (req, res, next) {
     if (!data) {
       res.status(400).json({
         errors: [{
-          message: '追番不存在'
+          message: '番剧不存在'
         }]
       })
       return
@@ -29,7 +29,7 @@ module.exports = async function (req, res, next) {
   }).catch((err) => {
     res.status(400).json({
       errors: [{
-        message: '追番详情获取失败'
+        message: '番剧详情获取失败'
       }]
     })
     adminApiLog.error(`bangumi detail get fail, ${logErrorToText(err)}`)

@@ -15,7 +15,7 @@ module.exports = async function (req, res, next) {
     }).catch((err) => {
       res.status(400).json({
         errors: [{
-          message: '追番年份列表获取失败'
+          message: '番剧年份列表获取失败'
         }]
       })
       userApiLog.error(`bangumi list get fail, ${JSON.stringify(err)

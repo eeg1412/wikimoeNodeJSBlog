@@ -7,7 +7,7 @@ const fs = require('fs');
 const nodePath = require('path')
 
 module.exports = async function (req, res, next) {
-  // banguminame	String	是	否	无	追番名称
+  // banguminame	String	是	否	无	番剧名称
   const { title, cover, summary, rating, year, season, label, status, id, urlList, __v } = req.body
   if (!id) {
     res.status(400).json({
@@ -110,7 +110,7 @@ module.exports = async function (req, res, next) {
   }).catch((err) => {
     res.status(400).json({
       errors: [{
-        message: '追番更新失败'
+        message: '番剧更新失败'
       }]
     })
     adminApiLog.error(`bangumi update fail, ${logErrorToText(err)}`)

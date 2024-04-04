@@ -2,7 +2,7 @@
   <div class="common-right-panel-form">
     <div class="pb20">
       <el-breadcrumb separator="/">
-        <el-breadcrumb-item>追番列表</el-breadcrumb-item>
+        <el-breadcrumb-item>番剧列表</el-breadcrumb-item>
       </el-breadcrumb>
     </div>
     <div class="clearfix pb20">
@@ -18,7 +18,7 @@
           <el-form-item>
             <el-input
               v-model="params.keyword"
-              placeholder="请输入追番名称"
+              placeholder="请输入番剧名称"
               style="width: 160px"
               clearable
             ></el-input>
@@ -69,7 +69,7 @@
         <el-button type="primary" @click="handleAdd">追加</el-button>
       </div>
     </div>
-    <!-- 追番 -->
+    <!-- 番剧 -->
     <div class="mb20 list-table-body">
       <el-table
         ref="tableRef"

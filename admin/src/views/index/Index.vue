@@ -121,7 +121,7 @@
               <i class="fas fa-fw fa-image pr10"></i>
               <template #title>横幅</template>
             </el-menu-item>
-            <!-- 追番 BangumiList -->
+            <!-- 番剧 BangumiList -->
             <el-menu-item
               index="BangumiList"
               @click="removeParam('BangumiList')"
@@ -129,7 +129,7 @@
               :route="{ name: 'BangumiList' }"
             >
               <i class="fas fa-fw fa-tv pr10"></i>
-              <template #title>追番</template>
+              <template #title>番剧</template>
             </el-menu-item>
             <el-sub-menu index="game">
               <template #title>
