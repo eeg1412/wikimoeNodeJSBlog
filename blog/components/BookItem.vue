@@ -54,10 +54,19 @@
         {{ url.text }}
       </a>
     </div>
+    <div
+      class="text-sm mb-1 text-gray-400 flex-shrink-0 pointer w_10 flex items-center"
+      v-if="book.giveUp"
+    >
+      <UIcon
+        name="i-heroicons-bookmark-slash"
+        class="align-middle mr-1"
+      />已弃坑
+    </div>
     <!-- 用时 -->
     <UPopover
       :popper="{ offsetDistance: 0, placement: 'bottom-start' }"
-      v-if="book.startTime"
+      v-else-if="book.startTime && !book.giveUp"
     >
       <div
         class="text-sm mb-1 text-gray-400 flex-shrink-0 pointer w_10 flex items-center"
