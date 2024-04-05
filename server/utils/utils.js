@@ -272,7 +272,7 @@ exports.deviceUAInfoUtils = function (req) {
   if (ua.length > 1000) {
     return null
   }
-  const uaParser = new parser(ua)
+  const uaParser = parser(ua)
   return uaParser
 }
 exports.deviceUtils = function (req, id, modelUtils) {
