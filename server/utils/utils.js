@@ -14,6 +14,16 @@ const referrerUtils = require('../mongodb/utils/referrers')
 const sharp = require('sharp');
 const AsyncLock = require('async-lock');
 const lock = new AsyncLock({ timeout: 60000 });
+const crawlerUserAgents = require('./crawler-user-agents.json')
+
+const botUserAgentList = []
+crawlerUserAgents.forEach((item) => {
+  const obj = {
+    pattern: new RegExp(item.pattern),
+    name: item.pattern.replace(/[^\w]/gi, '-').replace(/-+/g, '-').replace(/^-+|-+$/g, '')
+  }
+  botUserAgentList.push(obj)
+})
 
 exports.creatSha256Str = function (str) {
   const sha256 = crypto.createHash('sha256')
@@ -258,8 +268,12 @@ exports.IP2LocationUtils = function (ip, id, modelUtils, updateMongodb = true) {
 
 }
 exports.deviceUAInfoUtils = function (req) {
-  const ua = parser(req.get('user-agent'))
-  return ua
+  const ua = req.get('user-agent')
+  if (ua.length > 1000) {
+    return null
+  }
+  const uaParser = new parser(ua)
+  return uaParser
 }
 exports.deviceUtils = function (req, id, modelUtils) {
   const ua = this.deviceUAInfoUtils(req)
@@ -603,40 +617,25 @@ exports.setReferrer = function (referrer) {
 // 检查是否是bot
 exports.isSearchEngine = function (req) {
   const ua = req.get('user-agent')
-  if (!ua) {
-    return false
-  }
-  const searchEngines = [
-    'googlebot',
-    'baiduspider',
-    'yandex',
-    'bingbot',
-    'slurp',
-    'duckduckbot',
-    'sogou',
-    'exabot',
-    'facebot',
-    'ia_archiver',
-    'facebookexternalhit',
-    'twitterbot',
-    'rogerbot',
-    'msnbot',
-    'bingbot',
-    'ahrefs',
-    'applebot',
-    'wordpress',
-  ];
   const res = {
     isBot: false,
     botName: '',
   };
-  const userAgentLowerCase = ua.toLowerCase();
-  for (let i = 0; i < searchEngines.length; i++) {
-    if (userAgentLowerCase.includes(searchEngines[i])) {
-      res.isBot = true;
-      res.botName = searchEngines[i];
-      return res;
-    }
+  if (!ua) {
+    res.isBot = true;
+    res.botName = 'unknown-no-ua';
+  } else if (ua.length > 1000) {
+    res.isBot = true;
+    res.botName = 'unknown-ua-too-long';
+  } else {
+    botUserAgentList.some((item) => {
+      if (item.pattern.test(ua)) {
+        res.isBot = true;
+        res.botName = item.name;
+        return true;
+      }
+      return false;
+    });
   }
 
   return res;
