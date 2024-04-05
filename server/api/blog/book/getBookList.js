@@ -34,7 +34,7 @@ module.exports = async function (req, res, next) {
     params.booktype = booktypeId
   }
 
-  bookUtils.findPage(params, sort, page, size, '_id cover endTime booktype label rating startTime status summary title urlList').then((data) => {
+  bookUtils.findPage(params, sort, page, size, '_id cover endTime booktype label rating startTime status summary title urlList giveUp').then((data) => {
     // 返回格式list,total
     res.send({
       list: data.list,

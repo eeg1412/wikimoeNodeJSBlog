@@ -146,8 +146,14 @@
             >
           </template>
         </el-table-column>
+        <!-- giveUp 已弃坑 -->
+        <el-table-column label="弃坑" width="100px">
+          <template #default="{ row }">
+            <el-tag v-if="row.giveUp" type="danger">已弃坑</el-tag>
+          </template>
+        </el-table-column>
         <!-- 状态 -->
-        <el-table-column prop="status" label="状态" width="120px">
+        <el-table-column prop="status" label="状态" width="100px">
           <template #default="{ row }">
             <el-tag v-if="row.status === 1" type="success">显示</el-tag>
             <el-tag v-else type="danger">不显示</el-tag>

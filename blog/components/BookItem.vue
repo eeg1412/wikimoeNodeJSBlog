@@ -55,7 +55,7 @@
       </a>
     </div>
     <div
-      class="text-sm mb-1 text-gray-400 flex-shrink-0 pointer w_10 flex items-center"
+      class="text-sm mb-1 text-gray-400 flex-shrink-0 w_10 flex items-center"
       v-if="book.giveUp"
     >
       <UIcon

@@ -154,6 +154,10 @@
             placeholder="选择日期时间"
           ></el-date-picker>
         </el-form-item>
+        <!-- 弃坑 -->
+        <el-form-item label="弃坑" prop="giveUp">
+          <el-switch v-model="form.giveUp"></el-switch>
+        </el-form-item>
         <el-form-item label="状态" prop="status">
           <!-- radio 分别对应 0 1 不显示 显示 -->
           <el-radio-group v-model="form.status">

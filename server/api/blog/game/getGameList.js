@@ -34,7 +34,7 @@ module.exports = async function (req, res, next) {
     params.gamePlatform = gamePlatformId
   }
 
-  gameUtils.findPage(params, sort, page, size, '_id cover endTime gamePlatform label rating screenshotAlbum startTime status summary title urlList').then((data) => {
+  gameUtils.findPage(params, sort, page, size, '_id cover endTime gamePlatform label rating screenshotAlbum startTime status summary title urlList giveUp').then((data) => {
     // 返回格式list,total
     res.send({
       list: data.list,
