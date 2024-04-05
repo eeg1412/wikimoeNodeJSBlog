@@ -16,6 +16,7 @@ module.exports = async function (req, res, next) {
     urlList,
     startTime,
     endTime,
+    giveUp,
     status
   } = req.body
   // 校验格式
@@ -29,6 +30,7 @@ module.exports = async function (req, res, next) {
     urlList,
     startTime,
     endTime,
+    giveUp,
     status
   }
   const rule = [

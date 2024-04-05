@@ -18,6 +18,7 @@ module.exports = async function (req, res, next) {
     startTime,
     endTime,
     status,
+    giveUp,
     id,
     __v
   } = req.body
@@ -49,6 +50,7 @@ module.exports = async function (req, res, next) {
     startTime: startTime,
     endTime: endTime,
     status: status,
+    giveUp: giveUp
   }
   const rule = [
     {

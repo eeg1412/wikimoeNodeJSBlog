@@ -193,6 +193,7 @@ export default {
       urlList: [],
       startTime: null,
       endTime: null,
+      giveUp: false,
       status: 0,
     })
     const rules = reactive({
@@ -287,6 +288,7 @@ export default {
           form.urlList = res.data.data.urlList
           form.startTime = res.data.data.startTime
           form.endTime = res.data.data.endTime
+          form.giveUp = res.data.data.giveUp
           form.status = res.data.data.status
         })
         .catch(() => {})

@@ -174,6 +174,10 @@
             placeholder="选择日期时间"
           ></el-date-picker>
         </el-form-item>
+        <!-- 弃坑 -->
+        <el-form-item label="弃坑" prop="giveUp">
+          <el-switch v-model="form.giveUp"></el-switch>
+        </el-form-item>
         <el-form-item label="状态" prop="status">
           <!-- radio 分别对应 0 1 不显示 显示 -->
           <el-radio-group v-model="form.status">
@@ -202,66 +206,6 @@ export default {
     const router = useRouter()
     const route = useRoute()
     const id = ref(route.params.id)
-    //   gamePlatform: {
-    //   type: Schema.Types.ObjectId,
-    //   ref: 'gamePlatform',
-    // },
-    // // 标题
-    // title: {
-    //   type: String,
-    //   required: true
-    // },
-    // // 封面
-    // cover: {
-    //   type: String,
-    // },
-    // coverFolder: {
-    //   type: String,
-    //   default: null
-    // },
-    // coverFileName: {
-    //   type: String,
-    //   default: null
-    // },
-    // // 简评
-    // summary: {
-    //   type: String,
-    // },
-    // // 评分，神作，佳作，良作，劣作，烂作，迷
-    // rating: {
-    //   type: Number,
-    // },
-    // // label 字符串数组
-    // label: {
-    //   type: [String],
-    //   default: []
-    // },
-    // screenshotAlbum: {
-    //   type: Schema.Types.ObjectId,
-    //   ref: 'albums'
-    // },
-    // urlList: {
-    //   type: [
-    //   {
-    //     text: String,
-    //     url: String
-    //   }
-    // ],
-    //   default: []
-    // },
-    // // 游玩开始时间
-    // startTime: {
-    //   type: Date,
-    // },
-    // // 游玩结束时间
-    // endTime: {
-    //   type: Date,
-    // },
-    // // 状态 0: 不显示 1: 显示
-    // status: {
-    //   type: Number,
-    //   default: 0
-    // },
     const form = reactive({
       __v: null,
       gamePlatform: null,
@@ -274,6 +218,7 @@ export default {
       urlList: [],
       startTime: null,
       endTime: null,
+      giveUp: false,
       status: 0,
     })
     const rules = reactive({
@@ -375,6 +320,7 @@ export default {
           form.urlList = res.data.data.urlList
           form.startTime = res.data.data.startTime
           form.endTime = res.data.data.endTime
+          form.giveUp = res.data.data.giveUp
           form.status = res.data.data.status
         })
         .catch(() => {})

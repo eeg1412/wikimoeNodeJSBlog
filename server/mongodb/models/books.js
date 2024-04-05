@@ -53,6 +53,11 @@ var books = new Schema({
   endTime: {
     type: Date,
   },
+  // 弃坑
+  giveUp: {
+    type: Boolean,
+    default: false
+  },
   // 状态 0: 不显示 1: 显示
   status: {
     type: Number,
