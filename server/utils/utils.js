@@ -622,7 +622,9 @@ exports.isSearchEngine = function (req) {
     'rogerbot',
     'msnbot',
     'bingbot',
-    'AhrefsBot',
+    'ahrefs',
+    'applebot',
+    'wordpress',
   ];
   const res = {
     isBot: false,
