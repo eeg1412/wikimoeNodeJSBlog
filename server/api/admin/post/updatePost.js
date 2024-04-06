@@ -26,7 +26,7 @@ module.exports = async function (req, res, next) {
   // - coverImages  博客时是封面图片字段，页面时是页面图片字段
   // - __v  版本号字段
   const id = req.body.id
-  let { title, date, content, excerpt, alias, sort, tags, top, sortop, status, allowRemark, template, code, coverImages, bangumiList, gameList, bookList, postList, __v } = req.body
+  let { title, date, content, excerpt, alias, sort, tags, top, sortop, status, allowRemark, template, code, coverImages, bangumiList, gameList, bookList, postList, eventList, __v } = req.body
   // 校验id是否存在
   if (!id) {
     res.status(400).json({
@@ -99,6 +99,16 @@ module.exports = async function (req, res, next) {
       return
     }
   }
+  for (let i = 0; i < eventList.length; i++) {
+    if (!validator.isMongoId(eventList[i])) {
+      res.status(400).json({
+        errors: [{
+          message: 'eventList格式错误'
+        }]
+      })
+      return
+    }
+  }
 
 
   // 1blog,2tweet,3page
@@ -122,6 +132,7 @@ module.exports = async function (req, res, next) {
     gameList: gameList,
     bookList: bookList,
     postList: postList,
+    eventList: eventList
   }
   const rules = [
     {

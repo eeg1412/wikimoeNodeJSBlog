@@ -235,6 +235,9 @@
               <template v-else-if="content.type === 'post'">
                 <i class="fas fa-fw fa-newspaper"></i>
               </template>
+              <template v-else-if="content.type === 'event'">
+                <i class="fas fa-fw fa-calendar-alt"></i>
+              </template>
               {{ content.title }}
             </div>
           </template>
@@ -615,7 +618,7 @@ export default {
 
     // 合并bookList,bangumiList,gameList,postList
     const mergeContentList = (row) => {
-      const { bookList, bangumiList, gameList, postList } = row
+      const { bookList, bangumiList, gameList, postList, eventList } = row
       const contentList = []
       if (bookList && bookList.length) {
         const type = 'book'
@@ -638,6 +641,12 @@ export default {
       if (postList && postList.length) {
         const type = 'post'
         postList.forEach((item) => {
+          contentList.push({ ...item, type })
+        })
+      }
+      if (eventList && eventList.length) {
+        const type = 'event'
+        eventList.forEach((item) => {
           contentList.push({ ...item, type })
         })
       }

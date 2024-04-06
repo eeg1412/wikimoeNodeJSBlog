@@ -272,6 +272,29 @@
               ></el-option>
             </el-select>
           </el-form-item>
+          <!-- event -->
+          <el-form-item label="关联活动" prop="event">
+            <el-select
+              v-model="form.eventList"
+              multiple
+              filterable
+              remote
+              :remote-method="queryEvents"
+              :automatic-dropdown="true"
+              default-first-option
+              :reserve-keyword="false"
+              :loading="eventIsLoading"
+              placeholder="请选择活动"
+              style="width: 100%"
+            >
+              <el-option
+                v-for="item in eventList"
+                :key="item._id"
+                :label="item.title"
+                :value="item._id"
+              ></el-option>
+            </el-select>
+          </el-form-item>
           <!-- post -->
           <el-form-item label="关联博文" prop="post">
             <el-select
@@ -467,6 +490,10 @@ export default {
                 form[key] = res.data.data[key].map((item) => item._id)
                 postList.value = res.data.data[key]
                 break
+              case 'eventList':
+                form[key] = res.data.data[key].map((item) => item._id)
+                eventList.value = res.data.data[key]
+                break
               case 'coverImages':
                 form[key] = res.data.data[key].map((item) => item._id)
                 res.data.data[key].forEach((item) => {
@@ -546,6 +573,7 @@ export default {
       gameList: [],
       bookList: [],
       postList: [],
+      eventList: [],
       top: false,
       sortop: false,
       status: 0,
@@ -772,6 +800,35 @@ export default {
       }
       queryPostsTimer = setTimeout(() => {
         getPostList(query)
+      }, 50)
+    }
+    // event
+    const eventList = ref([])
+    const eventIsLoading = ref(false)
+    const getEventList = (eventKeyword = null) => {
+      if (eventIsLoading.value) {
+        return
+      }
+      eventIsLoading.value = true
+      authApi
+        .getEventList(
+          { keyword: eventKeyword, status: 1, size: 10, page: 1 },
+          true
+        )
+        .then((res) => {
+          eventList.value = res.data.list
+        })
+        .finally(() => {
+          eventIsLoading.value = false
+        })
+    }
+    let queryEventsTimer = null
+    const queryEvents = (query) => {
+      if (queryEventsTimer) {
+        clearTimeout(queryEventsTimer)
+      }
+      queryEventsTimer = setTimeout(() => {
+        getEventList(query)
       }, 50)
     }
 
@@ -1061,6 +1118,10 @@ export default {
       postList,
       postIsLoading,
       queryPosts,
+      // event
+      eventList,
+      eventIsLoading,
+      queryEvents,
       // sorts
       sortList,
       // attachments
