@@ -58,6 +58,18 @@
             name="i-heroicons-play-circle"
           />
         </div>
+        <div
+          class="absolute tweet-img-list-body-item-description"
+          v-if="coverImages[0].description"
+        >
+          <div
+            class="rounded px-1 py-0.5 bg-primary-500 text-white bg-opacity-80 text-xs flex align-middle justify-center pointer"
+            @click.stop="tryOpenHref(0)"
+            :title="coverImages[0].description"
+          >
+            描述
+          </div>
+        </div>
       </div>
     </div>
     <template v-else>
@@ -126,6 +138,18 @@
                     size="30"
                   />
                 </div>
+                <div
+                  class="absolute tweet-img-list-body-item-description"
+                  v-if="img.description"
+                >
+                  <div
+                    class="rounded px-1 py-0.5 bg-primary-500 text-white bg-opacity-80 text-xs flex align-middle justify-center pointer"
+                    @click.stop="tryOpenHref(index * 4 + indexChild)"
+                    :title="img.description"
+                  >
+                    描述
+                  </div>
+                </div>
               </template>
             </div>
           </SwiperSlide>
@@ -183,6 +207,18 @@
                     name="i-heroicons-play-circle"
                     size="30"
                   />
+                </div>
+                <div
+                  class="absolute tweet-img-list-body-item-description"
+                  v-if="img.description"
+                >
+                  <div
+                    class="rounded px-1 py-0.5 bg-primary-500 text-white bg-opacity-80 text-xs flex align-middle justify-center pointer"
+                    @click.stop="tryOpenHref(index * 4 + indexChild)"
+                    :title="img.description"
+                  >
+                    描述
+                  </div>
                 </div>
               </template>
             </div>
@@ -320,6 +356,27 @@ const sumSizeThrottle = () => {
     sumSize()
   }, 100)
 }
+
+const tryOpenHref = async (index) => {
+  if (props.clickStop) {
+    e.stopPropagation()
+  }
+  const list = dataHrefList.value
+  const dataSource = list.map((item) => {
+    let width = item.width || null
+    let height = item.height || null
+    return {
+      filepath: item.filepath,
+      thumfor: item.thumfor,
+      width: width,
+      height: height,
+      mimetype: item.mimetype,
+      description: item.description,
+    }
+  })
+  openPhotoSwipe(dataSource, index)
+}
+
 onMounted(() => {
   componentUUID.value = uuid()
   const coverImages = props.coverImages
@@ -358,6 +415,11 @@ onUnmounted(() => {
   overflow: hidden;
   position: relative;
 }
+.tweet-img-list-body-item-description {
+  z-index: 11;
+  left: 12px;
+  top: 10px;
+}
 .blog-tweet-img-list-body.cover-count-1-1 {
   /* 宽高跟着内容走 */
   display: inline-block;
@@ -381,11 +443,24 @@ onUnmounted(() => {
   width: 100%;
   height: 100%;
 }
+.blog-tweet-img-list-body.cover-count-2
+  .tweet-img-list-body-item-description:nth-of-type(2) {
+  left: calc(50% + 12px);
+}
 .blog-tweet-img-list-body.cover-count-3 {
   grid-template-columns: 1fr 1fr;
   grid-auto-rows: auto;
   width: 100%;
   height: 100%;
+}
+.blog-tweet-img-list-body.cover-count-3
+  .tweet-img-list-body-item-description:nth-of-type(2) {
+  left: calc(50% + 12px);
+}
+.blog-tweet-img-list-body.cover-count-3
+  .tweet-img-list-body-item-description:nth-of-type(3) {
+  left: calc(50% + 12px);
+  top: calc(50% + 6px);
 }
 .blog-tweet-img-list-body-no-swiper {
   margin-top: 2px;
@@ -407,6 +482,20 @@ onUnmounted(() => {
   grid-auto-rows: auto;
   width: 100%;
   height: 100%;
+}
+.blog-tweet-img-list-body.cover-count-4
+  .tweet-img-list-body-item-description:nth-of-type(2) {
+  left: calc(50% + 12px);
+}
+.blog-tweet-img-list-body.cover-count-4
+  .tweet-img-list-body-item-description:nth-of-type(3) {
+  left: 12px;
+  top: calc(50% + 6px);
+}
+.blog-tweet-img-list-body.cover-count-4
+  .tweet-img-list-body-item-description:nth-of-type(4) {
+  left: calc(50% + 12px);
+  top: calc(50% + 6px);
 }
 .blog-tweet-img-swiper-body {
   border-radius: 20px;
@@ -440,8 +529,8 @@ onUnmounted(() => {
   aspect-ratio: 16 / 9;
 }
 .blog-tweet-img-swiper-body .swiper-pagination-fraction {
-  top: 13px !important;
-  right: 16px !important;
+  top: 8px !important;
+  right: 13px !important;
   bottom: unset !important;
   left: unset !important;
   color: #ffffff !important;
@@ -449,7 +538,7 @@ onUnmounted(() => {
   background: rgba(0, 0, 0, 0.5) !important;
   padding: 2px 10px !important;
   border-radius: 20px !important;
-  font-size: 14px !important;
+  font-size: 12px !important;
 }
 .blog-tweet-img-list-body .blog-tweet-1img-list-body {
   width: 100%;
