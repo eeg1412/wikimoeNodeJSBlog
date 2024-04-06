@@ -214,6 +214,31 @@
             >
           </template>
         </el-table-column>
+        <!-- 关联内容 -->
+        <el-table-column prop="related" label="关联内容" min-width="200">
+          <template #default="{ row }">
+            <!-- tag -->
+            <div
+              v-for="content in mergeContentList(row)"
+              :key="content._id"
+              class="postlist-content-item"
+            >
+              <template v-if="content.type === 'bangumi'">
+                <i class="fas fa-fw fa-tv"></i>
+              </template>
+              <template v-else-if="content.type === 'book'">
+                <i class="fas fa-fw fa-book"></i>
+              </template>
+              <template v-else-if="content.type === 'game'">
+                <i class="fas fa-fw fa-gamepad"></i>
+              </template>
+              <template v-else-if="content.type === 'post'">
+                <i class="fas fa-fw fa-newspaper"></i>
+              </template>
+              {{ content.title }}
+            </div>
+          </template>
+        </el-table-column>
         <el-table-column
           prop="views"
           label="查看数"
@@ -588,6 +613,37 @@ export default {
       return siteUrl.value + path
     }
 
+    // 合并bookList,bangumiList,gameList,postList
+    const mergeContentList = (row) => {
+      const { bookList, bangumiList, gameList, postList } = row
+      const contentList = []
+      if (bookList && bookList.length) {
+        const type = 'book'
+        bookList.forEach((item) => {
+          contentList.push({ ...item, type })
+        })
+      }
+      if (bangumiList && bangumiList.length) {
+        const type = 'bangumi'
+        bangumiList.forEach((item) => {
+          contentList.push({ ...item, type })
+        })
+      }
+      if (gameList && gameList.length) {
+        const type = 'game'
+        gameList.forEach((item) => {
+          contentList.push({ ...item, type })
+        })
+      }
+      if (postList && postList.length) {
+        const type = 'post'
+        postList.forEach((item) => {
+          contentList.push({ ...item, type })
+        })
+      }
+      return contentList
+    }
+
     // 监听 params.page 的变化
     watch(
       () => params.page,
@@ -635,8 +691,29 @@ export default {
       submitCommentForm,
       openPage,
       copyPage,
+      mergeContentList,
     }
   },
 }
 </script>
-<style lang=""></style>
+<style scoped>
+.postlist-content-item {
+  margin-right: 5px;
+  margin-bottom: 5px;
+  display: inline-block;
+  --el-tag-border-radius: 4px;
+  --el-tag-text-color: var(--el-color-primary);
+  --el-tag-bg-color: var(--el-color-primary-light-9);
+  --el-tag-border-color: var(--el-color-primary-light-8);
+  --el-tag-hover-color: var(--el-color-primary);
+  background-color: var(--el-tag-bg-color);
+  border-color: var(--el-tag-border-color);
+  color: var(--el-tag-text-color);
+  border-color: var(--el-tag-border-color);
+  vertical-align: middle;
+  padding: 0 9px;
+  border-width: 1px;
+  border-style: solid;
+  box-sizing: border-box;
+}
+</style>

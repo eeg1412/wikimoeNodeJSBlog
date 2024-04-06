@@ -161,10 +161,11 @@ export default function (api) {
       })
     },
     // get /post/list
-    getPostList (data) {
+    getPostList (data, noLoading = false) {
       return api.get('/post/list', {
         params: data,
-        shouldAdminJWT: true
+        shouldAdminJWT: true,
+        noLoading
       })
     },
     // get /post/detail

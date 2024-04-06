@@ -272,6 +272,30 @@
               ></el-option>
             </el-select>
           </el-form-item>
+          <!-- post -->
+          <el-form-item label="关联博文" prop="post">
+            <el-select
+              v-model="form.postList"
+              multiple
+              filterable
+              remote
+              :remote-method="queryPosts"
+              :automatic-dropdown="true"
+              default-first-option
+              :reserve-keyword="false"
+              :loading="postIsLoading"
+              placeholder="请选择博文"
+              style="width: 100%"
+            >
+              <el-option
+                v-for="item in postList"
+                :key="item._id"
+                :label="item.title"
+                :value="item._id"
+                :disabled="item._id === id"
+              ></el-option>
+            </el-select>
+          </el-form-item>
         </template>
         <!-- 文章别名 -->
         <el-form-item label="文章别名" prop="alias">
@@ -439,6 +463,10 @@ export default {
                 form[key] = res.data.data[key].map((item) => item._id)
                 bookList.value = res.data.data[key]
                 break
+              case 'postList':
+                form[key] = res.data.data[key].map((item) => item._id)
+                postList.value = res.data.data[key]
+                break
               case 'coverImages':
                 form[key] = res.data.data[key].map((item) => item._id)
                 res.data.data[key].forEach((item) => {
@@ -517,6 +545,7 @@ export default {
       bangumiList: [],
       gameList: [],
       bookList: [],
+      postList: [],
       top: false,
       sortop: false,
       status: 0,
@@ -636,7 +665,10 @@ export default {
       }
       banggumiIsLoading.value = true
       authApi
-        .getBangumiList({ keyword: bangumiKeyword, size: 10, page: 1 }, true)
+        .getBangumiList(
+          { keyword: bangumiKeyword, status: 1, size: 10, page: 1 },
+          true
+        )
         .then((res) => {
           bangumiList.value = res.data.list
         })
@@ -662,7 +694,10 @@ export default {
       }
       gameIsLoading.value = true
       authApi
-        .getGameList({ keyword: gameKeyword, size: 10, page: 1 }, true)
+        .getGameList(
+          { keyword: gameKeyword, status: 1, size: 10, page: 1 },
+          true
+        )
         .then((res) => {
           gameList.value = res.data.list
         })
@@ -689,7 +724,10 @@ export default {
       }
       bookIsLoading.value = true
       authApi
-        .getBookList({ keyword: bookKeyword, size: 10, page: 1 }, true)
+        .getBookList(
+          { keyword: bookKeyword, status: 1, size: 10, page: 1 },
+          true
+        )
         .then((res) => {
           bookList.value = res.data.list
         })
@@ -704,6 +742,36 @@ export default {
       }
       queryBooksTimer = setTimeout(() => {
         getBookList(query)
+      }, 50)
+    }
+
+    // post
+    const postList = ref([])
+    const postIsLoading = ref(false)
+    const getPostList = (postKeyword = null) => {
+      if (postIsLoading.value) {
+        return
+      }
+      postIsLoading.value = true
+      authApi
+        .getPostList(
+          { keyword: postKeyword, status: 1, type: 1, size: 10, page: 1 },
+          true
+        )
+        .then((res) => {
+          postList.value = res.data.list
+        })
+        .finally(() => {
+          postIsLoading.value = false
+        })
+    }
+    let queryPostsTimer = null
+    const queryPosts = (query) => {
+      if (queryPostsTimer) {
+        clearTimeout(queryPostsTimer)
+      }
+      queryPostsTimer = setTimeout(() => {
+        getPostList(query)
       }, 50)
     }
 
@@ -957,6 +1025,7 @@ export default {
       window.removeEventListener('beforeunload', beforeUnloadEvent)
     })
     return {
+      id,
       type,
       postEditorVersion,
       contentTab,
@@ -988,6 +1057,10 @@ export default {
       bookList,
       bookIsLoading,
       queryBooks,
+      // post
+      postList,
+      postIsLoading,
+      queryPosts,
       // sorts
       sortList,
       // attachments
