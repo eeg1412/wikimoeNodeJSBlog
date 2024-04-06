@@ -10,14 +10,18 @@
         <li
           v-for="event in eventList"
           :key="event._id"
-          class="text-sm text-primary-500 pointer mb-2 flex items-center"
+          class="text-sm text-primary-500 pointer mb-2"
           @click="getEventDetail(event._id)"
         >
-          <div class="mr-1 flex-shrink-0">
-            <UIcon name="i-heroicons-calendar-days" />
-          </div>
           <div class="overflow-hidden overflow-ellipsis whitespace-nowrap">
-            {{ event.title }}
+            <span
+              v-if="event.eventtype"
+              class="post-event-about-event-type"
+              :style="{
+                backgroundColor: event.eventtype.color,
+              }"
+              >{{ event.eventtype.name }}</span
+            >{{ event.title }}
           </div>
         </li>
       </ul>
@@ -72,4 +76,13 @@ const getEventDetail = async (id) => {
 
 const eventClick = (event) => {}
 </script>
-<style scoped></style>
+<style scoped>
+.post-event-about-event-type {
+  padding: 0 4px;
+  border-radius: 2px;
+  color: #fff;
+  font-size: 12px;
+  border-radius: 4px;
+  margin-right: 4px;
+}
+</style>
