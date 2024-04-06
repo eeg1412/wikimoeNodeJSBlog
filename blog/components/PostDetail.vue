@@ -237,6 +237,7 @@
       :gameList="postData.data.gameList"
       :bookList="postData.data.bookList"
     />
+    <PostAbout :postList="postData.data.postList" />
     <!-- 广告 -->
     <div class="google-ad-post-detail" v-if="GOOGLE_ADSENSE_POST_DETAIL_BT">
       <AdsbygoogleHave :ad="GOOGLE_ADSENSE_POST_DETAIL_BT" />

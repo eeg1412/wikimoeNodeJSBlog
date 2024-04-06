@@ -36,7 +36,7 @@ exports.findOne = async function (parmas, projection, options = {}) {
     }).populate({
       path: 'postList',
       match: { status: 1, type: 1 },
-      select: 'title _id coverImages',
+      select: 'title _id coverImages alias',
       populate: {
         path: 'coverImages',
       }
@@ -70,7 +70,7 @@ exports.findPage = async function (parmas, sort, page, limit, projection, option
     }).populate({
       path: 'postList',
       match: { status: 1, type: 1 },
-      select: 'title _id',
+      select: 'title _id alias',
     })
     .sort(sort).skip((page - 1) * limit).limit(limit);
   const total = await postsModel.countDocuments(parmas);

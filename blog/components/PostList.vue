@@ -106,39 +106,7 @@
 
           <!-- 图片 -->
           <template v-if="item.type === 1">
-            <div class="post-list-blog-panel group">
-              <div class="post-list-blog-cover-body">
-                <WikimoeImage
-                  class="post-list-blog-cover-img border-t border-l border-r border-gray-200 border-solid group-hover:border-primary-300"
-                  :src="
-                    item.coverImages[0].thumfor || item.coverImages[0].filepath
-                  "
-                  :alt="item.coverImages[0].filename"
-                  :width="
-                    item.coverImages[0].thumWidth || item.coverImages[0].width
-                  "
-                  :height="
-                    item.coverImages[0].thumHeight || item.coverImages[0].height
-                  "
-                  v-if="item.coverImages[0]"
-                />
-                <!-- 默认封面图 defaultCover -->
-                <WikimoeImage
-                  class="post-list-blog-cover-img border-t border-l border-r border-gray-200 border-solid group-hover:border-primary-300"
-                  :src="defaultCover"
-                  :alt="item.title"
-                  :width="1344"
-                  :height="648"
-                  v-else
-                />
-              </div>
-              <!-- title -->
-              <div
-                class="post-list-title-body border border-gray-200 border-solid group-hover:border-primary-300 bg-white"
-              >
-                <div class="group-hover:text-primary-500">{{ item.title }}</div>
-              </div>
-            </div>
+            <PostItem :post="item" />
           </template>
           <div
             v-else-if="item.type === 2 && item.coverImages.length > 0"
@@ -518,18 +486,6 @@ onMounted(() => {
 .post-list-tag-item {
   margin-right: 9px;
   @apply text-primary-500;
-}
-.post-list-blog-panel {
-  margin-bottom: 12px;
-}
-.post-list-blog-cover-img {
-  border-radius: 20px 20px 0px 0px;
-}
-.post-list-title-body {
-  border-radius: 0px 0px 20px 20px;
-  padding: 10px 20px;
-  box-sizing: border-box;
-  font-size: 15px;
 }
 .post-list-info-bottom-body {
   display: flex;
