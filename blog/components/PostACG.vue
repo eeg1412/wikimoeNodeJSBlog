@@ -6,7 +6,7 @@
       相关作品：
     </div>
     <div
-      class="grid gap-3"
+      class="grid gap-4"
       :class="{
         'grid-cols-1': contentCount === 1,
         'md:grid-cols-2': contentCount > 1,

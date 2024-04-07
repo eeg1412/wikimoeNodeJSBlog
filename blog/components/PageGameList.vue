@@ -76,7 +76,7 @@
     <div class="relative" ref="listRef">
       <!-- 列表 -->
       <div v-if="gameList.length > 0" class="mt-5">
-        <div class="grid gap-3 md:grid-cols-2">
+        <div class="grid gap-4 md:grid-cols-2">
           <div v-for="game in gameList" :key="game.id" class="mb-1">
             <GameItem :game="game" />
           </div>
