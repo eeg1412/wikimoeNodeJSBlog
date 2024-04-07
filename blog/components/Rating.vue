@@ -1,5 +1,5 @@
 <template>
-  <div class="mt-2">
+  <div class="rating-body">
     <div
       v-if="rating"
       class="text-sm text-primary border border-solid border-primary-400 text-center rounded"
@@ -23,4 +23,8 @@ const props = defineProps({
   },
 })
 </script>
-<style scoped></style>
+<style scoped>
+.rating-body {
+  margin-top: 9px;
+}
+</style>
