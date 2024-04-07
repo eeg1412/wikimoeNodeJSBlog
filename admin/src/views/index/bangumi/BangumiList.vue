@@ -110,6 +110,20 @@
             <span v-else-if="row.season === 4">秋季新番</span>
           </template>
         </el-table-column>
+        <!-- urlList 附加链接列表 -->
+        <el-table-column prop="urlList" label="附加链接" min-width="150px">
+          <template #default="{ row }">
+            <div v-for="(item, index) in row.urlList" :key="index">
+              <el-link
+                :href="item.url"
+                target="_blank"
+                type="primary"
+                :underline="false"
+                >{{ item.text }}</el-link
+              >
+            </div>
+          </template>
+        </el-table-column>
         <!-- 标记 字符串数组 label -->
         <el-table-column prop="label" label="标记">
           <template #default="{ row }">

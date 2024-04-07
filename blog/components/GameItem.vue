@@ -40,31 +40,6 @@
             >{{ game.gamePlatform.name }}</span
           >{{ game.title }}
         </div>
-        <!-- 链接 -->
-        <div
-          class="text-sm mb-1 text-gray-500 flex-shrink-0"
-          v-if="game.urlList.length > 0 || game.screenshotAlbum"
-        >
-          <a
-            :href="url.url"
-            target="_blank"
-            class="inline-flex items-center text-primary mr-2"
-            v-for="(url, index) in game.urlList"
-            :key="index"
-          >
-            <UIcon name="i-heroicons-link" class="align-middle mr-1" />
-            {{ url.text }}
-          </a>
-          <a
-            href="javascript:;"
-            class="inline-flex items-center text-primary mr-2"
-            v-if="game.screenshotAlbum"
-            @click="showAlbum(game.screenshotAlbum._id)"
-          >
-            <UIcon name="i-heroicons-photo" class="align-middle mr-1" />
-            相关截图
-          </a>
-        </div>
         <div
           class="text-sm mb-1 text-gray-400 flex-shrink-0 w_10 flex items-center"
           v-if="game.giveUp"
@@ -96,6 +71,32 @@
             </div>
           </template>
         </UPopover>
+        <!-- 链接 -->
+        <div
+          class="text-sm mb-1 text-gray-500 flex-shrink-0"
+          v-if="game.urlList.length > 0 || game.screenshotAlbum"
+        >
+          <a
+            :href="url.url"
+            target="_blank"
+            class="inline-flex items-center text-primary mr-2"
+            v-for="(url, index) in game.urlList"
+            :key="index"
+          >
+            <UIcon name="i-heroicons-link" class="align-middle mr-1" />
+            {{ url.text }}
+          </a>
+          <a
+            href="javascript:;"
+            class="inline-flex items-center text-primary mr-2"
+            v-if="game.screenshotAlbum"
+            @click="showAlbum(game.screenshotAlbum._id)"
+          >
+            <UIcon name="i-heroicons-photo" class="align-middle mr-1" />
+            相关截图
+          </a>
+        </div>
+
         <div class="acg-summary">
           <!-- prettier-ignore -->
           <div class="text-sm whitespace-pre-line text-gray-500 flex-grow" v-if="game.summary">{{ game.summary }}</div>

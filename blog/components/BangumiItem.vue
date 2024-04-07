@@ -35,6 +35,14 @@
         <div class="font-bold mb-1 line-clamp-2 flex-shrink-0">
           {{ bangumi.title }}
         </div>
+        <div
+          class="text-sm mb-1 text-gray-400 flex-shrink-0 w_10 flex items-center"
+        >
+          <UIcon
+            name="i-heroicons-calendar-20-solid"
+            class="align-middle mr-1"
+          />{{ bangumi.year }}年{{ seasonToName(bangumi.season) }}
+        </div>
         <!-- 链接 -->
         <div
           class="text-sm mb-1 text-gray-500 flex-shrink-0"
@@ -50,14 +58,6 @@
             <UIcon name="i-heroicons-link" class="align-middle mr-1" />
             {{ url.text }}
           </a>
-        </div>
-        <div
-          class="text-sm mb-1 text-gray-400 flex-shrink-0 w_10 flex items-center"
-        >
-          <UIcon
-            name="i-heroicons-calendar-20-solid"
-            class="align-middle mr-1"
-          />{{ bangumi.year }}年{{ seasonToName(bangumi.season) }}
         </div>
         <div class="acg-summary">
           <!-- prettier-ignore -->
