@@ -914,3 +914,20 @@ ins.adsbygoogle[data-ad-status='unfilled'] {
 .content-h-139 {
   height: 139px;
 }
+.content-h-170 {
+  height: 170px;
+}
+.acg-summary {
+  border-top: 1px solid rgb(209, 213, 219);
+  padding: 5px 0px;
+}
+.acg-right-content {
+  border: 1px solid rgb(209, 213, 219);
+  padding: 5px 8px;
+  border-radius: 4px;
+  flex: 1;
+  margin-left: 8px;
+  box-sizing: border-box;
+  overflow: auto;
+  width: 100%;
+}
