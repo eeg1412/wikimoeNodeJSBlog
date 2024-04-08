@@ -46,14 +46,14 @@ const creatAdmin = async () => {
                 return '请输入密码'
             }
             // 管理账号小写
-            username = username.toLowerCase()
+            // username = username.toLowerCase()
             const passwordReg = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*])[a-zA-Z\d!@#$%^&*]{4,}$/
             if (!passwordReg.test(password)) {
-                return '密码必须4位以上且包含大小写、数字和符号'
+                return '密码必须4位以上且包含大小写、数字和符号（!@#$%^&*）'
             }
-            const userNameReg = /^[a-zA-Z0-9]+$/
+            const userNameReg = /^[a-z0-9]+$/
             if (!userNameReg.test(username)) {
-                return '用户名仅支持半角英文和数字'
+                return '用户名仅支持半角小写英文和数字'
             }
             // 校验用户名是否存在
             const userRes = await checkAdmin(username)
