@@ -30,9 +30,20 @@
         <el-icon><EditPen /></el-icon>
       </div>
     </div>
-    <div class="attachment-selector-body pointer" @click="onSelectorClick">
+    <div
+      class="attachment-selector-body pointer"
+      :class="{
+        'is-selected': isSelected,
+      }"
+      @click="onSelectorClick"
+    >
       <i class="far fa-circle" v-show="!isSelected"></i>
       <i class="fas fa-check-circle" v-show="isSelected"></i>
+      <span
+        class="attachment-selector-count"
+        v-if="selectIndex !== null && isSelected"
+        >{{ selectCount }}</span
+      >
     </div>
   </div>
   <!-- 更改名称dialog -->
@@ -105,6 +116,10 @@ export default {
       type: Boolean,
       default: false,
     },
+    selectIndex: {
+      type: Number,
+      default: null,
+    },
   },
   emits: ['onSelectorClick', 'onUpdateName'],
   setup(props, { emit }) {
@@ -170,6 +185,10 @@ export default {
     const setVideoCover = (data) => {
       formName.videoCover = data
     }
+
+    const selectCount = computed(() => {
+      return props.selectIndex + 1
+    })
     return {
       onSelectorClick,
       showNameDialog,
@@ -181,6 +200,7 @@ export default {
       openPreviewer,
       isVideo,
       setVideoCover,
+      selectCount,
     }
   },
 }
@@ -225,17 +245,33 @@ export default {
 .attachment-selector-body {
   /* 左上角 */
   position: absolute;
-  top: 0;
-  left: 0;
+  top: 3px;
+  left: 3px;
+  padding: 2px;
   z-index: 2;
   font-size: 18px;
   line-height: 18px;
-  padding: 5px;
   color: #fff;
   text-shadow: 0 0 5px #000;
+  display: flex;
+  align-items: center;
+}
+.attachment-selector-body.is-selected {
+  background-color: #67c23a;
+  border-radius: 20px;
+  box-shadow: 0px 0px 5px 0px rgba(0, 0, 0, 0.75);
 }
 .attachment-selector-body .fa-check-circle {
   /* 绿色 */
-  color: #67c23a;
+  color: #ffffff;
+  text-shadow: none;
+}
+.attachment-selector-count {
+  font-size: 12px;
+  color: #ffffff;
+  font-weight: bold;
+  padding: 0 5px;
+  display: inline-block;
+  text-shadow: none;
 }
 </style>

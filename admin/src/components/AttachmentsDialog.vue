@@ -15,13 +15,13 @@
       <div class="my-header">
         <div :id="titleId" :class="titleClass">
           <el-select
-            v-model="albumId"
+            :model-value="albumId"
             placeholder="请选择相册"
             clearable
             filterable
             remote
             :remote-method="searchAlbumsRemote"
-            @change="changeAlbum"
+            @change="preChangeAlbum"
             @visible-change="checkAlbumId"
             :automatic-dropdown="true"
             class="attachments-form-item"
@@ -83,6 +83,31 @@
               circle
               @click="changeAttachmentsAlbum"
               :title="`移动${selectedImageList.length}件媒体文件`"
+            />
+            <!-- 更改选择顺序按钮 -->
+            <el-button
+              type="info"
+              :icon="Sort"
+              circle
+              @click="changeAttachmentsSort"
+              :title="`更改选择顺序`"
+              v-if="shouldSelectOk"
+            />
+            <!-- 本页全选 -->
+            <el-button
+              type="info"
+              :icon="CircleCheck"
+              circle
+              @click="selectPageAttachments"
+              :title="`本页全选`"
+            />
+            <!-- 取消本页选择 -->
+            <el-button
+              type="info"
+              :icon="Remove"
+              circle
+              @click="clearSelectedPageImageList"
+              :title="`取消本页选择`"
             />
             <!-- 确定按钮 Select -->
             <el-button
@@ -180,6 +205,7 @@
               :item="item"
               @onSelectorClick="onSelectorClick"
               :isSelected="findImageInSelectedImageList(item._id) > -1"
+              :selectIndex="findImageInSelectedImageList(item._id)"
               @onUpdateName="getAttachmentList"
             />
           </div>
@@ -211,6 +237,7 @@
     destroy-on-close
     :close-on-click-modal="false"
     align-center
+    append-to-body
     title="转移相册"
   >
     <div class="dflex flexCenter">
@@ -244,6 +271,55 @@
       </span>
     </template>
   </el-dialog>
+  <!-- 更改选择顺序弹窗 -->
+  <el-dialog
+    v-model="changeOrderDialogVisible"
+    destroy-on-close
+    :close-on-click-modal="false"
+    align-center
+    append-to-body
+    @closed="changeOrderDialogClosed"
+    class="attachments-dialog"
+    title="拖动图片更改选择顺序"
+  >
+    <div class="clearfix custom-scroll scroll-not-hide attachments-list-body">
+      <draggable
+        class="attachments-sort-image-draggable-item"
+        v-model="selectedImageObjListCopy"
+        group="attachments"
+        @start="attachmentDrag = true"
+        @end="attachmentDrag = false"
+        item-key="_id"
+      >
+        <template #item="{ element, index }">
+          <div class="attachments-sort-image-item">
+            <el-image
+              :src="`${
+                element.thumfor || element.filepath
+              }?s=${$formatTimestamp(element.updatedAt)}`"
+              fit="cover"
+              style="width: 100%; height: 100%"
+            />
+            <!-- 如果是视频 isVideo 中间显示播放图标 -->
+            <div
+              class="attachment-play-icon"
+              v-if="element.mimetype.includes('video')"
+            >
+              <el-icon><VideoPlay /></el-icon>
+            </div>
+          </div>
+        </template>
+      </draggable>
+    </div>
+    <template #footer>
+      <span class="dialog-footer">
+        <el-button @click="changeOrderDialogVisible = false">取消</el-button>
+        <el-button type="primary" @click="doChangeAttachmentsSort"
+          >确定</el-button
+        >
+      </span>
+    </template>
+  </el-dialog>
 </template>
 <script>
 import { useRoute, useRouter } from 'vue-router'
@@ -262,14 +338,25 @@ import store from '@/store'
 // AttachmentImage
 import AttachmentImage from '@/components/AttachmentImage.vue'
 import VideoUploader from '@/components/VideoUploader.vue'
-import { Delete, Close, SetUp, Select, Search } from '@element-plus/icons-vue'
+import {
+  Delete,
+  Close,
+  SetUp,
+  Select,
+  Search,
+  Sort,
+  CircleCheck,
+  Remove,
+} from '@element-plus/icons-vue'
 import axios from 'axios'
 import { showLoading, hideLoading } from '@/utils/utils'
+import draggable from 'vuedraggable'
 
 export default {
   components: {
     AttachmentImage,
     VideoUploader,
+    draggable,
   },
   props: {
     albumIdProp: {
@@ -489,10 +576,31 @@ export default {
         keyword.value = ''
       }
     }
-    const changeAlbum = async (value) => {
+
+    const preChangeAlbum = async (value) => {
       if (value === '-1') {
         return
       }
+      // 如果有选择照片，提示会清空
+      if (selectedImageList.value.length > 0) {
+        ElMessageBox.confirm(
+          '更换相册后，已选择的媒体文件将会被清空，是否继续？',
+          {
+            confirmButtonText: '是',
+            cancelButtonText: '否',
+            type: 'warning',
+          }
+        )
+          .then(() => {
+            changeAlbum(value)
+          })
+          .catch(() => {})
+      } else {
+        changeAlbum(value)
+      }
+    }
+    const changeAlbum = async (value) => {
+      albumId.value = value
       params.album = albumId.value
       clearSelectedImageList()
       getAttachmentList(true, true)
@@ -760,6 +868,44 @@ export default {
       }
     }
 
+    // 更改选择顺序
+    const changeOrderDialogVisible = ref(false)
+    const selectedImageObjListCopy = ref([])
+    const changeAttachmentsSort = () => {
+      selectedImageObjListCopy.value = JSON.parse(
+        JSON.stringify(selectedImageObjList.value)
+      )
+      changeOrderDialogVisible.value = true
+    }
+    const doChangeAttachmentsSort = () => {
+      selectedImageObjList.value = JSON.parse(
+        JSON.stringify(selectedImageObjListCopy.value)
+      )
+      changeOrderDialogVisible.value = false
+    }
+    const changeOrderDialogClosed = () => {
+      selectedImageObjListCopy.value = []
+    }
+
+    // 本页全选
+    const selectPageAttachments = () => {
+      attachmentList.value.forEach((item) => {
+        const index = findImageInSelectedImageList(item._id)
+        if (index === -1) {
+          selectedImageObjList.value.push(item)
+        }
+      })
+    }
+    // 取消本页选择
+    const clearSelectedPageImageList = () => {
+      attachmentList.value.forEach((item) => {
+        const index = findImageInSelectedImageList(item._id)
+        if (index > -1) {
+          selectedImageObjList.value.splice(index, 1)
+        }
+      })
+    }
+
     // 监听 params.page 的变化
     watch(
       () => params.page,
@@ -778,6 +924,9 @@ export default {
       SetUp,
       Select,
       Search,
+      Sort,
+      CircleCheck,
+      Remove,
       visible,
       fileList,
       albumId,
@@ -796,6 +945,7 @@ export default {
       options,
       handleSuccess,
       handleError,
+      preChangeAlbum,
       changeAlbum,
       attachmentsLoading,
       attachmentList,
@@ -815,6 +965,16 @@ export default {
       onDialogClose,
       onVideoUploaded,
       uploadFile,
+      // 更改选择顺序
+      changeOrderDialogVisible,
+      selectedImageObjListCopy,
+      changeAttachmentsSort,
+      doChangeAttachmentsSort,
+      changeOrderDialogClosed,
+      // 本页全选
+      selectPageAttachments,
+      // 取消本页选择
+      clearSelectedPageImageList,
     }
   },
 }
@@ -846,6 +1006,18 @@ export default {
 }
 .attachments-upload-disabled {
   opacity: 0.3;
+}
+.attachments-sort-image-draggable-item {
+  width: 100%;
+}
+.attachments-sort-image-item {
+  width: 20%;
+  aspect-ratio: 1/1;
+  color: #ccc;
+  float: left;
+  box-sizing: border-box;
+  cursor: pointer;
+  position: relative;
 }
 /* 小于500 */
 @media screen and (max-width: 500px) {
