@@ -220,3 +220,7 @@ export const seasonToName = (season: number) => {
       return ''
   }
 }
+
+export const nextFrame = (fn: () => void) => {
+  window.requestAnimationFrame(() => window.requestAnimationFrame(fn))
+}

@@ -14,11 +14,22 @@
           v-if="!item.isdefault"
         />
       </div>
-      <ul class="blog-layout-sidebar-item-children-body" v-show="showChildren">
-        <template v-for="(item, index) in item.children" :key="index">
-          <NaviItem :item="item" :currentPath="currentPath" />
-        </template>
-      </ul>
+      <Transition
+        name="collapse"
+        @enter="enter"
+        @after-enter="afterEnter"
+        @leave="leave"
+        @after-leave="afterLeave"
+      >
+        <ul
+          class="blog-layout-sidebar-item-children-body"
+          v-show="showChildren"
+        >
+          <template v-for="(item, index) in item.children" :key="index">
+            <NaviItem :item="item" :currentPath="currentPath" />
+          </template>
+        </ul>
+      </Transition>
     </template>
     <template v-else-if="item.isdefault && !item.newtab">
       <nuxt-link
@@ -60,6 +71,34 @@ const props = defineProps({
   },
 })
 const showChildren = ref(false)
+
+const enter = (el) => {
+  el.style.overflow = 'hidden'
+  el.style.height = '0'
+
+  nextFrame(() => {
+    el.style.height = `${el.scrollHeight}px`
+  })
+}
+
+const leave = (el) => {
+  el.style.overflow = 'hidden'
+  el.style.height = `${el.scrollHeight}px`
+
+  nextFrame(() => {
+    el.style.height = '0'
+  })
+}
+
+const afterEnter = (el) => {
+  el.style.height = ''
+  el.style.overflow = ''
+}
+
+const afterLeave = (el) => {
+  el.style.height = ''
+  el.style.overflow = ''
+}
 </script>
 <style scoped>
 .blog-layout-sidebar-item {
