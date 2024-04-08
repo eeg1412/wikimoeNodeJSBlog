@@ -44,7 +44,7 @@ yarn install
 yarn build
 ```
 
-编译后会在 server/public 下生成 admin 文件夹，如果服务器配置并不支持编译的话可以在本机安装 nodejs 20 的环境后，在本机编译并上传到服务器
+编译后会在 server/front 下生成 admin 文件夹，如果服务器配置并不支持编译的话可以在本机安装 nodejs 20 的环境后，在本机编译并上传到服务器
 
 ## 2.博客 API 部分
 
