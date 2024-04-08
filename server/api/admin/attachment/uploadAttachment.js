@@ -11,6 +11,20 @@ module.exports = async function (req, res, next) {
   const albumid = headers['albumid']
   const noCompress = headers['x-no-compress'] === '1' ? true : false
   const noThumbnail = headers['x-no-thumbnail'] === '1' ? true : false
+
+  let imgSettingCompressMaxSizeHeader = headers['x-compress-max-size']
+  // 判断 imgSettingCompressMaxSizeHeader 是否是正整数
+  if (imgSettingCompressMaxSizeHeader && !/^[1-9]\d*$/.test(imgSettingCompressMaxSizeHeader)) {
+    // 如果不是正整数，就设置为默认值null
+    imgSettingCompressMaxSizeHeader = null
+  } else {
+    imgSettingCompressMaxSizeHeader = parseInt(imgSettingCompressMaxSizeHeader)
+  }
+
+  // imgSettingCompressMaxSizeHeader 最小 为 1
+  if (imgSettingCompressMaxSizeHeader !== null && imgSettingCompressMaxSizeHeader < 1) {
+    imgSettingCompressMaxSizeHeader = null
+  }
   if (!global.$globalConfig) {
     // 报错500
     res.status(500).json({
@@ -21,7 +35,10 @@ module.exports = async function (req, res, next) {
     return
   }
   // 读取全局配置
-  const config = global.$globalConfig.imgSettings;
+  const config = JSON.parse(JSON.stringify(global.$globalConfig.imgSettings));
+  if (imgSettingCompressMaxSizeHeader) {
+    config.imgSettingCompressMaxSize = imgSettingCompressMaxSizeHeader
+  }
   // // 开启图片压缩
   // imgSettingEnableImgCompress: false,
   // // 图片压缩为webp格式
@@ -150,7 +167,7 @@ module.exports = async function (req, res, next) {
       // 如果图片尺寸大于最长边
 
       const max = Math.max(width, height)
-      if (max > imgSettingThumbnailMaxSize) {
+      if (max > imgSettingThumbnailMaxSize && imgSettingThumbnailMaxSize < imgSettingCompressMaxSize) {
         // 计算压缩比例
         const scale = imgSettingThumbnailMaxSize / max
         // 计算压缩后的宽高

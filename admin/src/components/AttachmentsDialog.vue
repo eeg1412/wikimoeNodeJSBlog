@@ -168,14 +168,37 @@
                     v-model="options.noThumbnail"
                     label="不生成缩略图"
                   />
+                  <!-- 设置最长边 -->
+                  <div class="accactment-options-filed">
+                    <div class="accactment-options-label">最长边:</div>
+                    <div class="accactment-options-value">
+                      <el-input-number
+                        v-model="options.imgSettingCompressMaxSize"
+                        :step="10"
+                        :precision="0"
+                        :min="1"
+                        size="small"
+                        placeholder="设置最长边"
+                        clearable
+                      />
+                    </div>
+                  </div>
                 </div>
                 <template #reference>
                   <el-button
                     size="small"
                     :type="
-                      options.noCompress || options.noThumbnail ? 'primary' : ''
+                      options.noCompress ||
+                      options.noThumbnail ||
+                      options.imgSettingCompressMaxSize !== null
+                        ? 'primary'
+                        : ''
                     "
-                    :plain="!options.noCompress && !options.noThumbnail"
+                    :plain="
+                      !options.noCompress &&
+                      !options.noThumbnail &&
+                      options.imgSettingCompressMaxSize === null
+                    "
                     @click.stop
                   >
                     <el-icon><Setting /></el-icon><span class="pl3">设置</span>
@@ -490,11 +513,15 @@ export default {
         AlbumId: albumId.value,
         'x-no-compress': options.noCompress ? '1' : '0',
         'x-no-thumbnail': options.noThumbnail ? '1' : '0',
+        'x-compress-max-size': options.imgSettingCompressMaxSize
+          ? String(options.imgSettingCompressMaxSize)
+          : '',
       }
     }
     const options = reactive({
       noCompress: false,
       noThumbnail: false,
+      imgSettingCompressMaxSize: null,
     })
     watch(
       () => options,
@@ -1018,6 +1045,18 @@ export default {
   box-sizing: border-box;
   cursor: pointer;
   position: relative;
+}
+.accactment-options-filed {
+  display: flex;
+  align-items: center;
+}
+.accactment-options-label {
+  width: 54px; /* 你可以根据你的需求修改这个值 */
+  flex-shrink: 0; /* 防止元素在空间不足时缩小 */
+}
+
+.accactment-options-value {
+  flex-grow: 1; /* 元素将占用剩余的空间 */
 }
 /* 小于500 */
 @media screen and (max-width: 500px) {
