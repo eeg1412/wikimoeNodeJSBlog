@@ -84,7 +84,7 @@ yarn start
 ### 创建管理员（如果需要）
 
 ```
-yarn create
+yarn run create
 ```
 
 ## 3.博客 页面 部分
