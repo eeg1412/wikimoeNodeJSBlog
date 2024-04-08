@@ -83,7 +83,7 @@ app.use((req, res, next) => {
 app.use(history({
   index: '/admin/index.html'
 }));
-app.use('/admin', express.static(path.join(__dirname, 'public/admin')));
+app.use('/admin', express.static(path.join(__dirname, 'front/admin')));
 
 // setInterval(() => {
 //   const memoryUsage = process.memoryUsage();
