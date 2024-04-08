@@ -57,7 +57,7 @@
         </el-table-column>
         <el-table-column prop="sitename" label="网站名称" min-width="100px" />
         <el-table-column prop="siteurl" label="网站URL" min-width="250px" />
-        <el-table-column prop="rss" label="RSS地址" min-width="250px" />
+        <!-- <el-table-column prop="rss" label="RSS地址" min-width="250px" /> -->
         <el-table-column prop="description" label="描述" min-width="250px" />
         <el-table-column prop="taxis" label="排序" width="100px" />
         <el-table-column prop="status" label="状态" width="100px">
