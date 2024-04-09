@@ -84,7 +84,17 @@
       <el-input
         type="textarea"
         v-model="siteSettingsForm.siteFooterInfo"
+        :rows="6"
         placeholder="显示在页面底部，可以填写备案信息，支持HTML。"
+      ></el-input>
+    </el-form-item>
+    <!-- siteExtraCss -->
+    <el-form-item label="额外CSS样式" prop="siteExtraCss">
+      <el-input
+        type="textarea"
+        v-model="siteSettingsForm.siteExtraCss"
+        :rows="6"
+        placeholder="自定义CSS样式，会插入到head标签内，覆盖时可能需要添加!important。"
       ></el-input>
     </el-form-item>
 
@@ -126,6 +136,8 @@ export default {
       siteTimeZone: '',
       // 页面底部信息
       siteFooterInfo: '',
+      // 额外CSS样式
+      siteExtraCss: '',
     })
     const onSiteUrlBlur = () => {
       // 去掉最末尾的斜杠

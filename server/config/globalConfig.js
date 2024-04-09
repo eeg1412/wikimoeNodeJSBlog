@@ -52,6 +52,8 @@ const initGlobalConfig = async () => {
     siteTimeZone: '',
     // 页面底部信息
     siteFooterInfo: '',
+    // 额外CSS样式
+    siteExtraCss: '',
   }
   const commentSettingsConfig = {
     // 开启评论

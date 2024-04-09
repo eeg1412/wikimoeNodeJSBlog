@@ -105,6 +105,16 @@ const postLogCreate = () => {
   })
 }
 
+const setStyle = () => {
+  // 如果存在 options.siteExtraCss
+  if (options.value.siteExtraCss) {
+    useHead({
+      style: [options.value.siteExtraCss],
+    })
+  }
+}
+setStyle()
+
 onMounted(() => {
   // 检查uuid
   checkUuid()
