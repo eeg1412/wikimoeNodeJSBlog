@@ -87,6 +87,8 @@ yarn start
 yarn run create
 ```
 
+<span style="color:red">注意：账号仅支持小写字母和数字，密码必须包含大小写与符号（!@#$%^&\*）</span>
+
 ## 3.博客 页面 部分
 
 ### 进入文件夹
