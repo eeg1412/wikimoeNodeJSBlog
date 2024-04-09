@@ -88,7 +88,7 @@
     <div class="p-2 flex justify-between items-center" v-if="total > 0">
       <div>
         共<span class="text-primary pl-1 pr-1">{{ total }}</span
-        >部游戏
+        >部作品
       </div>
       <div>
         <UButton
@@ -124,7 +124,7 @@ const selectBooktypeData = ref({
   _id: null,
 })
 
-// 游戏列表
+// 作品列表
 const size = 20
 const params = reactive({
   page: 1,
