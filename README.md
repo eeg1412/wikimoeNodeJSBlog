@@ -62,7 +62,8 @@ yarn install
 
 ### 配置.env 文件
 
-文件内容如下：
+可以将目录下的 sample.env 复制并更名为.env  
+配置内容如下：
 
 ```
 PORT="填写运行端口号"
@@ -105,6 +106,7 @@ yarn install
 
 ### 配置.env 文件
 
+可以将目录下的 sample.env 复制并更名为.env  
 文件内容如下：
 
 ```
