@@ -22,7 +22,6 @@
             remote
             :remote-method="searchAlbumsRemote"
             @change="preChangeAlbum"
-            @visible-change="checkAlbumId"
             :automatic-dropdown="true"
             class="attachments-form-item"
           >
@@ -492,11 +491,9 @@ export default {
         .catch(() => {})
     }
     let searchTimer = null
-    const checkAlbumId = async (visible) => {
-      if (albumId.value === '-1' && !visible) {
-        await createAlbum()
-        changeAlbum(albumId.value)
-      }
+    const checkAlbumId = async () => {
+      await createAlbum()
+      changeAlbum(albumId.value)
     }
     const searchAlbumsRemote = async (query) => {
       clearTimeout(searchTimer)
@@ -606,6 +603,8 @@ export default {
 
     const preChangeAlbum = async (value) => {
       if (value === '-1') {
+        // 添加相册
+        checkAlbumId()
         return
       }
       // 如果有选择照片，提示会清空
@@ -798,7 +797,11 @@ export default {
               return
             }
             const formData = new FormData()
-            formData.append('file', blob, 'image.png') // 'image' 是字段名，'image.png' 是文件名
+            formData.append(
+              'file',
+              blob,
+              `image-${generateRandomString(8)}.png`
+            ) // 'image' 是字段名，'image.png' 是文件名
             showLoading()
             axios
               .post('/api/admin/attachment/upload', formData, {
@@ -820,6 +823,17 @@ export default {
           }
         }
       }
+    }
+
+    const generateRandomString = (length) => {
+      const characters = 'abcdefghijklmnopqrstuvwxyz0123456789'
+      let result = ''
+      for (let i = 0; i < length; i++) {
+        result += characters.charAt(
+          Math.floor(Math.random() * characters.length)
+        )
+      }
+      return result
     }
 
     // clearSelectedImageList
