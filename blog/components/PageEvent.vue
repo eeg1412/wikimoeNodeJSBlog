@@ -64,7 +64,7 @@
         <h3
           class="text-base font-semibold leading-6 text-gray-900 dark:text-white"
         >
-          当日活动列表
+          当日活动
         </h3>
       </template>
       <template #body>
