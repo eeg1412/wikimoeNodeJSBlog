@@ -198,6 +198,9 @@ const getEventDetail = async () => {
           })
         })
       }
+      if (route.query.eventid) {
+        router.replace({ query: {} })
+      }
     })
     .finally(() => {
       eventLoading.value = false
