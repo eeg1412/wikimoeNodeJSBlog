@@ -72,11 +72,11 @@
           <div
             v-for="item in dayEventList"
             :key="item._id"
-            class="pb-1 mb-3 border-b border-solid border-gray-200 last:border-0"
+            class="pb-1 mb-3 border border-solid border-gray-200 py-2 px-3 rounded-md"
           >
             <div class="page-event-current-content">
               <h4
-                class="text-base font-semibold leading-6 text-gray-900 dark:text-white pb-3 mb-1"
+                class="text-base font-semibold leading-6 text-gray-900 dark:text-white mb-1"
               >
                 <span
                   class="page-event-block"
