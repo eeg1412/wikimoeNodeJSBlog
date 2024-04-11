@@ -48,6 +48,7 @@
           :startTime="startTime"
           v-show="eventList.length > 0"
           @eventClick="tryOpenEvent"
+          @dayClick="dayClick"
         />
         <div
           class="page-event-table-empty text-primary-500"
@@ -58,6 +59,68 @@
       </div>
     </div>
     <EventDialog v-model:show="eventOpen" :currentData="currentData" />
+    <CommonDialog v-model:show="dayEventListOpen">
+      <template #title>
+        <h3
+          class="text-base font-semibold leading-6 text-gray-900 dark:text-white"
+        >
+          当日活动列表
+        </h3>
+      </template>
+      <template #body>
+        <div>
+          <div
+            v-for="item in dayEventList"
+            :key="item._id"
+            class="pb-1 mb-3 border-b border-solid border-gray-200 last:border-0"
+          >
+            <div class="page-event-current-content">
+              <h4
+                class="text-base font-semibold leading-6 text-gray-900 dark:text-white pb-3 mb-1"
+              >
+                <span
+                  class="page-event-block"
+                  :style="{
+                    backgroundColor: item.eventtype?.color,
+                  }"
+                  v-if="item.eventtype"
+                  >{{ item.eventtype?.name }}</span
+                >{{ item.title }}
+              </h4>
+              <div class="flex items-center mb-1">
+                <div class="flex items-center">
+                  <UIcon name="i-heroicons-clock" />
+                </div>
+                <div class="text-gray-700 text-md ml-2">
+                  {{ formatDate(item.startTime) }} ~
+                  {{ formatDate(item.endTime) }}
+                </div>
+              </div>
+              <div class="event-list-html-content-body">
+                <HtmlContent :content="item.content" v-if="item.content" />
+              </div>
+
+              <!-- 相关链接 urlList -->
+              <div
+                class="text-sm mb-2 mt-2 text-gray-500 flex-shrink-0"
+                v-if="item.urlList.length > 0"
+              >
+                <a
+                  :href="url.url"
+                  target="_blank"
+                  class="inline-flex items-center text-primary-500 mr-2"
+                  v-for="(url, index) in item.urlList"
+                  :key="index"
+                >
+                  <UIcon name="i-heroicons-link" class="align-middle mr-1" />
+                  {{ url.text }}
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </template>
+    </CommonDialog>
   </div>
 </template>
 <script setup>
@@ -234,6 +297,16 @@ watch(
   }
 )
 
+const dayEventListOpen = ref(false)
+const dayEventList = ref([])
+const dayClick = (day, dayEventIdMap) => {
+  const idList = dayEventIdMap[day.monthDay] || []
+  dayEventList.value = eventList.value.filter((item) =>
+    idList.includes(item._id)
+  )
+  dayEventListOpen.value = true
+}
+
 onMounted(() => {
   nextTick(() => {
     initTime()
@@ -311,5 +384,8 @@ onUnmounted(() => {})
 <style>
 .page-event-current-content p {
   margin: 10px 0;
+}
+.event-list-html-content-body .html-content-body {
+  padding-top: 0px;
 }
 </style>

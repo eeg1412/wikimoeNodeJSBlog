@@ -935,3 +935,11 @@ ins.adsbygoogle[data-ad-status='unfilled'] {
   overflow: auto;
   width: 100%;
 }
+.page-event-block {
+  color: #fff;
+  padding: 2px 5px;
+  border-radius: 2px;
+  font-size: 12px;
+  margin-right: 5px;
+  border-radius: 5px;
+}

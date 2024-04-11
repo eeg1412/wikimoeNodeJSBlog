@@ -21,7 +21,9 @@
             class="calendar-day"
             :class="{
               'is-now': day.month === nowMonth && day.day === nowDay,
+              pointer: dayHaveEvent(day),
             }"
+            @click="dayClick(day)"
           >
             {{ day.day }}
           </div>
@@ -68,7 +70,7 @@ const currentDate = computed(() => {
   return moment(props.startTime)
 })
 
-const emits = defineEmits(['eventClick'])
+const emits = defineEmits(['eventClick', 'dayClick'])
 
 const eventClick = (event) => {
   emits('eventClick', event)
@@ -111,6 +113,7 @@ const getCalendar = () => {
       weekRow.push({
         day: calendarDate.get('date'),
         month: calendarDate.format('YYYY-MM'),
+        monthDay: calendarDate.format('YYYY-MM-DD'),
         dayEvents,
       })
       calendarDate.add(1, 'days')
@@ -154,6 +157,7 @@ const getStartedEvents = (stackIndex, startedEvents, dayEvents) => {
   } while (typeof startedEvent !== 'undefined')
   return [stackIndex, dayEvents]
 }
+
 const getDayEvents = (date, day) => {
   let stackIndex = 0
   let dayEvents = []
@@ -195,8 +199,28 @@ const youbi = (dayIndex) => {
 }
 
 const calendars = computed(() => {
+  getDayEventCountMap()
   return getCalendar()
 })
+
+let dayEventIdMap = {}
+const getDayEventCountMap = () => {
+  dayEventIdMap = {}
+  sortedEvents.value.forEach((event) => {
+    const startDate = moment(event.startTime).format('YYYY-MM-DD')
+    const endDate = moment(event.endTime).format('YYYY-MM-DD')
+    const betweenDays = moment(endDate).diff(moment(startDate), 'days')
+    for (let i = 0; i <= betweenDays; i++) {
+      const date = moment(startDate).add(i, 'days')
+      const key = date.format('YYYY-MM-DD')
+      if (!dayEventIdMap[key]) {
+        dayEventIdMap[key] = [event._id]
+      } else {
+        dayEventIdMap[key].push(event._id)
+      }
+    }
+  })
+}
 
 const currentMonth = computed(() => {
   return currentDate.value.format('YYYY-MM')
@@ -211,6 +235,16 @@ const sortedEvents = computed(() => {
     return 0
   })
 })
+
+const dayHaveEvent = (day) => {
+  const { monthDay } = day
+  return dayEventIdMap[monthDay]
+}
+const dayClick = (day) => {
+  console.log(day, dayEventIdMap)
+  if (!dayHaveEvent(day)) return
+  emits('dayClick', day, dayEventIdMap)
+}
 
 onMounted(() => {})
 </script>

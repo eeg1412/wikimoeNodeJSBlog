@@ -66,13 +66,4 @@ const eventOpen = computed({
   },
 })
 </script>
-<style scoped>
-.page-event-block {
-  color: #fff;
-  padding: 2px 5px;
-  border-radius: 2px;
-  font-size: 12px;
-  margin-right: 5px;
-  border-radius: 5px;
-}
-</style>
+<style scoped></style>
