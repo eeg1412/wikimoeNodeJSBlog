@@ -61,7 +61,12 @@
   </div>
 </template>
 <script setup>
-import { getEventListApiFetch } from '@/api/event'
+import { getEventListApiFetch, getEventDetailApiFetch } from '@/api/event'
+const router = useRouter()
+const route = useRoute()
+
+const toast = useToast()
+
 const eventList = ref([])
 const startTime = ref(null)
 const endTime = ref(null)
@@ -166,12 +171,73 @@ const currentData = ref(null)
 const tryOpenEvent = (data) => {
   currentData.value = data
   eventOpen.value = true
+  // 路由添加eventid
+  router.replace({ query: { eventid: data._id } })
 }
+
+const getEventDetail = async () => {
+  eventLoading.value = true
+  const id = route.query.eventid
+  getEventDetailApiFetch({
+    id,
+  })
+    .then((res) => {
+      currentData.value = res.data
+      eventOpen.value = true
+    })
+    .catch((err) => {
+      console.log(err)
+      const errors = err.response?._data?.errors
+      if (errors) {
+        errors.forEach((item) => {
+          const message = item.message
+          toast.add({
+            title: message,
+            icon: 'i-heroicons-x-circle',
+            color: 'red',
+          })
+        })
+      }
+    })
+    .finally(() => {
+      eventLoading.value = false
+    })
+}
+
+// watch route
+watch(
+  () => route.query,
+  (newVal, oldVal) => {
+    if (newVal.eventid) {
+      const data = eventList.value.find((item) => item._id === newVal.eventid)
+      if (data) {
+        currentData.value = data
+        eventOpen.value = true
+      } else {
+        getEventDetail()
+      }
+    } else {
+      eventOpen.value = false
+    }
+  }
+)
+
+watch(
+  () => eventOpen.value,
+  (newVal) => {
+    if (!newVal && route.query.eventid) {
+      router.replace({ query: {} })
+    }
+  }
+)
 
 onMounted(() => {
   nextTick(() => {
     initTime()
     getList()
+    if (route.query.eventid) {
+      getEventDetail()
+    }
   })
 })
 onUnmounted(() => {})
