@@ -16,7 +16,7 @@
       <div class="blog-tweet-1img-list-body">
         <WikimoeImage
           :src="coverImages[0].thumfor || coverImages[0].filepath"
-          :alt="coverImages[0].filename"
+          :alt="coverImages[0].description || coverImages[0].filename"
           :width="oneItemWidth"
           :height="oneItemHeight"
           :data-href="coverImages[0].filepath"
@@ -98,7 +98,7 @@
                 <WikimoeImage
                   class="blog-tweet-img-list-body-item"
                   :src="img.thumfor || img.filepath"
-                  :alt="img.filename"
+                  :alt="img.description || img.filename"
                   :width="img.thumWidth || img.width"
                   :height="img.thumHeight || img.height"
                   loading="lazy"
@@ -168,7 +168,7 @@
                 <WikimoeImage
                   class="blog-tweet-img-list-body-item"
                   :src="img.thumfor || img.filepath"
-                  :alt="img.filename"
+                  :alt="img.description || img.filename"
                   :width="img.thumWidth || img.width"
                   :height="img.thumHeight || img.height"
                   loading="lazy"

@@ -309,7 +309,7 @@ export default {
               item.thumfor
                 ? `${siteUrl.value + item.thumfor}?t=${getTime()}`
                 : `${siteUrl.value + item.filepath}?t=${getTime()}`,
-              item.filename,
+              item.description || item.filename,
               `${siteUrl.value + item.filepath}?t=${getTime()}`
             )
           } else if (insertFnType.value === 'video') {
