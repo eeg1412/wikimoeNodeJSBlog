@@ -125,6 +125,8 @@
 </template>
 <script setup>
 import { getEventListApiFetch, getEventDetailApiFetch } from '@/api/event'
+import moment from 'moment'
+
 const router = useRouter()
 const route = useRoute()
 
@@ -139,14 +141,6 @@ const monthYear = computed(() => {
   // const end = new Date(endTime.value)
   return `${start.getFullYear()}年${start.getMonth() + 1}月`
 })
-const initTime = () => {
-  const now = new Date()
-  // 获取当前系统的月的第一天和最后一天
-  startTime.value = new Date(now.getFullYear(), now.getMonth(), 1)
-  let endDate = new Date(now.getFullYear(), now.getMonth() + 1, 0)
-  endDate.setHours(23, 59, 59)
-  endTime.value = endDate
-}
 const eventLoading = ref(false)
 const getList = async () => {
   eventLoading.value = true
@@ -154,9 +148,18 @@ const getList = async () => {
   const res = await getEventListApiFetch({
     startTime: new Date(startTime.value).toISOString(),
     endTime: new Date(endTime.value).toISOString(),
-  }).catch((err) => {
-    console.log(err)
   })
+    .then((res) => {
+      // 获取startTime.value的年和月
+      const year = startTime.value.getFullYear()
+      const month = startTime.value.getMonth() + 1
+      // 设置
+      changeRouter({ year, month })
+      return res
+    })
+    .catch((err) => {
+      console.log(err)
+    })
   eventList.value = res?.list || []
   eventLoading.value = false
 }
@@ -166,6 +169,32 @@ const getList = async () => {
 const maxDate = new Date(new Date().getFullYear() + 20, 11, 31)
 // 1980年1月1日
 const minDate = new Date(1980, 0, 1)
+// 初始化时间
+const initTime = () => {
+  // 从query中获取年和月
+  const query = route.query
+  const year = parseInt(query.year)
+  const month = parseInt(query.month) - 1
+
+  if (year && month >= 0 && month <= 11) {
+    const proposedStartDate = new Date(year, month, 1)
+    const proposedEndDate = new Date(year, month + 1, 0)
+    proposedEndDate.setHours(23, 59, 59)
+
+    if (proposedStartDate >= minDate && proposedEndDate <= maxDate) {
+      startTime.value = proposedStartDate
+      endTime.value = proposedEndDate
+      return
+    }
+  }
+
+  const now = new Date()
+  // 获取当前系统的月的第一天和最后一天
+  startTime.value = new Date(now.getFullYear(), now.getMonth(), 1)
+  const endDate = new Date(now.getFullYear(), now.getMonth() + 1, 0)
+  endDate.setHours(23, 59, 59)
+  endTime.value = endDate
+}
 // 是否显示上一年
 const showLastYear = computed(() => {
   const date = new Date(startTime.value)
@@ -235,7 +264,7 @@ const tryOpenEvent = (data) => {
   currentData.value = data
   eventOpen.value = true
   // 路由添加eventid
-  router.replace({ query: { eventid: data._id } })
+  changeRouter({ eventid: data._id })
 }
 
 const getEventDetail = async () => {
@@ -262,7 +291,7 @@ const getEventDetail = async () => {
         })
       }
       if (route.query.eventid) {
-        router.replace({ query: {} })
+        removeRouterQuery('eventid')
       }
     })
     .finally(() => {
@@ -292,7 +321,7 @@ watch(
   () => eventOpen.value,
   (newVal) => {
     if (!newVal && route.query.eventid) {
-      router.replace({ query: {} })
+      removeRouterQuery('eventid')
     }
   }
 )
@@ -305,15 +334,70 @@ const dayClick = (day, dayEventIdMap) => {
     idList.includes(item._id)
   )
   dayEventListOpen.value = true
+  changeRouter({ daydetail: day.monthDay })
+}
+
+watch(
+  () => dayEventListOpen.value,
+  (newVal) => {
+    if (!newVal) {
+      const query = route.query
+      if (query.daydetail) {
+        removeRouterQuery('daydetail')
+      }
+    }
+  }
+)
+
+const getEventListByDay = (dateYYYYMMDD) => {
+  const momentDate = moment(dateYYYYMMDD, 'YYYY-MM-DD')
+  // 将eventList中开始和结束时间转换成YYYY-MM-DD
+  dayEventList.value = eventList.value.filter((item) => {
+    const startTime = moment(item.startTime).format('YYYY-MM-DD')
+    const endTime = moment(item.endTime).format('YYYY-MM-DD')
+    return (
+      momentDate.isSameOrAfter(startTime) && momentDate.isSameOrBefore(endTime)
+    )
+  })
+  dayEventListOpen.value = true
+}
+
+const changeRouter = (newQuery) => {
+  const query = route.query
+  router.replace({
+    query: {
+      eventid: newQuery.eventid || query.eventid || undefined,
+      year: newQuery.year || query.year || undefined,
+      month: newQuery.month || query.month || undefined,
+      daydetail: newQuery.daydetail || query.daydetail || undefined,
+    },
+  })
+}
+
+const removeRouterQuery = (key) => {
+  const query = JSON.parse(JSON.stringify(route.query))
+  delete query[key]
+  router.replace({ query })
 }
 
 onMounted(() => {
-  nextTick(() => {
+  nextTick(async () => {
     initTime()
-    getList()
-    if (route.query.eventid) {
-      getEventDetail()
-    }
+    await getList()
+    nextTick(() => {
+      if (route.query.eventid) {
+        getEventDetail()
+      }
+      if (route.query.daydetail) {
+        const daydetail = route.query.daydetail
+        // 检查daydetail格式是否正确
+        if (moment(daydetail, 'YYYY-MM-DD', true).isValid()) {
+          getEventListByDay(daydetail)
+        } else {
+          removeRouterQuery('daydetail')
+        }
+      }
+    })
   })
 })
 onUnmounted(() => {})
