@@ -50,5 +50,6 @@ const props = defineProps({
 .my-page-avatar {
   margin-top: -40px;
   border: 4px solid #fff;
+  background-color: #fff;
 }
 </style>
