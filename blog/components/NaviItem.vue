@@ -35,7 +35,7 @@
       <nuxt-link
         class="blog-layout-sidebar-item"
         :class="{ active: item.url === currentPath }"
-        :to="item.url"
+        :to="item.url + (item.query || '')"
       >
         <span>{{ item.naviname }}</span>
       </nuxt-link>
@@ -45,7 +45,7 @@
       <a
         class="blog-layout-sidebar-item"
         :class="{ active: item.url === currentPath }"
-        :href="item.url"
+        :href="item.url + (item.query || '')"
         :target="item.newtab ? '_blank' : '_self'"
       >
         <span>{{ item.naviname }}</span>
