@@ -91,7 +91,7 @@
                 <div class="flex items-center">
                   <UIcon name="i-heroicons-clock" />
                 </div>
-                <div class="text-gray-700 text-md ml-2">
+                <div class="text-gray-700 text-xs ml-2">
                   {{ formatDate(item.startTime) }} ~
                   {{ formatDate(item.endTime) }}
                 </div>
