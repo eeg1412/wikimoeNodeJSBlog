@@ -64,11 +64,11 @@
         <h3
           class="text-base font-semibold leading-6 text-gray-900 dark:text-white"
         >
-          当日活动
+          {{ dayEventTitle }}
         </h3>
       </template>
       <template #body>
-        <div>
+        <div v-if="dayEventList.length > 0">
           <div
             v-for="item in dayEventList"
             :key="item._id"
@@ -118,6 +118,9 @@
               </div>
             </div>
           </div>
+        </div>
+        <div v-else>
+          <div class="tc text-gray-500 py-5">当日无事发生</div>
         </div>
       </template>
     </CommonDialog>
@@ -328,11 +331,17 @@ watch(
 
 const dayEventListOpen = ref(false)
 const dayEventList = ref([])
+const dayEventTitle = ref('')
+const setDayEventTitle = (YYYYMMDD) => {
+  const date = moment(YYYYMMDD, 'YYYY-MM-DD')
+  dayEventTitle.value = `${date.format('YYYY年M月D日')}活动`
+}
 const dayClick = (day, dayEventIdMap) => {
   const idList = dayEventIdMap[day.monthDay] || []
   dayEventList.value = eventList.value.filter((item) =>
     idList.includes(item._id)
   )
+  setDayEventTitle(day.monthDay)
   dayEventListOpen.value = true
   changeRouter({ daydetail: day.monthDay })
 }
@@ -359,6 +368,7 @@ const getEventListByDay = (dateYYYYMMDD) => {
       momentDate.isSameOrAfter(startTime) && momentDate.isSameOrBefore(endTime)
     )
   })
+  setDayEventTitle(dateYYYYMMDD)
   dayEventListOpen.value = true
 }
 
