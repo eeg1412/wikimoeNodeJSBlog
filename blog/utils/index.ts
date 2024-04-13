@@ -37,13 +37,13 @@ export function fromNow(
   }
   const diff = (now - Number(date)) / 1000
   if (diff < 60) {
-    return `${Math.ceil(diff)}秒前`
+    return `${Math.floor(diff)}秒前`
   } else if (diff < 60 * 60) {
-    return `${Math.ceil(diff / 60)}分钟前`
+    return `${Math.floor(diff / 60)}分钟前`
   } else if (diff < 60 * 60 * 24) {
-    return `${Math.ceil(diff / 60 / 60)}小时前`
+    return `${Math.floor(diff / 60 / 60)}小时前`
   } else if (diff < 60 * 60 * 24 * 30) {
-    return `${Math.ceil(diff / 60 / 60 / 24)}天前`
+    return `${Math.floor(diff / 60 / 60 / 24)}天前`
   } else {
     return formatDate(date, fmt)
   }
