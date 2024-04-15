@@ -5,13 +5,14 @@ const log4js = require('log4js')
 const adminApiLog = log4js.getLogger('adminApi')
 
 module.exports = async function (req, res, next) {
-  const { nickname, photo, email, description, currentPassword, password } = req.body
+  const { nickname, photo, email, description, currentPassword, password, cover } = req.body
 
   // 更新
   const id = req.admin._id
   const updateData = {
     email,
     description,
+    cover
   }
   if (nickname && nickname !== req.admin.nickname) {
     // 校验昵称是否重复
@@ -54,6 +55,18 @@ module.exports = async function (req, res, next) {
     updateData['password'] = utils.creatBcryptStr(password)
     // pwversion + 1 
     updateData['pwversion'] = req.admin.pwversion + 1
+  }
+  // 封面
+  if (cover) {
+    // cover必须是ObjectId
+    if (!utils.isObjectId(cover)) {
+      res.status(400).json({
+        errors: [{
+          message: '封面ID不正确'
+        }]
+      })
+      return
+    }
   }
 
   // IP

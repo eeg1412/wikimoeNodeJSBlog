@@ -10,7 +10,14 @@ exports.save = async function (parmas) {
 
 exports.findOne = async function (parmas, projection, options = {}) {
   // document查询
-  return await postsModel.findOne(parmas, projection).populate('author', options.authorFilter || 'nickname _id photo').populate('sort').populate('tags').populate('coverImages')
+  return await postsModel.findOne(parmas, projection).populate({
+    path: 'author',
+    select: options.authorFilter || 'nickname _id photo cover',
+    populate: {
+      path: 'cover',
+      select: '_id filepath height mimetype width'
+    }
+  }).populate('sort').populate('tags').populate('coverImages')
     .populate(
       {
         path: 'bangumiList',

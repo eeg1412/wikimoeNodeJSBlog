@@ -23,6 +23,7 @@ var users = new Schema({
   photo: String,
   email: String,
   description: String,
+  cover: { type: Schema.ObjectId, ref: 'attachments', default: null },
   disabled: {
     type: Boolean,
     default: false

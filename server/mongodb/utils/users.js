@@ -10,7 +10,7 @@ exports.save = async function (parmas) {
 
 exports.findOne = async function (parmas, projection) {
     // document查询
-    return await usersModel.findOne(parmas, projection);
+    return await usersModel.findOne(parmas, projection).populate('cover');
 }
 
 exports.updateOne = async function (filters, parmas) {

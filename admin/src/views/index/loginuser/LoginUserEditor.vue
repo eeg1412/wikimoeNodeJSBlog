@@ -38,6 +38,33 @@
                 type="textarea"
               ></el-input>
             </el-form-item>
+            <!-- 封面图 -->
+            <el-form-item label="封面图" prop="cover">
+              <div class="login-usercover-image-item" v-if="coverData">
+                <el-image
+                  :src="`${
+                    coverData.thumfor || coverData.filepath
+                  }?s=${$formatTimestamp(coverData.updatedAt)}`"
+                  fit="contain"
+                  @click="openAttachmentsDialog"
+                  style="width: 100%; height: 100%"
+                />
+              </div>
+              <div
+                class="login-usercover-image-item type-add"
+                @click="openAttachmentsDialog"
+                v-else
+              >
+                <div class="dflex flexCenter w_10 full-height">
+                  <el-icon size="32px"><Plus /></el-icon>
+                </div>
+              </div>
+              <div class="w_10 mt5" v-if="coverData">
+                <el-button type="danger" @click="coverData = null">
+                  删除封面图
+                </el-button>
+              </div>
+            </el-form-item>
             <el-form-item>
               <el-button type="primary" @click="submit">提交</el-button>
             </el-form-item>
@@ -81,6 +108,13 @@
         </el-tab-pane>
       </el-tabs>
     </div>
+    <AttachmentsDialog
+      :shouldSelectOk="true"
+      ref="attachmentsDialogRef"
+      :selectLimit="1"
+      :typeList="['image']"
+      @selectAttachments="selectAttachments"
+    />
   </div>
 </template>
 <script>
@@ -90,8 +124,13 @@ import { useRoute, useRouter } from 'vue-router'
 import { authApi } from '@/api'
 // ElMessage
 import { ElMessage } from 'element-plus'
+import AttachmentsDialog from '@/components/AttachmentsDialog'
+import { loadAndOpenImg } from '@/utils/utils'
 
 export default {
+  components: {
+    AttachmentsDialog,
+  },
   setup() {
     const route = useRoute()
     const router = useRouter()
@@ -99,11 +138,13 @@ export default {
     const activeName = ref('profile')
     const formRef = ref(null)
     const formRefPassword = ref(null)
+    const coverData = ref(null)
     const form = reactive({
       nickname: '',
       email: '',
       photo: '',
       description: '',
+      cover: null,
     })
     const formPassword = reactive({
       currentPassword: '',
@@ -157,6 +198,9 @@ export default {
           form.email = data.email
           form.photo = data.photo
           form.description = data.description
+          if (data.cover) {
+            coverData.value = data.cover
+          }
         })
         .catch((err) => {
           console.log(err)
@@ -166,8 +210,12 @@ export default {
     const submit = () => {
       formRef.value.validate((valid) => {
         if (valid) {
+          const newForm = { ...form }
+          if (coverData.value) {
+            newForm.cover = coverData.value._id
+          }
           authApi
-            .updateLoginUserInfo(form)
+            .updateLoginUserInfo(newForm)
             .then((res) => {
               setForm()
               store.dispatch('setAdminInfo')
@@ -215,6 +263,32 @@ export default {
       form.photo = base64
     }
 
+    // 附件
+    const siteUrl = computed(() => {
+      return store.getters.siteUrl
+    })
+    const attachmentsDialogRef = ref(null)
+    const openAttachmentsDialog = () => {
+      attachmentsDialogRef.value.open()
+    }
+    const selectAttachments = (attachments) => {
+      console.log(attachments)
+      coverData.value = attachments[0]
+    }
+    const openPreviewer = () => {
+      const item = coverData.value
+      const mimetype = item.mimetype
+      const { filepath, width, height } = item
+      loadAndOpenImg(0, [
+        {
+          src: `${siteUrl.value}${filepath}`,
+          width,
+          height,
+          mimetype,
+        },
+      ])
+    }
+
     onMounted(() => {
       setForm()
     })
@@ -222,6 +296,7 @@ export default {
       activeName,
       formRef,
       formRefPassword,
+      coverData,
       form,
       formPassword,
       rules,
@@ -229,8 +304,26 @@ export default {
       submit,
       submitPassword,
       setPhoto,
+      // 附件
+      attachmentsDialogRef,
+      openAttachmentsDialog,
+      selectAttachments,
+      openPreviewer,
     }
   },
 }
 </script>
-<style lang="less" scoped></style>
+<style lang="less" scoped>
+.login-usercover-image-item {
+  width: 100px;
+  height: 100px;
+  border: 1px solid #ccc;
+  color: #ccc;
+  margin-right: 3px;
+  margin-bottom: 3px;
+  float: left;
+  box-sizing: border-box;
+  cursor: pointer;
+  position: relative;
+}
+</style>

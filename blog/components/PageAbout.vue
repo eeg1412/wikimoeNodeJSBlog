@@ -3,6 +3,14 @@
     <div class="my-page-banner">
       <!-- img -->
       <img
+        v-if="author.cover"
+        :src="author.cover.filepath"
+        :width="author.cover.width"
+        :height="author.cover.height"
+        alt="cover"
+      />
+      <img
+        v-else
         src="/img/mypage-banner.webp"
         width="880"
         height="350"
@@ -23,9 +31,7 @@
         </div>
         <!-- 介绍 -->
         <div class="mt-1">
-          <div
-            class="text-gray-500 line-clamp-2 overflow-ellipsis overflow-hidden"
-          >
+          <div class="text-gray-500">
             {{ author.description || '暂无介绍' }}
           </div>
         </div>
