@@ -46,9 +46,16 @@
                     coverData.thumfor || coverData.filepath
                   }?s=${$formatTimestamp(coverData.updatedAt)}`"
                   fit="contain"
-                  @click="openAttachmentsDialog"
+                  @click="openPreviewer"
                   style="width: 100%; height: 100%"
                 />
+                <!-- 删除按钮 -->
+                <div
+                  class="login-usercover-image-item-change"
+                  @click="coverData = null"
+                >
+                  <el-icon><Close /></el-icon>
+                </div>
               </div>
               <div
                 class="login-usercover-image-item type-add"
@@ -60,8 +67,8 @@
                 </div>
               </div>
               <div class="w_10 mt5" v-if="coverData">
-                <el-button type="danger" @click="coverData = null">
-                  删除封面图
+                <el-button type="primary" @click="openAttachmentsDialog">
+                  更换封面图
                 </el-button>
               </div>
             </el-form-item>
@@ -325,5 +332,21 @@ export default {
   box-sizing: border-box;
   cursor: pointer;
   position: relative;
+}
+.login-usercover-image-item-change {
+  position: absolute;
+  top: 2px;
+  right: 2px;
+  width: 20px;
+  height: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 20px;
+  font-size: 14px;
+  text-align: center;
+  color: #f56c6c;
+  cursor: pointer;
+  background-color: rgba(255, 255, 255, 0.85);
 }
 </style>
