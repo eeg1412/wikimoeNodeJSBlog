@@ -213,14 +213,15 @@ module.exports = async function (req, res, next) {
   let tagsIdArr = []
   for await (const tagId of tags_) {
     if (!validator.isMongoId(tagId)) {
+      const tagname = utils.replaceSpacesWithUnderscores(tagId)
       // 不是id，创建tag
       // 校验tagname是否存在
-      let tag = await tagUtils.findOne({ tagname: tagId }).catch((err) => {
+      let tag = await tagUtils.findOne({ tagname: tagname }).catch((err) => {
         return null
       })
       if (!tag) {
         tag = await tagUtils.save({
-          tagname: tagId
+          tagname: tagname
         }).catch((err) => {
           return false
         })

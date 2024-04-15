@@ -205,13 +205,15 @@
 
         <el-table-column prop="tags" label="标签" width="200">
           <template #default="{ row }">
-            <el-tag
+            <div
+              class="postlist-content-item"
               v-for="tag in row.tags"
               :key="tag._id"
               size="small"
               style="margin-right: 5px"
-              >{{ tag.tagname }}</el-tag
             >
+              #{{ tag.tagname }}
+            </div>
           </template>
         </el-table-column>
         <!-- 关联内容 -->

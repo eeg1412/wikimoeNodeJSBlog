@@ -408,7 +408,7 @@ import RichEditor5 from '@/components/RichEditor5'
 import draggable from 'vuedraggable'
 import EmojiTextarea from '@/components/EmojiTextarea.vue'
 import { onBeforeRouteLeave } from 'vue-router'
-import { loadAndOpenImg } from '@/utils/utils'
+import { loadAndOpenImg, replaceSpacesWithUnderscores } from '@/utils/utils'
 import store from '@/store'
 
 export default {
@@ -633,13 +633,14 @@ export default {
           const list = res.data.list
           if (tagKeyword) {
             // 如果tagkeyword没有在list里面，就把tagkeyword push到list里面
+            const formatTagKeyword = replaceSpacesWithUnderscores(tagKeyword)
             const hasTagKeyword = list.some(
-              (item) => item.tagname === tagKeyword
+              (item) => item.tagname === formatTagKeyword
             )
             if (!hasTagKeyword) {
               list.push({
-                _id: tagKeyword,
-                tagname: tagKeyword,
+                _id: formatTagKeyword,
+                tagname: formatTagKeyword,
                 isNew: true,
               })
             }

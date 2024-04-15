@@ -373,3 +373,8 @@ export const dataURLtoBlob = (dataurl) => {
     }
     return new Blob([u8arr], { type: mime });
 }
+
+// 文字中的空格和全角空格替换为下划线
+export const replaceSpacesWithUnderscores = (str) => {
+    return str.replace(/[\s\u3000]/g, '-');
+}

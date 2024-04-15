@@ -15,6 +15,7 @@
           <el-input
             v-model="form.tagname"
             placeholder="请输入标签名称"
+            @blur="form.tagname = replaceSpacesWithUnderscores(form.tagname)"
           ></el-input>
         </el-form-item>
         <el-form-item>
@@ -28,6 +29,7 @@
 import { useRouter, useRoute } from 'vue-router'
 import { onMounted, reactive, ref } from 'vue'
 import { authApi } from '@/api'
+import { replaceSpacesWithUnderscores } from '@/utils/utils'
 export default {
   setup() {
     const router = useRouter()
@@ -94,6 +96,7 @@ export default {
       }
     })
     return {
+      replaceSpacesWithUnderscores,
       id,
       form,
       rules,
