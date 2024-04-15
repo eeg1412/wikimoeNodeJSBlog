@@ -8,6 +8,7 @@
         :width="author.cover.width"
         :height="author.cover.height"
         alt="cover"
+        class="w-full h-auto"
       />
       <img
         v-else
