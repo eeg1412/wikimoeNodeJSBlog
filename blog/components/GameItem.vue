@@ -30,7 +30,7 @@
     </div>
     <div class="acg-right-content content-h-170 custom-scroll">
       <div class="w-full flex flex-col">
-        <div class="font-bold mb-1 line-clamp-2 flex-shrink-0">
+        <div class="font-bold mb-1 flex-shrink-0">
           <span
             class="games-platform-block"
             :style="{
