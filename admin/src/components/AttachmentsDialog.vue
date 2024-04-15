@@ -90,7 +90,11 @@
               circle
               @click="changeAttachmentsSort"
               :title="`更改选择顺序`"
-              v-if="shouldSelectOk"
+              v-if="
+                shouldSelectOk &&
+                selectLimit > 1 &&
+                selectedImageList.length > 1
+              "
             />
             <!-- 本页全选 -->
             <el-button
@@ -98,6 +102,7 @@
               :icon="CircleCheck"
               circle
               @click="selectPageAttachments"
+              v-if="selectLimit === null || selectLimit > 20"
               :title="`本页全选`"
             />
             <!-- 取消本页选择 -->
@@ -106,6 +111,7 @@
               :icon="Remove"
               circle
               @click="clearSelectedPageImageList"
+              v-if="selectedImageList.length > 0"
               :title="`取消本页选择`"
             />
             <!-- 确定按钮 Select -->
@@ -678,7 +684,10 @@ export default {
       if (index > -1) {
         selectedImageObjList.value.splice(index, 1)
       } else {
-        if (props.selectLimit) {
+        if (props.selectLimit === 1) {
+          selectedImageObjList.value = [item]
+          return
+        } else if (props.selectLimit !== null) {
           if (selectedImageList.value.length >= props.selectLimit) {
             ElMessage.error(`最多只能选择${props.selectLimit}件媒体文件`)
             return
