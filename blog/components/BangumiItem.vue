@@ -43,6 +43,15 @@
             class="align-middle mr-1"
           />{{ bangumi.year }}年{{ seasonToName(bangumi.season) }}
         </div>
+        <div
+          class="text-sm mb-1 text-gray-400 flex-shrink-0 w_10 flex items-center"
+          v-if="bangumi.giveUp"
+        >
+          <UIcon
+            name="i-heroicons-bookmark-slash"
+            class="align-middle mr-1"
+          />已弃坑
+        </div>
         <!-- 链接 -->
         <div
           class="text-sm mb-1 text-gray-500 flex-shrink-0"
@@ -88,5 +97,13 @@ const setDataHrefList = (cover) => {
 <style scoped>
 .bangumi-cover-body {
   width: 100px;
+}
+.bangumi-platform-block {
+  color: #fff;
+  padding: 2px 5px;
+  border-radius: 2px;
+  font-size: 12px;
+  margin-right: 5px;
+  border-radius: 5px;
 }
 </style>

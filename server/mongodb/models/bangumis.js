@@ -34,6 +34,11 @@ var bangumis = new Schema({
   season: {
     type: Number,
   },
+  // 弃坑
+  giveUp: {
+    type: Boolean,
+    default: false
+  },
   urlList: {
     type: [
       {

@@ -37,7 +37,7 @@ module.exports = async function (req, res, next) {
     rating: -1,
     _id: -1,
   }
-  bangumiUtils.find(params, sort, '_id cover label rating season status summary title year urlList').then((data) => {
+  bangumiUtils.find(params, sort, '_id cover label rating season status summary title year giveUp urlList').then((data) => {
     // 返回格式list,total
     res.send({
       data: data,

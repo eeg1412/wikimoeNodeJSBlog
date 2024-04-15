@@ -8,7 +8,7 @@ const fs = require('fs');
 
 module.exports = async function (req, res, next) {
 
-  const { title, cover, summary, rating, year, season, label, urlList, status } = req.body
+  const { title, cover, summary, rating, year, season, label, urlList, giveUp, status } = req.body
   // 校验格式
   const params = {
     title,
@@ -19,6 +19,7 @@ module.exports = async function (req, res, next) {
     season,
     label,
     urlList,
+    giveUp,
     status
   }
   // 根据当前年份生成16进制文件夹

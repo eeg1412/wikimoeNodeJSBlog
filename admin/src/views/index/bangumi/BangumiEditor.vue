@@ -136,6 +136,10 @@
             </el-button>
           </div>
         </el-form-item>
+        <!-- giveUp -->
+        <el-form-item label="弃坑" prop="giveUp">
+          <el-switch v-model="form.giveUp"></el-switch>
+        </el-form-item>
         <el-form-item label="状态" prop="status">
           <!-- radio 分别对应 0 1 不显示 显示 -->
           <el-radio-group v-model="form.status">
@@ -170,6 +174,7 @@ export default {
       season: 1,
       label: [],
       urlList: [],
+      giveUp: false,
       status: 0,
       __v: null,
     })
