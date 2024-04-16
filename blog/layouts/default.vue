@@ -194,6 +194,7 @@ const route = useRoute()
 const router = useRouter()
 const optionStore = useOptionStore()
 const { options } = storeToRefs(optionStore)
+// const toast = useToast()
 // sidebar
 // const naviList = ref([
 //   {
@@ -227,11 +228,17 @@ const currentPath = computed(() => {
 })
 
 const keyword = ref('')
+const escapeRegExp = (string) => {
+  return string.replace(/[.*+?^${}()|[\]\\/]/g, '') // $& means the whole matched string
+}
 const goSearch = () => {
-  router.push({
-    path: `/post/list/keyword/${keyword.value}/1`,
-  })
-  keyword.value = ''
+  const keywordValue = escapeRegExp(keyword.value.trim())
+  if (keyword.value) {
+    router.push({
+      path: `/post/list/keyword/${keywordValue}/1`,
+    })
+    keyword.value = ''
+  }
 }
 
 const layoutRightBox = ref(null)

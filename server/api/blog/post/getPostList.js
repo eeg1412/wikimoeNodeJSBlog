@@ -1,6 +1,7 @@
 
 const postUtils = require('../../../mongodb/utils/posts')
 const sortUtils = require('../../../mongodb/utils/sorts')
+const tagsUtils = require('../../../mongodb/utils/tags')
 const utils = require('../../../utils/utils')
 const log4js = require('log4js')
 const userApiLog = log4js.getLogger('userApi')
@@ -30,26 +31,39 @@ module.exports = async function (req, res, next) {
   }
   // 如果keyword存在，就加入查询条件
   if (keyword) {
+    keyword = String(keyword)
+    // keyword去掉前后空格
+    keyword = keyword?.trim()
     // 如果keyword超过20个字符，就截取前20个字符
     if (keyword.length > 20) {
-      keyword = keyword.substring(0, 20)
+      keyword = Array.from(keyword).slice(0, 20).join('');
     }
-    const escapedKeyword = utils.escapeSpecialChars(keyword);
+    const keywordArray = keyword.split(' ');
+    const regexArray = keywordArray.map(keyword => {
+      const escapedKeyword = utils.escapeSpecialChars(keyword);
+      const regex = new RegExp(escapedKeyword, 'i');
+      return regex;
+    });
     // 检索title和excerpt
     params.$or = [
       {
-        title: {
-          $regex: escapedKeyword,
-          $options: 'i'
-        }
+        title: { $in: regexArray }
       },
       {
-        excerpt: {
-          $regex: escapedKeyword,
-          $options: 'i'
-        }
+        excerpt: { $in: regexArray }
       }
     ]
+    // 检索tags
+    const tags = await tagsUtils.findLimit({ tagname: { $in: regexArray } }, undefined, 100).catch((err) => {
+      return []
+    })
+    if (tags.length > 0) {
+      params.$or.push({
+        tags: {
+          $in: tags.map(tag => tag._id)
+        }
+      })
+    }
   }
   // 如果type存在，就加入查询条件
   if (Array.isArray(type)) {

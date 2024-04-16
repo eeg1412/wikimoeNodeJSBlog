@@ -19,6 +19,11 @@ exports.find = async function (parmas, sort, projection) {
   return await tagsModel.find(parmas, projection).sort(sort);
 }
 
+exports.findLimit = async function (parmas, sort, limit = 10, projection) {
+  // document查询
+  return await tagsModel.find(parmas, projection).sort(sort).limit(limit);
+}
+
 // 分页查询
 exports.findPage = async function (parmas, sort, page, limit, projection) {
   // document查询
