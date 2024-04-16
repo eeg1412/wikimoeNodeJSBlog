@@ -626,14 +626,14 @@ export default {
       if (tagsIsLoading.value) {
         return
       }
+      const formatTagKeyword = replaceSpacesWithUnderscores(tagKeyword)
       tagsIsLoading.value = true
       authApi
-        .getTagList({ keyword: tagKeyword, size: 10, page: 1 }, true)
+        .getTagList({ keyword: formatTagKeyword, size: 10, page: 1 }, true)
         .then((res) => {
           const list = res.data.list
           if (tagKeyword) {
             // 如果tagkeyword没有在list里面，就把tagkeyword push到list里面
-            const formatTagKeyword = replaceSpacesWithUnderscores(tagKeyword)
             const hasTagKeyword = list.some(
               (item) => item.tagname === formatTagKeyword
             )
