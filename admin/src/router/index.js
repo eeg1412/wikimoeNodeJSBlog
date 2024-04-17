@@ -259,6 +259,12 @@ const routes = [
         name: 'EventAdd',
         component: () => import(/* webpackChunkName: "EventEditor" */ '../views/index/event/EventEditor.vue')
       },
+      // BackupList
+      {
+        path: '/backup/list',
+        name: 'BackupList',
+        component: () => import(/* webpackChunkName: "BackupList" */ '../views/index/backup/BackupList.vue')
+      },
       // config
       {
         path: '/config',

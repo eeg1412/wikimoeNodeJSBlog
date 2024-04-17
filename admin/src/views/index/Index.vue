@@ -285,6 +285,16 @@
               <i class="fas fa-fw fa-cog pr10"></i>
               <template #title>设置</template>
             </el-menu-item>
+            <!-- BackupList 备份 -->
+            <el-menu-item
+              index="BackupList"
+              @click="removeParam('BackupList')"
+              @click.middle="openNewTab('BackupList')"
+              :route="{ name: 'BackupList' }"
+            >
+              <i class="fas fa-fw fa-database pr10"></i>
+              <template #title>备份</template>
+            </el-menu-item>
           </el-menu>
         </div>
       </el-aside>

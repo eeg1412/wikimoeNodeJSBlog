@@ -722,5 +722,11 @@ export default function (api) {
         shouldAdminJWT: true
       })
     },
+    // /backup/create
+    createBackup (data) {
+      return api.post('/backup/create', data, {
+        shouldAdminJWT: true
+      })
+    },
   }
 }

@@ -1032,6 +1032,15 @@ const adminRouteSetting = [
     roleType: null,
     role: null
   },
+  // createBackup
+  {
+    path: '/backup/create',
+    method: 'post',
+    middleware: [checkAuth],
+    controller: require('../api/admin/backup/createBackup'),
+    roleType: null,
+    role: null
+  },
 ]
 
 adminRouteSetting.forEach(item => {
