@@ -20,5 +20,5 @@ node_modules
 /server/utils/ip2location/*
 /server/tools/backupFromEmlogJson/*
 /server/cache/*
-/server/backup/*
+/server/backups/*
 /blog/public/ads.txt
