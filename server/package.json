@@ -12,6 +12,7 @@
     "backupFromEmlogJSON": "node ./tools/backupFromEmlogJSON"
   },
   "dependencies": {
+    "archiver": "^7.0.1",
     "async-lock": "^1.4.1",
     "bcryptjs": "^2.4.3",
     "chalk": "^4.1.2",
@@ -22,6 +23,7 @@
     "enquirer": "^2.3.6",
     "express": "^4.18.2",
     "feed": "^4.2.2",
+    "fs-extra": "^11.2.0",
     "ip2location-nodejs": "^9.6.1",
     "jsonwebtoken": "^9.0.2",
     "log4js": "^6.9.1",
@@ -33,6 +35,7 @@
     "nodemailer": "^6.9.7",
     "sharp": "0.32.6",
     "ua-parser-js": "^1.0.37",
+    "unzipper": "^0.11.3",
     "validator": "^13.11.0"
   }
 }
