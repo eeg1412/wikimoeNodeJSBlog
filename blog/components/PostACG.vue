@@ -12,13 +12,13 @@
         'md:grid-cols-2': contentCount > 1,
       }"
     >
-      <div v-for="bangumi in bangumiList" :key="bangumi.id" class="mb-1">
+      <div v-for="bangumi in bangumiList" :key="bangumi._id" class="mb-1">
         <BangumiItem :bangumi="bangumi" />
       </div>
-      <div v-for="book in bookList" :key="book.id" class="mb-1">
+      <div v-for="book in bookList" :key="book._id" class="mb-1">
         <BookItem :book="book" />
       </div>
-      <div v-for="game in gameList" :key="game.id" class="mb-1">
+      <div v-for="game in gameList" :key="game._id" class="mb-1">
         <GameItem :game="game" />
       </div>
     </div>
