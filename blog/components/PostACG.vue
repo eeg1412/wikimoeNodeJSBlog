@@ -9,7 +9,7 @@
       class="grid gap-4"
       :class="{
         'grid-cols-1': contentCount === 1,
-        'md:grid-cols-2': contentCount > 1,
+        'xl:grid-cols-2': contentCount > 1,
       }"
     >
       <div v-for="bangumi in bangumiList" :key="bangumi._id" class="mb-1">

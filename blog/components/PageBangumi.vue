@@ -85,7 +85,7 @@
     <div class="relative">
       <!-- 番剧列表 -->
       <div v-if="bangumiList.length > 0" class="mt-5">
-        <div class="grid md:grid-cols-2 gap-4">
+        <div class="grid xl:grid-cols-2 gap-4">
           <div v-for="bangumi in bangumiList" :key="bangumi._id" class="mb-1">
             <BangumiItem :bangumi="bangumi" />
           </div>
