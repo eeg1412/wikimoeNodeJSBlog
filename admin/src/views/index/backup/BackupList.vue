@@ -43,6 +43,53 @@
         ref="tableRef"
         border
       >
+        <el-table-column
+          prop="name"
+          label="备份名称"
+          width="180"
+        ></el-table-column>
+        <el-table-column label="备份类型" width="120">
+          <template #default="{ row }">
+            <el-tag :type="getBackupType(row.type).tagType">
+              {{ getBackupType(row.type).text }}
+            </el-tag>
+          </template>
+        </el-table-column>
+        <el-table-column
+          prop="filename"
+          label="备份文件名"
+          width="200"
+        ></el-table-column>
+        <el-table-column label="备份文件状态" width="150">
+          <template #default="{ row }">
+            <el-tag :type="getFileStatus(row.fileStatus).tagType">
+              {{ getFileStatus(row.fileStatus).text }}
+            </el-tag>
+          </template>
+        </el-table-column>
+        <el-table-column label="备份状态" width="120">
+          <template #default="{ row }">
+            <el-tag :type="getBackupStatus(row.status, row.type).tagType">
+              {{ getBackupStatus(row.status, row.type).text }}
+            </el-tag>
+          </template>
+        </el-table-column>
+        <el-table-column
+          prop="reason"
+          label="原因"
+          width="200"
+        ></el-table-column>
+        <el-table-column
+          prop="remark"
+          label="备份备注"
+          width="200"
+        ></el-table-column>
+        <!-- createdAt -->
+        <el-table-column prop="createdAt" label="创建时间" width="200">
+          <template #default="{ row }">
+            {{ $formatDate(row.createdAt) }}
+          </template>
+        </el-table-column>
         <el-table-column label="操作" width="140" fixed="right">
           <template #default="{ row }">
             <el-button type="primary" size="small" @click="goEdit(row._id)"
@@ -158,9 +205,46 @@ export default {
         params.keyword = sessionParams.keyword
       }
     }
+
+    const getBackupType = (type) => {
+      switch (type) {
+        case 1:
+          return { text: '备份', tagType: 'success' }
+        case 2:
+          return { text: '还原', tagType: 'info' }
+        default:
+          return { text: '', tagType: '' }
+      }
+    }
+
+    const getFileStatus = (status) => {
+      switch (status) {
+        case 0:
+          return { text: '备份中', tagType: 'warning' }
+        case 1:
+          return { text: '存在', tagType: 'success' }
+        case 2:
+          return { text: '已删除', tagType: 'danger' }
+        default:
+          return { text: '', tagType: '' }
+      }
+    }
+
+    const getBackupStatus = (status, type) => {
+      switch (status) {
+        case 0:
+          return { text: type === 1 ? '备份中' : '还原中', tagType: 'warning' }
+        case 1:
+          return { text: '成功', tagType: 'success' }
+        case 2:
+          return { text: '失败', tagType: 'danger' }
+        default:
+          return { text: '', tagType: '' }
+      }
+    }
     onMounted(() => {
       initParams()
-      // getBackupList()
+      getBackupList()
     })
     return {
       backupList,
@@ -172,6 +256,9 @@ export default {
       handleAdd,
       goEdit,
       deleteBackup,
+      getBackupType,
+      getFileStatus,
+      getBackupStatus,
     }
   },
 }

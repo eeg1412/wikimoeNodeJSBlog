@@ -728,5 +728,12 @@ export default function (api) {
         shouldAdminJWT: true
       })
     },
+    // /backup/list
+    getBackupList (data) {
+      return api.get('/backup/list', {
+        params: data,
+        shouldAdminJWT: true
+      })
+    },
   }
 }

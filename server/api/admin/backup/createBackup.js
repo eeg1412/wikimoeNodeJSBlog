@@ -1,5 +1,6 @@
 const backupUtils = require('../../../mongodb/utils/backups')
 const utils = require('../../../utils/utils')
+const backupTools = require('../../../utils/backup')
 const log4js = require('log4js')
 const adminApiLog = log4js.getLogger('adminApi')
 const moment = require('moment-timezone');
@@ -52,16 +53,15 @@ module.exports = async function (req, res, next) {
     // 文件名为当前时间戳YYYYMMDDHHmmss+id
     const pathname = `backup-${moment().format('YYYYMMDDHHmmss')}-${id}`
     try {
-      await utils.dumpCollections(pathname)
-      await utils.backupAttachmentsAndAssets(pathname)
-      await utils.backupToZip(pathname)
-      await utils.clearBackupCache(pathname)
+      await backupTools.dumpCollections(pathname, id)
+      await backupTools.backupToZip(pathname)
+      await backupTools.clearBackupCache(pathname)
     } catch (err) {
       backupUtils.updateOne({ _id: id }, { status: 2, fileStatus: 2, reason: logErrorToText(err) })
       adminApiLog.error(`backup create fail, ${logErrorToText(err)}`)
       return
     }
-    backupUtils.updateOne({ _id: id }, { status: 1, fileStatus: 1, pathname: `${pathname}.zip` })
+    backupUtils.updateOne({ _id: id }, { status: 1, fileStatus: 1, filename: `${pathname}.zip` })
 
     adminApiLog.info(`backup create success`)
   }).catch((err) => {
