@@ -115,7 +115,7 @@
         v-model:page-size="params.size"
       />
     </div>
-    <BackupEditor ref="BackupEditorRef" />
+    <BackupEditor ref="BackupEditorRef" @update="getBackupList(true)" />
   </div>
 </template>
 <script>
