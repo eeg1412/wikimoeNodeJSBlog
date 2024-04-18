@@ -46,7 +46,7 @@
         <el-table-column
           prop="name"
           label="备份名称"
-          width="180"
+          min-width="180"
         ></el-table-column>
         <el-table-column label="备份类型" width="120">
           <template #default="{ row }">
@@ -58,7 +58,7 @@
         <el-table-column
           prop="filename"
           label="备份文件名"
-          width="200"
+          min-width="200"
         ></el-table-column>
         <el-table-column label="备份文件状态" width="150">
           <template #default="{ row }">
@@ -82,7 +82,7 @@
         <el-table-column
           prop="remark"
           label="备份备注"
-          width="200"
+          min-width="200"
         ></el-table-column>
         <!-- createdAt -->
         <el-table-column prop="createdAt" label="创建时间" width="200">
