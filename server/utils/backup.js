@@ -64,7 +64,7 @@ exports.backupToZip = async (pathname) => {
   const output = fs.createWriteStream(`./backups/${pathname}.zip`);
   // 创建 archiver 对象，用于压缩文件
   const archive = archiver('zip', {
-    zlib: { level: 0 }
+    zlib: { level: 2 }
   });
 
   console.log('backup to zip start');
