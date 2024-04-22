@@ -1,9 +1,8 @@
 const backupUtils = require('../../../mongodb/utils/backups')
 const utils = require('../../../utils/utils')
-const backupTools = require('../../../utils/backup')
 const log4js = require('log4js')
 const adminApiLog = log4js.getLogger('adminApi')
-const moment = require('moment-timezone');
+const { Worker } = require('worker_threads');
 
 module.exports = async function (req, res, next) {
 
@@ -45,32 +44,35 @@ module.exports = async function (req, res, next) {
 
   // save
   backupUtils.save(params).then(async (data) => {
+
+    const backupWorker = new Worker('./utils/workers/backupWorker.js');
+    const id = data._id;
+    backupWorker.postMessage(String(id));
+
+    backupWorker.on('message', (message) => {
+      if (message.status === 'success') {
+        backupUtils.updateOne({ _id: id }, { status: 1, fileStatus: 1, pathname: message.data.pathname });
+      } else {
+        backupUtils.updateOne({ _id: id }, { status: 2, fileStatus: 2, reason: logErrorToText(message.error) });
+        adminApiLog.error(`backup create fail, ${logErrorToText(message.error)}`);
+      }
+      // 关闭 worker
+      backupWorker.terminate().then(() => {
+        console.log('Worker terminated');
+      });
+    });
     res.send({
       data: data
     })
-
-    const id = data._id
-    // 文件名为当前时间戳YYYYMMDDHHmmss+id
-    const pathname = `backup-${moment().format('YYYYMMDDHHmmss')}-${id}`
-    try {
-      await backupTools.dumpCollections(pathname, id)
-      await backupTools.backupToZip(pathname)
-      await backupTools.clearBackupCache(pathname)
-    } catch (err) {
-      backupUtils.updateOne({ _id: id }, { status: 2, fileStatus: 2, reason: logErrorToText(err) })
-      adminApiLog.error(`backup create fail, ${logErrorToText(err)}`)
-      return
-    }
-    backupUtils.updateOne({ _id: id }, { status: 1, fileStatus: 1, filename: `${pathname}.zip` })
-
-    adminApiLog.info(`backup create success`)
+    adminApiLog.info(`backup document create success`)
   }).catch((err) => {
+    console.error(err)
     res.status(400).json({
       errors: [{
         message: '备份创建失败'
       }]
     })
-    adminApiLog.error(`backup create fail, ${logErrorToText(err)}`)
+    adminApiLog.error(`backup document create fail, ${logErrorToText(err)}`)
   })
 
 }

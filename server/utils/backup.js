@@ -46,7 +46,7 @@ exports.dumpCollections = async (pathname, id) => {
   // 将备份信息序列化为 BSON 格式
   const BackupInfoBSONData = bson.serialize(BackupInfo);
   // 将备份信息写入到文件中
-  fs.writeFileSync(path.join(dir, 'backupInfo.bson'), BackupInfoBSONData);
+  fs.writeFileSync(path.join(`./cache/${pathname}`, 'backupInfo.bson'), BackupInfoBSONData);
   console.log(`backup info ${JSON.stringify(BackupInfo)} dumped successfully`);
 }
 
