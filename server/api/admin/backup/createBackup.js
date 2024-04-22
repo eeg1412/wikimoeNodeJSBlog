@@ -51,7 +51,7 @@ module.exports = async function (req, res, next) {
 
     backupWorker.on('message', (message) => {
       if (message.status === 'success') {
-        backupUtils.updateOne({ _id: id }, { status: 1, fileStatus: 1, pathname: message.data.pathname });
+        backupUtils.updateOne({ _id: id }, { status: 1, fileStatus: 1, filename: `${message.data.pathname}.zip` });
       } else {
         backupUtils.updateOne({ _id: id }, { status: 2, fileStatus: 2, reason: logErrorToText(message.error) });
         adminApiLog.error(`backup create fail, ${logErrorToText(message.error)}`);
