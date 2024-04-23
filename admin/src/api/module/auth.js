@@ -742,5 +742,18 @@ export default function (api) {
         shouldAdminJWT: true
       })
     },
+    // /backup/detail
+    getBackupDetail (data) {
+      return api.get('/backup/detail', {
+        params: data,
+        shouldAdminJWT: true
+      })
+    },
+    // /backup/update
+    updateBackup (data) {
+      return api.put('/backup/update', data, {
+        shouldAdminJWT: true
+      })
+    },
   }
 }

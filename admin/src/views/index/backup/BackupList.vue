@@ -153,14 +153,18 @@
         v-model:page-size="params.size"
       />
     </div>
-    <BackupEditor ref="BackupEditorRef" @update="getBackupList(true)" />
+    <BackupEditor
+      ref="BackupEditorRef"
+      :id="editId"
+      @update="getBackupList(true)"
+    />
   </div>
 </template>
 <script>
 import { useRoute, useRouter } from 'vue-router'
 import { authApi } from '@/api'
 import { ElMessage, ElMessageBox } from 'element-plus'
-import { onMounted, reactive, ref, watch } from 'vue'
+import { nextTick, onMounted, reactive, ref, watch } from 'vue'
 import { setSessionParams, getSessionParams } from '@/utils/utils'
 import BackupEditor from '@/components/BackupEditor.vue'
 export default {
@@ -196,7 +200,10 @@ export default {
     }
     const BackupEditorRef = ref(null)
     const handleAdd = () => {
-      BackupEditorRef.value.open()
+      editId.value = null
+      nextTick(() => {
+        BackupEditorRef.value.open()
+      })
     }
     // 监听 params.page 的变化
     watch(
@@ -206,12 +213,11 @@ export default {
       }
     )
 
+    const editId = ref(null)
     const goEdit = (id) => {
-      router.push({
-        name: 'BackupEdit',
-        params: {
-          id,
-        },
+      editId.value = id
+      nextTick(() => {
+        BackupEditorRef.value.open()
       })
     }
     const deleteCommand = (id, command) => {
@@ -316,6 +322,7 @@ export default {
       getBackupList,
       BackupEditorRef,
       handleAdd,
+      editId,
       goEdit,
       deleteCommand,
       deleteBackup,

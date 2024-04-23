@@ -1059,6 +1059,24 @@ const adminRouteSetting = [
     roleType: null,
     role: null
   },
+  // updateBackup
+  {
+    path: '/backup/update',
+    method: 'put',
+    middleware: [checkAuth],
+    controller: require('../api/admin/backup/updateBackup'),
+    roleType: null,
+    role: null
+  },
+  // getBackupDetail
+  {
+    path: '/backup/detail',
+    method: 'get',
+    middleware: [checkAuth],
+    controller: require('../api/admin/backup/getBackupDetail'),
+    roleType: null,
+    role: null
+  },
 ]
 
 adminRouteSetting.forEach(item => {
