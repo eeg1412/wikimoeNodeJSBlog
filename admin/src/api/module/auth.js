@@ -755,5 +755,12 @@ export default function (api) {
         shouldAdminJWT: true
       })
     },
+    // /backup/download/token
+    getDownloadBackupToken (data) {
+      return api.get('/backup/download/token', {
+        params: data,
+        shouldAdminJWT: true
+      })
+    },
   }
 }

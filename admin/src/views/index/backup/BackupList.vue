@@ -95,7 +95,7 @@
             {{ $formatDate(row.createdAt) }}
           </template>
         </el-table-column>
-        <el-table-column label="操作" width="200" fixed="right">
+        <el-table-column label="操作" width="190" fixed="right">
           <template #default="{ row }">
             <div class="dflex flexMiddle">
               <div>
@@ -135,6 +135,28 @@
                   >删除记录</el-button
                 >
               </div>
+            </div>
+            <div class="dflex flexMiddle mt5">
+              <!-- 下载 -->
+              <div>
+                <el-button
+                  class="mr5"
+                  size="small"
+                  @click="downloadBackup(row._id)"
+                  v-if="row.fileStatus === 1"
+                  >下载</el-button
+                >
+              </div>
+              <!-- 还原 -->
+              <!-- <div>
+                <el-button
+                  type="danger"
+                  size="small"
+                  @click="goEdit(row._id)"
+                  v-if="row.type === 1 && row.fileStatus === 1"
+                  >还原</el-button
+                >
+              </div> -->
             </div>
           </template>
         </el-table-column>
@@ -310,6 +332,36 @@ export default {
           return { text: '', tagType: '' }
       }
     }
+
+    // 下载
+    const downloadBackup = (id) => {
+      authApi
+        .getDownloadBackupToken({ id })
+        .then((res) => {
+          const token = res.data.token
+          const form = document.createElement('form')
+          form.action = '/api/admin/backup/download' // your url
+          form.method = 'POST'
+          form.target = '_blank' // open in a new tab
+
+          // add parameters
+          const input1 = document.createElement('input')
+          input1.type = 'hidden'
+          input1.name = 't'
+          input1.value = token
+          form.appendChild(input1)
+
+          // append form to body and submit
+          document.body.appendChild(form)
+          form.submit()
+
+          // remove form from body
+          document.body.removeChild(form)
+        })
+        .catch((err) => {
+          console.error(err)
+        })
+    }
     onMounted(() => {
       initParams()
       getBackupList()
@@ -329,6 +381,7 @@ export default {
       getBackupType,
       getFileStatus,
       getBackupStatus,
+      downloadBackup,
     }
   },
 }

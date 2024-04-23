@@ -1077,6 +1077,25 @@ const adminRouteSetting = [
     roleType: null,
     role: null
   },
+  // downloadBackup
+  {
+    path: '/backup/download',
+    method: 'post',
+    // 下载的校验在downloadBackup.js中进行
+    middleware: [],
+    controller: require('../api/admin/backup/downloadBackup'),
+    roleType: null,
+    role: null
+  },
+  // getDownloadBackupToken
+  {
+    path: '/backup/download/token',
+    method: 'get',
+    middleware: [checkAuth],
+    controller: require('../api/admin/backup/getDownloadBackupToken'),
+    roleType: null,
+    role: null
+  },
 ]
 
 adminRouteSetting.forEach(item => {
