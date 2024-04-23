@@ -812,6 +812,11 @@ input[type='password'] {
   justify-content: center;
   align-items: flex-start;
 }
+/* 垂直居中，左边对齐 */
+.flexMiddle {
+  justify-content: flex-start;
+  align-items: center;
+}
 .pointer {
   cursor: pointer;
 }

@@ -735,5 +735,12 @@ export default function (api) {
         shouldAdminJWT: true
       })
     },
+    // /backup/delete
+    deleteBackup (data) {
+      return api.delete('/backup/delete', {
+        params: data,
+        shouldAdminJWT: true
+      })
+    },
   }
 }

@@ -13,7 +13,7 @@
           :model="params"
           @submit.prevent
           class="demo-form-inline"
-          @keypress.enter="getBackupList(true)"
+          @keypress.enter="getBackupList(false)"
         >
           <el-form-item>
             <el-input
@@ -30,6 +30,11 @@
       </div>
       <div class="fr">
         <!-- 按钮用 -->
+        <!-- 刷新 -->
+        <el-button @click="getBackupList(true)">
+          <el-icon><Refresh /></el-icon>
+        </el-button>
+
         <!-- 追加 -->
         <el-button type="primary" @click="handleAdd">备份</el-button>
       </div>
@@ -90,14 +95,47 @@
             {{ $formatDate(row.createdAt) }}
           </template>
         </el-table-column>
-        <el-table-column label="操作" width="140" fixed="right">
+        <el-table-column label="操作" width="200" fixed="right">
           <template #default="{ row }">
-            <el-button type="primary" size="small" @click="goEdit(row._id)"
-              >编辑</el-button
-            >
-            <el-button type="danger" size="small" @click="deleteBackup(row._id)"
-              >删除</el-button
-            >
+            <div class="dflex flexMiddle">
+              <div>
+                <el-button
+                  type="primary"
+                  class="mr5"
+                  size="small"
+                  @click="goEdit(row._id)"
+                  >编辑</el-button
+                >
+              </div>
+
+              <el-dropdown
+                split-button
+                size="small"
+                type="danger"
+                trigger="click"
+                @click="deleteBackup(row._id, '1', '1')"
+                @command="(command) => deleteCommand(row._id, command)"
+                v-if="row.type === 1 && row.fileStatus === 1"
+              >
+                完整删除
+                <template #dropdown>
+                  <el-dropdown-menu>
+                    <el-dropdown-item command="file">删除文件</el-dropdown-item>
+                    <el-dropdown-item command="record"
+                      >删除记录</el-dropdown-item
+                    >
+                  </el-dropdown-menu>
+                </template>
+              </el-dropdown>
+              <div v-else>
+                <el-button
+                  type="danger"
+                  size="small"
+                  @click="deleteBackup(row._id, '0', '1')"
+                  >删除记录</el-button
+                >
+              </div>
+            </div>
           </template>
         </el-table-column>
       </el-table>
@@ -176,8 +214,30 @@ export default {
         },
       })
     }
-    const deleteBackup = (id) => {
-      ElMessageBox.confirm('确定要删除吗？', {
+    const deleteCommand = (id, command) => {
+      switch (command) {
+        case 'file':
+          deleteBackup(id, '1', '0')
+          break
+        case 'record':
+          deleteBackup(id, '0', '1')
+          break
+
+        default:
+          break
+      }
+    }
+    const deleteBackup = (id, deletefile, deleterecord) => {
+      // 根据deletefile和deleterecord显示不同的提示
+      let note = ''
+      if (deletefile === '1' && deleterecord === '1') {
+        note = '删除文件和记录'
+      } else if (deletefile === '1') {
+        note = '删除文件'
+      } else if (deleterecord === '1') {
+        note = '删除记录'
+      }
+      ElMessageBox.confirm(`确定要${note}吗？`, {
         confirmButtonText: '是',
         cancelButtonText: '否',
         type: 'warning',
@@ -185,6 +245,8 @@ export default {
         .then(() => {
           const params = {
             id,
+            deletefile,
+            deleterecord,
           }
           authApi
             .deleteBackup(params)
@@ -255,6 +317,7 @@ export default {
       BackupEditorRef,
       handleAdd,
       goEdit,
+      deleteCommand,
       deleteBackup,
       getBackupType,
       getFileStatus,
