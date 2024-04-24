@@ -7,6 +7,7 @@ var path = require('path');
 
 module.exports = async function (req, res, next) {
   const token = req.body.t
+  // check token
   const decoded = utils.checkJWT(token)
   if (decoded.isError) {
     res.status(403).json({
@@ -17,7 +18,16 @@ module.exports = async function (req, res, next) {
     return
   }
   const id = decoded.data.id
-  // check token
+  const tokenType = decoded.data.tokenType
+  if (tokenType !== 'downloadBackup') {
+    res.status(403).json({
+      errors: [{
+        message: '请求失败'
+      }]
+    })
+    return
+  }
+
   if (!id) {
     res.status(400).json({
       errors: [{
