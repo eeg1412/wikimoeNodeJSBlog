@@ -762,5 +762,11 @@ export default function (api) {
         shouldAdminJWT: true
       })
     },
+    // post /backup/restore
+    restoreBackup (data) {
+      return api.post('/backup/restore', data, {
+        shouldAdminJWT: true
+      })
+    },
   }
 }

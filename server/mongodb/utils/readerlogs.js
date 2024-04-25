@@ -12,6 +12,11 @@ exports.save = async function (parmas) {
   return await readerlogs.save()
 }
 
+exports.saveNormal = async function (parmas) {
+  // document保存
+  return await readerlogsModel.insertMany(parmas);
+}
+
 
 exports.findOne = async function (parmas, projection) {
   // document查询

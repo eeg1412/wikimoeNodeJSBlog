@@ -67,7 +67,10 @@
         ></el-table-column>
         <el-table-column label="备份文件状态" width="150">
           <template #default="{ row }">
-            <el-tag :type="getFileStatus(row.fileStatus).tagType">
+            <el-tag
+              :type="getFileStatus(row.fileStatus).tagType"
+              v-if="row.type !== 2"
+            >
               {{ getFileStatus(row.fileStatus).text }}
             </el-tag>
           </template>
@@ -148,15 +151,15 @@
                 >
               </div>
               <!-- 还原 -->
-              <!-- <div>
+              <div>
                 <el-button
                   type="danger"
                   size="small"
-                  @click="goEdit(row._id)"
+                  @click="showBackupDialog(row._id)"
                   v-if="row.type === 1 && row.fileStatus === 1"
                   >还原</el-button
                 >
-              </div> -->
+              </div>
             </div>
           </template>
         </el-table-column>
@@ -180,6 +183,36 @@
       :id="editId"
       @update="getBackupList(true)"
     />
+    <el-dialog
+      title="注意"
+      v-model="isBackupDialogVisible"
+      destroy-on-close
+      :close-on-click-modal="false"
+      align-center
+      class="common-max-dialog"
+    >
+      <ul>
+        <li>注意该操作将会<span class="cRed">删除所有现有内容！</span></li>
+        <li>在还原前必须<span class="cRed">关闭博客访问！</span></li>
+        <li>在还原期间管理员账号可能会无法登录！</li>
+        <li>确定要还原吗？</li>
+      </ul>
+      <div class="mt10">
+        <el-checkbox v-model="isBackupNoticeChecked">我已知晓</el-checkbox>
+      </div>
+      <template #footer>
+        <span class="dialog-footer">
+          <el-button @click="isBackupDialogVisible = false">取消</el-button>
+          <el-button
+            type="danger"
+            :disabled="!isBackupNoticeChecked"
+            @click="confirmBackupRestore"
+          >
+            执行
+          </el-button>
+        </span>
+      </template>
+    </el-dialog>
   </div>
 </template>
 <script>
@@ -362,6 +395,34 @@ export default {
           console.error(err)
         })
     }
+
+    // 还原
+    const isBackupDialogVisible = ref(false)
+    const isBackupNoticeChecked = ref(false)
+    const restoreId = ref(null)
+
+    const showBackupDialog = (id) => {
+      restoreId.value = id
+      isBackupNoticeChecked.value = false
+      isBackupDialogVisible.value = true
+      restoreId.value = id
+    }
+
+    const confirmBackupRestore = () => {
+      authApi
+        .restoreBackup({ id: restoreId.value })
+        .then(() => {
+          ElMessage.success('开始还原，请稍后查看状态')
+          getBackupList()
+        })
+        .catch(() => {})
+      isBackupDialogVisible.value = false
+    }
+
+    const closeBackupDialog = (done) => {
+      isBackupDialogVisible.value = false
+    }
+
     onMounted(() => {
       initParams()
       getBackupList()
@@ -382,6 +443,12 @@ export default {
       getFileStatus,
       getBackupStatus,
       downloadBackup,
+      // 还原
+      isBackupDialogVisible,
+      isBackupNoticeChecked,
+      showBackupDialog,
+      confirmBackupRestore,
+      closeBackupDialog,
     }
   },
 }

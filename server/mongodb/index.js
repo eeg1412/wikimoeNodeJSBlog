@@ -12,6 +12,7 @@ var db = mongoose.connection;
 
 db.once('open', async () => {
   console.info('数据库连接成功！');
+  // 更新时注意同时更新还原时的缓存
   await globalConfigUtils.initGlobalConfig()
   cacheDataUtils.getNaviList()
   cacheDataUtils.getSidebarList()
