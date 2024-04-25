@@ -44,3 +44,9 @@ exports.deleteOne = async function (filters) {
   // document查询
   return await backupsModel.deleteOne(filters);
 }
+
+// deleteMany
+exports.deleteMany = async function (filters) {
+  // document查询
+  return await backupsModel.deleteMany(filters);
+}

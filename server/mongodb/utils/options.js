@@ -51,3 +51,8 @@ exports.findOneAndUpdate = async function (filters, parmas, options = {}) {
   parmas.$inc = { __v: 1, ...parmas.$inc }
   return await optionsModel.findOneAndUpdate(filters, parmas, options);
 }
+// deleteMany
+exports.deleteMany = async function (filters) {
+  // document查询
+  return await optionsModel.deleteMany(filters);
+}

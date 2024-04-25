@@ -86,6 +86,10 @@ exports.updateOne = async function (filters, parmas) {
   parmas.$inc = { __v: 1, ...parmas.$inc }
   return await ${tableName}sModel.updateOne(filters, parmas);
 }
+// deleteMany
+exports.deleteMany = async function (filters) {
+  return await ${tableName}sModel.deleteMany(filters);
+}
 // 删除
 exports.deleteOne = async function (filters) {
   // document查询

@@ -18,3 +18,8 @@ exports.updateOne = async function (filters, parmas) {
     parmas.$inc = { __v: 1, ...parmas.$inc }
     return await usersModel.updateOne(filters, parmas);
 }
+// deleteMany
+exports.deleteMany = async function (filters) {
+    // document查询
+    return await usersModel.deleteMany(filters);
+}

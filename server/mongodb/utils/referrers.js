@@ -44,3 +44,8 @@ exports.deleteOne = async function (filters) {
   // document查询
   return await referrersModel.deleteOne(filters);
 }
+// deleteMany
+exports.deleteMany = async function (filters) {
+  // document查询
+  return await referrersModel.deleteMany(filters);
+}

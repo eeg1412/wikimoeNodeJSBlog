@@ -49,3 +49,8 @@ exports.aggregate = async function (parmas) {
   // document查询
   return await bangumisModel.aggregate(parmas);
 }
+// deleteMany
+exports.deleteMany = async function (filters) {
+  // document查询
+  return await bangumisModel.deleteMany(filters);
+}

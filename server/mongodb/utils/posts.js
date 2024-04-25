@@ -134,3 +134,9 @@ exports.findOneAndUpdate = async function (filters, parmas, options) {
   // document查询
   return await postsModel.findOneAndUpdate(filters, parmas, options);
 }
+
+// deleteMany
+exports.deleteMany = async function (filters) {
+  // document查询
+  return await postsModel.deleteMany(filters);
+}

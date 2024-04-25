@@ -50,3 +50,9 @@ exports.count = async function (parmas) {
   // document查询
   return await commentsModel.countDocuments(parmas);
 }
+
+// deleteMany
+exports.deleteMany = async function (filters) {
+  // document查询
+  return await commentsModel.deleteMany(filters);
+}
