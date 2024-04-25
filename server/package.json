@@ -35,7 +35,6 @@
     "nodemailer": "^6.9.7",
     "sharp": "0.32.6",
     "ua-parser-js": "^1.0.37",
-    "unzipper": "^0.11.3",
     "validator": "^13.11.0"
   }
 }

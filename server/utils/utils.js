@@ -15,7 +15,6 @@ const sharp = require('sharp');
 const AsyncLock = require('async-lock');
 const lock = new AsyncLock({ timeout: 60000 });
 const crawlerUserAgents = require('./crawler-user-agents.json')
-const unzipper = require('unzipper');
 
 const botUserAgentList = []
 crawlerUserAgents.forEach((item) => {
