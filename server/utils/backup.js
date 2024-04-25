@@ -156,6 +156,7 @@ exports.clearBackupCache = async (pathname, fullPath) => {
 
 // 还原备份
 exports.unzipBackup = (fullPath) => {
+  console.log('unzip backup start');
   return new Promise((resolve, reject) => {
     // 在./cache 目录下创建一个文件夹，用于存放解压后的文件
     const dir = `./cache/${path.basename(fullPath, '.zip')}`;
@@ -232,48 +233,56 @@ exports.restoreCollections = async (fullPath) => {
 
       // 创建一个空的Buffer，用于存储从文件中读取的数据
       let buffer = Buffer.alloc(0);
-      const promiseArrary = [];
+      const promiseArray = [];
 
-      // 创建一个新的 Promise
-      await new Promise((resolve, reject) => {
-        // 当从文件中读取到数据时，触发此事件监听器
-        readStream.on('data', async (chunk) => {
-          // 将新读取的数据（chunk）添加到buffer中
-          buffer = Buffer.concat([buffer, chunk]);
+      // 当从文件中读取到数据时，触发此事件监听器
+      for await (const chunk of readStream) {
+        // 将新读取的数据（chunk）添加到buffer中
+        buffer = Buffer.concat([buffer, chunk]);
 
-          // 当buffer的长度大于4时，进入循环
-          // 这是因为在.bson文件中，每个文档的大小（以字节为单位）都存储在文档的前4个字节中
-          while (buffer.length > 4) {
-            // 读取buffer的前4个字节，获取到当前文档的大小
-            const size = buffer.readInt32LE(0);
+        // 当buffer的长度大于4时，进入循环
+        // 这是因为在.bson文件中，每个文档的大小（以字节为单位）都存储在文档的前4个字节中
+        while (buffer.length > 4) {
+          // 读取buffer的前4个字节，获取到当前文档的大小
+          const size = buffer.readInt32LE(0);
 
-            // 如果文档的大小大于buffer的长度，那么跳出循环，等待更多的数据被读取
-            if (size > buffer.length) {
-              break;
-            }
-
-            // 反序列化buffer中的数据，创建一个JavaScript对象
-            const doc = bson.deserialize(buffer.subarray(0, size));
-            // 插入
-            switch (collectionName) {
-              case 'readerlogs':
-                promiseArrary.push(modelUtilMap[collectionName].saveNormal(doc));
-                break;
-              default:
-                promiseArrary.push(modelUtilMap[collectionName].save(doc));
-                break;
-            }
-
-            // 将buffer中已经被反序列化的数据移除，以便于处理下一个文档
-            buffer = buffer.subarray(size);
+          // 如果文档的大小大于buffer的长度，那么跳出循环，等待更多的数据被读取
+          if (size > buffer.length) {
+            break;
           }
-        });
 
-        readStream.on('end', resolve);
-        readStream.on('error', reject);
-      });
+          // 反序列化buffer中的数据，创建一个JavaScript对象
+          const doc = bson.deserialize(buffer.subarray(0, size));
+          // 插入
+          switch (collectionName) {
+            case 'readerlogs':
+              promiseArray.push(modelUtilMap[collectionName].saveNormal(doc));
+              break;
+            default:
+              promiseArray.push(modelUtilMap[collectionName].save(doc));
+              break;
+          }
 
-      await Promise.all(promiseArrary);
+          // 将buffer中已经被反序列化的数据移除，以便于处理下一个文档
+          buffer = buffer.subarray(size);
+
+          // 如果promiseArray已经大于100，那么等待所有的promise执行完毕
+          if (promiseArray.length >= 100) {
+            console.log(`Collection ${collectionName} restored 100 documents try to save`);
+            await Promise.all(promiseArray);
+            console.log(`Collection ${collectionName} restored 100 documents saved`);
+            // 清空promiseArray
+            promiseArray.length = 0;
+          }
+        }
+      };
+
+
+      if (promiseArray.length > 0) {
+        console.log(`Collection ${collectionName} restored ${promiseArray.length} documents try to save`);
+        await Promise.all(promiseArray);
+        console.log(`Collection ${collectionName} restored ${promiseArray.length} documents saved`);
+      }
 
       console.log(`Collection ${collectionName} restored successfully`);
     }
