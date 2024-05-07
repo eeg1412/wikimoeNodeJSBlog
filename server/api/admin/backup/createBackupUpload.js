@@ -38,10 +38,11 @@ module.exports = async function (req, res, next) {
     })
     return
   }
+  const dataStr = moment().format('YYYY-MM-DD HH:mm:ss')
   // 校验格式
   const params = {
-    name: `用户上传的备份文件`,
-    remark: `用户上传的备份文件，文件名：${fileName}，上传时间：${moment().format('YYYY-MM-DD HH:mm:ss')}`,
+    name: `用户上传的备份:${dataStr}`,
+    remark: `用户上传的备份文件，文件名：${fileName}，上传时间：${dataStr}`,
     fileStatus: 3,
     fileSize: fileSize,
     status: 3,
