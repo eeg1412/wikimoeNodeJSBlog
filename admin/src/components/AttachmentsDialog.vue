@@ -90,11 +90,7 @@
               circle
               @click="changeAttachmentsSort"
               :title="`更改选择顺序`"
-              v-if="
-                shouldSelectOk &&
-                selectLimit > 1 &&
-                selectedImageList.length > 1
-              "
+              v-if="shouldSelectOk && selectedImageList.length > 1"
             />
             <!-- 本页全选 -->
             <el-button
