@@ -72,9 +72,15 @@ JSON_LIMT="JSON格式的大小限制如（50mb）"
 URLENCODED_LIMT="URL编码的大小限制如（50mb）"
 JWT_SECRET="JWT所用的密文"
 IP2LOCATION="1为开启IP地址解析"
-IP2LOCATION_FILE_NAME="地址解析用到的BIN文件，一般为IP2LOCATION-LITE-DB1.BIN"
+IP2LOCATION_FILE_NAME="地址解析用到的BIN文件，一般为IP2LOCATION-LITE-DB3.BIN，切记一定要下载【DB3.LITE】的BIN文件"
 MAX_HISTORYLOGS_SIZE="日志集合的最大占用空间，单位字节默认1073741824（1GB）"
 ```
+
+**关于 IP2LOCATION 文件**
+
+- 请自行在[IP2Location Lite](https://lite.ip2location.com/)网站注册下载 BIN 文件。
+- 注意一定要选择【DB3.LITE】 IP-COUNTRY-REGION-CITY 的 BIN 文件，如果网站有 IPv6 需求的话可以下载 IPv6 的 BIN 文件，IPv6 的 BIN 文件已经包含 IPv4。
+- 下载的 BIN 文件请放在 server/utils/ip2location 目录下
 
 ### 运行
 
