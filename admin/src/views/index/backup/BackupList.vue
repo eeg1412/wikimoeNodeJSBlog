@@ -34,6 +34,10 @@
         <el-button @click="getBackupList(true)">
           <el-icon><Refresh /></el-icon>
         </el-button>
+        <!-- 上传备份 -->
+        <el-button type="primary" @click="openUploadDialog()"
+          >上传备份</el-button
+        >
 
         <!-- 追加 -->
         <el-button type="primary" @click="handleAdd">备份</el-button>
@@ -146,6 +150,16 @@
               </div>
             </div>
             <div class="dflex flexMiddle mt5">
+              <!-- 续传 -->
+              <div>
+                <el-button
+                  class="mr5"
+                  size="small"
+                  @click="continueUploadBackup(row._id)"
+                  v-if="row.fileStatus === 3"
+                  >续传</el-button
+                >
+              </div>
               <!-- 下载 -->
               <div>
                 <el-button
@@ -218,6 +232,46 @@
           </el-button>
         </span>
       </template>
+    </el-dialog>
+    <el-dialog
+      title="上传备份"
+      v-model="uploadDialog"
+      destroy-on-close
+      :close-on-click-modal="false"
+      :close-on-press-escape="false"
+      :show-close="!backupFileUploading"
+      align-center
+      class="common-max-dialog"
+    >
+      <div class="uploader-dialog-body">
+        <div v-loading="backupFileUploading">
+          <el-upload
+            class="backup-uploader"
+            :show-file-list="false"
+            :auto-upload="false"
+            :on-change="uploadBackup"
+            accept="application/zip"
+          >
+            <el-button type="primary">上传文件</el-button>
+            <template #tip>
+              <div v-if="continueUploadId">
+                请上传由备份系统生成的备份文件，续传时请使用相同的文件
+              </div>
+              <div class="el-upload__tip" v-else>
+                请上传由备份系统生成的备份文件
+              </div>
+            </template>
+          </el-upload>
+        </div>
+        <div class="mt10" v-if="backupFileUploading">
+          <el-progress
+            :percentage="uploadProgress"
+            status="active"
+            text-inside
+            text="上传中"
+          ></el-progress>
+        </div>
+      </div>
     </el-dialog>
   </div>
 </template>
@@ -354,6 +408,8 @@ export default {
           return { text: '存在', tagType: 'success' }
         case 2:
           return { text: '已删除', tagType: 'danger' }
+        case 3:
+          return { text: '上传尚未完成', tagType: 'warning' }
         default:
           return { text: '', tagType: '' }
       }
@@ -367,6 +423,8 @@ export default {
           return { text: '成功', tagType: 'success' }
         case 2:
           return { text: '失败', tagType: 'danger' }
+        case 3:
+          return { text: '上传尚未完成', tagType: 'warning' }
         default:
           return { text: '', tagType: '' }
       }
@@ -442,6 +500,135 @@ export default {
       return (size / Math.pow(num, 4)).toFixed(2) + ' TB' // TB
     }
 
+    // 上传备份
+    const uploadDialog = ref(false)
+    const openUploadDialog = (id) => {
+      continueUploadId.value = id || null
+      backupFileUploading.value = false
+      uploadProgress.value = 0
+      uploadDialog.value = true
+    }
+    const uploadBackup = (file) => {
+      backupFileUploading.value = true
+      // 获取文件名和文件大小
+      const fileName = file.raw.name
+      const fileSize = file.raw.size
+      if (continueUploadId.value) {
+        // 续传
+        authApi
+          .getBackupUploadChunkList({
+            id: continueUploadId.value,
+            fileSize,
+          })
+          .then((res) => {
+            const uploadedFileChunkIndexList = res.data.data
+            uploadFileChunk(
+              {
+                _id: continueUploadId.value,
+              },
+              file.raw,
+              uploadedFileChunkIndexList
+            )
+          })
+          .catch((err) => {
+            console.error(err)
+            backupFileUploading.value = false
+          })
+      } else {
+        // 创建备份数据
+        authApi
+          .createBackupUpload({
+            fileName,
+            fileSize,
+          })
+          .then((res) => {
+            uploadFileChunk(res.data.data, file.raw)
+          })
+          .catch((err) => {
+            console.error(err)
+            backupFileUploading.value = false
+          })
+      }
+    }
+    const continueUploadId = ref(null)
+    const continueUploadBackup = (id) => {
+      openUploadDialog(id)
+    }
+
+    // 上传进度
+    const uploadProgress = ref(0)
+    const backupFileUploading = ref(false)
+    // 上传文件切片
+    const uploadFileChunk = async (
+      data,
+      file,
+      uploadedFileChunkIndexList = []
+    ) => {
+      // 上传文件切片，10M
+      const chunkSize = 10 * 1024 * 1024
+      const chunkInfoList = []
+      const chunkCount = Math.ceil(file.size / chunkSize)
+      for (let i = 0; i < chunkCount; i++) {
+        const start = i * chunkSize
+        const end = Math.min(file.size, start + chunkSize)
+        // 包含开始和结束的切片位置
+        const chunkInfo = {
+          start,
+          end,
+          index: i,
+        }
+        chunkInfoList.push(chunkInfo)
+      }
+      // 根据 uploadedFileChunkIndexList 剔除已上传的切片
+      const needUploadChunkList = chunkInfoList.filter(
+        (chunk) => !uploadedFileChunkIndexList.includes(String(chunk.index))
+      )
+      let errorCount = 0
+      //遍历 needUploadChunkList 上传切片
+      for (let i = 0; i < needUploadChunkList.length; i++) {
+        const chunk = needUploadChunkList[i]
+        const formData = new FormData()
+        formData.append('file', file.slice(chunk.start, chunk.end))
+        await authApi
+          .uploadBackupUploadChunk(data._id, chunk.index, formData)
+          .then((res) => {
+            errorCount = 0
+            // 进度
+            uploadProgress.value = Math.ceil(
+              ((uploadedFileChunkIndexList.length + 1) / chunkCount) * 100
+            )
+            uploadedFileChunkIndexList.push(String(chunk.index))
+            // 上传完成
+            if (uploadedFileChunkIndexList.length === chunkCount) {
+              // 上传完成
+              authApi
+                .mergeUploadBackupFile({ id: data._id })
+                .then((res) => {
+                  uploadProgress.value = 100
+                  backupFileUploading.value = false
+                  ElMessage.success('上传成功')
+                  uploadDialog.value = false
+                  getBackupList()
+                })
+                .catch((err) => {
+                  console.error(err)
+                })
+            }
+          })
+          .catch((err) => {
+            console.error(err)
+            errorCount++
+            if (errorCount > 3) {
+              ElMessage.error('上传失败')
+              backupFileUploading.value = false
+              throw new Error('上传失败')
+            } else {
+              i--
+            }
+          })
+      }
+    }
+
     onMounted(() => {
       initParams()
       getBackupList()
@@ -470,8 +657,25 @@ export default {
       closeBackupDialog,
       // 将字节转换成MB
       formatSize,
+      // 上传备份
+      uploadDialog,
+      openUploadDialog,
+      uploadBackup,
+      continueUploadId,
+      continueUploadBackup,
+      backupFileUploading,
+      uploadProgress,
     }
   },
 }
 </script>
-<style lang=""></style>
+<style scoped>
+.uploader-dialog-body {
+  min-height: 100px;
+}
+</style>
+<style>
+.uploader-dialog-body .el-progress-bar__outer {
+  height: 18px !important;
+}
+</style>

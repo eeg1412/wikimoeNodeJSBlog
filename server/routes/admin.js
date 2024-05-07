@@ -1105,6 +1105,42 @@ const adminRouteSetting = [
     roleType: null,
     role: null
   },
+  // post createBackupUpload 只是创建表
+  {
+    path: '/backup/upload/create',
+    method: 'post',
+    middleware: [checkAuth],
+    controller: require('../api/admin/backup/createBackupUpload'),
+    roleType: null,
+    role: null
+  },
+  // get getUploadBackupFileChunkList
+  {
+    path: '/backup/upload/chunk/list',
+    method: 'get',
+    middleware: [checkAuth],
+    controller: require('../api/admin/backup/getUploadBackupFileChunkList'),
+    roleType: null,
+    role: null
+  },
+  // post uploadBackupFileChunk :id :chunkindex 上传文件
+  {
+    path: '/backup/upload/chunk/:id/:chunkindex',
+    method: 'post',
+    middleware: [checkAuth, upload.single('file')],
+    controller: require('../api/admin/backup/uploadBackupFileChunk'),
+    roleType: null,
+    role: null
+  },
+  // put mergeUploadBackupFile
+  {
+    path: '/backup/upload/merge',
+    method: 'put',
+    middleware: [checkAuth],
+    controller: require('../api/admin/backup/mergeUploadBackupFile'),
+    roleType: null,
+    role: null
+  },
 ]
 
 adminRouteSetting.forEach(item => {

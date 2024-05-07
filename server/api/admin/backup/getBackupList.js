@@ -41,7 +41,6 @@ module.exports = async function (req, res, next) {
         message: '备份列表获取失败'
       }]
     })
-    adminApiLog.error(`backup list get fail, ${JSON.stringify(err)
-      }`)
+    adminApiLog.error(`backup list get fail, ${logErrorToText(err)}`)
   })
 }

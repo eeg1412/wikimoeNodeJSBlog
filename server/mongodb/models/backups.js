@@ -28,7 +28,7 @@ var backups = new Schema({
     type: Number,
     default: null
   },
-  // 备份状态，0: 备份中/还原中,1: 成功，2: 失败
+  // 备份状态，0: 备份中/还原中,1: 成功，2: 失败, 3: 上传尚未完成
   status: {
     type: Number,
     required: true,

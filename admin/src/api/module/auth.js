@@ -768,5 +768,31 @@ export default function (api) {
         shouldAdminJWT: true
       })
     },
+    // post /backup/upload/create
+    createBackupUpload (data) {
+      return api.post('/backup/upload/create', data, {
+        shouldAdminJWT: true
+      })
+    },
+    // get /backup/upload/chunk/list
+    getBackupUploadChunkList (data) {
+      return api.get('/backup/upload/chunk/list', {
+        params: data,
+        shouldAdminJWT: true
+      })
+    },
+    // post /backup/upload/chunk/:id/:chunkindex
+    uploadBackupUploadChunk (id, chunkindex, data) {
+      return api.post(`/backup/upload/chunk/${id}/${chunkindex}`, data, {
+        shouldAdminJWT: true,
+        noLoading: true
+      })
+    },
+    // put /backup/upload/merge
+    mergeUploadBackupFile (data) {
+      return api.put('/backup/upload/merge', data, {
+        shouldAdminJWT: true
+      })
+    },
   }
 }

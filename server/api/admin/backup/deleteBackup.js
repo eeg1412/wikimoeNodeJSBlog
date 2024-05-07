@@ -3,6 +3,7 @@ const utils = require('../../../utils/utils')
 const log4js = require('log4js')
 const adminApiLog = log4js.getLogger('adminApi')
 const fs = require('fs')
+const fsEX = require('fs-extra');
 var path = require('path');
 
 module.exports = async function (req, res, next) {
@@ -17,6 +18,15 @@ module.exports = async function (req, res, next) {
     })
     return
   }
+  const backup = await backupUtils.findOne({ _id: id })
+  if (!backup) {
+    res.status(400).json({
+      errors: [{
+        message: '备份不存在'
+      }]
+    })
+    return
+  }
   // deletefile 和 deleterecord 至少有一个为1
   if (deletefile !== '1' && deleterecord !== '1') {
     res.status(400).json({
@@ -27,7 +37,6 @@ module.exports = async function (req, res, next) {
     return
   }
   if (deletefile === '1') {
-    const backup = await backupUtils.findOne({ _id: id })
     if (backup) {
       let basePath = './backups/'
       // 如果不存在 backup.filename 报错
@@ -78,6 +87,24 @@ module.exports = async function (req, res, next) {
         }]
       })
       return
+    }
+  }
+  if (backup.status === 3) {
+    // 待上传的备份，需要删除缓存文件
+    const cacheDir = `./cache/${backup._id}`
+    // 如果存在 cacheDir 则删除
+    if (fs.existsSync(cacheDir)) {
+      try {
+        await fsEX.remove(cacheDir)
+      } catch (err) {
+        res.status(400).json({
+          errors: [{
+            message: '删除缓存文件失败'
+          }]
+        })
+        adminApiLog.error(`backup delete cache file fail, ${logErrorToText(err)}`)
+        return
+      }
     }
   }
   if (deleterecord === '1') {
