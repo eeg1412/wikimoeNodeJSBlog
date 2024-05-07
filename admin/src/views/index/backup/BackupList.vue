@@ -254,11 +254,15 @@
           >
             <el-button type="primary">上传文件</el-button>
             <template #tip>
-              <div v-if="continueUploadId">
-                请上传由备份系统生成的备份文件，续传时请使用相同的文件
+              <div v-if="continueUploadId" class="mt5">
+                请上传由<span class="cRed"
+                  >博客备份系统生成的备份文件，非博客备份系统生成的备份文件将会造成不可预计的错误！</span
+                >续传时请<span class="cRed">使用相同的文件!</span>
               </div>
-              <div class="el-upload__tip" v-else>
-                请上传由备份系统生成的备份文件
+              <div v-else class="mt5">
+                请上传由<span class="cRed"
+                  >博客备份系统生成的备份文件，非博客备份系统生成的备份文件将会造成不可预计的错误！</span
+                >
               </div>
             </template>
           </el-upload>
