@@ -143,6 +143,7 @@ export default {
     }
     const editorShow = ref(false)
     const handleAdd = () => {
+      id.value = null
       editorShow.value = true
     }
     // 监听 params.page 的变化
