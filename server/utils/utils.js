@@ -224,18 +224,12 @@ exports.IP2LocationUtils = function (ip, id, modelUtils, updateMongodb = true) {
       try {
         // 判断ip是否是ipv6
         const isIPV6 = ip.includes(':')
-        // 如果是ipv6，ip2location只能解析ipv4，所以不对ipv6进行解析
-        if (isIPV6) {
-          console.log('ip2location不支持ipv6解析')
-          resolve(null)
-          return
-        }
         // 判断ip是否是ipv4
         const ipV4Reg = /^(\d+)\.(\d+)\.(\d+)\.(\d+)$/
         const isIPV4 = ipV4Reg.test(ip)
         // 如果不是ipv4，直接返回null
-        if (!isIPV4) {
-          console.log('不是ipv4，跳过ip解析')
+        if (!isIPV4 && !isIPV6) {
+          console.log('ip不是ipv4或ipv6,跳过ip解析')
           resolve(null)
           return
         }
