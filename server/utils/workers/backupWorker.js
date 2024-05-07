@@ -24,7 +24,8 @@ parentPort.on('message', async (_id) => {
       await backupTools.dumpCollections(pathname, id);
       await backupTools.backupToZip(pathname);
       await backupTools.clearBackupCache(pathname);
-      parentPort.postMessage({ status: 'success', data: { pathname } });
+      const fileSize = backupTools.getBackupFileSize(pathname);
+      parentPort.postMessage({ status: 'success', data: { pathname, fileSize } });
       parentPort.close();
     } catch (err) {
       parentPort.postMessage({ status: 'error', error: err });

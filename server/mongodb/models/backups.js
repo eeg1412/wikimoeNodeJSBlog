@@ -17,11 +17,16 @@ var backups = new Schema({
     type: String,
     default: ''
   },
-  // 备份文件状态，0: 备份中，1: 未删除, 2: 已删除
+  // 备份文件状态，0: 备份中，1: 未删除, 2: 已删除, 3: 上传尚未完成
   fileStatus: {
     type: Number,
     required: true,
     default: 0
+  },
+  // 备份文件大小
+  fileSize: {
+    type: Number,
+    default: null
   },
   // 备份状态，0: 备份中/还原中,1: 成功，2: 失败
   status: {

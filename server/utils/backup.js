@@ -142,10 +142,21 @@ exports.backupToZip = async (pathname) => {
   console.log('backup to zip end');
 }
 
+// 获取备份文件的大小
+exports.getBackupFileSize = (pathname) => {
+  const fullPath = `./backups/${pathname}.zip`;
+  if (!fs.existsSync(fullPath)) {
+    throw new Error('backup file not exists');
+  }
+  const stats = fs.statSync(fullPath
+  );
+  return stats.size;
+}
+
 // 清除备份缓存
-exports.clearBackupCache = async (pathname, fullPath) => {
+exports.clearBackupCache = async (pathname) => {
   // 定义备份目录
-  const dir = fullPath || `./cache/${pathname, fullPath}`;
+  const dir = `./cache/${pathname}`;
   if (!fs.existsSync(dir)) {
     throw new Error('backup cache not exists');
   }
