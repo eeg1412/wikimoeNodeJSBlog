@@ -488,9 +488,9 @@
   integrity sha512-fpL830Fln1SykOCboExsWr3JIVeQKieLJ3XytLe/tt1A0XzqUthOftDmjcCYLW62w7mQI7wXcoPXr3tZ9QfGxw==
 
 "@headlessui/vue@^1.7.21":
-  version "1.7.21"
-  resolved "https://registry.yarnpkg.com/@headlessui/vue/-/vue-1.7.21.tgz#debad090e6ae191f50cadde54d0b53322983ac6c"
-  integrity sha512-95cPFP5X9luB8/+smPENFv0ruaotT6epFnqK9EKldX2YpNkYM/qkN44oFoqQo+higlCAxDK5Pkg2E3FuD1Anyg==
+  version "1.7.22"
+  resolved "https://registry.yarnpkg.com/@headlessui/vue/-/vue-1.7.22.tgz#8d55a3a670c3d48beb660b7c47a7a8ff76caacfe"
+  integrity sha512-Hoffjoolq1rY+LOfJ+B/OvkhuBXXBFgd8oBlN+l1TApma2dB0En0ucFZrwQtb33SmcCqd32EQd0y07oziXWNYg==
   dependencies:
     "@tanstack/vue-virtual" "^3.0.0-beta.60"
 
@@ -1535,9 +1535,9 @@
     "@types/node" "*"
 
 "@types/node@*":
-  version "20.12.10"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-20.12.10.tgz#8f0c3f12b0f075eee1fe20c1afb417e9765bef76"
-  integrity sha512-Eem5pH9pmWBHoGAT8Dr5fdc5rYA+4NAovdM4EktRPVAAiJhmWWfQrA0cFhAbOsQdSfIHjAud6YdkbL69+zSKjw==
+  version "20.12.11"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-20.12.11.tgz#c4ef00d3507000d17690643278a60dc55a9dc9be"
+  integrity sha512-vDg9PZ/zi+Nqp6boSOT7plNuthRugEKixDv5sFTIpkE89MmNtEArAShI4mxuX2+UrLEe9pxC1vm2cjm9YlWbJw==
   dependencies:
     undici-types "~5.26.4"
 
