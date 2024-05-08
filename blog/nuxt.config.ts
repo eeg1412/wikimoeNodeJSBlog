@@ -2,6 +2,8 @@
 
 const modulesPlus = []
 const publicRuntimeConfigPlus: any = {}
+// SHOW_LOADING
+publicRuntimeConfigPlus.showLoading = process.env.SHOW_LOADING === '1'
 if (process.env.GOOGLE_ADSENSE_ID) {
   modulesPlus.push('@nuxtjs/google-adsense')
   publicRuntimeConfigPlus.googleAdsense = {

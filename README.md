@@ -126,6 +126,7 @@ SWR_CACHE_MAXAGE="SWR缓存时间，单位秒，默认10秒"
 SWR_CACHE_STALEMAXAGE="staleMaxAge的时间，单位秒，默认3600秒"
 CACHE_MAX_PAGE="开启SWR时的缓存页面数量，默认10个页面"
 CACHE_TTL="缓存的过期时间，单位毫秒，默认60000毫秒"
+SHOW_LOADING="是否显示进入网站时的读取动画，需要时为1"
 ```
 
 ### 配置谷歌广告 ads.txt （如果需要）

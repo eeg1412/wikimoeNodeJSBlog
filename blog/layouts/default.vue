@@ -5,7 +5,7 @@
     }"
   >
     <Transition name="fade">
-      <div class="loader-body" v-if="pageLoading">
+      <div class="loader-body" v-if="showLoading && pageLoading">
         <span class="loader"><span class="loader-inner"></span></span>
         <div class="loader-text">正在召唤神秘力量</div>
       </div>
@@ -194,6 +194,10 @@ const route = useRoute()
 const router = useRouter()
 const optionStore = useOptionStore()
 const { options } = storeToRefs(optionStore)
+
+const runtimeConfig = useRuntimeConfig()
+const showLoading = runtimeConfig.public.showLoading
+
 // const toast = useToast()
 // sidebar
 // const naviList = ref([
