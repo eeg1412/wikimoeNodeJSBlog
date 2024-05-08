@@ -88,10 +88,9 @@
         <slot></slot>
       </div>
       <div
-        class="blog-layout-right-body custom-scroll"
+        class="blog-layout-right-body custom-scroll blog-layout-right-body-full-height"
         :class="{
           active: rightSidebarActive,
-          'blog-layout-right-body-full-height': layoutRightBoxHeight === 0,
         }"
       >
         <div class="blog-layout-right-top-body">
@@ -124,13 +123,7 @@
             </UInput>
           </div>
         </div>
-        <div
-          class="blog-layout-right-box"
-          ref="layoutRightBox"
-          :style="{
-            top: -layoutRightBoxHeight + 'px',
-          }"
-        >
+        <div class="blog-layout-right-box" ref="layoutRightBox">
           <div
             v-for="(item, index) in sidebarListData"
             :key="item._id"
@@ -248,32 +241,32 @@ const goSearch = () => {
 const layoutRightBox = ref(null)
 let windowHeight = 0
 let setWindowHeightTimer = null
-const setWindowHeight = () => {
-  if (windowHeight !== undefined) {
-    windowHeight = window.innerHeight || 0
-    sumLayoutRightBoxHeight()
-  }
-}
-const setWindowHeightResize = () => {
-  clearTimeout(setWindowHeightTimer)
-  setWindowHeightTimer = setTimeout(() => {
-    setWindowHeight()
-  }, 100)
-}
+// const setWindowHeight = () => {
+//   if (windowHeight !== undefined) {
+//     windowHeight = window.innerHeight || 0
+//     sumLayoutRightBoxHeight()
+//   }
+// }
+// const setWindowHeightResize = () => {
+//   clearTimeout(setWindowHeightTimer)
+//   setWindowHeightTimer = setTimeout(() => {
+//     setWindowHeight()
+//   }, 100)
+// }
 // 计算layoutRightBox高度和window高度的差
-const layoutRightBoxHeight = ref(0)
-const sumLayoutRightBoxHeight = () => {
-  if (layoutRightBox.value) {
-    let newTop = layoutRightBox.value.offsetHeight - windowHeight
-    if (newTop < 0) {
-      newTop = 0
-    }
-    layoutRightBoxHeight.value = newTop
-    console.log(layoutRightBox.value.offsetHeight, windowHeight)
-  } else {
-    layoutRightBoxHeight.value = 0
-  }
-}
+// const layoutRightBoxHeight = ref(0)
+// const sumLayoutRightBoxHeight = () => {
+//   if (layoutRightBox.value) {
+//     let newTop = layoutRightBox.value.offsetHeight - windowHeight
+//     if (newTop < 0) {
+//       newTop = 0
+//     }
+//     layoutRightBoxHeight.value = newTop
+//     console.log(layoutRightBox.value.offsetHeight, windowHeight)
+//   } else {
+//     layoutRightBoxHeight.value = 0
+//   }
+// }
 const pageLoading = ref(true)
 
 // 左右菜单
@@ -293,34 +286,14 @@ watch(
   (newVal, oldVal) => {
     leftMenuActive.value = false
     rightSidebarActive.value = false
-    setWindowHeight()
-    setTimeout(() => {
-      setWindowHeight()
-    }, 2000)
   }
 )
 
 // let observer
 onMounted(async () => {
-  // observer = new ResizeObserver((entries) => {
-  //   for (let entry of entries) {
-  //     setWindowHeightResize()
-  //   }
-  // })
-  // observer.observe(layoutRightBox.value)
   pageLoading.value = false
-  setWindowHeight()
-  setTimeout(() => {
-    setWindowHeight()
-  }, 1000)
-  window.addEventListener('resize', setWindowHeightResize)
 })
-onUnmounted(() => {
-  // if (observer) {
-  //   observer.disconnect()
-  // }
-  window.removeEventListener('resize', setWindowHeightResize)
-})
+onUnmounted(() => {})
 </script>
 <style scoped>
 /* flex布局 左边固定300px 右边固定300px margin10 */
@@ -339,9 +312,9 @@ onUnmounted(() => {
   border-radius: 20px;
 }
 .blog-layout-left-body {
-  width: 300px;
+  width: 298px;
   box-sizing: border-box;
-  flex: 0 0 300px;
+  flex: 0 0 298px;
   border-right: 2px solid #fff7f9;
 }
 .blog-layout-content-body {
@@ -351,10 +324,13 @@ onUnmounted(() => {
   overflow: hidden;
 }
 .blog-layout-right-body {
-  width: 300px;
+  width: 298px;
   box-sizing: border-box;
-  flex: 0 0 300px;
+  flex: 0 0 298px;
   border-left: 2px solid #fff7f9;
+  align-self: flex-end;
+  position: sticky;
+  bottom: 0px;
 }
 .blog-layout-right-body.blog-layout-right-body-full-height {
   background-color: #ffffff;
