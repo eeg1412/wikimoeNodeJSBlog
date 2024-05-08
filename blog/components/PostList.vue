@@ -485,6 +485,7 @@ onMounted(() => {
 }
 .post-list-tag-item {
   margin-right: 9px;
+  display: inline-block;
   @apply text-primary-500;
 }
 .post-list-info-bottom-body {
