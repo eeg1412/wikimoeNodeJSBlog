@@ -133,22 +133,12 @@ exports.checkForm = function (form, ruleArr) {
 }
 
 exports.getUserIp = function (req) {
-  const SITE_USE_CDN = process.env.SITE_USE_CDN === '1'
-  let ip = ''
-  if (SITE_USE_CDN) {
-    ip = (req.headers['x-forwarded-for'] || '').split(',')[0] ||
-      req.connection.remoteAddress ||
-      req.socket.remoteAddress ||
-      req.connection.socket.remoteAddress || '';
-  } else {
-    ip = req.connection.remoteAddress ||
-      req.socket.remoteAddress ||
-      req.connection.socket.remoteAddress || '';
-  }
-
-
-  if (ip.substring(0, 7) === "::ffff:") {
-    ip = ip.substring(7);
+  let ip = (req.headers['x-forwarded-for'] || '').split(',')[0] ||
+    req.connection.remoteAddress ||
+    req.socket.remoteAddress ||
+    req.connection.socket.remoteAddress || '';
+  if (ip.substr(0, 7) == "::ffff:") {
+    ip = ip.substr(7)
   }
   return ip;
 };
