@@ -22,14 +22,14 @@
           <!-- 作者 时间 分类名 -->
           <div class="clearfix">
             <div class="post-list-info-body fl">
-              <span class="fb">{{ item.author?.nickname }}</span
-              ><span class="tenten">·</span>
+              <span class="fb">{{ item.author?.nickname }}</span>
               <ClientOnly
+                ><span class="tenten">·</span
                 ><span class="cGray94" :title="formatDate(item.date)">{{
                   fromNow(item.date, 'yyyy-MM-dd')
                 }}</span
                 ><template #fallback
-                  ><span class="cGray94">{{
+                  ><span class="cGray94 none">{{
                     formatDate(item.date, 'yyyy-MM-dd')
                   }}</span></template
                 > </ClientOnly
