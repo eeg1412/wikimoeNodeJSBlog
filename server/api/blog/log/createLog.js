@@ -32,7 +32,7 @@ module.exports = async function (req, res, next) {
   switch (action) {
     case 'open':
       const performanceNavigationTimingData = req.body.performanceNavigationTiming || null;
-      if (!searchEngineData.isBot && performanceNavigationTimingData && typeof performanceNavigationTimingData === 'object') {
+      if (!searchEngineData.isBot && performanceNavigationTimingData && typeof performanceNavigationTimingData === 'object' && performanceNavigationTimingData?.duration > 0) {
         performanceNavigationTiming = {};
 
         const keys = ['connectDuration', 'domComplete', 'domInteractive', 'domainLookupDuration', 'duration', 'loadEventDuration', 'redirectCount'];

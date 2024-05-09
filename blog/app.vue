@@ -150,12 +150,11 @@ const postLogCreate = () => {
   const referrer = document.referrer
   let dataContentObj = getPerformanceNavigationTiming()
 
-  let performanceNavigationTiming = ''
+  let performanceNavigationTiming = null
   const duration = dataContentObj?.duration || 0
   if (dataContentObj && duration > 0) {
     performanceNavigationTiming = dataContentObj
   }
-
   postLogCreateApi({
     referrer: referrer,
     action: 'open',
