@@ -37,7 +37,7 @@ module.exports = async function (req, res, next) {
         keys.forEach(key => {
           if (performanceNavigationTimingData.hasOwnProperty(key)) {
             const value = performanceNavigationTimingData[key];
-            if (typeof value === 'number') {
+            if (typeof value === 'number' && !isNaN(value) && value < 999999) {
               performanceNavigationTiming[key] = value;
             } else {
               performanceNavigationTiming[key] = null;
@@ -48,7 +48,7 @@ module.exports = async function (req, res, next) {
         stringKeys.forEach(key => {
           if (performanceNavigationTimingData.hasOwnProperty(key)) {
             const value = performanceNavigationTimingData[key];
-            if (typeof value === 'string') {
+            if (typeof value === 'string' && value.length < 200) {
               performanceNavigationTiming[key] = value;
             } else {
               performanceNavigationTiming[key] = null;
