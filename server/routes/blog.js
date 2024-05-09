@@ -205,6 +205,13 @@ const blogRouteSetting = [
     middleware: [],
     controller: require('../api/blog/log/createLog'),
   },
+  // updateLogPerformanceNavigationTiming
+  {
+    path: '/log/update/performance',
+    method: 'put',
+    middleware: [],
+    controller: require('../api/blog/log/updateLogPerformanceNavigationTiming'),
+  },
 ]
 
 blogRouteSetting.forEach(item => {

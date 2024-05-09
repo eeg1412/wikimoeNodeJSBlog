@@ -4,9 +4,12 @@ const readerlogUtils = require('../../../mongodb/utils/readerlogs')
 const utils = require('../../../utils/utils')
 const log4js = require('log4js')
 const userApiLog = log4js.getLogger('userApi')
+const mongoose = require('mongoose');
 
 module.exports = async function (req, res, next) {
+  const logId = new mongoose.Types.ObjectId();
   res.send({
+    id: logId
   })
   const uuid = req.headers['x-request-id']
   const referrer = utils.setReferrer(req.body.referrer)
@@ -110,6 +113,7 @@ module.exports = async function (req, res, next) {
   }
 
   const readerlogParams = {
+    _id: logId,
     uuid: uuid,
     action: action,
     data: {

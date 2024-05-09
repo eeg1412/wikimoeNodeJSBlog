@@ -9,7 +9,7 @@
 <script setup>
 import { useOptionStore } from '@/store/options'
 import { storeToRefs } from 'pinia'
-import { postLogCreateApi } from '@/api/log'
+import { postLogCreateApi, putLogUpdatePerformanceApi } from '@/api/log'
 
 const optionStore = useOptionStore()
 const { getOptions } = optionStore
@@ -97,8 +97,7 @@ useHead({
     ...rssHead(),
   ],
 })
-const postLogCreate = () => {
-  const referrer = document.referrer
+const getPerformanceNavigationTiming = () => {
   let dataContentObj = null
   try {
     const navTiming = performance.getEntriesByType('navigation')[0]
@@ -142,17 +141,53 @@ const postLogCreate = () => {
       type: navTiming.type || null,
     }
   } catch (e) {
-    navTiming = null
+    dataContentObj = null
   }
+  return dataContentObj
+}
+let openLogId = null
+const postLogCreate = () => {
+  const referrer = document.referrer
+  let dataContentObj = getPerformanceNavigationTiming()
+
   let performanceNavigationTiming = ''
   if (dataContentObj) {
     performanceNavigationTiming = dataContentObj
   }
+
   postLogCreateApi({
     referrer: referrer,
     action: 'open',
     performanceNavigationTiming: performanceNavigationTiming,
+  }).then((res) => {
+    openLogId = res.id
+    // 如果 performanceNavigationTiming的duration为0，则250毫秒后再次获取
+    if (
+      performanceNavigationTiming &&
+      performanceNavigationTiming.duration === 0
+    ) {
+      setTimeout(() => {
+        updatePerformance()
+      }, 300)
+    }
   })
+}
+
+let tryCount = 0
+const updatePerformance = () => {
+  const performanceNavigationTiming = getPerformanceNavigationTiming()
+  if (performanceNavigationTiming && performanceNavigationTiming.duration > 0) {
+    putLogUpdatePerformanceApi({
+      id: openLogId,
+      action: 'open',
+      performanceNavigationTiming: performanceNavigationTiming,
+    })
+  } else if (tryCount < 60) {
+    setTimeout(() => {
+      updatePerformance()
+    }, 1000)
+    tryCount++
+  }
 }
 
 const setStyle = () => {

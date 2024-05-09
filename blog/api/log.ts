@@ -8,4 +8,12 @@ const postLogCreateApi = (params: any) => {
   })
 }
 
-export { postLogCreateApi }
+// put /log/update/performance
+const updatePerformanceURL = `/log/update/performance`
+const putLogUpdatePerformanceApi = (params: any) => {
+  return httpRequest.putFetch(`${updatePerformanceURL}`, params, {
+    shouldUuid: true,
+  })
+}
+
+export { postLogCreateApi, putLogUpdatePerformanceApi }
