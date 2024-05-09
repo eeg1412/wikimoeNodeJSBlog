@@ -422,8 +422,8 @@ onUnmounted(() => {})
 }
 .blog-layout-right-box {
   padding: 0 20px 20px 20px;
-  position: sticky;
-  top: 0px;
+  /* position: sticky;
+  top: 0px; */
   z-index: 1;
   background: #ffffff;
   border-bottom-right-radius: 20px;
@@ -664,6 +664,11 @@ onUnmounted(() => {})
   .blog-layout-content-body {
     margin-left: 5px;
   }
+  .blog-layout-right-body {
+    /* 右上角 右下角 没有圆角 */
+    border-top-right-radius: 0px !important;
+    border-bottom-right-radius: 0px !important;
+  }
 }
 /* 小于768时 */
 @media (max-width: 768px) {
@@ -689,9 +694,6 @@ onUnmounted(() => {})
     width: 100%;
     height: 100%;
     overflow-y: auto;
-    /* 右上角 右下角 没有圆角 */
-    border-top-right-radius: 0px;
-    border-bottom-right-radius: 0px;
     background-color: #ffffff;
     border-left: 0px solid #fff7f9;
   }

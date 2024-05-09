@@ -177,18 +177,8 @@
           <template #default="{ row }">
             <div v-if="row.data?.performanceNavigationTiming">
               <div>
-                TCP握手耗时：{{
-                  msToSec(row.data.performanceNavigationTiming.connectDuration)
-                }}
-              </div>
-              <div>
-                DOM完成耗时：{{
-                  msToSec(row.data.performanceNavigationTiming.domComplete)
-                }}
-              </div>
-              <div>
-                DOM交互耗时：{{
-                  msToSec(row.data.performanceNavigationTiming.domInteractive)
+                重定向计数：{{
+                  row.data.performanceNavigationTiming.redirectCount
                 }}
               </div>
               <div>
@@ -199,26 +189,38 @@
                 }}
               </div>
               <div>
-                加载耗时：{{
-                  msToSec(row.data.performanceNavigationTiming.duration)
+                TCP握手耗时：{{
+                  msToSec(row.data.performanceNavigationTiming.connectDuration)
                 }}
               </div>
               <div>
-                load事件耗时：{{
+                DOM解析完成耗时：{{
+                  msToSec(row.data.performanceNavigationTiming.domInteractive)
+                }}
+              </div>
+              <div>
+                DOM完全加载耗时：{{
+                  msToSec(row.data.performanceNavigationTiming.domComplete)
+                }}
+              </div>
+              <div>
+                加载事件处理耗时：{{
                   msToSec(
                     row.data.performanceNavigationTiming.loadEventDuration
                   )
                 }}
               </div>
               <div>
-                重定向计数：{{
-                  row.data.performanceNavigationTiming.redirectCount
+                总页面加载耗时：{{
+                  msToSec(row.data.performanceNavigationTiming.duration)
                 }}
               </div>
               <div>
                 条目类型：{{ row.data.performanceNavigationTiming.entryType }}
               </div>
-              <div>URL：{{ row.data.performanceNavigationTiming.name }}</div>
+              <div class="word-break">
+                URL：{{ row.data.performanceNavigationTiming.name }}
+              </div>
               <div>类型：{{ row.data.performanceNavigationTiming.type }}</div>
             </div>
           </template>
