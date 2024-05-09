@@ -99,9 +99,59 @@ useHead({
 })
 const postLogCreate = () => {
   const referrer = document.referrer
+  let dataContentObj = null
+  try {
+    const navTiming = performance.getEntriesByType('navigation')[0]
+    dataContentObj = {
+      connectDuration:
+        typeof navTiming.connectEnd === 'number' &&
+        typeof navTiming.connectStart === 'number'
+          ? Math.floor(navTiming.connectEnd) -
+            Math.floor(navTiming.connectStart)
+          : null,
+      domComplete:
+        typeof navTiming.domComplete === 'number'
+          ? Math.floor(navTiming.domComplete)
+          : null,
+      domInteractive:
+        typeof navTiming.domInteractive === 'number'
+          ? Math.floor(navTiming.domInteractive)
+          : null,
+      domainLookupDuration:
+        typeof navTiming.domainLookupEnd === 'number' &&
+        typeof navTiming.domainLookupStart === 'number'
+          ? Math.floor(navTiming.domainLookupEnd) -
+            Math.floor(navTiming.domainLookupStart)
+          : null,
+      duration:
+        typeof navTiming.duration === 'number'
+          ? Math.floor(navTiming.duration)
+          : null,
+      loadEventDuration:
+        typeof navTiming.loadEventEnd === 'number' &&
+        typeof navTiming.loadEventStart === 'number'
+          ? Math.floor(navTiming.loadEventEnd) -
+            Math.floor(navTiming.loadEventStart)
+          : null,
+      redirectCount:
+        typeof navTiming.redirectCount === 'number'
+          ? navTiming.redirectCount
+          : null,
+      entryType: navTiming.entryType || null,
+      name: navTiming.name || null,
+      type: navTiming.type || null,
+    }
+  } catch (e) {
+    navTiming = null
+  }
+  let performanceNavigationTiming = ''
+  if (dataContentObj) {
+    performanceNavigationTiming = dataContentObj
+  }
   postLogCreateApi({
     referrer: referrer,
     action: 'open',
+    performanceNavigationTiming: performanceNavigationTiming,
   })
 }
 

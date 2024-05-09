@@ -16,6 +16,7 @@ module.exports = async function (req, res, next) {
   let id = null
   let target = null
   let content = ''
+  let performanceNavigationTiming = null
   // 判断action是否符合格式
   if (!actionList.includes(action)) {
     return
@@ -26,6 +27,35 @@ module.exports = async function (req, res, next) {
   }
   switch (action) {
     case 'open':
+      const performanceNavigationTimingData = req.body.performanceNavigationTiming || null;
+      if (performanceNavigationTimingData && typeof performanceNavigationTimingData === 'object') {
+        performanceNavigationTiming = {};
+
+        const keys = ['connectDuration', 'domComplete', 'domInteractive', 'domainLookupDuration', 'duration', 'loadEventDuration', 'redirectCount'];
+        const stringKeys = ['entryType', 'name', 'type'];
+
+        keys.forEach(key => {
+          if (performanceNavigationTimingData.hasOwnProperty(key)) {
+            const value = performanceNavigationTimingData[key];
+            if (typeof value === 'number') {
+              performanceNavigationTiming[key] = value;
+            } else {
+              performanceNavigationTiming[key] = null;
+            }
+          }
+        });
+
+        stringKeys.forEach(key => {
+          if (performanceNavigationTimingData.hasOwnProperty(key)) {
+            const value = performanceNavigationTimingData[key];
+            if (typeof value === 'string') {
+              performanceNavigationTiming[key] = value;
+            } else {
+              performanceNavigationTiming[key] = null;
+            }
+          }
+        });
+      }
       break;
     case 'postListArchive':
       const title = req.body.title
@@ -78,6 +108,7 @@ module.exports = async function (req, res, next) {
   if (content.length > 20) {
     content = content.substring(0, 20) + '...'
   }
+
   const readerlogParams = {
     uuid: uuid,
     action: action,
@@ -85,6 +116,7 @@ module.exports = async function (req, res, next) {
       target: target,
       targetId: id,
       content: content,
+      performanceNavigationTiming: performanceNavigationTiming
     },
     ...utils.isSearchEngine(req),
     referrer: referrer,

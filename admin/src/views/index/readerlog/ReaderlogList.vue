@@ -172,6 +172,57 @@
             <div>UA：{{ row.deviceInfo?.ua }}</div>
           </template>
         </el-table-column>
+        <!-- 性能统计 performanceNavigationTiming -->
+        <el-table-column label="性能统计" min-width="230">
+          <template #default="{ row }">
+            <div v-if="row.data?.performanceNavigationTiming">
+              <div>
+                TCP握手耗时：{{
+                  msToSec(row.data.performanceNavigationTiming.connectDuration)
+                }}
+              </div>
+              <div>
+                DOM完成耗时：{{
+                  msToSec(row.data.performanceNavigationTiming.domComplete)
+                }}
+              </div>
+              <div>
+                DOM交互耗时：{{
+                  msToSec(row.data.performanceNavigationTiming.domInteractive)
+                }}
+              </div>
+              <div>
+                DNS查询耗时：{{
+                  msToSec(
+                    row.data.performanceNavigationTiming.domainLookupDuration
+                  )
+                }}
+              </div>
+              <div>
+                加载耗时：{{
+                  msToSec(row.data.performanceNavigationTiming.duration)
+                }}
+              </div>
+              <div>
+                load事件耗时：{{
+                  msToSec(
+                    row.data.performanceNavigationTiming.loadEventDuration
+                  )
+                }}
+              </div>
+              <div>
+                重定向计数：{{
+                  row.data.performanceNavigationTiming.redirectCount
+                }}
+              </div>
+              <div>
+                条目类型：{{ row.data.performanceNavigationTiming.entryType }}
+              </div>
+              <div>URL：{{ row.data.performanceNavigationTiming.name }}</div>
+              <div>类型：{{ row.data.performanceNavigationTiming.type }}</div>
+            </div>
+          </template>
+        </el-table-column>
         <!-- 来源 referrer -->
         <el-table-column prop="referrer" label="来源" min-width="200" />
         <!-- createdAt -->
@@ -439,6 +490,14 @@ export default {
       })
     }
 
+    const msToSec = (ms) => {
+      if (!ms && ms !== 0) {
+        return ''
+      }
+      const s = ms / 1000
+      return s + 's'
+    }
+
     onMounted(() => {
       initParams()
       getReaderlogList()
@@ -464,6 +523,7 @@ export default {
       openDeleteDialog,
       deleteDialogRef,
       deletelog,
+      msToSec,
     }
   },
 }
