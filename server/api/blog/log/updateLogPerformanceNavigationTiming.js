@@ -53,7 +53,7 @@ module.exports = async function (req, res, next) {
     });
   }
 
-  if (!performanceNavigationTiming && !performanceNavigationTiming.duration) {
+  if (!performanceNavigationTiming || !performanceNavigationTiming?.duration) {
     return
   }
 
