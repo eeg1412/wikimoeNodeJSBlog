@@ -62,19 +62,18 @@ module.exports = async function (req, res, next) {
       performanceNavigationTiming: performanceNavigationTiming
     }
   }
-  const filters = {
-    _id: id,
-    uuid: uuid,
-    action: action,
-    $or: [
-      { 'data.performanceNavigationTiming': { $exists: false } },
-      { 'data.performanceNavigationTiming.duration': { $in: [0, null] } }
-    ]
-  }
-  readerlogUtils.updateOne(filters, readerlogParams).then((data) => {
-    userApiLog.info(`post view log create success`)
-  }).catch((err) => {
-    userApiLog.error(`post view log create fail, ${logErrorToText(err)}`)
-  })
-
+  setTimeout(() => {
+    const filters = {
+      _id: id,
+      uuid: uuid,
+      action: action,
+      createdAt: { $gt: new Date(new Date().setMinutes(new Date().getMinutes() - 3)) }
+    }
+    readerlogUtils.updateOne(filters, readerlogParams).then((data) => {
+      console.log(data)
+      userApiLog.info(`post view log create success`)
+    }).catch((err) => {
+      userApiLog.error(`post view log create fail, ${logErrorToText(err)}`)
+    })
+  }, 1000)
 }

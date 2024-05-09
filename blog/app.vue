@@ -151,7 +151,8 @@ const postLogCreate = () => {
   let dataContentObj = getPerformanceNavigationTiming()
 
   let performanceNavigationTiming = ''
-  if (dataContentObj) {
+  const duration = dataContentObj?.duration || 0
+  if (dataContentObj && duration > 0) {
     performanceNavigationTiming = dataContentObj
   }
 
@@ -162,13 +163,10 @@ const postLogCreate = () => {
   }).then((res) => {
     openLogId = res.id
     // 如果 performanceNavigationTiming的duration为0，则250毫秒后再次获取
-    if (
-      performanceNavigationTiming &&
-      performanceNavigationTiming.duration === 0
-    ) {
+    if (dataContentObj && duration === 0) {
       setTimeout(() => {
         updatePerformance()
-      }, 300)
+      }, 100)
     }
   })
 }
