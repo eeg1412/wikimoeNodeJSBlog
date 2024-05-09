@@ -25,6 +25,9 @@ module.exports = async function (req, res, next) {
   let performanceNavigationTiming = null;
   const performanceNavigationTimingData = req.body.performanceNavigationTiming || null;
   if (performanceNavigationTimingData && typeof performanceNavigationTimingData === 'object') {
+    if (utils.isSearchEngine(req).isBot) {
+      return
+    }
     performanceNavigationTiming = {};
 
     const keys = ['connectDuration', 'domComplete', 'domInteractive', 'domainLookupDuration', 'duration', 'loadEventDuration', 'redirectCount'];
@@ -67,10 +70,10 @@ module.exports = async function (req, res, next) {
       _id: id,
       uuid: uuid,
       action: action,
-      createdAt: { $gt: new Date(new Date().setMinutes(new Date().getMinutes() - 3)) }
+      createdAt: { $gt: new Date(new Date().setMinutes(new Date().getMinutes() - 2)) }
     }
     readerlogUtils.updateOne(filters, readerlogParams).then((data) => {
-      console.log(data)
+      // console.log(data)
       userApiLog.info(`post view log create success`)
     }).catch((err) => {
       userApiLog.error(`post view log create fail, ${logErrorToText(err)}`)

@@ -20,7 +20,6 @@ module.exports = async function (req, res, next) {
   let target = null
   let content = ''
   let performanceNavigationTiming = null
-  const searchEngineData = utils.isSearchEngine(req)
   // 判断action是否符合格式
   if (!actionList.includes(action)) {
     return
@@ -29,6 +28,7 @@ module.exports = async function (req, res, next) {
   if (!utils.isUUID(uuid)) {
     return
   }
+  const searchEngineData = utils.isSearchEngine(req)
   switch (action) {
     case 'open':
       const performanceNavigationTimingData = req.body.performanceNavigationTiming || null;
