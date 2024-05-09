@@ -20,6 +20,7 @@ module.exports = async function (req, res, next) {
   let target = null
   let content = ''
   let performanceNavigationTiming = null
+  const searchEngineData = utils.isSearchEngine(req)
   // 判断action是否符合格式
   if (!actionList.includes(action)) {
     return
@@ -31,7 +32,7 @@ module.exports = async function (req, res, next) {
   switch (action) {
     case 'open':
       const performanceNavigationTimingData = req.body.performanceNavigationTiming || null;
-      if (performanceNavigationTimingData && typeof performanceNavigationTimingData === 'object') {
+      if (!searchEngineData.isBot && performanceNavigationTimingData && typeof performanceNavigationTimingData === 'object') {
         performanceNavigationTiming = {};
 
         const keys = ['connectDuration', 'domComplete', 'domInteractive', 'domainLookupDuration', 'duration', 'loadEventDuration', 'redirectCount'];
@@ -111,7 +112,6 @@ module.exports = async function (req, res, next) {
   if (content.length > 20) {
     content = content.substring(0, 20) + '...'
   }
-
   const readerlogParams = {
     _id: logId,
     uuid: uuid,
@@ -122,7 +122,7 @@ module.exports = async function (req, res, next) {
       content: content,
       performanceNavigationTiming: performanceNavigationTiming
     },
-    ...utils.isSearchEngine(req),
+    ...searchEngineData,
     referrer: referrer,
     deviceInfo: utils.deviceUAInfoUtils(req),
     ipInfo: await utils.IP2LocationUtils(ip, null, null, false),
