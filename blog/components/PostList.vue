@@ -29,9 +29,7 @@
                   fromNow(item.date, 'yyyy-MM-dd')
                 }}</span
                 ><template #fallback
-                  ><span class="cGray94">{{
-                    fromNow(item.date, 'yyyy-MM-dd')
-                  }}</span></template
+                  ><span class="cGray94">{{ item.dateStr }}</span></template
                 > </ClientOnly
               ><template v-if="item.sort"
                 ><span class="tenten">·</span
@@ -312,6 +310,12 @@ const [postsDataResponse] = await Promise.all([
 ])
 
 const { data: postsData } = postsDataResponse
+
+if (postsData?.value?.list && process.server) {
+  postsData.value.list.forEach((item, index) => {
+    postsData.value.list[index].dateStr = fromNow(item.date, 'yyyy-MM-dd')
+  })
+}
 
 const totalPage = computed(() => {
   return Math.ceil(postsData.value.total / postsData.value.size)
