@@ -29,8 +29,8 @@
                   fromNow(item.date, 'yyyy-MM-dd')
                 }}</span
                 ><template #fallback
-                  ><span class="cGray94 none">{{
-                    formatDate(item.date, 'yyyy-MM-dd')
+                  ><span class="cGray94">{{
+                    fromNow(item.date, 'yyyy-MM-dd')
                   }}</span></template
                 > </ClientOnly
               ><template v-if="item.sort"
