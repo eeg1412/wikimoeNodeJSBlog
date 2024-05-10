@@ -79,9 +79,12 @@
             </template>
           </ul>
           <!-- 图片 -->
-          <div
-            class="blog-layout-info-menu-bg blog-layout-info-menu-bt-img"
-          ></div>
+          <transition name="fade">
+            <div
+              class="blog-layout-info-menu-bg blog-layout-info-menu-bt-img"
+              v-if="!pageLoading"
+            ></div>
+          </transition>
         </div>
       </div>
       <div class="blog-layout-content-body">
@@ -357,6 +360,7 @@ onUnmounted(() => {})
   width: 100%;
   /* 左下角圆角 */
   border-bottom-left-radius: 20px;
+  opacity: 1;
 }
 .blog-layout-left-top-info-body {
   padding: 20px 20px 0 20px;
