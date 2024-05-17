@@ -108,7 +108,7 @@ export default defineNuxtConfig({
   },
   css: ['~/assets/css/common.css', 'photoswipe/style.css'],
   runtimeConfig: {
-    apiDomain: '',
+    // apiDomain: '',
     public: {
       ...publicRuntimeConfigPlus,
     },
