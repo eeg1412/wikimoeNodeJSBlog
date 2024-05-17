@@ -26,32 +26,32 @@ const staleMaxAge = process.env.SWR_CACHE_STALEMAXAGE
 
 let routeRules = {
   '/rss': {
-    proxy: `${process.env.NUXT_API_API_DOMAIN}/rss`,
+    proxy: `${process.env.NUXT_API_DOMAIN}/rss`,
   },
   '/rss/blog': {
-    proxy: `${process.env.NUXT_API_API_DOMAIN}/rss/blog`,
+    proxy: `${process.env.NUXT_API_DOMAIN}/rss/blog`,
   },
   '/rss/tweet': {
-    proxy: `${process.env.NUXT_API_API_DOMAIN}/rss/tweet`,
+    proxy: `${process.env.NUXT_API_DOMAIN}/rss/tweet`,
   },
   '/content/**': {
-    proxy: `${process.env.NUXT_API_API_DOMAIN}/content/**`,
+    proxy: `${process.env.NUXT_API_DOMAIN}/content/**`,
   },
   '/upload/**': {
-    proxy: `${process.env.NUXT_API_API_DOMAIN}/upload/**`,
+    proxy: `${process.env.NUXT_API_DOMAIN}/upload/**`,
   },
   '/up_works/**': {
-    proxy: `${process.env.NUXT_API_API_DOMAIN}/up_works/**`,
+    proxy: `${process.env.NUXT_API_DOMAIN}/up_works/**`,
   },
   '/web_demo/**': {
-    proxy: `${process.env.NUXT_API_API_DOMAIN}/web_demo/**`,
+    proxy: `${process.env.NUXT_API_DOMAIN}/web_demo/**`,
   },
   // ucloudImg
   '/ucloudImg/**': {
-    proxy: `${process.env.NUXT_API_API_DOMAIN}/ucloudImg/**`,
+    proxy: `${process.env.NUXT_API_DOMAIN}/ucloudImg/**`,
   },
   '/api/blog/**': {
-    proxy: `${process.env.NUXT_API_API_DOMAIN}/api/blog/**`,
+    proxy: `${process.env.NUXT_API_DOMAIN}/api/blog/**`,
   },
 }
 // 如果开启了SWR
