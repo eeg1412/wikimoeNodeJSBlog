@@ -6,7 +6,7 @@
       :loop="true"
       :mousewheel="true"
       :autoplay="{
-        delay: 8000,
+        delay: siteTopSlideTime,
         disableOnInteraction: false,
       }"
       :pagination="{
@@ -42,6 +42,12 @@
 </template>
 <script setup>
 import { getBannerListApi } from '@/api/banner'
+import { useOptionStore } from '@/store/options'
+
+const optionStore = useOptionStore()
+const { options } = storeToRefs(optionStore)
+
+const siteTopSlideTime = computed(() => options.value.siteTopSlideTime || 8000)
 const router = useRouter()
 const [bannerListDataResponse] = await Promise.all([getBannerListApi()])
 const { data: bannerListData } = bannerListDataResponse
@@ -90,7 +96,7 @@ const openLink = (item, midClick) => {
   background: rgba(0, 0, 0, 0.4);
   /* 垂直居中 */
   line-height: 24px;
-  padding: 0 40px 0 9px;
+  padding: 0 9px 0 9px;
   box-sizing: border-box;
   color: #ffffff;
   z-index: 2;

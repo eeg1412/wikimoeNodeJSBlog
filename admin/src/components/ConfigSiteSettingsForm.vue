@@ -67,7 +67,18 @@
         :min="1"
         :max="100"
         :step="1"
-      ></el-input-number>
+      ></el-input-number
+      ><span class="pl10">条内容</span>
+    </el-form-item>
+    <el-form-item label="轮播图切换时间" prop="siteTopSlideTime">
+      <!-- 数字 1000-10000 -->
+      <el-input-number
+        v-model="siteSettingsForm.siteTopSlideTime"
+        controls-position="right"
+        :min="100"
+        :step="100"
+      ></el-input-number
+      ><span class="pl10">毫秒</span>
     </el-form-item>
     <el-form-item label="所在时区" prop="siteTimeZone">
       <el-select v-model="siteSettingsForm.siteTimeZone">
@@ -132,6 +143,8 @@ export default {
       siteUrl: '',
       // 每页显示
       sitePageSize: 10,
+      // 顶部幻灯片切换时间
+      siteTopSlideTime: 8000,
       // 你所在时区
       siteTimeZone: '',
       // 页面底部信息
@@ -161,6 +174,9 @@ export default {
       siteUrl: [{ required: true, message: '请输入站点地址', trigger: 'blur' }],
       sitePageSize: [
         { required: true, message: '请输入每页显示', trigger: 'blur' },
+      ],
+      siteTopSlideTime: [
+        { required: true, message: '请输入轮播图切换时间', trigger: 'blur' },
       ],
       siteTimeZone: [
         { required: true, message: '请选择你所在时区', trigger: 'blur' },

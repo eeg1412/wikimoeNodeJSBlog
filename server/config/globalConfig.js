@@ -48,6 +48,8 @@ const initGlobalConfig = async () => {
     siteUrl: '',
     // 每页显示
     sitePageSize: 10,
+    // 顶部幻灯片切换时间
+    siteTopSlideTime: 8000,
     // 你所在时区
     siteTimeZone: '',
     // 页面底部信息
