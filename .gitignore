@@ -22,3 +22,4 @@ node_modules
 /server/cache/*
 /server/backups/*
 /blog/public/ads.txt
+/blog/public/robots.txt
