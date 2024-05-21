@@ -2,6 +2,7 @@
   <div>
     <div
       class="p-2 pb-2 pl-4 pr-4 block text-center border-solid border-b border-gray-200"
+      v-if="data"
     >
       分类：{{ data.sortname }}
     </div>

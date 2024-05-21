@@ -12,6 +12,7 @@
 import { postLogCreateApi } from '@/api/log'
 
 const route = useRoute()
+const keyword = route.params.keyword || ''
 // 如果page不是正整数，报错去404页面
 const page = route.params.page
 if (!/^\d+$/.test(page)) {
@@ -21,7 +22,6 @@ if (!/^\d+$/.test(page)) {
   })
   throw new Error('页面不存在')
 }
-const keyword = route.params.keyword || ''
 // 设置SEO
 useSeoMeta({
   title: keyword,
