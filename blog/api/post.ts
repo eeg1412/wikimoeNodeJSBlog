@@ -12,6 +12,7 @@ interface GetPostsParams {
   year?: string
   month?: string
   tags?: string
+  type?: Array<number>
 }
 const URL = `/post/list`
 const getPostsApi = (params: GetPostsParams) => {

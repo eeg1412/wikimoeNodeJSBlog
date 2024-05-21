@@ -223,6 +223,8 @@ const sitePageSize = computed(() => options.value.sitePageSize || 1)
 const route = useRoute()
 const router = useRouter()
 const toast = useToast()
+const postType = computed(() => route.query.type)
+console.log(postType.value)
 
 const routeName = computed(() => route.name)
 const page = route.params.page ? Number(route.params.page) : 1
@@ -306,6 +308,7 @@ const [postsDataResponse] = await Promise.all([
     year,
     month,
     tags: tagid ? [tagid] : null,
+    type: postType.value ? postType.value : null,
   }),
 ])
 
