@@ -885,6 +885,10 @@ const getHeaderList = () => {
     postData.value?.data?.type === 1
   ) {
     headerList.value = parseHeaders()
+    if (headerList.value.length > 0) {
+      window.addEventListener('scroll', onScroll)
+      onScroll()
+    }
   }
 }
 let scrollTimer = null
@@ -923,8 +927,6 @@ onMounted(() => {
   putViewCount()
   postLikeLogList()
   getHeaderList()
-  window.addEventListener('scroll', onScroll)
-  onScroll()
 })
 onUnmounted(() => {
   window.removeEventListener('scroll', onScroll)
