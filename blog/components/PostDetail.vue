@@ -442,6 +442,7 @@
               <PostHeaderItem
                 :list="headerList"
                 :activeHeaderDom="activeHeaderDom"
+                @goToHeader="showHeaderListMenu = false"
               />
             </div>
           </div>

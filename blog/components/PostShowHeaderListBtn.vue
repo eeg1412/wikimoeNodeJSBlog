@@ -4,7 +4,7 @@
       class="common-right-tool-btn opacity-70 text-white hover:opacity-100"
       @click="onClick"
     >
-      <UIcon name="i-heroicons-queue-list-solid" />
+      <UIcon name="i-heroicons-list-bullet" />
     </div>
   </transition>
 </template>

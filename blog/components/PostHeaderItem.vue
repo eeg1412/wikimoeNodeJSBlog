@@ -20,6 +20,7 @@
   </ul>
 </template>
 <script setup>
+const emits = defineEmits()
 const props = defineProps({
   list: {
     type: Array,
@@ -47,6 +48,7 @@ const goToHeader = (dom) => {
       top: header.offsetTop,
       behavior: 'smooth',
     })
+    emits('goToHeader', header)
   }
 }
 </script>
