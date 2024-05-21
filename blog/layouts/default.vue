@@ -177,7 +177,10 @@
         </div>
       </div>
     </div>
-    <GoTop />
+
+    <div class="right-tool-bar" id="rightToolBar">
+      <GoTop />
+    </div>
   </div>
 </template>
 <script setup>
@@ -739,4 +742,9 @@ onUnmounted(() => {})
   overflow: hidden;
   box-shadow: 0px 0px 10px 0px rgba(239, 144, 167, 0.08);
 } */
+.right-tool-bar {
+  position: fixed;
+  right: 20px;
+  bottom: 20px;
+}
 </style>

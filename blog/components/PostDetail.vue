@@ -128,6 +128,7 @@
     <div
       class="post-html-content-body"
       v-if="postData.data.type === 1 || postData.data.type === 3"
+      id="postHtmlContent"
     >
       <HtmlContent :content="postData.data.content" />
       <!-- tags -->
@@ -420,6 +421,29 @@
           </div>
         </div>
       </div>
+    </ClientOnly>
+    <ClientOnly>
+      <!-- headerList -->
+      <div
+        class="fixed inset-0 bg-white bg-opacity-50 z-50 flex justify-end"
+        v-show="showHeaderListMenu"
+        @click.self="switchShowHeaderListMenu"
+      >
+        <div class="w-72 h-full bg-white overflow-auto custom-scroll shadow-lg">
+          <div
+            class="sticky top-0 text-center bg-white border-b border-solid border-gray-200 text-lg p-3"
+          >
+            文章目录
+          </div>
+          <PostHeaderItem
+            :list="headerList"
+            :activeHeaderDom="activeHeaderDom"
+          />
+        </div>
+      </div>
+      <Teleport to="#rightToolBar">
+        <PostShowHeaderListBtn @btnClick="switchShowHeaderListMenu" />
+      </Teleport>
     </ClientOnly>
   </div>
 </template>
@@ -799,10 +823,102 @@ useSeoMeta({
   twitterDescription: seoDescription,
   twitterImage: seoImage,
 })
+
+// 文章导航
+const showHeaderListMenu = ref(false)
+const switchShowHeaderListMenu = () => {
+  showHeaderListMenu.value = !showHeaderListMenu.value
+}
+const activeHeaderDom = ref(null)
+const parseHeaders = () => {
+  const parentElement = document.querySelector(
+    '#postHtmlContent .html-content-body'
+  )
+  const headers = parentElement.querySelectorAll('h1, h2, h3, h4, h5, h6')
+  const result = []
+  let currentHeader = null
+
+  headers.forEach((header) => {
+    const level = parseInt(header.tagName.slice(1))
+    const headerObj = {
+      tag: header.tagName,
+      text: header.textContent,
+      dom: header,
+      children: [],
+    }
+
+    if (currentHeader === null) {
+      result.push(headerObj)
+    } else {
+      while (currentHeader && currentHeader.level >= level) {
+        currentHeader = currentHeader.parent
+      }
+      if (currentHeader) {
+        currentHeader.children.push(headerObj)
+      } else {
+        result.push(headerObj)
+      }
+    }
+
+    headerObj.level = level
+    headerObj.parent = currentHeader
+    currentHeader = headerObj
+  })
+  console.log(result)
+  return result
+}
+
+const headerList = ref([])
+const getHeaderList = () => {
+  // 只有 editorVersion 为 5 ，type 为 1 的文章才有文章导航
+  if (
+    postData.value?.data?.editorVersion === 5 &&
+    postData.value?.data?.type === 1
+  ) {
+    headerList.value = parseHeaders()
+  }
+}
+let scrollTimer = null
+const onScroll = () => {
+  if (scrollTimer) {
+    clearTimeout(scrollTimer)
+  }
+  scrollTimer = setTimeout(() => {
+    getActiveHeader()
+  }, 300)
+}
+const getActiveHeader = () => {
+  const parentElement = document.querySelector(
+    '#postHtmlContent .html-content-body'
+  )
+  const headers = parentElement.querySelectorAll('h1, h2, h3, h4, h5, h6')
+  let closest = null
+  let closestDistance = Infinity
+  const threshold = window.innerHeight / 2 // 设置阈值为窗口高度的一半
+  headers.forEach((header) => {
+    const rect = header.getBoundingClientRect()
+    const distance = Math.abs(rect.top)
+    if (distance < closestDistance && distance <= threshold) {
+      // 只有当元素距离窗口顶部的距离小于阈值时，才将其视为最近的元素
+      closestDistance = distance
+      closest = header
+    }
+  })
+  if (closest) {
+    console.log(closest)
+    activeHeaderDom.value = closest
+  }
+}
 onMounted(() => {
   getCommentList()
   putViewCount()
   postLikeLogList()
+  getHeaderList()
+  window.addEventListener('scroll', onScroll)
+  onScroll()
+})
+onUnmounted(() => {
+  window.removeEventListener('scroll', onScroll)
 })
 </script>
 <style scoped>

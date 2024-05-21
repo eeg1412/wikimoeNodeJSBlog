@@ -1,7 +1,7 @@
 <template>
   <transition name="fade">
     <div
-      class="goTopBtn bg-primary-500 opacity-70 text-white"
+      class="goTopBtn common-right-tool-btn opacity-70 text-white"
       v-show="showButton"
       ref="goTopBtnRef"
       @click="goTop"
@@ -49,22 +49,6 @@ const goTop = () => {
 </script>
 
 <style scoped>
-.goTopBtn {
-  position: fixed;
-  right: 20px;
-  bottom: 20px;
-  cursor: pointer;
-  z-index: 10;
-  transition: all 0.3s;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 18px;
-  width: 40px;
-  height: 40px;
-  border-radius: 40px;
-  padding: 10px;
-}
 @media (hover: hover) {
   .goTopBtn:hover {
     opacity: 1;
