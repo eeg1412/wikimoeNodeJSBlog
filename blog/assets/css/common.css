@@ -991,6 +991,10 @@ ins.adsbygoogle[data-ad-status='unfilled'] {
   /* opacity: 0; */
   transform: translateY(100%);
 }
+.post-header-item-text {
+  /* 禁止选中 */
+  user-select: none;
+}
 .post-header-item-text.active {
   /* border-primary-400 */
   @apply bg-primary-400 text-white;
