@@ -2,7 +2,7 @@
   <ul class="post-header-item-ul">
     <li v-for="(item, index) in list" :key="index">
       <div
-        class="px-4 py-3 transition duration-300 hover:text-primary-400 hover:bg-gray-50 border-l-4 border-solid border-transparent cursor-pointer post-header-item-text"
+        class="m-2 px-3 py-1 transition duration-300 hover:text-primary-400 hover:border-primary-400 border-solid border border-transparent cursor-pointer post-header-item-text rounded"
         :style="{ paddingLeft }"
         @click="goToHeader(item.dom)"
         :class="{
@@ -37,7 +37,7 @@ const props = defineProps({
   },
 })
 const paddingLeft = computed(() => {
-  return `${props.deepLevel * 1}rem`
+  return `${props.deepLevel * 0.75}rem`
 })
 const goToHeader = (dom) => {
   const header = dom

@@ -992,7 +992,8 @@ ins.adsbygoogle[data-ad-status='unfilled'] {
   transform: translateY(100%);
 }
 .post-header-item-text.active {
-  @apply bg-gray-50 border-primary-400 text-primary-400;
+  /* border-primary-400 */
+  @apply bg-primary-400 text-white;
 }
 .common-right-tool-btn {
   @apply bg-primary-500;
