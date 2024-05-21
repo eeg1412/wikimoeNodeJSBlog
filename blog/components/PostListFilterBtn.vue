@@ -4,13 +4,17 @@
       class="common-right-tool-btn opacity-70 text-white hover:opacity-100"
       @click="onClick"
     >
-      <UIcon name="i-heroicons-adjustments-vertical" />
+      <span v-if="postRouteType === 'blog'" class="text-sm">博</span>
+      <span v-else-if="postRouteType === 'tweet'" class="text-sm">推</span>
+      <UIcon name="i-heroicons-adjustments-horizontal" v-else />
     </div>
   </transition>
 </template>
 
 <script setup>
+const route = useRoute()
 const emits = defineEmits()
+const postRouteType = computed(() => route.params.type)
 const onClick = () => {
   // emit
   emits('btnClick')

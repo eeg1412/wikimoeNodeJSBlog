@@ -365,7 +365,14 @@ const routePagination = computed(() => {
   }
   return to
 })
-
+// 如果page不是正整数，报错去404页面
+if (!/^\d+$/.test(page)) {
+  showError({
+    statusCode: 404,
+    message: '页面不存在',
+  })
+  throw new Error('页面不存在')
+}
 const [postsDataResponse] = await Promise.all([
   getPostsApi({
     page,
