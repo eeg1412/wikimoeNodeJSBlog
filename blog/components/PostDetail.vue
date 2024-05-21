@@ -424,23 +424,29 @@
     </ClientOnly>
     <ClientOnly>
       <!-- headerList -->
-      <div
-        class="fixed inset-0 bg-white bg-opacity-50 z-50 flex justify-end"
-        v-show="showHeaderListMenu"
-        @click.self="switchShowHeaderListMenu"
-      >
-        <div class="w-72 h-full bg-white overflow-auto custom-scroll shadow-lg">
-          <div
-            class="sticky top-0 text-center bg-white border-b border-solid border-gray-200 text-lg p-3"
-          >
-            文章目录
+      <transition name="fade">
+        <div class="post-header-list-menu-body" v-show="showHeaderListMenu">
+          <div class="post-header-list-menu-box">
+            <div
+              class="flex justify-between items-center bg-white border-b border-solid border-gray-200 text-base px-4 py-3"
+            >
+              <div>文章目录</div>
+              <button
+                class="text-gray-500 hover:text-gray-700"
+                @click="switchShowHeaderListMenu"
+              >
+                <UIcon name="i-heroicons-x-mark" />
+              </button>
+            </div>
+            <div class="custom-scroll post-header-list-menu">
+              <PostHeaderItem
+                :list="headerList"
+                :activeHeaderDom="activeHeaderDom"
+              />
+            </div>
           </div>
-          <PostHeaderItem
-            :list="headerList"
-            :activeHeaderDom="activeHeaderDom"
-          />
         </div>
-      </div>
+      </transition>
       <Teleport to="#rightToolBar">
         <PostShowHeaderListBtn
           @btnClick="switchShowHeaderListMenu"
@@ -1050,5 +1056,23 @@ onUnmounted(() => {
 }
 .google-ad-post-detail {
   margin-top: 20px;
+}
+/* header list menu */
+.post-header-list-menu-body {
+  position: fixed;
+  z-index: 11;
+  right: 70px;
+  bottom: 20px;
+  background-color: #fff;
+  border-radius: 10px;
+  /* 阴影 */
+  box-shadow: 0px 0px 6px 2px rgba(0, 0, 0, 0.1);
+  width: 260px;
+  overflow: hidden;
+}
+.post-header-list-menu {
+  max-height: calc(100vh - 150px);
+  overflow: auto;
+  min-height: 50px;
 }
 </style>

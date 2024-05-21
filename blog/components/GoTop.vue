@@ -48,10 +48,4 @@ const goTop = () => {
 }
 </script>
 
-<style scoped>
-@media (hover: hover) {
-  .goTopBtn:hover {
-    opacity: 1;
-  }
-}
-</style>
+<style scoped></style>

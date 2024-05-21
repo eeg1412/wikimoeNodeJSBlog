@@ -1009,3 +1009,9 @@ ins.adsbygoogle[data-ad-status='unfilled'] {
   padding: 10px;
   margin-top: 10px;
 }
+
+@media (hover: hover) {
+  .common-right-tool-btn:hover {
+    opacity: 1;
+  }
+}
