@@ -442,7 +442,10 @@
         </div>
       </div>
       <Teleport to="#rightToolBar">
-        <PostShowHeaderListBtn @btnClick="switchShowHeaderListMenu" />
+        <PostShowHeaderListBtn
+          @btnClick="switchShowHeaderListMenu"
+          v-if="headerList.length > 0"
+        />
       </Teleport>
     </ClientOnly>
   </div>
