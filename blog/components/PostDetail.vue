@@ -425,8 +425,8 @@
     <ClientOnly>
       <!-- headerList -->
       <transition name="fade">
-        <div class="post-header-list-menu-body" v-show="showHeaderListMenu">
-          <div class="post-header-list-menu-box">
+        <div class="common-right-tool-menu-body" v-show="showHeaderListMenu">
+          <div class="common-right-tool-menu-box">
             <div
               class="flex justify-between items-center bg-white border-b border-solid border-gray-200 text-base px-4 py-3"
             >
@@ -438,7 +438,7 @@
                 <UIcon name="i-heroicons-x-mark" />
               </button>
             </div>
-            <div class="custom-scroll post-header-list-menu">
+            <div class="custom-scroll common-right-tool-menu">
               <PostHeaderItem
                 :list="headerList"
                 :activeHeaderDom="activeHeaderDom"
@@ -1058,24 +1058,5 @@ onUnmounted(() => {
 }
 .google-ad-post-detail {
   margin-top: 20px;
-}
-/* header list menu */
-.post-header-list-menu-body {
-  position: fixed;
-  z-index: 11;
-  right: 70px;
-  bottom: 20px;
-  background-color: #fff;
-  border-radius: 10px;
-  /* 阴影 */
-  box-shadow: 0px 0px 6px 2px rgba(0, 0, 0, 0.1);
-  width: 260px;
-  overflow: hidden;
-}
-.post-header-list-menu {
-  max-height: calc(100vh - 250px);
-  max-height: calc(100dvh - 170px);
-  overflow: auto;
-  min-height: 50px;
 }
 </style>

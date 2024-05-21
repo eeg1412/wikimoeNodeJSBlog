@@ -1,8 +1,8 @@
 <template>
-  <ul class="post-header-item-ul">
+  <ul class="common-right-tool-menu-item-ul">
     <li v-for="(item, index) in list" :key="index">
       <div
-        class="m-2 px-3 py-1 transition duration-300 hover:text-primary-400 hover:border-primary-400 border-solid border border-transparent cursor-pointer post-header-item-text rounded"
+        class="m-2 px-3 py-1 transition duration-300 hover:text-primary-400 hover:border-primary-400 border-solid border border-transparent cursor-pointer common-right-tool-menu-item-text rounded"
         :style="{ paddingLeft }"
         @click="goToHeader(item.dom)"
         :class="{

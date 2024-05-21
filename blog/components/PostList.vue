@@ -208,6 +208,61 @@
         </NuxtLink>
       </div>
     </div>
+    <ClientOnly>
+      <Teleport to="#rightToolBar">
+        <PostListFilterBtn @btnClick="switchFilterMenu" />
+      </Teleport>
+      <transition name="fade">
+        <div class="common-right-tool-menu-body" v-show="showFilterMenu">
+          <div class="common-right-tool-menu-box">
+            <div
+              class="flex justify-between items-center bg-white border-b border-solid border-gray-200 text-base px-4 py-3"
+            >
+              <div>类型筛选</div>
+              <button
+                class="text-gray-500 hover:text-gray-700"
+                @click="switchFilterMenu"
+              >
+                <UIcon name="i-heroicons-x-mark" />
+              </button>
+            </div>
+            <div class="custom-scroll common-right-tool-menu">
+              <ul class="common-right-tool-menu-item-ul">
+                <li>
+                  <div
+                    class="m-2 px-3 py-1 transition duration-300 hover:text-primary-400 hover:border-primary-400 border-solid border border-transparent cursor-pointer common-right-tool-menu-item-text rounded"
+                    :class="{
+                      active: postType !== '1' && postType !== '2',
+                    }"
+                    @click="switchPostType(null)"
+                  >
+                    全部类型
+                  </div>
+                </li>
+                <li>
+                  <div
+                    class="m-2 px-3 py-1 transition duration-300 hover:text-primary-400 hover:border-primary-400 border-solid border border-transparent cursor-pointer common-right-tool-menu-item-text rounded"
+                    :class="{ active: postType === '1' }"
+                    @click="switchPostType('blog')"
+                  >
+                    博文
+                  </div>
+                </li>
+                <li>
+                  <div
+                    class="m-2 px-3 py-1 transition duration-300 hover:text-primary-400 hover:border-primary-400 border-solid border border-transparent cursor-pointer common-right-tool-menu-item-text rounded"
+                    :class="{ active: postType === '2' }"
+                    @click="switchPostType('tweet')"
+                  >
+                    推文
+                  </div>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </transition>
+    </ClientOnly>
   </div>
 </template>
 <script setup>
@@ -223,8 +278,16 @@ const sitePageSize = computed(() => options.value.sitePageSize || 1)
 const route = useRoute()
 const router = useRouter()
 const toast = useToast()
-const postType = computed(() => route.query.type)
-console.log(postType.value)
+const postRouteType = computed(() => route.params.type)
+const postType = computed(() => {
+  if (postRouteType.value === 'blog') {
+    return '1'
+  } else if (postRouteType.value === 'tweet') {
+    return '2'
+  } else {
+    return undefined
+  }
+})
 
 const routeName = computed(() => route.name)
 const page = route.params.page ? Number(route.params.page) : 1
@@ -271,24 +334,28 @@ const routePagination = computed(() => {
         name: routeName.value,
         params: {
           page: 1,
+          type: postRouteType.value,
         },
       }
       to.lastRoute = {
         name: routeName.value,
         params: {
           page: totalPage.value,
+          type: postRouteType.value,
         },
       }
       to.prevRoute = {
         name: routeName.value,
         params: {
           page: page - 1,
+          type: postRouteType.value,
         },
       }
       to.nextRoute = {
         name: routeName.value,
         params: {
           page: page + 1,
+          type: postRouteType.value,
         },
       }
       break
@@ -459,6 +526,24 @@ const likePost = (postId) => {
     .finally(() => {
       likePostIsLoading[postId] = false
     })
+}
+
+// 文章筛选
+const showFilterMenu = ref(false)
+const switchFilterMenu = () => {
+  showFilterMenu.value = !showFilterMenu.value
+}
+const switchPostType = (type) => {
+  if (type === postType.value) {
+    return
+  }
+  const params = route.params
+  params.page = 1
+  params.type = type
+  router.push({
+    params: params,
+  })
+  showFilterMenu.value = false
 }
 
 onMounted(() => {
