@@ -15,6 +15,7 @@
         :list="item.children"
         :deepLevel="deepLevel + 1"
         :activeHeaderDom="activeHeaderDom"
+        @goToHeader="emitGoToHeader"
       />
     </li>
   </ul>
@@ -48,8 +49,11 @@ const goToHeader = (dom) => {
       top: header.offsetTop,
       behavior: 'smooth',
     })
-    emits('goToHeader', header)
+    emitGoToHeader(header)
   }
+}
+const emitGoToHeader = (dom) => {
+  emits('goToHeader', dom)
 }
 </script>
 <style scoped></style>
