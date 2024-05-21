@@ -1071,7 +1071,8 @@ onUnmounted(() => {
   overflow: hidden;
 }
 .post-header-list-menu {
-  max-height: calc(100vh - 150px);
+  max-height: calc(100vh - 250px);
+  max-height: calc(100dvh - 170px);
   overflow: auto;
   min-height: 50px;
 }
