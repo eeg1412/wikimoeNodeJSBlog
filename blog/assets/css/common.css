@@ -1007,12 +1007,11 @@ ins.adsbygoogle[data-ad-status='unfilled'] {
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 18px;
-  width: 40px;
-  height: 40px;
-  border-radius: 40px;
-  padding: 10px;
-  margin-top: 10px;
+  font-size: 17px;
+  width: 34px;
+  height: 34px;
+  border-radius: 34px;
+  margin-top: 8px;
 }
 
 @media (hover: hover) {
@@ -1023,7 +1022,7 @@ ins.adsbygoogle[data-ad-status='unfilled'] {
 .common-right-tool-menu-body {
   position: fixed;
   z-index: 11;
-  right: 70px;
+  right: 65px;
   bottom: 20px;
   background-color: #fff;
   border-radius: 10px;
