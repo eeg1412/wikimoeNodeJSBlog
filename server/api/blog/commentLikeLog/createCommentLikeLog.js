@@ -47,6 +47,7 @@ module.exports = async function (req, res, next) {
         key: 'uuid',
         label: '内容参数',
         type: 'isUUID',
+        options: 4,
         required: true,
       },
     ]

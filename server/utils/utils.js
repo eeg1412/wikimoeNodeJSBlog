@@ -285,9 +285,9 @@ exports.isObjectId = function (value) {
   return value.match(/^[0-9a-fA-F]{24}$/)
 }
 // isUUID
-exports.isUUID = function (value) {
+exports.isUUID = function (value, version = 4) {
   // 通过 validator isUUID 来判断
-  return validator.isUUID(String(value))
+  return validator.isUUID(String(value), version)
 }
 // getTodayStartTime
 exports.getTodayStartTime = function () {
