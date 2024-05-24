@@ -11,7 +11,7 @@ module.exports = async function (req, res, next) {
   res.send({
     id: logId
   })
-  const uuid = req.headers['x-request-id']
+  const uuid = req.headers['wmb-request-id']
   const referrer = utils.setReferrer(req.body.referrer)
   const ip = utils.getUserIp(req)
   const action = req.body.action

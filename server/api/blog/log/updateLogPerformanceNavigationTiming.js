@@ -7,7 +7,7 @@ const userApiLog = log4js.getLogger('userApi')
 module.exports = async function (req, res, next) {
   res.send({
   })
-  const uuid = req.headers['x-request-id']
+  const uuid = req.headers['wmb-request-id']
   const action = req.body.action
   const actionList = ['open']
   const id = req.body.id

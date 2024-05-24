@@ -60,8 +60,8 @@ class HttpRequest {
       if (uuid) {
         options.headers = {
           ...options.headers,
-          // 将uuid放入请求头 x-request-id
-          'x-request-id': uuid,
+          // 将uuid放入请求头 wmb-request-id
+          'wmb-request-id': uuid,
         }
       }
     }

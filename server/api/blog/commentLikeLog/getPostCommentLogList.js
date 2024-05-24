@@ -6,7 +6,7 @@ const userApiLog = log4js.getLogger('userApi')
 module.exports = async function (req, res, next) {
   // 获取id列表
   const commentIdList = req.body.commentIdList
-  const uuid = req.headers['x-request-id']
+  const uuid = req.headers['wmb-request-id']
   const ip = utils.getUserIp(req)
   // 判断uuid是否符合格式
   if (!utils.isUUID(uuid)) {

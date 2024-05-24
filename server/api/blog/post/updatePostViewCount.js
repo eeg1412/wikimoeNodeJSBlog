@@ -30,7 +30,7 @@ module.exports = async function (req, res, next) {
   // - coverImages  博客时是封面图片字段，页面时是页面图片字段
   // - __v  版本号字段
   const id = req.body.id
-  const uuid = req.headers['x-request-id']
+  const uuid = req.headers['wmb-request-id']
   const ip = utils.getUserIp(req)
   // 判断uuid是否符合格式
   if (!utils.isUUID(uuid)) {

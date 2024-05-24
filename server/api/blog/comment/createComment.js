@@ -79,7 +79,7 @@ module.exports = async function (req, res, next) {
       return
     }
     // 从header中获取uuid
-    const uuid = req.headers['x-request-id']
+    const uuid = req.headers['wmb-request-id']
 
 
     const ip = utils.getUserIp(req)

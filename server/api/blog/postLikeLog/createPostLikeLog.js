@@ -18,7 +18,7 @@ module.exports = async function (req, res, next) {
       throw new Error('postLikeLogs超出最大存储容量')
     }
     const { like, id, __v } = req.body
-    const uuid = req.headers['x-request-id']
+    const uuid = req.headers['wmb-request-id']
     const ip = utils.getUserIp(req)
     const filter = {
       post: id,
