@@ -119,10 +119,16 @@ export const uuid = (): string => {
     return v.toString(16)
   })
 }
+// 检查uuid是否格式是否合法
+export const checkUuidFormat = (uuid: string): boolean => {
+  return /^[0-9A-F]{8}-[0-9A-F]{4}-4[0-9A-F]{3}-[89AB][0-9A-F]{3}-[0-9A-F]{12}$/i.test(
+    uuid
+  )
+}
 // 检查本地是否存在uuid，没有则生成
 export const checkUuid = () => {
   let storedUuid = localStorage.getItem('uuid')
-  if (!storedUuid) {
+  if (!storedUuid || !checkUuidFormat(storedUuid)) {
     storedUuid = uuid()
     localStorage.setItem('uuid', storedUuid)
   }
