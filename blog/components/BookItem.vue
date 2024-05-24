@@ -57,9 +57,12 @@
           <div
             class="text-sm mb-1 text-gray-400 flex-shrink-0 pointer w_10 flex items-center"
           >
-            <UIcon name="i-heroicons-clock" class="align-middle mr-1" />用时{{
-              getACGDuration(book.startTime, book.endTime)
-            }}
+            <UIcon
+              name="i-heroicons-clock"
+              class="align-middle mr-1"
+            /><template v-if="!book.endTime">累计阅读</template
+            ><template v-else>共计阅读</template
+            >{{ getACGDuration(book.startTime, book.endTime) }}
           </div>
           <template #panel>
             <div class="px-2 py-1">

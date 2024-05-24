@@ -57,9 +57,12 @@
           <div
             class="text-sm mb-1 text-gray-400 flex-shrink-0 pointer w_10 flex items-center"
           >
-            <UIcon name="i-heroicons-clock" class="align-middle mr-1" />用时{{
-              getACGDuration(game.startTime, game.endTime)
-            }}
+            <UIcon
+              name="i-heroicons-clock"
+              class="align-middle mr-1"
+            /><template v-if="!game.endTime">累计游玩</template
+            ><template v-else>共计游玩</template
+            >{{ getACGDuration(game.startTime, game.endTime) }}
           </div>
           <template #panel>
             <div class="px-2 py-1">
