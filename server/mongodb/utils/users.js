@@ -13,6 +13,12 @@ exports.findOne = async function (parmas, projection) {
     return await usersModel.findOne(parmas, projection).populate('cover');
 }
 
+// 查找所有
+exports.find = async function (parmas, sort, projection) {
+    // document查询
+    return await usersModel.find(parmas, projection).sort(sort);
+}
+
 exports.updateOne = async function (filters, parmas) {
     // document查询
     parmas.$inc = { __v: 1, ...parmas.$inc }
