@@ -244,7 +244,9 @@
               <el-option
                 v-for="item in gameList"
                 :key="item._id"
-                :label="item.title"
+                :label="`${
+                  item.gamePlatform?.name ? `【${item.gamePlatform.name}】` : ''
+                }${item.title}`"
                 :value="item._id"
               ></el-option>
             </el-select>
@@ -267,7 +269,9 @@
               <el-option
                 v-for="item in bookList"
                 :key="item._id"
-                :label="item.title"
+                :label="`${
+                  item.booktype?.name ? `【${item.booktype.name}】` : ''
+                }${item.title}`"
                 :value="item._id"
               ></el-option>
             </el-select>

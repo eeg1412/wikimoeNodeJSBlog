@@ -77,11 +77,19 @@ exports.findPage = async function (parmas, sort, page, limit, projection, option
     ).populate({
       path: 'gameList',
       match: { status: 1 },
-      select: '_id title',
+      select: '_id title gamePlatform',
+      populate: {
+        path: 'gamePlatform',
+        select: '_id name color'
+      }
     }).populate({
       path: 'bookList',
       match: { status: 1 },
-      select: '_id title',
+      select: '_id title booktype',
+      populate: {
+        path: 'booktype',
+        select: '_id name color'
+      }
     }).populate({
       path: 'postList',
       match: { status: 1, type: 1 },

@@ -229,10 +229,18 @@
                 <i class="fas fa-fw fa-tv"></i>
               </template>
               <template v-else-if="content.type === 'book'">
-                <i class="fas fa-fw fa-book"></i>
+                <i class="fas fa-fw fa-book"></i
+                >{{
+                  content.booktype?.name ? `【${content.booktype.name}】` : ''
+                }}
               </template>
               <template v-else-if="content.type === 'game'">
-                <i class="fas fa-fw fa-gamepad"></i>
+                <i class="fas fa-fw fa-gamepad"></i
+                >{{
+                  content.gamePlatform?.name
+                    ? `【${content.gamePlatform.name}】`
+                    : ''
+                }}
               </template>
               <template v-else-if="content.type === 'post'">
                 <i class="fas fa-fw fa-newspaper"></i>
