@@ -69,7 +69,7 @@
           </template>
         </el-table-column>
         <!-- disabled -->
-        <el-table-column label="状态" prop="disabled" width="100">
+        <el-table-column label="状态" prop="disabled" width="75">
           <template #default="{ row }">
             <el-tag v-if="row.disabled" type="danger">禁用</el-tag>
             <el-tag v-else type="success">正常</el-tag>
