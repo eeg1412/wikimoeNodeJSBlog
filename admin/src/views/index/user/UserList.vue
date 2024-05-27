@@ -68,6 +68,13 @@
             <span v-else-if="row.role === 990">管理员</span>
           </template>
         </el-table-column>
+        <!-- disabled -->
+        <el-table-column label="状态" prop="disabled" width="100">
+          <template #default="{ row }">
+            <el-tag v-if="row.disabled" type="danger">禁用</el-tag>
+            <el-tag v-else type="success">正常</el-tag>
+          </template>
+        </el-table-column>
         <!-- description -->
         <el-table-column label="描述" prop="description" min-width="200" />
         <!-- createdAt -->
