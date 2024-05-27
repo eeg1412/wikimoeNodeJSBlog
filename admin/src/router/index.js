@@ -265,6 +265,12 @@ const routes = [
         name: 'BackupList',
         component: () => import(/* webpackChunkName: "BackupList" */ '../views/index/backup/BackupList.vue')
       },
+      // UserList
+      {
+        path: '/user/list',
+        name: 'UserList',
+        component: () => import(/* webpackChunkName: "UserList" */ '../views/index/user/UserList.vue')
+      },
       // config
       {
         path: '/config',

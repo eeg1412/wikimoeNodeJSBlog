@@ -285,6 +285,16 @@
               <i class="fas fa-fw fa-cog pr10"></i>
               <template #title>设置</template>
             </el-menu-item>
+            <!-- UserList 管理员 -->
+            <el-menu-item
+              index="UserList"
+              @click="removeParam('UserList')"
+              @click.middle="openNewTab('UserList')"
+              :route="{ name: 'UserList' }"
+            >
+              <i class="fas fa-fw fa-user pr10"></i>
+              <template #title>管理员</template>
+            </el-menu-item>
             <!-- BackupList 备份 -->
             <el-menu-item
               index="BackupList"

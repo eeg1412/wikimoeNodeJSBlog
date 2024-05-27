@@ -794,5 +794,12 @@ export default function (api) {
         shouldAdminJWT: true
       })
     },
+    // get /user/list
+    getUserList (data) {
+      return api.get('/user/list', {
+        params: data,
+        shouldAdminJWT: true
+      })
+    },
   }
 }
