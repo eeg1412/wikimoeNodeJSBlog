@@ -49,6 +49,16 @@ module.exports = async function (req, res, next) {
     })
     return
   }
+  // 管理员不能删除自己
+  const adminId = req.admin.id
+  if (id === adminId) {
+    res.status(400).json({
+      errors: [{
+        message: '不能删除自己'
+      }]
+    })
+    return
+  }
   //  删除管理员
   userUtils.deleteOne({ _id: id }).then((data) => {
     if (data.deletedCount === 0) {

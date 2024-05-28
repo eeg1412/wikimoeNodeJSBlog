@@ -75,6 +75,10 @@
             </el-button>
           </div>
         </el-form-item>
+        <!-- 禁用 -->
+        <el-form-item label="禁用" prop="disabled">
+          <el-switch v-model="form.disabled" />
+        </el-form-item>
         <el-form-item>
           <el-button type="primary" @click="submit">提交</el-button>
         </el-form-item>

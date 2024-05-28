@@ -87,10 +87,18 @@
         </el-table-column>
         <el-table-column label="操作" width="140" fixed="right">
           <template #default="{ row }">
-            <el-button type="primary" size="small" @click="goEdit(row._id)"
+            <el-button
+              type="primary"
+              size="small"
+              @click="goEdit(row._id)"
+              :disabled="adminInfo.id === row._id"
               >编辑</el-button
             >
-            <el-button type="danger" size="small" @click="deleteUser(row._id)"
+            <el-button
+              type="danger"
+              size="small"
+              @click="deleteUser(row._id)"
+              :disabled="adminInfo.id === row._id"
               >删除</el-button
             >
           </template>
@@ -116,8 +124,9 @@
 import { useRoute, useRouter } from 'vue-router'
 import { authApi } from '@/api'
 import { ElMessage, ElMessageBox } from 'element-plus'
-import { onMounted, reactive, ref, watch } from 'vue'
+import { onMounted, reactive, ref, watch, computed } from 'vue'
 import { setSessionParams, getSessionParams } from '@/utils/utils'
+import store from '@/store'
 export default {
   setup() {
     const route = useRoute()
@@ -196,6 +205,10 @@ export default {
         params.keyword = sessionParams.keyword
       }
     }
+
+    const adminInfo = computed(() => {
+      return store.getters.adminInfo
+    })
     onMounted(() => {
       initParams()
       getUserList()
@@ -209,6 +222,7 @@ export default {
       handleAdd,
       goEdit,
       deleteUser,
+      adminInfo,
     }
   },
 }

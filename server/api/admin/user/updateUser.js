@@ -15,6 +15,16 @@ module.exports = async function (req, res, next) {
     })
     return
   }
+  const adminId = req.admin.id
+  // 管理员不能修改自己
+  if (id === adminId) {
+    res.status(400).json({
+      errors: [{
+        message: '不能修改自己'
+      }]
+    })
+    return
+  }
   // disabled必须为布尔值
   if (disabled !== undefined && typeof disabled !== 'boolean') {
     res.status(400).json({
@@ -39,7 +49,8 @@ module.exports = async function (req, res, next) {
   const updateData = {
     email,
     description,
-    cover
+    cover,
+    disabled
   }
   if (nickname && nickname !== userRes.nickname) {
     // 校验昵称是否重复
