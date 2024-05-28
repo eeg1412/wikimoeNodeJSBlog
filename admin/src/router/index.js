@@ -271,6 +271,12 @@ const routes = [
         name: 'UserList',
         component: () => import(/* webpackChunkName: "UserList" */ '../views/index/user/UserList.vue')
       },
+      // UserAdd
+      {
+        path: '/user/add',
+        name: 'UserAdd',
+        component: () => import(/* webpackChunkName: "UserAdd" */ '../views/index/user/UserAdd.vue')
+      },
       // config
       {
         path: '/config',

@@ -978,3 +978,31 @@ input[type='password'] {
   color: #fff;
   z-index: 3;
 }
+.login-usercover-image-item {
+  width: 100px;
+  height: 100px;
+  border: 1px solid #ccc;
+  color: #ccc;
+  margin-right: 3px;
+  margin-bottom: 3px;
+  float: left;
+  box-sizing: border-box;
+  cursor: pointer;
+  position: relative;
+}
+.login-usercover-image-item-change {
+  position: absolute;
+  top: 2px;
+  right: 2px;
+  width: 20px;
+  height: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 20px;
+  font-size: 14px;
+  text-align: center;
+  color: #f56c6c;
+  cursor: pointer;
+  background-color: rgba(255, 255, 255, 0.85);
+}

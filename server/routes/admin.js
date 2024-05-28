@@ -1193,6 +1193,18 @@ const adminRouteSetting = [
     },
     role: null
   },
+  // post createUser
+  {
+    path: '/user/create',
+    method: 'post',
+    middleware: [checkAuth, checkRole],
+    controller: require('../api/admin/user/createUser'),
+    roleType: {
+      type: 'eq',
+      role: 999
+    },
+    role: null
+  },
 ]
 
 adminRouteSetting.forEach(item => {

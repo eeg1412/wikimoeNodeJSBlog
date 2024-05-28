@@ -178,7 +178,14 @@ export default {
         currentPassword: [
           { required: true, message: '请输入原密码', trigger: 'blur' },
         ],
-        password: [{ required: true, message: '请输入密码', trigger: 'blur' }],
+        password: [
+          { required: true, message: '请输入密码', trigger: 'blur' },
+          {
+            pattern: passwordReg,
+            message: '密码必须包含大小写字母、数字、特殊字符',
+            trigger: 'blur',
+          },
+        ],
         confirmPassword: [
           { required: true, message: '请再次输入新密码', trigger: 'blur' },
           {
@@ -320,33 +327,4 @@ export default {
   },
 }
 </script>
-<style lang="less" scoped>
-.login-usercover-image-item {
-  width: 100px;
-  height: 100px;
-  border: 1px solid #ccc;
-  color: #ccc;
-  margin-right: 3px;
-  margin-bottom: 3px;
-  float: left;
-  box-sizing: border-box;
-  cursor: pointer;
-  position: relative;
-}
-.login-usercover-image-item-change {
-  position: absolute;
-  top: 2px;
-  right: 2px;
-  width: 20px;
-  height: 20px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  border-radius: 20px;
-  font-size: 14px;
-  text-align: center;
-  color: #f56c6c;
-  cursor: pointer;
-  background-color: rgba(255, 255, 255, 0.85);
-}
-</style>
+<style lang="less" scoped></style>

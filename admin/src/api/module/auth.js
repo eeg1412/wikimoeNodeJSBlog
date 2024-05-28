@@ -801,5 +801,11 @@ export default function (api) {
         shouldAdminJWT: true
       })
     },
+    // post /user/create
+    createUser (data) {
+      return api.post('/user/create', data, {
+        shouldAdminJWT: true
+      })
+    },
   }
 }
