@@ -4,6 +4,8 @@ const commentUtils = require('../../../mongodb/utils/comments')
 const utils = require('../../../utils/utils')
 const log4js = require('log4js')
 const adminApiLog = log4js.getLogger('adminApi')
+const fs = require('fs')
+const path = require('path');
 
 module.exports = async function (req, res, next) {
   const id = req.query.id
@@ -26,6 +28,15 @@ module.exports = async function (req, res, next) {
       res.status(400).json({
         errors: [{
           message: 'toUserId不正确'
+        }]
+      })
+      return
+    }
+    // toUserId 不能和 id 相同
+    if (toUserId === id) {
+      res.status(400).json({
+        errors: [{
+          message: '不能转让给自己'
         }]
       })
       return
@@ -59,6 +70,15 @@ module.exports = async function (req, res, next) {
     })
     return
   }
+  const deleteUserRes = await userUtils.findOne({ _id: id })
+  if (!deleteUserRes) {
+    res.status(400).json({
+      errors: [{
+        message: '管理员不存在'
+      }]
+    })
+    return
+  }
   //  删除管理员
   userUtils.deleteOne({ _id: id }).then((data) => {
     if (data.deletedCount === 0) {
@@ -83,11 +103,32 @@ module.exports = async function (req, res, next) {
     }
     // 执行promise
     Promise.all(promiseArr).then(() => {
-      res.send({
-        data: {
-          message: '删除成功'
+      // 删除头像
+      if (deleteUserRes.photo) {
+        const basePath = './public/upload/avatar/'
+        const fullPath = path.join(basePath, deleteUserRes._id + '.webp')
+        try {
+          fs.unlinkSync(fullPath)
+          res.send({
+            data: {
+              message: '删除成功'
+            }
+          })
+        } catch (err) {
+          res.status(400).json({
+            errors: [{
+              message: '管理员删除成功，但删除头像失败'
+            }]
+          })
+          adminApiLog.error(`delete user photo fail, ${logErrorToText(err)}`)
         }
-      })
+      } else {
+        res.send({
+          data: {
+            message: '删除成功'
+          }
+        })
+      }
     }).catch((err) => {
       res.status(400).json({
         errors: [{

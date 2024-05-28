@@ -97,7 +97,7 @@
             <el-button
               type="danger"
               size="small"
-              @click="deleteUser(row._id)"
+              @click="deleteUser(row)"
               :disabled="adminInfo.id === row._id"
               >删除</el-button
             >
@@ -118,6 +118,12 @@
         v-model:page-size="params.size"
       />
     </div>
+    <UserDeleteDialog
+      v-model:show="showDeleteDialog"
+      :id="deleteId"
+      :username="deleteUsername"
+      @deleteSuccess="getUserList(true)"
+    />
   </div>
 </template>
 <script>
@@ -127,7 +133,11 @@ import { ElMessage, ElMessageBox } from 'element-plus'
 import { onMounted, reactive, ref, watch, computed } from 'vue'
 import { setSessionParams, getSessionParams } from '@/utils/utils'
 import store from '@/store'
+import UserDeleteDialog from '@/components/UserDeleteDialog'
 export default {
+  components: {
+    UserDeleteDialog,
+  },
   setup() {
     const route = useRoute()
     const router = useRouter()
@@ -176,25 +186,14 @@ export default {
         },
       })
     }
-    const deleteUser = (id) => {
-      ElMessageBox.confirm('确定要删除吗？', {
-        confirmButtonText: '是',
-        cancelButtonText: '否',
-        type: 'warning',
-      })
-        .then(() => {
-          const params = {
-            id,
-          }
-          authApi
-            .deleteUser(params)
-            .then(() => {
-              ElMessage.success('删除成功')
-              getUserList()
-            })
-            .catch(() => {})
-        })
-        .catch(() => {})
+
+    const showDeleteDialog = ref(false)
+    const deleteId = ref('')
+    const deleteUsername = ref('')
+    const deleteUser = (row) => {
+      showDeleteDialog.value = true
+      deleteId.value = row._id
+      deleteUsername.value = row.username
     }
 
     const initParams = () => {
@@ -221,8 +220,11 @@ export default {
       getUserList,
       handleAdd,
       goEdit,
+      showDeleteDialog,
       deleteUser,
       adminInfo,
+      deleteId,
+      deleteUsername,
     }
   },
 }

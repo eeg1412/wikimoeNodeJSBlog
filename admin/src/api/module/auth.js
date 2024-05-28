@@ -795,10 +795,11 @@ export default function (api) {
       })
     },
     // get /user/list
-    getUserList (data) {
+    getUserList (data, noLoading = false) {
       return api.get('/user/list', {
         params: data,
-        shouldAdminJWT: true
+        shouldAdminJWT: true,
+        noLoading
       })
     },
     // get /user/update
