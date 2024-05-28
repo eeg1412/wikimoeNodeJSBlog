@@ -56,7 +56,12 @@
           </template>
         </el-table-column>
         <!-- username -->
-        <el-table-column label="账号" prop="username" width="120" />
+        <el-table-column label="账号" prop="username" width="180">
+          <template #default="{ row }">
+            <span>{{ row.username }}</span>
+            <span v-if="adminInfo.id === row._id">（我）</span>
+          </template>
+        </el-table-column>
         <!-- nickname -->
         <el-table-column label="昵称" prop="nickname" width="120" />
         <!-- email -->
