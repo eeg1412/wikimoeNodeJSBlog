@@ -67,14 +67,22 @@ exports.find = async function (parmas, sort, projection) {
 // 分页查询
 exports.findPage = async function (parmas, sort, page, limit, projection, options = {}) {
   // document查询
-  const list = await postsModel.find(parmas, projection).populate('author', options.authorFilter || 'nickname _id photo').populate('sort').populate('tags').populate('coverImages')
-    .populate(
-      {
-        path: 'bangumiList',
-        match: { status: 1 },
-        select: '_id title year season',
-      }
-    ).populate({
+  let query = postsModel.find(parmas, projection)
+    .populate('author', options.authorFilter || 'nickname _id photo')
+    .populate('sort')
+    .populate('tags')
+    .populate('coverImages');
+
+  if (projection && !projection.includes('-bangumiList')) {
+    query = query.populate({
+      path: 'bangumiList',
+      match: { status: 1 },
+      select: '_id title year season',
+    });
+  }
+
+  if (projection && !projection.includes('-gameList')) {
+    query = query.populate({
       path: 'gameList',
       match: { status: 1 },
       select: '_id title gamePlatform',
@@ -82,7 +90,11 @@ exports.findPage = async function (parmas, sort, page, limit, projection, option
         path: 'gamePlatform',
         select: '_id name color'
       }
-    }).populate({
+    });
+  }
+
+  if (projection && !projection.includes('-bookList')) {
+    query = query.populate({
       path: 'bookList',
       match: { status: 1 },
       select: '_id title booktype',
@@ -90,16 +102,26 @@ exports.findPage = async function (parmas, sort, page, limit, projection, option
         path: 'booktype',
         select: '_id name color'
       }
-    }).populate({
+    });
+  }
+
+  if (projection && !projection.includes('-postList')) {
+    query = query.populate({
       path: 'postList',
       match: { status: 1, type: 1 },
       select: 'title _id alias',
-    }).populate({
+    });
+  }
+
+  if (projection && !projection.includes('-eventList')) {
+    query = query.populate({
       path: 'eventList',
       match: { status: 1 },
       select: '_id title',
-    })
-    .sort(sort).skip((page - 1) * limit).limit(limit);
+    });
+  }
+
+  const list = await query.sort(sort).skip((page - 1) * limit).limit(limit);
   const total = await postsModel.countDocuments(parmas);
   // 查询失败
   if (!list || total === undefined) {
