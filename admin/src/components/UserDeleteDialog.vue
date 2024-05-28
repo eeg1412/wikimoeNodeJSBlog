@@ -146,11 +146,11 @@ export default {
     const title = computed(() => {
       switch (form.step) {
         case 1:
-          return '确认删除'
+          return '确认删除(1/3)'
         case 2:
-          return '数据处理'
+          return '数据处理(2/3)'
         case 3:
-          return '确认'
+          return '确认(3/3)'
 
         default:
           return ''
