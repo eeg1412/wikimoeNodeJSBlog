@@ -339,8 +339,12 @@
                   <i class="fas fa-fw fa-user-edit"></i>
                 </el-button>
               </div>
-              <div class="fr pt10 mr10 fb">
-                {{ adminInfo.nickname }}
+              <!-- adminInfo.role 999为站长 990 为管理员 -->
+              <div class="fr pt10 fb">
+                {{ adminInfo.nickname }}（<template
+                  v-if="adminInfo.role === 999"
+                  >站长</template
+                ><template v-else>管理员</template>）
               </div>
             </template>
           </div>
