@@ -38,6 +38,46 @@ const checkAuth = async (req, res, next) => {
     res.status(401).json({ errors: [{ message: '认证失败' }] })
   }
 }
+// role校验
+const checkRole = (req, res, next) => {
+  const roleType = req.roleType
+  if (roleType) {
+    const type = req.roleType.type
+    const role = req.roleType.role
+    const adminRole = req.admin.role
+    switch (type) {
+      // lt lte gt gte eq
+      case 'lt':
+        if (adminRole >= role) {
+          return res.status(400).json({ errors: [{ message: '权限不足' }] })
+        }
+        break
+      case 'lte':
+        if (adminRole > role) {
+          return res.status(400).json({ errors: [{ message: '权限不足' }] })
+        }
+        break
+      case 'gt':
+        if (adminRole <= role) {
+          return res.status(400).json({ errors: [{ message: '权限不足' }] })
+        }
+        break
+      case 'gte':
+        if (adminRole < role) {
+          return res.status(400).json({ errors: [{ message: '权限不足' }] })
+        }
+        break
+      case 'eq':
+        if (adminRole !== role) {
+          return res.status(400).json({ errors: [{ message: '权限不足' }] })
+        }
+        break
+      default:
+        return res.status(400).json({ errors: [{ message: '权限不足' }] })
+    }
+  }
+  next()
+}
 
 
 // roleType 大于小于等于
@@ -1145,15 +1185,21 @@ const adminRouteSetting = [
   {
     path: '/user/list',
     method: 'get',
-    middleware: [checkAuth],
+    middleware: [checkAuth, checkRole],
     controller: require('../api/admin/user/getUserList'),
-    roleType: null,
+    roleType: {
+      type: 'eq',
+      role: 999
+    },
     role: null
   },
 ]
 
 adminRouteSetting.forEach(item => {
-  router[item.method](item.path, ...item.middleware, item.controller)
+  router[item.method](item.path, (req, res, next) => {
+    req.roleType = item.roleType;
+    next();
+  }, ...item.middleware, item.controller)
 })
 
 module.exports = router
