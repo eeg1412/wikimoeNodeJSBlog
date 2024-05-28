@@ -340,10 +340,11 @@
                 </el-button>
               </div>
               <!-- adminInfo.role 999为站长 990 为管理员 -->
-              <div class="fr pt10 fb">
-                {{ adminInfo.nickname }}（<template
-                  v-if="adminInfo.role === 999"
-                  >站长</template
+              <div class="fr pt10 fb dflex">
+                <div class="common-header-nickname">
+                  {{ adminInfo.nickname }}
+                </div>
+                （<template v-if="adminInfo.role === 999">站长</template
                 ><template v-else>管理员</template>）
               </div>
             </template>
@@ -530,6 +531,12 @@ export default {
   height: calc(100dvh - 62px);
   overflow: auto;
   margin-right: 10px;
+}
+.common-header-nickname {
+  max-width: 100px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 /* 媒体查询 手机模式 */
 @media (max-width: 767px) {
