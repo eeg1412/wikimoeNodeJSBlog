@@ -40,10 +40,10 @@ const checkAuth = async (req, res, next) => {
 }
 // role校验
 const checkRole = (req, res, next) => {
-  const roleType = req.roleType
-  if (roleType) {
-    const type = req.roleType.type
-    const role = req.roleType.role
+  const roleCheckInfo = req.roleCheckInfo
+  if (roleCheckInfo) {
+    const type = req.roleCheckInfo.type
+    const role = req.roleCheckInfo.role
     const adminRole = req.admin.role
     switch (type) {
       // lt lte gt gte eq
@@ -1187,11 +1187,8 @@ const adminRouteSetting = [
     method: 'get',
     middleware: [checkAuth, checkRole],
     controller: require('../api/admin/user/getUserList'),
-    roleType: {
-      type: 'eq',
-      role: 999
-    },
-    role: null
+    roleType: 'eq',
+    role: 999
   },
   // post createUser
   {
@@ -1199,17 +1196,46 @@ const adminRouteSetting = [
     method: 'post',
     middleware: [checkAuth, checkRole],
     controller: require('../api/admin/user/createUser'),
-    roleType: {
-      type: 'eq',
-      role: 999
-    },
-    role: null
+    roleType: 'eq',
+    role: 999
+  },
+  // put updateUser
+  {
+    path: '/user/update',
+    method: 'put',
+    middleware: [checkAuth, checkRole],
+    controller: require('../api/admin/user/updateUser'),
+    roleType: 'eq',
+    role: 999
+  },
+  // get getUserDetail
+  {
+    path: '/user/detail',
+    method: 'get',
+    middleware: [checkAuth, checkRole],
+    controller: require('../api/admin/user/getUserDetail'),
+    roleType: 'eq',
+    role: 999
+  },
+  // delete deleteUser
+  {
+    path: '/user/delete',
+    method: 'delete',
+    middleware: [checkAuth, checkRole],
+    controller: require('../api/admin/user/deleteUser'),
+    roleType: 'eq',
+    role: 999
   },
 ]
 
 adminRouteSetting.forEach(item => {
   router[item.method](item.path, (req, res, next) => {
-    req.roleType = item.roleType;
+    if (item.roleType && item.role) {
+      req.roleCheckInfo = {
+        type: item.roleType,
+        role: item.role
+      }
+    }
     next();
   }, ...item.middleware, item.controller)
 })

@@ -39,10 +39,21 @@ exports.updateOne = async function (filters, parmas) {
   parmas.$inc = { __v: 1, ...parmas.$inc }
   return await commentsModel.updateOne(filters, parmas);
 }
+// updateMany
+exports.updateMany = async function (filters, parmas) {
+  parmas.$inc = { __v: 1, ...parmas.$inc }
+  // document查询
+  return await commentsModel.updateMany(filters, parmas);
+}
 // 删除
 exports.deleteOne = async function (filters) {
   // document查询
   return await commentsModel.deleteOne(filters);
+}
+// deleteMany
+exports.deleteMany = async function (filters) {
+  // document查询
+  return await commentsModel.deleteMany(filters);
 }
 
 // 查询总数

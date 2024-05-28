@@ -142,10 +142,21 @@ exports.updateOne = async function (filters, parmas, isClient = false) {
   }
   return await postsModel.updateOne(filters, parmas);
 }
+// updateMany
+exports.updateMany = async function (filters, parmas) {
+  parmas.$inc = { __v: 1, ...parmas.$inc }
+  // document查询
+  return await postsModel.updateMany(filters, parmas);
+}
 // 删除
 exports.deleteOne = async function (filters) {
   // document查询
   return await postsModel.deleteOne(filters);
+}
+// deleteMany
+exports.deleteMany = async function (filters) {
+  // document查询
+  return await postsModel.deleteMany(filters);
 }
 
 // 查询总数

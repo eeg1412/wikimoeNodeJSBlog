@@ -51,7 +51,7 @@ module.exports = async function (req, res, next) {
         message: '管理员列表获取失败'
       }]
     })
-    adminApiLog.error(`user list get fail, ${JSON.stringify(err)
+    adminApiLog.error(`admin list get fail, ${JSON.stringify(err)
       }`)
   })
 }

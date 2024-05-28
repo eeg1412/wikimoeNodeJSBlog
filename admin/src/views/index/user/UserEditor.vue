@@ -5,27 +5,22 @@
         <el-breadcrumb-item :to="{ name: 'UserList' }"
           >管理员列表</el-breadcrumb-item
         >
-        <el-breadcrumb-item>追加</el-breadcrumb-item>
+        <el-breadcrumb-item v-if="id">编辑</el-breadcrumb-item>
+        <el-breadcrumb-item v-else>追加</el-breadcrumb-item>
       </el-breadcrumb>
     </div>
     <div>
       <el-form :model="form" :rules="rules" ref="formRef" label-width="80px">
-        <el-form-item label="用户名" prop="username">
-          <el-input
-            v-model="form.username"
-            placeholder="请输入用户名"
-          ></el-input>
+        <el-form-item label="昵称" prop="nickname">
+          <el-input v-model="form.nickname" placeholder="请输入昵称"></el-input>
         </el-form-item>
         <el-form-item label="密码" prop="password">
           <el-input
             v-model="form.password"
-            placeholder="请输入密码"
+            placeholder="如需更改密码，请输入新密码"
             type="password"
             show-password
           ></el-input>
-        </el-form-item>
-        <el-form-item label="昵称" prop="nickname">
-          <el-input v-model="form.nickname" placeholder="请输入昵称"></el-input>
         </el-form-item>
         <el-form-item label="邮箱" prop="email">
           <el-input v-model="form.email" placeholder="请输入邮箱"></el-input>
@@ -103,7 +98,6 @@ import { authApi } from '@/api'
 import { ElMessage } from 'element-plus'
 import AttachmentsDialog from '@/components/AttachmentsDialog'
 import { loadAndOpenImg } from '@/utils/utils'
-
 export default {
   components: {
     AttachmentsDialog,
@@ -111,47 +105,38 @@ export default {
   setup() {
     const router = useRouter()
     const route = useRoute()
+    const id = ref(route.params.id)
     const form = reactive({
-      username: '',
       nickname: '',
-      password: '',
       email: '',
       photo: '',
       description: '',
-      cover: '',
+      password: '',
+      cover: null,
+      disabled: false,
+      __v: 0,
     })
-    const passwordReg =
-      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*])[a-zA-Z\d!@#$%^&*]{4,}$/
-    const userNameReg = /^[a-z0-9]+$/
-    const rules = reactive({
-      username: [
-        { required: true, message: '请输入用户名', trigger: 'blur' },
+    const rules = computed(() => {
+      const rules = {
+        nickname: [{ required: true, message: '请输入昵称', trigger: 'blur' }],
+        email: [
+          {
+            type: 'email',
+            message: '请输入正确的邮箱地址',
+            trigger: 'blur',
+          },
+        ],
+      }
+      rules.password = [
+        // { required: true, message: '请输入密码', trigger: 'blur' },
         {
-          pattern: userNameReg,
-          message: '用户名只能包含小写字母和数字',
+          pattern:
+            /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*])[a-zA-Z\d!@#$%^&*]{4,}$/,
+          message: '密码必须包含大小写字母、数字、特殊字符（!@#$%^&*）',
           trigger: 'blur',
         },
-      ],
-      nickname: [
-        { required: true, message: '请输入昵称', trigger: 'blur' },
-        // 10个字符以内
-        { max: 10, message: '昵称最多10个字符', trigger: 'blur' },
-      ],
-      password: [
-        { required: true, message: '请输入密码', trigger: 'blur' },
-        {
-          pattern: passwordReg,
-          message: '密码必须包含大小写字母、数字、特殊字符（!@#$%^&\*）',
-          trigger: 'blur',
-        },
-      ],
-      email: [
-        {
-          type: 'email',
-          message: '请输入正确的邮箱地址',
-          trigger: 'blur',
-        },
-      ],
+      ]
+      return rules
     })
     const formRef = ref(null)
     const submit = () => {
@@ -159,27 +144,53 @@ export default {
         if (!valid) {
           return false
         }
-        const data = { ...form }
+        const data = {
+          ...form,
+        }
         if (coverData.value) {
           data.cover = coverData.value._id
         }
-        authApi
-          .createUser(data)
-          .then(() => {
-            router.push({
-              name: 'UserList',
+        if (id.value) {
+          // 编辑
+          data.id = id.value
+          authApi
+            .updateUser(data)
+            .then(() => {
+              router.push({
+                name: 'UserList',
+              })
             })
-          })
-          .catch(() => {})
+            .catch(() => {})
+        }
       })
     }
 
+    const getUserDetail = () => {
+      const params = {
+        id: id.value,
+      }
+      authApi
+        .getUserDetail(params)
+        .then((res) => {
+          const data = res.data.data
+          form.nickname = data.nickname
+          form.email = data.email
+          form.photo = data.photo
+          form.description = data.description
+          form.disabled = data.disabled
+          if (data.cover) {
+            coverData.value = data.cover
+          }
+          form.__v = data.__v
+        })
+        .catch(() => {})
+    }
+
+    const coverData = ref(null)
     const setPhoto = (base64) => {
       form.photo = base64
     }
-
     // 附件
-    const coverData = ref(null)
     const siteUrl = computed(() => {
       return store.getters.siteUrl
     })
@@ -204,8 +215,13 @@ export default {
         },
       ])
     }
-    onMounted(() => {})
+    onMounted(() => {
+      if (id.value) {
+        getUserDetail()
+      }
+    })
     return {
+      id,
       form,
       rules,
       formRef,

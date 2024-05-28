@@ -801,6 +801,26 @@ export default function (api) {
         shouldAdminJWT: true
       })
     },
+    // get /user/update
+    getUserDetail (data) {
+      return api.get('/user/detail', {
+        params: data,
+        shouldAdminJWT: true
+      })
+    },
+    // put /user/update
+    updateUser (data) {
+      return api.put('/user/update', data, {
+        shouldAdminJWT: true
+      })
+    },
+    // delete /user/delete
+    deleteUser (data) {
+      return api.delete('/user/delete', {
+        params: data,
+        shouldAdminJWT: true
+      })
+    },
     // post /user/create
     createUser (data) {
       return api.post('/user/create', data, {

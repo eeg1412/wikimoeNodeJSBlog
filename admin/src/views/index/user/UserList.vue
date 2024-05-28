@@ -78,7 +78,7 @@
         <!-- description -->
         <el-table-column label="描述" prop="description" min-width="200" />
         <!-- IP -->
-        <el-table-column label="登录IP" prop="IP" width="120" />
+        <el-table-column label="操作IP" prop="IP" width="120" />
         <!-- createdAt -->
         <el-table-column label="创建时间" prop="createdAt" width="160">
           <template #default="{ row }">

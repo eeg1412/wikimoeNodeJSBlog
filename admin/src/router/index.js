@@ -277,6 +277,12 @@ const routes = [
         name: 'UserAdd',
         component: () => import(/* webpackChunkName: "UserAdd" */ '../views/index/user/UserAdd.vue')
       },
+      // UserEditor
+      {
+        path: '/user/editor/:id',
+        name: 'UserEdit',
+        component: () => import(/* webpackChunkName: "UserEditor" */ '../views/index/user/UserEditor.vue')
+      },
       // config
       {
         path: '/config',
