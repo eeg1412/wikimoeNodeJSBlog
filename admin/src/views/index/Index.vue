@@ -287,6 +287,7 @@
             </el-menu-item>
             <!-- UserList 管理员 -->
             <el-menu-item
+              v-if="adminInfo?.role === 999"
               index="UserList"
               @click="removeParam('UserList')"
               @click.middle="openNewTab('UserList')"
