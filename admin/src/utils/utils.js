@@ -378,3 +378,22 @@ export const dataURLtoBlob = (dataurl) => {
 export const replaceSpacesWithUnderscores = (str) => {
     return str.replace(/[\s\u3000]/g, '-');
 }
+
+export const seasonToStr = (season) => {
+    let str = ''
+    switch (season) {
+        case 1:
+            str = '春'
+            break
+        case 2:
+            str = '夏'
+            break
+        case 3:
+            str = '秋'
+            break
+        case 4:
+            str = '冬'
+            break
+    }
+    return str
+}

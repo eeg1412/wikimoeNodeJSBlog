@@ -72,7 +72,7 @@ exports.findPage = async function (parmas, sort, page, limit, projection, option
       {
         path: 'bangumiList',
         match: { status: 1 },
-        select: '_id title',
+        select: '_id title year season',
       }
     ).populate({
       path: 'gameList',

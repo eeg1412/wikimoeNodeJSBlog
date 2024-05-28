@@ -221,7 +221,9 @@
               <el-option
                 v-for="item in bangumiList"
                 :key="item._id"
-                :label="item.title"
+                :label="`【${item.year}年${seasonToStr(item.season)}季新番】${
+                  item.title
+                }`"
                 :value="item._id"
               ></el-option>
             </el-select>
@@ -412,7 +414,11 @@ import RichEditor5 from '@/components/RichEditor5'
 import draggable from 'vuedraggable'
 import EmojiTextarea from '@/components/EmojiTextarea.vue'
 import { onBeforeRouteLeave } from 'vue-router'
-import { loadAndOpenImg, replaceSpacesWithUnderscores } from '@/utils/utils'
+import {
+  loadAndOpenImg,
+  replaceSpacesWithUnderscores,
+  seasonToStr,
+} from '@/utils/utils'
 import store from '@/store'
 
 export default {
@@ -1087,6 +1093,7 @@ export default {
       window.removeEventListener('beforeunload', beforeUnloadEvent)
     })
     return {
+      seasonToStr,
       id,
       type,
       postEditorVersion,

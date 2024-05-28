@@ -226,7 +226,10 @@
               class="postlist-content-item"
             >
               <template v-if="content.type === 'bangumi'">
-                <i class="fas fa-fw fa-tv"></i>
+                <i class="fas fa-fw fa-tv"></i
+                >{{
+                  `【${content.year}年${seasonToStr(content.season)}季新番】`
+                }}
               </template>
               <template v-else-if="content.type === 'book'">
                 <i class="fas fa-fw fa-book"></i
@@ -367,6 +370,7 @@ import {
   setSessionParams,
   getSessionParams,
   copyToClipboard,
+  seasonToStr,
 } from '@/utils/utils'
 import store from '@/store'
 export default {
@@ -680,6 +684,7 @@ export default {
       }
     })
     return {
+      seasonToStr,
       params,
       total,
       list,
