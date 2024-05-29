@@ -32,6 +32,14 @@ location /upload {
 }
 ```
 
+3. 关于 emoji 一些设备显示不全的问题。可以在管理后台的【设置】->【页面底部信息】中添加：
+
+```
+<style>
+@import url('https://fonts.loli.net/css2?family=Noto+Color+Emoji&display=swap');
+</style>
+```
+
 ## 说明
 
 【维基萌博客系统】推荐 Node.js 20 版本和 mongodb 6 版本。  
