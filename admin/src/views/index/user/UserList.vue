@@ -83,7 +83,17 @@
         <!-- description -->
         <el-table-column label="描述" prop="description" min-width="200" />
         <!-- IP -->
-        <el-table-column label="操作IP" prop="IP" width="120" />
+        <el-table-column label="操作IP" prop="IP" width="350">
+          <template #default="{ row }">
+            <div>{{ row.IP }}</div>
+            <div>
+              {{ row.ipInfo?.countryLong }} {{ row.ipInfo?.city
+              }}<template v-if="row.ipInfo?.region !== row.ipInfo?.city">
+                {{ ' ' + row.ipInfo?.region }}</template
+              >
+            </div>
+          </template>
+        </el-table-column>
         <!-- createdAt -->
         <el-table-column label="创建时间" prop="createdAt" width="160">
           <template #default="{ row }">
