@@ -33,6 +33,10 @@ var users = new Schema({
     default: 0
   },
   IP: String,
+  ipInfo: {
+    type: Object,
+    default: {}
+  },
 }, { timestamps: true });
 
 module.exports = mongoose.model('users', users);

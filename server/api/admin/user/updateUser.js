@@ -99,6 +99,7 @@ module.exports = async function (req, res, next) {
   // IP
   const IP = utils.getUserIp(req)
   updateData['IP'] = IP
+  updateData['ipInfo'] = await utils.IP2LocationUtils(IP, null, null, false)
 
   //照片上传
   //base64正则

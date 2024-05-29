@@ -66,7 +66,7 @@ module.exports = async function (req, res, next) {
     return
   }
   // 校验通过写入IP
-  const updateRes = await userUtils.updateOne({ _id: admin._id, __v: admin.__v }, { IP })
+  const updateRes = await userUtils.updateOne({ _id: admin._id, __v: admin.__v }, { IP, ipInfo: await utils.IP2LocationUtils(IP, null, null, false) })
   if (updateRes?.modifiedCount === 0) {
     return res.status(400).json({ errors: [{ message: '登录发生错误' }] })
   } else {

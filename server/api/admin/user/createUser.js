@@ -111,6 +111,7 @@ module.exports = async function (req, res, next) {
   // IP
   const IP = utils.getUserIp(req)
   params['IP'] = IP
+  params['ipInfo'] = await utils.IP2LocationUtils(IP, null, null, false)
 
   // 生成ObjectId
   const newId = new mongoose.Types.ObjectId();
