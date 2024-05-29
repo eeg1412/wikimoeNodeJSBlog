@@ -68,7 +68,7 @@ const { data: sortListData } = sortData
 .sort-list-item-link {
   display: block;
   text-decoration: none;
-  font-size: 13px;
+  font-size: 14px;
   background: #ffffff;
   border: 1px solid rgba(255, 255, 255, 0);
   color: #3c3c3c;
