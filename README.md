@@ -4,8 +4,33 @@
 
 ## 当前已知问题
 
-1. 在 Windows 环境中运行开发版 blog 会出现图片加载失败的现象，这是因为 Nuxt.js 所使用的 Nitro 在开发模式中反代有并发问题导致的，build 之后在 Linux 下运行是不会出现这个问题的（Windows 服务器未验证）。
-2. 如果不做任何设置的话，资源文件默认是通过 nuxt3 反代到 express 获取资源文件的，但是 nuxt3 不知道对流媒体的请求做了什么处理，导致苹果设备的 safari 无法查看视频，解决办法是不要通过 nuxt3 去反代资源文件，而是通过比如 nginx 去反代资源文件。
+1. 在 Windows 环境中运行开发版 blog 会出现图片视频加载失败的现象，这是因为 Nuxt.js 所使用的 Nitro 在开发模式中反代有并发问题导致的，build 之后在 Linux 下运行是不会出现这个问题的。
+2. 如果不做任何设置的话，资源文件默认是通过 nuxt3 反代到 express 获取资源文件的，此时如果用 nginx 再去反代资源文件的话会出现 safari 无法查看视频的问题，如果用 nginx 代理博客的话，请将以下路径反代到博客 API 的地址。
+
+- /content
+- /upload
+
+以下是一个例子，假如 API 是 3000 端口：
+
+```
+location /content {
+    proxy_pass http://localhost:3000;
+    proxy_set_header Host $host;
+    proxy_set_header X-Real-IP $remote_addr;
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    proxy_set_header REMOTE-HOST $remote_addr;
+    add_header X-Cache $upstream_cache_status;
+}
+
+location /upload {
+    proxy_pass http://localhost:3000;
+    proxy_set_header Host $host;
+    proxy_set_header X-Real-IP $remote_addr;
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    proxy_set_header REMOTE-HOST $remote_addr;
+    add_header X-Cache $upstream_cache_status;
+}
+```
 
 ## 说明
 
