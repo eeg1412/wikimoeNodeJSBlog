@@ -77,7 +77,7 @@ onUnmounted(() => {
   max-height: calc(100dvh - 150px);
   min-height: 50px;
   overflow: auto;
-  font-size: 13px;
+  font-size: 14px;
   padding: 12px;
 }
 .page-commonDialog-current-commonDialog-title {
