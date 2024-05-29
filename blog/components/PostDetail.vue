@@ -1055,7 +1055,7 @@ onUnmounted(() => {
 }
 .post-html-content-body,
 .post-tweet-detail-content-body {
-  font-size: 15px;
+  font-size: 16px;
 }
 .google-ad-post-detail {
   margin-top: 20px;
