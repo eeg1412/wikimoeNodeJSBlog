@@ -50,9 +50,9 @@ const props = defineProps({
 </script>
 <style scoped>
 .my-page-banner {
-  margin-top: -20px;
-  margin-left: -20px;
-  margin-right: -20px;
+  margin-top: -18px;
+  margin-left: -18px;
+  margin-right: -18px;
 }
 .my-page-avatar {
   margin-top: -40px;

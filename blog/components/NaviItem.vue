@@ -104,7 +104,7 @@ const afterLeave = (el) => {
 .blog-layout-sidebar-item {
   width: 100%;
   height: 40px;
-  padding: 0 20px;
+  padding: 0 18px;
   font-size: 20px;
   font-style: normal;
   font-weight: 400;

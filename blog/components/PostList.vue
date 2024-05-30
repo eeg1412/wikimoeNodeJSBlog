@@ -567,7 +567,7 @@ onMounted(() => {
 }
 .post-list-body-item {
   @apply border-solid border-b border-gray-200;
-  padding: 13px 17px;
+  padding: 13px 18px;
 }
 .post-list-info-body {
   margin-bottom: 5px;
@@ -594,7 +594,7 @@ onMounted(() => {
 }
 .post-list-page-body {
   @apply text-gray-400;
-  padding: 20px 0px;
+  padding: 18px 0px;
   /* 两边 中间  */
   justify-content: space-between;
   /* 垂直居中 */

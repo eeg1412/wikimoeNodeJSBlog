@@ -77,7 +77,7 @@ const goPostDetail = (e, item, middle) => {
 </script>
 <style scoped>
 .comment-latest-item-body {
-  padding: 20px 0;
+  padding: 18px 0;
   border-bottom: 1px solid #eee;
   display: flex;
   /* 顶部对齐 */

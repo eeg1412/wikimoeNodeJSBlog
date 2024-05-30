@@ -936,7 +936,7 @@ onUnmounted(() => {
 <style scoped>
 .post-detail-body {
   position: relative;
-  padding: 20px;
+  padding: 18px;
 }
 .post-blog-head {
   display: flex;
@@ -999,7 +999,7 @@ onUnmounted(() => {
 }
 .comment-list-item {
   @apply border-solid border-b border-gray-200;
-  padding: 20px 0;
+  padding: 18px 0;
 }
 .comment-list-item-avatar-body {
   margin-right: 10px;
