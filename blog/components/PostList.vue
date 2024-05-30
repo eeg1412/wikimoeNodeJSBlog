@@ -563,11 +563,11 @@ onMounted(() => {
   padding-bottom: 0px;
 } */
 .post-list-body {
-  font-size: 15px;
+  font-size: 16px;
 }
 .post-list-body-item {
   @apply border-solid border-b border-gray-200;
-  padding: 20px;
+  padding: 13px 17px;
 }
 .post-list-info-body {
   margin-bottom: 5px;
