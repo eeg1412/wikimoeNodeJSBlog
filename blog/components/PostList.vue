@@ -563,7 +563,7 @@ onMounted(() => {
   padding-bottom: 0px;
 } */
 .post-list-body {
-  font-size: 16px;
+  font-size: 15px;
 }
 .post-list-body-item {
   @apply border-solid border-b border-gray-200;
