@@ -249,7 +249,8 @@
                 <i class="fas fa-fw fa-newspaper"></i>
               </template>
               <template v-else-if="content.type === 'event'">
-                <i class="fas fa-fw fa-calendar-alt"></i>
+                <i class="fas fa-fw fa-calendar-alt"></i
+                >{{ `【${$formatDate(content.startTime, 'YYYY年MM月')}】` }}
               </template>
               {{ content.title }}
             </div>

@@ -50,7 +50,7 @@ exports.findOne = async function (parmas, projection, options = {}) {
     }).populate({
       path: 'eventList',
       match: { status: 1 },
-      select: '_id title eventtype',
+      select: '_id title eventtype startTime',
       populate: {
         path: 'eventtype',
         select: '_id name color'
@@ -117,7 +117,7 @@ exports.findPage = async function (parmas, sort, page, limit, projection, option
     query = query.populate({
       path: 'eventList',
       match: { status: 1 },
-      select: '_id title',
+      select: '_id title startTime',
     });
   }
 

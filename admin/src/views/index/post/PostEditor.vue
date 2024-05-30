@@ -296,7 +296,9 @@
               <el-option
                 v-for="item in eventList"
                 :key="item._id"
-                :label="item.title"
+                :label="`【${$formatDate(item.startTime, 'YYYY年MM月')}】${
+                  item.title
+                }`"
                 :value="item._id"
               ></el-option>
             </el-select>
