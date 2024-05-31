@@ -43,7 +43,7 @@ exports.findOne = async function (parmas, projection, options = {}) {
     }).populate({
       path: 'postList',
       match: { status: 1, type: 1 },
-      select: 'title _id coverImages alias',
+      select: 'title _id coverImages alias date',
       populate: {
         path: 'coverImages',
       }
@@ -109,7 +109,7 @@ exports.findPage = async function (parmas, sort, page, limit, projection, option
     query = query.populate({
       path: 'postList',
       match: { status: 1, type: 1 },
-      select: 'title _id alias',
+      select: 'title _id alias date',
     });
   }
 

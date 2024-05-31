@@ -321,7 +321,9 @@
               <el-option
                 v-for="item in postList"
                 :key="item._id"
-                :label="item.title"
+                :label="`${item.date ? $formatDate(item.date, '【YYYY年MM月DD日】') : ''}${
+                  item.title
+                }`"
                 :value="item._id"
                 :disabled="item._id === id"
               ></el-option>

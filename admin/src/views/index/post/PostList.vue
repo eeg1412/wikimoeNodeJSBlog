@@ -246,7 +246,14 @@
                 }}
               </template>
               <template v-else-if="content.type === 'post'">
-                <i class="fas fa-fw fa-newspaper"></i>
+                <i class="fas fa-fw fa-newspaper"></i
+                >{{
+                  `${
+                    content.date
+                      ? $formatDate(content.date, '【YYYY年MM月DD日】')
+                      : ''
+                  }`
+                }}
               </template>
               <template v-else-if="content.type === 'event'">
                 <i class="fas fa-fw fa-calendar-alt"></i
