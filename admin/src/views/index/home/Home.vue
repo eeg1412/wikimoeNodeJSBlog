@@ -71,14 +71,14 @@
       </div>
       <el-row v-if="visitorData">
         <!-- PV -->
-        <el-col :span="8" :xs="12">
+        <el-col :span="24">
           <el-statistic title="PV" :value="visitorData.pvCount" />
           <div class="home-chart-body" v-if="pvCartData.labels.length > 0">
             <Line :data="pvCartData" :options="chartOptions" />
           </div>
         </el-col>
         <!-- IP -->
-        <el-col :span="8" :xs="12">
+        <el-col :span="24">
           <el-statistic title="IP" :value="visitorData.uniqueIPCount" />
           <div
             class="home-chart-body"
@@ -88,7 +88,7 @@
           </div>
         </el-col>
         <!-- 机器人访问 -->
-        <el-col :span="8" :xs="24">
+        <el-col :span="24">
           <el-statistic
             title="机器人访问"
             :value="visitorData.robotAccessCount"
