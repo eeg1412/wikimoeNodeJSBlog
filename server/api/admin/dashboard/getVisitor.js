@@ -40,7 +40,7 @@ module.exports = async function (req, res, next) {
       endDate = moment().tz(siteTimeZone).endOf('month');
       break;
     case 'year':
-      startDate = moment().tz(siteTimeZone).subtract(1, 'years');
+      startDate = moment().tz(siteTimeZone).subtract(1, 'years').startOf('day');
       endDate = moment().tz(siteTimeZone);
       break;
     default:
@@ -171,12 +171,87 @@ module.exports = async function (req, res, next) {
     uniqueIPTimeLine: [],
     uniqueIPCount: 0,
   }
+  // 初始化pv，robotAccess，uniqueIPTimeLine
+  switch (timeRangeType) {
+    case 'today':
+      // 获取当前的时间，循环生成当前时间的小时
+      const currentDayHour = moment().tz(siteTimeZone).hour()
+      for (let i = 0; i <= currentDayHour; i++) {
+        const time = moment().tz(siteTimeZone).hour(i).format('YYYY-MM-DDTHH:00:00.000Z')
+        sendData.pv.push({ _id: time, count: 0 })
+        sendData.robotAccess.push({ _id: time, count: 0 })
+        sendData.uniqueIPTimeLine.push({ _id: time, count: 0 })
+      }
+
+      break;
+    case 'yesterday':
+      for (let i = 0; i <= 23; i++) {
+        const time = moment().tz(siteTimeZone).subtract(1, 'days').hour(i).format('YYYY-MM-DDTHH:00:00.000Z')
+        sendData.pv.push({ _id: time, count: 0 })
+        sendData.robotAccess.push({ _id: time, count: 0 })
+        sendData.uniqueIPTimeLine.push({ _id: time, count: 0 })
+      }
+      break;
+    case 'week':
+      const now = moment().tz(siteTimeZone)
+      const currentDayOfWeek = now.day()
+      const currentHour = now.hour()
+      for (let i = 0; i <= currentDayOfWeek; i++) {
+        const maxHour = i < currentDayOfWeek ? 23 : currentHour
+        for (let j = 0; j <= maxHour; j++) {
+          const time = moment().tz(siteTimeZone).startOf('week').add(i, 'days').hour(j)
+          sendData.pv.push({ _id: time.format('YYYY-MM-DDTHH:00:00.000Z'), count: 0 })
+          sendData.robotAccess.push({ _id: time.format('YYYY-MM-DDTHH:00:00.000Z'), count: 0 })
+          sendData.uniqueIPTimeLine.push({ _id: time.format('YYYY-MM-DDTHH:00:00.000Z'), count: 0 })
+        }
+      }
+      break;
+    case 'month':
+      const days = moment().tz(siteTimeZone).daysInMonth()
+      for (let i = 1; i <= days; i++) {
+        const time = moment().tz(siteTimeZone).startOf('month').add(i - 1, 'days').format('YYYY-MM-DDTHH:00:00.000Z')
+        sendData.pv.push({ _id: time, count: 0 })
+        sendData.robotAccess.push({ _id: time, count: 0 })
+        sendData.uniqueIPTimeLine.push({ _id: time, count: 0 })
+      }
+      break;
+    case 'year':
+      const daysOfYear = endDate.diff(startDate, 'days')
+      for (let i = 0; i <= daysOfYear; i++) {
+        const time = startDate.clone().add(i, 'days').format('YYYY-MM-DDTHH:00:00.000Z')
+        sendData.pv.push({ _id: time, count: 0 })
+        sendData.robotAccess.push({ _id: time, count: 0 })
+        sendData.uniqueIPTimeLine.push({ _id: time, count: 0 })
+      }
+      break;
+
+    default:
+      break;
+  }
   if (readData.length > 0) {
-    sendData.pv = readData[0]?.pv || []
+    const pv = readData[0]?.pv || []
+    pv.forEach(item => {
+      const index = sendData.pv.findIndex(i => i._id === item._id)
+      if (index !== -1) {
+        sendData.pv[index].count = item.count
+      }
+    })
     sendData.pvCount = readData[0]?.pvCount[0]?.count || 0
-    sendData.robotAccess = readData[0]?.robotAccess || []
+    const robotAccess = readData[0]?.robotAccess || []
+    robotAccess.forEach(item => {
+      const index = sendData.robotAccess.findIndex(i => i._id === item._id)
+      if (index !== -1) {
+        sendData.robotAccess[index].count = item.count
+      }
+    })
     sendData.robotAccessCount = readData[0]?.robotAccessCount[0]?.count || 0
-    sendData.uniqueIPTimeLine = readData[0]?.uniqueIPTimeLine || []
+    const uniqueIPTimeLine = readData[0]?.uniqueIPTimeLine || []
+    uniqueIPTimeLine.forEach(item => {
+      const index = sendData.uniqueIPTimeLine.findIndex(i => i._id === item._id)
+      if (index !== -1) {
+        sendData.uniqueIPTimeLine[index].count = item.count
+      }
+    })
     sendData.uniqueIPCount = readData[0]?.uniqueIPCount[0]?.count || 0
   }
 
