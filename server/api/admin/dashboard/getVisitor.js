@@ -184,7 +184,7 @@ module.exports = async function (req, res, next) {
       }
       break;
     case 'yesterday':
-      const yesterday = moment().tz(siteTimeZone).subtract(1, 'days');
+      const yesterday = startDate;
       for (let i = 0; i <= 23; i++) {
         const time = yesterday.clone().hour(i).format('YYYY-MM-DDTHH:00:00.000Z');
         sendData.pv.push({ _id: time, count: 0 });
@@ -197,20 +197,23 @@ module.exports = async function (req, res, next) {
       const currentDayOfWeek = nowWeek.day();
       const currentHour = nowWeek.hour();
       for (let i = 0; i <= currentDayOfWeek; i++) {
+        const day = nowWeek.clone().startOf('week').add(i, 'days');
         const maxHour = i < currentDayOfWeek ? 23 : currentHour;
         for (let j = 0; j <= maxHour; j++) {
-          const time = nowWeek.clone().startOf('week').add(i, 'days').hour(j);
-          sendData.pv.push({ _id: time.format('YYYY-MM-DDTHH:00:00.000Z'), count: 0 });
-          sendData.robotAccess.push({ _id: time.format('YYYY-MM-DDTHH:00:00.000Z'), count: 0 });
-          sendData.uniqueIPTimeLine.push({ _id: time.format('YYYY-MM-DDTHH:00:00.000Z'), count: 0 });
+          const time = day.clone().hour(j).format('YYYY-MM-DDTHH:00:00.000Z');
+          const data = { _id: time, count: 0 };
+          sendData.pv.push({ ...data });
+          sendData.robotAccess.push({ ...data });
+          sendData.uniqueIPTimeLine.push({ ...data });
         }
       }
       break;
     case 'month':
       const nowMonth = moment().tz(siteTimeZone);
+      const startOfMonth = nowMonth.clone().startOf('month');
       const days = nowMonth.daysInMonth();
       for (let i = 1; i <= days; i++) {
-        const time = nowMonth.clone().startOf('month').add(i - 1, 'days').format('YYYY-MM-DDTHH:00:00.000Z');
+        const time = startOfMonth.clone().add(i - 1, 'days').format('YYYY-MM-DDTHH:00:00.000Z');
         sendData.pv.push({ _id: time, count: 0 });
         sendData.robotAccess.push({ _id: time, count: 0 });
         sendData.uniqueIPTimeLine.push({ _id: time, count: 0 });
