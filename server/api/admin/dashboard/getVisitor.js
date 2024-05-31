@@ -234,28 +234,42 @@ module.exports = async function (req, res, next) {
   }
   if (readData.length > 0) {
     const pv = readData[0]?.pv || []
-    pv.forEach(item => {
-      const index = sendData.pv.findIndex(i => i._id === item._id)
-      if (index !== -1) {
-        sendData.pv[index].count = item.count
-      }
-    })
+    if (pv.length <= 0) {
+      sendData.pv = []
+    } else {
+      pv.forEach(item => {
+        const index = sendData.pv.findIndex(i => i._id === item._id)
+        if (index !== -1) {
+          sendData.pv[index].count = item.count
+        }
+      })
+    }
+
     sendData.pvCount = readData[0]?.pvCount[0]?.count || 0
     const robotAccess = readData[0]?.robotAccess || []
-    robotAccess.forEach(item => {
-      const index = sendData.robotAccess.findIndex(i => i._id === item._id)
-      if (index !== -1) {
-        sendData.robotAccess[index].count = item.count
-      }
-    })
+    if (robotAccess.length <= 0) {
+      sendData.robotAccess = []
+    } else {
+      robotAccess.forEach(item => {
+        const index = sendData.robotAccess.findIndex(i => i._id === item._id)
+        if (index !== -1) {
+          sendData.robotAccess[index].count = item.count
+        }
+      })
+    }
     sendData.robotAccessCount = readData[0]?.robotAccessCount[0]?.count || 0
     const uniqueIPTimeLine = readData[0]?.uniqueIPTimeLine || []
-    uniqueIPTimeLine.forEach(item => {
-      const index = sendData.uniqueIPTimeLine.findIndex(i => i._id === item._id)
-      if (index !== -1) {
-        sendData.uniqueIPTimeLine[index].count = item.count
-      }
-    })
+    if (uniqueIPTimeLine.length <= 0) {
+      sendData.uniqueIPTimeLine = []
+    } else {
+      uniqueIPTimeLine.forEach(item => {
+        const index = sendData.uniqueIPTimeLine.findIndex(i => i._id === item._id)
+        if (index !== -1) {
+          sendData.uniqueIPTimeLine[index].count = item.count
+        }
+      })
+    }
+
     sendData.uniqueIPCount = readData[0]?.uniqueIPCount[0]?.count || 0
   }
 
