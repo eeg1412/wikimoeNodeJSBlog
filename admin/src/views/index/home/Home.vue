@@ -363,10 +363,11 @@ export default {
 </script>
 <style scoped>
 .home-chart-body {
-  height: 200px;
   margin-top: 20px;
   width: 100%;
+  height: 35vh;
   box-sizing: border-box;
   padding: 5px;
+  margin-bottom: 14px;
 }
 </style>

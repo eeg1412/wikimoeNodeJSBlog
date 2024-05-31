@@ -248,12 +248,4 @@ export default {
   },
 }
 </script>
-<style scoped>
-.home-chart-body {
-  height: 200px;
-  margin-top: 20px;
-  width: 100%;
-  box-sizing: border-box;
-  padding: 5px;
-}
-</style>
+<style scoped></style>
