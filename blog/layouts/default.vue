@@ -241,6 +241,12 @@ const goSearch = () => {
       path: `/post/list/keyword/${keywordValue}/1`,
     })
     keyword.value = ''
+    // 释放焦点
+    try {
+      document.activeElement.blur()
+    } catch (e) {
+      console.log(e)
+    }
   }
 }
 
