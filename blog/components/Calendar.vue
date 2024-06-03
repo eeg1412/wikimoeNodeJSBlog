@@ -300,6 +300,7 @@ onMounted(() => {})
   @apply bg-primary-50;
 } */
 .calendar-event {
+  font-size: 12px;
   color: white;
   margin-bottom: 1px;
   height: 25px;
