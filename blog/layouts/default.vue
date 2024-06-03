@@ -343,6 +343,8 @@ onUnmounted(() => {})
   align-self: flex-end;
   position: sticky;
   bottom: 0px;
+  min-height: 100vh;
+  min-height: 100dvh;
 }
 .blog-layout-right-body.blog-layout-right-body-full-height {
   background-color: #ffffff;
