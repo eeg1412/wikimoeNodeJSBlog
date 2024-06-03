@@ -979,6 +979,7 @@ onUnmounted(() => {
 .post-detail-tag-item {
   margin-right: 12px;
   font-size: 16px;
+  display: inline-block;
   @apply text-primary-500;
 }
 .post-detail-tag-item:hover {
