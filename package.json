@@ -1,0 +1,25 @@
+{
+  "name": "wikimoenodejsblog",
+  "version": "0.15.0",
+  "description": "![N`AG~U3E547WKDN{J P2H22](https://github.com/eeg1412/wikimoeNodeJSBlog/assets/27753071/4b5177e5-6f1b-414b-938b-336c0b7a68ed)",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/eeg1412/wikimoeNodeJSBlog.git"
+  },
+  "keywords": [
+    "blog"
+  ],
+  "author": "hiroki",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/eeg1412/wikimoeNodeJSBlog/issues"
+  },
+  "homepage": "https://github.com/eeg1412/wikimoeNodeJSBlog#readme",
+  "dependencies": {
+    "concurrently": "^8.2.2"
+  }
+}
