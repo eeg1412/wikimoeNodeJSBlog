@@ -995,6 +995,7 @@ ins.adsbygoogle[data-ad-status='unfilled'] {
 .common-right-tool-menu-item-text {
   /* 禁止选中 */
   user-select: none;
+  word-break: break-all;
 }
 .common-right-tool-menu-item-text.active {
   /* border-primary-400 */

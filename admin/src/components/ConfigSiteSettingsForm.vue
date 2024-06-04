@@ -3,7 +3,7 @@
     :model="siteSettingsForm"
     :rules="siteSettingsRules"
     ref="siteSettingsFormRef"
-    label-width="120px"
+    label-width="140px"
   >
     <el-form-item label="站点标题" prop="siteTitle">
       <el-input v-model="siteSettingsForm.siteTitle"></el-input>
