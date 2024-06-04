@@ -373,6 +373,9 @@ onMounted(() => {
 .html-content-body pre.hljs {
   position: relative;
   padding-left: 3.5em;
+  padding-top: 0.6em;
+  padding-bottom: 0.6em;
+  padding-right: 1em;
 }
 /* blockquote */
 .html-content-body blockquote {
@@ -401,7 +404,7 @@ onMounted(() => {
   @apply text-primary-50;
   content: attr(data-lines);
   position: absolute;
-  top: 0;
+  top: 0.6em;
   left: 0;
   width: 3em;
   padding: 0 0.5em;
