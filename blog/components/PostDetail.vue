@@ -958,7 +958,7 @@ onUnmounted(() => {
   flex: 1;
 }
 .post-title {
-  font-size: 16px;
+  font-size: 18px;
   font-weight: 700;
 }
 .post-extra {
