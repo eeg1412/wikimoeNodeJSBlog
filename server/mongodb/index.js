@@ -31,9 +31,11 @@ db.on('error', function (error) {
 
 db.on('close', function () {
   console.error(
-    '数据库断开，重新连接数据库'
+    '数据库断开，10秒后重新连接数据库'
   );
-  mongoose.connect(process.env.DB_HOST, { useNewUrlParser: true, useUnifiedTopology: true });
+  setTimeout(() => {
+    mongoose.connect(process.env.DB_HOST, { useNewUrlParser: true, useUnifiedTopology: true });
+  }, 10000);
 });
 
 module.exports = db;
