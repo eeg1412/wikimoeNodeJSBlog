@@ -431,6 +431,7 @@ onMounted(() => {
 }
 .html-content-body pre {
   @apply my-2 overflow-auto rounded-md bg-gray-800;
+  isolation: isolate;
   position: relative;
 }
 .html-content-body.is-loading pre {
