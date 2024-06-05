@@ -273,11 +273,17 @@ const initHljs = () => {
       codeBlock = code
     }
 
+    // 查看codeBlock是否有lang-xxx的class
+    const regex = /language-/
+    const hasLanguageClass = regex.test(codeBlock.className)
     // 去掉block前后的空格和空行
     codeBlock.textContent = codeBlock.textContent.trim()
     hljs.highlightBlock(codeBlock)
     const result = codeBlock.result
-    const language = result.language || ''
+    let language = 'code'
+    if (hasLanguageClass) {
+      language = result.language || 'code'
+    }
     const lines = (codeBlock.textContent + '\n').split('\n').length - 1
     codeBlock.setAttribute(
       'data-lines',
