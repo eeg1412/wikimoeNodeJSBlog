@@ -417,6 +417,7 @@ onMounted(() => {
   -moz-user-select: none;
   -ms-user-select: none;
   user-select: none;
+  border-right: 1px solid #ffffff;
 }
 .html-content-body table {
   @apply table-auto border-collapse;
