@@ -1,5 +1,10 @@
 <template>
-  <div class="html-content-body">
+  <div
+    class="html-content-body"
+    :class="{
+      'is-loading': !initFlag,
+    }"
+  >
     <div
       v-html="contentCom"
       @click.middle="onMidClick"
@@ -252,16 +257,66 @@ const getEventDetail = async (e) => {
 const htmlContent = ref(null)
 
 const initHljs = () => {
-  const codeList = htmlContent.value.querySelectorAll('pre')
-  codeList.forEach((block) => {
+  const preList = htmlContent.value.querySelectorAll('pre')
+  preList.forEach((pre) => {
+    let codeBlock = pre.querySelector('code')
+    if (!codeBlock) {
+      // 在pre标签中没有找到code标签，将pre标签的内容用code标签包裹
+      const code = document.createElement('code')
+      code.textContent = pre.textContent
+      // 将pre的class赋值给code
+      code.className = pre.className
+      pre.innerHTML = ''
+      pre.appendChild(code)
+      // 去掉pre的class
+      pre.removeAttribute('class')
+      codeBlock = code
+    }
+
     // 去掉block前后的空格和空行
-    block.textContent = block.textContent.trim()
-    hljs.highlightBlock(block)
-    const lines = (block.textContent + '\n').split('\n').length - 1
-    block.setAttribute(
+    codeBlock.textContent = codeBlock.textContent.trim()
+    hljs.highlightBlock(codeBlock)
+    const result = codeBlock.result
+    const language = result.language || ''
+    const lines = (codeBlock.textContent + '\n').split('\n').length - 1
+    codeBlock.setAttribute(
       'data-lines',
       Array.from({ length: lines }, (_, i) => i + 1).join('\n')
     )
+    // 添加显示代码语言的功能
+    const div = document.createElement('div')
+    // class
+    div.classList.add('code-header')
+    // 复制按钮
+    const copyBtn = document.createElement('button')
+    copyBtn.innerHTML =
+      '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--!Font Awesome Free 6.5.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.--><path d="M384 336H192c-8.8 0-16-7.2-16-16V64c0-8.8 7.2-16 16-16l140.1 0L400 115.9V320c0 8.8-7.2 16-16 16zM192 384H384c35.3 0 64-28.7 64-64V115.9c0-12.7-5.1-24.9-14.1-33.9L366.1 14.1c-9-9-21.2-14.1-33.9-14.1H192c-35.3 0-64 28.7-64 64V320c0 35.3 28.7 64 64 64zM64 128c-35.3 0-64 28.7-64 64V448c0 35.3 28.7 64 64 64H256c35.3 0 64-28.7 64-64V416H272v32c0 8.8-7.2 16-16 16H64c-8.8 0-16-7.2-16-16V192c0-8.8 7.2-16 16-16H96V128H64z"/></svg>'
+    copyBtn.classList.add('code-copy-btn')
+    copyBtn.addEventListener('click', async () => {
+      try {
+        await navigator.clipboard.writeText(codeBlock.textContent)
+        toast.add({
+          title: '复制成功',
+          icon: 'i-heroicons-check-circle',
+          color: 'green',
+        })
+      } catch (error) {
+        toast.add({
+          title: '复制失败',
+          icon: 'i-heroicons-x-circle',
+          color: 'red',
+        })
+      }
+    })
+    // 代码语言
+    const languageSpan = document.createElement('span')
+    languageSpan.textContent = language
+    // css
+    languageSpan.classList.add('code-language')
+    div.appendChild(languageSpan)
+
+    div.appendChild(copyBtn)
+    pre.prepend(div)
   })
 }
 
@@ -275,11 +330,16 @@ const initImgs = () => {
   })
 }
 
+const initFlag = ref(false)
+
 const init = () => {
   if (process.client && htmlContent.value) {
     nextTick(() => {
       initHljs()
       initImgs()
+      if (!initFlag.value) {
+        initFlag.value = true
+      }
     })
   }
 }
@@ -365,15 +425,23 @@ onMounted(() => {
 }
 .html-content-body pre {
   @apply my-2 overflow-auto rounded-md bg-gray-800;
+  position: relative;
+}
+.html-content-body.is-loading pre {
+  padding-left: 3.5em;
+  padding-top: 2.5rem;
+  padding-bottom: 0.6em;
+  padding-right: 1em;
+  color: #ffffff;
 }
 .html-content-body strong,
 .html-content-body b {
   font-weight: 700;
 }
-.html-content-body pre.hljs {
+.html-content-body pre code.hljs {
   position: relative;
   padding-left: 3.5em;
-  padding-top: 0.6em;
+  padding-top: 2.5rem;
   padding-bottom: 0.6em;
   padding-right: 1em;
 }
@@ -381,30 +449,30 @@ onMounted(() => {
 .html-content-body blockquote {
   @apply border-l-4 border-primary-200 p-2 mt-2 mb-2 text-primary-400 bg-primary-50 rounded-md;
 }
-.html-content-body pre::-webkit-scrollbar {
+.html-content-body pre code::-webkit-scrollbar {
   width: 6px;
   height: 6px;
 }
 
-.html-content-body pre::-webkit-scrollbar-thumb {
+.html-content-body pre code::-webkit-scrollbar-thumb {
   height: 40px;
   border-radius: 4px;
   background-color: rgba(255, 255, 255, 0);
 }
-.html-content-body pre:hover::-webkit-scrollbar-thumb {
+.html-content-body pre code:hover::-webkit-scrollbar-thumb {
   height: 40px;
   border-radius: 4px;
   background-color: #bbb;
 }
 
-.html-content-body pre::-webkit-scrollbar-thumb:hover {
+.html-content-body pre code::-webkit-scrollbar-thumb:hover {
   background-color: #bbb;
 }
 .hljs:before {
   @apply text-primary-50;
   content: attr(data-lines);
   position: absolute;
-  top: 0.6em;
+  top: 2.5rem;
   left: 0;
   width: 3em;
   padding: 0 0.5em;
@@ -429,5 +497,32 @@ onMounted(() => {
 }
 .html-content-body span[data-w-e-type='eventspan'] {
   @apply text-primary-500 cursor-pointer;
+}
+.code-header {
+  @apply text-white text-sm bg-gray-900;
+  padding: 0.2em 0.5em;
+  border-bottom: 1px solid #d1d5db;
+  display: flex;
+  /* 垂直居中 */
+  align-items: center;
+  justify-content: space-between;
+  height: 2rem;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 2;
+}
+.code-header svg {
+  width: 16px;
+  height: 16px;
+  fill: #ffffff;
+}
+.code-copy-btn {
+  margin-right: 0.25rem;
+}
+.code-language {
+  margin-left: 0.25rem;
+  font-size: 0.9rem;
 }
 </style>
