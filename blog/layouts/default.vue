@@ -171,6 +171,16 @@
           v-if="options.siteFooterInfo"
           class="whitespace-pre-wrap"
         ></div>
+        <div v-if="options.siteEnableRss && options.siteShowRssInFooter">
+          <span>RSS订阅：</span
+          ><a :href="`${options.siteUrl}/rss`" target="_blank">全站订阅</a
+          ><span style="padding: 0 5px">|</span
+          ><a :href="`${options.siteUrl}/rss/blog`" target="_blank">订阅博文</a
+          ><span style="padding: 0 5px">|</span
+          ><a :href="`${options.siteUrl}/rss/tweet`" target="_blank"
+            >订阅推文</a
+          >
+        </div>
         <div>
           <span>Powered by </span>
           <a href="https://www.wikimoe.com/" target="_blank">wikimoeBlog</a>
@@ -193,6 +203,9 @@ const route = useRoute()
 const router = useRouter()
 const optionStore = useOptionStore()
 const { options } = storeToRefs(optionStore)
+
+// RSS
+const { siteEnableRss, siteShowRssInFooter, siteUrl } = options.value
 
 const runtimeConfig = useRuntimeConfig()
 const showLoading = runtimeConfig.public.showLoading

@@ -73,6 +73,8 @@ const initGlobalConfig = async () => {
     siteEnableRss: false,
     // RSS显示条数
     siteRssMaxCount: 10,
+    // 是否在底部显示RSS
+    siteShowRssInFooter: false,
     // RSS输出全文
     // siteRssFullText: false,
   }

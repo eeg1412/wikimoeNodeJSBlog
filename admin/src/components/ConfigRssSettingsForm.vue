@@ -20,6 +20,11 @@
         :step="1"
       ></el-input-number>
     </el-form-item>
+    <!-- 底部显示RSS siteShowRssInFooter -->
+    <el-form-item label="底部显示RSS" prop="siteShowRssInFooter">
+      <el-switch v-model="rssSettingsForm.siteShowRssInFooter"></el-switch>
+    </el-form-item>
+
     <!-- <el-form-item label="RSS输出全文" prop="siteRssFullText">
             <el-switch v-model="rssSettingsForm.siteRssFullText"></el-switch>
           </el-form-item> -->
@@ -44,6 +49,8 @@ export default {
       siteEnableRss: false,
       // RSS显示条数
       siteRssMaxCount: 10,
+      // 底部显示RSS
+      siteShowRssInFooter: false,
       // RSS输出全文
       // siteRssFullText: false,
     })
