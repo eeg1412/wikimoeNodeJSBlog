@@ -62,6 +62,10 @@ blog：博客部分
 
 可以参考[如何使用 1Panel 搭建猛男自用的维基萌博客](https://www.wikimoe.com/post/94r1mfyk)
 
+## 对于 宝塔/aaPanel 的部署
+
+可以参考[如果使用宝塔/aaPanel 搭建猛男自用的维基萌博客](https://www.wikimoe.com/post/tcxurept)
+
 ## 一键编译运行
 
 可以先参考下面的配置文件配置，然后直接在根目录运行
