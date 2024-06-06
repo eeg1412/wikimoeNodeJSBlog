@@ -275,16 +275,6 @@
                 <template #title>引用日志</template>
               </el-menu-item>
             </el-sub-menu>
-            <!-- 设置 -->
-            <el-menu-item
-              index="Config"
-              @click="removeParam('Config')"
-              @click.middle="openNewTab('Config')"
-              :route="{ name: 'Config' }"
-            >
-              <i class="fas fa-fw fa-cog pr10"></i>
-              <template #title>设置</template>
-            </el-menu-item>
             <!-- UserList 管理员 -->
             <el-menu-item
               v-if="adminInfo?.role === 999"
@@ -305,6 +295,16 @@
             >
               <i class="fas fa-fw fa-database pr10"></i>
               <template #title>备份</template>
+            </el-menu-item>
+            <!-- 设置 -->
+            <el-menu-item
+              index="Config"
+              @click="removeParam('Config')"
+              @click.middle="openNewTab('Config')"
+              :route="{ name: 'Config' }"
+            >
+              <i class="fas fa-fw fa-cog pr10"></i>
+              <template #title>设置</template>
             </el-menu-item>
           </el-menu>
         </div>
