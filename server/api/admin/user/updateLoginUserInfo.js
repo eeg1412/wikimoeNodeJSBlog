@@ -3,6 +3,7 @@ const userUtils = require('../../../mongodb/utils/users')
 const utils = require('../../../utils/utils')
 const log4js = require('log4js')
 const adminApiLog = log4js.getLogger('adminApi')
+const cacheDataUtils = require('../../../config/cacheData')
 
 module.exports = async function (req, res, next) {
   const { nickname, photo, email, description, currentPassword, password, cover } = req.body
@@ -106,5 +107,7 @@ module.exports = async function (req, res, next) {
   }
   adminApiLog.info(`admin:${req.admin.nickname} - ${req.admin._id} update profile,IP:${IP}`)
   res.send({})
+  // 更新缓存
+  cacheDataUtils.getCommentList()
   // utils.reflushBlogCache()
 }
