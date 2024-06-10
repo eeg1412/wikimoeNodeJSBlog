@@ -164,6 +164,12 @@
           <span
             ><span class="font-serif">©</span> {{ nowYear }}
             {{ options.siteTitle }}</span
+          ><template
+            v-if="options.siteEnableSitemap && options.siteShowSitemapInFooter"
+            ><span class="px-2">|</span
+            ><a :href="`${options.siteUrl}/sitemap.xml`" target="_blank"
+              >站点地图</a
+            ></template
           >
         </div>
         <div
@@ -174,9 +180,9 @@
         <div v-if="options.siteEnableRss && options.siteShowRssInFooter">
           <span>RSS订阅：</span
           ><a :href="`${options.siteUrl}/rss`" target="_blank">全站订阅</a
-          ><span style="padding: 0 5px">|</span
+          ><span class="px-2">|</span
           ><a :href="`${options.siteUrl}/rss/blog`" target="_blank">订阅博文</a
-          ><span style="padding: 0 5px">|</span
+          ><span class="px-2">|</span
           ><a :href="`${options.siteUrl}/rss/tweet`" target="_blank"
             >订阅推文</a
           >

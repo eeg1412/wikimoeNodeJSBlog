@@ -71,7 +71,7 @@
       ><span class="pl10">条内容</span>
     </el-form-item>
     <!-- 站点地图 -->
-    <el-form-item label="显示站点地图" prop="siteEnableSitemap">
+    <el-form-item label="站点地图" prop="siteEnableSitemap">
       <el-switch v-model="siteSettingsForm.siteEnableSitemap"></el-switch>
     </el-form-item>
     <!-- 底部显示站点地图 -->
