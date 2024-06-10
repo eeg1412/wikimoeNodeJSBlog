@@ -37,6 +37,7 @@
     "multer": "^1.4.5-lts.1",
     "nodemailer": "^6.9.7",
     "sharp": "0.32.6",
+    "sitemap": "^8.0.0",
     "ua-parser-js": "^1.0.37",
     "validator": "^13.11.0",
     "yauzl": "^3.1.3"
