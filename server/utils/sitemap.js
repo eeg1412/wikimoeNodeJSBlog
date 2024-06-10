@@ -21,9 +21,11 @@ exports.updateSitemap = async () => {
         await unlink(sitemapPath);
       } catch (error) {
         if (error.code !== 'ENOENT') { // ENOENT 错误表示文件不存在，忽略这个错误
-          throw error; // 抛出其他错误
+          return reject(error)
         }
+        resolve()
       }
+      resolve()
       return null
     }
 
@@ -95,7 +97,7 @@ exports.updateSitemap = async () => {
 }
 
 exports.reflushSitemap = async () => {
-  await utils.executeInLock('reflushRSS', async () => {
+  await utils.executeInLock('reflushSitemap', async () => {
     await this.updateSitemap()
   })
 }

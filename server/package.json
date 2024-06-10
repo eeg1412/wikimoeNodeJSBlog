@@ -12,7 +12,8 @@
     "createCRUD": "node ./tools/createCRUD",
     "sumPostComment": "node ./tools/sumPostComment",
     "fixAttachmentMimetype": "node ./tools/fixAttachmentMimetype",
-    "backupFromEmlogJSON": "node ./tools/backupFromEmlogJSON"
+    "backupFromEmlogJSON": "node ./tools/backupFromEmlogJSON",
+    "fixPostLastChangDate": "node ./tools/fixPostLastChangDate"
   },
   "dependencies": {
     "archiver": "^7.0.1",
