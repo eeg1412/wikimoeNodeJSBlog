@@ -12,6 +12,7 @@ var adminRouter = require('./routes/admin');
 const blogRouter = require('./routes/blog');
 const rssRouter = require('./routes/rss/index');
 const utils = require('./utils/utils')
+const sitemapToolUtils = require('./utils/sitemap')
 const fs = require('fs')
 
 // 如果cache文件夹不存在，创建cache文件夹
@@ -25,6 +26,12 @@ const rssFolder = './cache/rss'
 if (!fs.existsSync(rssFolder)) {
   console.info('rss文件夹不存在，创建rss文件夹')
   fs.mkdirSync(rssFolder)
+}
+// 如果sitemap文件夹不存在，创建sitemap文件夹
+const sitemapFolder = './cache/sitemap'
+if (!fs.existsSync(sitemapFolder)) {
+  console.info('sitemap文件夹不存在，创建sitemap文件夹')
+  fs.mkdirSync(sitemapFolder)
 }
 
 var app = express();
@@ -84,6 +91,14 @@ app.use('/rss', rssRouter);
 app.use('/robots.txt', function (req, res) {
   res.type('text/plain');
   res.send("User-agent: *\nDisallow: /");
+});
+// sitemap.xml
+app.use('/sitemap.xml', async function (req, res) {
+  sitemapToolUtils.getSitemap(req, res)
+});
+// sitemap.xsl
+app.use('/sitemap.xsl', function (req, res) {
+  res.sendFile(path.join(__dirname, 'public/sitemap/sitemap.xsl'));
 });
 // 所有第一级路径不是/admin的，都返回404
 app.use((req, res, next) => {

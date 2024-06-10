@@ -53,6 +53,14 @@ let routeRules = {
   '/api/blog/**': {
     proxy: `${process.env.NUXT_API_DOMAIN}/api/blog/**`,
   },
+  // sitemap.xml
+  '/sitemap.xml': {
+    proxy: `${process.env.NUXT_API_DOMAIN}/sitemap.xml`,
+  },
+  // sitemap.xsl
+  '/sitemap.xsl': {
+    proxy: `${process.env.NUXT_API_DOMAIN}/sitemap.xsl`,
+  },
 }
 // 如果开启了SWR
 if (process.env.SWR_ENABLED === '1') {

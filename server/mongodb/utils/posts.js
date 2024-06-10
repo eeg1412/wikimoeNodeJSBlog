@@ -63,6 +63,11 @@ exports.find = async function (parmas, sort, projection) {
   // document查询
   return await postsModel.find(parmas, projection).sort(sort);
 }
+// 查询Cursor
+exports.findCursor = function (parmas, sort, projection) {
+  // document查询
+  return postsModel.find(parmas, projection).sort(sort).cursor();
+}
 
 // 分页查询
 exports.findPage = async function (parmas, sort, page, limit, projection, options = {}) {

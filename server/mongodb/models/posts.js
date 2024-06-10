@@ -29,6 +29,10 @@ var posts = new Schema({
     type: Date,
     default: Date.now
   },
+  lastChangDate: {
+    type: Date,
+    default: Date.now
+  },
   content: {
     type: String,
     default: ''
