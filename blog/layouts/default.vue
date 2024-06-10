@@ -172,11 +172,6 @@
             ></template
           >
         </div>
-        <div
-          v-html="options.siteFooterInfo"
-          v-if="options.siteFooterInfo"
-          class="whitespace-pre-wrap"
-        ></div>
         <div v-if="options.siteEnableRss && options.siteShowRssInFooter">
           <span>RSS订阅：</span
           ><a :href="`${options.siteUrl}/rss`" target="_blank">全站订阅</a
@@ -187,6 +182,11 @@
             >订阅推文</a
           >
         </div>
+        <div
+          v-html="options.siteFooterInfo"
+          v-if="options.siteFooterInfo"
+          class="whitespace-pre-wrap"
+        ></div>
         <div>
           <span>Powered by </span>
           <a href="https://www.wikimoe.com/" target="_blank">wikimoeBlog</a>
