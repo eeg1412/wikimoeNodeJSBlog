@@ -149,9 +149,24 @@ exports.getRSS = (type) => {
     return null
   }
   const path = `${rssCacheFolder}/${type}.xml`
-  if (!fs.existsSync(path)) {
-    return null
-  }
-  // 读取文件
-  return fs.readFileSync(path, 'utf-8')
+  // if (!fs.existsSync(path)) {
+  //   return null
+  // }
+  // // 读取文件
+  // return fs.readFileSync(path, 'utf-8')
+  const promise = new Promise((resolve, reject) => {
+    fs.access(path, fs.constants.F_OK, (err) => {
+      if (err) {
+        return resolve(null)
+      }
+      fs.readFile(path, 'utf-8', (err, data) => {
+        if (err) {
+          console.error(err)
+          return reject(null)
+        }
+        resolve(data)
+      })
+    })
+  })
+  return promise
 }

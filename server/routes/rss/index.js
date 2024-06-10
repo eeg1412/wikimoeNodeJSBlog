@@ -12,7 +12,9 @@ router.get('/:type?', async function (req, res, next) {
     res.status(404).send('Not found')
     return
   }
-  const feed = rssToolUtils.getRSS(type)
+  const feed = await rssToolUtils.getRSS(type).catch((err) => {
+    return null
+  })
   if (!feed) {
     res.status(404).send('Not found')
     return
