@@ -12,6 +12,20 @@ var adminRouter = require('./routes/admin');
 const blogRouter = require('./routes/blog');
 const rssRouter = require('./routes/rss/index');
 const utils = require('./utils/utils')
+const fs = require('fs')
+
+// 如果cache文件夹不存在，创建cache文件夹
+const cacheFolder = './cache'
+if (!fs.existsSync(cacheFolder)) {
+  console.info('cache文件夹不存在，创建cache文件夹')
+  fs.mkdirSync(cacheFolder)
+}
+// 如果rss文件夹不存在，创建rss文件夹
+const rssFolder = './cache/rss'
+if (!fs.existsSync(rssFolder)) {
+  console.info('rss文件夹不存在，创建rss文件夹')
+  fs.mkdirSync(rssFolder)
+}
 
 var app = express();
 

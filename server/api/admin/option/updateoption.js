@@ -1,5 +1,6 @@
 const optionUtils = require('../../../mongodb/utils/options')
 const utils = require('../../../utils/utils')
+const rssToolUtils = require('../../../utils/rss')
 const log4js = require('log4js')
 const adminApiLog = log4js.getLogger('adminApi')
 const globalConfigUtils = require('../../../config/globalConfig')
@@ -52,8 +53,9 @@ module.exports = async function (req, res, next) {
       adminApiLog.error(`option update fail, ${logErrorToText(err)}`)
     })
   }
-  globalConfigUtils.initGlobalConfig()
+  await globalConfigUtils.initGlobalConfig()
   cacheDataUtils.getPostArchiveList()
+  rssToolUtils.reflushRSS()
   // utils.reflushBlogCache()
   // 返回结果
   res.send({

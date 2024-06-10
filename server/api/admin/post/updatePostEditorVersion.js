@@ -6,6 +6,7 @@ const tagUtils = require('../../../mongodb/utils/tags')
 const adminApiLog = log4js.getLogger('adminApi')
 const validator = require('validator')
 const cacheDataUtils = require('../../../config/cacheData')
+const rssToolUtils = require('../../../utils/rss')
 
 module.exports = async function (req, res, next) {
   const id = req.body.id
@@ -50,6 +51,7 @@ module.exports = async function (req, res, next) {
     adminApiLog.info(`post update success`)
     // 新旧status不一样，更新缓存
     cacheDataUtils.getPostArchiveList()
+    rssToolUtils.reflushRSS()
   }).catch((err) => {
     res.status(400).json({
       errors: [{

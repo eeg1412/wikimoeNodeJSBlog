@@ -1,6 +1,7 @@
 var mongoose = require('mongoose');
 const globalConfigUtils = require('../config/globalConfig')
 const cacheDataUtils = require('../config/cacheData')
+const rssToolUtils = require('../utils/rss')
 console.info('数据库连接中...');
 // console.log('数据库地址：', process.env.DB_HOST);
 if (!process.env.DB_HOST) {
@@ -20,6 +21,7 @@ db.once('open', async () => {
   cacheDataUtils.getSortList()
   cacheDataUtils.getPostArchiveList()
   cacheDataUtils.getBangumiYearList()
+  rssToolUtils.reflushRSS()
 })
 
 db.on('error', function (error) {

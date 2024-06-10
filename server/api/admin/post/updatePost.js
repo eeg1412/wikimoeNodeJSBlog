@@ -6,6 +6,7 @@ const tagUtils = require('../../../mongodb/utils/tags')
 const adminApiLog = log4js.getLogger('adminApi')
 const validator = require('validator')
 const cacheDataUtils = require('../../../config/cacheData')
+const rssToolUtils = require('../../../utils/rss')
 
 module.exports = async function (req, res, next) {
   // - title	标题字段
@@ -256,6 +257,7 @@ module.exports = async function (req, res, next) {
     if (post.status !== status) {
       cacheDataUtils.getPostArchiveList()
     }
+    rssToolUtils.reflushRSS()
     // utils.reflushBlogCache()
   }).catch((err) => {
     res.status(400).json({
