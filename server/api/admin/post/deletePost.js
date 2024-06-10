@@ -5,6 +5,7 @@ const log4js = require('log4js')
 const adminApiLog = log4js.getLogger('adminApi')
 const cacheDataUtils = require('../../../config/cacheData')
 const rssToolUtils = require('../../../utils/rss')
+const sitemapToolUtils = require('../../../utils/sitemap')
 
 module.exports = async function (req, res, next) {
   const id = req.query.id
@@ -33,6 +34,7 @@ module.exports = async function (req, res, next) {
     })
     cacheDataUtils.getPostArchiveList()
     rssToolUtils.reflushRSS()
+    sitemapToolUtils.reflushSitemap()
     // utils.reflushBlogCache()
   }).catch((err) => {
     res.status(400).json({

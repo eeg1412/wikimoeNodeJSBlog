@@ -3,7 +3,7 @@
     :model="siteSettingsForm"
     :rules="siteSettingsRules"
     ref="siteSettingsFormRef"
-    label-width="140px"
+    label-width="150px"
   >
     <el-form-item label="站点标题" prop="siteTitle">
       <el-input v-model="siteSettingsForm.siteTitle"></el-input>
@@ -69,6 +69,14 @@
         :step="1"
       ></el-input-number
       ><span class="pl10">条内容</span>
+    </el-form-item>
+    <!-- 站点地图 -->
+    <el-form-item label="显示站点地图" prop="siteEnableSitemap">
+      <el-switch v-model="siteSettingsForm.siteEnableSitemap"></el-switch>
+    </el-form-item>
+    <!-- 底部显示站点地图 -->
+    <el-form-item label="底部显示站点地图" prop="siteShowSitemapInFooter">
+      <el-switch v-model="siteSettingsForm.siteShowSitemapInFooter"></el-switch>
     </el-form-item>
     <el-form-item label="轮播图切换时间" prop="siteTopSlideTime">
       <!-- 数字 1000-10000 -->
@@ -151,6 +159,10 @@ export default {
       siteFooterInfo: '',
       // 额外CSS样式
       siteExtraCss: '',
+      // 显示站点地图
+      siteEnableSitemap: false,
+      // 底部站点地图
+      siteShowSitemapInFooter: false,
     })
     const onSiteUrlBlur = () => {
       // 去掉最末尾的斜杠

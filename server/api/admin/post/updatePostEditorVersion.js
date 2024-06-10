@@ -7,6 +7,7 @@ const adminApiLog = log4js.getLogger('adminApi')
 const validator = require('validator')
 const cacheDataUtils = require('../../../config/cacheData')
 const rssToolUtils = require('../../../utils/rss')
+const sitemapToolUtils = require('../../../utils/sitemap')
 
 module.exports = async function (req, res, next) {
   const id = req.body.id
@@ -34,6 +35,7 @@ module.exports = async function (req, res, next) {
     editorVersion: 5,
     content: '',
     status: 0,
+    lastChangDate: new Date()
   }
   // 更新
   postUtils.updateOne({ _id: id, __v: __v }, params).then((data) => {
@@ -52,6 +54,7 @@ module.exports = async function (req, res, next) {
     // 新旧status不一样，更新缓存
     cacheDataUtils.getPostArchiveList()
     rssToolUtils.reflushRSS()
+    sitemapToolUtils.reflushSitemap()
   }).catch((err) => {
     res.status(400).json({
       errors: [{

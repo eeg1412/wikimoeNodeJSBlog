@@ -22,6 +22,7 @@ module.exports = async function (req, res, next) {
   const params = {
     type: type,
     author: adminId,
+    lastChangDate: new Date()
   }
 
   // save

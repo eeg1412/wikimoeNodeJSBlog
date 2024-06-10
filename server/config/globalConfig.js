@@ -46,6 +46,10 @@ const initGlobalConfig = async () => {
     siteKeywords: '',
     // 站点地址
     siteUrl: '',
+    // 显示站点地图
+    siteEnableSitemap: false,
+    // 底部站点地图
+    siteShowSitemapInFooter: false,
     // 每页显示
     sitePageSize: 10,
     // 顶部幻灯片切换时间

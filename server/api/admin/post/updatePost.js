@@ -7,6 +7,7 @@ const adminApiLog = log4js.getLogger('adminApi')
 const validator = require('validator')
 const cacheDataUtils = require('../../../config/cacheData')
 const rssToolUtils = require('../../../utils/rss')
+const sitemapToolUtils = require('../../../utils/sitemap')
 
 module.exports = async function (req, res, next) {
   // - title	标题字段
@@ -133,7 +134,8 @@ module.exports = async function (req, res, next) {
     gameList: gameList,
     bookList: bookList,
     postList: postList,
-    eventList: eventList
+    eventList: eventList,
+    lastChangDate: new Date()
   }
   const rules = [
     {
@@ -258,6 +260,7 @@ module.exports = async function (req, res, next) {
       cacheDataUtils.getPostArchiveList()
     }
     rssToolUtils.reflushRSS()
+    sitemapToolUtils.reflushSitemap()
     // utils.reflushBlogCache()
   }).catch((err) => {
     res.status(400).json({
