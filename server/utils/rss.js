@@ -156,7 +156,7 @@ exports.getRSS = (type, res) => {
       return;
     }
     // 设置正确的Content-Type
-    res.setHeader('Content-Type', 'application/rss+xml; application/xml');
+    res.setHeader('Content-Type', 'application/rss+xml; charset=utf-8');
     const readStream = fs.createReadStream(filePath);
     readStream.pipe(res);
   });
