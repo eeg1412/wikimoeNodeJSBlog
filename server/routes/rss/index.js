@@ -12,15 +12,9 @@ router.get('/:type?', async function (req, res, next) {
     res.status(404).send('Not found')
     return
   }
-  const feed = await rssToolUtils.getRSS(type).catch((err) => {
-    return null
-  })
-  if (!feed) {
-    res.status(404).send('Not found')
-    return
-  }
-  res.set('Content-Type', 'application/rss+xml; charset=UTF-8');
-  res.send(feed);
+
+  // 发送rss
+  rssToolUtils.getRSS(type, res)
 
   // 记录日志
   const ip = utils.getUserIp(req)

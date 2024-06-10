@@ -119,15 +119,15 @@ exports.reflushRSS = async () => {
   const { siteEnableRss } = config
   await utils.executeInLock('reflushRSS', async () => {
     if (siteEnableRss !== true) {
-      console.info('rss not enabled delete rss files')
+      console.info('rss not enabled delete rss files');
       // 删除rss文件夹里的所有文件
-      const files = fs.readdirSync(rssCacheFolder)
-      files.forEach((file) => {
-        const filePath = path.join(rssCacheFolder, file)
-        fs.unlinkSync(filePath)
-      })
-      console.info('rss files deleted')
-      return null
+      const files = await fs.promises.readdir(rssCacheFolder);
+      for (const file of files) {
+        const filePath = path.join(rssCacheFolder, file);
+        await fs.promises.unlink(filePath);
+      }
+      console.info('rss files deleted');
+      return null;
     }
     const promiseArray = [
       this.updateRSS('all'),
@@ -143,30 +143,21 @@ exports.reflushRSS = async () => {
   })
 }
 
-exports.getRSS = (type) => {
+exports.getRSS = (type, res) => {
   // 校验type只能是all、blog、tweet
   if (!['all', 'blog', 'tweet'].includes(type)) {
-    return null
+    res.status(404).send('Not found');
+    return;
   }
-  const path = `${rssCacheFolder}/${type}.xml`
-  // if (!fs.existsSync(path)) {
-  //   return null
-  // }
-  // // 读取文件
-  // return fs.readFileSync(path, 'utf-8')
-  const promise = new Promise((resolve, reject) => {
-    fs.access(path, fs.constants.F_OK, (err) => {
-      if (err) {
-        return resolve(null)
-      }
-      fs.readFile(path, 'utf-8', (err, data) => {
-        if (err) {
-          console.error(err)
-          return reject(null)
-        }
-        resolve(data)
-      })
-    })
-  })
-  return promise
+  const filePath = `${rssCacheFolder}/${type}.xml`;
+  fs.access(filePath, fs.constants.F_OK, (err) => {
+    if (err) {
+      res.status(404).send('File not found');
+      return;
+    }
+    // 设置正确的Content-Type
+    res.setHeader('Content-Type', 'application/rss+xml; application/xml');
+    const readStream = fs.createReadStream(filePath);
+    readStream.pipe(res);
+  });
 }
