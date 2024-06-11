@@ -59,15 +59,18 @@
       >
         <el-table-column label="文章/推文" min-width="180">
           <template #default="{ row }">
-            <div :title="row.post.title || row.post.excerpt" class="dib">
-              {{ titleLimit(row.post.title || row.post.excerpt) }}
+            <div v-if="row.post">
+              <div :title="row.post.title || row.post.excerpt" class="dib">
+                {{ titleLimit(row.post.title || row.post.excerpt) }}
+              </div>
+              <!-- 点击打开按钮 -->
+              <div class="dib ml5 vt">
+                <el-link type="primary" @click="goToBlog(row)"
+                  ><i class="fas fa-external-link-alt"></i
+                ></el-link>
+              </div>
             </div>
-            <!-- 点击打开按钮 -->
-            <div class="dib ml5 vt">
-              <el-link type="primary" @click="goToBlog(row)"
-                ><i class="fas fa-external-link-alt"></i
-              ></el-link>
-            </div>
+            <div v-else class="cRed">文章/推文已删除</div>
           </template>
         </el-table-column>
         <!-- uuid -->

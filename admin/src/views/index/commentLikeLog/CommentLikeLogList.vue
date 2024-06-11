@@ -59,9 +59,10 @@
       >
         <el-table-column label="评论" min-width="180">
           <template #default="{ row }">
-            <div :title="row.comment.content">
+            <div :title="row.comment.content" v-if="row.comment">
               {{ row.comment.content }}
             </div>
+            <div v-else class="cRed">评论已删除</div>
           </template>
         </el-table-column>
         <!-- uuid -->
