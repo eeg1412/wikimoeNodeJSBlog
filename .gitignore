@@ -15,6 +15,7 @@ node_modules
 /server/public/web_demo/*
 /server/public/ucloudImg/*
 /server/public/sitemap/sitemap.xml
+/server/public/rss/*
 /server/front/*
 /server/config/globalConfig.json
 /server/uploadCache/*
