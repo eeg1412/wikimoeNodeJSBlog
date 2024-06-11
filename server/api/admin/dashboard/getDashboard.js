@@ -53,8 +53,8 @@ module.exports = async function (req, res, next) {
   // JSON_LIMT="50mb"
   // URLENCODED_LIMT="50mb"
   // 返回以上数据
-  const jsonLimit = process.env.JSON_LIMT || '10mb'
-  const urlencodedLimit = process.env.URLENCODED_LIMT || '10mb'
+  const jsonLimit = process.env.JSON_LIMIT || '10mb'
+  const urlencodedLimit = process.env.URLENCODED_LIMIT || '10mb'
   // 获取nodejs版本
   const nodeVersion = process.version
   // 获取系统信息
