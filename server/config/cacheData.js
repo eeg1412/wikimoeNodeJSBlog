@@ -134,7 +134,7 @@ exports.getCommentList = async function (req, res, next) {
 
       // 将list的email字段替换为gravatar头像
       list.forEach((item) => {
-        const email = item.email || item.nickname
+        const email = item.email
         if (email) {
           item.avatar = utils.md5hex(email)
         }

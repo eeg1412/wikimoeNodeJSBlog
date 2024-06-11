@@ -9,7 +9,7 @@
 const props = defineProps({
   avatar: {
     type: String,
-    required: true,
+    default: '',
   },
   alt: {
     type: String,
@@ -29,7 +29,7 @@ const imgStyle = computed(() => {
 const loadErrorFlag = ref(false)
 const src = computed(() => {
   // 如果加载失败，返回默认头像
-  if (loadErrorFlag.value) {
+  if (!props.avatar || loadErrorFlag.value) {
     console.log('加载失败')
     const str = props.avatar || props.alt || ''
     // 如果存在str就以str为seed生成随机0-176的数字

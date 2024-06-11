@@ -447,7 +447,7 @@ exports.sendReplyCommentNotice = async function (post, comment) {
   const commentEmail = comment.email || commentUser.email
 
   if (!parentCommentEmail) {
-    console.error('parentComment.email不存在')
+    console.log('parentComment.email不存在')
     return
   }
   if (parentCommentEmail === commentEmail) {

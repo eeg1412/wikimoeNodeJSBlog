@@ -32,7 +32,7 @@ module.exports = async function (req, res, next) {
     const keys = ['_id', 'avatar', 'content', 'date', 'nickname', 'url', 'likes', 'isAdmin', 'parent', 'top']
     // 将list的email字段替换为gravatar头像
     list.forEach((item) => {
-      const email = item.email || item.nickname
+      const email = item.email
       if (email) {
         item.avatar = utils.md5hex(email)
       }
