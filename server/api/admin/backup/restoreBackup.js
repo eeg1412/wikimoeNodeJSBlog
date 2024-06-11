@@ -7,6 +7,8 @@ const fs = require('fs')
 const moment = require('moment');
 const cacheDataUtils = require('../../../config/cacheData')
 const globalConfigUtils = require('../../../config/globalConfig')
+const rssToolUtils = require('../../../utils/rss')
+const sitemapToolUtils = require('../../../utils/sitemap')
 
 module.exports = async function (req, res, next) {
   const id = req.body.id
@@ -108,6 +110,8 @@ module.exports = async function (req, res, next) {
         cacheDataUtils.getSortList()
         cacheDataUtils.getPostArchiveList()
         cacheDataUtils.getBangumiYearList()
+        rssToolUtils.reflushRSS()
+        sitemapToolUtils.reflushSitemap()
       });
       res.send({
       })
