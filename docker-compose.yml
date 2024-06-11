@@ -1,0 +1,62 @@
+services:
+  blog:
+    container_name: wikimoe-blog
+    image: timochan/wikimoe-blog:latest
+    environment:
+      - TZ=Asia/Shanghai
+      - NODE_ENV=production
+      - NUXT_API_DOMAIN=${NUXT_API_DOMAIN}
+      - GOOGLE_ADSENSE_ID=${GOOGLE_ADSENSE_ID}
+      - GOOGLE_ADSENSE_TEST_MODE=${GOOGLE_ADSENSE_TEST_MODE}
+      - GOOGLE_ADSENSE_POST_DETAIL_BT=${GOOGLE_ADSENSE_POST_DETAIL_BT}
+      - SWR_ENABLED=${SWR_ENABLED}
+      - SWR_CACHE_MAXAGE=${SWR_CACHE_MAXAGE}
+      - SWR_CACHE_STALEMAXAGE=${SWR_CACHE_STALEMAXAGE}
+      - CACHE_MAX_PAGE=${CACHE_MAX_PAGE}
+      - CACHE_TTL=${CACHE_TTL}
+      - SHOW_LOADING=${SHOW_LOADING}
+    ports:
+      - '3007:3007'
+    depends_on:
+      - server
+    networks:
+      - wikimoe
+    restart: unless-stopped
+  server:
+    container_name: wikimoe-server
+    image: timochan/wikimoe-server:latest
+    environment:
+      - TZ=Asia/Shanghai
+      - NODE_ENV=production
+      - PORT=${PORT}
+      - DB_HOST=${DB_HOST}
+      - JSON_LIMIT=${JSON_LIMIT}
+      - URLENCODED_LIMIT=${URLENCODED_LIMIT}
+      - JWT_SECRET=${JWT_SECRET}
+      - IP2LOCATION=${IP2LOCATION}
+      - IP2LOCATION_FILE_NAME=${IP2LOCATION_FILE_NAME}
+      - MAX_HISTORYLOGS_SIZE=${MAX_HISTORYLOGS_SIZE}
+      - USER_NAME=${USER_NAME} # option
+    volumes:
+      - ./data/wikimoe-server:/app/log
+      - ./data/wikimoe-server/ip2location:/app/utils/ip2location
+    ports:
+      - '3000:3000'
+    depends_on:
+      - mongo
+    networks:
+      - wikimoe
+    restart: unless-stopped
+
+  mongo:
+    container_name: wikimoe-db
+    image: mongo
+    volumes:
+      - ./data/db:/data/db
+    networks:
+      - wikimoe
+    restart: unless-stopped
+
+networks:
+  wikimoe:
+    driver: bridge

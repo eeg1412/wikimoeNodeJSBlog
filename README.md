@@ -12,7 +12,7 @@
 
 以下是一个例子，假如 API 是 3000 端口：
 
-```
+```nginx
 location /content {
     proxy_pass http://localhost:3000;
     proxy_set_header Host $host;
@@ -34,7 +34,7 @@ location /upload {
 
 3. 关于 emoji 一些设备显示不全的问题。可以在管理后台的【设置】->【页面底部信息】中添加：
 
-```
+```typescript
 <style>
 @import url('https://fonts.loli.net/css2?family=Noto+Color+Emoji&display=swap');
 </style>
@@ -58,6 +58,44 @@ blog：博客部分
 三个部分需要按照顺序编译/启动  
 也可以直接在根目录运行 yarn run start --build，一键编译和运行程序。
 
+## Docker 部署
+
+### 准备环境
+
+```bash
+curl -fsSL https://get.docker.com | bash -s docker --mirror Aliyun
+```
+
+从 repo 下载 docker-compose.yml 以及 .env 文件
+
+```bash
+cd && mkdir wikimoe && cd wikimoe
+wget https://raw.githubusercontent.com/eeg1412/wikimoeNodeJSBlog/main/docker-compose.yml
+wget https://raw.githubusercontent.com/eeg1412/wikimoeNodeJSBlog/main/docker-support/example.env .env
+```
+
+然后按照下文说明配置 .env 文件，该文件包含了 Server 和 Blog 所有的环境变量
+
+### 初始化
+
+修改 .env 文件中的 USER_NAME 环境变量，以及其他相关环境变量，`PORT` ,`NUXT_API_DOMAIN`无需修改，然后使用 compose 拉起容器
+
+```bash
+docker compose up -d
+```
+
+Server 容器会自动检查 USER_NAME 环境变量，并为你创建站长用户（会生成 install.lock 防止重复初始化），注意：此用户的初始密码为 `7@wVUo6BL6LHjNR*#x` ，请初始化后及时修改。
+
+反向代理可根据自己需求修改
+
+（后端）Server：`http://localhost:3000`
+
+（前端）Blog：`http://localhost:3007`
+
+（后台）admin：`http://localhost:3000/admin`
+
+
+
 ## 对于 1Panel 的部署
 
 可以参考[如何使用 1Panel 搭建猛男自用的维基萌博客](https://www.wikimoe.com/post/94r1mfyk)
@@ -70,7 +108,7 @@ blog：博客部分
 
 可以先参考下面的配置文件配置，然后直接在根目录运行
 
-```
+```bash
 yarn run start --build
 ```
 
@@ -81,19 +119,19 @@ yarn run start --build
 
 ### 进入文件夹
 
-```
+```bash
 cd admin
 ```
 
 ### 安装依赖
 
-```
+```bash
 yarn install
 ```
 
 ### 编译
 
-```
+```bash
 yarn build
 ```
 
@@ -103,13 +141,13 @@ yarn build
 
 ### 进入文件夹
 
-```
+```bash
 cd server
 ```
 
 ### 安装依赖
 
-```
+```bash
 yarn install
 ```
 
@@ -118,7 +156,7 @@ yarn install
 可以将目录下的 sample.env 复制并更名为.env  
 配置内容如下：
 
-```
+```env
 PORT="填写运行端口号"
 DB_HOST="填写mongodb地址"
 JSON_LIMT="JSON格式的大小限制如（50mb）"
@@ -137,19 +175,19 @@ MAX_HISTORYLOGS_SIZE="日志集合的最大占用空间，单位字节默认1073
 
 ### 运行
 
-```
+```bash
 yarn start
 ```
 
 ### 创建管理员（如果需要）
 
-```
+```bash
 yarn run create-user
 ```
 
 也可以通过参数的形式直接创建管理员
 
-```
+```bash
 yarn run create-user 账号 密码 昵称
 ```
 
@@ -162,13 +200,13 @@ yarn run create-user 账号 密码 昵称
 
 ### 进入文件夹
 
-```
+```bash
 cd blog
 ```
 
 ### 安装依赖
 
-```
+```bash
 yarn install
 ```
 
@@ -177,7 +215,7 @@ yarn install
 可以将目录下的 sample.env 复制并更名为.env  
 文件内容如下：
 
-```
+```env
 NUXT_API_DOMAIN="填写API的HTTP地址，如：http://localhost:3006"
 GOOGLE_ADSENSE_ID="如果需要设置谷歌广告，填写谷歌广告ID"
 GOOGLE_ADSENSE_TEST_MODE="是否启用测试模式 1 为启用，0 为不启用"
@@ -196,7 +234,7 @@ SHOW_LOADING="是否显示进入网站时的读取动画，需要时为1"
 
 ### 编译
 
-```
+```bash
 yarn build
 ```
 
@@ -204,7 +242,7 @@ yarn build
 
 ### 进入编译文件夹
 
-```
+```bash
 cd build
 ```
 
@@ -212,13 +250,13 @@ cd build
 
 linux
 
-```
+```bash
 yarn start-linux
 ```
 
 windows
 
-```
+```powershell
 yarn start-windows
 ```
 
@@ -232,7 +270,7 @@ yarn start-windows
 
 使用 `create-user` 命令来创建一个新的用户：
 
-```
+```bash
 yarn run create-user 账号 密码 昵称
 ```
 
@@ -243,7 +281,7 @@ yarn run create-user 账号 密码 昵称
 
 使用 `change-user-password` 命令来修改一个用户的密码：
 
-```
+```bash
 yarn run change-user-password 账号 密码
 ```
 
@@ -253,13 +291,13 @@ yarn run change-user-password 账号 密码
 
 使用 `get-user-list` 命令来获取所有用户的列表：
 
-```
+```bash
 yarn run get-user-list
 ```
 
 ### 设置用户禁止状态
 
-```
+```bash
 yarn run set-user-ban 1
 ```
 

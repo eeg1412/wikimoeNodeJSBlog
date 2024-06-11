@@ -1,6 +1,7 @@
 # dependencies
 node_modules
 .env
+data
 /server/log
 /server/public/upload/avatar/*
 /server/public/upload/linkicon/*

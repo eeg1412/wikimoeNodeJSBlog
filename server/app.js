@@ -19,8 +19,8 @@ var app = express();
 app.use(log4js.connectLogger(log4js.getLogger('access'), { level: 'auto' }))
 
 // app.use(logger('dev'));
-app.use(express.json({ limit: process.env.JSON_LIMT || '10mb' }));
-app.use(express.urlencoded({ extended: false, limit: process.env.URLENCODED_LIMT || '10mb' }));
+app.use(express.json({ limit: process.env.JSON_LIMIT || '10mb' }));
+app.use(express.urlencoded({ extended: false, limit: process.env.URLENCODED_LIMIT || '10mb' }));
 app.use(cookieParser());
 
 const upLoadFolder = path.join(__dirname, 'public/upload')
