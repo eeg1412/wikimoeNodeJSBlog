@@ -3,7 +3,7 @@ const postUtils = require('../mongodb/utils/posts')
 const utils = require('./utils')
 const fs = require('fs')
 const path = require('path')
-const rssCacheFolder = './public/rss'
+const rssCacheFolder = './seo/rss'
 
 exports.updateRSS = async (type) => {
   const prmise = new Promise(async (resolve, reject) => {

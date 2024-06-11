@@ -78,7 +78,7 @@ app.use('/sitemap.xml', async function (req, res) {
 });
 // sitemap.xsl
 app.use('/sitemap.xsl', function (req, res) {
-  res.sendFile(path.join(__dirname, 'public/sitemap/sitemap.xsl'));
+  res.sendFile(path.join(__dirname, 'seo/sitemap/sitemap.xsl'));
 });
 // 所有第一级路径不是/admin的，都返回404
 app.use((req, res, next) => {
