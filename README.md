@@ -36,7 +36,8 @@ location /upload {
 
 ```typescript
 <style>
-@import url('https://fonts.loli.net/css2?family=Noto+Color+Emoji&display=swap');
+  @import
+  url('https://fonts.loli.net/css2?family=Noto+Color+Emoji&display=swap');
 </style>
 ```
 
@@ -93,8 +94,6 @@ Server 容器会自动检查 USER_NAME 环境变量，并为你创建站长用�
 （前端）Blog：`http://localhost:3007`
 
 （后台）admin：`http://localhost:3000/admin`
-
-
 
 ## 对于 1Panel 的部署
 
@@ -159,8 +158,8 @@ yarn install
 ```env
 PORT="填写运行端口号"
 DB_HOST="填写mongodb地址"
-JSON_LIMT="JSON格式的大小限制如（50mb）"
-URLENCODED_LIMT="URL编码的大小限制如（50mb）"
+JSON_LIMIT="JSON格式的大小限制如（50mb）"
+URLENCODED_LIMIT="URL编码的大小限制如（50mb）"
 JWT_SECRET="JWT所用的密文"
 IP2LOCATION="1为开启IP地址解析"
 IP2LOCATION_FILE_NAME="地址解析用到的BIN文件，一般为IP2LOCATION-LITE-DB3.BIN，切记一定要下载【DB3.LITE】的BIN文件"
