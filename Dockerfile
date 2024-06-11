@@ -1,7 +1,6 @@
 FROM node:20-alpine as builder
 WORKDIR /app
 COPY . .
-ENV NODE_ENV production
 RUN cd admin && \
     yarn install && \
     yarn build && \
