@@ -4,7 +4,7 @@ const { access, unlink } = require('fs').promises;
 const utils = require('./utils')
 const postUtils = require('../mongodb/utils/posts')
 const path = require('path')
-const sitemapCacheFolder = './cache/sitemap'
+const sitemapCacheFolder = './public/sitemap'
 
 exports.updateSitemap = async () => {
   const promise = new Promise(async (resolve, reject) => {

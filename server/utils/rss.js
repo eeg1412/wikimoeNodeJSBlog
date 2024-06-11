@@ -3,7 +3,7 @@ const postUtils = require('../mongodb/utils/posts')
 const utils = require('./utils')
 const fs = require('fs')
 const path = require('path')
-const rssCacheFolder = './cache/rss'
+const rssCacheFolder = './public/rss'
 
 exports.updateRSS = async (type) => {
   const prmise = new Promise(async (resolve, reject) => {
@@ -107,7 +107,7 @@ exports.updateRSS = async (type) => {
     const rssXML = feed.rss2()
     // 写入文件
     const rssPath = path.join(rssCacheFolder, `${type}.xml`)
-    fs.writeFileSync(rssPath, rssXML)
+    await fs.promises.writeFile(rssPath, rssXML);
     resolve(rssXML)
     console.info('rss created:' + type)
   })
@@ -120,11 +120,13 @@ exports.reflushRSS = async () => {
   await utils.executeInLock('reflushRSS', async () => {
     if (siteEnableRss !== true) {
       console.info('rss not enabled delete rss files');
-      // 删除rss文件夹里的所有文件
+      // 删除rss文件夹里的所有文件，除了 README.md
       const files = await fs.promises.readdir(rssCacheFolder);
       for (const file of files) {
-        const filePath = path.join(rssCacheFolder, file);
-        await fs.promises.unlink(filePath);
+        if (file !== 'README.md') { // 如果文件名不是 README.md，则删除
+          const filePath = path.join(rssCacheFolder, file);
+          await fs.promises.unlink(filePath);
+        }
       }
       console.info('rss files deleted');
       return null;
