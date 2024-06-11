@@ -11,10 +11,10 @@ const emailSendHistoryUtils = require('../mongodb/utils/emailSendHistorys')
 const postUtils = require('../mongodb/utils/posts')
 const commentUtils = require('../mongodb/utils/comments')
 const referrerUtils = require('../mongodb/utils/referrers')
-const sharp = require('sharp');
 const AsyncLock = require('async-lock');
 const lock = new AsyncLock({ timeout: 60000 });
 const crawlerUserAgents = require('./crawler-user-agents.json')
+const { Worker } = require('worker_threads');
 
 const botUserAgentList = []
 crawlerUserAgents.forEach((item) => {
@@ -635,38 +635,46 @@ exports.isSearchEngine = function (req) {
   return res;
 }
 
-sharp.cache(false)
-
 exports.imageCompress = async (toExtname, fileData, animated = false, newWidth, newHeight, imgSettingCompressQuality, filePath) => {
-  let imageData = sharp(fileData, {
-    animated,
+  const shrpWorker = new Worker('./utils/workers/sharpWorker.js')
+  const promise = new Promise((resolve, reject) => {
+    shrpWorker.on('message', (data) => {
+      if (data.status === 'success') {
+        resolve(data.data)
+      } else {
+        reject(data)
+      }
+    })
+    shrpWorker.on('error', (err) => {
+      reject(err)
+    })
+    shrpWorker.postMessage({
+      action: 'imageCompress',
+      data: [toExtname, fileData, animated, newWidth, newHeight, imgSettingCompressQuality, filePath]
+    })
   })
-  if (newWidth && newHeight) {
-    imageData.resize(newWidth, newHeight)
-  }
-  switch (toExtname) {
-    case '.webp':
-      await imageData.webp({ quality: imgSettingCompressQuality }).toFile(filePath)
-      break;
-    case '.jpg':
-    case '.jpeg':
-      await imageData.jpeg({ quality: imgSettingCompressQuality }).toFile(filePath)
-      break;
-    case '.png':
-      await imageData.png({ quality: imgSettingCompressQuality }).toFile(filePath)
-      break;
-    default:
-      await imageData.toFile(filePath)
-      break;
-  }
-  // 释放内存
-  imageData = null
+  return promise
 }
 
 exports.imageMetadata = async (fileData) => {
-  const image = sharp(fileData)
-  const imageInfo = await image.metadata()
-  return imageInfo
+  const shrpWorker = new Worker('./utils/workers/sharpWorker.js')
+  const promise = new Promise((resolve, reject) => {
+    shrpWorker.on('message', (data) => {
+      if (data.status === 'success') {
+        resolve(data.data)
+      } else {
+        reject(data)
+      }
+    })
+    shrpWorker.on('error', (err) => {
+      reject(err)
+    })
+    shrpWorker.postMessage({
+      action: 'imageMetadata',
+      data: [fileData]
+    })
+  })
+  return promise
 }
 
 exports.logErrorToText = (error) => {
