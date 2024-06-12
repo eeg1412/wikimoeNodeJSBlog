@@ -40,6 +40,8 @@ services:
     volumes:
       - ./data/wikimoe-server:/app/log
       - ./data/wikimoe-server/ip2location:/app/utils/ip2location
+      - ./data/wikimoe-server/backups:/app/backups
+      - ./data/wikimoe-server/public:/app/public
     ports:
       - '3000:3000'
     depends_on:
@@ -50,7 +52,7 @@ services:
 
   mongo:
     container_name: wikimoe-db
-    image: mongo
+    image: mongo:6.0.12-jammy
     volumes:
       - ./data/db:/data/db
     networks:
