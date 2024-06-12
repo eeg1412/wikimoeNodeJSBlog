@@ -2,6 +2,7 @@ FROM node:20-alpine as builder
 
 WORKDIR /app
 COPY . .
+RUN npm install --global yarn
 ENV NODE_ENV production
 ENV NUXT_API_DOMAIN=http://wikimoe-server:3000
 ENV GOOGLE_ADSENSE_ID=
@@ -13,15 +14,14 @@ ENV SWR_CACHE_STALEMAXAGE=3600
 ENV CACHE_MAX_PAGE=10
 ENV CACHE_TTL=60000
 ENV SHOW_LOADING=1
-RUN node -e "console.log(process.env)" && \
-    yarn install && \
+RUN yarn install && \
     yarn build
 
 
 FROM node:20-alpine as runner 
 
 WORKDIR /app
-
+RUN npm install --global yarn
 COPY --from=builder /app/build /app
 CMD ["yarn", "run","start-linux"]
 EXPOSE 3007
