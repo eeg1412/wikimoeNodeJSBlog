@@ -1,6 +1,5 @@
 FROM node:20-alpine as builder
 WORKDIR /app
-RUN npm install --global yarn
 COPY . .
 RUN cd admin && \
     yarn install && \
