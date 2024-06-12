@@ -1,7 +1,7 @@
 services:
   blog:
     container_name: wikimoe-blog
-    image: timochan/wikimoe-blog:latest
+    image: eeg1412/wikimoe-blog:latest
     environment:
       - TZ=Asia/Shanghai
       - NODE_ENV=production
@@ -24,7 +24,7 @@ services:
     restart: unless-stopped
   server:
     container_name: wikimoe-server
-    image: timochan/wikimoe-server:latest
+    image: eeg1412/wikimoe-server:latest
     environment:
       - TZ=Asia/Shanghai
       - NODE_ENV=production
