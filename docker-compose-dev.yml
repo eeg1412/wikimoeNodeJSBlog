@@ -1,22 +1,10 @@
 services:
   blog:
     container_name: wikimoe-blog-nuxt
-    build:
-      context: ./blog
-      args:
-        - TZ=Asia/Shanghai
-        - NUXT_API_DOMAIN=${NUXT_API_DOMAIN}
-        - GOOGLE_ADSENSE_ID=${GOOGLE_ADSENSE_ID}
-        - GOOGLE_ADSENSE_TEST_MODE=${GOOGLE_ADSENSE_TEST_MODE}
-        - GOOGLE_ADSENSE_POST_DETAIL_BT=${GOOGLE_ADSENSE_POST_DETAIL_BT}
-        - SWR_ENABLED=${SWR_ENABLED}
-        - SWR_CACHE_MAXAGE=${SWR_CACHE_MAXAGE}
-        - SWR_CACHE_STALEMAXAGE=${SWR_CACHE_STALEMAXAGE}
-        - CACHE_MAX_PAGE=${CACHE_MAX_PAGE}
-        - CACHE_TTL=${CACHE_TTL}
-        - SHOW_LOADING=${SHOW_LOADING}
+    image: eeg1412/wikimoe-blog-nuxt:latest
     environment:
       - TZ=Asia/Shanghai
+      - NODE_ENV=production
       - NUXT_API_DOMAIN=${NUXT_API_DOMAIN}
       - GOOGLE_ADSENSE_ID=${GOOGLE_ADSENSE_ID}
       - GOOGLE_ADSENSE_TEST_MODE=${GOOGLE_ADSENSE_TEST_MODE}
@@ -34,19 +22,12 @@ services:
     networks:
       - wikimoe
     restart: unless-stopped
-    deploy:
-      resources:
-        limits:
-          cpus: '1.0'
-          memory: '378M'
-        reservations:
-          cpus: '0.25'
-          memory: '128M'
   server:
     container_name: wikimoe-blog-server
     image: eeg1412/wikimoe-blog-server:latest
     environment:
       - TZ=Asia/Shanghai
+      - NODE_ENV=production
       - PORT=${PORT}
       - DB_HOST=${DB_HOST}
       - JSON_LIMIT=${JSON_LIMIT}
@@ -68,14 +49,6 @@ services:
     networks:
       - wikimoe
     restart: unless-stopped
-    deploy:
-      resources:
-        limits:
-          cpus: '1.0'
-          memory: '378M'
-        reservations:
-          cpus: '0.25'
-          memory: '128M'
 
   mongo:
     container_name: wikimoe-db
@@ -85,14 +58,6 @@ services:
     networks:
       - wikimoe
     restart: unless-stopped
-    deploy:
-      resources:
-        limits:
-          cpus: '1.0'
-          memory: '512M'
-        reservations:
-          cpus: '0.25'
-          memory: '256M'
 
 networks:
   wikimoe:
