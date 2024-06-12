@@ -19,7 +19,7 @@ jobs:
         uses: docker/metadata-action@v4
         with:
           images: |
-            eeg1412/wikimoe-blog-nuxt-server
+            eeg1412/wikimoe-blog-server
           tags: |
             type=ref,event=branch
             type=semver,pattern={{version}}
@@ -40,7 +40,7 @@ jobs:
         with:
           context: .
           platforms: linux/amd64
-          tags: ${{ steps.meta.outputs.tags }},eeg1412/wikimoe-blog-nuxt-server:latest
+          tags: ${{ steps.meta.outputs.tags }},eeg1412/wikimoe-blog-server:latest
           labels: ${{ steps.meta.outputs.labels }}
       - name: Build and push
         id: docker_build
@@ -48,7 +48,7 @@ jobs:
         with:
           context: .
           push: ${{ startsWith(github.ref, 'refs/tags/v') }}
-          tags: ${{ steps.meta.outputs.tags }},eeg1412/wikimoe-blog-nuxt-server:latest
+          tags: ${{ steps.meta.outputs.tags }},eeg1412/wikimoe-blog-server:latest
           labels: ${{ steps.meta.outputs.labels }}
           platforms: linux/amd64
 
