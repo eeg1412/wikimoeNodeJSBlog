@@ -41,7 +41,7 @@ services:
           memory: '378M'
         reservations:
           cpus: '0.25'
-          memory: '256M'
+          memory: '128M'
   server:
     container_name: wikimoe-blog-server
     image: eeg1412/wikimoe-blog-server:latest
