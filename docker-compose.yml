@@ -1,7 +1,7 @@
 services:
   blog:
-    container_name: wikimoe-blog
-    image: eeg1412/wikimoe-blog:latest
+    container_name: wikimoe-blog-nuxt
+    image: eeg1412/wikimoe-blog-nuxt:latest
     environment:
       - TZ=Asia/Shanghai
       - NODE_ENV=production
@@ -23,8 +23,8 @@ services:
       - wikimoe
     restart: unless-stopped
   server:
-    container_name: wikimoe-server
-    image: eeg1412/wikimoe-server:latest
+    container_name: wikimoe-blog-nuxt-server
+    image: eeg1412/wikimoe-blog-nuxt-server:latest
     environment:
       - TZ=Asia/Shanghai
       - NODE_ENV=production
@@ -38,10 +38,10 @@ services:
       - MAX_HISTORYLOGS_SIZE=${MAX_HISTORYLOGS_SIZE}
       - USER_NAME=${USER_NAME} # option
     volumes:
-      - ./data/wikimoe-server:/app/log
-      - ./data/wikimoe-server/ip2location:/app/utils/ip2location
-      - ./data/wikimoe-server/backups:/app/backups
-      - ./data/wikimoe-server/public:/app/public
+      - ./data/wikimoe-blog-nuxt-server:/app/log
+      - ./data/wikimoe-blog-nuxt-server/ip2location:/app/utils/ip2location
+      - ./data/wikimoe-blog-nuxt-server/backups:/app/backups
+      - ./data/wikimoe-blog-nuxt-server/public:/app/public
     ports:
       - '3000:3000'
     depends_on:

@@ -4,7 +4,7 @@ WORKDIR /app
 COPY . .
 RUN npm install --global yarn
 ENV NODE_ENV production
-ENV NUXT_API_DOMAIN=http://wikimoe-server:3000
+ENV NUXT_API_DOMAIN=http://wikimoe-blog-nuxt-server:3000
 ENV GOOGLE_ADSENSE_ID=
 ENV GOOGLE_ADSENSE_TEST_MODE=
 ENV GOOGLE_ADSENSE_POST_DETAIL_BT=
