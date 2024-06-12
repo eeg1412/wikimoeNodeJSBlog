@@ -67,9 +67,9 @@ blog：博客部分
 curl -fsSL https://get.docker.com | bash -s docker --mirror Aliyun
 ```
 
-### 快速体验
+### 快速体验（不建议生产部署）
 
-从 repo 下载 docker-compose-dev.yml 以及 .env 文件，
+从 repo 下载 docker-compose-dev.yml 以及 .env 文件
 
 ```bash
 cd && mkdir wikimoe && cd wikimoe
@@ -79,17 +79,16 @@ wget -O .env https://raw.githubusercontent.com/eeg1412/wikimoeNodeJSBlog/main/ex
 
 然后使用 `docker compose up -d` 即可在本地快速体验，注意：docker-compose-dev.yml 预设的内容仅为快速体验，不建议在生产环境使用
 
-### 完整体验
+### 完整部署
 
-从 repo 下载 docker-compose.yml 以及 .env 文件
+Clone 仓库，并修改 .env 文件的内容
 
 ```bash
-cd && mkdir wikimoe && cd wikimoe
-wget -O compose.yml https://raw.githubusercontent.com/eeg1412/wikimoeNodeJSBlog/main/docker-compose.yml 
-wget -O .env https://raw.githubusercontent.com/eeg1412/wikimoeNodeJSBlog/main/example.env 
+cd && mkdir wikimoe && git clone https://github.com/eeg1412/wikimoeNodeJSBlog --depth=1
+cd wikimoeNodeJSBlog && mv example.env .env
 ```
 
-按照 [API 配置部分](#配置env-文件) 、[Blog 配置部分](#配置env-文件-1) 修改 .env 文件中的 USER_NAME 环境变量，以及其他相关环境变量。注意：port 相关请修改 compose.yml 文件来修改端口映射
+按照 [API 配置部分](#配置env-文件) 、[Blog 配置部分](#配置env-文件-1) 修改 `.env` 文件中的 USER_NAME 环境变量（此环境变量为站长初始用户名），以及其他相关环境变量。注意：port 相关请修改 compose.yml 文件来修改端口映射
 
 然后使用 `docker compose up -d`拉起容器，你所修改的环境变量会传递给容器
 
