@@ -7,9 +7,17 @@
   >
     <div
       class="blog-tweet-img-list-body cover-count-1-1"
-      :style="`${oneItemWidth ? `width: ${oneItemWidth}px;` : ''} ${
-        oneItemHeight ? `height: ${oneItemHeight}px;` : ''
-      }`"
+      :style="{
+        aspectRatio: `${coverImages[0].thumWidth || coverImages[0].width} / ${
+          coverImages[0].thumHeight || coverImages[0].height
+        }`,
+        ...((coverImages[0].thumHeight || coverImages[0].height) >
+        (coverImages[0].thumWidth || coverImages[0].width)
+          ? {
+              height: `${coverImages[0].thumHeight || coverImages[0].height}px`,
+            }
+          : { width: `${coverImages[0].thumWidth || coverImages[0].width}px` }),
+      }"
       v-if="coverImages.length === 1"
     >
       <!-- 1张图时 -->
@@ -17,8 +25,8 @@
         <WikimoeImage
           :src="coverImages[0].thumfor || coverImages[0].filepath"
           :alt="coverImages[0].description || coverImages[0].filename"
-          :width="oneItemWidth"
-          :height="oneItemHeight"
+          :width="coverImages[0].thumWidth || coverImages[0].width"
+          :height="coverImages[0].thumHeight || coverImages[0].height"
           :data-href="coverImages[0].filepath"
           :dataHrefList="dataHrefList"
           :dataHrefIndex="0"
@@ -30,7 +38,6 @@
         />
         <video
           controls
-          :style="`width: ${oneItemWidth}px; height: ${oneItemHeight}px;`"
           :id="`${componentUUID}-${coverImages[0]._id}`"
           muted
           loop
@@ -307,55 +314,6 @@ const videoPlay = (id) => {
 }
 const componentUUID = ref(null)
 const blogTweetImgListWrapRef = ref(null)
-const oneItemWidth = ref(null)
-const oneItemHeight = ref(null)
-let resizeTimer = null
-const sumSize = () => {
-  const width = blogTweetImgListWrapRef.value.offsetWidth
-  const height = window.screen.height
-  const coverImages = props.coverImages
-  const oneItem = coverImages[0]
-  let oneItemWidth_ = oneItem.thumWidth || oneItem.width
-  let oneItemHeight_ = oneItem.thumHeight || oneItem.height
-  // 如果宽大于父级,就缩小
-  if (oneItemWidth_ > width) {
-    const scale = width / oneItemWidth_
-    oneItemWidth_ = width
-    oneItemHeight_ = oneItemHeight_ * scale
-  }
-  // 如果高度大于半个屏幕，就缩小
-  if (oneItemHeight_ > height / 2) {
-    let resizeHeight = height / 2
-    if (resizeHeight < 350) {
-      resizeHeight = 350
-    }
-    const scale = resizeHeight / oneItemHeight_
-    oneItemWidth_ = oneItemWidth_ * scale
-    oneItemHeight_ = resizeHeight
-  }
-  // 再次检查宽度是否超过父级
-  if (oneItemWidth_ > width) {
-    const scale = width / oneItemWidth_
-    oneItemWidth_ = width
-    oneItemHeight_ = oneItemHeight_ * scale
-  }
-  oneItemWidth.value =
-    oneItemWidth_ % 2 === 0
-      ? Math.floor(oneItemWidth_)
-      : Math.floor(oneItemWidth_) - 1
-  oneItemHeight.value =
-    oneItemHeight_ % 2 === 0
-      ? Math.floor(oneItemHeight_)
-      : Math.floor(oneItemHeight_) - 1
-}
-const sumSizeThrottle = () => {
-  if (resizeTimer) {
-    clearTimeout(resizeTimer)
-  }
-  resizeTimer = setTimeout(() => {
-    sumSize()
-  }, 100)
-}
 
 const tryOpenHref = async (index) => {
   if (props.clickStop) {
@@ -379,19 +337,8 @@ const tryOpenHref = async (index) => {
 
 onMounted(() => {
   componentUUID.value = uuid()
-  const coverImages = props.coverImages
-  if (coverImages.length === 1) {
-    sumSize()
-    // 监听窗口变化
-    window.addEventListener('resize', sumSizeThrottle)
-  }
 })
-onUnmounted(() => {
-  const coverImages = props.coverImages
-  if (coverImages.length === 1) {
-    window.removeEventListener('resize', sumSizeThrottle)
-  }
-})
+onUnmounted(() => {})
 </script>
 <style scoped>
 .blog-tweet-img-list-no-swiper-body {
@@ -425,6 +372,7 @@ onUnmounted(() => {
   display: inline-block;
   border-radius: 20px;
   max-width: 100%;
+  max-height: 320px;
   isolation: isolate;
 }
 .blog-tweet-img-list-body.cover-count-1 {
@@ -548,8 +496,12 @@ onUnmounted(() => {
 .blog-tweet-img-list-body.cover-count-1-1 .wikimoe-image {
   width: 100%;
   height: 100%;
-  /* 拉伸 */
+}
+.blog-tweet-img-list-body.cover-count-1-1 .wikimoe-image {
   object-fit: cover;
+}
+.blog-tweet-img-list-body.cover-count-1-1 video {
+  object-fit: contain;
 }
 /* .blog-tweet-img-list-body.cover-count-1-1 .wikimoe-image {
   width: auto;
