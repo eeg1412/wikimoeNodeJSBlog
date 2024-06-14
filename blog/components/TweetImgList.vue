@@ -15,6 +15,7 @@
         (coverImages[0].thumWidth || coverImages[0].width)
           ? {
               height: `${coverImages[0].thumHeight || coverImages[0].height}px`,
+              maxHeight: '320px',
             }
           : { width: `${coverImages[0].thumWidth || coverImages[0].width}px` }),
       }"
@@ -372,7 +373,6 @@ onUnmounted(() => {})
   display: inline-block;
   border-radius: 20px;
   max-width: 100%;
-  max-height: 320px;
   isolation: isolate;
 }
 .blog-tweet-img-list-body.cover-count-1 {
