@@ -7,15 +7,16 @@
   >
     <div
       class="blog-tweet-img-list-body cover-count-1-1"
+      :class="{
+        'is-height': isHeight,
+      }"
       :style="{
         aspectRatio: `${coverImages[0].thumWidth || coverImages[0].width} / ${
           coverImages[0].thumHeight || coverImages[0].height
         }`,
-        ...((coverImages[0].thumHeight || coverImages[0].height) >
-        (coverImages[0].thumWidth || coverImages[0].width)
+        ...(isHeight
           ? {
               height: `${coverImages[0].thumHeight || coverImages[0].height}px`,
-              maxHeight: '320px',
             }
           : { width: `${coverImages[0].thumWidth || coverImages[0].width}px` }),
       }"
@@ -336,6 +337,17 @@ const tryOpenHref = async (index) => {
   openPhotoSwipe(dataSource, index)
 }
 
+// 如果coverImages只有一张，判断是不是高度大于宽度
+const isHeight = computed(() => {
+  if (props.coverImages.length === 1) {
+    return (
+      (props.coverImages[0].thumHeight || props.coverImages[0].height) >
+      (props.coverImages[0].thumWidth || props.coverImages[0].width)
+    )
+  }
+  return false
+})
+
 onMounted(() => {
   componentUUID.value = uuid()
 })
@@ -374,6 +386,9 @@ onUnmounted(() => {})
   border-radius: 20px;
   max-width: 100%;
   isolation: isolate;
+}
+.blog-tweet-img-list-body.cover-count-1-1.is-height {
+  max-height: 380px;
 }
 .blog-tweet-img-list-body.cover-count-1 {
   grid-template-columns: 1fr;
@@ -470,6 +485,12 @@ onUnmounted(() => {})
 }
 .blog-tweet-img-list-body-item-video-mask-icon {
   font-size: 6rem;
+}
+/* 手机 */
+@media (max-width: 767px) {
+  .blog-tweet-img-list-body.cover-count-1-1.is-height {
+    max-height: 320px;
+  }
 }
 </style>
 <style>
