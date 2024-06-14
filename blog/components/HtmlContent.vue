@@ -182,8 +182,8 @@ const clickOnImg = (e) => {
         const imgWidAndHeight = getImgWidAndHeight(imgE)
         thumfor = media.src
         src = getImgHref(imgE) || media.src
-        width = imgWidAndHeight.width || media.width || null
-        height = imgWidAndHeight.height || media.height || null
+        width = imgWidAndHeight.width || null
+        height = imgWidAndHeight.height || null
         mimetype = 'image'
       } else if (media.tagName === 'VIDEO') {
         // 获取source标签的src
