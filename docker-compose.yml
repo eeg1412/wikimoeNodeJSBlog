@@ -60,6 +60,15 @@ services:
       - ./data/wikimoe-blog-server/log:/app/log
       - ./data/wikimoe-blog-server/ip2location:/app/utils/ip2location
       - ./data/wikimoe-blog-server/backups:/app/backups
+      - ./data/wikimoe-blog-server/cache:/app/cache
+      - ./data/wikimoe-blog-server/public/content/uploadfile:/app/public/content/uploadfile
+      - ./data/wikimoe-blog-server/public/ucloudImg:/app/public/ucloudImg
+      - ./data/wikimoe-blog-server/public/up_works:/app/public/up_works
+      - ./data/wikimoe-blog-server/public/upload/avatar:/app/public/upload/avatar
+      - ./data/wikimoe-blog-server/public/upload/bangumi:/app/public/upload/bangumi
+      - ./data/wikimoe-blog-server/public/upload/banner:/app/public/upload/banner
+      - ./data/wikimoe-blog-server/public/upload/siteImg:/app/public/upload/siteImg
+      - ./data/wikimoe-blog-server/public/web_demo:/app/public/web_demo
     ports:
       - '3000:3000'
     depends_on:
