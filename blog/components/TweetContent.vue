@@ -17,7 +17,14 @@
     class="tweet-content-link-cover-body mt-3 mb-3"
   >
     <div v-html="linkCover" v-if="linkCoverShow"></div>
-    <div v-else class="tweet-content-link-cover-block bg-primary-500"></div>
+    <div v-else class="tweet-content-link-cover-block bg-primary-300">
+      <div class="text-white flex justify-center items-center w-full h-full">
+        <div class="text-2xl text-center">
+          <UIcon class="animate-spin" name="i-heroicons-arrow-path" />
+          <div class="text-lg">读取中</div>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 <script setup>
