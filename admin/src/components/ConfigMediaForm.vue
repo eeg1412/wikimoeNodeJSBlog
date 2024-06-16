@@ -112,8 +112,8 @@
           >※安装FFmpeg后生效</span
         >
       </div>
-      <!-- 视频最压缩长边 -->
-      <el-form-item label="视频最压缩长边">
+      <!-- 视频最长边 -->
+      <el-form-item label="视频最长边">
         <!-- 数字 1-4096 -->
         <el-input-number
           v-model="mediaForm.videoSettingCompressMaxSize"
@@ -186,7 +186,7 @@ export default {
       imgSettingEnableImgThumbnail: false,
       imgSettingThumbnailQuality: 40,
       imgSettingThumbnailMaxSize: 680,
-      // 视频最压缩长边
+      // 视频最长边
       videoSettingCompressMaxSize: 480,
       // 视频压缩码率
       videoSettingCompressBitrate: 500,

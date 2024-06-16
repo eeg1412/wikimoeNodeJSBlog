@@ -90,7 +90,7 @@
               >获取结束时间</el-button
             >
           </el-form-item>
-          <!-- 视频最压缩长边 -->
+          <!-- 视频最长边 -->
           <el-form-item label="最长边">
             <!-- 数字 1-4096 -->
             <el-input-number
