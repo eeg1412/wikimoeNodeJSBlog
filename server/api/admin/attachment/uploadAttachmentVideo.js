@@ -96,7 +96,7 @@ module.exports = async function (req, res, next) {
   // 如果不存在，就创建目录
   const yearMonthPath = path.join('./public/content/uploadfile/', yearMonth)
   if (!fs.existsSync(yearMonthPath)) {
-    fs.mkdirSync(yearMonthPath)
+    fs.mkdirSync(yearMonthPath, { recursive: true })
   }
 
 
