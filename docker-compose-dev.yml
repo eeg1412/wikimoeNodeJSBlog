@@ -42,7 +42,7 @@ services:
       - ./data/wikimoe-blog-server/ip2location:/app/utils/ip2location
       - ./data/wikimoe-blog-server/backups:/app/backups
       - ./data/wikimoe-blog-server/cache:/app/cache
-      - ./data/wikimoe-blog-server/public
+      - ./data/wikimoe-blog-server/public:/app/public
     ports:
       - '3000:3000'
     depends_on:
