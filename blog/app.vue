@@ -93,6 +93,11 @@ useHead({
       type: 'image/x-icon',
       href: options.value.siteFavicon,
     },
+    {
+      rel: 'apple-touch-icon',
+      sizes: '256x256',
+      href: options.value.siteFavicon,
+    },
     // rss
     ...rssHead(),
   ],
