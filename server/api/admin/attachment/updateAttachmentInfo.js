@@ -64,7 +64,7 @@ module.exports = async function (req, res, next) {
       const path = pathModule.dirname(oldFullpath);  // '/user/local'
       const ext = pathModule.extname(oldFullpath);
       const fileName = pathModule.basename(oldFullpath, ext);
-      utils.base64ToFile(videoCover, path, fileName, { createDir: false })
+      utils.base64ToFile(videoCover, path, fileName, { createDir: true })
     }
   }
 
