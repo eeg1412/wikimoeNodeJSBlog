@@ -301,22 +301,36 @@ exports.restoreCollections = async (fullPath) => {
 }
 
 // 删除./public目录
-exports.removePublic = async () => {
+exports.removePublicContents = async () => {
   const dir = './public';
   if (!fs.existsSync(dir)) {
     throw new Error('public not exists');
   }
-  // 删除目录
-  await
-    fsEX.remove(dir);
-  console.log('clear public success');
+  // 获取public目录下的所有文件和目录
+  const files = await fs.promises.readdir(dir);
+  for (const file of files) {
+    // 构建完整的文件/目录路径
+    const fullPath = path.join(dir, file);
+    // 递归删除文件或目录
+    await fsEX.remove(fullPath);
+  }
+  console.log('clear public contents success');
 }
 
 // 还原./public目录
 exports.restorePublic = async (fullPath) => {
-  const dir = `./cache/${path.basename(fullPath, '.zip')}/public`;
-  // 复制目录
-  await fsEX.copy(dir, './public');
+  const sourceDir = `./cache/${path.basename(fullPath, '.zip')}/public`;
+  const targetDir = './public';
+  // 读取源目录下的所有文件和目录
+  const entries = await fs.promises.readdir(sourceDir);
+
+  for (const entry of entries) {
+    const sourcePath = path.join(sourceDir, entry);
+    const targetPath = path.join(targetDir, entry);
+
+    // 复制文件或目录到目标目录
+    await fsEX.copy(sourcePath, targetPath);
+  }
   console.log('restore public success');
 }
 

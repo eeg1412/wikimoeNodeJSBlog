@@ -17,7 +17,7 @@ parentPort.on('message', async (fullPath) => {
     await backupTools.unzipBackup(fullPath);
     await backupTools.clearCollections();
     await backupTools.restoreCollections(fullPath);
-    await backupTools.removePublic()
+    await backupTools.removePublicContents()
     await backupTools.restorePublic(fullPath)
     await backupTools.clearRestoreCache(fullPath)
     parentPort.postMessage({ status: 'success' });
