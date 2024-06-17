@@ -28,10 +28,17 @@ exports.findOne = async function (parmas, projection, options = {}) {
       path: 'gameList',
       match: { status: 1 },
       select: '-coverFileName -coverFolder -createdAt -updatedAt',
-      populate: {
-        path: 'gamePlatform',
-        select: '_id name color'
-      }
+      populate: [
+        {
+          path: 'gamePlatform',
+          select: '_id name color'
+        },
+        // screenshotAlbum
+        {
+          path: 'screenshotAlbum',
+          select: '_id name'
+        }
+      ]
     }).populate({
       path: 'bookList',
       match: { status: 1 },
