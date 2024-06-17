@@ -1,6 +1,6 @@
 {
   "name": "wikimoenodejsblog",
-  "version": "0.17.6",
+  "version": "0.17.7",
   "description": "猛男自用博客系统，基于nodejs，mongodb",
   "main": "index.js",
   "scripts": {
