@@ -154,7 +154,14 @@ module.exports = async function (req, res, next) {
 
     let imageInfo = await utils.imageMetadata(fileData)
     // 读取图片信息
-    const { width, height } = imageInfo
+    let { width, height, orientation } = imageInfo
+    // 如果有旋转信息，需要宽高互换
+    if (orientation && [5, 6, 7, 8].includes(orientation)) {
+      const temp = width
+      width = height
+      height = temp
+    }
+
     updateAttachment.width = width
     updateAttachment.height = height
     const animated = imageInfo.pages > 1

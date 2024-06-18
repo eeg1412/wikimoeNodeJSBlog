@@ -7,7 +7,7 @@ const action = {
   imageCompress: async (toExtname, fileData, animated = false, newWidth, newHeight, imgSettingCompressQuality, filePath) => {
     let imageData = sharp(fileData, {
       animated,
-    })
+    }).rotate()
     if (newWidth && newHeight) {
       imageData.resize(newWidth, newHeight)
     }
