@@ -629,8 +629,8 @@ html,
 body {
   font-size: 14px;
   font-family: 'Noto Sans SC', 'PingFang SC', 'Source Han Sans SC',
-    'Microsoft YaHei', Roboto, Helvetica, Arial, sans-serif, 'Segoe UI Emoji',
-    'Noto Color Emoji', emoji;
+    'Microsoft YaHei', system-ui, -apple-system, BlinkMacSystemFont, sans-serif,
+    'Segoe UI Emoji', 'Noto Color Emoji', emoji;
   width: 100%;
   height: 100%;
 }

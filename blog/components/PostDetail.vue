@@ -15,10 +15,9 @@
         <h2 class="post-title mb-1">{{ postData.data.title }}</h2>
         <p class="post-extra cGray94">
           作者：{{ postData.data.author.nickname
-          }}<span class="tenten">·</span>时间：{{
-            formatDate(postData.data.date)
+          }}<span class="tenten"></span>时间：{{ formatDate(postData.data.date)
           }}<span class="post_sort_link_span" v-if="postData.data.sort"
-            ><span class="tenten">·</span><span>分类：</span>
+            ><span class="tenten"></span><span>分类：</span>
             <NuxtLink
               class="common-a"
               :to="{
@@ -50,7 +49,7 @@
         <p class="post-extra cGray94">
           时间：{{ formatDate(postData.data.date)
           }}<template v-if="postData.data.sort"
-            ><span class="tenten">·</span
+            ><span class="tenten"></span
             ><span class="post_sort_link_span"
               >分类 :
               <NuxtLink

@@ -23,7 +23,7 @@
           <div class="clearfix">
             <div class="post-list-info-body fl">
               <span class="fb">{{ item.author?.nickname }}</span
-              ><span class="tenten">·</span>
+              ><span class="tenten"></span>
               <ClientOnly
                 ><span class="cGray94" :title="formatDate(item.date)">{{
                   fromNow(item.date, 'yyyy-MM-dd')
@@ -32,7 +32,7 @@
                   ><span class="cGray94">{{ item.dateStr }}</span></template
                 > </ClientOnly
               ><template v-if="item.sort"
-                ><span class="tenten">·</span
+                ><span class="tenten"></span
                 ><NuxtLink
                   class="cGray94 common-a"
                   :to="{
@@ -117,13 +117,13 @@
             <div class="dflex flexCenter">
               <div class="mr15 dflex flexCenter">
                 <!-- icon book-open -->
-                <UIcon class="mr5" name="i-heroicons-book-open" />
+                <UIcon class="mr5 f15" name="i-heroicons-book-open" />
                 <span class="cGray94">{{ formatNumber(item.views) }} 阅读</span>
               </div>
               <div class="dflex flexCenter">
                 <!-- icon chat-bubble-left-ellipsis -->
                 <UIcon
-                  class="mr5"
+                  class="mr5 f15"
                   name="i-heroicons-chat-bubble-left-ellipsis"
                 />
                 <span class="cGray94"
@@ -140,18 +140,18 @@
             >
               <!-- 加载 -->
               <UIcon
-                class="mr5 animate-spin"
+                class="mr5 f15 animate-spin"
                 name="i-heroicons-arrow-path"
                 v-if="getLikePostIsLoading(item._id)"
               />
               <!-- heart -->
               <UIcon
-                class="mr5"
+                class="mr5 f15"
                 name="i-heroicons-heart-solid"
                 v-else-if="item.isLike"
               />
               <!-- heart-outline -->
-              <UIcon class="mr5" name="i-heroicons-heart" v-else />
+              <UIcon class="mr5 f15" name="i-heroicons-heart" v-else />
 
               <span>{{ formatNumber(item.likes) }} 点赞</span>
             </div>
