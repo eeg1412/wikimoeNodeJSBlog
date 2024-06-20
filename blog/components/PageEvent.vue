@@ -467,6 +467,7 @@ onUnmounted(() => {})
   padding: 10px 5px;
   display: flex;
   justify-content: space-between;
+  font-size: 16px;
 }
 .page-event-table-empty {
   height: 500px;

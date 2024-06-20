@@ -40,7 +40,7 @@
             >
               {{ dayEvent.title }}
             </div>
-            <div v-else style="height: 26px"></div>
+            <div v-else style="height: 29px"></div>
           </div>
         </div>
       </div>
@@ -269,6 +269,8 @@ onMounted(() => {})
   border-right: 1px solid;
   border-bottom: 1px solid;
   box-sizing: border-box;
+  font-size: 14px;
+  line-height: 24px;
   @apply border-primary-200;
 }
 .calendar-weekly:last-child .calendar-daily {
@@ -289,6 +291,8 @@ onMounted(() => {})
   border-right: 1px solid;
   box-sizing: border-box;
   text-align: center;
+  font-size: 14px;
+  line-height: 24px;
   @apply bg-primary-50 border-primary-200;
 }
 .calendar-youbi:last-child {
@@ -300,11 +304,11 @@ onMounted(() => {})
   @apply bg-primary-50;
 } */
 .calendar-event {
-  font-size: 12px;
+  font-size: 13px;
   color: white;
   margin-bottom: 1px;
-  height: 25px;
-  line-height: 25px;
+  height: 28px;
+  line-height: 28px;
   position: relative;
   z-index: 1;
   border-radius: 4px;
