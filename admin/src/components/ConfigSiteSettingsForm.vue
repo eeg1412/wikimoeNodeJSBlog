@@ -34,6 +34,7 @@
         :width="256"
         :height="256"
         :src="siteSettingsForm.siteFavicon"
+        putImageType="image/png"
         @crop="setSiteFavicon"
       ></Cropper>
     </el-form-item>
