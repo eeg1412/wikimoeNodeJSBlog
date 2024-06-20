@@ -1049,3 +1049,6 @@ ins.adsbygoogle[data-ad-status='unfilled'] {
   overflow: auto;
   min-height: 50px;
 }
+.blog-tweet-img-swiper-body.video-playing .swiper-pagination {
+  display: none;
+}

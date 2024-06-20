@@ -24,6 +24,36 @@
     >
       <!-- 1张图时 -->
       <div class="blog-tweet-1img-list-body">
+        <template v-if="coverImages[0].mimetype.includes('video')">
+          <video
+            :controls="videoPlayId === coverImages[0]._id"
+            :id="`${componentUUID}-${coverImages[0]._id}`"
+            :poster="coverImages[0].thumfor || coverImages[0].filepath"
+            muted
+            loop
+            playsinline
+            preload="none"
+            class="blog-tweet-1img-list-body-video bg-black"
+            @click.stop
+            @pause="videoPlayId = null"
+          >
+            <source
+              :src="`${options.siteUrl}${coverImages[0].filepath}`"
+              type="video/mp4"
+            />
+          </video>
+          <!-- 如果是视频加上播放按钮 -->
+          <div
+            class="blog-tweet-img-list-body-item-video-mask absolute inset-0 flex items-center justify-center z-10"
+            v-show="videoPlayId !== coverImages[0]._id"
+            @click.stop="videoPlay(coverImages[0]._id)"
+          >
+            <UIcon
+              class="blog-tweet-img-list-body-item-video-mask-icon text-white"
+              name="i-heroicons-play-circle"
+            />
+          </div>
+        </template>
         <WikimoeImage
           :src="coverImages[0].thumfor || coverImages[0].filepath"
           :alt="coverImages[0].description || coverImages[0].filename"
@@ -36,40 +66,13 @@
           :updatedAt="coverImages[0].updatedAt"
           loading="lazy"
           :mimetype="coverImages[0].mimetype"
-          v-if="videoPlayId !== coverImages[0]._id"
-        />
-        <video
-          controls
-          :id="`${componentUUID}-${coverImages[0]._id}`"
-          muted
-          loop
-          playsinline
-          class="blog-tweet-1img-list-body-video bg-black"
-          @click.stop
           v-else
-        >
-          <source
-            :src="`${options.siteUrl}${coverImages[0].filepath}`"
-            type="video/mp4"
-          />
-        </video>
-        <!-- 如果是视频加上播放按钮 -->
-        <div
-          class="blog-tweet-img-list-body-item-video-mask absolute inset-0 flex items-center justify-center z-10"
-          v-if="
-            coverImages[0].mimetype.includes('video') &&
-            videoPlayId !== coverImages[0]._id
-          "
-          @click.stop="videoPlay(coverImages[0]._id)"
-        >
-          <UIcon
-            class="blog-tweet-img-list-body-item-video-mask-icon text-white"
-            name="i-heroicons-play-circle"
-          />
-        </div>
+        />
+
         <div
           class="absolute tweet-img-list-body-item-description"
           v-if="coverImages[0].description"
+          v-show="videoPlayId !== coverImages[0]._id"
         >
           <div
             class="rounded px-1 py-0.5 bg-primary-500 text-white bg-opacity-80 text-xs flex align-middle justify-center pointer"
@@ -82,7 +85,13 @@
       </div>
     </div>
     <template v-else>
-      <div class="blog-tweet-img-swiper-body" v-if="swiperMode">
+      <div
+        class="blog-tweet-img-swiper-body"
+        :class="{
+          'video-playing': videoPlayId !== null,
+        }"
+        v-if="swiperMode"
+      >
         <Swiper
           :modules="[SwiperPagination, SwiperMousewheel]"
           :slides-per-view="1"
@@ -97,13 +106,43 @@
           @slideChangeTransitionEnd="slideChangeTransitionEnd"
         >
           <SwiperSlide v-for="(item, index) in imageGroup" :key="item._id">
-            <!-- 四张图以内 -->
+            <!-- 幻灯片模式 -->
             <div
               class="blog-tweet-img-list-body"
               :class="`cover-count-${item.length}`"
               v-if="item.length > 0"
             >
               <template v-for="(img, indexChild) in item" :key="index">
+                <template v-if="img.mimetype.includes('video')">
+                  <video
+                    :controls="videoPlayId === img._id"
+                    :poster="img.thumfor || img.filepath"
+                    :id="`${componentUUID}-${img._id}`"
+                    preload="none"
+                    muted
+                    loop
+                    playsinline
+                    class="blog-tweet-1img-list-body-video bg-black self-stretch"
+                    @click.stop
+                    @pause="videoPlayId = null"
+                  >
+                    <source
+                      :src="`${options.siteUrl}${img.filepath}`"
+                      type="video/mp4"
+                    />
+                  </video>
+                  <div
+                    class="blog-tweet-img-list-body-item-video-mask absolute inset-0 flex items-center justify-center z-10"
+                    @click.stop="videoPlay(img._id)"
+                    v-show="videoPlayId !== img._id"
+                  >
+                    <UIcon
+                      class="blog-tweet-img-list-body-item-video-mask-icon text-white"
+                      name="i-heroicons-play-circle"
+                      size="30"
+                    />
+                  </div>
+                </template>
                 <WikimoeImage
                   class="blog-tweet-img-list-body-item"
                   :src="img.thumfor || img.filepath"
@@ -113,47 +152,21 @@
                   loading="lazy"
                   fit="cover"
                   :dataHrefList="dataHrefList"
-                  :dataHrefIndex="index * 4 + indexChild"
+                  :dataHrefIndex="img.dataHrefIndex"
                   :clickStop="true"
                   :updatedAt="img.updatedAt"
                   :mimetype="img.mimetype"
-                  v-if="videoPlayId !== img._id"
-                />
-                <video
-                  controls
-                  :id="`${componentUUID}-${img._id}`"
-                  muted
-                  loop
-                  playsinline
-                  class="blog-tweet-1img-list-body-video bg-black self-stretch"
-                  @click.stop
                   v-else
-                >
-                  <source
-                    :src="`${options.siteUrl}${img.filepath}`"
-                    type="video/mp4"
-                  />
-                </video>
-                <div
-                  class="blog-tweet-img-list-body-item-video-mask absolute inset-0 flex items-center justify-center z-10"
-                  @click.stop="videoPlay(img._id)"
-                  v-if="
-                    img.mimetype.includes('video') && videoPlayId !== img._id
-                  "
-                >
-                  <UIcon
-                    class="blog-tweet-img-list-body-item-video-mask-icon text-white"
-                    name="i-heroicons-play-circle"
-                    size="30"
-                  />
-                </div>
+                />
+
                 <div
                   class="absolute tweet-img-list-body-item-description"
                   v-if="img.description"
+                  v-show="videoPlayId !== img._id"
                 >
                   <div
                     class="rounded px-1 py-0.5 bg-primary-500 text-white bg-opacity-80 text-xs flex align-middle justify-center pointer"
-                    @click.stop="tryOpenHref(index * 4 + indexChild)"
+                    @click.stop="tryOpenHref(img.dataHrefIndex)"
                     :title="img.description"
                   >
                     描述
@@ -166,7 +179,7 @@
       </div>
       <div class="blog-tweet-img-swiper-body type-no-swiper" v-else>
         <template v-for="(item, index) in imageGroup" :key="item._id">
-          <!-- 四张图以内 -->
+          <!-- 非幻灯片模式 -->
           <div class="blog-tweet-img-list-no-swiper-body">
             <div
               class="blog-tweet-img-list-body blog-tweet-img-list-body-no-swiper"
@@ -174,6 +187,36 @@
               v-if="item.length > 0"
             >
               <template v-for="(img, indexChild) in item" :key="index">
+                <template v-if="img.mimetype.includes('video')">
+                  <video
+                    :controls="videoPlayId === img._id"
+                    :poster="img.thumfor || img.filepath"
+                    :id="`${componentUUID}-${img._id}`"
+                    preload="none"
+                    muted
+                    loop
+                    playsinline
+                    class="blog-tweet-1img-list-body-video bg-black self-stretch"
+                    @click.stop
+                    @pause="videoPlayId = null"
+                  >
+                    <source
+                      :src="`${options.siteUrl}${img.filepath}`"
+                      type="video/mp4"
+                    />
+                  </video>
+                  <div
+                    class="blog-tweet-img-list-body-item-video-mask absolute inset-0 flex items-center justify-center z-10"
+                    @click.stop="videoPlay(img._id)"
+                    v-show="videoPlayId !== img._id"
+                  >
+                    <UIcon
+                      class="blog-tweet-img-list-body-item-video-mask-icon text-white"
+                      name="i-heroicons-play-circle"
+                      size="30"
+                    />
+                  </div>
+                </template>
                 <WikimoeImage
                   class="blog-tweet-img-list-body-item"
                   :src="img.thumfor || img.filepath"
@@ -183,47 +226,21 @@
                   loading="lazy"
                   fit="cover"
                   :dataHrefList="dataHrefList"
-                  :dataHrefIndex="index * 4 + indexChild"
+                  :dataHrefIndex="img.dataHrefIndex"
                   :clickStop="true"
                   :updatedAt="img.updatedAt"
                   :mimetype="img.mimetype"
-                  v-if="videoPlayId !== img._id"
-                />
-                <video
-                  controls
-                  :id="`${componentUUID}-${img._id}`"
-                  muted
-                  loop
-                  playsinline
-                  class="blog-tweet-1img-list-body-video bg-black self-stretch"
-                  @click.stop
                   v-else
-                >
-                  <source
-                    :src="`${options.siteUrl}${img.filepath}`"
-                    type="video/mp4"
-                  />
-                </video>
-                <div
-                  class="blog-tweet-img-list-body-item-video-mask absolute inset-0 flex items-center justify-center z-10"
-                  @click.stop="videoPlay(img._id)"
-                  v-if="
-                    img.mimetype.includes('video') && videoPlayId !== img._id
-                  "
-                >
-                  <UIcon
-                    class="blog-tweet-img-list-body-item-video-mask-icon text-white"
-                    name="i-heroicons-play-circle"
-                    size="30"
-                  />
-                </div>
+                />
+
                 <div
                   class="absolute tweet-img-list-body-item-description"
                   v-if="img.description"
+                  v-show="videoPlayId !== img._id"
                 >
                   <div
                     class="rounded px-1 py-0.5 bg-primary-500 text-white bg-opacity-80 text-xs flex align-middle justify-center pointer"
-                    @click.stop="tryOpenHref(index * 4 + indexChild)"
+                    @click.stop="tryOpenHref(img.dataHrefIndex)"
                     :title="img.description"
                   >
                     描述
@@ -263,6 +280,7 @@ const imageGroup = computed(() => {
   let temp = []
   let newGroupIndex = 0
   props.coverImages.forEach((item, index) => {
+    item['dataHrefIndex'] = index
     const mimetype = item.mimetype
     if (mimetype.includes('video')) {
       if (temp.length > 0) {
@@ -303,13 +321,40 @@ const slideChangeTransitionStart = (swiper) => {
 }
 const slideChangeTransitionEnd = (swiper) => {
   swiper.params.mousewheel.releaseOnEdges = true
+  // videoPlayId 的视频暂停
+  if (videoPlayId.value) {
+    document
+      .getElementById(`${componentUUID.value}-${videoPlayId.value}`)
+      ?.pause()
+  }
   videoPlayId.value = null
 }
 
 const videoPlayId = ref(null)
-const videoPlay = (id) => {
-  videoPlayId.value = id
+const videoPlay = async (id) => {
+  let pasusePromise = null
+  // videoPlayId 的视频暂停
+  if (videoPlayId.value) {
+    const video = document.getElementById(
+      `${componentUUID.value}-${videoPlayId.value}`
+    )
+    if (video) {
+      pasusePromise = new Promise((resolve) => {
+        // 定义一个处理函数，便于之后移除监听器
+        const onPause = () => {
+          video.removeEventListener('pause', onPause) // 暂停后移除监听器
+          resolve() // 解决Promise
+        }
+        video.addEventListener('pause', onPause)
+        video.pause() // 尝试暂停视频
+      })
+    }
+  }
+  if (pasusePromise) {
+    await pasusePromise
+  }
   nextTick(() => {
+    videoPlayId.value = id
     const video = document.getElementById(`${componentUUID.value}-${id}`)
     video.play()
   })
