@@ -269,8 +269,8 @@ onMounted(() => {})
   border-right: 1px solid;
   border-bottom: 1px solid;
   box-sizing: border-box;
-  font-size: 14px;
-  line-height: 24px;
+  font-size: 13px;
+  line-height: 22px;
   @apply border-primary-200;
 }
 .calendar-weekly:last-child .calendar-daily {
@@ -291,8 +291,8 @@ onMounted(() => {})
   border-right: 1px solid;
   box-sizing: border-box;
   text-align: center;
-  font-size: 14px;
-  line-height: 24px;
+  font-size: 13px;
+  line-height: 22px;
   @apply bg-primary-50 border-primary-200;
 }
 .calendar-youbi:last-child {
