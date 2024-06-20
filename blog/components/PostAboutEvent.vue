@@ -78,11 +78,13 @@ const eventClick = (event) => {}
 </script>
 <style scoped>
 .post-event-about-event-type {
-  padding: 2px 4px;
+  padding: 2px 5px;
   border-radius: 2px;
   color: #fff;
   font-size: 12px;
   border-radius: 4px;
   margin-right: 4px;
+  display: inline-block;
+  line-height: 18px;
 }
 </style>
