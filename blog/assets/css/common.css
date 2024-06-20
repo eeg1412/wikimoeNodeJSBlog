@@ -952,6 +952,8 @@ ins.adsbygoogle[data-ad-status='unfilled'] {
   font-size: 12px;
   margin-right: 5px;
   border-radius: 5px;
+  display: inline-block;
+  line-height: 18px;
 }
 /* 菜单动画 */
 .left-enter-active,

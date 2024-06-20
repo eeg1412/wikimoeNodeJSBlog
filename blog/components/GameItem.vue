@@ -149,5 +149,7 @@ const showAlbum = (id) => {
   font-size: 12px;
   margin-right: 5px;
   border-radius: 5px;
+  display: inline-block;
+  line-height: 18px;
 }
 </style>
