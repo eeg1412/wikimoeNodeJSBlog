@@ -22,7 +22,17 @@ exports.find = async function (parmas, sort, projection) {
 // 分页查询
 exports.findPage = async function (parmas, sort, page, limit, projection, options = {}) {
   // document查询
-  const list = await commentsModel.find(parmas, projection).populate('parent', 'content _id status').populate('post', options.postFilter || 'title _id excerpt alias type').populate('user', options.userFilter || 'nickname _id photo').sort(sort).skip((page - 1) * limit).limit(limit);
+  const list = await commentsModel.find(parmas, projection)
+    .populate({
+      path: 'parent',
+      match: { status: 1 },
+      select: 'content _id status user nickname date',
+      populate: {
+        path: 'user',
+        select: '_id nickname'
+      }
+    })
+    .populate('post', options.postFilter || 'title _id excerpt alias type').populate('user', options.userFilter || 'nickname _id photo').sort(sort).skip((page - 1) * limit).limit(limit);
   const total = await commentsModel.countDocuments(parmas);
   // 查询失败
   if (!list || total === undefined) {

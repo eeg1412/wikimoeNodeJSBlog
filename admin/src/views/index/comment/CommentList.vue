@@ -90,8 +90,15 @@
         <el-table-column prop="content" label="内容" min-width="300">
           <template #default="{ row }">
             <div>
-              <blockquote class="common-blockquote" v-if="row.parent?.content">
-                {{ row.parent.content }}
+              <blockquote
+                class="common-blockquote"
+                v-if="row.parent && row.parent?.content"
+              >
+                <div class="fb">
+                  {{ row.parent.user?.nickname || row.parent.nickname }}
+                </div>
+                <div>{{ $formatDate(row.date) }}</div>
+                <div class="mt5">{{ row.parent.content }}</div>
               </blockquote>
               <div>{{ row.content }}</div>
             </div>

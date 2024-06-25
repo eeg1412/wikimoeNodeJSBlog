@@ -19,9 +19,11 @@
         </div>
         <div class="comment-latest-item-date">
           <ClientOnly
-            >{{ fromNow(item.date, 'yyyy-MM-dd')
-            }}<template #fallback>{{
-              formatDate(item.date, 'yyyy-MM-dd')
+            ><span :title="formatDate(item.date, 'yyyy-MM-dd hh:mm:ss')">{{
+              fromNow(item.date, 'yyyy-MM-dd hh:mm')
+            }}</span
+            ><template #fallback>{{
+              formatDate(item.date, 'yyyy-MM-dd hh:mm')
             }}</template>
           </ClientOnly>
         </div>

@@ -300,9 +300,11 @@
                     </div>
                     <div class="comment-list-item-date">
                       <ClientOnly
-                        >{{ fromNow(item.date, 'yyyy-MM-dd')
-                        }}<template #fallback>{{
-                          formatDate(item.date, 'yyyy-MM-dd')
+                        ><span
+                          :title="formatDate(item.date, 'yyyy-MM-dd hh:mm:ss')"
+                          >{{ fromNow(item.date, 'yyyy-MM-dd hh:mm') }}</span
+                        ><template #fallback>{{
+                          formatDate(item.date, 'yyyy-MM-dd hh:mm')
                         }}</template>
                       </ClientOnly>
                     </div>
@@ -311,7 +313,27 @@
                     class="comment-list-item-parent-content"
                     v-if="item.parent"
                   >
-                    {{ item.parent.content }}
+                    <div>
+                      <div class="fb">{{ item.parent.nickname }}</div>
+                      <div class="mb-1 f13">
+                        <ClientOnly
+                          ><span
+                            :title="
+                              formatDate(
+                                item.parent.date,
+                                'yyyy-MM-dd hh:mm:ss'
+                              )
+                            "
+                            >{{
+                              fromNow(item.parent.date, 'yyyy-MM-dd hh:mm')
+                            }}</span
+                          ><template #fallback>{{
+                            formatDate(item.parent.date, 'yyyy-MM-dd hh:mm')
+                          }}</template>
+                        </ClientOnly>
+                      </div>
+                    </div>
+                    <div>{{ item.parent.content }}</div>
                   </blockquote>
                   <div class="comment-list-item-content">
                     {{ item.content }}

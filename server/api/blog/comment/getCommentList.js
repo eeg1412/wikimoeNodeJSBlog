@@ -44,8 +44,14 @@ module.exports = async function (req, res, next) {
         item.isAdmin = false
       }
       // 判断parent是status是否为1,如果不是parent的content设置为 该评论咱不可见
-      if (item.parent && item.parent.status !== 1) {
-        item.parent.content = '啊呀！？这个评论怎么不见了！？难道是那个坏坏的魔法师把它删掉了！？'
+      if (item.parent) {
+        if (item.parent.status !== 1) {
+          item.parent.content = '啊呀！？这个评论怎么不见了！？难道是那个坏坏的魔法师把它删掉了！？'
+        }
+        if (item.parent.user) {
+          item.parent.nickname = item.parent.user.nickname
+        }
+        delete item.parent.user
       }
       // 只保留需要的key
       Object.keys(item).forEach((key) => {
