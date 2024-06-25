@@ -79,7 +79,7 @@ exports.updateRSS = async (type) => {
         // 将excerpt去掉换行符设定为newTitle，最大长度为50，超过50的部分用...代替
         newTitle = excerpt.replace(/\n/g, '')
         if (newTitle.length > 50) {
-          newTitle = newTitle.slice(0, 50).join('') + '...'
+          newTitle = newTitle.slice(0, 50) + '...'
         }
         newContent = `<p>${excerpt}</p>`
         // 换行符替换为br标签
