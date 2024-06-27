@@ -36,6 +36,7 @@
             class="blog-tweet-1img-list-body-video bg-black"
             @click.stop
             @pause="videoPlayId = null"
+            autoplay
             v-if="videoPlayedIdList.includes(coverImages[0]._id)"
           >
             <source
@@ -132,6 +133,7 @@
                     loop
                     playsinline
                     class="blog-tweet-1img-list-body-video bg-black self-stretch"
+                    autoplay
                     @click.stop
                     @pause="videoPlayId = null"
                     v-if="videoPlayedIdList.includes(img._id)"
@@ -215,6 +217,7 @@
                     loop
                     playsinline
                     class="blog-tweet-1img-list-body-video bg-black self-stretch"
+                    autoplay
                     @click.stop
                     @pause="videoPlayId = null"
                     v-if="videoPlayedIdList.includes(img._id)"
@@ -388,7 +391,10 @@ const videoPlay = async (id) => {
   videoPlayId.value = id
   nextTick(() => {
     const video = document.getElementById(`${componentUUID.value}-${id}`)
-    video.play()
+    if (video && video.paused) {
+      console.log('play')
+      video.play()
+    }
   })
 }
 const componentUUID = ref(null)
