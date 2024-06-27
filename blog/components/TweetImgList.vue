@@ -36,6 +36,7 @@
             class="blog-tweet-1img-list-body-video bg-black"
             @click.stop
             @pause="videoPlayId = null"
+            v-if="videoPlayedIdList.includes(coverImages[0]._id)"
           >
             <source
               :src="`${options.siteUrl}${coverImages[0].filepath}`"
@@ -52,6 +53,11 @@
               class="blog-tweet-img-list-body-item-video-mask-icon text-white"
               name="i-heroicons-play-circle"
             />
+            <UIcon
+              class="blog-tweet-img-list-body-item-video-mask-zoom-icon text-white"
+              name="i-heroicons-magnifying-glass-plus"
+              @click.stop="tryOpenHref(0)"
+            />
           </div>
         </template>
         <WikimoeImage
@@ -66,7 +72,10 @@
           :updatedAt="coverImages[0].updatedAt"
           loading="lazy"
           :mimetype="coverImages[0].mimetype"
-          v-else
+          v-if="
+            videoPlayId !== coverImages[0]._id &&
+            !videoPlayedIdList.includes(coverImages[0]._id)
+          "
         />
 
         <div
@@ -125,6 +134,7 @@
                     class="blog-tweet-1img-list-body-video bg-black self-stretch"
                     @click.stop
                     @pause="videoPlayId = null"
+                    v-if="videoPlayedIdList.includes(img._id)"
                   >
                     <source
                       :src="`${options.siteUrl}${img.filepath}`"
@@ -141,6 +151,11 @@
                       name="i-heroicons-play-circle"
                       size="30"
                     />
+                    <UIcon
+                      class="blog-tweet-img-list-body-item-video-mask-zoom-icon text-white"
+                      name="i-heroicons-magnifying-glass-plus"
+                      @click.stop="tryOpenHref(img.dataHrefIndex)"
+                    />
                   </div>
                 </template>
                 <WikimoeImage
@@ -156,7 +171,10 @@
                   :clickStop="true"
                   :updatedAt="img.updatedAt"
                   :mimetype="img.mimetype"
-                  v-else
+                  v-if="
+                    videoPlayId !== img._id &&
+                    !videoPlayedIdList.includes(img._id)
+                  "
                 />
 
                 <div
@@ -199,6 +217,7 @@
                     class="blog-tweet-1img-list-body-video bg-black self-stretch"
                     @click.stop
                     @pause="videoPlayId = null"
+                    v-if="videoPlayedIdList.includes(img._id)"
                   >
                     <source
                       :src="`${options.siteUrl}${img.filepath}`"
@@ -215,6 +234,11 @@
                       name="i-heroicons-play-circle"
                       size="30"
                     />
+                    <UIcon
+                      class="blog-tweet-img-list-body-item-video-mask-zoom-icon text-white"
+                      name="i-heroicons-magnifying-glass-plus"
+                      @click.stop="tryOpenHref(img.dataHrefIndex)"
+                    />
                   </div>
                 </template>
                 <WikimoeImage
@@ -230,7 +254,10 @@
                   :clickStop="true"
                   :updatedAt="img.updatedAt"
                   :mimetype="img.mimetype"
-                  v-else
+                  v-if="
+                    videoPlayId !== img._id &&
+                    !videoPlayedIdList.includes(img._id)
+                  "
                 />
 
                 <div
@@ -331,6 +358,7 @@ const slideChangeTransitionEnd = (swiper) => {
 }
 
 const videoPlayId = ref(null)
+const videoPlayedIdList = ref([])
 const videoPlay = async (id) => {
   let pasusePromise = null
   // videoPlayId 的视频暂停
@@ -353,8 +381,12 @@ const videoPlay = async (id) => {
   if (pasusePromise) {
     await pasusePromise
   }
+  // 如果videoPlayedIdList没有这个id，就添加进去
+  if (!videoPlayedIdList.value.includes(id)) {
+    videoPlayedIdList.value.push(id)
+  }
+  videoPlayId.value = id
   nextTick(() => {
-    videoPlayId.value = id
     const video = document.getElementById(`${componentUUID.value}-${id}`)
     video.play()
   })
@@ -422,7 +454,7 @@ onUnmounted(() => {})
 }
 .tweet-img-list-body-item-description {
   z-index: 11;
-  left: 12px;
+  left: 13px;
   top: 10px;
 }
 .blog-tweet-img-list-body.cover-count-1-1 {
@@ -530,6 +562,13 @@ onUnmounted(() => {})
 }
 .blog-tweet-img-list-body-item-video-mask-icon {
   font-size: 6rem;
+}
+.blog-tweet-img-list-body-item-video-mask-zoom-icon {
+  position: absolute;
+  bottom: 10px;
+  right: 13px;
+  font-size: 1.25rem;
+  cursor: pointer;
 }
 /* 手机 */
 @media (max-width: 767px) {
