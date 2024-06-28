@@ -129,6 +129,22 @@
               v-model="videoForm.videoSettingCompressAudio"
             ></el-switch>
           </el-form-item>
+          <!-- 编码速度 -->
+          <el-form-item label="编码速度">
+            <el-select
+              v-model="videoForm.videoSettingCompressPreset"
+              placeholder="请选择"
+              size="small"
+              style="max-width: 120px"
+            >
+              <el-option
+                v-for="item in presets"
+                :key="item"
+                :label="item"
+                :value="item"
+              ></el-option>
+            </el-select>
+          </el-form-item>
           <!-- 压缩 -->
           <el-form-item>
             <el-button
@@ -263,6 +279,19 @@ export default {
         })
       }
     }
+    const presets = [
+      'ultrafast',
+      'superfast',
+      'veryfast',
+      'faster',
+      'fast',
+      'medium',
+      'slow',
+      'slower',
+      'veryslow',
+      'placebo',
+    ]
+
     const videoForm = reactive({
       // 开始时间
       startTime: 0,
@@ -276,6 +305,8 @@ export default {
       videoSettingCompressFps: 30,
       // 视频压缩声音
       videoSettingCompressAudio: true,
+      // 编码速度
+      videoSettingCompressPreset: 'veryfast',
     })
     const getOptionList = () => {
       // 将mediaForm的key转换为数组
@@ -470,7 +501,7 @@ export default {
         // 声音码率
         arg.push('-b:a', '128k')
       }
-      arg.push('-preset', 'veryfast')
+      arg.push('-preset', videoForm.videoSettingCompressPreset)
       arg.push('-f', 'mp4')
       arg.push(outputFileName)
       step.value = 2
@@ -554,6 +585,7 @@ export default {
       videoUrl,
       videoRef,
       uploadVideo,
+      presets,
       videoForm,
       videoRule,
       getStartTime,
