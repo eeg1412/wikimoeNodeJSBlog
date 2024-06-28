@@ -208,12 +208,7 @@
           下载
         </el-button>
         <!-- 选择当前帧为封面 -->
-        <el-button
-          type="primary"
-          size="small"
-          @click="getVideoCover()"
-          v-if="!options.noCompress"
-        >
+        <el-button type="primary" size="small" @click="getVideoCover()">
           选择当前帧为封面
         </el-button>
       </div>
