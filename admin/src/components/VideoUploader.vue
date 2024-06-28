@@ -123,6 +123,12 @@
               size="small"
             ></el-input-number>
           </el-form-item>
+          <!-- 声音 -->
+          <el-form-item label="声音">
+            <el-switch
+              v-model="videoForm.videoSettingCompressAudio"
+            ></el-switch>
+          </el-form-item>
           <!-- 压缩 -->
           <el-form-item>
             <el-button
@@ -268,6 +274,8 @@ export default {
       videoSettingCompressBitrate: 500,
       // 视频压缩帧率
       videoSettingCompressFps: 30,
+      // 视频压缩声音
+      videoSettingCompressAudio: true,
     })
     const getOptionList = () => {
       // 将mediaForm的key转换为数组
@@ -454,7 +462,14 @@ export default {
       arg.push('-b:v', `${bitrate}k`)
       arg.push('-r', `${fps}`)
       arg.push('-c:v', 'libx264')
-      arg.push('-c:a', 'aac')
+      // 是否有声音
+      if (!videoForm.videoSettingCompressAudio) {
+        arg.push('-an')
+      } else {
+        arg.push('-c:a', 'aac')
+        // 声音码率
+        arg.push('-b:a', '128k')
+      }
       arg.push('-preset', 'veryfast')
       arg.push('-f', 'mp4')
       arg.push(outputFileName)
