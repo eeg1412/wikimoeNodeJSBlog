@@ -226,6 +226,12 @@ const open = async (list = [], showIndex = 0, closeCallback_) => {
   lightbox.addFilter('numItems', (numItems) => {
     return attachmentList.value.length
   })
+  lightbox.addFilter('contentErrorElement', (contentErrorElement, content) => {
+    const el = document.createElement('div')
+    el.className = 'pswp__error-msg'
+    el.innerHTML = `读取失败`
+    return el
+  })
   lightbox.addFilter('itemData', (itemData, index) => {
     const mimetype = attachmentList.value[index].mimetype
     let width = attachmentList.value[index].width
