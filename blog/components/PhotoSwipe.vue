@@ -84,8 +84,12 @@
         </template>
       </UPopover>
     </Teleport>
+    <!-- <Teleport :to="`#photo-swipe-loading-${componentId}`" v-if="showUI">
+      <div>
+        <DivLoading class="photo-swipe-load-body" :loading="loading" />
+      </div>
+    </Teleport> -->
   </ClientOnly>
-  <DivLoading class="photo-swipe-load-body" :loading="loading" />
 </template>
 <script setup>
 import PhotoSwipeLightbox from 'photoswipe/lightbox'
@@ -131,27 +135,28 @@ const loadImageDimensions = async (list) => {
       if (mimetype.indexOf('video') > -1) {
         width = 1280
         height = 720
-      } else {
-        // 如果是图片，需要计算宽高
-        const img = new Image()
-        img.src = src
-        try {
-          await new Promise((resolve, reject) => {
-            img.onload = function () {
-              item.width = img.width
-              item.height = img.height
-              resolve()
-            }
-            img.onerror = function () {
-              reject('图片加载失败')
-            }
-          })
-        } catch (error) {
-          console.error(error)
-          item.width = 0
-          item.height = 0
-        }
       }
+      // else {
+      //   // 如果是图片，需要计算宽高
+      //   const img = new Image()
+      //   img.src = src
+      //   try {
+      //     await new Promise((resolve, reject) => {
+      //       img.onload = function () {
+      //         item.width = img.width
+      //         item.height = img.height
+      //         resolve()
+      //       }
+      //       img.onerror = function () {
+      //         reject('图片加载失败')
+      //       }
+      //     })
+      //   } catch (error) {
+      //     console.error(error)
+      //     item.width = 0
+      //     item.height = 0
+      //   }
+      // }
     }
   }
   if (loadingTimer) {
@@ -162,9 +167,52 @@ const loadImageDimensions = async (list) => {
   attachmentList.value = list
 }
 let closeCallback = null
+let loadingImageIndexList = []
+let refreshSlideContentChange = false
+const loadNoSizeImage = (src, index) => {
+  if (loadingImageIndexList.includes(index)) {
+    return
+  }
+  loadingImageIndexList.push(index)
+  loading.value = true
+  const promise = new Promise((resolve, reject) => {
+    const img = new Image()
+    img.src = src
+    img.onload = async () => {
+      resolve(img)
+    }
+    img.onerror = async () => {
+      reject(new Error('Image loading failed'))
+    }
+  })
+  promise
+    .then((img) => {
+      attachmentList.value[index].width = img.width
+      attachmentList.value[index].height = img.height
+    })
+    .catch((err) => {
+      console.error(err)
+      attachmentList.value[index].loadFailed = true
+    })
+    .finally(async () => {
+      loading.value = false
+      if (photoswipeInitialLayoutPromise) {
+        await photoswipeInitialLayoutPromise
+        refreshSlideContentChange = true
+        lightbox.pswp.refreshSlideContent(index)
+      }
+      // 移除加载中的index
+      loadingImageIndexList = loadingImageIndexList.filter((item) => {
+        return item !== index
+      })
+    })
+}
 const open = async (list = [], showIndex = 0, closeCallback_) => {
   closeCallback = closeCallback_ || null
   await loadImageDimensions(list)
+  photoswipeInitialLayoutPromise = new Promise((resolve) => {
+    photoswipeInitialLayoutPromiseResolve = resolve
+  })
   itemIndex.value = showIndex
   firstFlag = true
   if (attachmentList.value.length <= 0) {
@@ -195,6 +243,16 @@ const open = async (list = [], showIndex = 0, closeCallback_) => {
       if (mimetype.indexOf('video') > -1) {
         width = 1280
         height = 720
+      } else {
+        const loadFailed = attachmentList.value[index].loadFailed
+        return {
+          html: `<div class="previewer-img-loading-content" id="loading-content-${componentId}-${index}">${
+            loadFailed ? '图片加载失败' : '图片加载中...'
+          }</div>`,
+          shouldLoadImageItem: true,
+          imageSrc: src,
+          loadFailed: loadFailed,
+        }
       }
     }
 
@@ -241,6 +299,8 @@ const description = computed(() => {
 let lightbox = null
 let videoTimer = null
 let firstFlag = true
+let photoswipeInitialLayoutPromiseResolve = null
+let photoswipeInitialLayoutPromise = null
 const initLightbox = async () => {
   const lightboxopen = window.location.hash === '#photo-swipelightboxopen'
   if (lightboxopen) {
@@ -254,6 +314,9 @@ const initLightbox = async () => {
   })
   lightbox.init()
   lightbox.on('close', () => {
+    photoswipeInitialLayoutPromiseResolve = null
+    photoswipeInitialLayoutPromise = null
+    loadingImageIndexList = []
     console.log('close')
     if (closeCallback) {
       closeCallback()
@@ -272,8 +335,20 @@ const initLightbox = async () => {
   })
   lightbox.on('change', () => {
     console.log('change')
+    if (refreshSlideContentChange) {
+      refreshSlideContentChange = false
+      console.log('refreshSlideContentChange')
+      return
+    }
+    console.log(lightbox.pswp)
     const currIndex = lightbox.pswp.currIndex
     itemIndex.value = currIndex
+    const currSlide = lightbox.pswp.currSlide
+    const data = currSlide?.data
+    if (data?.shouldLoadImageItem && data?.loadFailed !== true) {
+      const imageSrc = data?.imageSrc
+      loadNoSizeImage(imageSrc, currIndex)
+    }
     // 计算当前Index对应的groupPage页数
     groupPage.value = Math.floor(currIndex / 9)
 
@@ -303,6 +378,7 @@ const initLightbox = async () => {
     // photoswipe measures size of various elements
     // if you need to read getBoundingClientRect of something - do it here
     showUI.value = true
+    photoswipeInitialLayoutPromiseResolve()
   })
   // 注册UI
   lightbox.on('uiRegister', function () {
@@ -325,6 +401,14 @@ const initLightbox = async () => {
       html: `<div id="photo-swipe-${componentId}"></div>`,
     })
   })
+  // lightbox.on('uiRegister', function () {
+  //   lightbox.pswp.ui.registerElement({
+  //     name: 'photo-swipe-loading',
+  //     order: 9,
+  //     isButton: false,
+  //     html: `<div id="photo-swipe-loading-${componentId}"></div>`,
+  //   })
+  // })
 }
 const onHashchange = () => {
   if (window.location.hash !== '#photo-swipelightboxopen') {
@@ -408,6 +492,6 @@ onUnmounted(() => {
   position: fixed;
   top: 0;
   left: 0;
-  z-index: 100;
+  z-index: 2;
 }
 </style>

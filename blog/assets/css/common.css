@@ -898,12 +898,16 @@ input[type='password'] {
 .collapse-leave-active {
   transition: height 400ms ease;
 }
-.previewer-video-body {
+.previewer-video-body,
+.previewer-img-loading-content {
   width: 100%;
   height: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
+}
+.previewer-img-loading-content {
+  color: #fff;
 }
 .previewer-video-body video {
   max-width: 100%;
