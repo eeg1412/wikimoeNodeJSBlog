@@ -385,6 +385,7 @@ const initLightbox = async () => {
     // if you need to read getBoundingClientRect of something - do it here
     showUI.value = true
     photoswipeInitialLayoutPromiseResolve()
+    console.log(lightbox.pswp.on)
   })
   // 注册UI
   lightbox.on('uiRegister', function () {
