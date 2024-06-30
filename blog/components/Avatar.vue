@@ -43,8 +43,10 @@ const imgStyle = computed(() => {
 })
 const loadErrorFlag = ref(false)
 const src = computed(() => {
+  // 判断avatar是否是md5,正则匹配
+  const isMd5 = /^[a-f0-9]{32}$/.test(props.avatar)
   // 如果加载失败，返回默认头像
-  if (!props.avatar || loadErrorFlag.value || !siteGravatarSource) {
+  if (!props.avatar || loadErrorFlag.value || (!siteGravatarSource && isMd5)) {
     console.log('头像加载失败或者没有头像或者没有gravatar地址')
     const str = props.avatar || props.alt || ''
     // 如果存在str就以str为seed生成随机0-176的数字
@@ -54,8 +56,6 @@ const src = computed(() => {
     const num = seed % 176
     return `/img/avatar/${num}.webp`
   }
-  // 判断avatar是否是md5,正则匹配
-  const isMd5 = /^[a-f0-9]{32}$/.test(props.avatar)
 
   if (isMd5) {
     // 如果是md5，返回对应的URL
