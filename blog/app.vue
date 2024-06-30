@@ -8,6 +8,7 @@
 </template>
 <script setup>
 import { useOptionStore } from '@/store/options'
+import { useIsFullscreenStore } from '@/store/isFullscreen'
 import { storeToRefs } from 'pinia'
 import { postLogCreateApi, putLogUpdatePerformanceApi } from '@/api/log'
 
@@ -202,11 +203,53 @@ const setStyle = () => {
 }
 setStyle()
 
+// useIsFullscreenStore
+const isFullscreenStore = useIsFullscreenStore()
+const { setFullscreen } = isFullscreenStore
+
+// 全屏状态变化时的回调函数
+const onFullscreenChange = () => {
+  if (
+    document.fullscreenElement ||
+    document.webkitFullscreenElement ||
+    document.mozFullScreenElement ||
+    document.msFullscreenElement
+  ) {
+    console.log('进入全屏')
+    // 进入全屏后的逻辑
+    setFullscreen(true)
+  } else {
+    console.log('退出全屏')
+    // 退出全屏后的逻辑
+    setFullscreen(false)
+  }
+}
+
+// 添加全屏事件监听器
+const addFullscreenChangeListener = () => {
+  document.addEventListener('fullscreenchange', onFullscreenChange)
+  document.addEventListener('webkitfullscreenchange', onFullscreenChange)
+  document.addEventListener('mozfullscreenchange', onFullscreenChange)
+  document.addEventListener('MSFullscreenChange', onFullscreenChange)
+}
+
+// 移除全屏事件监听器
+const removeFullscreenChangeListener = () => {
+  document.removeEventListener('fullscreenchange', onFullscreenChange)
+  document.removeEventListener('webkitfullscreenchange', onFullscreenChange)
+  document.removeEventListener('mozfullscreenchange', onFullscreenChange)
+  document.removeEventListener('MSFullscreenChange', onFullscreenChange)
+}
+
 onMounted(() => {
   // 检查uuid
   checkUuid()
   // 获取referrer
   postLogCreate()
+  addFullscreenChangeListener()
+})
+onUnmounted(() => {
+  removeFullscreenChangeListener()
 })
 </script>
 <style scoped>

@@ -291,9 +291,18 @@
 import { nextTick, onMounted, onUnmounted, ref } from 'vue'
 import { storeToRefs } from 'pinia'
 import { useOptionStore } from '@/store/options'
+import { useIsFullscreenStore } from '@/store/isFullscreen'
 
 const optionStore = useOptionStore()
 const { options } = storeToRefs(optionStore)
+
+const isFullscreenStore = useIsFullscreenStore()
+const { isFullscreen } = storeToRefs(isFullscreenStore)
+
+// watch isFullscreen
+watch(isFullscreen, (value) => {
+  console.log('isFullscreen', value)
+})
 
 // props
 const props = defineProps({
@@ -448,48 +457,10 @@ const isHeight = computed(() => {
   return false
 })
 
-const isFullscreen = ref(false)
-// 全屏状态变化时的回调函数
-const onFullscreenChange = () => {
-  if (
-    document.fullscreenElement ||
-    document.webkitFullscreenElement ||
-    document.mozFullScreenElement ||
-    document.msFullscreenElement
-  ) {
-    console.log('进入全屏')
-    // 进入全屏后的逻辑
-    isFullscreen.value = true
-  } else {
-    console.log('退出全屏')
-    // 退出全屏后的逻辑
-    isFullscreen.value = false
-  }
-}
-
-// 添加全屏事件监听器
-const addFullscreenChangeListener = () => {
-  document.addEventListener('fullscreenchange', onFullscreenChange)
-  document.addEventListener('webkitfullscreenchange', onFullscreenChange)
-  document.addEventListener('mozfullscreenchange', onFullscreenChange)
-  document.addEventListener('MSFullscreenChange', onFullscreenChange)
-}
-
-// 移除全屏事件监听器
-const removeFullscreenChangeListener = () => {
-  document.removeEventListener('fullscreenchange', onFullscreenChange)
-  document.removeEventListener('webkitfullscreenchange', onFullscreenChange)
-  document.removeEventListener('mozfullscreenchange', onFullscreenChange)
-  document.removeEventListener('MSFullscreenChange', onFullscreenChange)
-}
-
 onMounted(() => {
   componentUUID.value = uuid()
-  addFullscreenChangeListener()
 })
-onUnmounted(() => {
-  removeFullscreenChangeListener()
-})
+onUnmounted(() => {})
 </script>
 <style scoped>
 .blog-tweet-img-list-no-swiper-body {
