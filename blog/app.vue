@@ -212,8 +212,7 @@ const onFullscreenChange = () => {
   if (
     document.fullscreenElement ||
     document.webkitFullscreenElement ||
-    document.mozFullScreenElement ||
-    document.msFullscreenElement
+    document.mozFullScreenElement
   ) {
     console.log('进入全屏')
     // 进入全屏后的逻辑
@@ -230,7 +229,6 @@ const addFullscreenChangeListener = () => {
   document.addEventListener('fullscreenchange', onFullscreenChange)
   document.addEventListener('webkitfullscreenchange', onFullscreenChange)
   document.addEventListener('mozfullscreenchange', onFullscreenChange)
-  document.addEventListener('MSFullscreenChange', onFullscreenChange)
 }
 
 // 移除全屏事件监听器
@@ -238,7 +236,6 @@ const removeFullscreenChangeListener = () => {
   document.removeEventListener('fullscreenchange', onFullscreenChange)
   document.removeEventListener('webkitfullscreenchange', onFullscreenChange)
   document.removeEventListener('mozfullscreenchange', onFullscreenChange)
-  document.removeEventListener('MSFullscreenChange', onFullscreenChange)
 }
 
 onMounted(() => {

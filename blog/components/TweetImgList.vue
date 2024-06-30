@@ -29,6 +29,7 @@
             :controls="isFullscreen || videoPlayId === coverImages[0]._id"
             :id="`${componentUUID}-${coverImages[0]._id}`"
             :poster="coverImages[0].thumfor || coverImages[0].filepath"
+            :data-id="coverImages[0]._id"
             muted
             loop
             playsinline
@@ -129,6 +130,7 @@
                     :controls="isFullscreen || videoPlayId === img._id"
                     :poster="img.thumfor || img.filepath"
                     :id="`${componentUUID}-${img._id}`"
+                    :data-id="img._id"
                     preload="none"
                     muted
                     loop
@@ -214,6 +216,7 @@
                     :controls="isFullscreen || videoPlayId === img._id"
                     :poster="img.thumfor || img.filepath"
                     :id="`${componentUUID}-${img._id}`"
+                    :data-id="img._id"
                     preload="none"
                     muted
                     loop
@@ -297,11 +300,23 @@ const optionStore = useOptionStore()
 const { options } = storeToRefs(optionStore)
 
 const isFullscreenStore = useIsFullscreenStore()
-const { isFullscreen } = storeToRefs(isFullscreenStore)
+const { isFullscreen: isFullscreenMode } = storeToRefs(isFullscreenStore)
 
-// watch isFullscreen
-watch(isFullscreen, (value) => {
-  console.log('isFullscreen', value)
+const isFullscreen = computed(() => {
+  if (isFullscreenMode.value) {
+    const fullscreenElement =
+      document.fullscreenElement ||
+      document.webkitFullscreenElement ||
+      document.mozFullScreenElement
+    if (fullscreenElement) {
+      // 查看是否是video标签
+      if (fullscreenElement.tagName === 'VIDEO') {
+        console.log('VIDEO全屏模式')
+        return true
+      }
+    }
+  }
+  return false
 })
 
 // props
