@@ -117,6 +117,18 @@
         placeholder="自定义CSS样式，会插入到head标签内，覆盖时可能需要添加!important。"
       ></el-input>
     </el-form-item>
+    <!-- Gravatar头像图源 -->
+    <el-form-item label="Gravatar头像图源" prop="siteGravatarSource">
+      <el-input
+        v-model="siteSettingsForm.siteGravatarSource"
+        @blur="onGravatarSourceBlur"
+      ></el-input>
+      <div>
+        ※Gravatar头像图源，例如：<span class="word-break"
+          >https://www.gravatar.com/avatar</span
+        >
+      </div>
+    </el-form-item>
 
     <el-form-item>
       <el-button type="primary" @click="siteSettingsSubmit">提交</el-button>
@@ -164,10 +176,17 @@ export default {
       siteEnableSitemap: false,
       // 底部站点地图
       siteShowSitemapInFooter: false,
+      // Gravatar头像图源
+      siteGravatarSource: '',
     })
     const onSiteUrlBlur = () => {
       // 去掉最末尾的斜杠
       siteSettingsForm.siteUrl = siteSettingsForm.siteUrl.replace(/\/$/, '')
+    }
+    const onGravatarSourceBlur = () => {
+      // 去掉最末尾的斜杠
+      siteSettingsForm.siteGravatarSource =
+        siteSettingsForm.siteGravatarSource.replace(/\/$/, '')
     }
     const siteSettingsRules = {
       siteTitle: [
@@ -380,6 +399,7 @@ export default {
       setSiteFavicon,
       siteSettingsSubmit,
       onSiteUrlBlur,
+      onGravatarSourceBlur,
       timeZones,
     }
   },

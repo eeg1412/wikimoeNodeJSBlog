@@ -60,6 +60,8 @@ const initGlobalConfig = async () => {
     siteFooterInfo: '',
     // 额外CSS样式
     siteExtraCss: '',
+    // Gravatar头像图源
+    siteGravatarSource: '',
   }
   const commentSettingsConfig = {
     // 开启评论

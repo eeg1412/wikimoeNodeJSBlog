@@ -6,6 +6,8 @@
   </div>
 </template>
 <script setup>
+import { useOptionStore } from '@/store/options'
+import { storeToRefs } from 'pinia'
 const props = defineProps({
   avatar: {
     type: String,
@@ -20,6 +22,11 @@ const props = defineProps({
     default: 50,
   },
 })
+const optionStore = useOptionStore()
+const { getOptions } = optionStore
+await getOptions()
+const { options } = storeToRefs(optionStore)
+const siteGravatarSource = options.value.siteGravatarSource
 const imgStyle = computed(() => {
   return {
     width: `${props.size}px`,
@@ -29,8 +36,8 @@ const imgStyle = computed(() => {
 const loadErrorFlag = ref(false)
 const src = computed(() => {
   // 如果加载失败，返回默认头像
-  if (!props.avatar || loadErrorFlag.value) {
-    console.log('加载失败')
+  if (!props.avatar || loadErrorFlag.value || !siteGravatarSource) {
+    console.log('头像加载失败或者没有头像或者没有gravatar地址')
     const str = props.avatar || props.alt || ''
     // 如果存在str就以str为seed生成随机0-176的数字
     const seed = str.split('').reduce((sum, item) => {
@@ -44,7 +51,7 @@ const src = computed(() => {
 
   if (isMd5) {
     // 如果是md5，返回对应的URL
-    return `https://gravatar.loli.net/avatar/${props.avatar}?d=404`
+    return `${siteGravatarSource}/${props.avatar}?d=404`
   } else {
     // 如果不是md5，认为是URL，返回URL
     return props.avatar
