@@ -319,7 +319,15 @@ setPhotoSwipe(open)
 const itemIndex = ref(0)
 const showDescription = ref(true)
 const description = computed(() => {
-  return attachmentList.value[itemIndex.value]?.description
+  const description = attachmentList.value[itemIndex.value]?.description
+  const btnEl = document.querySelector(
+    `.pswp__button--photo-swipe-caption-button-${componentId}`
+  )
+  if (btnEl) {
+    // 显示元素
+    btnEl.style.display = description ? 'block' : 'none'
+  }
+  return description
 })
 
 let lightbox = null
@@ -421,7 +429,7 @@ const initLightbox = async () => {
       },
     })
     lightbox.pswp.ui.registerElement({
-      name: 'photo-swipe-caption-button',
+      name: `photo-swipe-caption-button-${componentId}`,
       order: 9,
       isButton: true,
       html: `<div id="photo-swipe-caption-${componentId}"></div>`,
