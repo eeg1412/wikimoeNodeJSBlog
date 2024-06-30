@@ -26,7 +26,7 @@
       <div class="blog-tweet-1img-list-body">
         <template v-if="coverImages[0].mimetype.includes('video')">
           <video
-            :controls="videoPlayId === coverImages[0]._id"
+            :controls="isFullscreen || videoPlayId === coverImages[0]._id"
             :id="`${componentUUID}-${coverImages[0]._id}`"
             :poster="coverImages[0].thumfor || coverImages[0].filepath"
             muted
@@ -35,6 +35,7 @@
             preload="none"
             class="blog-tweet-1img-list-body-video bg-black"
             @click.stop
+            @play="checkVideoPlay(coverImages[0]._id)"
             @pause="videoPause"
             autoplay
             v-if="videoPlayedIdList.includes(coverImages[0]._id)"
@@ -125,7 +126,7 @@
               <template v-for="(img, indexChild) in item" :key="index">
                 <template v-if="img.mimetype.includes('video')">
                   <video
-                    :controls="videoPlayId === img._id"
+                    :controls="isFullscreen || videoPlayId === img._id"
                     :poster="img.thumfor || img.filepath"
                     :id="`${componentUUID}-${img._id}`"
                     preload="none"
@@ -135,6 +136,7 @@
                     class="blog-tweet-1img-list-body-video bg-black self-stretch"
                     autoplay
                     @click.stop
+                    @play="checkVideoPlay(img._id)"
                     @pause="videoPause"
                     v-if="videoPlayedIdList.includes(img._id)"
                   >
@@ -209,7 +211,7 @@
               <template v-for="(img, indexChild) in item" :key="index">
                 <template v-if="img.mimetype.includes('video')">
                   <video
-                    :controls="videoPlayId === img._id"
+                    :controls="isFullscreen || videoPlayId === img._id"
                     :poster="img.thumfor || img.filepath"
                     :id="`${componentUUID}-${img._id}`"
                     preload="none"
@@ -219,6 +221,7 @@
                     class="blog-tweet-1img-list-body-video bg-black self-stretch"
                     autoplay
                     @click.stop
+                    @play="checkVideoPlay(img._id)"
                     @pause="videoPause"
                     v-if="videoPlayedIdList.includes(img._id)"
                   >
@@ -397,6 +400,13 @@ const videoPlay = async (id) => {
     }
   })
 }
+const checkVideoPlay = async (id) => {
+  if (videoPlayId.value === id) {
+    return
+  }
+  console.log('和当前播放的不一样，尝试播放')
+  videoPlay(id)
+}
 const videoPause = async (e) => {
   const target = e.target
   if (target.seeking) {
@@ -438,10 +448,48 @@ const isHeight = computed(() => {
   return false
 })
 
+const isFullscreen = ref(false)
+// 全屏状态变化时的回调函数
+const onFullscreenChange = () => {
+  if (
+    document.fullscreenElement ||
+    document.webkitFullscreenElement ||
+    document.mozFullScreenElement ||
+    document.msFullscreenElement
+  ) {
+    console.log('进入全屏')
+    // 进入全屏后的逻辑
+    isFullscreen.value = true
+  } else {
+    console.log('退出全屏')
+    // 退出全屏后的逻辑
+    isFullscreen.value = false
+  }
+}
+
+// 添加全屏事件监听器
+const addFullscreenChangeListener = () => {
+  document.addEventListener('fullscreenchange', onFullscreenChange)
+  document.addEventListener('webkitfullscreenchange', onFullscreenChange)
+  document.addEventListener('mozfullscreenchange', onFullscreenChange)
+  document.addEventListener('MSFullscreenChange', onFullscreenChange)
+}
+
+// 移除全屏事件监听器
+const removeFullscreenChangeListener = () => {
+  document.removeEventListener('fullscreenchange', onFullscreenChange)
+  document.removeEventListener('webkitfullscreenchange', onFullscreenChange)
+  document.removeEventListener('mozfullscreenchange', onFullscreenChange)
+  document.removeEventListener('MSFullscreenChange', onFullscreenChange)
+}
+
 onMounted(() => {
   componentUUID.value = uuid()
+  addFullscreenChangeListener()
 })
-onUnmounted(() => {})
+onUnmounted(() => {
+  removeFullscreenChangeListener()
+})
 </script>
 <style scoped>
 .blog-tweet-img-list-no-swiper-body {
