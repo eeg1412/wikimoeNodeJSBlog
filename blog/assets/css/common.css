@@ -910,9 +910,11 @@ input[type='password'] {
   color: #fff;
 }
 .previewer-video-body video {
+  width: auto;
+  height: auto;
   max-width: 100%;
-  max-height: calc(100vh - 100px);
-  max-height: calc(100dvh - 100px);
+  max-height: calc(100vh - 130px);
+  max-height: calc(100dvh - 130px);
 }
 ins.adsbygoogle[data-ad-status='unfilled'] {
   display: none !important;

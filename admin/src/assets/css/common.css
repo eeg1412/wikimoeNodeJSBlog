@@ -955,9 +955,11 @@ input[type='password'] {
   align-items: center;
 }
 .previewer-video-body video {
+  width: auto;
+  height: auto;
   max-width: 100%;
-  max-height: calc(100vh - 100px);
-  max-height: calc(100dvh - 100px);
+  max-height: calc(100vh - 130px);
+  max-height: calc(100dvh - 130px);
 }
 .max-width-cropper .avatar-uploader .avatar,
 .max-width-cropper .el-upload {
