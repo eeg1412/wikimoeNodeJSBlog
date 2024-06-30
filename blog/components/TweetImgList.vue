@@ -35,7 +35,7 @@
             preload="none"
             class="blog-tweet-1img-list-body-video bg-black"
             @click.stop
-            @pause="videoPlayId = null"
+            @pause="videoPause"
             autoplay
             v-if="videoPlayedIdList.includes(coverImages[0]._id)"
           >
@@ -135,7 +135,7 @@
                     class="blog-tweet-1img-list-body-video bg-black self-stretch"
                     autoplay
                     @click.stop
-                    @pause="videoPlayId = null"
+                    @pause="videoPause"
                     v-if="videoPlayedIdList.includes(img._id)"
                   >
                     <source
@@ -219,7 +219,7 @@
                     class="blog-tweet-1img-list-body-video bg-black self-stretch"
                     autoplay
                     @click.stop
-                    @pause="videoPlayId = null"
+                    @pause="videoPause"
                     v-if="videoPlayedIdList.includes(img._id)"
                   >
                     <source
@@ -396,6 +396,13 @@ const videoPlay = async (id) => {
       video.play()
     }
   })
+}
+const videoPause = async (e) => {
+  const target = e.target
+  if (target.seeking) {
+    return
+  }
+  videoPlayId.value = null
 }
 const componentUUID = ref(null)
 const blogTweetImgListWrapRef = ref(null)
