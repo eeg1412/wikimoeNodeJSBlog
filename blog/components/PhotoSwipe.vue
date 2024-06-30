@@ -420,31 +420,21 @@ const initLightbox = async () => {
         console.log(el)
       },
     })
-  })
-  lightbox.on('uiRegister', function () {
     lightbox.pswp.ui.registerElement({
       name: 'photo-swipe-caption-button',
       order: 9,
       isButton: true,
       html: `<div id="photo-swipe-caption-${componentId}"></div>`,
     })
+    if (attachmentList.value.length > 1) {
+      lightbox.pswp.ui.registerElement({
+        name: 'photo-swipe-button',
+        order: 9,
+        isButton: true,
+        html: `<div id="photo-swipe-${componentId}"></div>`,
+      })
+    }
   })
-  lightbox.on('uiRegister', function () {
-    lightbox.pswp.ui.registerElement({
-      name: 'photo-swipe-button',
-      order: 9,
-      isButton: true,
-      html: `<div id="photo-swipe-${componentId}"></div>`,
-    })
-  })
-  // lightbox.on('uiRegister', function () {
-  //   lightbox.pswp.ui.registerElement({
-  //     name: 'photo-swipe-loading',
-  //     order: 9,
-  //     isButton: false,
-  //     html: `<div id="photo-swipe-loading-${componentId}"></div>`,
-  //   })
-  // })
 }
 const onHashchange = () => {
   if (window.location.hash !== '#photo-swipelightboxopen') {
