@@ -3,8 +3,27 @@
     <Teleport :to="`#caption-${componentId}`" v-if="showUI && description">
       <div
         class="photo-swipe-photo-swipe-caption bg-primary bg-opacity-80 rounded px-2 py-1 text-white text-sm whitespace-pre-line"
+        v-show="showDescription"
       >
         {{ description }}
+      </div>
+    </Teleport>
+    <Teleport
+      :to="`#photo-swipe-caption-${componentId}`"
+      v-if="showUI && description"
+    >
+      <div
+        class="photo-swipe-photo-swipe-btn"
+        @click="showDescription = !showDescription"
+      >
+        <UIcon
+          class="photo-swipe-caption-icon"
+          :name="
+            showDescription
+              ? 'i-heroicons-chat-bubble-bottom-center-text-solid'
+              : 'i-heroicons-chat-bubble-bottom-center-solid'
+          "
+        />
       </div>
     </Teleport>
     <Teleport
@@ -298,6 +317,7 @@ const open = async (list = [], showIndex = 0, closeCallback_) => {
 setPhotoSwipe(open)
 
 const itemIndex = ref(0)
+const showDescription = ref(true)
 const description = computed(() => {
   return attachmentList.value[itemIndex.value]?.description
 })
@@ -316,7 +336,7 @@ const initLightbox = async () => {
     pswpModule: () => import('photoswipe'),
     preload: [1, 2],
     mainClass: 'photo-swipe-photo-swipe',
-    padding: { top: 40, bottom: 60, left: 0, right: 0 },
+    padding: { top: 50, bottom: 60, left: 0, right: 0 },
   })
   lightbox.init()
   lightbox.on('close', () => {
@@ -347,6 +367,7 @@ const initLightbox = async () => {
       return
     }
     console.log(lightbox.pswp)
+    showDescription.value = true
     const currIndex = lightbox.pswp.currIndex
     itemIndex.value = currIndex
     const currSlide = lightbox.pswp.currSlide
@@ -398,6 +419,14 @@ const initLightbox = async () => {
       onInit: (el, pswp) => {
         console.log(el)
       },
+    })
+  })
+  lightbox.on('uiRegister', function () {
+    lightbox.pswp.ui.registerElement({
+      name: 'photo-swipe-caption-button',
+      order: 9,
+      isButton: true,
+      html: `<div id="photo-swipe-caption-${componentId}"></div>`,
     })
   })
   lightbox.on('uiRegister', function () {
@@ -500,5 +529,10 @@ onUnmounted(() => {
   top: 0;
   left: 0;
   z-index: 2;
+}
+.photo-swipe-caption-icon {
+  /* 下移1像素 */
+  transform: translateY(1px);
+  font-size: 22px;
 }
 </style>
