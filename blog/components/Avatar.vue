@@ -1,7 +1,17 @@
 <template>
-  <div class="dib" :style="imgStyle">
+  <div
+    class="dib blog-avatar-body"
+    :class="{ 'blog-avatar-loaded': imageLoaded }"
+    :style="imgStyle"
+  >
     <ClientOnly>
-      <img class="blog-avatar" :src="src" :alt="alt" @error="imgError" />
+      <img
+        class="blog-avatar"
+        :src="src"
+        :alt="alt"
+        @load="imgLoad"
+        @error="imgError"
+      />
     </ClientOnly>
   </div>
 </template>
@@ -23,8 +33,6 @@ const props = defineProps({
   },
 })
 const optionStore = useOptionStore()
-const { getOptions } = optionStore
-await getOptions()
 const { options } = storeToRefs(optionStore)
 const siteGravatarSource = options.value.siteGravatarSource
 const imgStyle = computed(() => {
@@ -57,14 +65,33 @@ const src = computed(() => {
     return props.avatar
   }
 })
+
+const imageLoaded = ref(false)
 const imgError = () => {
   loadErrorFlag.value = true
+  imageLoaded.value = true
+}
+const imgLoad = () => {
+  imageLoaded.value = true
+  console.log('头像加载成功')
 }
 </script>
 <style scoped>
+.blog-avatar-body {
+  @apply bg-gray-100;
+  border-radius: 5px;
+}
+.blog-avatar-loaded.blog-avatar-body {
+  background-color: transparent;
+}
 .blog-avatar {
   border-radius: 5px;
   width: 100%;
   height: 100%;
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+.blog-avatar-loaded .blog-avatar {
+  opacity: 1;
 }
 </style>
