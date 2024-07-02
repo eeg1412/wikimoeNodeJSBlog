@@ -51,7 +51,7 @@ module.exports = async function (req, res, next) {
     return
   }
   // 允许创建多个type的列表
-  const multipleType = [1, 10]
+  const multipleType = [1, 10, 11]
   // 校验除了multipleType以外的其他侧边栏是否存在
   if (!multipleType.includes(params.type)) {
     const sidebar = await sidebarUtils.findOne({ type: params.type })
