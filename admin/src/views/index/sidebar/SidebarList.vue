@@ -302,7 +302,7 @@ export default {
 
     const placeholderMap = {
       10: '填写格式为：ad-slot,ad-format,ad-layout-key',
-      11: '填写HTML代码，注意代码安全！',
+      11: '填写可信任的HTML代码，注意代码安全！',
     }
 
     const getSidebarList = () => {
