@@ -151,6 +151,12 @@
             <template v-else-if="item.type === 10">
               <AdsbygoogleHave :ad="item.content" />
             </template>
+            <template v-else-if="item.type === 11">
+              <div
+                class="blog-layout-right-customize-html"
+                v-html="item.content"
+              ></div>
+            </template>
           </div>
         </div>
       </div>
