@@ -114,6 +114,19 @@
                     :placeholder="placeholderMap[element.type]"
                   ></el-input>
                 </el-form-item>
+                <!-- showTextareaTypeList -->
+                <el-form-item
+                  label="内容"
+                  prop="content"
+                  v-if="showTextareaTypeList.includes(element.type)"
+                >
+                  <el-input
+                    type="textarea"
+                    v-model="element.content"
+                    :rows="8"
+                    :placeholder="placeholderMap[element.type]"
+                  ></el-input>
+                </el-form-item>
                 <el-form-item
                   label="显示条数"
                   prop="count"
@@ -182,12 +195,21 @@ export default {
     const sidebarSettingsForm = ref([])
     const sidebarSettingsTemplate = computed(() => {
       const base = [
-        // 1:自定义 2:热门文章 3:最新评论 4:标签云 5:随机文章 6:热门文章 7:搜索 8:分类 9:归档
+        // 1:自定义内容 2:热门文章 3:最新评论 4:标签云 5:随机文章 6:热门文章 7:搜索 8:分类 9:归档 10:谷歌广告 11:自定义HTML
         {
-          title: '自定义',
+          title: '自定义内容',
           content: '',
           count: 1,
           type: 1,
+          taxis: 0,
+          status: 0,
+        },
+        // 自定义HTML
+        {
+          title: '自定义HTML',
+          content: '',
+          count: 1,
+          type: 11,
           taxis: 0,
           status: 0,
         },
@@ -276,9 +298,11 @@ export default {
     const showConetntTypeList = [1]
     const showCountTypeList = [2, 3, 4, 5, 6]
     const showTextInputTypeList = [10]
+    const showTextareaTypeList = [11]
 
     const placeholderMap = {
       10: '填写格式为：ad-slot,ad-format,ad-layout-key',
+      11: '填写HTML代码，注意代码安全！',
     }
 
     const getSidebarList = () => {
@@ -366,6 +390,7 @@ export default {
       showConetntTypeList,
       showCountTypeList,
       showTextInputTypeList,
+      showTextareaTypeList,
       placeholderMap,
       handleSideBarCommand,
       sidebarSettingsSubmit,
