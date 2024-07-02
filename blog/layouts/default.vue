@@ -490,6 +490,9 @@ onUnmounted(() => {})
   padding-bottom: 8px;
   border-bottom: 1px solid #e2e2e2;
 }
+.blog-layout-right-customize-html {
+  padding-top: 10px;
+}
 .blog-layout-right-sidebar-item {
   margin-bottom: 20px;
 }
