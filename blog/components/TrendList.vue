@@ -6,10 +6,10 @@
       :to="getLinkObj(item)"
       v-for="(item, index) in trendList"
       :key="index"
-      class="trend-item-body flex border border-solid cursor-pointer my-3 rounded-md overflow-hidden transition-colors"
+      class="trend-item-body flex border border-solid cursor-pointer my-3 rounded-md overflow-hidden transition duration-500"
     >
       <div
-        class="flex-1 min-w-0 pr-4 pl-3 py-3 trend-item-left border-r border-solid transition-colors"
+        class="flex-1 min-w-0 pr-4 pl-3 py-3 trend-item-left border-r border-solid transition duration-500"
       >
         <div class="text-sm text-gray-500 mb-1 flex items-center">
           <span class="font-medium text-gray-700 mr-1">{{ index + 1 }}.</span
@@ -161,11 +161,14 @@ const getTrendCategory = (item) => {
   border-color: #eee;
 }
 .trend-item-left {
-  background-color: #fbfbfb;
+  /* background-color: #fbfbfb; */
   border-color: #eee;
 }
-/* .trend-item-body:hover,
+.trend-item-body:hover,
 .trend-item-body:hover .trend-item-left {
-  @apply border-primary-200;
+  @apply border-primary-500;
+}
+/* .trend-item-body:hover .trend-item-left {
+  @apply bg-primary-50;
 } */
 </style>
