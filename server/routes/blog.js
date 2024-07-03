@@ -212,6 +212,13 @@ const blogRouteSetting = [
     middleware: [],
     controller: require('../api/blog/log/updateLogPerformanceNavigationTiming'),
   },
+  // getTrendList
+  {
+    path: '/trend/list',
+    method: 'get',
+    middleware: [],
+    controller: require('../api/blog/trend/getTrendList'),
+  },
 ]
 
 blogRouteSetting.forEach(item => {

@@ -195,7 +195,7 @@ export default {
     const sidebarSettingsForm = ref([])
     const sidebarSettingsTemplate = computed(() => {
       const base = [
-        // 1:自定义内容 2:热门文章 3:最新评论 4:标签云 5:随机文章 6:热门文章 7:搜索 8:分类 9:归档 10:谷歌广告 11:自定义HTML
+        // 1:自定义内容 2:热门文章 3:最新评论 4:标签云 5:随机文章 6:热门文章 7:搜索 8:分类 9:归档 10:谷歌广告 11:自定义HTML 12:趋势榜单
         {
           title: '自定义内容',
           content: '',
@@ -288,6 +288,15 @@ export default {
           taxis: 0,
           status: 0,
         },
+        // 趋势榜单
+        {
+          title: '趋势榜单',
+          content: '',
+          count: 1,
+          type: 12,
+          taxis: 0,
+          status: 0,
+        },
       ]
       // 检查 sidebarSettingsForm 里存在的 type，如果存在，只输出sidebarSettingsForm中没有的type
       const typeList = sidebarSettingsForm.value.map((item) => item.type)
@@ -296,7 +305,7 @@ export default {
     })
 
     const showConetntTypeList = [1]
-    const showCountTypeList = [2, 3, 4, 5, 6]
+    const showCountTypeList = [2, 3, 4, 5, 6, 12]
     const showTextInputTypeList = [10]
     const showTextareaTypeList = [11]
 
