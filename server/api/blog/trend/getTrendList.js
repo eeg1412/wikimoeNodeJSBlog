@@ -43,7 +43,6 @@ module.exports = async function (req, res, next) {
         // reject
         return
       }
-      return
     }
 
 

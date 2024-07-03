@@ -157,6 +157,10 @@
                 v-html="item.content"
               ></div>
             </template>
+            <!-- 12 TrendList -->
+            <template v-else-if="item.type === 12">
+              <TrendList />
+            </template>
           </div>
         </div>
       </div>
