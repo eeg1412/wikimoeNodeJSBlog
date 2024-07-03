@@ -31,12 +31,18 @@ module.exports = async function (req, res, next) {
     }
 
     // 获取缓存中的trendListData
-    const trendListData = global.$cacheData.trendListData || null
-    const siteTimeZone = global.$globalConfig.siteSettings.siteTimeZone || 'Asia/Shanghai'
+    const trendListData = global.$cacheData.trendListData || null;
+    const siteTimeZone = global.$globalConfig.siteSettings.siteTimeZone || 'Asia/Shanghai';
     const startDate = moment().tz(siteTimeZone).startOf('day');
     if (trendListData) {
-      // 判断 trendListData 中的date是否超过10分钟且是否是今天且limit是否相等
-      if (moment(trendListData.date).isSame(startDate, 'day') && moment().diff(moment(trendListData.date), 'minutes') <= 10 && trendListData.limit === limit) {
+      // 确保trendListData.date也在相同的时区
+      const trendListDateWithTimeZone = moment(trendListData.date).tz(siteTimeZone);
+      const isSameDay = trendListDateWithTimeZone.isSame(startDate, 'day');
+      const isSameLimit = trendListData.limit === limit;
+      // 使用带时区的日期进行分钟差异比较
+      const isDiffSeconds = moment().tz(siteTimeZone).diff(trendListDateWithTimeZone, 'seconds');
+      const isOverTime = isDiffSeconds <= 10 * 60;
+      if (isSameDay && isOverTime && isSameLimit) {
         res.send({
           list: trendListData.list
         })
