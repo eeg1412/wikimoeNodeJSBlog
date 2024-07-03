@@ -15,7 +15,9 @@
           <span class="font-medium text-gray-700 mr-1">{{ index + 1 }}.</span
           ><span>{{ getTrendCategory(item) }}</span>
         </div>
-        <div class="line-clamp-2 text-gray-800 font-semibold text-sm">
+        <div
+          class="line-clamp-2 text-gray-800 font-semibold text-sm break-words"
+        >
           {{ getTrendTitle(item) }}
         </div>
       </div>
