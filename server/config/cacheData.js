@@ -66,6 +66,8 @@ exports.getSidebarList = async function (req, res, next) {
       resolve(data)
       // 更新 getCommentList
       this.getCommentList()
+      // 重置trend
+      this.resetTrend()
       console.info('sidebarList get success')
     }).catch((err) => {
       global.$cacheData.sidebarList = null
@@ -74,6 +76,35 @@ exports.getSidebarList = async function (req, res, next) {
     })
   })
   return promise
+}
+
+exports.resetTrend = () => {
+  // 重置trend
+  const sidebarList = global.$cacheData.sidebarList || []
+  const trendSidebar = sidebarList.find((item) => {
+    return item.type === 12
+  })
+  // 不存在type为12的侧边栏
+  if (!trendSidebar) {
+    global.$cacheData.trendListData = null
+    // reject
+    return true
+  }
+  // 存在type为3的侧边栏,获取count
+  const limit = trendSidebar.count || 0
+  // 如果count小于等于0，不获取最新评论列表
+  if (limit <= 0) {
+    global.$cacheData.trendListData = null
+    // reject
+    return true
+  }
+
+  const cacheLimit = global.$cacheData.trendListData?.limit || 0
+  if (cacheLimit !== limit) {
+    global.$cacheData.trendListData = null
+    return true
+  }
+  return false
 }
 
 exports.getBannerList = async function (req, res, next) {
