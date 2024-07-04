@@ -7,10 +7,12 @@
       v-for="(item, index) in trendList"
       :key="index"
       class="trend-item-body flex border border-solid cursor-pointer my-3 rounded-md overflow-hidden transition duration-500"
+      :class="`trend-item-type-${item.target}`"
     >
       <div
         class="flex-1 min-w-0 pr-4 pl-3 py-3 trend-item-left border-r border-solid transition duration-500"
       >
+        <div class="trend-item-left-image"></div>
         <div class="text-sm text-gray-500 mb-1 flex items-center">
           <span class="font-medium text-gray-700">{{ index + 1 }}</span
           ><span class="tenten"></span><span>{{ getTrendCategory(item) }}</span>
@@ -162,7 +164,22 @@ const getTrendCategory = (item) => {
 }
 .trend-item-left {
   /* background-color: #fbfbfb; */
+  position: relative;
+  z-index: 1;
   border-color: #e2e2e2;
+}
+.trend-item-left-image {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+  background-size: contain;
+  background-position: center right;
+  background-repeat: no-repeat;
+  opacity: 0.05;
+  @apply bg-primary-100;
 }
 .trend-item-body:hover,
 .trend-item-body:hover .trend-item-left {
