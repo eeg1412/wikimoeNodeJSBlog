@@ -158,11 +158,11 @@ const getTrendCategory = (item) => {
 </script>
 <style scoped>
 .trend-item-body {
-  border-color: #eee;
+  border-color: #e2e2e2;
 }
 .trend-item-left {
   /* background-color: #fbfbfb; */
-  border-color: #eee;
+  border-color: #e2e2e2;
 }
 .trend-item-body:hover,
 .trend-item-body:hover .trend-item-left {
