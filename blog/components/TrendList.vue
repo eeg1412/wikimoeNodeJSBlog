@@ -12,8 +12,8 @@
         class="flex-1 min-w-0 pr-4 pl-3 py-3 trend-item-left border-r border-solid transition duration-500"
       >
         <div class="text-sm text-gray-500 mb-1 flex items-center">
-          <span class="font-medium text-gray-700 mr-1">{{ index + 1 }}.</span
-          ><span>{{ getTrendCategory(item) }}</span>
+          <span class="font-medium text-gray-700">{{ index + 1 }}</span
+          ><span class="tenten"></span><span>{{ getTrendCategory(item) }}</span>
         </div>
         <div
           class="line-clamp-2 text-gray-800 font-semibold text-sm break-words"
