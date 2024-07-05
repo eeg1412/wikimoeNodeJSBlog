@@ -1,16 +1,16 @@
 <template>
-  <div class="trend-list-body">
+  <div class="trend-list-body mt-3">
     <!-- 遍历trendList -->
     <!-- nuxt-link -->
     <nuxt-link
       :to="getLinkObj(item)"
       v-for="(item, index) in trendList"
       :key="index"
-      class="trend-item-body flex border border-solid cursor-pointer my-3 rounded-md overflow-hidden transition duration-500"
+      class="trend-item-body flex border border-solid cursor-pointer my-2 rounded-md overflow-hidden transition duration-500"
       :class="`trend-item-type-${item.target}`"
     >
       <div
-        class="flex-1 min-w-0 pr-4 pl-3 py-3 trend-item-left border-r border-solid transition duration-500"
+        class="flex-1 min-w-0 pr-4 pl-3 py-2 trend-item-left border-r border-solid transition duration-500"
       >
         <div class="trend-item-left-image"></div>
         <div class="text-sm text-gray-500 mb-1 flex items-center">
