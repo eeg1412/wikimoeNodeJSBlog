@@ -1,4 +1,5 @@
 const readerlogUtils = require('../../../mongodb/utils/readerlogs')
+const postLikeLogUtils = require('../../../mongodb/utils/postLikeLogs')
 const utils = require('../../../utils/utils')
 const log4js = require('log4js')
 const userApiLog = log4js.getLogger('userApi')
@@ -55,6 +56,90 @@ module.exports = async function (req, res, next) {
     // 查询数据库
     const endDate = moment().tz(siteTimeZone).endOf('day');
 
+    const postLikeLogPipe = [
+      // 今天点赞的文章，startDate和endDate是今天的开始和结束,like为true
+      {
+        $match: {
+          date: { $gte: startDate.toDate(), $lte: endDate.toDate() },
+          like: true
+        }
+      },
+      {
+        $group: {
+          _id: "$post",
+          count: { $sum: 1 }
+        }
+      },
+      {
+        $sort: {
+          count: -1,
+          date: -1,
+          _id: -1
+        }
+      },
+      // 最多取500条
+      {
+        $limit: 500
+      },
+      // lookup posts 只要tags和status
+      {
+        $lookup: {
+          from: "posts",
+          localField: "_id",
+          foreignField: "_id",
+          as: "postDetail",
+          pipeline: [
+            { $project: { _id: 1, tags: 1, sort: 1, status: 1 } }
+          ]
+        }
+      },
+      {
+        $unwind: { path: "$postDetail", preserveNullAndEmptyArrays: true }
+      },
+      // 过滤掉status不为1的文章
+      {
+        $match: {
+          "postDetail.status": 1
+        }
+      },
+    ]
+    const postLikeLogData = await postLikeLogUtils.aggregate(postLikeLogPipe)
+    // 遍历postLikeLogData，获取tag和sort
+    const likeIdObjList = []
+    postLikeLogData.forEach((item) => {
+      const postDetail = item.postDetail
+      if (postDetail) {
+        const sort = postDetail.sort
+        // 查询sortIdObjList中是否存在sort
+        const sortIndex = likeIdObjList.findIndex((sortItem) => {
+          return sortItem._id.toString() === sort.toString()
+        })
+        if (sortIndex === -1) {
+          likeIdObjList.push({
+            _id: sort,
+            hot: item.count * 15
+          })
+        }
+
+        const tags = postDetail.tags
+        tags.forEach((tag) => {
+          const tagIndex = likeIdObjList.findIndex((tagItem) => {
+            return tagItem._id.toString() === tag.toString()
+          })
+          if (tagIndex === -1) {
+            likeIdObjList.push({
+              _id: tag,
+              hot: item.count * 15
+            })
+          }
+        })
+        likeIdObjList.push({
+          _id: item._id,
+          hot: item.count * 30
+        })
+      }
+    })
+
     const pipe = [
       {
         $match: {
@@ -67,12 +152,34 @@ module.exports = async function (req, res, next) {
         $group: {
           _id: "$data.targetId",
           target: { $first: "$data.target" },
-          count: { $sum: 1 }
+          hot: { $sum: 10 }
+        }
+      },
+      {
+        $addFields: {
+          hot: {
+            $add: [
+              "$hot", // 引用 $group 阶段计算的 hot 值
+              {
+                $reduce: {
+                  input: likeIdObjList,
+                  initialValue: 0,
+                  in: {
+                    $cond: [
+                      { $eq: ["$$this._id", "$_id"] }, // 检查当前文档的_id是否在likeIdObjList中
+                      { $add: ["$$value", "$$this.hot"] }, // 如果是，加上likeIdObjList中对应的hot数值
+                      "$$value" // 否则，保持当前累加值不变
+                    ]
+                  }
+                }
+              }
+            ]
+          }
         }
       },
       {
         $sort: {
-          count: -1,
+          hot: -1,
           _id: -1
         }
       },
@@ -183,6 +290,7 @@ module.exports = async function (req, res, next) {
   }).catch((err) => {
     // 释放锁
     userApiLog.error(`getTrendList unlock error, ${logErrorToText(err)}`)
+    throw new Error(err)
   })
 
 }
