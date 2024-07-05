@@ -27,9 +27,9 @@
       <div
         class="w-14 flex flex-col items-center justify-center text-sm bg-white"
       >
-        <div class="text-gray-800 text-xs">点击数</div>
+        <div class="text-gray-800 text-xs">热度</div>
         <div class="text-primary-600 text-base font-semibold">
-          {{ formatNumber(item.count) }}
+          {{ formatNumber(item.hot) }}
         </div>
       </div>
     </nuxt-link>
