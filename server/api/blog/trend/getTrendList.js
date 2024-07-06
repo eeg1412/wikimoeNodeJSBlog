@@ -35,7 +35,12 @@ module.exports = async function (req, res, next) {
     const trendListData = global.$cacheData.trendListData || null;
     const siteTimeZone = global.$globalConfig.siteSettings.siteTimeZone || 'Asia/Shanghai';
     const startDate = moment().tz(siteTimeZone).startOf('day');
+
+    let shouldUpdate = true;
     if (trendListData) {
+      res.send({
+        list: trendListData.list
+      })
       // 确保trendListData.date也在相同的时区
       const trendListDateWithTimeZone = moment(trendListData.date).tz(siteTimeZone);
       const isSameDay = trendListDateWithTimeZone.isSame(startDate, 'day');
@@ -44,142 +49,138 @@ module.exports = async function (req, res, next) {
       const isDiffSeconds = moment().tz(siteTimeZone).diff(trendListDateWithTimeZone, 'seconds');
       const isOverTime = isDiffSeconds <= 10 * 60;
       if (isSameDay && isOverTime && isSameLimit) {
-        res.send({
-          list: trendListData.list
-        })
+        shouldUpdate = false;
         // reject
         return
       }
     }
 
+    if (shouldUpdate) {
+      console.info('getTrendList should update')
+      // 查询数据库
+      const endDate = moment().tz(siteTimeZone).endOf('day');
 
-    // 查询数据库
-    const endDate = moment().tz(siteTimeZone).endOf('day');
-
-    const pipe = [
-      {
-        $match: {
-          createdAt: { $gte: startDate.toDate(), $lte: endDate.toDate() },
-          action: { $in: ['postView', 'postLike', 'postDislike'] },
-          isBot: false
-        }
-      },
-      {
-        $group: {
-          _id: "$data.targetId",
-          target: { $first: "$data.target" },
-          hot: {
-            $sum: {
-              $switch: {
-                branches: [
-                  { case: { $eq: ["$action", "postDislike"] }, then: -50 },
-                  { case: { $eq: ["$action", "postLike"] }, then: 50 },
-                ],
-                default: 10 // 其他情况下增加10分
+      const pipe = [
+        {
+          $match: {
+            createdAt: { $gte: startDate.toDate(), $lte: endDate.toDate() },
+            action: { $in: ['postView', 'postLike', 'postDislike'] },
+            isBot: false
+          }
+        },
+        {
+          $group: {
+            _id: "$data.targetId",
+            target: { $first: "$data.target" },
+            hot: {
+              $sum: {
+                $switch: {
+                  branches: [
+                    { case: { $eq: ["$action", "postDislike"] }, then: -50 },
+                    { case: { $eq: ["$action", "postLike"] }, then: 50 },
+                  ],
+                  default: 10 // 其他情况下增加10分
+                }
               }
             }
           }
-        }
-      },
-      {
-        $match: {
-          hot: { $gt: 0 }
-        }
-      },
-      {
-        $sort: {
-          hot: -1,
-          _id: -1
-        }
-      },
-      {
-        $limit: limit
-      },
-      {
-        $addFields: {
-          tag: {
-            $cond: { if: { $eq: ["$target", "tag"] }, then: "$_id", else: "$$REMOVE" }
-          },
-          sort: {
-            $cond: { if: { $eq: ["$target", "sort"] }, then: "$_id", else: "$$REMOVE" }
-          },
-          post: {
-            $cond: { if: { $in: ["$target", ["blog", "tweet", "page"]] }, then: "$_id", else: "$$REMOVE" }
+        },
+        {
+          $match: {
+            hot: { $gt: 0 }
           }
-        }
-      },
-      {
-        $lookup: {
-          from: "posts",
-          localField: "post",
-          foreignField: "_id",
-          pipeline: [
-            {
-              $match:
+        },
+        {
+          $sort: {
+            hot: -1,
+            _id: -1
+          }
+        },
+        {
+          $limit: limit
+        },
+        {
+          $addFields: {
+            post: {
+              $cond: { if: { $in: ["$target", ["blog", "tweet", "page"]] }, then: "$_id", else: "$$REMOVE" }
+            }
+          }
+        },
+        {
+          $lookup: {
+            from: "posts",
+            localField: "post",
+            foreignField: "_id",
+            pipeline: [
               {
-                $expr:
+                $match:
                 {
-                  $and: [
-                    { $eq: ["$status", 1] }
-                  ]
-                }
-              }
-            },
-            {
-              $addFields: {
-                coverImage: {
-                  $cond: {
-                    if: { $eq: [{ $size: "$coverImages" }, 0] },
-                    then: [],
-                    else: [{ $arrayElemAt: ["$coverImages", 0] }]
+                  $expr:
+                  {
+                    $and: [
+                      { $eq: ["$status", 1] }
+                    ]
                   }
                 }
-              }
-            },
-            {
-              $lookup: {
-                from: "attachments",
-                localField: "coverImage",
-                foreignField: "_id",
-                as: "coverImage"
-              }
-            },
-            { $unwind: { path: "$coverImage", preserveNullAndEmptyArrays: true } },
+              },
+              {
+                $addFields: {
+                  coverImage: {
+                    $cond: {
+                      if: { $eq: [{ $size: "$coverImages" }, 0] },
+                      then: [],
+                      else: [{ $arrayElemAt: ["$coverImages", 0] }]
+                    }
+                  }
+                }
+              },
+              {
+                $lookup: {
+                  from: "attachments",
+                  localField: "coverImage",
+                  foreignField: "_id",
+                  as: "coverImage"
+                }
+              },
+              { $unwind: { path: "$coverImage", preserveNullAndEmptyArrays: true } },
 
-            { $project: { _id: 1, title: 1, alias: 1, excerpt: 1, coverImage: 1 } }
-          ],
-          as: "postDetail"
+              { $project: { _id: 1, title: 1, alias: 1, excerpt: 1, coverImage: 1 } }
+            ],
+            as: "postDetail"
+          }
+        },
+        {
+          $unwind: {
+            path: "$postDetail",
+            preserveNullAndEmptyArrays: true
+          }
+        },
+        {
+          $match: {
+            $or: [
+              { "postDetail": { $exists: true, $ne: null } }
+            ]
+          }
+        },
+      ];
+      await readerlogUtils.aggregate(pipe).then((data) => {
+        // 写入缓存
+        global.$cacheData.trendListData = {
+          date: moment().toDate(),
+          list: data,
+          limit: limit
         }
-      },
-      {
-        $unwind: {
-          path: "$postDetail",
-          preserveNullAndEmptyArrays: true
+        if (!trendListData) {
+          console.info('getTrendList should send new data')
+          res.send({
+            list: data
+          })
         }
-      },
-      {
-        $match: {
-          $or: [
-            { "postDetail": { $exists: true, $ne: null } }
-          ]
-        }
-      },
-    ];
-    console.time('trend aggregate')
-    await readerlogUtils.aggregate(pipe).then((data) => {
-      console.timeEnd('trend aggregate')
-      // 写入缓存
-      global.$cacheData.trendListData = {
-        date: moment().toDate(),
-        list: data,
-        limit: limit
-      }
-      res.send({
-        list: data
+
+      }).catch((err) => {
+        userApiLog.error(`getTrendList error, ${logErrorToText(err)}`)
       })
-    }).catch((err) => {
-      userApiLog.error(`getTrendList error, ${logErrorToText(err)}`)
-    })
+    }
   }).then(() => {
     // 释放锁
     console.info('getTrendList unlock')
