@@ -292,7 +292,7 @@ export default {
         {
           title: '今日热门文章',
           content: '',
-          count: 1,
+          count: 5,
           type: 12,
           taxis: 0,
           status: 0,
