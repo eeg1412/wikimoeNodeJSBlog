@@ -6,9 +6,9 @@ import httpRequest from '~/api'
  * @return {any} 返回配置项
  */
 
-const URL = `/trend/list`
-const getTrendListApi = (params: any) => {
-  return httpRequest.get(URL, params)
+const POSTURL = `/trend/post/list`
+const getTrendPostListApi = (params: any) => {
+  return httpRequest.get(POSTURL, params)
 }
 
-export { getTrendListApi }
+export { getTrendPostListApi }

@@ -7,7 +7,7 @@ const moment = require('moment-timezone');
 
 
 module.exports = async function (req, res, next) {
-  utils.executeInLock('getTrendList', async () => {
+  utils.executeInLock('getTrendPostList', async () => {
     const sidebarList = global.$cacheData.sidebarList || []
     const trendSidebar = sidebarList.find((item) => {
       return item.type === 12
@@ -56,7 +56,7 @@ module.exports = async function (req, res, next) {
     }
 
     if (shouldUpdate) {
-      console.info('getTrendList should update')
+      console.info('getTrendPostList should update')
       // 查询数据库
       const endDate = moment().tz(siteTimeZone).endOf('day');
 
@@ -171,22 +171,22 @@ module.exports = async function (req, res, next) {
           limit: limit
         }
         if (!trendListData) {
-          console.info('getTrendList should send new data')
+          console.info('getTrendPostList should send new data')
           res.send({
             list: data
           })
         }
 
       }).catch((err) => {
-        userApiLog.error(`getTrendList error, ${logErrorToText(err)}`)
+        userApiLog.error(`getTrendPostList error, ${logErrorToText(err)}`)
       })
     }
   }).then(() => {
     // 释放锁
-    console.info('getTrendList unlock')
+    console.info('getTrendPostList unlock')
   }).catch((err) => {
     // 释放锁
-    userApiLog.error(`getTrendList unlock error, ${logErrorToText(err)}`)
+    userApiLog.error(`getTrendPostList unlock error, ${logErrorToText(err)}`)
   })
 
 }

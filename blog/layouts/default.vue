@@ -157,9 +157,9 @@
                 v-html="item.content"
               ></div>
             </template>
-            <!-- 12 TrendList -->
+            <!-- 12 TrendPostList -->
             <template v-else-if="item.type === 12">
-              <TrendList />
+              <TrendPostList />
             </template>
           </div>
         </div>
