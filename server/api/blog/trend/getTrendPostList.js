@@ -86,13 +86,6 @@ module.exports = async function (req, res, next) {
           }
         },
         {
-          $addFields: {
-            post: {
-              $cond: { if: { $in: ["$target", ["blog", "tweet", "page"]] }, then: "$_id", else: "$$REMOVE" }
-            }
-          }
-        },
-        {
           $lookup: {
             from: "comments",
             localField: "_id",
@@ -141,7 +134,7 @@ module.exports = async function (req, res, next) {
         {
           $lookup: {
             from: "posts",
-            localField: "post",
+            localField: "_id",
             foreignField: "_id",
             pipeline: [
               {
