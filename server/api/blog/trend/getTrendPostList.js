@@ -33,8 +33,6 @@ module.exports = async function (req, res, next) {
 
     // 获取缓存中的trendPostListData
     const trendPostListData = global.$cacheData.trendPostListData || null;
-    const siteTimeZone = global.$globalConfig.siteSettings.siteTimeZone || 'Asia/Shanghai';
-    const startDate = moment().tz(siteTimeZone).startOf('day');
 
     let shouldUpdate = true;
     if (trendPostListData) {
@@ -42,13 +40,12 @@ module.exports = async function (req, res, next) {
         list: trendPostListData.list
       })
       // 确保trendPostListData.date也在相同的时区
-      const trendPostListDateWithTimeZone = moment(trendPostListData.date).tz(siteTimeZone);
-      const isSameDay = trendPostListDateWithTimeZone.isSame(startDate, 'day');
+      const trendPostListDate = trendPostListData.date;
       const isSameLimit = trendPostListData.limit === limit;
       // 使用带时区的日期进行分钟差异比较
-      const isDiffSeconds = moment().tz(siteTimeZone).diff(trendPostListDateWithTimeZone, 'seconds');
-      const isOverTime = isDiffSeconds <= 10 * 60;
-      if (isSameDay && isOverTime && isSameLimit) {
+      const isDiffSeconds = moment().diff(trendPostListDate, 'seconds');
+      const isWithinTimeLimit = isDiffSeconds <= 10 * 60;
+      if (isWithinTimeLimit && isSameLimit) {
         shouldUpdate = false;
         // reject
         return
@@ -58,12 +55,13 @@ module.exports = async function (req, res, next) {
     if (shouldUpdate) {
       console.info('getTrendPostList should update')
       // 查询数据库
-      const endDate = moment().tz(siteTimeZone).endOf('day');
+      // 获取24小时前的时间
+      const twentyFourHoursAgo = moment().subtract(24, 'hours');
 
       const pipe = [
         {
           $match: {
-            createdAt: { $gte: startDate.toDate(), $lte: endDate.toDate() },
+            createdAt: { $gte: twentyFourHoursAgo.toDate() },
             action: { $in: ['postView', 'postLike', 'postDislike'] },
             isBot: false
           }
@@ -93,7 +91,7 @@ module.exports = async function (req, res, next) {
             pipeline: [
               {
                 $match: {
-                  date: { $gte: startDate.toDate(), $lte: endDate.toDate() },
+                  date: { $gte: twentyFourHoursAgo.toDate() },
                   status: 1,
                   $or: [
                     { user: null },

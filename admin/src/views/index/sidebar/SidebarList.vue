@@ -195,7 +195,7 @@ export default {
     const sidebarSettingsForm = ref([])
     const sidebarSettingsTemplate = computed(() => {
       const base = [
-        // 1:自定义内容 2:热门文章 3:最新评论 4:标签云 5:随机文章 6:热门文章 7:搜索 8:分类 9:归档 10:谷歌广告 11:自定义HTML 12:今日热门文章
+        // 1:自定义内容 3:最新评论 4:标签云 5:随机文章 7:搜索 8:分类 9:归档 10:谷歌广告 11:自定义HTML 12:热门文章
         {
           title: '自定义内容',
           content: '',
@@ -224,14 +224,6 @@ export default {
         },
       ]
       const only1 = [
-        // {
-        //   title: '热门文章',
-        //   content: '',
-        //   count: 10,
-        //   type: 2,
-        //   taxis: 0,
-        //   status: 0,
-        // },
         {
           title: '最新评论',
           content: '',
@@ -288,9 +280,9 @@ export default {
           taxis: 0,
           status: 0,
         },
-        // 今日热门文章
+        // 热门文章
         {
-          title: '今日热门文章',
+          title: '热门文章',
           content: '',
           count: 5,
           type: 12,
