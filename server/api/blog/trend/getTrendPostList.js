@@ -31,22 +31,22 @@ module.exports = async function (req, res, next) {
       return
     }
 
-    // 获取缓存中的trendListData
-    const trendListData = global.$cacheData.trendListData || null;
+    // 获取缓存中的trendPostListData
+    const trendPostListData = global.$cacheData.trendPostListData || null;
     const siteTimeZone = global.$globalConfig.siteSettings.siteTimeZone || 'Asia/Shanghai';
     const startDate = moment().tz(siteTimeZone).startOf('day');
 
     let shouldUpdate = true;
-    if (trendListData) {
+    if (trendPostListData) {
       res.send({
-        list: trendListData.list
+        list: trendPostListData.list
       })
-      // 确保trendListData.date也在相同的时区
-      const trendListDateWithTimeZone = moment(trendListData.date).tz(siteTimeZone);
-      const isSameDay = trendListDateWithTimeZone.isSame(startDate, 'day');
-      const isSameLimit = trendListData.limit === limit;
+      // 确保trendPostListData.date也在相同的时区
+      const trendPostListDateWithTimeZone = moment(trendPostListData.date).tz(siteTimeZone);
+      const isSameDay = trendPostListDateWithTimeZone.isSame(startDate, 'day');
+      const isSameLimit = trendPostListData.limit === limit;
       // 使用带时区的日期进行分钟差异比较
-      const isDiffSeconds = moment().tz(siteTimeZone).diff(trendListDateWithTimeZone, 'seconds');
+      const isDiffSeconds = moment().tz(siteTimeZone).diff(trendPostListDateWithTimeZone, 'seconds');
       const isOverTime = isDiffSeconds <= 10 * 60;
       if (isSameDay && isOverTime && isSameLimit) {
         shouldUpdate = false;
@@ -165,12 +165,12 @@ module.exports = async function (req, res, next) {
       ];
       await readerlogUtils.aggregate(pipe).then((data) => {
         // 写入缓存
-        global.$cacheData.trendListData = {
+        global.$cacheData.trendPostListData = {
           date: moment().toDate(),
           list: data,
           limit: limit
         }
-        if (!trendListData) {
+        if (!trendPostListData) {
           console.info('getTrendPostList should send new data')
           res.send({
             list: data

@@ -86,7 +86,7 @@ exports.resetTrend = () => {
   })
   // 不存在type为12的侧边栏
   if (!trendSidebar) {
-    global.$cacheData.trendListData = null
+    global.$cacheData.trendPostListData = null
     // reject
     return true
   }
@@ -94,14 +94,14 @@ exports.resetTrend = () => {
   const limit = trendSidebar.count || 0
   // 如果count小于等于0，不获取最新评论列表
   if (limit <= 0) {
-    global.$cacheData.trendListData = null
+    global.$cacheData.trendPostListData = null
     // reject
     return true
   }
 
-  const cacheLimit = global.$cacheData.trendListData?.limit || 0
+  const cacheLimit = global.$cacheData.trendPostListData?.limit || 0
   if (cacheLimit !== limit) {
-    global.$cacheData.trendListData = null
+    global.$cacheData.trendPostListData = null
     return true
   }
   return false

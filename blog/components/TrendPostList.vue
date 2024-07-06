@@ -1,10 +1,10 @@
 <template>
   <div class="trend-list-body mt-3">
-    <!-- 遍历trendList -->
+    <!-- 遍历trendPostList -->
     <!-- nuxt-link -->
     <nuxt-link
       :to="getLinkObj(item)"
-      v-for="(item, index) in trendList"
+      v-for="(item, index) in trendPostList"
       :key="index"
       class="trend-item-body flex border border-solid cursor-pointer my-2 rounded-md overflow-hidden transition duration-500"
       :class="`trend-item-type-${item.target}`"
@@ -39,8 +39,11 @@
       </div>
     </nuxt-link>
     <!-- 空列表 -->
-    <!-- v-if="trendList.length === 0" -->
-    <div class="text-center py-4 text-gray-500" v-if="trendList.length === 0">
+    <!-- v-if="trendPostList.length === 0" -->
+    <div
+      class="text-center py-4 text-gray-500"
+      v-if="trendPostList.length === 0"
+    >
       <!-- <div class="text-2xl mb-2">
         <UIcon name="i-heroicons-cube-transparent" class="align-middle mr-1" />
       </div> -->
@@ -56,8 +59,8 @@ import { storeToRefs } from 'pinia'
 const optionStore = useOptionStore()
 const { options } = storeToRefs(optionStore)
 
-const { data: trendListData } = await getTrendPostListApi()
-const trendList = ref(trendListData.value.list)
+const { data: trendPostListData } = await getTrendPostListApi()
+const trendPostList = ref(trendPostListData.value.list)
 
 const getTrendDetail = (item, target) => {
   let detail = ''
