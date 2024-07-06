@@ -60,7 +60,7 @@ module.exports = async function (req, res, next) {
       {
         $match: {
           createdAt: { $gte: startDate.toDate(), $lte: endDate.toDate() },
-          action: { $in: ['postView', 'postListSort', 'postListTag', 'postLike', 'postDislike'] },
+          action: { $in: ['postView', 'postLike', 'postDislike'] },
           isBot: false
         }
       },
@@ -68,38 +68,32 @@ module.exports = async function (req, res, next) {
         $group: {
           _id: "$data.targetId",
           target: { $first: "$data.target" },
-          likes: {
-            $sum: {
-              $switch: {
-                branches: [
-                  { case: { $eq: ["$action", "postLike"] }, then: 1 },
-                  { case: { $eq: ["$action", "postDislike"] }, then: -1 }
-                ],
-                default: 0 // 其他action类型不计算
-              }
-            }
-          },
-          count: {
-            $sum: {
-              $switch: {
-                branches: [
-                  { case: { $eq: ["$action", "postLike"] }, then: 0 },
-                  { case: { $eq: ["$action", "postDislike"] }, then: 0 }
-                ],
-                default: 1 // 除了postLike和postDislike外的action类型计数
-              }
-            }
-          },
           hot: {
             $sum: {
-              $cond: {
-                if: { $eq: ["$action", "postDislike"] },
-                then: -10, // 如果是postDislike，不增加hot
-                else: 10 // 其他情况下增加10分
+              $switch: {
+                branches: [
+                  { case: { $eq: ["$action", "postDislike"] }, then: -50 },
+                  { case: { $eq: ["$action", "postLike"] }, then: 50 },
+                ],
+                default: 10 // 其他情况下增加10分
               }
             }
           }
         }
+      },
+      {
+        $match: {
+          hot: { $gt: 0 }
+        }
+      },
+      {
+        $sort: {
+          hot: -1,
+          _id: -1
+        }
+      },
+      {
+        $limit: limit
       },
       {
         $addFields: {
@@ -131,7 +125,28 @@ module.exports = async function (req, res, next) {
                 }
               }
             },
-            { $project: { _id: 1, title: 1, alias: 1, excerpt: 1, tags: 1, sort: 1 } }
+            {
+              $addFields: {
+                coverImage: {
+                  $cond: {
+                    if: { $eq: [{ $size: "$coverImages" }, 0] },
+                    then: [],
+                    else: [{ $arrayElemAt: ["$coverImages", 0] }]
+                  }
+                }
+              }
+            },
+            {
+              $lookup: {
+                from: "attachments",
+                localField: "coverImage",
+                foreignField: "_id",
+                as: "coverImage"
+              }
+            },
+            { $unwind: { path: "$coverImage", preserveNullAndEmptyArrays: true } },
+
+            { $project: { _id: 1, title: 1, alias: 1, excerpt: 1, coverImage: 1 } }
           ],
           as: "postDetail"
         }
@@ -143,167 +158,8 @@ module.exports = async function (req, res, next) {
         }
       },
       {
-        $addFields: {
-          "postDetail.tags": {
-            $map: {
-              input: "$postDetail.tags",
-              as: "tag",
-              in: {
-                _id: "$$tag",
-                tag: "$$tag",
-                target: "tag",
-                likes: "$likes",
-                hot: { $multiply: ["$count", 3] } // 假设 $$count 是你想乘以 10 的字段
-              }
-            }
-          }
-        }
-      },
-      {
-        $addFields: {
-          "postDetail.sort": {
-            _id: "$postDetail.sort",
-            target: "sort",
-            likes: "$likes",
-            sort: "$postDetail.sort",
-            hot: { $multiply: ["$count", 3] }
-          }
-        }
-      },
-      {
-        $facet: {
-          posts: [
-            {
-              $project: {
-                _id: 1,
-                target: 1,
-                likes: 1,
-                count: 1,
-                hot: 1,
-                post: 1,
-                tag: 1,
-                sort: 1,
-                postDetail: {
-                  _id: 1,
-                  title: 1,
-                  excerpt: 1,
-                  alias: 1
-                  // 排除tags字段
-                }
-              }
-            }
-          ],
-          tags: [
-            { $unwind: "$postDetail.tags" },
-            { $match: { "postDetail.tags._id": { $exists: true, $ne: null } } },
-            {
-              $replaceRoot: { newRoot: "$postDetail.tags" }
-            }
-          ],
-          sorts: [
-            {
-              $match: {
-                "postDetail.sort._id": { $exists: true, $ne: null }
-              }
-            },
-            {
-              $replaceRoot: { newRoot: "$postDetail.sort" }
-            }
-          ]
-        }
-      },
-      {
-        $project: {
-          combined: { $concatArrays: ["$posts", "$tags", "$sorts"] }
-        }
-      },
-      { $unwind: "$combined" },
-      { $replaceRoot: { newRoot: "$combined" } },
-      {
-        $group: {
-          _id: "$_id",
-          target: { $first: "$target" },
-          likes: { $first: "$likes" },
-          hot: {
-            $sum: {
-              $add: [
-                "$hot", // 原有的hot数量
-                {
-                  $switch: {
-                    branches: [
-                      { case: { $eq: ["$target", "blog"] }, then: { $multiply: ["$likes", 20] } },
-                      { case: { $eq: ["$target", "tweet"] }, then: { $multiply: ["$likes", 20] } },
-                      { case: { $eq: ["$target", "page"] }, then: { $multiply: ["$likes", 20] } },
-                      { case: { $eq: ["$target", "tag"] }, then: { $multiply: ["$likes", 10] } },
-                      { case: { $eq: ["$target", "sort"] }, then: { $multiply: ["$likes", 10] } }
-                    ],
-                    default: 0
-                  }
-                }
-              ]
-            }
-          },
-          post: { $first: "$post" },
-          tag: { $first: "$tag" },
-          sort: { $first: "$sort" },
-          postDetail: { $first: "$postDetail" }
-        }
-      },
-      // 筛选掉hot小于等于0的数据
-      {
-        $match: {
-          hot: { $gt: 0 }
-        }
-      },
-      {
-        $sort: {
-          hot: -1,
-          _id: -1
-        }
-      },
-      {
-        $limit: limit
-      },
-      {
-        $lookup: {
-          from: "tags",
-          localField: "tag",
-          foreignField: "_id",
-          as: "tagDetail",
-          pipeline: [
-            { $project: { _id: 1, tagname: 1 } } // 仅返回需要的字段
-          ]
-        }
-      },
-      {
-        $lookup: {
-          from: "sorts",
-          localField: "sort",
-          foreignField: "_id",
-          as: "sortDetail",
-          pipeline: [
-            { $project: { sortname: 1, alias: 1, _id: 1 } } // 仅返回需要的字段
-          ]
-        }
-      },
-
-      {
-        $unwind: {
-          path: "$tagDetail",
-          preserveNullAndEmptyArrays: true
-        }
-      },
-      {
-        $unwind: {
-          path: "$sortDetail",
-          preserveNullAndEmptyArrays: true
-        }
-      },
-      {
         $match: {
           $or: [
-            { "tagDetail": { $exists: true, $ne: null } },
-            { "sortDetail": { $exists: true, $ne: null } },
             { "postDetail": { $exists: true, $ne: null } }
           ]
         }

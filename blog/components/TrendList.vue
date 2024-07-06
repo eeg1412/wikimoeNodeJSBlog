@@ -12,7 +12,12 @@
       <div
         class="flex-1 min-w-0 pr-4 pl-3 py-2 trend-item-left border-r border-solid transition duration-500"
       >
-        <div class="trend-item-left-image"></div>
+        <div
+          class="trend-item-left-image"
+          :style="{
+            backgroundImage: getBackgroundImage(item),
+          }"
+        ></div>
         <div class="text-sm text-gray-500 mb-1 flex items-center">
           <span class="font-medium text-gray-700">{{ index + 1 }}</span
           ><span class="tenten"></span><span>{{ getTrendCategory(item) }}</span>
@@ -45,6 +50,11 @@
 </template>
 <script setup>
 import { getTrendListApi } from '@/api/trend'
+import { useOptionStore } from '@/store/options'
+import { storeToRefs } from 'pinia'
+
+const optionStore = useOptionStore()
+const { options } = storeToRefs(optionStore)
 
 const { data: trendListData } = await getTrendListApi()
 const trendList = ref(trendListData.value.list)
@@ -52,12 +62,6 @@ const trendList = ref(trendListData.value.list)
 const getTrendDetail = (item, target) => {
   let detail = ''
   switch (target) {
-    case 'tag':
-      detail = item.tagDetail
-      break
-    case 'sort':
-      detail = item.sortDetail
-      break
     case 'tweet':
     case 'blog':
     case 'page':
@@ -73,18 +77,6 @@ const getLinkObj = (item) => {
   const target = item.target
   const detail = getTrendDetail(item, target)
   switch (target) {
-    case 'tag':
-      linkObj = {
-        name: 'postListTag',
-        params: { tagid: detail._id, page: 1 },
-      }
-      break
-    case 'sort':
-      linkObj = {
-        name: 'postListSort',
-        params: { sortid: detail.alias || detail._id, page: 1 },
-      }
-      break
     case 'tweet':
     case 'blog':
       linkObj = {
@@ -109,12 +101,6 @@ const getTrendTitle = (item) => {
   const target = item.target
   const detail = getTrendDetail(item, target)
   switch (target) {
-    case 'tag':
-      title = '#' + detail.tagname
-      break
-    case 'sort':
-      title = detail.sortname
-      break
     case 'tweet':
       title = detail.excerpt
       break
@@ -131,14 +117,6 @@ const getTrendCategory = (item) => {
   let category = ''
   const target = item.target
   switch (target) {
-    case 'tag':
-      category = '标签'
-
-      break
-    // sort
-    case 'sort':
-      category = '分类'
-      break
     // tweet
     case 'tweet':
       category = '推文'
@@ -156,6 +134,17 @@ const getTrendCategory = (item) => {
       break
   }
   return category
+}
+const getBackgroundImage = (item) => {
+  let backgroundImage = ''
+  const target = item.target
+  const detail = getTrendDetail(item, target)
+  if (detail.coverImage) {
+    backgroundImage = detail.coverImage.thumfor || detail.coverImage.filepath
+  } else {
+    backgroundImage = options.value.siteUrl + options.value.siteDefaultCover
+  }
+  return `url(${backgroundImage})`
 }
 </script>
 <style scoped>
@@ -175,10 +164,10 @@ const getTrendCategory = (item) => {
   width: 100%;
   height: 100%;
   z-index: -1;
-  background-size: contain;
-  background-position: center right;
+  background-size: cover;
+  background-position: center center;
   background-repeat: no-repeat;
-  opacity: 0.05;
+  opacity: 0.08;
   @apply bg-primary-100;
 }
 .trend-item-body:hover,
