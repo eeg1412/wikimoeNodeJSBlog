@@ -47,7 +47,7 @@ module.exports = async function (req, res, next) {
       const isSameLimit = trendPostListData.limit === limit;
       // 使用带时区的日期进行分钟差异比较
       const isDiffSeconds = moment().tz(siteTimeZone).diff(trendPostListDateWithTimeZone, 'seconds');
-      const isOverTime = isDiffSeconds <= 10 * 60;
+      const isOverTime = isDiffSeconds <= 0.0010 * 60;
       if (isSameDay && isOverTime && isSameLimit) {
         shouldUpdate = false;
         // reject
@@ -86,6 +86,45 @@ module.exports = async function (req, res, next) {
           }
         },
         {
+          $addFields: {
+            post: {
+              $cond: { if: { $in: ["$target", ["blog", "tweet", "page"]] }, then: "$_id", else: "$$REMOVE" }
+            }
+          }
+        },
+        {
+          $lookup: {
+            from: "comments",
+            localField: "_id",
+            foreignField: "post",
+            pipeline: [
+              {
+                $match: {
+                  date: { $gte: startDate.toDate(), $lte: endDate.toDate() },
+                  status: 1,
+                  user: { $eq: null }
+                }
+              },
+              {
+                $project: {
+                  _id: 1,
+                }
+              }
+            ],
+            as: "comments"
+          }
+        },
+        {
+          $addFields: {
+            hot: { $add: ["$hot", { $multiply: [{ $size: "$comments" }, 50] }] }
+          }
+        },
+        {
+          $project: {
+            comments: 0, // 不包含comments字段
+          }
+        },
+        {
           $match: {
             hot: { $gt: 0 }
           }
@@ -98,13 +137,6 @@ module.exports = async function (req, res, next) {
         },
         {
           $limit: limit
-        },
-        {
-          $addFields: {
-            post: {
-              $cond: { if: { $in: ["$target", ["blog", "tweet", "page"]] }, then: "$_id", else: "$$REMOVE" }
-            }
-          }
         },
         {
           $lookup: {
