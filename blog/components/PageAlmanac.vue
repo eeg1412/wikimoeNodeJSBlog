@@ -1,7 +1,7 @@
 <template>
   <div class="container">
     <div class="title bg-primary text-white">程序员老黄历</div>
-    <div class="date">{{ titleDate }}</div>
+    <div class="date">{{ isLoading ? '正在计算今日运势...' : titleDate }}</div>
     <div class="good">
       <div class="title">
         <table>
@@ -434,17 +434,21 @@ const badList = ref([])
 function addToBad(event) {
   badList.value.push(event)
 }
-
+const isLoading = ref(true)
 const titleDate = ref('')
 const direction_value = ref('')
 const drink_value = ref('')
 const goddes_value = ref('')
-onMounted(() => {
+const init = () => {
   titleDate.value = getTodayString()
   direction_value.value = directions[random(iday, 2) % directions.length]
   drink_value.value = pickRandom(drinks, 2).join('，')
   goddes_value.value = star((random(iday, 6) % 5) + 1)
   pickTodaysLuck()
+  isLoading.value = false
+}
+onMounted(() => {
+  init()
 })
 </script>
 
@@ -491,6 +495,7 @@ onMounted(() => {
 .bad {
   clear: both;
   position: relative;
+  min-height: 68px;
 }
 
 .good .title,
