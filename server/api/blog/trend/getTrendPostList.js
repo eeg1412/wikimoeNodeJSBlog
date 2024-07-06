@@ -95,7 +95,10 @@ module.exports = async function (req, res, next) {
                 $match: {
                   date: { $gte: startDate.toDate(), $lte: endDate.toDate() },
                   status: 1,
-                  user: { $eq: null }
+                  $or: [
+                    { user: null },
+                    { user: { $exists: false } }
+                  ]
                 }
               },
               {
