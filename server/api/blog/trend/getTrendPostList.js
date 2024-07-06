@@ -74,10 +74,10 @@ module.exports = async function (req, res, next) {
               $sum: {
                 $switch: {
                   branches: [
-                    { case: { $eq: ["$action", "postDislike"] }, then: -50 },
-                    { case: { $eq: ["$action", "postLike"] }, then: 50 },
+                    { case: { $eq: ["$action", "postDislike"] }, then: -51 },
+                    { case: { $eq: ["$action", "postLike"] }, then: 51 },
                   ],
-                  default: 10 // 其他情况下增加10分
+                  default: 13 // 其他情况下
                 }
               }
             }
@@ -110,7 +110,7 @@ module.exports = async function (req, res, next) {
         },
         {
           $addFields: {
-            hot: { $add: ["$hot", { $multiply: [{ $size: "$comments" }, 50] }] }
+            hot: { $add: ["$hot", { $multiply: [{ $size: "$comments" }, 91] }] }
           }
         },
         {
