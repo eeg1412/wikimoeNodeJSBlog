@@ -44,7 +44,7 @@ module.exports = async function (req, res, next) {
       const isSameLimit = trendPostListData.limit === limit;
       // 使用带时区的日期进行分钟差异比较
       const isDiffSeconds = moment().diff(trendPostListDate, 'seconds');
-      const isWithinTimeLimit = isDiffSeconds <= 10 * 60;
+      const isWithinTimeLimit = isDiffSeconds <= 2 * 60;
       if (isWithinTimeLimit && isSameLimit) {
         shouldUpdate = false;
         // reject
