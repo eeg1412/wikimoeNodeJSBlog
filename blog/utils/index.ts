@@ -92,7 +92,7 @@ export function formatDate(
 export function formatNumber(num: number) {
   if (num < 1000) {
     return num
-  } else if (num < 10000) {
+  } else if (num < 100000) {
     return (num / 1000).toFixed(1) + 'k'
   } else if (num < 100000000) {
     return (num / 10000).toFixed(1) + 'm'
