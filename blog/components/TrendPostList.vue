@@ -178,7 +178,7 @@ const getBackgroundImage = (item) => {
   @apply border-primary-500;
 }
 .trend-right-hot-body {
-  min-width: 3.5rem;
+  min-width: 4rem;
 }
 /* .trend-item-body:hover .trend-item-left {
   @apply bg-primary-50;
