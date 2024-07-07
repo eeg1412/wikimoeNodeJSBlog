@@ -30,7 +30,7 @@
       </div>
 
       <div
-        class="w-14 flex flex-col items-center justify-center text-sm bg-white"
+        class="trend-right-hot-body px-1 flex flex-col items-center justify-center text-sm bg-white"
       >
         <div class="text-gray-800 text-xs">热度</div>
         <div class="text-primary-600 text-base font-semibold">
@@ -176,6 +176,9 @@ const getBackgroundImage = (item) => {
 .trend-item-body:hover,
 .trend-item-body:hover .trend-item-left {
   @apply border-primary-500;
+}
+.trend-right-hot-body {
+  min-width: 3.5rem;
 }
 /* .trend-item-body:hover .trend-item-left {
   @apply bg-primary-50;
