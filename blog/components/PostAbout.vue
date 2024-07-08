@@ -3,7 +3,7 @@
     <div
       class="mb-4 text-gray-600 font-bold text-base border-b border-dotted pb-3 border-gray-300"
     >
-      相关博文：
+      {{ title }}：
     </div>
     <div>
       <div class="mb-4" v-for="item in postList" :key="item._id">
@@ -27,6 +27,10 @@ const props = defineProps({
     default() {
       return []
     },
+  },
+  title: {
+    type: String,
+    default: '相关博文',
   },
 })
 </script>
