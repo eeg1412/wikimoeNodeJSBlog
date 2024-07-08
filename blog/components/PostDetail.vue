@@ -265,6 +265,7 @@
             <div
               class="comment-list-item"
               v-for="(item, index) in commentList"
+              :id="`post-detail-comment-${item._id}`"
               :key="item._id"
             >
               <div class="flex">
@@ -549,6 +550,24 @@ const commentSize = computed(() => {
   return commentData.value.size
 })
 const commentLoading = ref(false)
+let postCommentId = null
+if (process.client) {
+  postCommentId = sessionStorage.getItem('wm-post-commentid')
+  if (postCommentId) {
+    // 用逗号拆成数组
+    postCommentId = postCommentId.split(',')
+    // 取第0个比对postid，如果不一样清空postCommentId
+    if (postCommentId[0] !== postid) {
+      console.warn('postCommentId postId不一致')
+      postCommentId = null
+    } else {
+      // 取第1个，转为数字
+      postCommentId = postCommentId[1]
+    }
+    // 清空sessionStorage
+    sessionStorage.removeItem('wm-post-commentid')
+  }
+}
 const getCommentList = async (goToCommentListRef) => {
   commentLoading.value = true
   getCommentListApi({
@@ -560,7 +579,20 @@ const getCommentList = async (goToCommentListRef) => {
       commentData.value = res
       commentLikeLogList()
       nextTick(() => {
-        if (goToCommentListRef) {
+        if (commentPage.value === 1 && postCommentId) {
+          // 查询id对应的dom
+          const commentDom = document.getElementById(
+            `post-detail-comment-${postCommentId}`
+          )
+          if (commentDom) {
+            window.scrollBy({
+              top: commentDom.getBoundingClientRect().top - 100,
+              behavior: 'smooth',
+            })
+          } else {
+            console.warn('postCommentId 找不到对应的评论')
+          }
+        } else if (goToCommentListRef) {
           const rect = commentListRef.value.getBoundingClientRect()
           window.scrollBy({
             top: rect.top - 100,

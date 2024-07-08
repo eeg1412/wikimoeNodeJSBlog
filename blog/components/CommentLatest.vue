@@ -59,15 +59,28 @@ const goPostDetail = (e, item, middle) => {
   if (postType === 3) {
     routeName = 'pageDetail'
   }
+  // 当前path和点击的path一样，就不跳转
+  // resolveUrl
+  const url = router.resolve({
+    name: routeName,
+    params: { id },
+  }).href
+  const newTabOpen = () => {
+    const newtab = window.open(url, '_blank')
+    newtab.sessionStorage.setItem(
+      'wm-post-commentid',
+      `${item.post._id},${item._id}`
+    )
+  }
   // 如果middle为true，就在新标签页打开
   if (middle) {
-    // resolveUrl
-    const url = router.resolve({
-      name: routeName,
-      params: { id },
-    }).href
-    window.open(url, '_blank')
+    newTabOpen()
   } else {
+    if (router.currentRoute.value.path === url) {
+      newTabOpen()
+      return
+    }
+    sessionStorage.setItem('wm-post-commentid', `${item.post._id},${item._id}`)
     router.push({
       name: routeName,
       params: {
