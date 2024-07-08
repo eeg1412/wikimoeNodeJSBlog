@@ -362,6 +362,11 @@ onUnmounted(() => {})
   background-color: #ffffff;
   /* 撑开剩余空间 */
   flex: 1;
+  align-self: flex-end;
+  position: sticky;
+  bottom: 0px;
+  min-height: 100vh;
+  min-height: 100dvh;
   overflow: hidden;
 }
 .blog-layout-right-body {
