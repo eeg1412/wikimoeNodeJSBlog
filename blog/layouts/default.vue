@@ -365,6 +365,7 @@ onUnmounted(() => {})
   align-self: flex-end;
   position: sticky;
   bottom: 0px;
+  width: 100%;
   min-height: 100vh;
   min-height: 100dvh;
   overflow: hidden;
@@ -726,6 +727,9 @@ onUnmounted(() => {})
 @media (max-width: 768px) {
   .blog-layout-content-body {
     margin-left: 0px;
+    align-self: stretch;
+    position: relative;
+    bottom: unset;
   }
   .blog-layout-body {
     margin-bottom: 0px;
