@@ -253,11 +253,11 @@
           :allowRemark="postData.data.allowRemark"
           @refresh="refreshCommentList"
         />
-        <div class="relative">
-          <DivLoading :loading="commentLoading" />
+        <div class="relative pt-5">
+          <DivLoading :loading="commentLoading" text="拼命加载中..." />
           <!-- 评论 -->
           <div
-            class="mt-5 pt-5 border-t border-solid border-gray-200"
+            class="pt-5 border-t border-solid border-gray-200"
             ref="commentListRef"
             v-if="commentTotal > 0"
           >
@@ -440,6 +440,17 @@
               :max="7"
               v-if="commentTotal > 0"
             />
+            <!-- 无数据 -->
+            <div
+              class="text-center pb-5"
+              v-else-if="
+                options.siteEnableComment &&
+                postData.data.allowRemark &&
+                !commentLoading
+              "
+            >
+              <span class="text-gray-500">期待大佬们的评论(☆ω☆)</span>
+            </div>
           </div>
         </div>
       </div>
