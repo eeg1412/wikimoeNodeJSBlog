@@ -139,13 +139,16 @@ const getTrendCategory = (item) => {
   return category
 }
 const getBackgroundImage = (item) => {
-  let backgroundImage = ''
+  let backgroundImage = options.value.siteUrl + options.value.siteDefaultCover
   const target = item.target
   const detail = getTrendDetail(item, target)
   if (detail.coverImage) {
-    backgroundImage = detail.coverImage.thumfor || detail.coverImage.filepath
-  } else {
-    backgroundImage = options.value.siteUrl + options.value.siteDefaultCover
+    const mimetype = detail.coverImage.mimetype
+    if (detail.coverImage.thumfor) {
+      backgroundImage = detail.coverImage.thumfor
+    } else if (mimetype.includes('image')) {
+      backgroundImage = detail.coverImage.filepath
+    }
   }
   return `url(${backgroundImage})`
 }
