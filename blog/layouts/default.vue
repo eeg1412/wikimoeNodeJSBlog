@@ -203,7 +203,7 @@
         </div>
       </div>
     </div>
-
+    <div id="rightToolBarMenu"></div>
     <div class="right-tool-bar" id="rightToolBar">
       <GoTop />
     </div>

@@ -457,30 +457,32 @@
     </ClientOnly>
     <ClientOnly>
       <!-- headerList -->
-      <transition name="fade">
-        <div class="common-right-tool-menu-body" v-show="showHeaderListMenu">
-          <div class="common-right-tool-menu-box">
-            <div
-              class="flex justify-between items-center bg-white border-b border-solid border-gray-200 text-base px-4 py-3"
-            >
-              <div>文章目录</div>
-              <button
-                class="text-gray-500 hover:text-gray-700"
-                @click="switchShowHeaderListMenu"
+      <Teleport to="#rightToolBarMenu">
+        <transition name="fade">
+          <div class="common-right-tool-menu-body" v-show="showHeaderListMenu">
+            <div class="common-right-tool-menu-box">
+              <div
+                class="flex justify-between items-center bg-white border-b border-solid border-gray-200 text-base px-4 py-3"
               >
-                <UIcon name="i-heroicons-x-mark" />
-              </button>
-            </div>
-            <div class="custom-scroll common-right-tool-menu">
-              <PostHeaderItem
-                :list="headerList"
-                :activeHeaderDom="activeHeaderDom"
-                @goToHeader="showHeaderListMenu = false"
-              />
+                <div>文章目录</div>
+                <button
+                  class="text-gray-500 hover:text-gray-700"
+                  @click="switchShowHeaderListMenu"
+                >
+                  <UIcon name="i-heroicons-x-mark" />
+                </button>
+              </div>
+              <div class="custom-scroll common-right-tool-menu">
+                <PostHeaderItem
+                  :list="headerList"
+                  :activeHeaderDom="activeHeaderDom"
+                  @goToHeader="showHeaderListMenu = false"
+                />
+              </div>
             </div>
           </div>
-        </div>
-      </transition>
+        </transition>
+      </Teleport>
       <Teleport to="#rightToolBar">
         <PostShowHeaderListBtn
           @btnClick="switchShowHeaderListMenu"
