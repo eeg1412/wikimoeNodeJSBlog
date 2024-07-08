@@ -165,6 +165,16 @@ module.exports = async function (req, res, next) {
                   from: "attachments",
                   localField: "coverImage",
                   foreignField: "_id",
+                  pipeline: [
+                    {
+                      $project: {
+                        _id: 1,
+                        filepath: 1,
+                        mimetype: 1,
+                        thumfor: 1,
+                      }
+                    },
+                  ],
                   as: "coverImage"
                 }
               },
