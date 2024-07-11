@@ -362,12 +362,6 @@ onUnmounted(() => {})
   background-color: #ffffff;
   /* 撑开剩余空间 */
   flex: 1;
-  align-self: flex-end;
-  position: sticky;
-  bottom: 0px;
-  width: 100%;
-  min-height: 100vh;
-  min-height: 100dvh;
   overflow: hidden;
 }
 .blog-layout-right-body {
@@ -723,14 +717,18 @@ onUnmounted(() => {})
     border-bottom-right-radius: 0px !important;
   }
 }
+/* 大于等于769时 */
+@media (min-width: 769px) {
+  .blog-layout-content-body {
+    align-self: flex-end;
+    position: sticky;
+    bottom: 0px;
+    min-height: 100vh;
+    min-height: 100dvh;
+  }
+}
 /* 小于768时 */
 @media (max-width: 768px) {
-  .blog-layout-content-body {
-    margin-left: 0px;
-    align-self: stretch;
-    position: relative;
-    bottom: unset;
-  }
   .blog-layout-body {
     margin-bottom: 0px;
   }
