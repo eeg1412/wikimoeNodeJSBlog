@@ -142,6 +142,9 @@
             <template v-else-if="item.type === 3">
               <CommentLatest />
             </template>
+            <template v-else-if="item.type === 4">
+              <RandomTagList />
+            </template>
             <template v-else-if="item.type === 8">
               <Sort />
             </template>

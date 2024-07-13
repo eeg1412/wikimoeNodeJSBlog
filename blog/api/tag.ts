@@ -11,4 +11,10 @@ const getTagDetailApi = (params: any) => {
   return httpRequest.get(URL, params)
 }
 
-export { getTagDetailApi }
+// /tag/random/list
+const RandomURL = `/tag/random/list`
+const getRandomTagListApi = (params: any) => {
+  return httpRequest.get(RandomURL, params)
+}
+
+export { getTagDetailApi, getRandomTagListApi }

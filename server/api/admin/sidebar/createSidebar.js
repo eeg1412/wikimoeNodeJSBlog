@@ -13,7 +13,7 @@ module.exports = async function (req, res, next) {
   content: { type: String },
   // 计数
   count: { type: Number, default: 1 },
-  // 1:自定义 3:最新评论 4:标签云 5:随机文章 7:搜索 8:分类
+  // 1:自定义 3:最新评论 4:随机标签 5:随机文章 7:搜索 8:分类
   type: { type: Number, default: 1 },
   // 排序
   taxis: { type: Number, default: 0 },

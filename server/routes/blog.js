@@ -149,6 +149,13 @@ const blogRouteSetting = [
     middleware: [],
     controller: require('../api/blog/tag/getTagDetail'),
   },
+  // getRandomTagList
+  {
+    path: '/tag/random/list',
+    method: 'get',
+    middleware: [],
+    controller: require('../api/blog/tag/getRandomTagList'),
+  },
   // getGameList
   {
     path: '/game/list',

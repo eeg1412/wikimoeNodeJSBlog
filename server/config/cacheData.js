@@ -66,8 +66,9 @@ exports.getSidebarList = async function (req, res, next) {
       resolve(data)
       // 更新 getCommentList
       this.getCommentList()
-      // 重置trend
-      this.resetTrend()
+      // 重置
+      exports.resetCacheDataByType(12, 'trendPostListData');
+      exports.resetCacheDataByType(4, 'randomTagListData');
       console.info('sidebarList get success')
     }).catch((err) => {
       global.$cacheData.sidebarList = null
@@ -78,34 +79,28 @@ exports.getSidebarList = async function (req, res, next) {
   return promise
 }
 
-exports.resetTrend = () => {
-  // 重置trend
-  const sidebarList = global.$cacheData.sidebarList || []
-  const trendSidebar = sidebarList.find((item) => {
-    return item.type === 12
-  })
-  // 不存在type为12的侧边栏
-  if (!trendSidebar) {
-    global.$cacheData.trendPostListData = null
-    // reject
-    return true
-  }
-  // 存在type为3的侧边栏,获取count
-  const limit = trendSidebar.count || 0
-  // 如果count小于等于0，不获取最新评论列表
-  if (limit <= 0) {
-    global.$cacheData.trendPostListData = null
-    // reject
-    return true
+exports.resetCacheDataByType = (sidebarType, cacheDataName) => {
+  // 从全局缓存中获取侧边栏列表
+  const sidebarList = global.$cacheData.sidebarList || [];
+  // 查找指定类型的侧边栏
+  const targetSidebar = sidebarList.find(item => item.type === sidebarType);
+
+  // 如果不存在指定类型的侧边栏，或者其count属性小于等于0
+  if (!targetSidebar || targetSidebar.count <= 0) {
+    global.$cacheData[cacheDataName] = null;
+    return true;
   }
 
-  const cacheLimit = global.$cacheData.trendPostListData?.limit || 0
-  if (cacheLimit !== limit) {
-    global.$cacheData.trendPostListData = null
-    return true
+  // 检查缓存中的数据是否需要更新
+  const cacheLimit = global.$cacheData[cacheDataName]?.limit || 0;
+  if (cacheLimit !== targetSidebar.count) {
+    global.$cacheData[cacheDataName] = null;
+    return true;
   }
-  return false
+
+  return false;
 }
+
 
 exports.getBannerList = async function (req, res, next) {
   console.info('bannerList get')

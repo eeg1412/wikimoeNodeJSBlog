@@ -54,3 +54,8 @@ exports.deleteMany = async function (filters) {
   // document查询
   return await tagsModel.deleteMany(filters);
 }
+// 聚合
+exports.aggregate = async function (pipe) {
+  // document查询
+  return await tagsModel.aggregate(pipe);
+}
