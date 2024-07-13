@@ -321,9 +321,9 @@
               <el-option
                 v-for="item in postList"
                 :key="item._id"
-                :label="`${item.date ? $formatDate(item.date, '【YYYY年MM月DD日】') : ''}${
-                  item.title
-                }`"
+                :label="`${
+                  item.date ? $formatDate(item.date, '【YYYY年MM月DD日】') : ''
+                }${item.title}`"
                 :value="item._id"
                 :disabled="item._id === id"
               ></el-option>
@@ -643,7 +643,7 @@ export default {
       const formatTagKeyword = replaceSpacesWithUnderscores(tagKeyword)
       tagsIsLoading.value = true
       authApi
-        .getTagList({ keyword: formatTagKeyword, size: 10, page: 1 }, true)
+        .getTagList({ keyword: formatTagKeyword, size: 50, page: 1 }, true)
         .then((res) => {
           const list = res.data.list
           if (tagKeyword) {
@@ -709,7 +709,7 @@ export default {
       banggumiIsLoading.value = true
       authApi
         .getBangumiList(
-          { keyword: bangumiKeyword, status: 1, size: 10, page: 1 },
+          { keyword: bangumiKeyword, status: 1, size: 50, page: 1 },
           true
         )
         .then((res) => {
@@ -738,7 +738,7 @@ export default {
       gameIsLoading.value = true
       authApi
         .getGameList(
-          { keyword: gameKeyword, status: 1, size: 10, page: 1 },
+          { keyword: gameKeyword, status: 1, size: 50, page: 1 },
           true
         )
         .then((res) => {
@@ -768,7 +768,7 @@ export default {
       bookIsLoading.value = true
       authApi
         .getBookList(
-          { keyword: bookKeyword, status: 1, size: 10, page: 1 },
+          { keyword: bookKeyword, status: 1, size: 50, page: 1 },
           true
         )
         .then((res) => {
@@ -798,7 +798,7 @@ export default {
       postIsLoading.value = true
       authApi
         .getPostList(
-          { keyword: postKeyword, status: 1, type: 1, size: 10, page: 1 },
+          { keyword: postKeyword, status: 1, type: 1, size: 50, page: 1 },
           true
         )
         .then((res) => {
@@ -827,7 +827,7 @@ export default {
       eventIsLoading.value = true
       authApi
         .getEventList(
-          { keyword: eventKeyword, status: 1, size: 10, page: 1 },
+          { keyword: eventKeyword, status: 1, size: 50, page: 1 },
           true
         )
         .then((res) => {
