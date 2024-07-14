@@ -365,6 +365,7 @@ onUnmounted(() => {})
   background-color: #ffffff;
   /* 撑开剩余空间 */
   flex: 1;
+  min-width: 0px; /* 防止元素宽度过大 */
   overflow: hidden;
 }
 .blog-layout-right-body {
