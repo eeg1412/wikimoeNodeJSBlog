@@ -40,6 +40,7 @@
     </div>
     <!-- 整体layout -->
     <div class="blog-layout-body">
+      <!-- 左侧菜单 -->
       <div
         class="blog-layout-left-body"
         :class="{
@@ -87,9 +88,7 @@
           </transition>
         </div>
       </div>
-      <div class="blog-layout-content-body">
-        <slot></slot>
-      </div>
+      <!-- 右侧工具栏 -->
       <div
         class="blog-layout-right-body custom-scroll blog-layout-right-body-full-height"
         :class="{
@@ -166,6 +165,10 @@
             </template>
           </div>
         </div>
+      </div>
+      <!-- 中间内容 -->
+      <div class="blog-layout-content-body">
+        <slot></slot>
       </div>
     </div>
 
@@ -360,6 +363,7 @@ onUnmounted(() => {})
   box-sizing: border-box;
   flex: 0 0 298px;
   border-right: 2px solid #fff7f9;
+  order: 0;
 }
 .blog-layout-content-body {
   background-color: #ffffff;
@@ -367,6 +371,7 @@ onUnmounted(() => {})
   flex: 1;
   min-width: 0px; /* 防止元素宽度过大 */
   overflow: hidden;
+  order: 1;
 }
 .blog-layout-right-body {
   width: 298px;
@@ -378,6 +383,7 @@ onUnmounted(() => {})
   bottom: 0px;
   min-height: 100vh;
   min-height: 100dvh;
+  order: 2;
 }
 .blog-layout-right-body.blog-layout-right-body-full-height {
   background-color: #ffffff;
