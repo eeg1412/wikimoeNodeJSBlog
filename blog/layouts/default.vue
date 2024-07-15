@@ -345,6 +345,7 @@ onUnmounted(() => {})
 <style scoped>
 /* flex布局 左边固定300px 右边固定300px margin10 */
 .blog-layout-body {
+  @apply bg-white;
   display: flex;
   flex-direction: row;
   justify-content: space-between;
