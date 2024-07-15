@@ -32,6 +32,7 @@
       </el-form-item>
       <el-form-item label="收信邮箱" prop="emailReceiver">
         <el-input v-model="emailSettingsForm.emailReceiver"></el-input>
+        <div>※多个收信邮箱地址可以用英文逗号隔开</div>
       </el-form-item>
       <!-- 通知自己模板 -->
       <el-form-item
@@ -141,12 +142,44 @@ export default {
           ],
           emailSender: [
             { required: true, message: '请输入发信邮箱', trigger: 'blur' },
+            // 校验邮箱格式
+            {
+              type: 'email',
+              message: '请输入正确的邮箱格式',
+              trigger: ['blur', 'change'],
+            },
           ],
           emailPassword: [
             { required: true, message: '请输入发信密码', trigger: 'blur' },
           ],
           emailReceiver: [
             { required: true, message: '请输入收信邮箱', trigger: 'blur' },
+            // 校验邮箱格式，多个邮箱地址是用英文逗号隔开的
+            {
+              validator: (rule, value, callback) => {
+                if (value) {
+                  // 使用正则表达式来匹配邮箱格式
+                  const emails = value ? value.split(',') : '' // 分割并去除空格
+                  const emailRegex =
+                    /^[a-zA-Z0-9_.+-]+@([a-zA-Z0-9][a-zA-Z0-9-]*[a-zA-Z0-9]*\.)+[a-zA-Z]{2,}$/ // 简单的邮箱正则表达式
+                  const invalidEmails = emails.filter(
+                    (email) => !emailRegex.test(email)
+                  ) // 筛选出不符合格式的邮箱
+                  if (invalidEmails.length > 0) {
+                    callback(
+                      new Error(
+                        '请输入有效的邮箱地址，多个邮箱请用英文逗号隔开'
+                      )
+                    )
+                  } else {
+                    callback()
+                  }
+                } else {
+                  callback(new Error('请输入收信邮箱'))
+                }
+              },
+              trigger: 'blur',
+            },
           ],
         }
       } else {
