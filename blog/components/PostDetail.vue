@@ -268,6 +268,10 @@
               :id="`post-detail-comment-${item._id}`"
               :key="item._id"
             >
+              <div
+                class="comment-list-item-alert"
+                v-if="alertCommentId === item._id"
+              ></div>
               <div class="flex">
                 <div class="comment-list-item-avatar-body">
                   <a :href="item.url" target="_blank" v-if="item.url">
@@ -581,6 +585,8 @@ if (process.client) {
     sessionStorage.removeItem('wm-post-commentid')
   }
 }
+const alertCommentId = ref(null)
+let alertCommentTimer = null
 const getCommentList = async (goToCommentListRef) => {
   commentLoading.value = true
   getCommentListApi({
@@ -602,6 +608,11 @@ const getCommentList = async (goToCommentListRef) => {
               top: commentDom.getBoundingClientRect().top - 100,
               behavior: 'smooth',
             })
+            alertCommentId.value = postCommentId
+            alertCommentTimer = setTimeout(() => {
+              alertCommentId.value = null
+              alertCommentTimer = null
+            }, 3000)
           } else {
             console.warn('postCommentId 找不到对应的评论')
           }
@@ -997,6 +1008,9 @@ onMounted(() => {
 })
 onUnmounted(() => {
   window.removeEventListener('scroll', onScroll)
+  if (alertCommentTimer) {
+    clearTimeout(alertCommentTimer)
+  }
 })
 </script>
 <style scoped>
@@ -1067,6 +1081,30 @@ onUnmounted(() => {
 .comment-list-item {
   @apply border-solid border-b border-gray-200;
   padding: 18px 0;
+  position: relative;
+}
+.comment-list-item-alert {
+  @apply bg-primary-100 rounded-md;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: calc(100% + 10px);
+  margin-left: -5px;
+  height: 100%;
+  z-index: 2;
+  /* 穿透 */
+  pointer-events: none;
+  opacity: 0;
+  animation: opacityAnimation 0.8s ease-in-out 0s 3;
+}
+@keyframes opacityAnimation {
+  0%,
+  100% {
+    opacity: 0;
+  }
+  50% {
+    opacity: 0.5;
+  }
 }
 .comment-list-item-avatar-body {
   margin-right: 10px;
