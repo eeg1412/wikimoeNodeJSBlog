@@ -227,9 +227,9 @@ const fetchGameList = async () => {
   })
   nextTick(() => {
     if (listRef.value) {
-      const rect = listRef.value.getBoundingClientRect()
-      window.scrollBy({
-        top: rect.top - 200,
+      // const rect = listRef.value.getBoundingClientRect()
+      window.scrollTo({
+        top: 0,
         behavior: 'smooth',
       })
     }
