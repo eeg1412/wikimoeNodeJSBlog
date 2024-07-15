@@ -133,6 +133,10 @@ export const checkUuid = () => {
   return storedUuid
 }
 
+export const isObjectId = (value: string) => {
+  return value.match(/^[0-9a-fA-F]{24}$/)
+}
+
 // 获取emoji
 export const getEmoji = () => {
   return emoji

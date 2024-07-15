@@ -116,6 +116,8 @@
 </template>
 <script setup>
 import { getBookListApi, getBooktypeListApi } from '@/api/book'
+const route = useRoute()
+const router = useRouter()
 
 // 类型
 const booktypeList = ref([])
@@ -124,20 +126,79 @@ const selectBooktypeData = ref({
   _id: null,
 })
 
+await getBooktypeListApi().then((res) => {
+  booktypeList.value = res.data.value.data
+})
+
 // 作品列表
 const size = 20
 const params = reactive({
   page: 1,
   sortType: 'startTime',
+  booktypeId: null,
 })
+
+const sortTypeMap = {
+  startTime: '按开始时间排序',
+  rating: '按评分排序',
+}
+const sortTypeList = [
+  {
+    label: '按开始时间排序',
+    value: 'startTime',
+  },
+  {
+    label: '按评分排序',
+    value: 'rating',
+  },
+]
+const selectType = (type, close) => {
+  params.sortType = type
+  fetchBookList()
+  close()
+}
+
+const initParams = () => {
+  // page必须是数字，sortType必须是sortTypeList，booktypeId必须是isObjectId
+  const queryPage = route.query.page
+    ? Math.abs(parseInt(route.query.page, 10))
+    : null
+  const querySortType = route.query.sortType
+  const queryBooktypeId = route.query.booktypeId
+  // page必须是数字
+  if (queryPage && !isNaN(queryPage)) {
+    params.page = queryPage
+  }
+  // sortType必须是sortTypeList里的
+  if (sortTypeList.find((item) => item.value === querySortType)) {
+    params.sortType = querySortType
+  }
+  // booktypeId必须是isObjectId
+  if (queryBooktypeId && isObjectId(queryBooktypeId)) {
+    // 检查queryBooktypeId是否在booktypeList里
+    const booktype = booktypeList.value.find(
+      (item) => item._id === queryBooktypeId
+    )
+    if (booktype) {
+      selectBooktypeData.value = booktype
+      params.booktypeId = queryBooktypeId
+    }
+  }
+  if (process.client && (queryPage || querySortType || queryBooktypeId)) {
+    router.replace({
+      query: {
+        ...route.query,
+        ...params,
+      },
+    })
+  }
+}
+initParams()
 const bookList = ref([])
 const total = ref(0)
 
 // 获取数据
 await Promise.all([
-  getBooktypeListApi().then((res) => {
-    booktypeList.value = res.data.value.data
-  }),
   getBookListApi(params).then((res) => {
     bookList.value = res.data.value.list
     total.value = res.data.value.total
@@ -152,12 +213,17 @@ const fetchBookList = async () => {
   bookLoading.value = true
   const newParams = {
     ...params,
-    booktypeId: selectBooktypeData.value?._id,
   }
   const res = await getBookListApi(newParams)
   bookList.value = res?.data?.value?.list || []
   total.value = res?.data?.value?.total || 0
   bookLoading.value = false
+  router.replace({
+    query: {
+      ...route.query,
+      ...params,
+    },
+  })
   nextTick(() => {
     if (listRef.value) {
       const rect = listRef.value.getBoundingClientRect()
@@ -183,29 +249,20 @@ const toNext = () => {
 
 const selectBooktype = (item, close) => {
   selectBooktypeData.value = item
+  params.booktypeId = item?._id
   params.page = 1
   fetchBookList()
   close()
 }
 
-const sortTypeMap = {
-  startTime: '按开始时间排序',
-  rating: '按评分排序',
-}
-const sortTypeList = [
-  {
-    label: '按开始时间排序',
-    value: 'startTime',
-  },
-  {
-    label: '按评分排序',
-    value: 'rating',
-  },
-]
-const selectType = (type, close) => {
-  params.sortType = type
-  fetchBookList()
-  close()
-}
+onMounted(() => {
+  nextTick(() => {
+    // 如果bookList为0，且page不为1，则重新获取数据
+    if (bookList.value.length === 0 && params.page > 1) {
+      params.page = 1
+      fetchBookList()
+    }
+  })
+})
 </script>
 <style scoped></style>

@@ -111,6 +111,8 @@ import {
   getBangumiYearListApi,
   getBangumiListApiFetch,
 } from '@/api/bangumi'
+const route = useRoute()
+const router = useRouter()
 
 const { data: yearListData } = await getBangumiYearListApi()
 
@@ -150,11 +152,39 @@ const selectSeasonList = computed(() => {
   return yearItem?.seasonList || []
 })
 const initYearSeason = () => {
-  const lastYear = yearList.value[0] || null
-  if (lastYear) {
-    selectYear.value = lastYear.year || null
-    selectSeason.value =
-      lastYear.seasonList[lastYear.seasonList.length - 1] || null
+  const queryYear = route.query.year ? Number(route.query.year) : null
+  const querySeason = route.query.season ? Number(route.query.season) : null
+  // 校验年份是否存在
+  let yearItem = yearList.value.find((item) => item.year === queryYear)
+  if (yearItem) {
+    selectYear.value = queryYear
+  } else {
+    yearItem = yearList.value[0] || null
+    if (yearItem) {
+      selectYear.value = yearItem.year || null
+    }
+  }
+  // 校验季度是否存在
+  if (yearItem) {
+    const seasonItem = yearItem.seasonList.find((item) => item === querySeason)
+    if (seasonItem) {
+      selectSeason.value = querySeason
+    } else {
+      selectSeason.value = yearItem.seasonList[0] || null
+    }
+  }
+  // 客户端执行
+  if (process.client) {
+    const newQuery = {}
+    if (queryYear && selectYear.value !== queryYear) {
+      newQuery.year = selectYear.value
+    }
+    if (querySeason && selectSeason.value !== querySeason) {
+      newQuery.season = selectSeason.value
+    }
+    if (Object.keys(newQuery).length > 0) {
+      router.replace({ query: { ...route.query, ...newQuery } })
+    }
   }
 }
 initYearSeason()
@@ -178,6 +208,18 @@ const fetchBangumiList = async () => {
   }
   bangumiLoading.value = true
   const res = await getBangumiListApi(params)
+    .then((res) => {
+      const query = {
+        year: selectYear.value,
+        season: selectSeason.value,
+      }
+      const nowQuery = route.query
+      router.replace({ query: { ...nowQuery, ...query } })
+      return res
+    })
+    .catch(() => {
+      return null
+    })
   bangumiList.value = res?.data?.value?.data || []
   bangumiLoading.value = false
 }
