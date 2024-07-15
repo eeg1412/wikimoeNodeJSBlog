@@ -583,6 +583,8 @@ if (process.client) {
     }
     // 清空sessionStorage
     sessionStorage.removeItem('wm-post-commentid')
+  } else if (route.hash.includes('comment-')) {
+    postCommentId = route.hash.split('comment-')[1]
   }
 }
 const alertCommentId = ref(null)
@@ -612,7 +614,7 @@ const getCommentList = async (goToCommentListRef) => {
             alertCommentTimer = setTimeout(() => {
               alertCommentId.value = null
               alertCommentTimer = null
-            }, 3000)
+            }, 4500)
           } else {
             console.warn('postCommentId 找不到对应的评论')
           }
@@ -1095,7 +1097,7 @@ onUnmounted(() => {
   /* 穿透 */
   pointer-events: none;
   opacity: 0;
-  animation: opacityAnimation 0.8s ease-in-out 0s 3;
+  animation: opacityAnimation 0.8s ease-in-out 0s 5;
 }
 @keyframes opacityAnimation {
   0%,
