@@ -1,5 +1,5 @@
 <template>
-  <div class="post-detail-body" v-if="postData?.data">
+  <div class="post-detail-body" v-if="postData?.data" ref="postDetailBody">
     <!-- 头部 -->
     <div class="post-blog-head" v-if="postData.data.type === 1">
       <div class="post-author-avatar-body">
@@ -589,6 +589,7 @@ if (process.client) {
 }
 const alertCommentId = ref(null)
 let alertCommentTimer = null
+const postDetailBody = ref(null)
 const getCommentList = async (goToCommentListRef) => {
   commentLoading.value = true
   getCommentListApi({
@@ -619,9 +620,12 @@ const getCommentList = async (goToCommentListRef) => {
             console.warn('postCommentId 找不到对应的评论')
           }
         } else if (goToCommentListRef) {
-          const rect = commentListRef.value.getBoundingClientRect()
-          window.scrollBy({
-            top: rect.top - 100,
+          // const rect = commentListRef.value.getBoundingClientRect()
+          const elementRect = commentListRef.value.getBoundingClientRect()
+          const parentRect = postDetailBody.value.getBoundingClientRect()
+          const distanceToParentTop = elementRect.top - parentRect.top
+          window.scrollTo({
+            top: distanceToParentTop - 100,
             behavior: 'smooth',
           })
         }
