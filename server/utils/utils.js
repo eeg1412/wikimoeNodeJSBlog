@@ -44,6 +44,14 @@ exports.checkBcryptStr = function (str, hash) {
   return bcrypt.compareSync(str, hash)
 }
 
+exports.limitStr = (str, len) => {
+  const strArray = Array.from(str)
+  if (strArray.length > len) {
+    return strArray.slice(0, len).join('') + '...'
+  }
+  return str
+}
+
 exports.creatJWT = function (payload, exp) {
   const secret = process.env.JWT_SECRET
   const token = jwt.sign(payload, secret, { expiresIn: exp })
@@ -386,6 +394,10 @@ exports.sendCommentAddNotice = function (post, comment) {
   if (emailEnable && emailSendOptions.includes('receiveComment')) {
     const { siteUrl, siteTitle } = siteSettings
     const { title, excerpt } = post
+    let linkTitle = title || excerpt
+    if (linkTitle.length > 200) {
+      linkTitle = this.limitStr(linkTitle, 200)
+    }
     let { nickname, content, user } = comment
     content = this.escapeHtml(content)
     if (user) {
@@ -404,7 +416,7 @@ exports.sendCommentAddNotice = function (post, comment) {
     // 开始替换
     contentHtml = contentHtml.replace(/\${comment}/g, content)
     contentHtml = contentHtml.replace(/\${nickname}/g, nickname)
-    contentHtml = contentHtml.replace(/\${title}/g, `<a href="${this.getPostPagePath(post)}">${title || excerpt}</a>`)
+    contentHtml = contentHtml.replace(/\${title}/g, `<a href="${this.getPostPagePath(post)}">${linkTitle}</a>`)
     contentHtml = contentHtml.replace(/\${siteTitle}/g, `<a href="${siteUrl}">${siteTitle}</a>`)
     this.sendEmail(to, contentHtml, subject)
   }
@@ -476,6 +488,10 @@ exports.sendReplyCommentNotice = async function (post, comment) {
   if (emailEnable && emailSendOptions.includes('replyComment')) {
     const { siteUrl, siteTitle } = siteSettings
     const { title, excerpt } = post
+    let linkTitle = title || excerpt
+    if (linkTitle.length > 200) {
+      linkTitle = this.limitStr(linkTitle, 200)
+    }
     let { nickname, content } = comment
     content = this.escapeHtml(content)
     let { nickname: parentNickname, content: parentContent } = parentComment
@@ -502,7 +518,7 @@ exports.sendReplyCommentNotice = async function (post, comment) {
     // 开始替换
     contentHtml = contentHtml.replace(/\${comment}/g, content)
     contentHtml = contentHtml.replace(/\${nickname}/g, nickname)
-    contentHtml = contentHtml.replace(/\${title}/g, `<a href="${this.getPostPagePath(post)}">${title || excerpt}</a>`)
+    contentHtml = contentHtml.replace(/\${title}/g, `<a href="${this.getPostPagePath(post)}/#comment-${comment._id}">${linkTitle}</a>`)
     contentHtml = contentHtml.replace(/\${siteTitle}/g, `<a href="${siteUrl}">${siteTitle}</a>`)
     contentHtml = contentHtml.replace(/\${parentComment}/g, parentContent)
     contentHtml = contentHtml.replace(/\${parentNickname}/g, parentNickname)
