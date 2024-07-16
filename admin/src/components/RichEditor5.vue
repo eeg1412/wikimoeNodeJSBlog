@@ -159,6 +159,7 @@ export default {
             'imageWidth33',
             'imageWidth50',
             'imageWidth100',
+            'imageWidthauto',
             'editImage',
             'viewImageLink',
             'deleteImage',
