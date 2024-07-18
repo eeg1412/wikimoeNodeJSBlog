@@ -1,10 +1,10 @@
 <template>
   <div class="pt-2 pb-2 page-bangumi-body">
-    <div class="flex items-center" v-if="selectYear && selectSeason">
+    <div class="flex items-center">
       <!-- 顶部年份季度选择 -->
       <UPopover :popper="{ arrow: true }">
         <UButton
-          :label="`${selectYear}年`"
+          :label="`${formatYearText(selectYear)}`"
           size="sm"
           variant="soft"
           trailing-icon="i-heroicons-chevron-down-20-solid"
@@ -21,7 +21,7 @@
                 class="w-1/2 p-2"
               >
                 <UButton
-                  :label="`${year.year}年`"
+                  :label="`${formatYearText(year.year)}`"
                   size="sm"
                   :variant="year.year === selectYear ? 'solid' : 'ghost'"
                   @click="selectYearHandle(year.year, close)"
@@ -59,22 +59,52 @@
           size="sm"
           variant="soft"
           trailing-icon="i-heroicons-chevron-down-20-solid"
+          class="mr-3"
         />
 
         <template #panel="{ close }">
-          <div class="p-4 w-60">
+          <div class="p-4 w-80">
             <!-- 季度选择器 -->
             <div class="flex flex-wrap">
               <div
                 v-for="season in selectSeasonList"
                 :key="season"
-                class="w-1/2 p-2"
+                class="w-1/3 p-2"
               >
                 <UButton
                   :label="seasonToName(season)"
                   size="sm"
                   :variant="season === selectSeason ? 'solid' : 'ghost'"
                   @click="selectSeasonHandle(season, close)"
+                />
+              </div>
+            </div>
+          </div>
+        </template>
+      </UPopover>
+      <UPopover :popper="{ arrow: true }">
+        <UButton
+          :label="`${sortTypeMap[sortType]}`"
+          size="sm"
+          variant="soft"
+          trailing-icon="i-heroicons-chevron-down-20-solid"
+          class="mr-3"
+        />
+
+        <template #panel="{ close }">
+          <div class="p-4">
+            <!-- 排序选择器 -->
+            <div class="flex flex-wrap">
+              <div
+                class="p-2 mr-1 mb-1"
+                v-for="(item, index) in sortTypeList"
+                :key="item.value"
+              >
+                <UButton
+                  :label="item.label"
+                  size="sm"
+                  :variant="sortType === item.value ? 'solid' : 'ghost'"
+                  @click="selectType(item.value, close)"
                 />
               </div>
             </div>
@@ -96,12 +126,32 @@
       </div>
       <DivLoading :loading="bangumiLoading" />
     </div>
-    <div class="p-2" v-if="total > 0">
-      共计番剧<span class="text-primary pl-1 pr-1">{{ total }}</span
-      >部，当前季度追番<span class="text-primary pl-1 pr-1">{{
-        bangumiList.length
-      }}</span
-      >部
+    <div class="p-2 flex justify-between items-center" v-if="total > 0">
+      <div>
+        共计<span class="text-primary pl-1 pr-1">{{ total }}</span
+        >部番剧
+      </div>
+      <div>
+        <UButton
+          icon="i-heroicons-chevron-left"
+          size="2xs"
+          color="primary"
+          square
+          variant="outline"
+          class="mr-1"
+          :disabled="!hasPrev"
+          @click="toPrev"
+        />
+        <UButton
+          icon="i-heroicons-chevron-right"
+          size="2xs"
+          color="primary"
+          square
+          variant="outline"
+          :disabled="!hasNext"
+          @click="toNext"
+        />
+      </div>
     </div>
   </div>
 </template>
@@ -116,19 +166,64 @@ const router = useRouter()
 
 const { data: yearListData } = await getBangumiYearListApi()
 
+const sortType = ref('default')
+const sortTypeMap = {
+  default: '默认排序',
+  rating: '按评分排序',
+}
+const sortTypeList = [
+  {
+    label: '默认排序',
+    value: 'default',
+  },
+  {
+    label: '按评分排序',
+    value: 'rating',
+  },
+]
+const selectType = (type, close) => {
+  sortType.value = type
+  fetchBangumiList()
+  close()
+}
+
+const page = ref(1)
+const size = 20
+const hasPrev = computed(() => page.value > 1)
+const hasNext = computed(() => page.value * size < total.value)
+const toPrev = () => {
+  if (hasPrev.value) {
+    page.value--
+    fetchBangumiList()
+  }
+}
+const toNext = () => {
+  if (hasNext.value) {
+    page.value++
+    fetchBangumiList()
+  }
+}
+
 const yearList = computed(() => {
-  const list = yearListData.value?.data.list || []
+  const list = JSON.parse(JSON.stringify(yearListData.value?.data.list || '[]'))
   //  遍历list，将其中的seasons 数组从小到大排序
   list.forEach((item) => {
     item.seasonList.sort((a, b) => {
       return a - b
     })
   })
+  const allYear = {
+    year: -1,
+    seasonList: [1, 2, 3, 4],
+  }
+  list.unshift(allYear)
   return list
 })
-const total = computed(() => {
-  return yearListData.value.data.total || 0
-})
+
+const formatYearText = (year) => {
+  return year === -1 ? '所有年份' : `${year}年`
+}
+const total = ref(0)
 const selectYear = ref(null)
 const yearPageSize = ref(4)
 const yearPage = ref(1)
@@ -149,9 +244,11 @@ const selectSeasonList = computed(() => {
   const year = selectYear.value
   if (!year) return []
   const yearItem = yearList.value.find((item) => item.year === year)
-  return yearItem?.seasonList || []
+  const seasonList = JSON.parse(JSON.stringify(yearItem?.seasonList || '[]'))
+  seasonList.unshift(-1)
+  return seasonList
 })
-const initYearSeason = () => {
+const initParams = () => {
   const queryYear = route.query.year ? Number(route.query.year) : null
   const querySeason = route.query.season ? Number(route.query.season) : null
   // 校验年份是否存在
@@ -160,10 +257,7 @@ const initYearSeason = () => {
   if (yearItem) {
     selectYear.value = queryYear
   } else {
-    yearItem = yearList.value[0] || null
-    if (yearItem) {
-      selectYear.value = yearItem.year || null
-    }
+    selectYear.value = -1
   }
   // 校验季度是否存在
   if (yearItem) {
@@ -172,10 +266,26 @@ const initYearSeason = () => {
     if (seasonItem) {
       selectSeason.value = querySeason
     } else {
-      selectSeason.value =
-        yearItem.seasonList[yearItem.seasonList.length - 1] || null
+      selectSeason.value = -1
     }
+  } else {
+    selectSeason.value = -1
   }
+  // 检查page
+  const queryPage = route.query.page
+    ? Math.abs(parseInt(route.query.page, 10))
+    : 1
+  // page必须是数字
+  if (queryPage && !isNaN(queryPage)) {
+    page.value = queryPage
+  }
+
+  // sortType必须是sortTypeList里的
+  const querySortType = route.query.sortType
+  if (sortTypeList.find((item) => item.value === querySortType)) {
+    sortType.value = querySortType
+  }
+
   // 客户端执行
   if (process.client) {
     const newQuery = {}
@@ -185,29 +295,46 @@ const initYearSeason = () => {
     if (querySeason && selectSeason.value !== querySeason) {
       newQuery.season = selectSeason.value
     }
+    if (page.value !== queryPage) {
+      newQuery.page = page.value
+    }
+    if (querySortType && sortType.value !== querySortType) {
+      newQuery.sortType = sortType.value
+    }
     if (Object.keys(newQuery).length > 0) {
       router.replace({ query: { ...route.query, ...newQuery } })
     }
   }
 }
-initYearSeason()
+initParams()
 // 如果年份和季度都存在，就获取番剧列表
 const bangumiList = ref([])
-if (selectYear.value && selectSeason.value) {
-  const params = {
-    year: selectYear.value,
-    season: selectSeason.value,
-  }
-  await getBangumiListApi(params).then((res) => {
-    bangumiList.value = res.data.value.data
-  })
+const params = {
+  page: page.value,
+  sortType: sortType.value,
 }
+if (selectYear.value && selectYear.value !== -1) {
+  params.year = selectYear.value
+}
+if (selectSeason.value && selectSeason.value !== -1) {
+  params.season = selectSeason.value
+}
+await getBangumiListApi(params).then((res) => {
+  bangumiList.value = res.data.value.data.list
+  total.value = res.data.value.data.total
+})
 
 const bangumiLoading = ref(false)
 const fetchBangumiList = async () => {
   const params = {
-    year: selectYear.value,
-    season: selectSeason.value,
+    page: page.value,
+    sortType: sortType.value,
+  }
+  if (selectYear.value && selectYear.value !== -1) {
+    params.year = selectYear.value
+  }
+  if (selectSeason.value && selectSeason.value !== -1) {
+    params.season = selectSeason.value
   }
   bangumiLoading.value = true
   const res = await getBangumiListApi(params)
@@ -215,6 +342,8 @@ const fetchBangumiList = async () => {
       const query = {
         year: selectYear.value,
         season: selectSeason.value,
+        page: page.value,
+        sortType: sortType.value,
       }
       const nowQuery = route.query
       router.replace({ query: { ...nowQuery, ...query } })
@@ -223,12 +352,14 @@ const fetchBangumiList = async () => {
     .catch(() => {
       return null
     })
-  bangumiList.value = res?.data?.value?.data || []
+  bangumiList.value = res?.data?.value?.data?.list || []
+  total.value = res?.data?.value?.data?.total || 0
   bangumiLoading.value = false
 }
 // 选择了年份
 const selectYearHandle = async (year, close) => {
   if (close) close()
+  page.value = 1
   selectYear.value = year
   selectSeason.value = selectSeasonList.value[0]
   await fetchBangumiList()
@@ -236,8 +367,18 @@ const selectYearHandle = async (year, close) => {
 // 选择了季度
 const selectSeasonHandle = async (season, close) => {
   if (close) close()
+  page.value = 1
   selectSeason.value = season
   await fetchBangumiList()
 }
+
+onMounted(() => {
+  nextTick(() => {
+    if (bangumiList.value.length === 0 && params.page > 1) {
+      page.value = 1
+      fetchBangumiList()
+    }
+  })
+})
 </script>
 <style scoped></style>

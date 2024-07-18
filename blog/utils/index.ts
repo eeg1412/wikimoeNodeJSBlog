@@ -224,8 +224,10 @@ export const seasonToName = (season: number) => {
       return '夏季新番'
     case 4:
       return '秋季新番'
+    case -1:
+      return '所有季度'
     default:
-      return ''
+      return season
   }
 }
 

@@ -242,11 +242,11 @@ exports.getBangumiYearList = async function (req, res, next) {
       },
       {
         $facet: {
-          count: [
-            {
-              $count: "total"
-            }
-          ],
+          // count: [
+          //   {
+          //     $count: "total"
+          //   }
+          // ],
           data: [
             {
               $group: {
@@ -271,14 +271,14 @@ exports.getBangumiYearList = async function (req, res, next) {
       }
     ]).then((data) => {
       let base = {
-        total: 0,
+        // total: 0,
         list: []
       }
       const data_ = data[0]
       if (data_) {
-        if (data_.count.length > 0) {
-          base.total = data_.count[0].total
-        }
+        // if (data_.count.length > 0) {
+        //   base.total = data_.count[0].total
+        // }
         if (data_.data.length > 0) {
           base.list = data_.data
         }
