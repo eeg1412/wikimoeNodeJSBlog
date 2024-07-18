@@ -112,7 +112,7 @@
         </template>
       </UPopover>
     </div>
-    <div class="relative">
+    <div class="relative" ref="listRef">
       <!-- 番剧列表 -->
       <div v-if="bangumiList.length > 0" class="mt-5">
         <div class="grid xl:grid-cols-2 gap-4">
@@ -323,6 +323,7 @@ await getBangumiListApi(params).then((res) => {
   total.value = res.data.value.data.total
 })
 
+const listRef = ref(null)
 const bangumiLoading = ref(false)
 const fetchBangumiList = async () => {
   const params = {
@@ -354,6 +355,15 @@ const fetchBangumiList = async () => {
   bangumiList.value = res?.data?.value?.data?.list || []
   total.value = res?.data?.value?.data?.total || 0
   bangumiLoading.value = false
+  nextTick(() => {
+    if (listRef.value) {
+      // const rect = listRef.value.getBoundingClientRect()
+      window.scrollTo({
+        top: 0,
+        behavior: 'smooth',
+      })
+    }
+  })
 }
 // 选择了年份
 const selectYearHandle = async (year, close) => {
