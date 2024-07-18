@@ -155,7 +155,8 @@ const initYearSeason = () => {
   const queryYear = route.query.year ? Number(route.query.year) : null
   const querySeason = route.query.season ? Number(route.query.season) : null
   // 校验年份是否存在
-  let yearItem = yearList.value.find((item) => item.year === queryYear)
+  let yearItem =
+    queryYear && yearList.value.find((item) => item.year === queryYear)
   if (yearItem) {
     selectYear.value = queryYear
   } else {
@@ -166,11 +167,13 @@ const initYearSeason = () => {
   }
   // 校验季度是否存在
   if (yearItem) {
-    const seasonItem = yearItem.seasonList.find((item) => item === querySeason)
+    const seasonItem =
+      querySeason && yearItem.seasonList.find((item) => item === querySeason)
     if (seasonItem) {
       selectSeason.value = querySeason
     } else {
-      selectSeason.value = yearItem.seasonList[0] || null
+      selectSeason.value =
+        yearItem.seasonList[yearItem.seasonList.length - 1] || null
     }
   }
   // 客户端执行
