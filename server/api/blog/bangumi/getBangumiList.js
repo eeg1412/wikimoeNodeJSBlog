@@ -52,7 +52,7 @@ module.exports = async function (req, res, next) {
 
   let sort = {
     year: -1,
-    season: 1,
+    season: -1,
     rating: -1,
     _id: -1,
   }
@@ -60,7 +60,7 @@ module.exports = async function (req, res, next) {
     sort = {
       rating: -1,
       year: -1,
-      season: 1,
+      season: -1,
       _id: -1,
     }
   }
