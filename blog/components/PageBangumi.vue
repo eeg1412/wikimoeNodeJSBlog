@@ -307,7 +307,6 @@ const initParams = () => {
   }
 }
 initParams()
-// 如果年份和季度都存在，就获取番剧列表
 const bangumiList = ref([])
 const params = {
   page: page.value,
