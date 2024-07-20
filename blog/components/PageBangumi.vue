@@ -163,6 +163,17 @@ import {
 } from '@/api/bangumi'
 const route = useRoute()
 const router = useRouter()
+const setRouterQuert = (query) => {
+  const nowQuery = route.query
+  const queryCopy = JSON.parse(JSON.stringify(query))
+  if (queryCopy.year === -1) {
+    queryCopy.year = undefined
+  }
+  if (queryCopy.season === -1) {
+    queryCopy.season = undefined
+  }
+  router.replace({ query: { ...nowQuery, ...queryCopy } })
+}
 
 const { data: yearListData } = await getBangumiYearListApi()
 
@@ -236,7 +247,6 @@ const yearPageList = computed(() => {
   const end = start + yearPageSize.value
   return yearList.value.slice(start, end)
 })
-// watch selectYear
 
 const selectSeason = ref(null)
 const selectSeasonList = computed(() => {
@@ -302,7 +312,7 @@ const initParams = () => {
       newQuery.sortType = sortType.value
     }
     if (Object.keys(newQuery).length > 0) {
-      router.replace({ query: { ...route.query, ...newQuery } })
+      setRouterQuert(newQuery)
     }
   }
 }
@@ -345,8 +355,8 @@ const fetchBangumiList = async () => {
         page: page.value,
         sortType: sortType.value,
       }
-      const nowQuery = route.query
-      router.replace({ query: { ...nowQuery, ...query } })
+
+      setRouterQuert(query)
       return res
     })
     .catch(() => {
