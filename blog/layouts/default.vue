@@ -719,9 +719,9 @@ onUnmounted(() => {})
     align-items: center;
     cursor: pointer;
   }
-  .blog-layout-content-body {
+  /* .blog-layout-content-body {
     margin-left: 5px;
-  }
+  } */
   .blog-layout-right-body {
     /* 右上角 右下角 没有圆角 */
     border-top-right-radius: 0px !important;
