@@ -20,5 +20,10 @@ export default <Partial<Config>>{
         },
       },
     },
+    fontFamily: {
+      sans: [],
+      serif: [],
+      mono: [],
+    },
   },
 }
