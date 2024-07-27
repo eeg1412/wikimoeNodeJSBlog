@@ -413,8 +413,18 @@ const showTopIcon = (item) => {
 }
 
 const goPostDetail = (e, item, middle) => {
+  console.log(e)
   // 如果是点击了链接，就不跳转
   if (e.target.tagName === 'A') {
+    return
+  }
+  // 如果是选中了文字且点击了div元素，就不跳转
+  const selection = window.getSelection()
+  if (
+    selection &&
+    selection.toString().length > 0 &&
+    (e.target.tagName === 'DIV' || e.target.tagName === 'SPAN')
+  ) {
     return
   }
 
@@ -424,8 +434,9 @@ const goPostDetail = (e, item, middle) => {
     id = alias
   }
   const routeName = 'postDetail'
+  // 判断是否按着ctrl键，如果是就在新标签页打开
   // 如果middle为true，就在新标签页打开
-  if (middle) {
+  if (middle || e.ctrlKey || e.metaKey) {
     // resolveUrl
     const url = router.resolve({
       name: routeName,
