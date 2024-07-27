@@ -92,7 +92,7 @@
         共<span class="text-primary pl-1 pr-1">{{ total }}</span
         >部游戏
       </div>
-      <div>
+      <div v-show="hasPrev || hasNext">
         <UButton
           icon="i-heroicons-chevron-left"
           size="2xs"
@@ -100,6 +100,9 @@
           square
           variant="outline"
           class="mr-1"
+          :ui="{
+            base: 'focus:outline-none focus-visible:outline-0 disabled:cursor-not-allowed disabled:opacity-40 flex-shrink-0',
+          }"
           :disabled="!hasPrev"
           @click="toPrev"
         />
@@ -109,6 +112,9 @@
           color="primary"
           square
           variant="outline"
+          :ui="{
+            base: 'focus:outline-none focus-visible:outline-0 disabled:cursor-not-allowed disabled:opacity-40 flex-shrink-0',
+          }"
           :disabled="!hasNext"
           @click="toNext"
         />
