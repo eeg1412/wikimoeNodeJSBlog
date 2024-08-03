@@ -12,20 +12,11 @@
       <el-input v-model="siteSettingsForm.siteSubTitle"></el-input>
     </el-form-item>
     <el-form-item label="站点LOGO" prop="siteLogo">
-      <el-upload
-        class="avatar-uploader"
-        :show-file-list="false"
-        :auto-upload="false"
-        :on-change="setSiteLogo"
-        accept="image/*"
-      >
-        <img
-          v-if="siteSettingsForm.siteLogo"
-          :src="siteSettingsForm.siteLogo"
-          class="avatar"
-        />
-        <el-icon v-else class="avatar-uploader-icon"><Plus /></el-icon>
-      </el-upload>
+      <Cropper
+        :src="siteSettingsForm.siteLogo"
+        putImageType="image/webp"
+        @crop="setSiteLogo"
+      ></Cropper>
     </el-form-item>
     <!-- siteFavicon -->
     <el-form-item label="站点图标" prop="siteFavicon">
@@ -214,24 +205,9 @@ export default {
         { required: true, message: '请选择你所在时区', trigger: 'blur' },
       ],
     }
-    const setSiteLogo = (file) => {
+    const setSiteLogo = (crop) => {
       // file to base64
-      const reader = new FileReader()
-      reader.readAsDataURL(file.raw)
-      reader.onload = (e) => {
-        // base64转webp 0.8质量
-        const img = new Image()
-        img.src = e.target.result
-        img.onload = () => {
-          const canvas = document.createElement('canvas')
-          const ctx = canvas.getContext('2d')
-          canvas.width = img.width
-          canvas.height = img.height
-          ctx.drawImage(img, 0, 0, img.width, img.height)
-          const base64 = canvas.toDataURL('image/webp', 0.8)
-          siteSettingsForm.siteLogo = base64
-        }
-      }
+      siteSettingsForm.siteLogo = crop
     }
     const setSiteDefaultCover = (crop) => {
       siteSettingsForm.siteDefaultCover = crop
