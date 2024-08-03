@@ -775,6 +775,15 @@ const adminRouteSetting = [
     roleType: null,
     role: null
   },
+  // resendEmail
+  {
+    path: '/emailsendhistory/resend',
+    method: 'post',
+    middleware: [checkAuth],
+    controller: require('../api/admin/emailSendHistory/resendEmail'),
+    roleType: null,
+    role: null
+  },
   // getReferrerList
   {
     path: '/referrer/list',

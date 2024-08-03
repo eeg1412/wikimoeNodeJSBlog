@@ -76,7 +76,7 @@
         <el-table-column label="发送对象" prop="to" min-width="150px">
           <template #default="{ row }">
             <div v-if="row.to">
-              <div class="dib">{{ row.to }}</div>
+              <div class="di word-break">{{ row.to }}</div>
               <!-- 查询按钮 -->
               <div class="dib ml5 vt">
                 <el-link
@@ -94,6 +94,8 @@
             </div>
           </template>
         </el-table-column>
+        <!-- subject -->
+        <el-table-column label="发送主题" prop="subject" min-width="150px" />
         <el-table-column label="发送内容" prop="content" min-width="300px">
           <template #default="{ row }">
             <div v-html="row.content"></div>
@@ -114,6 +116,15 @@
         <el-table-column label="发送时间" prop="createdAt" width="180px">
           <template #default="{ row }">
             {{ $formatDate(row.createdAt) }}
+          </template>
+        </el-table-column>
+        <!-- 重新发送按钮 -->
+        <el-table-column label="操作" width="100px">
+          <template #default="{ row }">
+            <!-- 重新发送 -->
+            <el-button type="primary" size="small" @click="resend(row._id)"
+              >重发</el-button
+            >
           </template>
         </el-table-column>
       </el-table>
@@ -173,11 +184,6 @@ export default {
           console.log(err)
         })
     }
-    const handleAdd = () => {
-      router.push({
-        name: 'EmailSendHistoryAdd',
-      })
-    }
     const addParamsAndSearch = (key, value) => {
       params[key] = value
       getEmailSendHistoryList(true)
@@ -190,28 +196,18 @@ export default {
       }
     )
 
-    const goEdit = (id) => {
-      router.push({
-        name: 'EmailSendHistoryEdit',
-        params: {
-          id,
-        },
-      })
-    }
-    const deleteEmailSendHistory = (id) => {
-      ElMessageBox.confirm('确定要删除吗？', {
+    const resend = (id) => {
+      // 先询问是否重新发送
+      ElMessageBox.confirm('确定要重新发送吗？', {
         confirmButtonText: '是',
         cancelButtonText: '否',
         type: 'warning',
       })
         .then(() => {
-          const params = {
-            id,
-          }
           authApi
-            .deleteEmailSendHistory(params)
+            .resendEmailSendHistory({ id })
             .then(() => {
-              ElMessage.success('删除成功')
+              ElMessage.success('已重新发送, 请稍后查看发送状态')
               getEmailSendHistoryList()
             })
             .catch(() => {})
@@ -240,9 +236,7 @@ export default {
       total,
       tableRef,
       getEmailSendHistoryList,
-      handleAdd,
-      goEdit,
-      deleteEmailSendHistory,
+      resend,
       // 搜索
       addParamsAndSearch,
     }

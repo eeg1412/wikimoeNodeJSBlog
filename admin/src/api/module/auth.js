@@ -497,6 +497,12 @@ export default function (api) {
         shouldAdminJWT: true
       })
     },
+    // post /emailsendhistory/resend
+    resendEmailSendHistory (data) {
+      return api.post('/emailsendhistory/resend', data, {
+        shouldAdminJWT: true
+      })
+    },
     // get '/referrer/list'
     getReferrerList (data) {
       return api.get('/referrer/list', {

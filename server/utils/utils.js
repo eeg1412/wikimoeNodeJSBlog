@@ -363,6 +363,7 @@ exports.sendEmail = function (to, content, subject) {
   promise.then((info) => {
     const emailSendHistory = {
       to,
+      subject,
       content,
       status: 1
     }

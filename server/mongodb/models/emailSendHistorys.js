@@ -6,6 +6,9 @@ var emailSendHistorys = new Schema({
   to: {
     type: String,
   },
+  subject: {
+    type: String,
+  },
   // 发送内容
   content: {
     type: String,
