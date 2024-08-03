@@ -25,7 +25,7 @@
       >
         <el-table-column prop="sortname" label="分类名称" min-width="300">
           <template #default="{ row }">
-            <div class="dib">{{ row.sortname }}</div>
+            <div class="di">{{ row.sortname }}</div>
             <!-- 点击打开按钮 -->
             <div class="dib ml5 vt">
               <el-link type="primary" @click="goToBlog(row)"

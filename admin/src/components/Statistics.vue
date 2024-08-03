@@ -31,13 +31,13 @@
             <el-table-column prop="title" label="标题">
               <template #default="{ row }">
                 <!-- 判断type，如果是2就用 row.excerpt 否则用title -->
-                <div class="dib">
-                  <div v-if="row.type === 2">
+                <div class="di">
+                  <template v-if="row.type === 2">
                     {{ reduceText(row.excerpt) }}
-                  </div>
-                  <div v-else>
+                  </template>
+                  <template v-else>
                     {{ reduceText(row.title) }}
-                  </div>
+                  </template>
                 </div>
                 <!-- 点击打开按钮 -->
                 <div class="dib ml5 vt">
@@ -67,13 +67,13 @@
             <el-table-column prop="title" label="标题">
               <template #default="{ row }">
                 <!-- 判断type，如果是2就用 row.excerpt 否则用title -->
-                <div class="dib">
-                  <div v-if="row.type === 2">
+                <div class="di">
+                  <template v-if="row.type === 2">
                     {{ reduceText(row.excerpt) }}
-                  </div>
-                  <div v-else>
+                  </template>
+                  <template v-else>
                     {{ reduceText(row.title) }}
-                  </div>
+                  </template>
                 </div>
                 <!-- 点击打开按钮 -->
                 <div class="dib ml5 vt">

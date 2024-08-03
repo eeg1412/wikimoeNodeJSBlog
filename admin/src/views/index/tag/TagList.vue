@@ -44,7 +44,7 @@
       >
         <el-table-column prop="tagname" label="标签名称" min-width="300">
           <template #default="{ row }">
-            <div class="dib">{{ row.tagname }}</div>
+            <div class="di">{{ row.tagname }}</div>
             <!-- 点击打开按钮 -->
             <div class="dib ml5 vt">
               <el-link type="primary" @click="goToBlog(row)"

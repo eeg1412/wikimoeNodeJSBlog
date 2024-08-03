@@ -167,7 +167,7 @@
         <el-table-column prop="title" label="标题/推文" width="320">
           <template #default="{ row }">
             <div>
-              <div :title="row.title || row.excerpt" class="dib">
+              <div :title="row.title || row.excerpt" class="di">
                 {{ titleLimit(row.title || row.excerpt) }}
               </div>
               <!-- 点击打开按钮 -->

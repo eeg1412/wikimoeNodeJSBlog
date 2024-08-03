@@ -65,7 +65,7 @@
         <el-table-column prop="ip" label="IP信息" width="350">
           <template #default="{ row }">
             <div v-if="row.ip">
-              <div class="dib word-break">{{ row.ip }}</div>
+              <div class="di word-break">{{ row.ip }}</div>
               <!-- 查询按钮 -->
               <div class="dib ml5 vt">
                 <el-link
@@ -120,7 +120,7 @@
         <el-table-column prop="rssPath" label="RSS路径" min-width="86">
           <template #default="{ row }">
             <div v-if="row.rssPath">
-              <div class="dib">{{ row.rssPath }}</div>
+              <div class="di">{{ row.rssPath }}</div>
               <!-- 查询按钮 -->
               <div class="dib ml5 vt">
                 <el-link

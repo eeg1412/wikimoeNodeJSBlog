@@ -60,7 +60,7 @@
         <el-table-column label="文章/推文" min-width="180">
           <template #default="{ row }">
             <div v-if="row.post">
-              <div :title="row.post.title || row.post.excerpt" class="dib">
+              <div :title="row.post.title || row.post.excerpt" class="di">
                 {{ titleLimit(row.post.title || row.post.excerpt) }}
               </div>
               <!-- 点击打开按钮 -->
@@ -77,7 +77,7 @@
         <el-table-column prop="uuid" label="uuid" width="350">
           <template #default="{ row }">
             <div v-if="row.uuid">
-              <div class="dib">{{ row.uuid }}</div>
+              <div class="di">{{ row.uuid }}</div>
               <!-- 查询按钮 -->
               <div class="dib ml5 vt">
                 <el-link
@@ -127,7 +127,7 @@
         <el-table-column prop="ip" label="IP信息" width="350">
           <template #default="{ row }">
             <div v-if="row.ip">
-              <div class="dib word-break">{{ row.ip }}</div>
+              <div class="di word-break">{{ row.ip }}</div>
               <!-- 查询按钮 -->
               <div class="dib ml5 vt">
                 <el-link
