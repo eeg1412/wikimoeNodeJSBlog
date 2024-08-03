@@ -275,6 +275,13 @@
           width="100"
           sortable="custom"
         />
+        <!-- likes -->
+        <el-table-column
+          prop="likes"
+          label="点赞数"
+          width="100"
+          sortable="likes"
+        />
         <el-table-column prop="top" label="置顶">
           <template #default="{ row }">
             <el-tag v-if="row.top" type="success">是</el-tag>

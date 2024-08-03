@@ -239,6 +239,18 @@ module.exports = async function (req, res, next) {
           comnum: -1
         }
         break;
+      // 按照点赞数likes升序
+      case 'likes_ascending':
+        postSorting = {
+          likes: 1
+        }
+        break;
+      // 按照点赞数likes降序
+      case 'likes_descending':
+        postSorting = {
+          likes: -1
+        }
+        break;
       // 按照更新时间updatedAt升序
       case 'updatedAt_ascending':
         postSorting = {
