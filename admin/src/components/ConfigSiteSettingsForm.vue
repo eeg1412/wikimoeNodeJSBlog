@@ -13,6 +13,8 @@
     </el-form-item>
     <el-form-item label="站点LOGO" prop="siteLogo">
       <Cropper
+        :maxWidth="1024"
+        :maxHeight="1024"
         :src="siteSettingsForm.siteLogo"
         putImageType="image/webp"
         @crop="setSiteLogo"
