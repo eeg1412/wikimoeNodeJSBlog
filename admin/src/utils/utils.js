@@ -13,6 +13,7 @@ let loadingTimer = null;
 
 const lightbox = new PhotoSwipeLightbox({
     pswpModule: () => import('photoswipe'),
+    secondaryZoomLevel: 1,
 })
 lightbox.init()
 let videoTimer = null

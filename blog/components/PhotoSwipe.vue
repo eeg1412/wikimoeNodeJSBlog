@@ -345,6 +345,7 @@ const initLightbox = async () => {
     preload: [1, 2],
     mainClass: 'photo-swipe-photo-swipe',
     padding: { top: 65, bottom: 30, left: 0, right: 0 },
+    secondaryZoomLevel: 1,
   })
   lightbox.init()
   lightbox.on('close', () => {
