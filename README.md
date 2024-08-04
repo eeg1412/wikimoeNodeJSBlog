@@ -2,6 +2,23 @@
 
 ![N`AG~U3E547WKDN{J P2H22](https://github.com/eeg1412/wikimoeNodeJSBlog/assets/27753071/4b5177e5-6f1b-414b-938b-336c0b7a68ed)
 
+## 特色系统
+### 记录生活点滴
+![image](https://github.com/user-attachments/assets/49dd9adc-c3ba-4d77-a56c-920da7e518ac)
+
+### 自动解析bilibili视频地址
+![image](https://github.com/user-attachments/assets/bc99079b-dbae-41d4-8cb3-e72a7ec2c7cb)
+
+### 记录自己追过的ACGN
+![image](https://github.com/user-attachments/assets/78cc341f-4a69-4a79-8318-66153415818b)
+![image](https://github.com/user-attachments/assets/78e604ac-d6b7-4a8c-9a2c-010328f759a0)
+![image](https://github.com/user-attachments/assets/3b1a311b-69a9-4c76-bd0c-28a4530ed86e)
+
+### 管理与分享自己的日程
+![image](https://github.com/user-attachments/assets/701ed64f-4e96-44b0-a0b7-57475f52501c)
+
+
+
 ## 当前已知问题
 
 1. 在 Windows 环境中运行开发版 blog 会出现图片视频加载失败的现象，这是因为 Nuxt.js 所使用的 Nitro 在开发模式中反代有并发问题导致的，build 之后在 Linux 下运行是不会出现这个问题的。
