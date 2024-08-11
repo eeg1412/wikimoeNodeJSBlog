@@ -32,7 +32,7 @@
             :data="readPostViewData"
             row-key="_id"
             style="width: 100%"
-            height="400px"
+            height="440px"
           >
             <el-table-column prop="title" label="标题">
               <template #default="{ row }">
@@ -79,7 +79,7 @@
             :data="readPostLikeData"
             row-key="_id"
             style="width: 100%"
-            height="400px"
+            height="440px"
           >
             <el-table-column prop="title" label="标题">
               <template #default="{ row }">
@@ -126,7 +126,7 @@
             :data="readReferrerData"
             row-key="_id"
             style="width: 100%"
-            height="400px"
+            height="440px"
           >
             <el-table-column prop="_id" label="来源"> </el-table-column>
             <el-table-column
@@ -155,7 +155,7 @@
             :data="readPostListSortData"
             row-key="_id"
             style="width: 100%"
-            height="400px"
+            height="440px"
           >
             <el-table-column prop="sortname" label="分类"> </el-table-column>
             <el-table-column
@@ -184,7 +184,7 @@
             :data="readPostListTagData"
             row-key="_id"
             style="width: 100%"
-            height="400px"
+            height="440px"
           >
             <el-table-column prop="tagname" label="标签"> </el-table-column>
             <el-table-column
@@ -213,7 +213,7 @@
             :data="readPostListKeywordData"
             row-key="_id"
             style="width: 100%"
-            height="400px"
+            height="440px"
           >
             <el-table-column prop="_id" label="关键词"> </el-table-column>
             <el-table-column
@@ -553,7 +553,7 @@ export default {
 }
 .statistics-panel {
   border: 1px solid #ebeef5;
-  height: 444px;
+  height: 485px;
   box-sizing: border-box;
   padding-bottom: 10px;
 }
