@@ -351,32 +351,7 @@ module.exports = async function (req, res, next) {
       readPostListSortData,
       readPostListTagData,
       readPostListKeywordData
-    ] = await Promise.all([
-      readerlogUtils.aggregate(readReferrerpipeline).catch(err => {
-        adminApiLog.error(err);
-        return false;
-      }),
-      readerlogUtils.aggregate(readPostViewPipeline).catch(err => {
-        adminApiLog.error(err);
-        return false;
-      }),
-      postLikeLogUtils.aggregate(readPostLikePipeline).catch(err => {
-        adminApiLog.error(err);
-        return false;
-      }),
-      readerlogUtils.aggregate(readPostListSortPipeline).catch(err => {
-        adminApiLog.error(err);
-        return false;
-      }),
-      readerlogUtils.aggregate(readPostListTagPipeline).catch(err => {
-        adminApiLog.error(err);
-        return false;
-      }),
-      readerlogUtils.aggregate(readPostListKeywordPipeline).catch(err => {
-        adminApiLog.error(err);
-        return false;
-      })
-    ]);
+    ] = await Promise.all(promiseArray);
 
     if (!readReferrerData || !readPostViewData || !readPostLikeData || !readPostListSortData || !readPostListTagData || !readPostListKeywordData) {
       res.status(500).json({
