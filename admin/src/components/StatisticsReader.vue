@@ -6,7 +6,7 @@
       <div class="el-descriptions__extra">
         <el-date-picker
           v-model="timeRange"
-          popper-class="pre-date-picker"
+          :popper-class="pickerClass"
           type="daterange"
           range-separator="至"
           start-placeholder="开始日期"
@@ -60,6 +60,7 @@
 import { ref, onMounted, computed } from 'vue'
 import { authApi } from '@/api'
 import moment from 'moment'
+import { generateRandomAlphabetString } from '@/utils/utils'
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -68,7 +69,6 @@ import {
   LineElement,
   Title,
   Tooltip,
-  Legend,
 } from 'chart.js'
 import { Line } from 'vue-chartjs'
 ChartJS.register(
@@ -86,6 +86,7 @@ export default {
     Line,
   },
   setup() {
+    const pickerClass = ref(generateRandomAlphabetString(12))
     const startOfDay = new Date()
     startOfDay.setHours(0, 0, 0, 0)
 
@@ -336,8 +337,14 @@ export default {
 
     onMounted(() => {
       getDashboardVisitor()
+      const queryClass = `.${pickerClass.value} .el-picker-panel__icon-btn.arrow-left`
+      const arrowLeft = document.querySelector(queryClass)
+      if (arrowLeft) {
+        arrowLeft.click()
+      }
     })
     return {
+      pickerClass,
       timeRange,
       shortcuts,
       timeRangeDisabledDate,

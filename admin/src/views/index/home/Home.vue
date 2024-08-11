@@ -138,13 +138,6 @@ export default {
 
     onMounted(() => {
       getDashboard()
-      // 找到.pre-date-picker .el-picker-panel__icon-btn.arrow-left 然后click一下
-      const arrowLeft = document.querySelector(
-        '.pre-date-picker .el-picker-panel__icon-btn.arrow-left'
-      )
-      if (arrowLeft) {
-        arrowLeft.click()
-      }
     })
 
     return {

@@ -199,6 +199,18 @@ export const uuid = () => {
     return chars.join("");
 }
 
+// 随机生成英文字母
+export const generateRandomAlphabetString = (length) => {
+    const characters = 'abcdefghijklmnopqrstuvwxyz'
+    let result = ''
+    for (let i = 0; i < length; i++) {
+        result += characters.charAt(
+            Math.floor(Math.random() * characters.length)
+        )
+    }
+    return result
+}
+
 
 export const startEndTimeCheck = (rule, value, callback, start, end) => {
     if (start && end) {
