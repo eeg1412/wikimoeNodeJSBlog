@@ -1008,3 +1008,19 @@ input[type='password'] {
   cursor: pointer;
   background-color: rgba(255, 255, 255, 0.85);
 }
+
+/* 手机模式 */
+@media (max-width: 768px) {
+  .el-range-editor.el-input__wrapper {
+    width: 230px;
+  }
+  .el-date-range-picker.has-sidebar {
+    max-width: 96vw;
+  }
+  .el-date-range-picker .el-picker-panel__body {
+    min-width: unset;
+  }
+  .el-date-range-picker__content {
+    width: 100%;
+  }
+}

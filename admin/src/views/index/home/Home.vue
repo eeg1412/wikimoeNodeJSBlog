@@ -49,57 +49,7 @@
         <el-divider />
       </div>
     </template>
-    <!-- 访客统计 -->
-    <div>
-      <div class="el-descriptions__header">
-        <div class="el-descriptions__title">访客统计</div>
-        <div class="el-descriptions__extra">
-          <el-select
-            v-model="timeRangeType"
-            placeholder="请选择时间范围"
-            @change="getDashboardVisitor"
-            style="width: 120px"
-          >
-            <el-option
-              v-for="item in timeRangeTypeList"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value"
-            ></el-option>
-          </el-select>
-        </div>
-      </div>
-      <el-row v-if="visitorData">
-        <!-- PV -->
-        <el-col :span="24">
-          <el-statistic title="PV" :value="visitorData.pvCount" />
-          <div class="home-chart-body" v-if="pvCartData.labels.length > 0">
-            <Line :data="pvCartData" :options="chartOptions" />
-          </div>
-        </el-col>
-        <!-- IP -->
-        <el-col :span="24">
-          <el-statistic title="IP" :value="visitorData.uniqueIPCount" />
-          <div
-            class="home-chart-body"
-            v-if="uniqueIPTimeLineData.labels.length > 0"
-          >
-            <Line :data="uniqueIPTimeLineData" :options="chartOptions"></Line>
-          </div>
-        </el-col>
-        <!-- 机器人访问 -->
-        <el-col :span="24">
-          <el-statistic
-            title="机器人访问"
-            :value="visitorData.robotAccessCount"
-          />
-          <div class="home-chart-body" v-if="robotAccessData.labels.length > 0">
-            <Line :data="robotAccessData" :options="chartOptions"></Line>
-          </div>
-        </el-col>
-      </el-row>
-      <el-divider />
-    </div>
+    <StatisticsReader />
     <Statistics />
     <el-divider />
     <el-descriptions title="服务器信息" v-if="data">
@@ -142,37 +92,17 @@
 </template>
 <script>
 import { onMounted, reactive, ref, computed } from 'vue'
-import moment from 'moment'
 import store from '@/store'
 import { useRoute, useRouter } from 'vue-router'
 import { authApi } from '@/api'
 import { ElMessage, ElMessageBox } from 'element-plus'
-import {
-  Chart as ChartJS,
-  CategoryScale,
-  LinearScale,
-  PointElement,
-  LineElement,
-  Title,
-  Tooltip,
-  Legend,
-} from 'chart.js'
-import { Line } from 'vue-chartjs'
 import Statistics from '@/components/Statistics.vue'
-ChartJS.register(
-  CategoryScale,
-  LinearScale,
-  PointElement,
-  LineElement,
-  Title,
-  Tooltip
-)
-moment.locale('zh-cn')
+import StatisticsReader from '@/components/StatisticsReader.vue'
 
 export default {
   components: {
-    Line,
     Statistics,
+    StatisticsReader,
   },
   setup() {
     const route = useRoute()
@@ -206,157 +136,20 @@ export default {
       })
     }
 
-    const timeRangeTypeList = [
-      { value: 'today', label: '今天' },
-      { value: 'yesterday', label: '昨天' },
-      { value: 'week', label: '本周' },
-      { value: 'month', label: '本月' },
-      { value: 'year', label: '过去一年' },
-    ]
-    const timeRangeType = ref('today')
-    const visitorData = ref(null)
-    const getDashboardVisitor = () => {
-      authApi
-        .getDashboardVisitor({
-          timeRangeType: timeRangeType.value,
-        })
-        .then((res) => {
-          visitorData.value = res.data
-        })
-    }
-
-    // chart
-    const chartOptions = {
-      responsive: true,
-      maintainAspectRatio: false,
-      interaction: {
-        mode: 'index',
-        intersect: false,
-      },
-      scales: {
-        y: {
-          ticks: {
-            beginAtZero: true,
-            precision: 0,
-            stepSize: 1,
-          },
-        },
-        x: {
-          ticks: {
-            // 禁止倾斜
-            maxRotation: 0,
-            // display: false,
-          },
-        },
-      },
-    }
-    const pvCartData = computed(() => {
-      if (visitorData.value) {
-        let data = visitorData.value.pv
-        // data的ID格式是2024-01-13T08:00:00.000Z 按照这个时间字符串排序
-        data = data.sort((a, b) => {
-          return a._id > b._id ? 1 : -1
-        })
-        const labels = []
-        const values = []
-        data.forEach((item) => {
-          // _id 为日期 2024-01-13T07:00:00.000Z
-          let f = moment(item._id).format('YYYY/MM/DD dddd HH:mm')
-          // 空格换行
-          f = f.split(' ')
-          labels.push(f)
-          values.push(item.count)
-        })
-        return {
-          labels,
-          datasets: [
-            {
-              label: 'PV',
-              data: values,
-              borderColor: '#409EFF',
-            },
-          ],
-        }
-      }
-      return {}
-    })
-    const uniqueIPTimeLineData = computed(() => {
-      if (visitorData.value) {
-        let data = visitorData.value.uniqueIPTimeLine
-        // data的ID格式是2024-01-13T08:00:00.000Z 按照这个时间字符串排序
-        data = data.sort((a, b) => {
-          return a._id > b._id ? 1 : -1
-        })
-        const labels = []
-        const values = []
-        data.forEach((item) => {
-          // _id 为日期 2024-01-13T07:00:00.000Z
-          let f = moment(item._id).format('YYYY/MM/DD dddd HH:mm')
-          // 空格换行
-          f = f.split(' ')
-          labels.push(f)
-          values.push(item.count)
-        })
-        return {
-          labels,
-          datasets: [
-            {
-              label: 'IP',
-              data: values,
-              borderColor: '#409EFF',
-            },
-          ],
-        }
-      }
-      return {}
-    })
-    const robotAccessData = computed(() => {
-      if (visitorData.value) {
-        let data = visitorData.value.robotAccess
-        // data的ID格式是2024-01-13T08:00:00.000Z 按照这个时间字符串排序
-        data = data.sort((a, b) => {
-          return a._id > b._id ? 1 : -1
-        })
-        const labels = []
-        const values = []
-        data.forEach((item) => {
-          // _id 为日期 2024-01-13T07:00:00.000Z
-          let f = moment(item._id).format('YYYY/MM/DD dddd HH:mm')
-          // 空格换行
-          f = f.split(' ')
-          labels.push(f)
-          values.push(item.count)
-        })
-        return {
-          labels,
-          datasets: [
-            {
-              label: '机器人访问',
-              data: values,
-              borderColor: '#409EFF',
-            },
-          ],
-        }
-      }
-      return {}
-    })
-
     onMounted(() => {
       getDashboard()
-      getDashboardVisitor()
+      // 找到.pre-date-picker .el-picker-panel__icon-btn.arrow-left 然后click一下
+      const arrowLeft = document.querySelector(
+        '.pre-date-picker .el-picker-panel__icon-btn.arrow-left'
+      )
+      if (arrowLeft) {
+        arrowLeft.click()
+      }
     })
 
     return {
       data,
       goCommentAudit,
-      timeRangeTypeList,
-      timeRangeType,
-      visitorData,
-      getDashboardVisitor,
-      chartOptions,
-      pvCartData,
-      uniqueIPTimeLineData,
-      robotAccessData,
     }
   },
 }

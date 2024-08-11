@@ -6,67 +6,88 @@ const readerlogUtils = require('../../../mongodb/utils/readerlogs')
 
 
 module.exports = async function (req, res, next) {
-  const timeRangeType = req.query.timeRangeType
-  const timeRangeTypeList = ['today', 'yesterday', 'week', 'month', 'year']
-  // 判断timeRangeType是否符合格式
-  if (!timeRangeTypeList.includes(timeRangeType)) {
-    // 报错
+  const startTime = req.query.startTime
+  const endTime = req.query.endTime
+  const timeZone = req.query.timeZone
+
+  // 校验 timeZone 是否合法
+  const validTimeZones = moment.tz.names();
+  if (!validTimeZones.includes(timeZone)) {
     res.status(400).json({
       errors: [{
-        message: '参数错误'
+        message: '时区不合法'
       }]
     })
     return
   }
-  const vistorActionList = ['postList', 'postListArchive', 'postListKeyword', 'postListSort', 'postListTag', 'postView']
-  const siteTimeZone = global.$globalConfig.siteSettings.siteTimeZone || 'Asia/Shanghai'
-  // 根据 timeRangeType 计算开始日期和结束日期
-  let startDate, endDate;
-  switch (timeRangeType) {
-    case 'today':
-      startDate = moment().tz(siteTimeZone).startOf('day');
-      endDate = moment().tz(siteTimeZone).endOf('day');
-      break;
-    case 'yesterday':
-      startDate = moment().tz(siteTimeZone).subtract(1, 'days').startOf('day');
-      endDate = moment().tz(siteTimeZone).subtract(1, 'days').endOf('day');
-      break;
-    case 'week':
-      startDate = moment().tz(siteTimeZone).startOf('week');
-      endDate = moment().tz(siteTimeZone).endOf('week');
-      break;
-    case 'month':
-      startDate = moment().tz(siteTimeZone).startOf('month');
-      endDate = moment().tz(siteTimeZone).endOf('month');
-      break;
-    case 'year':
-      startDate = moment().tz(siteTimeZone).subtract(1, 'years').startOf('day');
-      endDate = moment().tz(siteTimeZone);
-      break;
-    default:
-      break;
+  // 时间格式是 2023-08-10T15:00:00.000Z 需要判断合法性
+  const rule = [
+    // startTime
+    {
+      key: 'startTime',
+      label: '开始时间',
+      type: 'isISO8601',
+      required: true,
+      options: {
+        strict: true,
+        strictSeparator: true,
+      },
+    },
+    // endTime
+    {
+      key: 'endTime',
+      label: '结束时间',
+      type: 'isISO8601',
+      required: true,
+      options: {
+        strict: true,
+        strictSeparator: true,
+      },
+    },
+  ]
+
+  const errors = utils.checkForm({
+    startTime, endTime
+  }, rule)
+  if (errors.length > 0) {
+    res.status(400).json({ errors })
+    return
   }
 
+
+  const vistorActionList = ['postList', 'postListArchive', 'postListKeyword', 'postListSort', 'postListTag', 'postView']
+  // 根据 timeRangeType 计算开始日期和结束日期
+  const startDate = moment(startTime)
+  const endDate = moment(endTime)
+
+  // 数据是否超过一定小时数
+  let diffHours = endDate.diff(startDate, 'hours');
+
+  let isOverDays = false;
+  if (diffHours > 72) {
+    isOverDays = true;
+  }
+
+  let offset = null
+
   // 打印开始日期和结束日期
-  // console.log(startDate.toDate(), endDate.toDate())
-  const offset = moment.tz(siteTimeZone).format('Z')
   let $addFields = {
     "formatDate": {
       $dateToString: {
-        format: `%Y-%m-%dT%H:00:00.000${offset}`,
+        format: `%Y-%m-%dT%H:00:00.000Z`,
         date: "$createdAt",
-        timezone: siteTimeZone
       }
     }
   }
-  // 如果是年或者月，就按照天分组
-  if (timeRangeType === 'year' || timeRangeType === 'month') {
+  // 如果超过一定天数，就按天数来统计
+  if (isOverDays) {
+    offset = moment.tz(timeZone).format('Z')
     $addFields = {
       "formatDate": {
         $dateToString: {
           format: `%Y-%m-%dT00:00:00.000${offset}`,
           date: "$createdAt",
-          timezone: siteTimeZone
+          timezone: timeZone
         }
       }
     }
@@ -170,67 +191,27 @@ module.exports = async function (req, res, next) {
     robotAccessCount: 0,
     uniqueIPTimeLine: [],
     uniqueIPCount: 0,
+    isOverDays
   }
   // 初始化pv，robotAccess，uniqueIPTimeLine
-  switch (timeRangeType) {
-    case 'today':
-      const now = moment().tz(siteTimeZone);
-      const currentDayHour = now.hour();
-      for (let i = 0; i <= currentDayHour; i++) {
-        const time = now.clone().hour(i).format('YYYY-MM-DDTHH:00:00.000Z');
-        sendData.pv.push({ _id: time, count: 0 });
-        sendData.robotAccess.push({ _id: time, count: 0 });
-        sendData.uniqueIPTimeLine.push({ _id: time, count: 0 });
-      }
-      break;
-    case 'yesterday':
-      const yesterday = startDate;
-      for (let i = 0; i <= 23; i++) {
-        const time = yesterday.clone().hour(i).format('YYYY-MM-DDTHH:00:00.000Z');
-        sendData.pv.push({ _id: time, count: 0 });
-        sendData.robotAccess.push({ _id: time, count: 0 });
-        sendData.uniqueIPTimeLine.push({ _id: time, count: 0 });
-      }
-      break;
-    case 'week':
-      const nowWeek = moment().tz(siteTimeZone);
-      const currentDayOfWeek = nowWeek.day();
-      const currentHour = nowWeek.hour();
-      for (let i = 0; i <= currentDayOfWeek; i++) {
-        const day = nowWeek.clone().startOf('week').add(i, 'days');
-        const maxHour = i < currentDayOfWeek ? 23 : currentHour;
-        for (let j = 0; j <= maxHour; j++) {
-          const time = day.clone().hour(j).format('YYYY-MM-DDTHH:00:00.000Z');
-          const data = { _id: time, count: 0 };
-          sendData.pv.push({ ...data });
-          sendData.robotAccess.push({ ...data });
-          sendData.uniqueIPTimeLine.push({ ...data });
-        }
-      }
-      break;
-    case 'month':
-      const nowMonth = moment().tz(siteTimeZone);
-      const startOfMonth = nowMonth.clone().startOf('month');
-      const days = nowMonth.daysInMonth();
-      for (let i = 1; i <= days; i++) {
-        const time = startOfMonth.clone().add(i - 1, 'days').format('YYYY-MM-DDTHH:00:00.000Z');
-        sendData.pv.push({ _id: time, count: 0 });
-        sendData.robotAccess.push({ _id: time, count: 0 });
-        sendData.uniqueIPTimeLine.push({ _id: time, count: 0 });
-      }
-      break;
-    case 'year':
-      const daysOfYear = endDate.diff(startDate, 'days');
-      for (let i = 0; i <= daysOfYear; i++) {
-        const time = startDate.clone().add(i, 'days').format('YYYY-MM-DDTHH:00:00.000Z');
-        sendData.pv.push({ _id: time, count: 0 });
-        sendData.robotAccess.push({ _id: time, count: 0 });
-        sendData.uniqueIPTimeLine.push({ _id: time, count: 0 });
-      }
-      break;
-
-    default:
-      break;
+  if (!isOverDays) {
+    // 按小时统计
+    const hoursDifference = endDate.diff(startDate, 'hours');
+    for (let i = 0; i <= hoursDifference; i++) {
+      const time = startDate.clone().hour(i).utc().format('YYYY-MM-DDTHH:00:00.000[Z]');
+      sendData.pv.push({ _id: time, count: 0 });
+      sendData.robotAccess.push({ _id: time, count: 0 });
+      sendData.uniqueIPTimeLine.push({ _id: time, count: 0 });
+    }
+  } else {
+    // 按天统计
+    const daysOfYear = endDate.diff(startDate, 'days');
+    for (let i = 0; i <= daysOfYear; i++) {
+      const time = startDate.clone().tz(timeZone).add(i, 'days').format(`YYYY-MM-DDT00:00:00.000${offset}`);
+      sendData.pv.push({ _id: time, count: 0 });
+      sendData.robotAccess.push({ _id: time, count: 0 });
+      sendData.uniqueIPTimeLine.push({ _id: time, count: 0 });
+    }
   }
   if (readData.length > 0) {
     const pv = readData[0]?.pv || []
@@ -272,6 +253,8 @@ module.exports = async function (req, res, next) {
 
     sendData.uniqueIPCount = readData[0]?.uniqueIPCount[0]?.count || 0
   }
+
+  sendData.raw = readData
 
   // 发送响应
   res.send(sendData);
