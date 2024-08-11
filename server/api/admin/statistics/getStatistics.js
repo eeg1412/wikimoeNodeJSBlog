@@ -75,7 +75,7 @@ module.exports = async function (req, res, next) {
     },
     // 只取前10
     {
-      $limit: 10
+      $limit: 100
     }
   ]
   const readReferrerData = await readerlogUtils.aggregate(readReferrerpipeline).catch(err => {
@@ -115,7 +115,7 @@ module.exports = async function (req, res, next) {
     },
     // 只取前10
     {
-      $limit: 10
+      $limit: 100
     },
     // 根据id查询posts,只要返回id,title,excerpt,type
     {
@@ -177,7 +177,7 @@ module.exports = async function (req, res, next) {
     },
     // 只取前10
     {
-      $limit: 10
+      $limit: 100
     },
     // 根据id查询posts,只要返回id,title,excerpt,type
     {
@@ -240,7 +240,7 @@ module.exports = async function (req, res, next) {
     },
     // 只取前10
     {
-      $limit: 10
+      $limit: 100
     },
     // 根据id查询sorts,只要返回id,sortname
     {
@@ -301,7 +301,7 @@ module.exports = async function (req, res, next) {
     },
     // 只取前10
     {
-      $limit: 10
+      $limit: 100
     },
     // 根据id查询tags,只要返回id,tagname
     {
@@ -362,7 +362,7 @@ module.exports = async function (req, res, next) {
     },
     // 只取前10
     {
-      $limit: 10
+      $limit: 100
     }
   ]
   const readPostListKeywordData = await readerlogUtils.aggregate(readPostListKeywordPipeline).catch(err => {

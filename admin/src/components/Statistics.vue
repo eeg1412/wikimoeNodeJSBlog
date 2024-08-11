@@ -28,11 +28,7 @@
       <el-col :span="8" :xs="24" class="p10">
         <div class="mb10 fb">文章阅读</div>
         <div class="mb10">
-          <el-table
-            :data="rankData.readPostViewData"
-            row-key="_id"
-            style="width: 100%"
-          >
+          <el-table :data="readPostViewData" row-key="_id" style="width: 100%">
             <el-table-column prop="title" label="标题">
               <template #default="{ row }">
                 <!-- 判断type，如果是2就用 row.excerpt 否则用title -->
@@ -58,17 +54,23 @@
               width="80px"
             ></el-table-column>
           </el-table>
+          <div class="dflex flexCenter mt10">
+            <el-pagination
+              layout="prev, pager, next"
+              :total="rankData.readPostViewData.length"
+              :pager-count="5"
+              small
+              v-model:current-page="readPostViewPagination.currentPage"
+              v-model:page-size="readPostViewPagination.pageSize"
+            />
+          </div>
         </div>
       </el-col>
       <!-- 文章点赞统计 rankData.readPostLikeData -->
       <el-col :span="8" :xs="24" class="p10">
         <div class="mb10 fb">文章点赞</div>
         <div class="mb10">
-          <el-table
-            :data="rankData.readPostLikeData"
-            row-key="_id"
-            style="width: 100%"
-          >
+          <el-table :data="readPostLikeData" row-key="_id" style="width: 100%">
             <el-table-column prop="title" label="标题">
               <template #default="{ row }">
                 <!-- 判断type，如果是2就用 row.excerpt 否则用title -->
@@ -94,17 +96,23 @@
               width="80px"
             ></el-table-column>
           </el-table>
+          <div class="dflex flexCenter mt10">
+            <el-pagination
+              layout="prev, pager, next"
+              :total="rankData.readPostLikeData.length"
+              :pager-count="5"
+              small
+              v-model:current-page="readPostLikePagination.currentPage"
+              v-model:page-size="readPostLikePagination.pageSize"
+            />
+          </div>
         </div>
       </el-col>
       <!-- 来源 rankData.readReferrerData -->
       <el-col :span="8" :xs="24" class="p10">
         <div class="mb10 fb">来源</div>
         <div class="mb10">
-          <el-table
-            :data="rankData.readReferrerData"
-            row-key="_id"
-            style="width: 100%"
-          >
+          <el-table :data="readReferrerData" row-key="_id" style="width: 100%">
             <el-table-column prop="_id" label="来源"> </el-table-column>
             <el-table-column
               prop="count"
@@ -112,6 +120,16 @@
               width="80px"
             ></el-table-column>
           </el-table>
+          <div class="dflex flexCenter mt10">
+            <el-pagination
+              layout="prev, pager, next"
+              :total="rankData.readReferrerData.length"
+              :pager-count="5"
+              small
+              v-model:current-page="readReferrerPagination.currentPage"
+              v-model:page-size="readReferrerPagination.pageSize"
+            />
+          </div>
         </div>
       </el-col>
       <!-- 分类 rankData.readPostListSortData -->
@@ -119,7 +137,7 @@
         <div class="mb10 fb">分类</div>
         <div class="mb10">
           <el-table
-            :data="rankData.readPostListSortData"
+            :data="readPostListSortData"
             row-key="_id"
             style="width: 100%"
           >
@@ -130,6 +148,16 @@
               width="80px"
             ></el-table-column>
           </el-table>
+          <div class="dflex flexCenter mt10">
+            <el-pagination
+              layout="prev, pager, next"
+              :total="rankData.readPostListSortData.length"
+              :pager-count="5"
+              small
+              v-model:current-page="readPostListSortPagination.currentPage"
+              v-model:page-size="readPostListSortPagination.pageSize"
+            />
+          </div>
         </div>
       </el-col>
       <!-- tag rankData.readPostListTagData -->
@@ -137,7 +165,7 @@
         <div class="mb10 fb">标签</div>
         <div class="mb10">
           <el-table
-            :data="rankData.readPostListTagData"
+            :data="readPostListTagData"
             row-key="_id"
             style="width: 100%"
           >
@@ -148,6 +176,16 @@
               width="80px"
             ></el-table-column>
           </el-table>
+          <div class="dflex flexCenter mt10">
+            <el-pagination
+              layout="prev, pager, next"
+              :total="rankData.readPostListTagData.length"
+              :pager-count="5"
+              small
+              v-model:current-page="readPostListTagPagination.currentPage"
+              v-model:page-size="readPostListTagPagination.pageSize"
+            />
+          </div>
         </div>
       </el-col>
       <!-- 站内关键词 rankData.readPostListKeywordData -->
@@ -155,7 +193,7 @@
         <div class="mb10 fb">站内关键词</div>
         <div class="mb10">
           <el-table
-            :data="rankData.readPostListKeywordData"
+            :data="readPostListKeywordData"
             row-key="_id"
             style="width: 100%"
           >
@@ -166,6 +204,16 @@
               width="80px"
             ></el-table-column>
           </el-table>
+          <div class="dflex flexCenter mt10">
+            <el-pagination
+              layout="prev, pager, next"
+              :total="rankData.readPostListKeywordData.length"
+              :pager-count="5"
+              small
+              v-model:current-page="readPostListKeywordPagination.currentPage"
+              v-model:page-size="readPostListKeywordPagination.pageSize"
+            />
+          </div>
         </div>
       </el-col>
     </el-row>
@@ -337,6 +385,106 @@ export default {
       return siteUrl.value + path
     }
 
+    // readPostView的翻页对象
+    const readPostViewPagination = reactive({
+      currentPage: 1,
+      pageSize: 10,
+    })
+    // readPostView的computed
+    const readPostViewData = computed(() => {
+      if (rankData.value) {
+        return rankData.value.readPostViewData.slice(
+          (readPostViewPagination.currentPage - 1) *
+            readPostViewPagination.pageSize,
+          readPostViewPagination.currentPage * readPostViewPagination.pageSize
+        )
+      }
+      return []
+    })
+    // readPostLike 的翻页对象
+    const readPostLikePagination = reactive({
+      currentPage: 1,
+      pageSize: 10,
+    })
+    // readPostLike 的computed
+    const readPostLikeData = computed(() => {
+      if (rankData.value) {
+        return rankData.value.readPostLikeData.slice(
+          (readPostLikePagination.currentPage - 1) *
+            readPostLikePagination.pageSize,
+          readPostLikePagination.currentPage * readPostLikePagination.pageSize
+        )
+      }
+      return []
+    })
+    // readReferrer 的翻页对象
+    const readReferrerPagination = reactive({
+      currentPage: 1,
+      pageSize: 10,
+    })
+    // readReferrer 的computed
+    const readReferrerData = computed(() => {
+      if (rankData.value) {
+        return rankData.value.readReferrerData.slice(
+          (readReferrerPagination.currentPage - 1) *
+            readReferrerPagination.pageSize,
+          readReferrerPagination.currentPage * readReferrerPagination.pageSize
+        )
+      }
+      return []
+    })
+    // readPostListSort
+    const readPostListSortPagination = reactive({
+      currentPage: 1,
+      pageSize: 10,
+    })
+    // readPostListSort 的computed
+    const readPostListSortData = computed(() => {
+      if (rankData.value) {
+        return rankData.value.readPostListSortData.slice(
+          (readPostListSortPagination.currentPage - 1) *
+            readPostListSortPagination.pageSize,
+          readPostListSortPagination.currentPage *
+            readPostListSortPagination.pageSize
+        )
+      }
+      return []
+    })
+    // readPostListTag
+    const readPostListTagPagination = reactive({
+      currentPage: 1,
+      pageSize: 10,
+    })
+    // readPostListTag 的computed
+    const readPostListTagData = computed(() => {
+      if (rankData.value) {
+        return rankData.value.readPostListTagData.slice(
+          (readPostListTagPagination.currentPage - 1) *
+            readPostListTagPagination.pageSize,
+          readPostListTagPagination.currentPage *
+            readPostListTagPagination.pageSize
+        )
+      }
+      return []
+    })
+    // readPostListKeyword
+    const readPostListKeywordPagination = reactive({
+      currentPage: 1,
+      pageSize: 10,
+    })
+    // readPostListKeyword 的computed
+    const readPostListKeywordData = computed(() => {
+      if (rankData.value) {
+        return rankData.value.readPostListKeywordData.slice(
+          (readPostListKeywordPagination.currentPage - 1) *
+            readPostListKeywordPagination.pageSize,
+          readPostListKeywordPagination.currentPage *
+            readPostListKeywordPagination.pageSize
+        )
+      }
+      return []
+    })
+
     onMounted(() => {
       getStatistics()
       const queryClass = `.${pickerClass.value} .el-picker-panel__icon-btn.arrow-left`
@@ -356,6 +504,19 @@ export default {
       getStatistics,
       reduceText,
       openPage,
+
+      readPostViewPagination,
+      readPostViewData,
+      readPostLikePagination,
+      readPostLikeData,
+      readReferrerPagination,
+      readReferrerData,
+      readPostListSortPagination,
+      readPostListSortData,
+      readPostListTagPagination,
+      readPostListTagData,
+      readPostListKeywordPagination,
+      readPostListKeywordData,
     }
   },
 }
