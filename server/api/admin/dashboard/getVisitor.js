@@ -254,7 +254,7 @@ module.exports = async function (req, res, next) {
     sendData.uniqueIPCount = readData[0]?.uniqueIPCount[0]?.count || 0
   }
 
-  sendData.raw = readData
+  // sendData.raw = readData
 
   // 发送响应
   res.send(sendData);
