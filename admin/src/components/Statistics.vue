@@ -3,19 +3,24 @@
     <div class="el-descriptions__header">
       <div class="el-descriptions__title">排名统计</div>
       <div class="el-descriptions__extra">
-        <el-select
-          v-model="timeRangeType"
-          placeholder="请选择时间范围"
+        <el-date-picker
+          v-model="timeRange"
+          :popper-class="pickerClass"
+          type="daterange"
+          range-separator="至"
+          start-placeholder="开始日期"
+          end-placeholder="结束日期"
+          :shortcuts="shortcuts"
+          teleported
+          :editable="false"
+          :clearable="false"
+          :disabled-date="timeRangeDisabledDate"
+          :default-time="[
+            new Date().setHours(0, 0, 0, 0),
+            new Date().setHours(23, 59, 59, 999),
+          ]"
           @change="getStatistics"
-          style="width: 120px"
-        >
-          <el-option
-            v-for="item in timeRangeTypeList"
-            :key="item.value"
-            :label="item.label"
-            :value="item.value"
-          ></el-option>
-        </el-select>
+        />
       </div>
     </div>
     <el-row v-if="rankData">
@@ -168,27 +173,126 @@
 </template>
 <script>
 import { onMounted, reactive, ref, computed } from 'vue'
-import { useRoute, useRouter } from 'vue-router'
+import { generateRandomAlphabetString } from '@/utils/utils'
 import { authApi } from '@/api'
+import moment from 'moment'
 import store from '@/store'
 
 export default {
   setup() {
-    const route = useRoute()
-    const router = useRouter()
-    const timeRangeTypeList = [
-      { value: 'today', label: '今天' },
-      { value: 'yesterday', label: '昨天' },
-      { value: 'week', label: '本周' },
-      { value: 'month', label: '本月' },
-      { value: 'year', label: '过去一年' },
+    const pickerClass = ref(generateRandomAlphabetString(12))
+    const startOfDay = new Date()
+    startOfDay.setHours(0, 0, 0, 0)
+
+    const endOfDay = new Date()
+    endOfDay.setHours(23, 59, 59, 999)
+
+    const timeRange = ref([startOfDay, endOfDay])
+    const shortcuts = [
+      // 今天
+      {
+        text: '今天',
+        value: () => {
+          const end = new Date()
+          end.setHours(23, 59, 59, 999)
+          const start = new Date()
+          start.setHours(0, 0, 0, 0)
+          return [start, end]
+        },
+      },
+      // 昨天
+      {
+        text: '昨天',
+        value: () => {
+          const end = new Date()
+          end.setHours(0, 0, 0, 0)
+          end.setTime(end.getTime() - 1)
+          const start = new Date()
+          start.setHours(0, 0, 0, 0)
+          start.setTime(start.getTime() - 3600 * 1000 * 24)
+          return [start, end]
+        },
+      },
+      // 过去3天
+      {
+        text: '过去3天',
+        value: () => {
+          const end = new Date()
+          end.setHours(23, 59, 59, 999)
+          const start = new Date()
+          start.setTime(start.getTime() - 3600 * 1000 * 24 * 3)
+          start.setHours(0, 0, 0, 0)
+          return [start, end]
+        },
+      },
+      {
+        text: '过去7天',
+        value: () => {
+          const end = new Date()
+          end.setHours(23, 59, 59, 999)
+          const start = new Date()
+          start.setTime(start.getTime() - 3600 * 1000 * 24 * 7)
+          start.setHours(0, 0, 0, 0)
+          return [start, end]
+        },
+      },
+      {
+        text: '过去1个月',
+        value: () => {
+          const end = new Date()
+          end.setHours(23, 59, 59, 999)
+          const start = new Date()
+          start.setMonth(start.getMonth() - 1)
+          start.setHours(0, 0, 0, 0)
+          return [start, end]
+        },
+      },
+      {
+        text: '过去3个月',
+        value: () => {
+          const end = new Date()
+          end.setHours(23, 59, 59, 999)
+          const start = new Date()
+          start.setMonth(start.getMonth() - 3)
+          start.setHours(0, 0, 0, 0)
+          return [start, end]
+        },
+      },
+      {
+        text: '过去一年',
+        value: () => {
+          const end = new Date()
+          end.setHours(23, 59, 59, 999)
+          const start = new Date()
+          start.setFullYear(start.getFullYear() - 1)
+          start.setHours(0, 0, 0, 0)
+          return [start, end]
+        },
+      },
     ]
-    const timeRangeType = ref('today')
+
+    const timeRangeDisabledDate = (time) => {
+      const today = new Date()
+      const past370Days = new Date()
+      past370Days.setDate(today.getDate() - 370)
+      return (
+        time.getTime() < past370Days.getTime() ||
+        time.getTime() > today.getTime()
+      )
+    }
+
     const rankData = ref(null)
     const getStatistics = () => {
+      const startTime = new Date(timeRange.value[0])
+      const endTime = new Date(timeRange.value[1])
+      // 如果endTime是当天，则时间是当前时间
+      if (moment(endTime).isSame(moment(), 'day')) {
+        endTime.setHours(new Date().getHours(), new Date().getMinutes())
+      }
       authApi
         .getStatistics({
-          timeRangeType: timeRangeType.value,
+          startTime: startTime,
+          endTime: endTime,
         })
         .then((res) => {
           rankData.value = res.data
@@ -235,12 +339,20 @@ export default {
 
     onMounted(() => {
       getStatistics()
+      const queryClass = `.${pickerClass.value} .el-picker-panel__icon-btn.arrow-left`
+      const arrowLeft = document.querySelector(queryClass)
+      if (arrowLeft) {
+        arrowLeft.click()
+      }
     })
 
     return {
+      timeRange,
+      pickerClass,
+      shortcuts,
+      timeRangeDisabledDate,
+
       rankData,
-      timeRangeTypeList,
-      timeRangeType,
       getStatistics,
       reduceText,
       openPage,

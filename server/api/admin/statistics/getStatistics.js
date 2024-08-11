@@ -7,45 +7,47 @@ const postLikeLogUtils = require('../../../mongodb/utils/postLikeLogs')
 
 
 module.exports = async function (req, res, next) {
-  const timeRangeType = req.query.timeRangeType
-  const timeRangeTypeList = ['today', 'yesterday', 'week', 'month', 'year']
-  // 判断timeRangeType是否符合格式
-  if (!timeRangeTypeList.includes(timeRangeType)) {
-    // 报错
-    res.status(400).json({
-      errors: [{
-        message: '参数错误'
-      }]
-    })
+  const startTime = req.query.startTime
+  const endTime = req.query.endTime
+
+  // 时间格式是 2023-08-10T15:00:00.000Z 需要判断合法性
+  const rule = [
+    // startTime
+    {
+      key: 'startTime',
+      label: '开始时间',
+      type: 'isISO8601',
+      required: true,
+      options: {
+        strict: true,
+        strictSeparator: true,
+      },
+    },
+    // endTime
+    {
+      key: 'endTime',
+      label: '结束时间',
+      type: 'isISO8601',
+      required: true,
+      options: {
+        strict: true,
+        strictSeparator: true,
+      },
+    },
+  ]
+
+  const errors = utils.checkForm({
+    startTime, endTime
+  }, rule)
+  if (errors.length > 0) {
+    res.status(400).json({ errors })
     return
   }
-  const siteTimeZone = global.$globalConfig.siteSettings.siteTimeZone || 'Asia/Shanghai'
-  // 根据 timeRangeType 计算开始日期和结束日期
-  let startDate, endDate;
-  switch (timeRangeType) {
-    case 'today':
-      startDate = moment().tz(siteTimeZone).startOf('day');
-      endDate = moment().tz(siteTimeZone).endOf('day');
-      break;
-    case 'yesterday':
-      startDate = moment().tz(siteTimeZone).subtract(1, 'days').startOf('day');
-      endDate = moment().tz(siteTimeZone).subtract(1, 'days').endOf('day');
-      break;
-    case 'week':
-      startDate = moment().tz(siteTimeZone).startOf('week');
-      endDate = moment().tz(siteTimeZone).endOf('week');
-      break;
-    case 'month':
-      startDate = moment().tz(siteTimeZone).startOf('month');
-      endDate = moment().tz(siteTimeZone).endOf('month');
-      break;
-    case 'year':
-      startDate = moment().tz(siteTimeZone).subtract(1, 'years');
-      endDate = moment().tz(siteTimeZone);
-      break;
-    default:
-      break;
-  }
+
+
+
+  const startDate = moment(startTime)
+  const endDate = moment(endTime)
 
   // 来源站统计
   const readReferrerpipeline = [
