@@ -83,7 +83,9 @@
           <transition name="fade">
             <div
               class="blog-layout-info-menu-bg blog-layout-info-menu-bt-img"
-              v-if="!pageLoading"
+              :class="{
+                pageloaded: !pageLoading,
+              }"
             ></div>
           </transition>
         </div>
