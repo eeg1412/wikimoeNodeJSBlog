@@ -8,7 +8,8 @@ module.exports = async function (req, res, next) {
     status: 1
   }
   const sort = {
-    taxis: -1,
+    taxis: 1,
+    _id: -1
   }
   linkUtils.find(params, sort).then((data) => {
     // 返回格式list,total
