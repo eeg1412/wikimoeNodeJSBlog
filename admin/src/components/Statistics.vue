@@ -26,9 +26,14 @@
     <el-row v-if="rankData">
       <!-- 文章阅读 rankData.readPostViewData -->
       <el-col :span="8" :xs="24" class="p10">
-        <div class="mb10 fb">文章阅读</div>
-        <div class="mb10">
-          <el-table :data="readPostViewData" row-key="_id" style="width: 100%">
+        <div class="mb10 fb statistics-title">文章阅读</div>
+        <div class="mb10 statistics-panel">
+          <el-table
+            :data="readPostViewData"
+            row-key="_id"
+            style="width: 100%"
+            height="400px"
+          >
             <el-table-column prop="title" label="标题">
               <template #default="{ row }">
                 <!-- 判断type，如果是2就用 row.excerpt 否则用title -->
@@ -68,9 +73,14 @@
       </el-col>
       <!-- 文章点赞统计 rankData.readPostLikeData -->
       <el-col :span="8" :xs="24" class="p10">
-        <div class="mb10 fb">文章点赞</div>
-        <div class="mb10">
-          <el-table :data="readPostLikeData" row-key="_id" style="width: 100%">
+        <div class="mb10 fb statistics-title">文章点赞</div>
+        <div class="mb10 statistics-panel">
+          <el-table
+            :data="readPostLikeData"
+            row-key="_id"
+            style="width: 100%"
+            height="400px"
+          >
             <el-table-column prop="title" label="标题">
               <template #default="{ row }">
                 <!-- 判断type，如果是2就用 row.excerpt 否则用title -->
@@ -110,9 +120,14 @@
       </el-col>
       <!-- 来源 rankData.readReferrerData -->
       <el-col :span="8" :xs="24" class="p10">
-        <div class="mb10 fb">来源</div>
-        <div class="mb10">
-          <el-table :data="readReferrerData" row-key="_id" style="width: 100%">
+        <div class="mb10 fb statistics-title">来源</div>
+        <div class="mb10 statistics-panel">
+          <el-table
+            :data="readReferrerData"
+            row-key="_id"
+            style="width: 100%"
+            height="400px"
+          >
             <el-table-column prop="_id" label="来源"> </el-table-column>
             <el-table-column
               prop="count"
@@ -134,12 +149,13 @@
       </el-col>
       <!-- 分类 rankData.readPostListSortData -->
       <el-col :span="8" :xs="24" class="p10">
-        <div class="mb10 fb">分类</div>
-        <div class="mb10">
+        <div class="mb10 fb statistics-title">分类</div>
+        <div class="mb10 statistics-panel">
           <el-table
             :data="readPostListSortData"
             row-key="_id"
             style="width: 100%"
+            height="400px"
           >
             <el-table-column prop="sortname" label="分类"> </el-table-column>
             <el-table-column
@@ -162,12 +178,13 @@
       </el-col>
       <!-- tag rankData.readPostListTagData -->
       <el-col :span="8" :xs="24" class="p10">
-        <div class="mb10 fb">标签</div>
-        <div class="mb10">
+        <div class="mb10 fb statistics-title">标签</div>
+        <div class="mb10 statistics-panel">
           <el-table
             :data="readPostListTagData"
             row-key="_id"
             style="width: 100%"
+            height="400px"
           >
             <el-table-column prop="tagname" label="标签"> </el-table-column>
             <el-table-column
@@ -190,12 +207,13 @@
       </el-col>
       <!-- 站内关键词 rankData.readPostListKeywordData -->
       <el-col :span="8" :xs="24" class="p10">
-        <div class="mb10 fb">站内关键词</div>
-        <div class="mb10">
+        <div class="mb10 fb statistics-title">站内关键词</div>
+        <div class="mb10 statistics-panel">
           <el-table
             :data="readPostListKeywordData"
             row-key="_id"
             style="width: 100%"
+            height="400px"
           >
             <el-table-column prop="_id" label="关键词"> </el-table-column>
             <el-table-column
@@ -528,4 +546,15 @@ export default {
   },
 }
 </script>
-<style scoped></style>
+<style scoped>
+.statistics-title {
+  height: 20px;
+  line-height: 20px;
+}
+.statistics-panel {
+  border: 1px solid #ebeef5;
+  height: 444px;
+  box-sizing: border-box;
+  padding-bottom: 10px;
+}
+</style>
