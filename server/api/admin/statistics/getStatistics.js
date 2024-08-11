@@ -10,6 +10,8 @@ module.exports = async function (req, res, next) {
   const startTime = req.query.startTime
   const endTime = req.query.endTime
 
+  const limit = 100
+
   // 时间格式是 2023-08-10T15:00:00.000Z 需要判断合法性
   const rule = [
     // startTime
@@ -45,6 +47,7 @@ module.exports = async function (req, res, next) {
   }
 
 
+  const promiseArray = []
 
   const startDate = moment(startTime)
   const endDate = moment(endTime)
@@ -75,21 +78,15 @@ module.exports = async function (req, res, next) {
     },
     // 只取前10
     {
-      $limit: 100
+      $limit: limit
     }
   ]
-  const readReferrerData = await readerlogUtils.aggregate(readReferrerpipeline).catch(err => {
+  const readReferrerData = readerlogUtils.aggregate(readReferrerpipeline).catch(err => {
     adminApiLog.error(err)
     return false
   })
-  if (!readReferrerData) {
-    res.status(500).json({
-      errors: [{
-        message: '数据库查询错误'
-      }]
-    })
-    return
-  }
+  promiseArray.push(readReferrerData)
+
   // 单位时间内最受欢迎的文章
   const readPostViewPipeline = [
     {
@@ -115,7 +112,7 @@ module.exports = async function (req, res, next) {
     },
     // 只取前10
     {
-      $limit: 100
+      $limit: limit
     },
     // 根据id查询posts,只要返回id,title,excerpt,type
     {
@@ -139,19 +136,12 @@ module.exports = async function (req, res, next) {
       }
     }
   ]
-  const readPostViewData = await readerlogUtils.aggregate(readPostViewPipeline).catch(err => {
+
+  const readPostViewData = readerlogUtils.aggregate(readPostViewPipeline).catch(err => {
     adminApiLog.error(err)
     return false
   })
-
-  if (!readPostViewData) {
-    res.status(500).json({
-      errors: [{
-        message: '数据库查询错误'
-      }]
-    })
-    return
-  }
+  promiseArray.push(readPostViewData)
 
   // 单位时间 postLike 
   const readPostLikePipeline = [
@@ -177,7 +167,7 @@ module.exports = async function (req, res, next) {
     },
     // 只取前10
     {
-      $limit: 100
+      $limit: limit
     },
     // 根据id查询posts,只要返回id,title,excerpt,type
     {
@@ -201,19 +191,12 @@ module.exports = async function (req, res, next) {
       }
     }
   ]
-  const readPostLikeData = await postLikeLogUtils.aggregate(readPostLikePipeline).catch(err => {
+  const readPostLikeData = postLikeLogUtils.aggregate(readPostLikePipeline).catch(err => {
     adminApiLog.error(err)
     return false
   })
 
-  if (!readPostLikeData) {
-    res.status(500).json({
-      errors: [{
-        message: '数据库查询错误'
-      }]
-    })
-    return
-  }
+  promiseArray.push(readPostLikeData)
 
   // 单位时间分类访问排行 postListSort
   const readPostListSortPipeline = [
@@ -240,7 +223,7 @@ module.exports = async function (req, res, next) {
     },
     // 只取前10
     {
-      $limit: 100
+      $limit: limit
     },
     // 根据id查询sorts,只要返回id,sortname
     {
@@ -262,19 +245,12 @@ module.exports = async function (req, res, next) {
       }
     }
   ]
-  const readPostListSortData = await readerlogUtils.aggregate(readPostListSortPipeline).catch(err => {
+  const readPostListSortData = readerlogUtils.aggregate(readPostListSortPipeline).catch(err => {
     adminApiLog.error(err)
     return false
   })
 
-  if (!readPostListSortData) {
-    res.status(500).json({
-      errors: [{
-        message: '数据库查询错误'
-      }]
-    })
-    return
-  }
+  promiseArray.push(readPostListSortData)
 
   // 单位时间标签访问排行 postListTag
   const readPostListTagPipeline = [
@@ -301,7 +277,7 @@ module.exports = async function (req, res, next) {
     },
     // 只取前10
     {
-      $limit: 100
+      $limit: limit
     },
     // 根据id查询tags,只要返回id,tagname
     {
@@ -323,19 +299,12 @@ module.exports = async function (req, res, next) {
       }
     }
   ]
-  const readPostListTagData = await readerlogUtils.aggregate(readPostListTagPipeline).catch(err => {
+  const readPostListTagData = readerlogUtils.aggregate(readPostListTagPipeline).catch(err => {
     adminApiLog.error(err)
     return false
   })
 
-  if (!readPostListTagData) {
-    res.status(500).json({
-      errors: [{
-        message: '数据库查询错误'
-      }]
-    })
-    return
-  }
+  promiseArray.push(readPostListTagData)
 
   // 单位时间关键词搜索排行 postListKeyword
   const readPostListKeywordPipeline = [
@@ -362,34 +331,80 @@ module.exports = async function (req, res, next) {
     },
     // 只取前10
     {
-      $limit: 100
+      $limit: limit
     }
   ]
-  const readPostListKeywordData = await readerlogUtils.aggregate(readPostListKeywordPipeline).catch(err => {
+  const readPostListKeywordData = readerlogUtils.aggregate(readPostListKeywordPipeline).catch(err => {
     adminApiLog.error(err)
     return false
   })
 
-  if (!readPostListKeywordData) {
+
+  promiseArray.push(readPostListKeywordData)
+
+
+  try {
+    const [
+      readReferrerData,
+      readPostViewData,
+      readPostLikeData,
+      readPostListSortData,
+      readPostListTagData,
+      readPostListKeywordData
+    ] = await Promise.all([
+      readerlogUtils.aggregate(readReferrerpipeline).catch(err => {
+        adminApiLog.error(err);
+        return false;
+      }),
+      readerlogUtils.aggregate(readPostViewPipeline).catch(err => {
+        adminApiLog.error(err);
+        return false;
+      }),
+      postLikeLogUtils.aggregate(readPostLikePipeline).catch(err => {
+        adminApiLog.error(err);
+        return false;
+      }),
+      readerlogUtils.aggregate(readPostListSortPipeline).catch(err => {
+        adminApiLog.error(err);
+        return false;
+      }),
+      readerlogUtils.aggregate(readPostListTagPipeline).catch(err => {
+        adminApiLog.error(err);
+        return false;
+      }),
+      readerlogUtils.aggregate(readPostListKeywordPipeline).catch(err => {
+        adminApiLog.error(err);
+        return false;
+      })
+    ]);
+
+    if (!readReferrerData || !readPostViewData || !readPostLikeData || !readPostListSortData || !readPostListTagData || !readPostListKeywordData) {
+      res.status(500).json({
+        errors: [{
+          message: '数据库查询错误'
+        }]
+      });
+      return;
+    }
+
+    let sendData = {
+      readReferrerData: readReferrerData,
+      readPostViewData: readPostViewData,
+      readPostLikeData: readPostLikeData,
+      readPostListSortData: readPostListSortData,
+      readPostListTagData: readPostListTagData,
+      readPostListKeywordData: readPostListKeywordData
+    };
+
+    // 发送响应
+    res.send(sendData);
+  } catch (error) {
+    console.error(error);
+    adminApiLog.error(error);
     res.status(500).json({
       errors: [{
-        message: '数据库查询错误'
+        message: '服务器内部错误'
       }]
-    })
-    return
+    });
   }
-
-
-  let sendData = {
-    readReferrerData: readReferrerData,
-    readPostViewData: readPostViewData,
-    readPostLikeData: readPostLikeData,
-    readPostListSortData: readPostListSortData,
-    readPostListTagData: readPostListTagData,
-    readPostListKeywordData: readPostListKeywordData
-
-  }
-
-  // 发送响应
-  res.send(sendData);
 }
