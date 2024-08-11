@@ -145,8 +145,8 @@ exports.getUserIp = function (req) {
     req.connection.remoteAddress ||
     req.socket.remoteAddress ||
     req.connection.socket.remoteAddress || '';
-  if (ip.substr(0, 7) == "::ffff:") {
-    ip = ip.substr(7)
+  if (ip.slice(0, 7).toLowerCase() === "::ffff:") {
+    ip = ip.slice(7);
   }
   return ip;
 };
