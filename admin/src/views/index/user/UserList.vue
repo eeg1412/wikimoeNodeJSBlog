@@ -86,12 +86,7 @@
         <el-table-column label="操作IP" prop="IP" width="350">
           <template #default="{ row }">
             <div>{{ row.IP }}</div>
-            <div>
-              {{ row.ipInfo?.countryLong }} {{ row.ipInfo?.city
-              }}<template v-if="row.ipInfo?.region !== row.ipInfo?.city">
-                {{ ' ' + row.ipInfo?.region }}</template
-              >
-            </div>
+            <IpInfoDisplay :ipInfo="row.ipInfo" />
           </template>
         </el-table-column>
         <!-- createdAt -->

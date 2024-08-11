@@ -81,12 +81,7 @@
                 ></el-link>
               </div>
             </div>
-            <div>
-              {{ row.ipInfo?.countryLong }} {{ row.ipInfo?.city
-              }}<template v-if="row.ipInfo?.region !== row.ipInfo?.city">
-                {{ ' ' + row.ipInfo?.region }}</template
-              >
-            </div>
+            <IpInfoDisplay :ipInfo="row.ipInfo" />
           </template>
         </el-table-column>
         <!-- UA信息 -->
