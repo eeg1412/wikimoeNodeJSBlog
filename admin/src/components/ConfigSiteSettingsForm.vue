@@ -196,7 +196,19 @@ export default {
       siteDefaultCover: [
         { required: true, message: '请上传默认封面图', trigger: 'blur' },
       ],
-      siteUrl: [{ required: true, message: '请输入站点地址', trigger: 'blur' }],
+      siteUrl: [
+        { required: true, message: '请输入站点地址', trigger: 'blur' },
+        {
+          validator: (rule, value, callback) => {
+            if (!value.startsWith('http://') && !value.startsWith('https://')) {
+              callback(new Error('站点地址必须以 http:// 或 https:// 开头'))
+            } else {
+              callback()
+            }
+          },
+          trigger: 'blur',
+        },
+      ],
       sitePageSize: [
         { required: true, message: '请输入每页显示', trigger: 'blur' },
       ],
