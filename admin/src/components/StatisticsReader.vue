@@ -26,26 +26,32 @@
     </div>
     <el-row v-if="visitorData">
       <!-- PV -->
-      <el-col :span="24">
-        <el-statistic title="PV" :value="visitorData.pvCount" />
+      <el-col :span="24" class="mb10">
+        <el-statistic title="页面访问数(PV)" :value="visitorData.pvCount" />
         <div class="home-chart-body" v-if="pvCartData.labels.length > 0">
           <Line :data="pvCartData" :options="chartOptions" />
         </div>
       </el-col>
       <!-- IP -->
-      <el-col :span="24">
-        <el-statistic title="IP" :value="visitorData.uniqueIPCount" />
+      <el-col :span="24" class="mb10">
+        <el-statistic
+          title="独立访客数(IP)"
+          :value="visitorData.uniqueIPCount"
+        />
         <div
           class="home-chart-body"
           v-if="uniqueIPTimeLineData.labels.length > 0"
         >
           <Line :data="uniqueIPTimeLineData" :options="chartOptions"></Line>
         </div>
+        <div>
+          ※独立访客数(IP)为所选时间段内的独立访客数，折线图中反映的是单位时间内的独立访客数量。
+        </div>
       </el-col>
       <!-- 机器人爬虫访问 -->
       <el-col :span="24">
         <el-statistic
-          title="机器人爬虫访问"
+          title="机器人爬虫访问数"
           :value="visitorData.robotAccessCount"
         />
         <div class="home-chart-body" v-if="robotAccessData.labels.length > 0">
@@ -119,14 +125,13 @@ export default {
           return [start, end]
         },
       },
-      // 过去3天
       {
         text: '过去3天',
         value: () => {
           const end = new Date()
           end.setHours(23, 59, 59, 999)
           const start = new Date()
-          start.setTime(start.getTime() - 3600 * 1000 * 24 * 3)
+          start.setDate(start.getDate() - 2) // 减去2天
           start.setHours(0, 0, 0, 0)
           return [start, end]
         },
@@ -137,7 +142,7 @@ export default {
           const end = new Date()
           end.setHours(23, 59, 59, 999)
           const start = new Date()
-          start.setTime(start.getTime() - 3600 * 1000 * 24 * 7)
+          start.setDate(start.getDate() - 6) // 减去6天
           start.setHours(0, 0, 0, 0)
           return [start, end]
         },

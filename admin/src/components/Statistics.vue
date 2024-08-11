@@ -19,7 +19,7 @@
             new Date().setHours(0, 0, 0, 0),
             new Date().setHours(23, 59, 59, 999),
           ]"
-          @change="getStatistics"
+          @change="getStatistics(true)"
         />
       </div>
     </div>
@@ -261,14 +261,13 @@ export default {
           return [start, end]
         },
       },
-      // 过去3天
       {
         text: '过去3天',
         value: () => {
           const end = new Date()
           end.setHours(23, 59, 59, 999)
           const start = new Date()
-          start.setTime(start.getTime() - 3600 * 1000 * 24 * 3)
+          start.setDate(start.getDate() - 2) // 减去2天
           start.setHours(0, 0, 0, 0)
           return [start, end]
         },
@@ -279,7 +278,7 @@ export default {
           const end = new Date()
           end.setHours(23, 59, 59, 999)
           const start = new Date()
-          start.setTime(start.getTime() - 3600 * 1000 * 24 * 7)
+          start.setDate(start.getDate() - 6) // 减去6天
           start.setHours(0, 0, 0, 0)
           return [start, end]
         },
@@ -330,7 +329,7 @@ export default {
     }
 
     const rankData = ref(null)
-    const getStatistics = () => {
+    const getStatistics = (resetPage) => {
       const startTime = new Date(timeRange.value[0])
       const endTime = new Date(timeRange.value[1])
       // 如果endTime是当天，则时间是当前时间
@@ -343,6 +342,14 @@ export default {
           endTime: endTime,
         })
         .then((res) => {
+          if (resetPage) {
+            readPostViewPagination.currentPage = 1
+            readPostLikePagination.currentPage = 1
+            readReferrerPagination.currentPage = 1
+            readPostListSortPagination.currentPage = 1
+            readPostListTagPagination.currentPage = 1
+            readPostListKeywordPagination.currentPage = 1
+          }
           rankData.value = res.data
         })
     }
