@@ -15,6 +15,24 @@
           class="demo-form-inline"
           @keypress.enter="getReaderlogList(true)"
         >
+          <!-- actionList -->
+          <el-form-item>
+            <el-select
+              v-model="params.action"
+              placeholder="动作"
+              :style="{
+                width: '180px',
+              }"
+              clearable
+            >
+              <el-option
+                v-for="item in actionList"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value"
+              ></el-option>
+            </el-select>
+          </el-form-item>
           <!-- ip -->
           <el-form-item>
             <el-input
@@ -86,7 +104,11 @@
           </template>
         </el-table-column>
         <!-- 动作 action -->
-        <el-table-column prop="action" label="动作" width="200" />
+        <el-table-column prop="action" label="动作" width="200">
+          <template #default="{ row }">
+            {{ actionMap[row.action] }}
+          </template>
+        </el-table-column>
         <!-- 操作内容 data -->
         <el-table-column prop="data" label="操作对象内容" min-width="200">
           <template #default="{ row }">
@@ -298,8 +320,28 @@ export default {
   setup() {
     const route = useRoute()
     const router = useRouter()
+    const actionMap = {
+      open: '打开',
+      postList: '文章列表',
+      postListArchive: '文章归档列表',
+      postListSort: '文章分类列表',
+      postListTag: '文章标签列表',
+      postListKeyword: '文章关键字列表',
+      postView: '文章详情',
+      postLike: '文章点赞',
+      postDislike: '取消文章点赞',
+      commentLike: '评论点赞',
+      commentDislike: '取消评论点赞',
+    }
+    const actionList = ref(
+      Object.keys(actionMap).map((key) => ({
+        value: key,
+        label: actionMap[key],
+      }))
+    )
     const readerlogList = ref([])
     const params = reactive({
+      action: '',
       page: 1,
       size: 50,
       ip: '',
@@ -350,6 +392,7 @@ export default {
     const initParams = () => {
       const sessionParams = getSessionParams(route.name)
       if (sessionParams) {
+        params.action = sessionParams.action
         params.page = sessionParams.page
         params.size = sessionParams.size
         params.keyword = sessionParams.keyword
@@ -507,6 +550,8 @@ export default {
     })
     return {
       copyToClipboard,
+      actionMap,
+      actionList,
       readerlogList,
       params,
       total,
