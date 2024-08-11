@@ -290,7 +290,8 @@ exports.isNumber = function (value) {
 }
 
 exports.isObjectId = function (value) {
-  return value.match(/^[0-9a-fA-F]{24}$/)
+  const str = String(value);
+  return /^[0-9a-fA-F]{24}$/.test(str);
 }
 // isUUID
 exports.isUUID = function (value, version = 4) {
