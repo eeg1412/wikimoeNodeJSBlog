@@ -198,7 +198,7 @@ module.exports = async function (req, res, next) {
     // 按小时统计
     const hoursDifference = endDate.diff(startDate, 'hours');
     for (let i = 0; i <= hoursDifference; i++) {
-      const time = startDate.clone().hour(i).utc().format('YYYY-MM-DDTHH:00:00.000[Z]');
+      const time = startDate.clone().tz(timeZone).hour(i).utc().format('YYYY-MM-DDTHH:00:00.000[Z]');
       sendData.pv.push({ _id: time, count: 0 });
       sendData.robotAccess.push({ _id: time, count: 0 });
       sendData.uniqueIPTimeLine.push({ _id: time, count: 0 });
