@@ -1,6 +1,6 @@
 <template></template>
 <script setup>
-import { getAttachmentListApi } from '@/api/attachment'
+import { getAttachmentListApiFetch } from '@/api/attachment'
 const props = defineProps({
   albumId: {
     type: String,
@@ -14,7 +14,7 @@ const toast = useToast()
 
 const attachmentList = ref([])
 const getList = async () => {
-  const res = await getAttachmentListApi({
+  const res = await getAttachmentListApiFetch({
     album: props.albumId,
   }).catch((err) => {
     console.log(err)
