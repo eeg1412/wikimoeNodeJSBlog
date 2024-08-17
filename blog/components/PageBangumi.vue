@@ -162,11 +162,7 @@
   </div>
 </template>
 <script setup>
-import {
-  getBangumiListApi,
-  getBangumiYearListApi,
-  getBangumiListApiFetch,
-} from '@/api/bangumi'
+import { getBangumiListApi, getBangumiYearListApi } from '@/api/bangumi'
 const route = useRoute()
 const router = useRouter()
 const setRouterQuert = (query) => {

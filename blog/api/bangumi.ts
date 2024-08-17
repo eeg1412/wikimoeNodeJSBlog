@@ -10,9 +10,6 @@ const URL = `/bangumi/list`
 const getBangumiListApi = (params: any) => {
   return httpRequest.get(URL, params)
 }
-const getBangumiListApiFetch = (params: any) => {
-  return httpRequest.get(URL, params)
-}
 
 // /bangumi/year/list
 const URL2 = `/bangumi/year/list`
@@ -20,4 +17,4 @@ const getBangumiYearListApi = (params: any) => {
   return httpRequest.get(URL2)
 }
 
-export { getBangumiListApi, getBangumiListApiFetch, getBangumiYearListApi }
+export { getBangumiListApi, getBangumiYearListApi }
