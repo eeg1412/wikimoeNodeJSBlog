@@ -4,6 +4,7 @@
     :class="{
       'is-loading': !initFlag,
     }"
+    :id="componentUUID"
   >
     <div
       v-html="contentCom"
@@ -25,11 +26,63 @@
     </div>
   </div>
   <EventDialog v-model:show="eventOpen" :currentData="currentEventData" />
+  <ClientOnly>
+    <Teleport
+      v-for="(item, index) in albumList"
+      :key="item.id"
+      :to="`#${componentUUID} #photoswiper-${item.id}`"
+    >
+      <div class="html-content-swiper-body">
+        <Swiper
+          :modules="[SwiperAutoplay, SwiperPagination, SwiperMousewheel]"
+          :slides-per-view="1"
+          :mousewheel="{
+            releaseOnEdges: true,
+          }"
+          :pagination="{
+            type: 'fraction',
+          }"
+          @slideChangeTransitionStart="slideChangeTransitionStart"
+          @slideChangeTransitionEnd="slideChangeTransitionEnd"
+        >
+          <SwiperSlide
+            v-for="(attachment, index) in item.list"
+            :key="attachment._id"
+          >
+            <template v-if="attachment.mimetype.includes('video')">
+              <video
+                controls
+                :poster="attachment.thumfor || attachment.filepath"
+                :id="`${componentUUID}-${attachment._id}`"
+                :data-id="attachment._id"
+                preload="none"
+                muted
+                loop
+                playsinline
+              >
+                <source :src="`${attachment.filepath}`" type="video/mp4" />
+              </video>
+            </template>
+            <WikimoeImage
+              class="top-banner-list-item-img"
+              :src="attachment.filepath"
+              :alt="attachment.name"
+              fit="contain"
+              loading="lazy"
+              v-else
+            />
+          </SwiperSlide>
+        </Swiper>
+      </div>
+    </Teleport>
+  </ClientOnly>
 </template>
 <script setup>
 import { getEventDetailApiFetch } from '@/api/event'
 import 'highlight.js/styles/base16/dracula.css'
 import hljs from 'highlight.js'
+import { getAttachmentListApiFetch } from '@/api/attachment'
+
 const toast = useToast()
 // props
 const props = defineProps({
@@ -52,6 +105,8 @@ const contentCom = computed(() => {
     /<img(?!.*?loading\s*=\s*['"]lazy['"])([^>]*?)>/gi,
     '<img loading="lazy" $1>'
   )
+  // 如果最后是<p><br></p> 则去掉
+  content = content.replace(/<p><br><\/p>$/gi, '')
   // 去掉data-href为空的data-href属性
   // content = content.replace(/data-href=""/gi, '')
   // if (divDom.value) {
@@ -336,6 +391,62 @@ const initImgs = () => {
   })
 }
 
+// photoswiper
+const initPhotoswiper = () => {
+  // 寻找 data-w-e-type="photoswiper" 的元素
+  const photoswiperList = htmlContent.value.querySelectorAll(
+    '[data-w-e-type="photoswiper"]'
+  )
+  console.log(photoswiperList)
+  const promiseArrary = []
+  // 遍历 photoswiperList
+  photoswiperList.forEach((photoswiper) => {
+    // 获取data-id属性
+    const id = photoswiper.getAttribute('data-id')
+    if (id) {
+      // 获取图片列表
+      promiseArrary.push(getAttachmentList(id))
+    }
+  })
+}
+
+const albumList = ref([])
+const getAttachmentList = async (id) => {
+  const res = await getAttachmentListApiFetch({
+    album: id,
+  }).catch((err) => {
+    console.log(err)
+    return null
+  })
+
+  if (res) {
+    albumList.value = albumList.value.concat({
+      id,
+      list: res.data,
+    })
+  }
+}
+
+const slideChangeTransitionStart = (e) => {
+  console.log('slideChangeTransitionStart', e)
+}
+const slideChangeTransitionEnd = (e) => {
+  console.log('slideChangeTransitionEnd', e)
+  const hostEl = e.hostEl
+  // 让hostEl下的所有video标签暂停
+  const videoList = hostEl.querySelectorAll('video')
+  videoList.forEach((video) => {
+    video.pause()
+    // 设为静音
+    video.muted = true
+  })
+  // 找到hostEl下的swiper-slide-active的video标签
+  const activeVideo = hostEl.querySelector('.swiper-slide-active video')
+  if (activeVideo) {
+    activeVideo.play()
+  }
+}
+
 const initFlag = ref(false)
 
 const init = () => {
@@ -343,6 +454,7 @@ const init = () => {
     nextTick(() => {
       initHljs()
       initImgs()
+      initPhotoswiper()
       if (!initFlag.value) {
         initFlag.value = true
       }
@@ -357,8 +469,11 @@ watch(
   }
 )
 
+const componentUUID = ref('')
+
 onMounted(() => {
   init()
+  componentUUID.value = `html-${uuid()}`
 })
 </script>
 <style scoped>
@@ -384,6 +499,10 @@ onMounted(() => {
   100% {
     opacity: 1;
   }
+}
+.html-content-swiper-body {
+  width: 100%;
+  height: 100%;
 }
 </style>
 <style>
@@ -531,5 +650,18 @@ onMounted(() => {
 .code-language {
   margin-left: 0.25rem;
   font-size: 0.9rem;
+}
+
+.html-content-swiper-body .swiper {
+  width: 100%;
+  height: 100%;
+}
+.html-content-swiper-body .swiper .wikimoe-image {
+  width: 100%;
+  height: 100% !important;
+}
+.html-content-swiper-body .swiper video {
+  width: 100%;
+  height: 100%;
 }
 </style>
