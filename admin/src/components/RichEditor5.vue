@@ -25,6 +25,14 @@
       :id="eventId"
       @ok="onEventDialogOk"
     />
+    <RichEditorPhotoswiperDialog
+      v-model:show="showPhotoswiperDialog"
+      :id="photoswiperId"
+      :aspectWidth="photoswiperAspectWidth"
+      :aspectHeight="photoswiperAspectHeight"
+      :name="photoswiperName"
+      @ok="onPhotoswiperDialogOk"
+    />
   </div>
 </template>
 
@@ -40,6 +48,7 @@ import {
 import { Editor, Toolbar } from '@wangeditor/editor-for-vue'
 import AttachmentsDialog from '@/components/AttachmentsDialog'
 import RichEditorEventSelectorDialog from '@/components/RichEditorEventSelectorDialog'
+import RichEditorPhotoswiperDialog from '@/components/RichEditorPhotoswiperDialog'
 import { Boot, DomEditor, SlateTransforms } from '@wangeditor/editor'
 import store from '@/store'
 
@@ -55,6 +64,7 @@ export default {
     Toolbar,
     AttachmentsDialog,
     RichEditorEventSelectorDialog,
+    RichEditorPhotoswiperDialog,
   },
   setup(props, { emit }) {
     // 编辑器实例，必须用 shallowRef
@@ -125,7 +135,7 @@ export default {
           title: '图片',
           iconSvg:
             '<svg viewBox="0 0 1024 1024"><path d="M959.877 128l0.123 0.123v767.775l-0.123 0.122H64.102l-0.122-0.122V128.123l0.122-0.123h895.775zM960 64H64C28.795 64 0 92.795 0 128v768c0 35.205 28.795 64 64 64h896c35.205 0 64-28.795 64-64V128c0-35.205-28.795-64-64-64zM832 288.01c0 53.023-42.988 96.01-96.01 96.01s-96.01-42.987-96.01-96.01S682.967 192 735.99 192 832 234.988 832 288.01zM896 832H128V704l224.01-384 256 320h64l224.01-192z"></path></svg>',
-          menuKeys: ['insertImage', 'uploadImage'],
+          menuKeys: ['insertImage', 'uploadImage', 'photoswiper'],
         },
         {
           key: 'group-video',
@@ -189,6 +199,9 @@ export default {
         eventspan: {
           menuKeys: ['uneventspan', 'editeventspan'],
         },
+        photoswiper: {
+          menuKeys: ['editphotoswiper'],
+        },
       },
     }
 
@@ -202,6 +215,7 @@ export default {
     const handleCreated = (editor) => {
       editorRef.value = editor // 记录 editor 实例，重要！
       editor['openEventDialog'] = openEventDialog
+      editor['openPhotoswiperDialog'] = openPhotoswiperDialog
       console.log(editor)
       const editorDom = editor.getEditableContainer()
       const { insertBreak } = editor
@@ -298,15 +312,6 @@ export default {
     const selectAttachments = async (attachments) => {
       console.log(attachments)
       const editor = editorRef.value
-      // let html = ''
-      // attachments.forEach((item) => {
-      //   // 写入img标签
-      //   html += `<img src="${siteUrl.value + item.filepath}" alt="${
-      //     item.filename
-      //   }" width="${item.thumWidth || item.width}" height="${
-      //     item.thumHeight || item.height
-      //   }" loading="lazy" />`
-      // })
 
       for (const item of attachments) {
         if (insertFn_) {
@@ -327,7 +332,6 @@ export default {
           }
 
           await insertFnPromise
-          const editor = editorRef.value
           console.log(editor)
           SlateTransforms.setNodes(
             editor,
@@ -380,21 +384,23 @@ export default {
     const onEventDialogOk = (form) => {
       const editor = editorRef.value
       if (eventDialogEditMode.value) {
-        // 编辑节点
-        SlateTransforms.setNodes(
-          editor,
-          {
-            id: form.id,
-            textContent: form.text,
-            children: [{ text: form.text }],
-          },
-          {
-            match: (n) => {
-              return n.type === 'eventspan'
+        setTimeout(() => {
+          // 编辑节点
+          SlateTransforms.setNodes(
+            editor,
+            {
+              id: form.id,
+              textContent: form.text,
+              children: [{ text: form.text }],
             },
-          }
-        )
-        editor.move(1)
+            {
+              match: (n) => {
+                return n.type === 'eventspan'
+              },
+            }
+          )
+          editor.move(1)
+        }, 100)
       } else {
         // 插入节点
         const eventspanElem = {
@@ -403,7 +409,79 @@ export default {
           textContent: form.text,
           children: [{ text: form.text }],
         }
-        editor.insertNode(eventspanElem)
+        setTimeout(() => {
+          editor.insertNode(eventspanElem)
+        }, 100)
+      }
+    }
+
+    const showPhotoswiperDialog = ref(false)
+    const photoswiperId = ref(null)
+    const photoswiperName = ref('')
+    const photoswiperAspectWidth = ref(16)
+    const photoswiperAspectHeight = ref(9)
+    const photoswiperDialogEditMode = ref(false)
+
+    const openPhotoswiperDialog = (editor, editmode = false, node = null) => {
+      if (editmode) {
+        photoswiperDialogEditMode.value = true
+        photoswiperId.value = node.id
+        photoswiperName.value = node.name
+        photoswiperAspectWidth.value = Number(node.width)
+        photoswiperAspectHeight.value = Number(node.height)
+      } else {
+        photoswiperDialogEditMode.value = false
+        photoswiperId.value = null
+        photoswiperName.value = ''
+        photoswiperAspectWidth.value = 16
+        photoswiperAspectHeight.value = 9
+      }
+      showPhotoswiperDialog.value = true
+    }
+
+    watch(showPhotoswiperDialog, (val) => {
+      if (!val) {
+        photoswiperId.value = null
+        photoswiperAspectWidth.value = 16
+        photoswiperAspectHeight.value = 9
+        editorRef.value.restoreSelection()
+      }
+    })
+
+    const onPhotoswiperDialogOk = (form) => {
+      const editor = editorRef.value
+      if (photoswiperDialogEditMode.value) {
+        // 编辑节点
+        setTimeout(() => {
+          SlateTransforms.setNodes(
+            editor,
+            {
+              id: form.id,
+              name: form.name,
+              width: form.aspectWidth,
+              height: form.aspectHeight,
+              children: [{ text: '' }],
+            },
+            {
+              match: (n) => {
+                return n.type === 'photoswiper'
+              },
+            }
+          )
+        }, 100)
+      } else {
+        // 插入节点
+        const photoswiperElem = {
+          type: 'photoswiper',
+          id: form.id,
+          name: form.name,
+          width: form.aspectWidth,
+          height: form.aspectHeight,
+          children: [{ text: '' }],
+        }
+        setTimeout(() => {
+          editor.insertNode(photoswiperElem)
+        }, 100)
       }
     }
 
@@ -427,6 +505,16 @@ export default {
       eventId,
       openEventDialog,
       onEventDialogOk,
+
+      // 图片幻灯片
+      showPhotoswiperDialog,
+      photoswiperDialogEditMode,
+      photoswiperId,
+      photoswiperName,
+      photoswiperAspectWidth,
+      photoswiperAspectHeight,
+      openPhotoswiperDialog,
+      onPhotoswiperDialogOk,
     }
   },
 }

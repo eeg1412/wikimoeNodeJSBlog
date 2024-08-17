@@ -1,6 +1,7 @@
 import { i18nAddResources } from '@wangeditor/editor'
 import { Boot } from '@wangeditor/editor'
 import editorMenuEventSpan from './editorMenu/event'
+import editorMenuPhotoswiper from './editorMenu/photoswiper'
 import editorMenuImage from './editorMenu/image'
 
 i18nAddResources('zh-CN', {
@@ -130,5 +131,6 @@ export const initRichEditor = () => {
   Boot.registerParseElemHtml(parseImgHtmlConf)
   Boot.registerElemToHtml(videoToHtmlConf)
   Boot.registerModule(editorMenuEventSpan)
+  Boot.registerModule(editorMenuPhotoswiper)
   Boot.registerModule(editorMenuImage)
 }
