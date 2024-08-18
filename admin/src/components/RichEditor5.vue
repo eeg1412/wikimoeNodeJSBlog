@@ -381,29 +381,33 @@ export default {
       const editor = editorRef.value
       if (eventDialogEditMode.value) {
         // 编辑节点
-        SlateTransforms.setNodes(
-          editor,
-          {
+        setTimeout(() => {
+          SlateTransforms.setNodes(
+            editor,
+            {
+              id: form.id,
+              textContent: form.text,
+              children: [{ text: form.text }],
+            },
+            {
+              match: (n) => {
+                return n.type === 'eventspan'
+              },
+            }
+          )
+          editor.move(1)
+        }, 100)
+      } else {
+        // 插入节点
+        setTimeout(() => {
+          const eventspanElem = {
+            type: 'eventspan',
             id: form.id,
             textContent: form.text,
             children: [{ text: form.text }],
-          },
-          {
-            match: (n) => {
-              return n.type === 'eventspan'
-            },
           }
-        )
-        editor.move(1)
-      } else {
-        // 插入节点
-        const eventspanElem = {
-          type: 'eventspan',
-          id: form.id,
-          textContent: form.text,
-          children: [{ text: form.text }],
-        }
-        editor.insertNode(eventspanElem)
+          editor.insertNode(eventspanElem)
+        }, 100)
       }
     }
 
