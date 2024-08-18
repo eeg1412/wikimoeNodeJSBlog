@@ -5,7 +5,7 @@
     :close-on-click-modal="false"
     destroy-on-close
     append-to-body
-    :title="id ? '编辑相册' : '新增相册'"
+    title="活动"
     @closed="resetData"
   >
     <div>
