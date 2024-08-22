@@ -1,7 +1,10 @@
 <template>
   <div class="post-detail-body" v-if="postData?.data" ref="postDetailBody">
     <!-- 头部 -->
-    <div class="post-blog-head" v-if="postData.data.type === 1">
+    <div
+      class="post-blog-head"
+      v-if="postData.data.type === 1 || postData.data.type === 2"
+    >
       <div class="post-author-avatar-body">
         <img
           class="post-author-avatar"
@@ -12,7 +15,12 @@
         />
       </div>
       <div class="post-right-info">
-        <h2 class="post-title mb-1">{{ postData.data.title }}</h2>
+        <h2 class="post-title mb-1" v-if="postData.data.type === 1">
+          {{ postData.data.title }}
+        </h2>
+        <h2 class="post-title mb-1" v-else-if="postData.data.type === 2">
+          推文
+        </h2>
         <p class="post-extra cGray94">
           作者：{{ postData.data.author.nickname
           }}<span class="tenten"></span>时间：{{ formatDate(postData.data.date)
@@ -34,7 +42,7 @@
         </p>
       </div>
     </div>
-    <div class="post-blog-head" v-else-if="postData.data.type === 2">
+    <!-- <div class="post-blog-head" v-else-if="postData.data.type === 2">
       <div class="post-author-avatar-body">
         <img
           class="post-author-avatar"
@@ -45,9 +53,10 @@
         />
       </div>
       <div class="post-right-info">
-        <h2 class="post-title">{{ postData.data.author.nickname }}</h2>
+        <h2 class="post-title">推文</h2>
         <p class="post-extra cGray94">
-          时间：{{ formatDate(postData.data.date)
+          作者：{{ postData.data.author.nickname
+          }}<span class="tenten"></span>时间：{{ formatDate(postData.data.date)
           }}<template v-if="postData.data.sort"
             ><span class="tenten"></span
             ><span class="post_sort_link_span"
@@ -68,7 +77,7 @@
           >
         </p>
       </div>
-    </div>
+    </div> -->
     <div v-else-if="3">
       <template v-if="pageTemplate === 'almanac'">
         <div>
