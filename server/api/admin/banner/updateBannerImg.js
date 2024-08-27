@@ -48,7 +48,7 @@ module.exports = async function (req, res, next) {
   const path = './public/upload/banner/'
   const fileName = _id
   try {
-    const imgRes = utils.base64ToFile(img, path, fileName)
+    const imgRes = utils.base64ToFile(img, path, fileName, { createDir: true })
     params['img'] = `/upload/banner/${imgRes.fileNameAll}?v=${Date.now()}`
     params['imgPath'] = imgRes.filepath
   } catch (error) {
