@@ -321,17 +321,20 @@ exports.removePublicContents = async () => {
 exports.restorePublic = async (fullPath) => {
   const sourceDir = `./cache/${path.basename(fullPath, '.zip')}/public`;
   const targetDir = './public';
-  // 读取源目录下的所有文件和目录
-  const entries = await fs.promises.readdir(sourceDir);
+  // 判断sourceDir是否存在
+  if (fs.existsSync(sourceDir)) {
+    // 读取源目录下的所有文件和目录
+    const entries = await fs.promises.readdir(sourceDir);
 
-  for (const entry of entries) {
-    const sourcePath = path.join(sourceDir, entry);
-    const targetPath = path.join(targetDir, entry);
+    for (const entry of entries) {
+      const sourcePath = path.join(sourceDir, entry);
+      const targetPath = path.join(targetDir, entry);
 
-    // 复制文件或目录到目标目录
-    await fsEX.copy(sourcePath, targetPath);
+      // 复制文件或目录到目标目录
+      await fsEX.copy(sourcePath, targetPath);
+    }
+    console.log('restore public success');
   }
-  console.log('restore public success');
 }
 
 // 清空cache
