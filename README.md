@@ -101,7 +101,7 @@ wget -O .env https://raw.githubusercontent.com/eeg1412/wikimoeNodeJSBlog/main/ex
 Clone 仓库，并修改 .env 文件的内容
 
 ```bash
-cd && mkdir wikimoe && git clone https://github.com/eeg1412/wikimoeNodeJSBlog --depth=1
+cd && mkdir wikimoe && cd wikimoe && git clone https://github.com/eeg1412/wikimoeNodeJSBlog --depth=1
 cd wikimoeNodeJSBlog && mv example.env .env
 ```
 
