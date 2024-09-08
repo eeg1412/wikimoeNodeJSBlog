@@ -184,7 +184,7 @@
                 />
 
                 <div
-                  class="absolute tweet-img-list-body-item-description"
+                  :class="`absolute tweet-img-list-body-item-description index-${indexChild}`"
                   v-if="img.description"
                   v-show="videoPlayId !== img._id"
                 >
@@ -270,7 +270,7 @@
                 />
 
                 <div
-                  class="absolute tweet-img-list-body-item-description"
+                  :class="`absolute tweet-img-list-body-item-description index-${indexChild}`"
                   v-if="img.description"
                   v-show="videoPlayId !== img._id"
                 >
@@ -531,7 +531,7 @@ onUnmounted(() => {})
   height: 100%;
 }
 .blog-tweet-img-list-body.cover-count-2
-  .tweet-img-list-body-item-description:nth-of-type(2) {
+  .tweet-img-list-body-item-description.index-1 {
   left: calc(50% + 12px);
 }
 .blog-tweet-img-list-body.cover-count-3 {
@@ -541,11 +541,11 @@ onUnmounted(() => {})
   height: 100%;
 }
 .blog-tweet-img-list-body.cover-count-3
-  .tweet-img-list-body-item-description:nth-of-type(2) {
+  .tweet-img-list-body-item-description.index-1 {
   left: calc(50% + 12px);
 }
 .blog-tweet-img-list-body.cover-count-3
-  .tweet-img-list-body-item-description:nth-of-type(3) {
+  .tweet-img-list-body-item-description.index-2 {
   left: calc(50% + 12px);
   top: calc(50% + 6px);
 }
@@ -571,16 +571,16 @@ onUnmounted(() => {})
   height: 100%;
 }
 .blog-tweet-img-list-body.cover-count-4
-  .tweet-img-list-body-item-description:nth-of-type(2) {
+  .tweet-img-list-body-item-description.index-1 {
   left: calc(50% + 12px);
 }
 .blog-tweet-img-list-body.cover-count-4
-  .tweet-img-list-body-item-description:nth-of-type(3) {
+  .tweet-img-list-body-item-description.index-2 {
   left: 12px;
   top: calc(50% + 6px);
 }
 .blog-tweet-img-list-body.cover-count-4
-  .tweet-img-list-body-item-description:nth-of-type(4) {
+  .tweet-img-list-body-item-description.index-3 {
   left: calc(50% + 12px);
   top: calc(50% + 6px);
 }
