@@ -885,7 +885,7 @@ const seoTitleSet = () => {
     postData.value?.data?.title || postData.value?.data?.excerpt || ''
   // 超过60个字符，截取
   if (newTitle.length > 60) {
-    newTitle = newTitle.slice(0, 60)
+    newTitle = limitStr(newTitle, 60)
   }
   return newTitle
 }
@@ -896,7 +896,7 @@ const seoDescriptionSet = () => {
     ''
   // 超过200个字符，截取
   if (newDescription.length > 200) {
-    newDescription = newDescription.slice(0, 200)
+    newDescription = limitStr(newDescription, 200)
   }
   return newDescription
 }
