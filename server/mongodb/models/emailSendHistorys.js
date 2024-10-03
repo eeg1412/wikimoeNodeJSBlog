@@ -19,7 +19,8 @@ var emailSendHistorys = new Schema({
   // 发送状态 0: 发送失败 1: 发送成功
   status: {
     type: Number,
-    default: 0
+    default: 0,
+    index: true
   },
 }, { capped: 15728640, timestamps: true });
 

@@ -4,7 +4,8 @@ var Schema = mongoose.Schema;
 var books = new Schema({
   booktype: {
     type: Schema.Types.ObjectId, ref: 'booktypes',
-    required: true
+    required: true,
+    index: true
   },
   // 标题
   title: {
@@ -30,6 +31,7 @@ var books = new Schema({
   // 评分，神作，佳作，良作，劣作，烂作，迷
   rating: {
     type: Number,
+    index: true
   },
   // label 字符串数组
   label: {
@@ -48,20 +50,24 @@ var books = new Schema({
   // 开始阅读时间
   startTime: {
     type: Date,
+    index: true
   },
   // 结束阅读时间
   endTime: {
     type: Date,
+    index: true
   },
   // 弃坑
   giveUp: {
     type: Boolean,
-    default: false
+    default: false,
+    index: true
   },
   // 状态 0: 不显示 1: 显示
   status: {
     type: Number,
-    default: 0
+    default: 0,
+    index: true
   },
 }, { timestamps: true });
 

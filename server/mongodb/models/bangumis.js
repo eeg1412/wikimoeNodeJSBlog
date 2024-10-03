@@ -25,19 +25,23 @@ var bangumis = new Schema({
   // 评分，神作，佳作，良作，劣作，烂作，迷
   rating: {
     type: Number,
+    index: true
   },
   // 年份
   year: {
     type: Number,
+    index: true
   },
   // 季度
   season: {
     type: Number,
+    index: true
   },
   // 弃坑
   giveUp: {
     type: Boolean,
-    default: false
+    default: false,
+    index: true
   },
   urlList: {
     type: [
@@ -56,7 +60,8 @@ var bangumis = new Schema({
   // 状态 0: 不显示 1: 显示
   status: {
     type: Number,
-    default: 0
+    default: 0,
+    index: true
   },
 }, { timestamps: true });
 

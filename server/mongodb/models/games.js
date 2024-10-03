@@ -5,6 +5,7 @@ var games = new Schema({
   gamePlatform: {
     type: Schema.Types.ObjectId,
     ref: 'gamePlatforms',
+    index: true
   },
   // 标题
   title: {
@@ -30,6 +31,7 @@ var games = new Schema({
   // 评分，神作，佳作，良作，劣作，烂作，迷
   rating: {
     type: Number,
+    index: true
   },
   // label 字符串数组
   label: {
@@ -38,7 +40,8 @@ var games = new Schema({
   },
   screenshotAlbum: {
     type: Schema.Types.ObjectId,
-    ref: 'albums'
+    ref: 'albums',
+    index: true
   },
   urlList: {
     type: [
@@ -52,20 +55,24 @@ var games = new Schema({
   // 游玩开始时间
   startTime: {
     type: Date,
+    index: true
   },
   // 游玩结束时间
   endTime: {
     type: Date,
+    index: true
   },
   // 弃坑
   giveUp: {
     type: Boolean,
-    default: false
+    default: false,
+    index: true
   },
   // 状态 0: 不显示 1: 显示
   status: {
     type: Number,
-    default: 0
+    default: 0,
+    index: true
   },
 }, { timestamps: true });
 

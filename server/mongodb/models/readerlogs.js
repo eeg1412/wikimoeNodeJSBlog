@@ -19,11 +19,13 @@ var readerlogs = new Schema({
   uuid: {
     type: String,
     required: true,
+    index: true
   },
   // 操作了什么
   action: {
     type: String,
     required: true,
+    index: true
   },
   referrer: {
     type: String,
@@ -31,7 +33,8 @@ var readerlogs = new Schema({
   },
   isBot: {
     type: Boolean,
-    default: false
+    default: false,
+    index: true
   },
   botName: {
     type: String,
@@ -42,11 +45,13 @@ var readerlogs = new Schema({
     // object
     target: {
       type: String,
-      default: ''
+      default: '',
+      index: true
     },
     targetId: {
       type: mongoose.Schema.Types.ObjectId,
-      default: null
+      default: null,
+      index: true
     },
     content: {
       type: String,
@@ -60,6 +65,7 @@ var readerlogs = new Schema({
   // ip
   ip: {
     type: String,
+    index: true
   },
   ipInfo: {
     type: Object,
@@ -69,7 +75,12 @@ var readerlogs = new Schema({
     type: Object,
     default: {}
   },
-  expireAt: { type: Date, expires: 31968000, default: Date.now }
+  expireAt: {
+    type: Date,
+    expires: 31968000,
+    default: Date.now,
+    index: true
+  }
 }, { timestamps: true });
 // timestamps:
 // createdAt

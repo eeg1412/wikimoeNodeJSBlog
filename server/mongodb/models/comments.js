@@ -5,17 +5,20 @@ var comments = new Schema({
   // 文章id
   post: {
     type: Schema.Types.ObjectId,
-    ref: 'posts'
+    ref: 'posts',
+    index: true
   },
   // 父评论id
   parent: {
     type: Schema.Types.ObjectId,
-    ref: 'comments'
+    ref: 'comments',
+    index: true
   },
   // 评论日期
   date: {
     type: Date,
-    default: Date.now
+    default: Date.now,
+    index: true
   },
   // 评论内容,对应emlog的comment
   content: {
@@ -30,7 +33,8 @@ var comments = new Schema({
   // 是否置顶
   top: {
     type: Boolean,
-    default: false
+    default: false,
+    index: true
   },
   // 评论者昵称,对应emlog的poster
   nickname: {
@@ -49,16 +53,19 @@ var comments = new Schema({
   },
   likes: {
     type: Number,
-    default: 0
+    default: 0,
+    index: true
   },
   uuid: {
     type: String,
-    default: ''
+    default: '',
+    index: true
   },
   // 评论者ip
   ip: {
     type: String,
-    default: ''
+    default: '',
+    index: true
   },
   ipInfo: {
     type: Object,
@@ -71,12 +78,14 @@ var comments = new Schema({
   // 需要通知父级评论的用户的Flag
   needSendMailToParent: {
     type: Boolean,
-    default: false
+    default: false,
+    index: true
   },
   // 评论状态,0待审核,1审核通过,2未通过,查询评论时注意父级评论的状态
   status: {
     type: Number,
-    default: 0
+    default: 0,
+    index: true
   },
 }, { timestamps: true });
 

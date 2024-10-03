@@ -32,6 +32,7 @@ var attachments = new Schema({
   },
   mimetype: {
     type: String,
+    index: true
   },
   thumfor: {
     type: String,
@@ -44,7 +45,8 @@ var attachments = new Schema({
   },
   album: {
     type: Schema.Types.ObjectId,
-    ref: 'albums'
+    ref: 'albums',
+    index: true
   },
   // 描述
   description: {
@@ -54,7 +56,8 @@ var attachments = new Schema({
   // 0还没压缩，1压缩成功
   status: {
     type: Number,
-    default: 0
+    default: 0,
+    index: true
   },
 }, { timestamps: true });
 

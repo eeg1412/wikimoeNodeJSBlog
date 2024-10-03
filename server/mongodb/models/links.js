@@ -38,12 +38,14 @@ var links = new Schema({
   // taxis	排序字段
   taxis: {
     type: Number,
-    default: 0
+    default: 0,
+    index: true
   },
   // status  状态字段：0不显示，1显示
   status: {
     type: Number,
-    default: 1
+    default: 1,
+    index: true
   },
 }, { timestamps: true });
 

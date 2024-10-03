@@ -16,17 +16,20 @@ var navis = new Schema({
   // 状态 0 不显示 1 显示
   status: {
     type: Number,
-    default: 0
+    default: 0,
+    index: true
   },
   // 排序
   taxis: {
     type: Number,
-    default: 0
+    default: 0,
+    index: true
   },
   // 父导航
   parent: {
     type: Schema.Types.ObjectId,
-    ref: 'navis'
+    ref: 'navis',
+    index: true
   },
   // 是否本站链接
   isdefault: {

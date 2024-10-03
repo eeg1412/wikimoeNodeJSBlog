@@ -14,12 +14,14 @@ var sorts = new Schema({
   // taxis 排序
   taxis: {
     type: Number,
-    default: 0
+    default: 0,
+    index: true
   },
   // 父级分类 ObjectId 或者null
   parent: {
     type: Schema.Types.ObjectId,
-    ref: 'sorts'
+    ref: 'sorts',
+    index: true
   },
   // description 描述
   description: {

@@ -12,22 +12,26 @@ var commentLikeLogs = new Schema({
   uuid: {
     type: String,
     required: true,
+    index: true
   },
   // 点赞还是取消点赞
   like: {
     type: Boolean,
     required: true,
+    index: true
   },
   // date
   date: {
     type: Date,
     expires: 31968000,
-    default: Date.now
+    default: Date.now,
+    index: true
   },
   // 评论者ip
   ip: {
     type: String,
-    default: ''
+    default: '',
+    index: true
   },
   ipInfo: {
     type: Object,

@@ -18,7 +18,8 @@ var users = new Schema({
   },
   role: {
     type: Number,
-    default: 1
+    default: 1,
+    index: true
   },
   photo: String,
   email: String,
@@ -26,11 +27,13 @@ var users = new Schema({
   cover: { type: Schema.ObjectId, ref: 'attachments', default: null },
   disabled: {
     type: Boolean,
-    default: false
+    default: false,
+    index: true
   },
   pwversion: {
     type: Number,
-    default: 0
+    default: 0,
+    index: true
   },
   IP: String,
   ipInfo: {

@@ -10,7 +10,8 @@ var backups = new Schema({
   // 备份类型, 1: 备份，2: 还原
   type: {
     type: Number,
-    required: true
+    required: true,
+    index: true
   },
   // 备份文件名
   filename: {
@@ -21,7 +22,8 @@ var backups = new Schema({
   fileStatus: {
     type: Number,
     required: true,
-    default: 0
+    default: 0,
+    index: true
   },
   // 备份文件大小
   fileSize: {
@@ -32,7 +34,8 @@ var backups = new Schema({
   status: {
     type: Number,
     required: true,
-    default: 0
+    default: 0,
+    index: true
   },
   // 原因
   reason: {

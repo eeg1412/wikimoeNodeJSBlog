@@ -23,11 +23,13 @@ var posts = new Schema({
 
   title: {
     type: String,
-    default: ''
+    default: '',
+    index: true
   },
   date: {
     type: Date,
-    default: Date.now
+    default: Date.now,
+    index: true
   },
   lastChangDate: {
     type: Date,
@@ -48,41 +50,50 @@ var posts = new Schema({
   },
   author: {
     type: Schema.Types.ObjectId,
-    ref: 'users'
+    ref: 'users',
+    index: true
   },
   sort: {
     type: Schema.Types.ObjectId,
     ref: 'sorts',
-    default: null
+    default: null,
+    index: true
   },
   // 1blog,2tweet,3page
   type: {
     type: Number,
+    index: true
   },
-  tags: [{ type: Schema.ObjectId, ref: 'tags' }],
+  tags: [{ type: Schema.ObjectId, ref: 'tags', index: true }],
   views: {
     type: Number,
-    default: 0
+    default: 0,
+    index: true
   },
   comnum: {
     type: Number,
-    default: 0
+    default: 0,
+    index: true
   },
   likes: {
     type: Number,
-    default: 0
+    default: 0,
+    index: true
   },
   top: {
     type: Boolean,
-    default: false
+    default: false,
+    index: true
   },
   sortop: {
     type: Boolean,
-    default: false
+    default: false,
+    index: true
   },
   status: {
     type: Number,
-    default: 0
+    default: 0,
+    index: true
   },
   allowRemark: {
     type: Boolean,
