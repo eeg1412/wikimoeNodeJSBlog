@@ -1061,3 +1061,6 @@ ins.adsbygoogle[data-ad-status='unfilled'] {
 .blog-tweet-img-swiper-body.video-playing .swiper-pagination {
   display: none;
 }
+.system-ui-font {
+  font-family: 'system-ui';
+}
