@@ -1024,3 +1024,7 @@ input[type='password'] {
     width: 100%;
   }
 }
+
+.config-com-body .el-tabs__content {
+  overflow: visible;
+}
