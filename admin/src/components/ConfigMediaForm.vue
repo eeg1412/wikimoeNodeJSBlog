@@ -4,6 +4,7 @@
     :rules="mediaRules"
     ref="mediaFormRef"
     label-width="150px"
+    v-if="inited"
   >
     <el-form-item label="开启图片压缩" prop="imgSettingEnableImgCompress">
       <el-switch v-model="mediaForm.imgSettingEnableImgCompress"></el-switch>
@@ -244,6 +245,7 @@ export default {
         }
       })
     }
+    const inited = ref(false)
     const getOptionList = () => {
       // 将mediaForm的key转换为数组
       const params = {
@@ -252,11 +254,16 @@ export default {
       Object.keys(mediaForm).forEach((key) => {
         params.nameList.push(key)
       })
-      authApi.getOptionList(params).then((res) => {
-        // res.data.data是数组，需要转换为对象
-        const obj = formatResToObj(res.data.data)
-        formatResToForm(mediaForm, obj)
-      })
+      authApi
+        .getOptionList(params)
+        .then((res) => {
+          // res.data.data是数组，需要转换为对象
+          const obj = formatResToObj(res.data.data)
+          formatResToForm(mediaForm, obj)
+        })
+        .finally(() => {
+          inited.value = true
+        })
     }
 
     // 视频相关
@@ -314,6 +321,7 @@ export default {
       mediaForm,
       mediaRules,
       mediaSubmit,
+      inited,
       ffmpegInstalled,
       installLoading,
       installBaseUrl,

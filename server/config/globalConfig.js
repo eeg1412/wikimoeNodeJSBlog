@@ -56,6 +56,9 @@ const initGlobalConfig = async () => {
     siteTopSlideTime: 8000,
     // 你所在时区
     siteTimeZone: '',
+    // 博文底部共通内容
+    sitePostCommonFooterContent: '',
+    sitePostCommonFooterContentIsRichMode: true,
     // 页面底部信息
     siteFooterInfo: '',
     // 额外CSS样式
@@ -103,8 +106,10 @@ const initGlobalConfig = async () => {
     emailSendOptions: [],
     // 通知自己模板
     emailSendToMeTemplate: '',
+    emailSendToMeTemplateIsRichMode: true,
     // 通知评论者模板
     emailSendToCommenterTemplate: '',
+    emailSendToCommenterTemplateIsRichMode: true,
   }
   // 其他配置
   const otherSettingsConfig = {

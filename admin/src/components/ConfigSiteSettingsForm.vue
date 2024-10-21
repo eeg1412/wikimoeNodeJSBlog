@@ -4,6 +4,7 @@
     :rules="siteSettingsRules"
     ref="siteSettingsFormRef"
     label-width="150px"
+    v-if="inited"
   >
     <el-form-item label="站点标题" prop="siteTitle">
       <el-input v-model="siteSettingsForm.siteTitle"></el-input>
@@ -92,6 +93,19 @@
         ></el-option>
       </el-select>
     </el-form-item>
+    <!-- 博文底部共通内容 -->
+    <el-form-item
+      label="博文底部共通内容"
+      class="blok-form-item"
+      prop="sitePostCommonFooterContent"
+    >
+      <RichEditor5Switch
+        v-model:content="siteSettingsForm.sitePostCommonFooterContent"
+        v-model:isRichMode="
+          siteSettingsForm.sitePostCommonFooterContentIsRichMode
+        "
+      ></RichEditor5Switch>
+    </el-form-item>
     <!-- 页面底部信息 -->
     <el-form-item label="页面底部信息" prop="siteFooterInfo">
       <el-input
@@ -134,7 +148,11 @@ import { ref, reactive, onMounted } from 'vue'
 import { authApi } from '@/api'
 import store from '@/store'
 import { ElMessage, ElMessageBox } from 'element-plus'
+import RichEditor5Switch from '@/components/RichEditor5Switch'
 export default {
+  components: {
+    RichEditor5Switch,
+  },
   setup(props, { emit }) {
     // 网站设置
     const siteSettingsFormRef = ref(null)
@@ -161,6 +179,9 @@ export default {
       siteTopSlideTime: 8000,
       // 你所在时区
       siteTimeZone: '',
+      // 博文底部共通内容
+      sitePostCommonFooterContent: '',
+      sitePostCommonFooterContentIsRichMode: true,
       // 页面底部信息
       siteFooterInfo: '',
       // 额外CSS样式
@@ -257,6 +278,7 @@ export default {
       })
     }
 
+    const inited = ref(false)
     const getOptionList = () => {
       // 将siteSettingsForm的key转换为数组
       const params = {
@@ -265,11 +287,16 @@ export default {
       Object.keys(siteSettingsForm).forEach((key) => {
         params.nameList.push(key)
       })
-      authApi.getOptionList(params).then((res) => {
-        // res.data.data是数组，需要转换为对象
-        const obj = formatResToObj(res.data.data)
-        formatResToForm(siteSettingsForm, obj)
-      })
+      authApi
+        .getOptionList(params)
+        .then((res) => {
+          // res.data.data是数组，需要转换为对象
+          const obj = formatResToObj(res.data.data)
+          formatResToForm(siteSettingsForm, obj)
+        })
+        .finally(() => {
+          inited.value = true
+        })
     }
 
     const timeZones = ref([
@@ -390,6 +417,7 @@ export default {
       siteSettingsSubmit,
       onSiteUrlBlur,
       onGravatarSourceBlur,
+      inited,
       timeZones,
     }
   },

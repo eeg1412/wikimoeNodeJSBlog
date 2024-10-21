@@ -9,6 +9,7 @@
       class="blog-tweet-img-list-body cover-count-1-1"
       :class="{
         'is-height': isHeight,
+        'no-swiper-mode': !swiperMode,
       }"
       :style="{
         aspectRatio: `${coverImages[0].thumWidth || coverImages[0].width} / ${
@@ -591,6 +592,9 @@ onUnmounted(() => {})
   isolation: isolate;
 }
 .blog-tweet-img-swiper-body.type-no-swiper {
+  border-radius: 5px;
+}
+.blog-tweet-img-list-body.cover-count-1-1.no-swiper-mode {
   border-radius: 5px;
 }
 .blog-tweet-img-swiper-item {

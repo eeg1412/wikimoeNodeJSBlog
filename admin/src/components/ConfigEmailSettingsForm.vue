@@ -4,6 +4,7 @@
     :rules="emailSettingsRules"
     ref="emailSettingsFormRef"
     label-width="120px"
+    v-if="inited"
   >
     <el-form-item label="开启邮件通知" prop="emailEnable">
       <el-switch v-model="emailSettingsForm.emailEnable"></el-switch>
@@ -40,8 +41,10 @@
         prop="emailSendToMeTemplate"
         class="blok-form-item"
       >
-        <RichEditor5
+        <RichEditor5Switch
           v-model:content="emailSettingsForm.emailSendToMeTemplate"
+          v-model:isRichMode="emailSettingsForm.emailSendToMeTemplateIsRichMode"
+          v-if="inited"
         />
         <!-- siteTitle -->
         <div>${siteTitle}为站点名称</div>
@@ -55,9 +58,14 @@
         prop="emailSendToCommenterTemplate"
         class="blok-form-item"
       >
-        <RichEditor5
+        <RichEditor5Switch
           v-model:content="emailSettingsForm.emailSendToCommenterTemplate"
+          v-model:isRichMode="
+            emailSettingsForm.emailSendToCommenterTemplateIsRichMode
+          "
+          v-if="inited"
         />
+
         <!-- siteTitle -->
         <div>${siteTitle}为站点名称</div>
         <div>${title}为文章标题</div>
@@ -86,7 +94,7 @@
   </el-form>
 </template>
 <script>
-import RichEditor5 from '@/components/RichEditor5'
+import RichEditor5Switch from '@/components/RichEditor5Switch'
 import { formatResToForm, formatResToObj } from '@/utils/utils'
 import { ref, reactive, onMounted, computed } from 'vue'
 import { authApi } from '@/api'
@@ -95,7 +103,7 @@ import { ElMessage, ElMessageBox } from 'element-plus'
 
 export default {
   components: {
-    RichEditor5,
+    RichEditor5Switch,
   },
   setup(props, { emit }) {
     // 邮件设置
@@ -118,8 +126,10 @@ export default {
       emailSendOptions: [],
       // 通知自己模板
       emailSendToMeTemplate: '',
+      emailSendToMeTemplateIsRichMode: true,
       // 通知评论者模板
       emailSendToCommenterTemplate: '',
+      emailSendToCommenterTemplateIsRichMode: true,
     })
     const emailSendOptions = ref([
       {
@@ -223,6 +233,7 @@ export default {
         }
       })
     }
+    const inited = ref(false)
     const getOptionList = () => {
       // 将emailSettingsForm的key转换为数组
       const params = {
@@ -231,11 +242,16 @@ export default {
       Object.keys(emailSettingsForm).forEach((key) => {
         params.nameList.push(key)
       })
-      authApi.getOptionList(params).then((res) => {
-        // res.data.data是数组，需要转换为对象
-        const obj = formatResToObj(res.data.data)
-        formatResToForm(emailSettingsForm, obj)
-      })
+      authApi
+        .getOptionList(params)
+        .then((res) => {
+          // res.data.data是数组，需要转换为对象
+          const obj = formatResToObj(res.data.data)
+          formatResToForm(emailSettingsForm, obj)
+        })
+        .finally(() => {
+          inited.value = true
+        })
     }
     onMounted(() => {
       getOptionList()
@@ -246,6 +262,7 @@ export default {
       emailSettingsRules,
       emailSendOptions,
       emailSettingsSubmit,
+      inited,
     }
   },
 }

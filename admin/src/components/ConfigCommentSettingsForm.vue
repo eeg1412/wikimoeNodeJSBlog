@@ -4,6 +4,7 @@
     :rules="commentSettingsRules"
     ref="commentSettingsFormRef"
     label-width="120px"
+    v-if="inited"
   >
     <!-- 评论设置 -->
 
@@ -100,6 +101,7 @@ export default {
         }
       })
     }
+    const inited = ref(false)
     const getOptionList = () => {
       // 将commentSettingsForm的key转换为数组
       const params = {
@@ -108,11 +110,16 @@ export default {
       Object.keys(commentSettingsForm).forEach((key) => {
         params.nameList.push(key)
       })
-      authApi.getOptionList(params).then((res) => {
-        // res.data.data是数组，需要转换为对象
-        const obj = formatResToObj(res.data.data)
-        formatResToForm(commentSettingsForm, obj)
-      })
+      authApi
+        .getOptionList(params)
+        .then((res) => {
+          // res.data.data是数组，需要转换为对象
+          const obj = formatResToObj(res.data.data)
+          formatResToForm(commentSettingsForm, obj)
+        })
+        .finally(() => {
+          inited.value = true
+        })
     }
     onMounted(() => {
       getOptionList()
@@ -123,6 +130,7 @@ export default {
       commentSettingsForm,
       commentSettingsRules,
       commentSettingsSubmit,
+      inited,
     }
   },
 }

@@ -4,6 +4,7 @@
     :rules="otherSettingsRules"
     ref="otherSettingsFormRef"
     label-width="120px"
+    v-if="inited"
   >
     <el-form-item label="引用域名白名单" prop="siteReferrerWhiteList">
       <el-input
@@ -72,6 +73,7 @@ export default {
         }
       })
     }
+    const inited = ref(false)
     const getOptionList = () => {
       // 将otherSettingsForm的key转换为数组
       const params = {
@@ -80,11 +82,16 @@ export default {
       Object.keys(otherSettingsForm).forEach((key) => {
         params.nameList.push(key)
       })
-      authApi.getOptionList(params).then((res) => {
-        // res.data.data是数组，需要转换为对象
-        const obj = formatResToObj(res.data.data)
-        formatResToForm(otherSettingsForm, obj)
-      })
+      authApi
+        .getOptionList(params)
+        .then((res) => {
+          // res.data.data是数组，需要转换为对象
+          const obj = formatResToObj(res.data.data)
+          formatResToForm(otherSettingsForm, obj)
+        })
+        .finally(() => {
+          inited.value = true
+        })
     }
     onMounted(() => {
       getOptionList()
@@ -94,6 +101,7 @@ export default {
       otherSettingsForm,
       otherSettingsRules,
       otherSettingsSubmit,
+      inited,
     }
   },
 }

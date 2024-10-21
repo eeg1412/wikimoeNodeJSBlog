@@ -78,7 +78,7 @@
         </p>
       </div>
     </div> -->
-    <div v-else-if="3">
+    <div v-else-if="postData.data.type === 3">
       <template v-if="pageTemplate === 'almanac'">
         <div>
           <h2 class="post-title mb-3">{{ postData.data.title }}</h2>
@@ -241,6 +241,21 @@
     <div class="post-detail-like-body dflex flexCenter" v-else>
       <USkeleton class="h-9 w-[90px]" />
     </div>
+    <!-- 文章通用底部内容 -->
+    <div
+      v-if="
+        options.sitePostCommonFooterContent &&
+        options.sitePostCommonFooterContent !== '<p><br></p>' &&
+        postData.data.type === 1
+      "
+      class="my-4"
+    >
+      <HtmlContent
+        v-if="options.sitePostCommonFooterContentIsRichMode"
+        :content="options.sitePostCommonFooterContent"
+      />
+      <div v-else v-html="options.sitePostCommonFooterContent"></div>
+    </div>
     <PostAboutEvent :eventList="postData.data.eventList" />
     <PostAbout :postList="postData.data.postList" />
     <PostACG
@@ -249,7 +264,10 @@
       :bookList="postData.data.bookList"
     />
     <!-- 广告 -->
-    <div class="google-ad-post-detail" v-if="GOOGLE_ADSENSE_POST_DETAIL_BT">
+    <div
+      class="google-ad-post-detail mt-4"
+      v-if="GOOGLE_ADSENSE_POST_DETAIL_BT"
+    >
       <AdsbygoogleHave :ad="GOOGLE_ADSENSE_POST_DETAIL_BT" />
     </div>
     <!-- 评论 -->
@@ -1087,7 +1105,7 @@ onUnmounted(() => {
 }
 /* 评论 */
 .comment-list-body {
-  padding-top: 20px;
+  @apply mt-4;
 }
 .comment-list-title {
   font-size: 16px;
@@ -1176,8 +1194,5 @@ onUnmounted(() => {
 .post-html-content-body,
 .post-tweet-detail-content-body {
   font-size: 16px;
-}
-.google-ad-post-detail {
-  margin-top: 20px;
 }
 </style>

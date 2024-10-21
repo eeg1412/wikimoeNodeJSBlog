@@ -4,6 +4,7 @@
     :rules="rssSettingsRules"
     ref="rssSettingsFormRef"
     label-width="120px"
+    v-if="inited"
   >
     <!-- RSS -->
 
@@ -88,6 +89,8 @@ export default {
         }
       })
     }
+
+    const inited = ref(false)
     const getOptionList = () => {
       // 将rssSettingsForm的key转换为数组
       const params = {
@@ -96,11 +99,16 @@ export default {
       Object.keys(rssSettingsForm).forEach((key) => {
         params.nameList.push(key)
       })
-      authApi.getOptionList(params).then((res) => {
-        // res.data.data是数组，需要转换为对象
-        const obj = formatResToObj(res.data.data)
-        formatResToForm(rssSettingsForm, obj)
-      })
+      authApi
+        .getOptionList(params)
+        .then((res) => {
+          // res.data.data是数组，需要转换为对象
+          const obj = formatResToObj(res.data.data)
+          formatResToForm(rssSettingsForm, obj)
+        })
+        .finally(() => {
+          inited.value = true
+        })
     }
 
     onMounted(() => {
@@ -112,6 +120,7 @@ export default {
       rssSettingsForm,
       rssSettingsRules,
       rssSettingsSubmit,
+      inited,
     }
   },
 }

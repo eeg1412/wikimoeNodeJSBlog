@@ -1,5 +1,5 @@
 <template>
-  <div class="common-right-panel-form common-limit-width">
+  <div class="common-right-panel-form common-limit-width config-com-body">
     <h3 class="common-title">设置</h3>
     <el-tabs v-model="activeName">
       <el-tab-pane label="网站设置" name="site">

@@ -96,9 +96,13 @@
         </el-table-column>
         <!-- subject -->
         <el-table-column label="发送主题" prop="subject" min-width="150px" />
-        <el-table-column label="发送内容" prop="content" min-width="300px">
+        <el-table-column label="发送内容" prop="content" min-width="50px">
           <template #default="{ row }">
-            <div v-html="row.content"></div>
+            <!-- <div v-html="row.content"></div> -->
+            <!-- 点击查看内容按钮 -->
+            <el-link type="primary" @click="openHtml(row.content)"
+              >查看内容</el-link
+            >
           </template>
         </el-table-column>
         <el-table-column label="错误信息" prop="errInfo"></el-table-column>
@@ -225,6 +229,15 @@ export default {
         params.status = sessionParams.status
       }
     }
+
+    const openHtml = (html) => {
+      const newWindow = window.open(
+        '',
+        '_blank',
+        'location=no,menubar=no,toolbar=no,dependent=yes,width=800,height=600'
+      )
+      newWindow.document.write(html)
+    }
     onMounted(() => {
       initParams()
       getEmailSendHistoryList()
@@ -239,6 +252,7 @@ export default {
       resend,
       // 搜索
       addParamsAndSearch,
+      openHtml,
     }
   },
 }
