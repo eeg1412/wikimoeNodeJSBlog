@@ -536,7 +536,7 @@ onUnmounted(() => {})
 }
 .blog-tweet-img-list-body.cover-count-3 {
   grid-template-columns: 1fr 1fr;
-  grid-auto-rows: auto;
+  grid-template-rows: repeat(2, 1fr);
   width: 100%;
   height: 100%;
 }
@@ -547,7 +547,7 @@ onUnmounted(() => {})
 .blog-tweet-img-list-body.cover-count-3
   .tweet-img-list-body-item-description.index-2 {
   left: calc(50% + 12px);
-  top: calc(50% + 6px);
+  top: calc(50% + 10px);
 }
 .blog-tweet-img-list-body-no-swiper {
   margin-top: 2px;
@@ -566,7 +566,7 @@ onUnmounted(() => {})
 }
 .blog-tweet-img-list-body.cover-count-4 {
   grid-template-columns: repeat(2, 1fr);
-  grid-auto-rows: auto;
+  grid-template-rows: repeat(2, 1fr);
   width: 100%;
   height: 100%;
 }
@@ -577,18 +577,21 @@ onUnmounted(() => {})
 .blog-tweet-img-list-body.cover-count-4
   .tweet-img-list-body-item-description.index-2 {
   left: 12px;
-  top: calc(50% + 6px);
+  top: calc(50% + 10px);
 }
 .blog-tweet-img-list-body.cover-count-4
   .tweet-img-list-body-item-description.index-3 {
   left: calc(50% + 12px);
-  top: calc(50% + 6px);
+  top: calc(50% + 10px);
 }
 .blog-tweet-img-swiper-body {
   border-radius: 20px;
   /* border: 1px solid #e2e2e2; */
   overflow: hidden;
   isolation: isolate;
+}
+.blog-tweet-img-swiper-body.type-no-swiper {
+  border-radius: 5px;
 }
 .blog-tweet-img-swiper-item {
   width: 100%;

@@ -613,7 +613,7 @@ onUnmounted(() => {})
   .blog-layout-body {
     margin-bottom: 0px;
     min-height: calc(100vh - 105px);
-    min-height: calc(100vh - 105px);
+    min-height: calc(100dvh - 105px);
     padding-top: 60px;
     margin-top: 0px;
   }
