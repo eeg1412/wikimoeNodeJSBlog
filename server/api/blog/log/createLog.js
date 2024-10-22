@@ -28,6 +28,27 @@ module.exports = async function (req, res, next) {
   if (!utils.isUUID(uuid)) {
     return
   }
+
+  // 根据ip或uuid， 查询 readerlogUtils.count 当天的数据量是否超过1000条
+  const readerlogCount = await readerlogUtils.count({
+    $or: [
+      {
+        uuid: uuid
+      },
+      {
+        ip: ip
+      }
+    ],
+    createdAt: {
+      $gte: utils.getTodayStartTime(),
+      $lte: utils.getTodayEndTime()
+    }
+  })
+  if (readerlogCount >= 1000) {
+    return
+  }
+
+
   const searchEngineData = utils.isSearchEngine(req)
   switch (action) {
     case 'open':
