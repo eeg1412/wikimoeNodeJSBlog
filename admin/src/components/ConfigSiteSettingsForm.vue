@@ -93,19 +93,6 @@
         ></el-option>
       </el-select>
     </el-form-item>
-    <!-- 博文底部共通内容 -->
-    <el-form-item
-      label="博文底部共通内容"
-      class="blok-form-item"
-      prop="sitePostCommonFooterContent"
-    >
-      <RichEditor5Switch
-        v-model:content="siteSettingsForm.sitePostCommonFooterContent"
-        v-model:isRichMode="
-          siteSettingsForm.sitePostCommonFooterContentIsRichMode
-        "
-      ></RichEditor5Switch>
-    </el-form-item>
     <!-- 页面底部信息 -->
     <el-form-item label="页面底部信息" prop="siteFooterInfo">
       <el-input
@@ -179,9 +166,6 @@ export default {
       siteTopSlideTime: 8000,
       // 你所在时区
       siteTimeZone: '',
-      // 博文底部共通内容
-      sitePostCommonFooterContent: '',
-      sitePostCommonFooterContentIsRichMode: true,
       // 页面底部信息
       siteFooterInfo: '',
       // 额外CSS样式

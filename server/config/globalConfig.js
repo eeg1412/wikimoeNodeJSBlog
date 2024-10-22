@@ -56,9 +56,6 @@ const initGlobalConfig = async () => {
     siteTopSlideTime: 8000,
     // 你所在时区
     siteTimeZone: '',
-    // 博文底部共通内容
-    sitePostCommonFooterContent: '',
-    sitePostCommonFooterContentIsRichMode: true,
     // 页面底部信息
     siteFooterInfo: '',
     // 额外CSS样式
@@ -118,6 +115,12 @@ const initGlobalConfig = async () => {
     // 禁止评论关键词
     siteBannedKeywordList: [],
   }
+  // 文章页设置
+  const sitePostSettingsConfig = {
+    // 博文底部共通内容
+    sitePostCommonFooterContent: '',
+    sitePostCommonFooterContentIsRichMode: true,
+  }
 
 
   // 写一个函数，先判断原始类型，再将字符串转换为对应的类型
@@ -148,6 +151,7 @@ const initGlobalConfig = async () => {
       rssSettings: rssSettingsConfig,
       emailSettings: emailSettingsConfig,
       otherSettings: otherSettingsConfig,
+      sitePostSettings: sitePostSettingsConfig,
     }
     // 将data转换为object
     const obj = {}
@@ -161,6 +165,7 @@ const initGlobalConfig = async () => {
     formatResToForm(config.rssSettings, obj)
     formatResToForm(config.emailSettings, obj)
     formatResToForm(config.otherSettings, obj)
+    formatResToForm(config.sitePostSettings, obj)
     // 将配置挂载到global上
     global.$globalConfig = config;
     global.$Mint = new Mint(config.otherSettings.siteBannedKeywordList)

@@ -5,6 +5,10 @@
       <el-tab-pane label="网站设置" name="site">
         <ConfigSiteSettingsForm v-if="activeName === 'site'" />
       </el-tab-pane>
+      <!-- 文章页设置 -->
+      <el-tab-pane label="文章页设置" name="post">
+        <ConfigSitePostForm v-if="activeName === 'post'" />
+      </el-tab-pane>
       <el-tab-pane label="评论设置" name="comment">
         <ConfigCommentSettingsForm v-if="activeName === 'comment'" />
       </el-tab-pane>
@@ -38,7 +42,7 @@ import ConfigRssSettingsForm from '@/components/ConfigRssSettingsForm'
 import ConfigMediaForm from '@/components/ConfigMediaForm'
 import ConfigEmailSettingsForm from '@/components/ConfigEmailSettingsForm'
 import ConfigOtherSettingsForm from '@/components/ConfigOtherSettingsForm'
-
+import ConfigSitePostForm from '@/components/ConfigSitePostForm'
 export default {
   components: {
     ConfigSiteSettingsForm,
@@ -47,6 +51,7 @@ export default {
     ConfigMediaForm,
     ConfigEmailSettingsForm,
     ConfigOtherSettingsForm,
+    ConfigSitePostForm,
   },
   setup() {
     const activeName = ref('site')
