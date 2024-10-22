@@ -19,7 +19,8 @@
             <el-input
               v-model="params.keyword"
               clearable
-              placeholder="请输入评论内容"
+              placeholder="请输入评论内容/评论者/邮箱/网站"
+              style="width: 250px"
             ></el-input>
           </el-form-item>
           <!-- ip -->

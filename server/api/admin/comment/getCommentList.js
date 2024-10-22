@@ -20,7 +20,12 @@ module.exports = async function (req, res, next) {
   }
   if (keyword) {
     keyword = utils.escapeSpecialChars(keyword)
-    params.content = new RegExp(keyword, 'i')
+    params.$or = [
+      { content: new RegExp(keyword, 'i') },
+      { nickname: new RegExp(keyword, 'i') },
+      { email: new RegExp(keyword, 'i') },
+      { url: new RegExp(keyword, 'i') }
+    ]
   }
   if (ip) {
     ip = utils.escapeSpecialChars(ip)
