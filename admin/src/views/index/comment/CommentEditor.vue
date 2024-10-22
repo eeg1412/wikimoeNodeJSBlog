@@ -29,7 +29,24 @@
             <el-input v-model="form.email" placeholder="请输入邮箱"></el-input>
           </el-form-item>
         </template>
-
+        <!-- 父级评论内容 -->
+        <el-form-item
+          label="父级评论"
+          v-if="detailData.parent && detailData.parent?.content"
+        >
+          <blockquote
+            class="common-blockquote comment-detail-blockquote"
+            @click="toParentComment"
+          >
+            <div class="fb">
+              {{
+                detailData.parent.user?.nickname || detailData.parent.nickname
+              }}
+            </div>
+            <div>{{ $formatDate(detailData.date) }}</div>
+            <div class="mt5">{{ detailData.parent.content }}</div>
+          </blockquote>
+        </el-form-item>
         <el-form-item label="评论内容" prop="content">
           <EmojiTextarea
             v-model:value="form.content"
@@ -194,6 +211,16 @@ export default {
         .catch(() => {})
     }
 
+    const toParentComment = () => {
+      const url = router.resolve({
+        name: 'CommentEdit',
+        params: {
+          id: detailData.value.parent._id,
+        },
+      }).href
+      window.open(url, '_blank')
+    }
+
     onMounted(() => {
       if (id.value) {
         getCommentDetail()
@@ -207,8 +234,14 @@ export default {
       rules,
       formRef,
       submit,
+      toParentComment,
     }
   },
 }
 </script>
-<style scoped></style>
+<style scoped>
+.comment-detail-blockquote {
+  line-height: 24px;
+  cursor: pointer;
+}
+</style>

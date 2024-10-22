@@ -10,7 +10,15 @@ exports.save = async function (parmas) {
 
 exports.findOne = async function (parmas, projection, options = {}) {
   // document查询
-  return await commentsModel.findOne(parmas, projection).populate('parent', 'content _id').populate('post', 'title _id excerpt').populate('user', options.userFilter || 'nickname _id photo');
+  return await commentsModel.findOne(parmas, projection).populate({
+    path: 'parent',
+    match: { status: 1 },
+    select: 'content _id status user nickname date',
+    populate: {
+      path: 'user',
+      select: '_id nickname'
+    }
+  }).populate('post', 'title _id excerpt').populate('user', options.userFilter || 'nickname _id photo');
 }
 
 // 查找所有
