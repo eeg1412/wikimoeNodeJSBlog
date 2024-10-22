@@ -565,13 +565,14 @@ export default {
     const total = ref(0)
     const getAttachmentList = (resetPage, resetKeyword) => {
       attachmentsLoading.value = true
-      if (resetPage) {
-        params.page = 1
-      }
       if (resetKeyword) {
         params.keyword = ''
       }
       params.typeList = props.typeList
+      if (resetPage === true && params.page !== 1) {
+        params.page = 1
+        return
+      }
       authApi
         .getAttachmentList(params)
         .then((res) => {

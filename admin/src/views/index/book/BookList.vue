@@ -19,6 +19,7 @@
             <el-input
               v-model="params.keyword"
               placeholder="请输入书籍名称"
+              clearable
             ></el-input>
           </el-form-item>
           <!-- 书籍类型 -->
@@ -201,8 +202,9 @@ export default {
     const total = ref(0)
     const tableRef = ref(null)
     const getBookList = (resetPage) => {
-      if (resetPage) {
+      if (resetPage === true && params.page !== 1) {
         params.page = 1
+        return
       }
       authApi
         .getBookList(params)

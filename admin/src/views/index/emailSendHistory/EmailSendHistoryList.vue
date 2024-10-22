@@ -96,7 +96,7 @@
         </el-table-column>
         <!-- subject -->
         <el-table-column label="发送主题" prop="subject" min-width="150px" />
-        <el-table-column label="发送内容" prop="content" min-width="50px">
+        <el-table-column label="发送内容" prop="content" width="100px">
           <template #default="{ row }">
             <!-- <div v-html="row.content"></div> -->
             <!-- 点击查看内容按钮 -->
@@ -105,7 +105,11 @@
             >
           </template>
         </el-table-column>
-        <el-table-column label="错误信息" prop="errInfo"></el-table-column>
+        <el-table-column
+          label="错误信息"
+          prop="errInfo"
+          min-width="150px"
+        ></el-table-column>
         <el-table-column label="发送状态" prop="status" width="100px">
           <template #default="{ row }">
             <!-- tag -->
@@ -173,8 +177,9 @@ export default {
     const total = ref(0)
     const tableRef = ref(null)
     const getEmailSendHistoryList = (resetPage) => {
-      if (resetPage) {
+      if (resetPage === true && params.page !== 1) {
         params.page = 1
+        return
       }
       authApi
         .getEmailSendHistoryList(params)

@@ -19,6 +19,7 @@
             <el-input
               v-model="params.keyword"
               placeholder="请输入友链名称"
+              clearable
             ></el-input>
           </el-form-item>
           <el-form-item>
@@ -112,8 +113,9 @@ export default {
     const total = ref(0)
     const tableRef = ref(null)
     const getLinkList = (resetPage) => {
-      if (resetPage) {
+      if (resetPage === true && params.page !== 1) {
         params.page = 1
+        return
       }
       authApi
         .getLinkList(params)

@@ -14,6 +14,7 @@
             <el-input
               v-model="params.keyword"
               placeholder="请输入相册名称"
+              clearable
             ></el-input>
           </el-form-item>
           <el-form-item>
@@ -126,8 +127,9 @@ export default {
     const total = ref(0)
     const tableRef = ref(null)
     const getAlbumList = (resetPage) => {
-      if (resetPage) {
+      if (resetPage === true && params.page !== 1) {
         params.page = 1
+        return
       }
       authApi
         .getAlbumList(params)

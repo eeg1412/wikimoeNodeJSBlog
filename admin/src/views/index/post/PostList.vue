@@ -452,11 +452,12 @@ export default {
     }
     const tableRef = ref(null)
     const getPostList = (resetPage, resetKeyword) => {
-      if (resetPage) {
-        params.page = 1
-      }
       if (resetKeyword) {
         params.keyword = ''
+      }
+      if (resetPage === true && params.page !== 1) {
+        params.page = 1
+        return
       }
       authApi.getPostList(params).then((res) => {
         list.value = res.data.list

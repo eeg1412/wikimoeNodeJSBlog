@@ -224,8 +224,9 @@ export default {
     const total = ref(0)
     const tableRef = ref(null)
     const getCommentLikeLogList = (resetPage) => {
-      if (resetPage) {
+      if (resetPage === true && params.page !== 1) {
         params.page = 1
+        return
       }
       authApi
         .getCommentLikeLogList(params)
