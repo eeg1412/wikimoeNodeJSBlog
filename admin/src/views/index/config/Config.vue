@@ -63,21 +63,4 @@ export default {
   },
 }
 </script>
-<style scoped>
-.config-border-item {
-  border: 1px solid #ebeef5;
-  padding: 20px;
-  margin-bottom: 20px;
-  border-radius: 10px;
-}
-.config-border-item-title {
-  font-weight: 600;
-  margin-bottom: 10px;
-}
-.config-border-item-tip {
-  font-size: 12px;
-  color: #909399;
-  margin-bottom: 10px;
-  padding-left: 10px;
-}
-</style>
+<style scoped></style>

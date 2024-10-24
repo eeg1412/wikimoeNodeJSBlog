@@ -18,6 +18,41 @@
       ></RichEditor5Switch>
     </el-form-item>
 
+    <div class="config-border-item">
+      <div class="config-border-item-title mb5">
+        随机相似内容<span class="config-border-item-tip"></span>
+      </div>
+      <el-form-item label="文章数" prop="sitePostRandomSimilarCount">
+        <el-input-number
+          v-model="sitePostForm.sitePostRandomSimilarCount"
+          controls-position="right"
+          :min="0"
+          :step="1"
+        ></el-input-number>
+        <div class="w_10">※0为不显示随机相似内容</div>
+      </el-form-item>
+      <!-- 内容范围 1博文 2推文 checkbox -->
+      <el-form-item label="内容范围" prop="sitePostRandomSimilarRange">
+        <el-checkbox-group v-model="sitePostForm.sitePostRandomSimilarRange">
+          <el-checkbox label="1">博文</el-checkbox>
+          <el-checkbox label="2">推文</el-checkbox>
+        </el-checkbox-group>
+      </el-form-item>
+      <!-- 显示范围 1博文 2推文 checkbox -->
+      <el-form-item label="显示范围" prop="sitePostRandomSimilarShowRange">
+        <el-checkbox-group
+          v-model="sitePostForm.sitePostRandomSimilarShowRange"
+        >
+          <el-checkbox label="1">博文</el-checkbox>
+          <el-checkbox label="2">推文</el-checkbox>
+        </el-checkbox-group>
+      </el-form-item>
+      <!-- 随机相似内容标题 -->
+      <el-form-item label="标题" prop="sitePostRandomSimilarTitle">
+        <el-input v-model="sitePostForm.sitePostRandomSimilarTitle"></el-input>
+      </el-form-item>
+    </div>
+
     <el-form-item>
       <el-button type="primary" @click="sitePostSubmit">提交</el-button>
     </el-form-item>
@@ -42,6 +77,14 @@ export default {
       // 博文底部共通内容
       sitePostCommonFooterContent: '',
       sitePostCommonFooterContentIsRichMode: true,
+      // 随机相似内容数
+      sitePostRandomSimilarCount: 0,
+      // 随机相似内容范围
+      sitePostRandomSimilarRange: [],
+      // 随机相似内容显示范围
+      sitePostRandomSimilarShowRange: [],
+      // 随机相似内容标题
+      sitePostRandomSimilarTitle: '相似内容',
     })
     const sitePostRules = {}
     const sitePostSubmit = () => {
@@ -49,10 +92,18 @@ export default {
         if (valid) {
           const params = []
           Object.keys(sitePostForm).forEach((key) => {
-            params.push({
-              name: key,
-              value: sitePostForm[key],
-            })
+            if (Array.isArray(sitePostForm[key])) {
+              // 转换成字符串
+              params.push({
+                name: key,
+                value: sitePostForm[key].join(','),
+              })
+            } else {
+              params.push({
+                name: key,
+                value: sitePostForm[key],
+              })
+            }
           })
           authApi
             .updateOption({ optionList: params })

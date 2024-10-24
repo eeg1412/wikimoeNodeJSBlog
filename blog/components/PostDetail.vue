@@ -263,6 +263,13 @@
       :gameList="postData.data.gameList"
       :bookList="postData.data.bookList"
     />
+    <!-- randomPostList -->
+    <PostPageRandomPostList
+      v-if="
+        postData.data.randomPostList && postData.data.randomPostList.length > 0
+      "
+      :randomPostList="postData.data.randomPostList"
+    />
     <!-- 广告 -->
     <div
       class="google-ad-post-detail mt-4"
@@ -561,6 +568,7 @@ const [postDataResponse] = await Promise.all([
   getDetailApi({
     id,
     type,
+    randompost: routeName === 'postDetail' ? 1 : 0,
   }),
 ])
 const { data: postData } = postDataResponse

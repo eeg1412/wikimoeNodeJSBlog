@@ -120,6 +120,14 @@ const initGlobalConfig = async () => {
     // 博文底部共通内容
     sitePostCommonFooterContent: '',
     sitePostCommonFooterContentIsRichMode: true,
+    // 随机相似内容数
+    sitePostRandomSimilarCount: 0,
+    // 随机相似内容范围
+    sitePostRandomSimilarRange: [],
+    // 随机相似内容显示范围
+    sitePostRandomSimilarShowRange: [],
+    // 随机相似内容标题
+    sitePostRandomSimilarTitle: '相似内容',
   }
 
 
