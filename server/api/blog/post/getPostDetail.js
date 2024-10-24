@@ -162,7 +162,7 @@ module.exports = async function (req, res, next) {
           {
             $unwind: {
               path: '$coverImage',
-              preserveNullAndEmptyArrays: false // 可选：保留空数组和 null 值
+              preserveNullAndEmptyArrays: true // 可选：保留空数组和 null 值
             }
           },
 
