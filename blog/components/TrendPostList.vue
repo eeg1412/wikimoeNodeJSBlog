@@ -173,7 +173,7 @@ const getBackgroundImage = (item) => {
   background-size: cover;
   background-position: center center;
   background-repeat: no-repeat;
-  opacity: 0.17;
+  opacity: 0.1;
   @apply bg-primary-100;
 }
 .trend-item-body:hover,

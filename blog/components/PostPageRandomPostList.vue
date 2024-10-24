@@ -150,8 +150,13 @@ const getBackgroundImage = (item) => {
   grid-column: span 2;
 }
 
-/* 手机布局：单列 */
-@media (max-width: 410px) {
+/* 单列 */
+/* 0-640 */
+/* 769 - 950 */
+/* 1025 - 1240 */
+@media (max-width: 640px),
+  (min-width: 769px) and (max-width: 950px),
+  (min-width: 1025px) and (max-width: 1240px) {
   .random-post-list-body {
     grid-template-columns: 1fr;
   }
@@ -183,7 +188,7 @@ const getBackgroundImage = (item) => {
   background-size: cover;
   background-position: center center;
   background-repeat: no-repeat;
-  opacity: 0.17;
+  opacity: 0.1;
   @apply bg-primary-100;
 }
 .random-post-item-body:hover,
