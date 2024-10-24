@@ -28,6 +28,7 @@
           controls-position="right"
           :min="0"
           :step="1"
+          :precision="0"
         ></el-input-number>
         <div class="w_10">※0为不显示随机相似内容</div>
       </el-form-item>

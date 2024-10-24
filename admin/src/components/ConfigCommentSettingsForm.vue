@@ -19,6 +19,7 @@
         :min="1"
         :max="100"
         :step="1"
+        :precision="0"
       ></el-input-number
       ><span class="pl5">秒</span>
     </el-form-item>
@@ -35,6 +36,7 @@
         :min="1"
         :max="100"
         :step="1"
+        :precision="0"
       ></el-input-number>
     </el-form-item>
 

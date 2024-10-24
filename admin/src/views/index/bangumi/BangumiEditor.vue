@@ -46,10 +46,15 @@
             v-model="form.rating"
             :min="0"
             :max="100"
+            :precision="0"
           ></el-input-number>
         </el-form-item>
         <el-form-item label="年" prop="year">
-          <el-input-number v-model="form.year"></el-input-number>
+          <el-input-number
+            v-model="form.year"
+            :precision="0"
+            :min="1"
+          ></el-input-number>
         </el-form-item>
         <el-form-item label="季度" prop="season">
           <!-- radio 分别对应 1 2 3 4 -->

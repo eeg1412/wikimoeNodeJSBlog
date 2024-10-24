@@ -30,7 +30,11 @@
           </el-radio-group>
         </el-form-item>
         <el-form-item label="排序" prop="taxis">
-          <el-input-number v-model="form.taxis" :min="0"></el-input-number>
+          <el-input-number
+            v-model="form.taxis"
+            :min="0"
+            :precision="0"
+          ></el-input-number>
         </el-form-item>
         <el-form-item label="父导航" prop="parent">
           <el-select v-model="form.parent" clearable placeholder="请选择父导航">

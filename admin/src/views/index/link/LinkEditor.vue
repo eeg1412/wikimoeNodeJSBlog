@@ -54,7 +54,11 @@
           ></el-input>
         </el-form-item>
         <el-form-item label="排序" prop="taxis">
-          <el-input-number v-model="form.taxis" :min="0"></el-input-number>
+          <el-input-number
+            v-model="form.taxis"
+            :min="0"
+            :precision="0"
+          ></el-input-number>
         </el-form-item>
         <el-form-item label="状态" prop="status">
           <el-radio-group v-model="form.status">

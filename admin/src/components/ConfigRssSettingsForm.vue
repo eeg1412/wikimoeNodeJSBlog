@@ -19,6 +19,7 @@
         :min="1"
         :max="100"
         :step="1"
+        :precision="0"
       ></el-input-number>
     </el-form-item>
     <!-- 底部显示RSS siteShowRssInFooter -->

@@ -27,6 +27,8 @@
           <el-form-item>
             <el-input-number
               v-model="params.year"
+              :precision="0"
+              :min="1"
               placeholder="请输入年份"
               style="width: 160px"
             ></el-input-number>

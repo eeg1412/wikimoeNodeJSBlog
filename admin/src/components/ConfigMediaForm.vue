@@ -32,6 +32,7 @@
           :min="1"
           :max="100"
           :step="1"
+          :precision="0"
         ></el-input-number>
       </el-form-item>
       <el-form-item label="图片压缩最长边" prop="imgSettingCompressMaxSize">
@@ -41,6 +42,7 @@
           controls-position="right"
           :min="1"
           :step="1"
+          :precision="0"
         ></el-input-number>
       </el-form-item>
     </div>
@@ -61,6 +63,7 @@
           :min="1"
           :max="100"
           :step="1"
+          :precision="0"
         ></el-input-number>
       </el-form-item>
       <el-form-item label="图片缩略图最长边" prop="imgSettingThumbnailMaxSize">
@@ -70,6 +73,7 @@
           controls-position="right"
           :min="1"
           :step="1"
+          :precision="0"
         ></el-input-number>
       </el-form-item>
       <!-- 当前FFmpeg状态 已安装 未安装 -->
@@ -121,6 +125,7 @@
           controls-position="right"
           :min="1"
           :step="1"
+          :precision="0"
         ></el-input-number>
       </el-form-item>
       <!-- 视频压缩码率 -->
@@ -131,6 +136,7 @@
           controls-position="right"
           :min="1"
           :step="1"
+          :precision="0"
         ></el-input-number>
       </el-form-item>
       <!-- 视频压缩帧率 -->
@@ -141,6 +147,7 @@
           controls-position="right"
           :min="1"
           :step="1"
+          :precision="0"
         ></el-input-number>
       </el-form-item>
     </div>

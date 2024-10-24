@@ -98,6 +98,7 @@
               controls-position="right"
               :min="2"
               :step="2"
+              :precision="0"
               size="small"
             ></el-input-number>
           </el-form-item>
@@ -109,6 +110,7 @@
               controls-position="right"
               :min="1"
               :step="1"
+              :precision="0"
               size="small"
             ></el-input-number>
           </el-form-item>
@@ -120,6 +122,7 @@
               controls-position="right"
               :min="1"
               :step="1"
+              :precision="0"
               size="small"
             ></el-input-number>
           </el-form-item>

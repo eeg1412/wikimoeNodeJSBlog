@@ -59,6 +59,7 @@
             v-model="form.rating"
             :min="0"
             :max="100"
+            :precision="0"
           ></el-input-number>
         </el-form-item>
         <el-form-item label="标记" prop="label">

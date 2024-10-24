@@ -29,6 +29,7 @@
             v-model="form.taxis"
             :min="0"
             :max="100"
+            :precision="0"
           ></el-input-number>
         </el-form-item>
         <el-form-item label="父级分类" prop="parent">

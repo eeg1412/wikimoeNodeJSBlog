@@ -139,6 +139,7 @@
                     :min="1"
                     :max="100"
                     :step="1"
+                    :precision="0"
                   ></el-input-number>
                 </el-form-item>
                 <el-form-item label="状态" prop="status">

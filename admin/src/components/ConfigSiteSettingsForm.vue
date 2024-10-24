@@ -62,6 +62,7 @@
         :min="1"
         :max="100"
         :step="1"
+        :precision="0"
       ></el-input-number
       ><span class="pl10">条内容</span>
     </el-form-item>
@@ -80,6 +81,7 @@
         controls-position="right"
         :min="100"
         :step="100"
+        :precision="0"
       ></el-input-number
       ><span class="pl10">毫秒</span>
     </el-form-item>
