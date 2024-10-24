@@ -39,8 +39,8 @@
             {{ getRandomPostTitle(item) }}
           </div>
           <!-- 时间 -->
-          <div class="text-xs text-gray-600 mt-1">
-            {{ formatDate(item.date, 'yyyy-MM-dd hh:mm') }}
+          <div class="text-xs text-gray-600 mt-1" v-if="item.date">
+            发表于：{{ formatDate(item.date, 'yyyy-MM-dd hh:mm') }}
           </div>
         </div>
       </nuxt-link>
@@ -151,14 +151,14 @@ const getBackgroundImage = (item) => {
 }
 
 /* 手机布局：单列 */
-/* @media (max-width: 440px) {
+@media (max-width: 410px) {
   .random-post-list-body {
     grid-template-columns: 1fr;
   }
   .random-post-list-body.is-odd .random-post-item-body:last-child {
     grid-column: span 1;
   }
-} */
+}
 
 .random-post-item-body {
   border-color: #e2e2e2;
