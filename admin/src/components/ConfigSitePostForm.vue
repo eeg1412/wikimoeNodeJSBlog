@@ -6,17 +6,66 @@
     label-width="140px"
     v-if="inited"
   >
-    <!-- 博文底部共通内容 -->
-    <el-form-item
-      label="博文底部共通内容"
-      class="blok-form-item"
-      prop="sitePostCommonFooterContent"
-    >
-      <RichEditor5Switch
-        v-model:content="sitePostForm.sitePostCommonFooterContent"
-        v-model:isRichMode="sitePostForm.sitePostCommonFooterContentIsRichMode"
-      ></RichEditor5Switch>
-    </el-form-item>
+    <div class="config-border-item">
+      <div class="config-border-item-title mb5">
+        博文底部共通内容<span class="config-border-item-tip"></span>
+      </div>
+      <!-- 是否开启 -->
+      <el-form-item label="是否开启" prop="sitePostBlogCommonFooterOpen">
+        <el-switch
+          v-model="sitePostForm.sitePostBlogCommonFooterOpen"
+        ></el-switch>
+      </el-form-item>
+      <!-- 博文底部共通内容 -->
+      <el-form-item
+        label="博文底部共通内容"
+        class="blok-form-item"
+        prop="sitePostBlogCommonFooterContent"
+      >
+        <RichEditor5Switch
+          v-model:content="sitePostForm.sitePostBlogCommonFooterContent"
+          v-model:isRichMode="
+            sitePostForm.sitePostBlogCommonFooterContentIsRichMode
+          "
+        ></RichEditor5Switch>
+        <div class="w_10">
+          <div>${title}为博文标题</div>
+          <div>${author}为博文作者</div>
+          <div>${date}为博文日期</div>
+          <div>${link}为博文链接</div>
+        </div>
+      </el-form-item>
+    </div>
+    <!-- 推文底部共通内容 -->
+    <div class="config-border-item">
+      <div class="config-border-item-title mb5">
+        推文底部共通内容<span class="config-border-item-tip"></span>
+      </div>
+      <!-- 是否开启 -->
+      <el-form-item label="是否开启" prop="sitePostTweetCommonFooterOpen">
+        <el-switch
+          v-model="sitePostForm.sitePostTweetCommonFooterOpen"
+        ></el-switch>
+      </el-form-item>
+      <!-- 推文底部共通内容 -->
+      <el-form-item
+        label="推文底部共通内容"
+        class="blok-form-item"
+        prop="sitePostTweetCommonFooterContent"
+      >
+        <RichEditor5Switch
+          v-model:content="sitePostForm.sitePostTweetCommonFooterContent"
+          v-model:isRichMode="
+            sitePostForm.sitePostTweetCommonFooterContentIsRichMode
+          "
+        ></RichEditor5Switch>
+        <div class="w_10">
+          <div>${author}为推文作者</div>
+          <div>${date}为推文日期</div>
+          <div>${link}为推文链接</div>
+        </div>
+      </el-form-item>
+    </div>
 
     <div class="config-border-item">
       <div class="config-border-item-title mb5">
@@ -76,8 +125,13 @@ export default {
     const sitePostFormRef = ref(null)
     const sitePostForm = reactive({
       // 博文底部共通内容
-      sitePostCommonFooterContent: '',
-      sitePostCommonFooterContentIsRichMode: true,
+      sitePostBlogCommonFooterOpen: false,
+      sitePostBlogCommonFooterContent: '',
+      sitePostBlogCommonFooterContentIsRichMode: true,
+      // 推文底部共通内容
+      sitePostTweetCommonFooterOpen: false,
+      sitePostTweetCommonFooterContent: '',
+      sitePostTweetCommonFooterContentIsRichMode: true,
       // 随机相似内容数
       sitePostRandomSimilarCount: 0,
       // 随机相似内容范围

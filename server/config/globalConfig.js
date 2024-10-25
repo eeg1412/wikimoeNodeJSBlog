@@ -118,8 +118,13 @@ const initGlobalConfig = async () => {
   // 文章页设置
   const sitePostSettingsConfig = {
     // 博文底部共通内容
-    sitePostCommonFooterContent: '',
-    sitePostCommonFooterContentIsRichMode: true,
+    sitePostBlogCommonFooterOpen: false,
+    sitePostBlogCommonFooterContent: '',
+    sitePostBlogCommonFooterContentIsRichMode: true,
+    // 推文底部共通内容
+    sitePostTweetCommonFooterOpen: false,
+    sitePostTweetCommonFooterContent: '',
+    sitePostTweetCommonFooterContentIsRichMode: true,
     // 随机相似内容数
     sitePostRandomSimilarCount: 0,
     // 随机相似内容范围

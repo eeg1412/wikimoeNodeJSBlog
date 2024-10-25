@@ -242,20 +242,10 @@
       <USkeleton class="h-9 w-[90px]" />
     </div>
     <!-- 文章通用底部内容 -->
-    <div
-      v-if="
-        options.sitePostCommonFooterContent &&
-        options.sitePostCommonFooterContent !== '<p><br></p>' &&
-        postData.data.type === 1
-      "
-      class="my-4"
-    >
-      <HtmlContent
-        v-if="options.sitePostCommonFooterContentIsRichMode"
-        :content="options.sitePostCommonFooterContent"
-      />
-      <div v-else v-html="options.sitePostCommonFooterContent"></div>
-    </div>
+    <PostCommonFooter
+      :post="postData.data"
+      v-if="showPostCommonFooter && postData.data"
+    />
     <PostAboutEvent :eventList="postData.data.eventList" />
     <PostAbout :postList="postData.data.postList" />
     <PostACG
@@ -1041,6 +1031,18 @@ const getActiveHeader = () => {
     activeHeaderDom.value = closest
   }
 }
+
+const showPostCommonFooter = computed(() => {
+  const type = postData.value?.data?.type
+  if (type === 1) {
+    return options.value.sitePostBlogCommonFooterOpen || false
+  } else if (type === 2) {
+    return options.value.sitePostTweetCommonFooterOpen || false
+  } else {
+    return false
+  }
+})
+
 onMounted(() => {
   getCommentList()
   putViewCount()
