@@ -34,10 +34,7 @@
           label="父级评论"
           v-if="detailData.parent && detailData.parent?.content"
         >
-          <blockquote
-            class="common-blockquote comment-detail-blockquote"
-            @click="toParentComment"
-          >
+          <blockquote class="common-blockquote comment-detail-blockquote">
             <div class="fb">
               {{
                 detailData.parent.user?.nickname || detailData.parent.nickname
@@ -211,16 +208,6 @@ export default {
         .catch(() => {})
     }
 
-    const toParentComment = () => {
-      const url = router.resolve({
-        name: 'CommentEdit',
-        params: {
-          id: detailData.value.parent._id,
-        },
-      }).href
-      window.open(url, '_blank')
-    }
-
     onMounted(() => {
       if (id.value) {
         getCommentDetail()
@@ -234,7 +221,6 @@ export default {
       rules,
       formRef,
       submit,
-      toParentComment,
     }
   },
 }
@@ -242,6 +228,5 @@ export default {
 <style scoped>
 .comment-detail-blockquote {
   line-height: 24px;
-  cursor: pointer;
 }
 </style>
