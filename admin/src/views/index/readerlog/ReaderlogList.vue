@@ -18,12 +18,13 @@
           <!-- actionList -->
           <el-form-item>
             <el-select
-              v-model="params.action"
+              v-model="params.actionList"
               placeholder="动作"
               :style="{
-                width: '180px',
+                minWidth: '180px',
               }"
               clearable
+              multiple
             >
               <el-option
                 v-for="item in actionList"
@@ -336,7 +337,7 @@ export default {
     )
     const readerlogList = ref([])
     const params = reactive({
-      action: '',
+      actionList: [],
       page: 1,
       size: 50,
       ip: '',
@@ -388,7 +389,7 @@ export default {
     const initParams = () => {
       const sessionParams = getSessionParams(route.name)
       if (sessionParams) {
-        params.action = sessionParams.action
+        params.actionList = sessionParams.actionList
         params.page = sessionParams.page
         params.size = sessionParams.size
         params.keyword = sessionParams.keyword

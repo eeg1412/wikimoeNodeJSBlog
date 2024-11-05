@@ -4,7 +4,7 @@ const log4js = require('log4js')
 const adminApiLog = log4js.getLogger('adminApi')
 
 module.exports = async function (req, res, next) {
-  let { page, size, ip, uuid, isBot, action } = req.query
+  let { page, size, ip, uuid, isBot, actionList } = req.query
   page = parseInt(page)
   size = parseInt(size)
   // 判断page和size是否为数字
@@ -19,10 +19,11 @@ module.exports = async function (req, res, next) {
   const params = {
   }
 
-  if (action) {
+  if (actionList) {
     // 判断action是否合法
     const validActions = ['open', 'postList', 'postListArchive', 'postListSort', 'postListTag', 'postListKeyword', 'postView', 'postLike', 'postDislike', 'commentLike', 'commentDislike']
-    if (!validActions.includes(action)) {
+    const isValid = actionList.every(action => validActions.includes(action))
+    if (!isValid) {
       res.status(400).json({
         errors: [{
           message: 'action参数错误'
@@ -30,7 +31,9 @@ module.exports = async function (req, res, next) {
       })
       return
     }
-    params.action = action
+    params.action = {
+      $in: actionList
+    }
   }
 
   if (ip) {
