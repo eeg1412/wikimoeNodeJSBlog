@@ -114,6 +114,8 @@ const initGlobalConfig = async () => {
     siteReferrerWhiteList: [],
     // 禁止评论关键词
     siteBannedKeywordList: [],
+    // 排名统计来源忽略域名
+    siteRankIgnoreReferrerDomainList: [],
   }
   // 文章页设置
   const sitePostSettingsConfig = {

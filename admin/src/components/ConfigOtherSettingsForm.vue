@@ -3,7 +3,7 @@
     :model="otherSettingsForm"
     :rules="otherSettingsRules"
     ref="otherSettingsFormRef"
-    label-width="120px"
+    label-width="160px"
     v-if="inited"
   >
     <el-form-item label="引用域名白名单" prop="siteReferrerWhiteList">
@@ -18,6 +18,17 @@
       <el-input
         type="textarea"
         v-model="otherSettingsForm.siteBannedKeywordList"
+        placeholder="英文逗号隔开"
+      ></el-input>
+    </el-form-item>
+
+    <el-form-item
+      label="排名统计来源忽略域名"
+      prop="siteRankIgnoreReferrerDomainList"
+    >
+      <el-input
+        type="textarea"
+        v-model="otherSettingsForm.siteRankIgnoreReferrerDomainList"
         placeholder="英文逗号隔开"
       ></el-input>
     </el-form-item>
@@ -43,6 +54,8 @@ export default {
       siteReferrerWhiteList: '',
       // 禁止评论关键词
       siteBannedKeywordList: '',
+      // 排名统计来源忽略域名
+      siteRankIgnoreReferrerDomainList: '',
     })
     const otherSettingsRules = {}
     const otherSettingsSubmit = () => {

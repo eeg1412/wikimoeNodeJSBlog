@@ -51,6 +51,8 @@ module.exports = async function (req, res, next) {
 
   const startDate = moment(startTime)
   const endDate = moment(endTime)
+  const siteRankIgnoreReferrerDomainList = global.$globalConfig?.otherSettings?.siteRankIgnoreReferrerDomainList || []
+  const siteRankIgnoreReferrerDomainListReg = siteRankIgnoreReferrerDomainList.map(domain => new RegExp(domain, 'i'))
 
   // 来源站统计
   const readReferrerpipeline = [
@@ -58,7 +60,7 @@ module.exports = async function (req, res, next) {
       $match: {
         createdAt: { $gte: startDate.toDate(), $lte: endDate.toDate() },
         action: { $in: ['open'] },
-        referrer: { $ne: null },
+        referrer: { $ne: null, $nin: siteRankIgnoreReferrerDomainListReg },
         isBot: false
       }
     },
