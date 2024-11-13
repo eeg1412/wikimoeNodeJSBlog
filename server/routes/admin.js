@@ -361,6 +361,15 @@ const adminRouteSetting = [
     roleType: null,
     role: null
   },
+  // put /post/batch
+  {
+    path: '/post/batch',
+    method: 'put',
+    middleware: [checkAuth],
+    controller: require('../api/admin/post/batch'),
+    roleType: null,
+    role: null
+  },
   // post /comment/create
   {
     path: '/comment/create',
