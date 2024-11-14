@@ -28,7 +28,6 @@
           <el-input-number
             v-model="form.taxis"
             :min="0"
-            :max="9999999"
             :precision="0"
           ></el-input-number>
         </el-form-item>
