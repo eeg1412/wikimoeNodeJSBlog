@@ -189,6 +189,12 @@ export default function (api) {
         shouldAdminJWT: true
       })
     },
+    // put /post/batch
+    putBatchPost (data) {
+      return api.put('/post/batch', data, {
+        shouldAdminJWT: true
+      })
+    },
     // post /comment/create
     createComment (data) {
       return api.post('/comment/create', data, {

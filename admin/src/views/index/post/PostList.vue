@@ -5,14 +5,13 @@
         <el-breadcrumb-item>文章列表</el-breadcrumb-item>
       </el-breadcrumb>
     </div>
-    <div class="clearfix pb20">
+    <div class="clearfix" :class="{ mb20: selectedRows.length <= 0 }">
       <div class="fl common-top-search-form-body">
         <!-- 检索用 -->
         <el-form
           :inline="true"
           :model="params"
           @submit.prevent
-          class="demo-form-inline"
           @keypress.enter="getPostList(true)"
         >
           <!-- 类型 -->
@@ -46,41 +45,11 @@
           </el-form-item>
           <!-- 分类 -->
           <el-form-item>
-            <el-select
-              v-model="params.sort"
-              placeholder="请选择分类"
-              clearable
-              style="width: 120px"
-            >
-              <el-option
-                v-for="item in sortList"
-                :key="item._id"
-                :label="item.sortname"
-                :value="item._id"
-              ></el-option>
-            </el-select>
+            <SortSelector v-model="params.sort" />
           </el-form-item>
           <!-- tags -->
           <el-form-item>
-            <el-select
-              v-model="params.tags"
-              placeholder="请选择标签"
-              clearable
-              style="width: 200px"
-              multiple
-              filterable
-              remote
-              :automatic-dropdown="true"
-              :remote-method="queryTags"
-              :loading="tagsIsLoading"
-            >
-              <el-option
-                v-for="item in tagList"
-                :key="item._id"
-                :label="item.tagname"
-                :value="item._id"
-              ></el-option>
-            </el-select>
+            <TagSelector v-model="params.tags" ref="SearchTagSelectorRef" />
           </el-form-item>
           <el-form-item>
             <el-input
@@ -118,7 +87,17 @@
         </el-dropdown>
       </div>
     </div>
-    <div class="mb20 list-table-body">
+    <div v-if="selectedRows.length > 0">
+      <PostBatchForm
+        :postList="selectedRows"
+        @success="postBatchFormSuccess()"
+        @cancel="clearSelection"
+      />
+    </div>
+    <div
+      class="mb20 list-table-body"
+      :class="{ batch: selectedRows.length > 0 }"
+    >
       <el-table
         :data="list"
         row-key="_id"
@@ -126,6 +105,7 @@
         border
         @sort-change="tableSortChange"
         :default-sort="defaultSort"
+        @selection-change="handleSelectionChange"
         ref="tableRef"
       >
         <!--
@@ -144,6 +124,12 @@
           // - sortop	是否分类置顶字段
           // - status	状态字段：0草稿，1发布，99回收站
           // - allowRemark	是否允许评论字段 -->
+        <el-table-column
+          type="selection"
+          :reserve-selection="true"
+          width="55"
+          fixed="left"
+        />
         <el-table-column prop="type" label="类型">
           <!-- 1blog,2tweet,3page -->
           <template #default="{ row }">
@@ -311,7 +297,12 @@
             {{ $formatDate(row.updatedAt) }}
           </template>
         </el-table-column>
-        <el-table-column label="操作" width="170" fixed="right">
+        <el-table-column
+          label="操作"
+          width="170"
+          fixed="right"
+          v-if="selectedRows.length <= 0"
+        >
           <template #default="{ row }">
             <el-button size="small" @click="openCommentForm(row._id, row.title)"
               ><el-icon><ChatLineSquare /></el-icon
@@ -381,6 +372,9 @@ import { useRouter, useRoute } from 'vue-router'
 import { authApi } from '@/api'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import EmojiTextarea from '@/components/EmojiTextarea.vue'
+import TagSelector from '@/components/TagSelector.vue'
+import SortSelector from '@/components/SortSelector.vue'
+import PostBatchForm from '@/components/PostBatchForm.vue'
 import {
   setSessionParams,
   getSessionParams,
@@ -391,6 +385,9 @@ import store from '@/store'
 export default {
   components: {
     EmojiTextarea,
+    TagSelector,
+    SortSelector,
+    PostBatchForm,
   },
   setup() {
     const router = useRouter()
@@ -451,7 +448,7 @@ export default {
         .catch(() => {})
     }
     const tableRef = ref(null)
-    const getPostList = (resetPage, resetKeyword) => {
+    const getPostList = (resetPage, resetKeyword, top = true) => {
       if (resetKeyword) {
         params.keyword = ''
       }
@@ -462,7 +459,9 @@ export default {
       authApi.getPostList(params).then((res) => {
         list.value = res.data.list
         total.value = res.data.total
-        tableRef.value.scrollTo({ top: 0 })
+        if (top) {
+          tableRef.value.scrollTo({ top: 0 })
+        }
         setSessionParams(route.name, params)
       })
     }
@@ -519,56 +518,6 @@ export default {
         label: '页面',
       },
     ]
-
-    // 获取文章分类
-    const sortList = ref([])
-    const getSortList = () => {
-      authApi.getSortList().then((res) => {
-        const list = res.data.data
-        // 循环list，查找里面有没有children，如果有，就把children里面的sortname前面加上'--',然后把children push到newlist里面
-        const newlist = []
-        list.forEach((item) => {
-          newlist.push(item)
-          if (item.children && item.children.length) {
-            item.children.forEach((child) => {
-              child.sortname = '└─ ' + child.sortname
-            })
-            newlist.push(...item.children)
-          }
-        })
-        sortList.value = newlist
-      })
-    }
-
-    // tags
-    const tagList = ref([])
-    const tagsIsLoading = ref(false)
-    const getTagList = (tagKeyword = null, options = {}) => {
-      if (tagsIsLoading.value) {
-        return
-      }
-      tagsIsLoading.value = true
-      authApi
-        .getTagList(
-          { keyword: tagKeyword, size: 100, page: 1, ...options },
-          true
-        )
-        .then((res) => {
-          tagList.value = res.data.list
-        })
-        .finally(() => {
-          tagsIsLoading.value = false
-        })
-    }
-    let queryTagsTimer = null
-    const queryTags = (query) => {
-      if (queryTagsTimer) {
-        clearTimeout(queryTagsTimer)
-      }
-      queryTagsTimer = setTimeout(() => {
-        getTagList(query)
-      }, 50)
-    }
 
     // 添加评论
     const commentForm = reactive({
@@ -683,6 +632,19 @@ export default {
       return contentList
     }
 
+    const selectedRows = ref([])
+    const handleSelectionChange = (rows) => {
+      console.log(rows)
+      selectedRows.value = rows
+    }
+    const clearSelection = () => {
+      tableRef.value.clearSelection()
+    }
+    const postBatchFormSuccess = () => {
+      clearSelection()
+      getPostList(false, false, false)
+    }
+
     // 监听 params.page 的变化
     watch(
       () => params.page,
@@ -691,12 +653,16 @@ export default {
       }
     )
 
+    const SearchTagSelectorRef = ref(null)
+
     onMounted(() => {
       initParams()
       getPostList()
-      getSortList()
       if (params.tags.length) {
-        getTagList(null, { idList: params.tags, size: 999999 })
+        SearchTagSelectorRef.value.getTagList(null, {
+          idList: params.tags,
+          size: 999999,
+        })
       }
     })
     return {
@@ -714,12 +680,6 @@ export default {
       defaultSort,
       titleLimit,
       typeOptions,
-      sortList,
-      getSortList,
-      tagList,
-      tagsIsLoading,
-      getTagList,
-      queryTags,
       // 添加评论
       commentForm,
       commentFormRef,
@@ -732,6 +692,13 @@ export default {
       openPage,
       copyPage,
       mergeContentList,
+      // 复选框
+      handleSelectionChange,
+      selectedRows,
+      clearSelection,
+      postBatchFormSuccess,
+      // 搜索标签
+      SearchTagSelectorRef,
     }
   },
 }

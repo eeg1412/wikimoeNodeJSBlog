@@ -38,9 +38,9 @@ module.exports = async function (req, res, next) {
 
   const idList = req.body.idList
   const action = req.body.action
-  const sortId = req.body.sortId || null
+  let sortId = req.body.sortId || null
   const tagIdList = req.body.tagIdList || []
-  const status = req.body.status || null
+  const status = req.body.status
 
   if (!idList || !Array.isArray(idList) || idList.length === 0) {
     res.status(400).json({
@@ -75,13 +75,17 @@ module.exports = async function (req, res, next) {
   // 批量操作--更改分类
   const changeSort = async function () {
     // 检验sortId是否合法
-    if (!validator.isMongoId(sortId) && sortId) {
-      res.status(400).json({
-        errors: [{
-          message: 'sortId参数有误'
-        }]
-      })
-      return false
+    if (sortId) {
+      if (!validator.isMongoId(sortId)) {
+        res.status(400).json({
+          errors: [{
+            message: 'sortId参数有误'
+          }]
+        })
+        return false
+      }
+    } else {
+      sortId = null
     }
     // 更改分类
     const query = {
@@ -137,6 +141,7 @@ module.exports = async function (req, res, next) {
     // tagsIdArr 去重
     tagsIdArr = tagsIdArr.filter((elem, index, self) => self.indexOf(elem) === index)
 
+    const resultList = []
     // 遍历tagsIdArr
     for await (const tagId of tagsIdArr) {
       const query = {
@@ -154,7 +159,7 @@ module.exports = async function (req, res, next) {
       }
       try {
         const result = await postUtils.updateMany(query, parmas)
-        return result
+        resultList.push(result)
       } catch (err) {
         adminApiLog.error(err)
         res.status(500).json({
@@ -165,6 +170,7 @@ module.exports = async function (req, res, next) {
         return false
       }
     }
+    return resultList
 
   }
 
@@ -353,6 +359,9 @@ module.exports = async function (req, res, next) {
     }
 
     if (result) {
+      res.send({
+        data: result
+      })
       adminApiLog.info(`post batch update success`)
       cacheDataUtils.getPostArchiveList()
       rssToolUtils.reflushRSS()
