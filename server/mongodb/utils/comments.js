@@ -24,6 +24,7 @@ exports.findOne = async function (parmas, projection, options = {}) {
 // 查找所有
 exports.find = async function (parmas, sort, projection) {
   // document查询
+  // 注意：未来要是加populate的话，需要考虑批量删除的问题
   return await commentsModel.find(parmas, projection).sort(sort);
 }
 
