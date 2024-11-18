@@ -6,6 +6,7 @@
     destroy-on-close
     title="确认"
     @close="handleCancel"
+    class="common-max-dialog w_10"
   >
     <slot></slot>
     <el-form :model="form" :rules="rules" ref="formRef" @submit.native.prevent>

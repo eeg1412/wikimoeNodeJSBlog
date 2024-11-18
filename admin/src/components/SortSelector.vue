@@ -42,9 +42,11 @@ export default {
         const list = res.data.data
         const newlist = []
         list.forEach((item) => {
+          item.originName = item.sortname
           newlist.push(item)
           if (item.children && item.children.length) {
             item.children.forEach((child) => {
+              child.originName = child.sortname
               child.sortname = '└─ ' + child.sortname
             })
             newlist.push(...item.children)
@@ -59,6 +61,13 @@ export default {
       set: (value) => emit('update:modelValue', value),
     })
 
+    const getOriginName = () => {
+      const sort = sortList.value.find(
+        (item) => item._id === selectedSort.value
+      )
+      return sort ? sort.originName : ''
+    }
+
     onMounted(() => {
       getSortList()
     })
@@ -66,6 +75,7 @@ export default {
     return {
       sortList,
       selectedSort,
+      getOriginName,
     }
   },
 }

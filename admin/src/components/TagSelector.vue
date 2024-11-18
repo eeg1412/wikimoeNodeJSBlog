@@ -12,6 +12,7 @@
     :loading="tagsIsLoading"
     default-first-option
     :reserve-keyword="false"
+    ref="tagSelectorRef"
   >
     <el-option
       v-for="item in tagList"
@@ -103,12 +104,20 @@ export default {
       set: (value) => emit('update:modelValue', value),
     })
 
+    const tagSelectorRef = ref(null)
+
+    const getSelectedList = () => {
+      return tagSelectorRef.value?.showTagList || []
+    }
+
     return {
       getTagList,
       tagList,
       tagsIsLoading,
       queryTags,
       selectedTags,
+      tagSelectorRef,
+      getSelectedList,
     }
   },
 }

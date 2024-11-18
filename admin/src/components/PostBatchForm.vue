@@ -43,6 +43,7 @@
           v-model="params.sortId"
           placeholder="请选择分类（为空则为清除分类）"
           width="270px"
+          ref="SearchSortSelectorRef"
         />
       </el-form-item>
       <!-- tagIdList -->
@@ -70,55 +71,85 @@
   >
     <!-- 针对不同的动作显示不同文案 -->
     <div>
-      <div v-if="params.action === 'changeSort'">
-        您确定要对 <span class="cRed">{{ postList.length }}</span> 个项目进行
-        <span class="cRed">更改分类</span> 操作吗？
-      </div>
-      <div v-else-if="params.action === 'addTag'">
-        您确定要对 <span class="cRed">{{ postList.length }}</span> 个项目进行
-        <span class="cRed">添加标签</span> 操作吗？
-      </div>
-      <div v-else-if="params.action === 'setTag'">
-        您确定要对 <span class="cRed">{{ postList.length }}</span> 个项目进行
-        <span class="cRed">设置标签</span> 操作吗？
-      </div>
-      <div v-else-if="params.action === 'removeTag'">
-        您确定要对 <span class="cRed">{{ postList.length }}</span> 个项目进行
-        <span class="cRed">移除标签</span> 操作吗？
-      </div>
-      <div v-else-if="params.action === 'changeStatus'">
-        您确定要对 <span class="cRed">{{ postList.length }}</span> 个项目进行
-        <span class="cRed">更改状态</span> 操作吗？
-      </div>
-      <div v-else-if="params.action === 'delete'">
-        您确定要对 <span class="cRed">{{ postList.length }}</span> 个项目进行
-        <span class="cRed">删除</span> 操作吗？<span class="cRed"
-          >该操作不可恢复！</span
-        >
-      </div>
-      <el-scrollbar
-        max-height="calc(100vh - 400px)"
-        class="post-batch-form-scroll"
-      >
-        <ul class="post-batch-form-list">
-          <li
-            v-for="post in postList"
-            :key="post._id"
-            class="post-batch-form-item"
+      <div class="mb10">
+        <div v-if="params.action === 'changeSort'">
+          <template v-if="params.sortId">
+            您确定要对
+            <span class="cRed">{{ postList.length }}</span> 个项目进行
+            <span class="cRed">更改分类为【{{ selectedSortName }}】</span>
+            的操作吗？
+          </template>
+          <template v-else>
+            您确定要对
+            <span class="cRed">{{ postList.length }}</span> 个项目进行
+            <span class="cRed">清除分类</span> 的操作吗？
+          </template>
+        </div>
+        <div v-else-if="params.action === 'addTag'">
+          您确定要对 <span class="cRed">{{ postList.length }}</span> 个项目进行
+          <span class="cRed">添加标签</span> 的操作吗？
+        </div>
+        <div v-else-if="params.action === 'setTag'">
+          您确定要对 <span class="cRed">{{ postList.length }}</span> 个项目进行
+          <span class="cRed">设置标签</span> 的操作吗？
+        </div>
+        <div v-else-if="params.action === 'removeTag'">
+          您确定要对 <span class="cRed">{{ postList.length }}</span> 个项目进行
+          <span class="cRed">移除标签</span> 的操作吗？
+        </div>
+        <div v-else-if="params.action === 'changeStatus'">
+          您确定要对 <span class="cRed">{{ postList.length }}</span> 个项目进行
+          <span class="cRed">更改状态为【{{ statusMap[params.status] }}】</span>
+          的操作吗？
+        </div>
+        <div v-else-if="params.action === 'delete'">
+          您确定要对 <span class="cRed">{{ postList.length }}</span> 个项目进行
+          <span class="cRed">删除</span> 的操作吗？<span class="cRed"
+            >该操作不可恢复！</span
           >
-            <el-tag v-if="post.type === 1" effect="plain" type="success"
-              >博客</el-tag
+        </div>
+      </div>
+      <div
+        class="post-batch-border"
+        v-if="['addTag', 'setTag', 'removeTag'].includes(params.action)"
+      >
+        <!-- selectedTagList -->
+        <div>
+          <div class="dib">已选标签：</div>
+          <el-tag
+            v-for="tag in selectedTagList"
+            :key="tag._id"
+            effect="plain"
+            type="primary"
+            class="post-batch-selected-tag-list"
+          >
+            {{ tag.currentLabel }}
+          </el-tag>
+        </div>
+      </div>
+      <div class="post-batch-border">
+        <div class="mb5">已选文章：</div>
+        <el-scrollbar class="post-batch-form-scroll">
+          <ul class="post-batch-form-list">
+            <li
+              v-for="post in postList"
+              :key="post._id"
+              class="post-batch-form-item"
             >
-            <el-tag v-else-if="post.type === 2" effect="plain">推文</el-tag>
-            <el-tag v-else-if="post.type === 3" effect="plain" type="info"
-              >页面</el-tag
-            >
-            <span class="post-batch-form-title">{{
-              post.title || post.excerpt || '未定义标题或内容'
-            }}</span>
-          </li>
-        </ul>
-      </el-scrollbar>
+              <el-tag v-if="post.type === 1" effect="plain" type="success"
+                >博客</el-tag
+              >
+              <el-tag v-else-if="post.type === 2" effect="plain">推文</el-tag>
+              <el-tag v-else-if="post.type === 3" effect="plain" type="info"
+                >页面</el-tag
+              >
+              <span class="post-batch-form-title">{{
+                post.title || post.excerpt || '未定义标题或内容'
+              }}</span>
+            </li>
+          </ul>
+        </el-scrollbar>
+      </div>
     </div>
   </CheckDialog>
 </template>
@@ -160,6 +191,11 @@ export default {
       tagIdList: [],
     })
 
+    const SearchTagSelectorRef = ref(null)
+    const selectedTagList = ref([])
+
+    const SearchSortSelectorRef = ref(null)
+    const selectedSortName = ref('')
     const tryBatch = () => {
       console.log('tryBatch')
       // action为必填
@@ -176,12 +212,18 @@ export default {
             ElMessage.error('请选择标签')
             return
           }
+          selectedTagList.value =
+            SearchTagSelectorRef.value?.getSelectedList() || []
           break
         case 'changeStatus':
           if (!params.status) {
             ElMessage.error('请选择状态')
             return
           }
+          break
+        case 'changeSort':
+          selectedSortName.value =
+            SearchSortSelectorRef.value?.getOriginName() || ''
           break
         default:
           break
@@ -222,6 +264,12 @@ export default {
       })
     }
 
+    const statusMap = {
+      0: '草稿',
+      1: '发布',
+      99: '回收站',
+    }
+
     const cancel = () => {
       emit('cancel')
     }
@@ -229,11 +277,16 @@ export default {
     return {
       actionList,
       params,
+      SearchTagSelectorRef,
+      selectedTagList,
+      SearchSortSelectorRef,
+      selectedSortName,
       tryBatch,
 
       dialogOpen,
       doBatch,
       cancel,
+      statusMap,
     }
   },
 }
@@ -241,10 +294,18 @@ export default {
 
 <style scoped>
 .post-batch-form-scroll {
+  max-height: calc(100dvh - 500px);
+  min-height: 100px;
+  height: 100dvh;
+}
+.post-batch-border {
   border: 1px solid #ebeef5;
   border-radius: 4px;
   padding: 10px;
-  margin: 10px 0;
+  margin: 0px 0px 10px 0px;
+}
+.post-batch-selected-tag-list {
+  margin: 2px 4px 2px 0;
 }
 .post-batch-form-list {
   list-style: none;
