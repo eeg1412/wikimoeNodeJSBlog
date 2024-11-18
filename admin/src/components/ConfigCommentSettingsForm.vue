@@ -3,7 +3,7 @@
     :model="commentSettingsForm"
     :rules="commentSettingsRules"
     ref="commentSettingsFormRef"
-    label-width="120px"
+    label-width="140px"
     v-if="inited"
   >
     <!-- 评论设置 -->
@@ -27,6 +27,17 @@
       <el-switch
         v-model="commentSettingsForm.siteEnableCommentReview"
       ></el-switch>
+    </el-form-item>
+    <!--  最大待审核评论数 -->
+    <el-form-item label="最大待审核评论数" prop="siteMaxCommentReview">
+      <!-- 数字 1-100 -->
+      <el-input-number
+        v-model="commentSettingsForm.siteMaxCommentReview"
+        controls-position="right"
+        :min="1"
+        :step="1"
+        :precision="0"
+      ></el-input-number>
     </el-form-item>
     <el-form-item label="评论分页" prop="siteCommentPageSize">
       <!-- 数字 1-100 -->
@@ -63,6 +74,8 @@ export default {
       siteCommentInterval: 10,
       // 开启评论审核
       siteEnableCommentReview: false,
+      // 最大待审核评论数
+      siteMaxCommentReview: 100,
       // 评论分页
       siteCommentPageSize: 10,
     })

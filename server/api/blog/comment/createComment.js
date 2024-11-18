@@ -46,7 +46,7 @@ module.exports = async function (req, res, next) {
       return
     }
     // 获取全局配置
-    const { siteEnableComment, siteCommentInterval, siteEnableCommentReview } = global.$globalConfig.commentSettings
+    const { siteEnableComment, siteCommentInterval, siteEnableCommentReview, siteMaxCommentReview } = global.$globalConfig.commentSettings
     // 如果siteEnableComment为false，则不允许评论
     if (!siteEnableComment) {
       res.status(400).json({
@@ -225,6 +225,16 @@ module.exports = async function (req, res, next) {
     // 根据siteEnableCommentReview判断是否需要审核
     if (siteEnableCommentReview) {
       params.status = 0
+      // 获取当前待审核评论数
+      const reviewCount = await commentUtils.count({ status: 0 })
+      if (reviewCount >= siteMaxCommentReview) {
+        res.status(400).json({
+          errors: [{
+            message: '评论审核数已达上限，请稍后再试'
+          }]
+        })
+        return
+      }
     } else {
       params.status = 1
     }

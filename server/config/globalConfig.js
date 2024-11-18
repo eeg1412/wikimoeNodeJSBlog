@@ -70,6 +70,8 @@ const initGlobalConfig = async () => {
     siteCommentInterval: 10,
     // 开启评论审核
     siteEnableCommentReview: false,
+    // 最大待审核评论数
+    siteMaxCommentReview: 100,
     // 评论分页
     siteCommentPageSize: 10,
   }
