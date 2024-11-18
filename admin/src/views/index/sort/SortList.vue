@@ -48,7 +48,7 @@
             <el-button type="primary" size="small" @click="goEdit(row._id)"
               >编辑</el-button
             >
-            <el-button type="danger" size="small" @click="deleteSort(row._id)"
+            <el-button type="danger" size="small" @click="deleteSort(row)"
               >删除</el-button
             >
           </template>
@@ -63,7 +63,8 @@ import { useRouter } from 'vue-router'
 import { authApi } from '@/api'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import store from '@/store'
-import { copyToClipboard } from '@/utils/utils'
+import { copyToClipboard, escapeHtml } from '@/utils/utils'
+import CheckDialogService from '@/services/CheckDialogService'
 
 export default {
   setup() {
@@ -90,25 +91,24 @@ export default {
         },
       })
     }
-    const deleteSort = (id) => {
-      ElMessageBox.confirm('确定要删除吗？', {
-        confirmButtonText: '是',
-        cancelButtonText: '否',
-        type: 'warning',
+    const deleteSort = (row) => {
+      const id = row._id
+      const title = escapeHtml(row.sortname)
+
+      CheckDialogService.open({
+        correctAnswer: '是',
+        content: `此操作将<span class="cRed">永久删除分类：【${title}】</span>, 是否继续?`,
+        success: () => {
+          return authApi.deleteSort({ id }).then(() => {
+            ElMessage.success('删除成功')
+            getSortList()
+          })
+        },
       })
-        .then(() => {
-          const params = {
-            id,
-          }
-          authApi
-            .deleteSort(params)
-            .then(() => {
-              ElMessage.success('删除成功')
-              getSortList()
-            })
-            .catch(() => {})
+        .then(() => {})
+        .catch((error) => {
+          console.log('Dialog closed:', error)
         })
-        .catch(() => {})
     }
     const siteUrl = computed(() => {
       return store.getters.siteUrl

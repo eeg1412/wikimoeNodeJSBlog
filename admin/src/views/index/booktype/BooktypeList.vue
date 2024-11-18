@@ -62,10 +62,7 @@
             <el-button type="primary" size="small" @click="goEdit(row._id)"
               >编辑</el-button
             >
-            <el-button
-              type="danger"
-              size="small"
-              @click="deleteBooktype(row._id)"
+            <el-button type="danger" size="small" @click="deleteBooktype(row)"
               >删除</el-button
             >
           </template>
@@ -97,8 +94,9 @@ import { useRoute, useRouter } from 'vue-router'
 import { authApi } from '@/api'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { onMounted, reactive, ref, watch, nextTick } from 'vue'
-import { setSessionParams, getSessionParams } from '@/utils/utils'
+import { setSessionParams, getSessionParams, escapeHtml } from '@/utils/utils'
 import BooktypeEditor from '@/components/BooktypeEditor.vue'
+import CheckDialogService from '@/services/CheckDialogService'
 export default {
   components: {
     BooktypeEditor,
@@ -153,25 +151,24 @@ export default {
         BooktypeEditorRef.value.open()
       })
     }
-    const deleteBooktype = (id) => {
-      ElMessageBox.confirm('确定要删除吗？', {
-        confirmButtonText: '是',
-        cancelButtonText: '否',
-        type: 'warning',
+    const deleteBooktype = (row) => {
+      const id = row._id
+      const title = escapeHtml(row.name) || '未命名'
+
+      CheckDialogService.open({
+        correctAnswer: '是',
+        content: `此操作将<span class="cRed">永久删除书籍类型：【${title}】</span>, 是否继续?`,
+        success: () => {
+          return authApi.deleteBooktype({ id }).then(() => {
+            ElMessage.success('删除成功')
+            getBooktypeList()
+          })
+        },
       })
-        .then(() => {
-          const params = {
-            id,
-          }
-          authApi
-            .deleteBooktype(params)
-            .then(() => {
-              ElMessage.success('删除成功')
-              getBooktypeList()
-            })
-            .catch(() => {})
+        .then(() => {})
+        .catch((error) => {
+          console.log('Dialog closed:', error)
         })
-        .catch(() => {})
     }
 
     const initParams = () => {

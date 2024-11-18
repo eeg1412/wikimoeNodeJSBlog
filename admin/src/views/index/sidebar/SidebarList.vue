@@ -81,7 +81,7 @@
                   type="danger"
                   size="small"
                   class="fr"
-                  @click="sidebarSettingsDelete(element._id)"
+                  @click="sidebarSettingsDelete(element)"
                   >删除</el-button
                 >
               </div>
@@ -181,7 +181,8 @@ import { ElMessage, ElMessageBox } from 'element-plus'
 import { computed, onMounted, reactive, ref, watch } from 'vue'
 import draggable from 'vuedraggable'
 import RichEditor5 from '@/components/RichEditor5'
-import { t } from '@wangeditor/editor'
+import { escapeHtml } from '@/utils/utils'
+import CheckDialogService from '@/services/CheckDialogService'
 
 export default {
   components: {
@@ -336,22 +337,27 @@ export default {
           console.log(err)
         })
     }
-    const sidebarSettingsDelete = (id) => {
+    const sidebarSettingsDelete = (row) => {
       // 询问是否删除
-      ElMessageBox.confirm('此操作将永久删除该侧边栏设置, 是否继续?', '提示', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning',
-      })
-        .then(() => {
-          // 删除
-          authApi.deleteSidebar({ id: id }).then((res) => {
+      const id = row._id
+      const title = escapeHtml(row.title) || '未定义标题'
+
+      CheckDialogService.open({
+        correctAnswer: '是',
+        content: `此操作将<span class="cRed">永久删除侧边栏设置：【${title}】</span>, 是否继续?`,
+        success: () => {
+          return authApi.deleteSidebar({ id }).then(() => {
+            ElMessage.success('删除成功')
             sidebarSettingsForm.value = sidebarSettingsForm.value.filter(
               (item) => item._id !== id
             )
           })
+        },
+      })
+        .then(() => {})
+        .catch((error) => {
+          console.log('Dialog closed:', error)
         })
-        .catch(() => {})
     }
 
     const showIdList = ref([])

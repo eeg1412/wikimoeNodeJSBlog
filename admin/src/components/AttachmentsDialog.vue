@@ -375,6 +375,7 @@ import {
 import axios from 'axios'
 import { showLoading, hideLoading } from '@/utils/utils'
 import draggable from 'vuedraggable'
+import CheckDialogService from '@/services/CheckDialogService'
 
 export default {
   components: {
@@ -702,15 +703,10 @@ export default {
 
     const deleteAttachments = () => {
       // 弹窗确认
-      ElMessageBox.confirm(
-        `确定要删除${selectedImageList.value.length}件媒体文件吗？`,
-        {
-          confirmButtonText: '是',
-          cancelButtonText: '否',
-          type: 'warning',
-        }
-      )
-        .then(() => {
+      CheckDialogService.open({
+        correctAnswer: '是',
+        content: `确定要删除<span class="cRed">${selectedImageList.value.length}</span>件媒体文件吗？`,
+        success: () => {
           // 删除
           const promiseList = selectedImageList.value.map((item) => {
             return new Promise((resolve, reject) => {
@@ -742,7 +738,10 @@ export default {
                   `成功删除${successCount}件媒体文件，失败${failCount}件`
                 )
               } else {
-                ElMessage(`成功删除${successCount}件媒体文件`)
+                ElMessage({
+                  type: 'success',
+                  message: `成功删除${successCount}件媒体文件`,
+                })
               }
               // 清空selectedImageList
               clearSelectedImageList()
@@ -750,8 +749,12 @@ export default {
               emit('onAttachmentsDelete')
             })
             .catch(() => {})
+        },
+      })
+        .then(() => {})
+        .catch((error) => {
+          console.log('Dialog closed:', error)
         })
-        .catch(() => {})
     }
 
     const toAlbumDialogVisible = ref(false)

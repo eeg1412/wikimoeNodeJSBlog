@@ -410,3 +410,8 @@ export const seasonToStr = (season) => {
     }
     return str
 }
+
+// 转义html
+export const escapeHtml = (str) => {
+    return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+}

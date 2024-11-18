@@ -52,7 +52,7 @@
             <el-button type="primary" size="small" @click="goEdit(row._id)"
               >编辑</el-button
             >
-            <el-button type="danger" size="small" @click="deleteAlbum(row._id)"
+            <el-button type="danger" size="small" @click="deleteAlbum(row)"
               >删除</el-button
             >
           </template>
@@ -92,9 +92,11 @@ import { useRoute, useRouter } from 'vue-router'
 import { authApi } from '@/api'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { nextTick, onBeforeMount, onMounted, reactive, ref, watch } from 'vue'
-import { setSessionParams, getSessionParams } from '@/utils/utils'
+import { setSessionParams, getSessionParams, escapeHtml } from '@/utils/utils'
 import AlbumEditorDialog from '@/components/AlbumEditorDialog.vue'
 import AttachmentsDialog from '@/components/AttachmentsDialog.vue'
+import CheckDialogService from '@/services/CheckDialogService'
+
 export default {
   components: {
     AlbumEditorDialog,
@@ -126,7 +128,7 @@ export default {
     })
     const total = ref(0)
     const tableRef = ref(null)
-    const getAlbumList = (resetPage) => {
+    const getAlbumList = (resetPage, top = true) => {
       if (resetPage === true && params.page !== 1) {
         params.page = 1
         return
@@ -136,7 +138,9 @@ export default {
         .then((res) => {
           albumList.value = res.data.list
           total.value = res.data.total
-          tableRef.value.scrollTo({ top: 0 })
+          if (top) {
+            tableRef.value.scrollTo({ top: 0 })
+          }
           emit('paramsChange', params)
         })
         .catch((err) => {
@@ -160,25 +164,24 @@ export default {
       id.value = _id
       editorShow.value = true
     }
-    const deleteAlbum = (id) => {
-      ElMessageBox.confirm('确定要删除吗？', {
-        confirmButtonText: '是',
-        cancelButtonText: '否',
-        type: 'warning',
+    const deleteAlbum = (row) => {
+      const id = row._id
+      const title = escapeHtml(row.name)
+
+      CheckDialogService.open({
+        correctAnswer: '是',
+        content: `此操作将<span class="cRed">永久删除相册：【${title}】</span>, 是否继续?`,
+        success: () => {
+          return authApi.deleteAlbum({ id }).then(() => {
+            ElMessage.success('删除成功')
+            getAlbumList()
+          })
+        },
       })
-        .then(() => {
-          const params = {
-            id,
-          }
-          authApi
-            .deleteAlbum(params)
-            .then(() => {
-              ElMessage.success('删除成功')
-              getAlbumList()
-            })
-            .catch(() => {})
+        .then(() => {})
+        .catch((error) => {
+          console.log('Dialog closed:', error)
         })
-        .catch(() => {})
     }
     const initParams = () => {
       // props.params
@@ -206,7 +209,7 @@ export default {
     const attachmentUploadSuccess = () => {
       clearTimeout(getAlbumTimer)
       getAlbumTimer = setTimeout(() => {
-        getAlbumList()
+        getAlbumList(false, false)
       }, 1000)
     }
     onMounted(() => {

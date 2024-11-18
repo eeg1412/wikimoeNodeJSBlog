@@ -254,10 +254,7 @@
               :disabled="!row.post"
               ><el-icon><Edit /></el-icon
             ></el-button>
-            <el-button
-              type="danger"
-              size="small"
-              @click="deleteComment(row._id)"
+            <el-button type="danger" size="small" @click="deleteComment(row)"
               ><el-icon><Delete /></el-icon
             ></el-button>
           </template>
@@ -333,8 +330,11 @@ import {
   setSessionParams,
   getSessionParams,
   copyToClipboard,
+  escapeHtml,
 } from '@/utils/utils'
 import store from '@/store'
+import CheckDialogService from '@/services/CheckDialogService'
+
 export default {
   components: {
     EmojiTextarea,
@@ -387,25 +387,38 @@ export default {
         },
       })
     }
-    const deleteComment = (id) => {
-      ElMessageBox.confirm('确定要删除吗？', {
-        confirmButtonText: '是',
-        cancelButtonText: '否',
-        type: 'warning',
+    const deleteComment = (row) => {
+      const id = row._id
+      let nickname = row.user?.nickname || row.nickname
+      const email = row.email
+      const url = row.url
+      const content = row.content
+      if (row.user) {
+        nickname += '（管理员）'
+      }
+
+      CheckDialogService.open({
+        correctAnswer: '是',
+        content: `
+          <div class="mb10">
+            <p class="mb10">此操作将<span class="cRed">永久删除评论</span>，是否继续?</p>
+            <p><strong>昵称：</strong>${escapeHtml(nickname || '-')}</p>
+            <p><strong>邮箱：</strong>${escapeHtml(email || '-')}</p>
+            <p><strong>网址：</strong>${escapeHtml(url || '-')}</p>
+            <p><strong>内容：</strong>${escapeHtml(content || '-')}</p>
+          </div>
+        `,
+        success: () => {
+          return authApi.deleteComment({ id }).then(() => {
+            ElMessage.success('删除成功')
+            getCommentList()
+          })
+        },
       })
-        .then(() => {
-          const params = {
-            id,
-          }
-          authApi
-            .deleteComment(params)
-            .then(() => {
-              ElMessage.success('删除成功')
-              getCommentList()
-            })
-            .catch(() => {})
+        .then(() => {})
+        .catch((error) => {
+          console.log('Dialog closed:', error)
         })
-        .catch(() => {})
     }
 
     const titleLimit = (title) => {

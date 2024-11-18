@@ -66,7 +66,7 @@
   </div>
   <CheckDialog
     v-model:isOpen="dialogOpen"
-    :correctAnswer="String(postList.length)"
+    correctAnswer="是"
     @confirm="doBatch"
   >
     <!-- 针对不同的动作显示不同文案 -->

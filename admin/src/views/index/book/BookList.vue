@@ -159,7 +159,7 @@
             <el-button type="primary" size="small" @click="goEdit(row._id)"
               >编辑</el-button
             >
-            <el-button type="danger" size="small" @click="deleteBook(row._id)"
+            <el-button type="danger" size="small" @click="deleteBook(row)"
               >删除</el-button
             >
           </template>
@@ -186,7 +186,9 @@ import { useRoute, useRouter } from 'vue-router'
 import { authApi } from '@/api'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { onMounted, reactive, ref, watch } from 'vue'
-import { setSessionParams, getSessionParams } from '@/utils/utils'
+import { setSessionParams, getSessionParams, escapeHtml } from '@/utils/utils'
+import CheckDialogService from '@/services/CheckDialogService'
+
 export default {
   setup() {
     const route = useRoute()
@@ -239,25 +241,24 @@ export default {
         },
       })
     }
-    const deleteBook = (id) => {
-      ElMessageBox.confirm('确定要删除吗？', {
-        confirmButtonText: '是',
-        cancelButtonText: '否',
-        type: 'warning',
+    const deleteBook = (row) => {
+      const id = row._id
+      const title = escapeHtml(row.title) || '未命名'
+
+      CheckDialogService.open({
+        correctAnswer: '是',
+        content: `此操作将<span class="cRed">永久删除书籍：【${title}】</span>, 是否继续?`,
+        success: () => {
+          return authApi.deleteBook({ id }).then(() => {
+            ElMessage.success('删除成功')
+            getBookList()
+          })
+        },
       })
-        .then(() => {
-          const params = {
-            id,
-          }
-          authApi
-            .deleteBook(params)
-            .then(() => {
-              ElMessage.success('删除成功')
-              getBookList()
-            })
-            .catch(() => {})
+        .then(() => {})
+        .catch((error) => {
+          console.log('Dialog closed:', error)
         })
-        .catch(() => {})
     }
 
     const initParams = () => {

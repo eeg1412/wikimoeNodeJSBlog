@@ -72,7 +72,7 @@
             <el-button type="primary" size="small" @click="goEdit(row._id)"
               >编辑</el-button
             >
-            <el-button type="danger" size="small" @click="deleteTag(row._id)"
+            <el-button type="danger" size="small" @click="deleteTag(row)"
               >删除</el-button
             >
           </template>
@@ -101,7 +101,8 @@ import { ElMessage, ElMessageBox } from 'element-plus'
 import { onMounted, reactive, ref, watch, computed } from 'vue'
 import { setSessionParams, getSessionParams } from '@/utils/utils'
 import store from '@/store'
-import { copyToClipboard } from '@/utils/utils'
+import { copyToClipboard, escapeHtml } from '@/utils/utils'
+import CheckDialogService from '@/services/CheckDialogService'
 
 export default {
   setup() {
@@ -153,25 +154,24 @@ export default {
         },
       })
     }
-    const deleteTag = (id) => {
-      ElMessageBox.confirm('确定要删除吗？', {
-        confirmButtonText: '是',
-        cancelButtonText: '否',
-        type: 'warning',
+    const deleteTag = (row) => {
+      const id = row._id
+      const title = escapeHtml(row.tagname)
+
+      CheckDialogService.open({
+        correctAnswer: '是',
+        content: `此操作将<span class="cRed">永久删除标签：【${title}】</span>, 是否继续?`,
+        success: () => {
+          return authApi.deleteTag({ id }).then(() => {
+            ElMessage.success('删除成功')
+            getTagList()
+          })
+        },
       })
-        .then(() => {
-          const params = {
-            id,
-          }
-          authApi
-            .deleteTag(params)
-            .then(() => {
-              ElMessage.success('删除成功')
-              getTagList()
-            })
-            .catch(() => {})
+        .then(() => {})
+        .catch((error) => {
+          console.log('Dialog closed:', error)
         })
-        .catch(() => {})
     }
 
     const initParams = () => {

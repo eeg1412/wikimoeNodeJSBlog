@@ -312,6 +312,8 @@ import {
   formatDate,
 } from '@/utils/utils'
 import store from '@/store'
+import CheckDialogService from '@/services/CheckDialogService'
+
 export default {
   setup() {
     const route = useRoute()
@@ -500,16 +502,15 @@ export default {
       deleteDialogRef.value.validate((valid) => {
         if (valid) {
           // 确认删除
-          const text = `确定删除 ${formatDate(
-            deleteForm.startTime
-          )} 到 ${formatDate(deleteForm.endTime)} 的日志吗？`
-          ElMessageBox.confirm(text, '提示', {
-            confirmButtonText: '确定',
-            cancelButtonText: '取消',
-            type: 'warning',
-          })
-            .then(() => {
-              authApi
+          const text = `${formatDate(deleteForm.startTime)} 到 ${formatDate(
+            deleteForm.endTime
+          )}`
+
+          CheckDialogService.open({
+            correctAnswer: '是',
+            content: `确定删除<span class="cRed">${text}</span>的日志吗？`,
+            success: () => {
+              return authApi
                 .deleteReaderlog({
                   startTime: deleteForm.startTime,
                   endTime: deleteForm.endTime,
@@ -526,8 +527,12 @@ export default {
                 .catch((err) => {
                   console.log(err)
                 })
+            },
+          })
+            .then(() => {})
+            .catch((error) => {
+              console.log('Dialog closed:', error)
             })
-            .catch(() => {})
         }
       })
     }

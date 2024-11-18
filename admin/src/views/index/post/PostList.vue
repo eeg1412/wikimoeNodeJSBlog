@@ -310,7 +310,7 @@
             <el-button type="primary" size="small" @click="goEdit(row._id)"
               ><el-icon><Edit /></el-icon
             ></el-button>
-            <el-button type="danger" size="small" @click="deletePost(row._id)"
+            <el-button type="danger" size="small" @click="deletePost(row)"
               ><el-icon><Delete /></el-icon
             ></el-button>
           </template>
@@ -380,8 +380,11 @@ import {
   getSessionParams,
   copyToClipboard,
   seasonToStr,
+  escapeHtml,
 } from '@/utils/utils'
 import store from '@/store'
+import CheckDialogService from '@/services/CheckDialogService'
+
 export default {
   components: {
     EmojiTextarea,
@@ -432,20 +435,45 @@ export default {
         },
       })
     }
-    const deletePost = (id) => {
+    const deletePost = (row) => {
+      const id = row._id
+      let title = row.title || row.excerpt
+      if (title.length > 20) {
+        title = title.slice(0, 20) + '...'
+      }
+      if (!title) {
+        title = '未定义标题或内容'
+      }
+      title = escapeHtml(title)
+
+      let type
+      switch (row.type) {
+        case 1:
+          type = '博客'
+          break
+        case 2:
+          type = '推文'
+          break
+        default:
+          type = '页面'
+          break
+      }
+
       // 弹窗确认
-      ElMessageBox.confirm('此操作将永久删除该文章, 是否继续?', '提示', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning',
-      })
-        .then(() => {
-          authApi.deletePost({ id }).then((res) => {
+      CheckDialogService.open({
+        correctAnswer: '是',
+        content: `此操作将<span class="cRed">永久删除【${type}】《${title}》</span>, 是否继续?`,
+        success: () => {
+          return authApi.deletePost({ id }).then((res) => {
             ElMessage.success('删除成功')
             getPostList()
           })
+        },
+      })
+        .then(() => {})
+        .catch((error) => {
+          console.log('Dialog closed:', error)
         })
-        .catch(() => {})
     }
     const tableRef = ref(null)
     const getPostList = (resetPage, resetKeyword, top = true) => {

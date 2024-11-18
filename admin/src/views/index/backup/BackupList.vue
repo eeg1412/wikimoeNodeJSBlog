@@ -285,8 +285,10 @@ import { useRoute, useRouter } from 'vue-router'
 import { authApi } from '@/api'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { nextTick, onMounted, reactive, ref, watch } from 'vue'
-import { setSessionParams, getSessionParams } from '@/utils/utils'
+import { setSessionParams, getSessionParams, escapeHtml } from '@/utils/utils'
 import BackupEditor from '@/components/BackupEditor.vue'
+import CheckDialogService from '@/services/CheckDialogService'
+
 export default {
   components: {
     BackupEditor,
@@ -364,26 +366,30 @@ export default {
       } else if (deleterecord === '1') {
         note = '删除记录'
       }
-      ElMessageBox.confirm(`确定要${note}吗？`, {
-        confirmButtonText: '是',
-        cancelButtonText: '否',
-        type: 'warning',
-      })
-        .then(() => {
+      CheckDialogService.open({
+        correctAnswer: '是',
+        content: `确定要<span class="cRed">${escapeHtml(
+          note || ''
+        )}</span>吗？`,
+        success: () => {
           const params = {
             id,
             deletefile,
             deleterecord,
           }
-          authApi
+          return authApi
             .deleteBackup(params)
             .then(() => {
               ElMessage.success('删除成功')
               getBackupList()
             })
             .catch(() => {})
+        },
+      })
+        .then(() => {})
+        .catch((error) => {
+          console.log('Dialog closed:', error)
         })
-        .catch(() => {})
     }
 
     const initParams = () => {

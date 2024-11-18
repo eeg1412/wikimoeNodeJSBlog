@@ -101,7 +101,7 @@
                       <el-button
                         type="danger"
                         class="fr mr10"
-                        @click="bannerSettingsDelete(element._id)"
+                        @click="bannerSettingsDelete(element)"
                         >删除</el-button
                       >
                     </div>
@@ -130,6 +130,8 @@ import { onMounted, reactive, ref, watch } from 'vue'
 import draggable from 'vuedraggable'
 import RichEditor5 from '@/components/RichEditor5'
 import Cropper from '@/components/Cropper'
+import { escapeHtml } from '@/utils/utils'
+import CheckDialogService from '@/services/CheckDialogService'
 
 export default {
   components: {
@@ -170,22 +172,26 @@ export default {
           console.log(err)
         })
     }
-    const bannerSettingsDelete = (id) => {
-      // 询问是否删除
-      ElMessageBox.confirm('此操作将永久删除该横幅设置, 是否继续?', '提示', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning',
-      })
-        .then(() => {
-          // 删除
-          authApi.deleteBanner({ id: id }).then((res) => {
+    const bannerSettingsDelete = (row) => {
+      const id = row._id
+      const title = escapeHtml(row.title) || '未命名'
+
+      CheckDialogService.open({
+        correctAnswer: '是',
+        content: `此操作将<span class="cRed">永久删除横幅设置：【${title}】</span>, 是否继续?`,
+        success: () => {
+          return authApi.deleteBanner({ id }).then(() => {
+            ElMessage.success('删除成功')
             bannerSettingsForm.value = bannerSettingsForm.value.filter(
               (item) => item._id !== id
             )
           })
+        },
+      })
+        .then(() => {})
+        .catch((error) => {
+          console.log('Dialog closed:', error)
         })
-        .catch(() => {})
     }
 
     const showIdList = ref([])

@@ -6,12 +6,16 @@
     destroy-on-close
     title="确认"
     @close="handleCancel"
+    @closed="handleClosed"
     class="common-max-dialog w_10"
   >
     <slot></slot>
+    <div v-if="content" v-html="content"></div>
     <el-form :model="form" :rules="rules" ref="formRef" @submit.native.prevent>
       <div>
-        <p class="mb5">请输入 {{ correctAnswer }}：</p>
+        <p class="mb5">
+          请输入 <span class="fb">{{ correctAnswer }}</span> ：
+        </p>
         <el-form-item prop="inputAnswer">
           <el-input
             v-model="form.inputAnswer"
@@ -31,8 +35,16 @@
 
 <script>
 import { ref, watch } from 'vue'
+import { ElDialog, ElForm, ElFormItem, ElInput, ElButton } from 'element-plus'
 
 export default {
+  components: {
+    ElDialog,
+    ElForm,
+    ElFormItem,
+    ElInput,
+    ElButton,
+  },
   props: {
     isOpen: {
       type: Boolean,
@@ -41,6 +53,14 @@ export default {
     correctAnswer: {
       type: String,
       required: true,
+    },
+    content: {
+      type: String,
+      default: '',
+    },
+    success: {
+      type: Function,
+      default: null,
     },
   },
   setup(props, { emit }) {
@@ -67,20 +87,36 @@ export default {
     const formRef = ref(null)
 
     const handleCancel = () => {
-      emit('update:isOpen', false)
+      if (props.isOpen) {
+        emit('update:isOpen', false)
+      }
     }
 
     const handleConfirm = () => {
-      formRef.value.validate((valid) => {
+      formRef.value.validate(async (valid) => {
         if (valid) {
-          emit('confirm')
+          if (props.success) {
+            try {
+              await props.success()
+              emit('confirm')
+            } catch (error) {
+              console.error(error)
+            }
+          } else {
+            emit('confirm')
+          }
         }
       })
+    }
+
+    const handleClosed = () => {
+      emit('closed')
     }
 
     watch(
       () => props.isOpen,
       (newVal) => {
+        console.log('isOpen changed:', newVal)
         if (!newVal) {
           form.value.inputAnswer = ''
           formRef.value.clearValidate()
@@ -94,6 +130,7 @@ export default {
       formRef,
       handleCancel,
       handleConfirm,
+      handleClosed,
     }
   },
 }
