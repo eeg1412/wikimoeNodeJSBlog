@@ -132,8 +132,8 @@ export default {
     }
     const referrerTypeMap = {
       assets: '静态资源',
-      adminApi: '管理后台接口',
       blogApi: '博客接口',
+      adminApi: '管理后台接口',
     }
     // 监听 params.page 的变化
     watch(
