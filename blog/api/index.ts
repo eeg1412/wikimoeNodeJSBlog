@@ -54,7 +54,7 @@ class HttpRequest {
     const shouldUuid = options.shouldUuid
     // 如果有就去本地拿uuid
     if (shouldUuid && process.client) {
-      const uuid = localStorage.getItem('uuid')
+      const uuid = checkUuid()
       // 删除shouldUuid
       delete options.shouldUuid
       if (uuid) {
