@@ -5,7 +5,7 @@
         <el-breadcrumb-item>引用记录列表</el-breadcrumb-item>
       </el-breadcrumb>
     </div>
-    <div class="clearfix pb20">
+    <div class="clearfix pb10">
       <div class="fl common-top-search-form-body">
         <!-- 检索用 -->
         <el-form
@@ -23,15 +23,31 @@
             ></el-input>
           </el-form-item>
           <el-form-item>
+            <el-select
+              v-model="params.referrerType"
+              placeholder="请选择类型"
+              style="width: 160px"
+              clearable
+            >
+              <el-option
+                v-for="(label, value) in referrerTypeMap"
+                :key="value"
+                :label="label"
+                :value="value"
+              ></el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item>
             <el-button type="primary" @click="getReferrerList(true)"
               >搜索</el-button
             >
           </el-form-item>
         </el-form>
+        <div>
+          ※如果有不想统计的来源域名可以在【设置】->【其他设置】->【引用域名白名单】中设置
+        </div>
       </div>
-      <div class="fr">
-        ※如果有不想统计的来源域名可以在【设置】->【其他设置】->【引用域名白名单】中设置
-      </div>
+      <div class="fr"></div>
     </div>
     <!-- 引用记录 -->
     <div class="mb20 list-table-body">
@@ -77,6 +93,7 @@
     </div>
   </div>
 </template>
+
 <script>
 import { useRoute, useRouter } from 'vue-router'
 import { authApi } from '@/api'
@@ -92,6 +109,7 @@ export default {
       page: 1,
       size: 50,
       keyword: '',
+      referrerType: '',
     })
     const total = ref(0)
     const tableRef = ref(null)
@@ -160,6 +178,7 @@ export default {
         params.page = sessionParams.page
         params.size = sessionParams.size
         params.keyword = sessionParams.keyword
+        params.referrerType = sessionParams.referrerType // 初始化筛选参数
       }
     }
     onMounted(() => {
@@ -179,4 +198,5 @@ export default {
   },
 }
 </script>
+
 <style lang=""></style>

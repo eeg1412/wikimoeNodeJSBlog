@@ -4,7 +4,7 @@ const log4js = require('log4js')
 const adminApiLog = log4js.getLogger('adminApi')
 
 module.exports = async function (req, res, next) {
-  let { page, size, keyword } = req.query
+  let { page, size, keyword, referrerType } = req.query
   page = parseInt(page)
   size = parseInt(size)
   // 判断page和size是否为数字
@@ -22,6 +22,20 @@ module.exports = async function (req, res, next) {
   if (keyword) {
     keyword = utils.escapeSpecialChars(keyword)
     params.referrer = new RegExp(keyword, 'i')
+  }
+
+  if (referrerType) {
+    // 校验referrerType是否合法
+    const referrerTypes = ['assets', 'adminApi', 'blogApi']
+    if (!referrerTypes.includes(referrerType)) {
+      res.status(400).json({
+        errors: [{
+          message: '参数错误'
+        }]
+      })
+      return
+    }
+    params.referrerType = referrerType
   }
 
   const sort = {
