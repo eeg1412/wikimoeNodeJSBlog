@@ -558,11 +558,21 @@ const referrerRecordTimerMap = {}
 exports.referrerRecord = function (referrer, referrerType) {
   // 获取otherSettings siteReferrerWhiteList
   const referrerDomainWhitelist = global.$globalConfig?.otherSettings?.siteReferrerWhiteList || []
-  if (referrerDomainWhitelist.length === 0) {
-    console.warn('引用白名单为空，不记录referrer')
+  const siteUrl = global.$globalConfig?.siteSettings?.siteUrl
+  if (!siteUrl) {
+    console.warn('siteUrl不存在,请在后台设置')
     return
   }
+  // if (referrerDomainWhitelist.length === 0) {
+  //   console.warn('引用白名单为空，不记录referrer')
+  //   return
+  // }
   if (referrer) {
+    // 如果referrer包含siteUrl，就不记录
+    if (referrer.includes(siteUrl)) {
+      // console.log('referrer包含siteUrl，不记录referrer', referrer)
+      return
+    }
     // referrer最大长度为300
     if (referrer.length > 300) {
       referrer = referrer.substring(0, 300)
@@ -577,7 +587,7 @@ exports.referrerRecord = function (referrer, referrerType) {
       const md5Id = this.md5hex(referrer)
       // 判断是否存在计时器
       if (referrerRecordTimerMap[md5Id]) {
-        // 如果存在计时器，就补操作
+        // 如果存在计时器，就不操作
         return
       }
       // 设置计时器
