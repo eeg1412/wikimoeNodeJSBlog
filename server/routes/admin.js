@@ -1,6 +1,6 @@
 var express = require('express')
 var router = express.Router()
-const { checkJWT } = require('../utils/utils')
+const { checkJWT, referrerRecord } = require('../utils/utils')
 
 const userUtils = require('../mongodb/utils/users')
 
@@ -15,6 +15,11 @@ const checkIsReady = (req, res, next) => {
   } else {
     res.status(503).send('Service Unavailable')
   }
+}
+
+const referrerRecordMiddleware = (req, res, next) => {
+  referrerRecord(req.headers.referer, 'adminApi')
+  next()
 }
 
 // jwt权限校验
@@ -1256,7 +1261,7 @@ const adminRouteSetting = [
 ]
 
 adminRouteSetting.forEach(item => {
-  const middleware = [checkIsReady, ...item.middleware]
+  const middleware = [checkIsReady, referrerRecordMiddleware, ...item.middleware]
   router[item.method](item.path, (req, res, next) => {
     if (item.roleType && item.role) {
       req.roleCheckInfo = {

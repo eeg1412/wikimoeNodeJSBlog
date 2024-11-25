@@ -30,9 +30,7 @@
         </el-form>
       </div>
       <div class="fr">
-        <!-- 按钮用 -->
-        <!-- 追加 -->
-        <!-- <el-button type="primary" @click="handleAdd">追加</el-button> -->
+        ※如果有不想统计的来源域名可以在【设置】->【其他设置】->【引用域名白名单】中设置
       </div>
     </div>
     <!-- 引用记录 -->
@@ -51,9 +49,9 @@
           </template>
         </el-table-column>
         <!-- 来源类型 referrerType -->
-        <el-table-column prop="referrerType" label="来源类型">
+        <el-table-column prop="referrerType" label="类型">
           <template #default="{ row }">
-            {{ row.referrerType }}
+            {{ referrerTypeMap[row.referrerType] }}
           </template>
         </el-table-column>
         <!-- 日期 creatAt -->
@@ -114,10 +112,10 @@ export default {
           console.log(err)
         })
     }
-    const handleAdd = () => {
-      router.push({
-        name: 'ReferrerAdd',
-      })
+    const referrerTypeMap = {
+      assets: '静态资源',
+      adminApi: '管理后台接口',
+      blogApi: '博客接口',
     }
     // 监听 params.page 的变化
     watch(
@@ -174,7 +172,7 @@ export default {
       total,
       tableRef,
       getReferrerList,
-      handleAdd,
+      referrerTypeMap,
       goEdit,
       deleteReferrer,
     }

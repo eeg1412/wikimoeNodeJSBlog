@@ -79,10 +79,12 @@ exports.checkJWT = function (token) {
 }
 
 
-exports.md5hex = (str /*: string */) => {
+const md5hex = (str /*: string */) => {
   const md5 = crypto.createHash('md5')
   return md5.update(str, 'utf8').digest('hex').toLowerCase()
 }
+
+exports.md5hex = md5hex
 
 exports.parseBase64 = (base64) => {
   if (!base64) {
@@ -556,23 +558,27 @@ exports.getPostPagePath = (postData) => {
 const referrerRecordTimerMap = {}
 // 引用记录传入参数是referrer和type
 exports.referrerRecord = function (referrer, referrerType) {
-  // 获取otherSettings siteReferrerWhiteList
-  const referrerDomainWhitelist = global.$globalConfig?.otherSettings?.siteReferrerWhiteList || []
-  const siteUrl = global.$globalConfig?.siteSettings?.siteUrl
-  if (!siteUrl) {
-    console.warn('siteUrl不存在,请在后台设置')
-    return
-  }
+  // const siteUrl = global.$globalConfig?.siteSettings?.siteUrl
+  // if (!siteUrl) {
+  //   console.warn('siteUrl不存在,请在后台设置')
+  //   return
+  // }
   // if (referrerDomainWhitelist.length === 0) {
   //   console.warn('引用白名单为空，不记录referrer')
   //   return
   // }
   if (referrer) {
-    // 如果referrer包含siteUrl，就不记录
-    if (referrer.includes(siteUrl)) {
-      // console.log('referrer包含siteUrl，不记录referrer', referrer)
+    // 获取otherSettings siteReferrerWhiteList
+    const referrerDomainWhitelist = global.$globalConfig?.otherSettings?.siteReferrerWhiteList || []
+    const isReady = global.$isReady
+    if (!isReady) {
+      console.warn('未完全启动，不记录referrer')
       return
     }
+    // 如果referrer包含siteUrl，就不记录
+    // if (referrer.includes(siteUrl)) {
+    //   return
+    // }
     // referrer最大长度为300
     if (referrer.length > 300) {
       referrer = referrer.substring(0, 300)
@@ -584,7 +590,7 @@ exports.referrerRecord = function (referrer, referrerType) {
     })
     // 如果referrer不在REFERRER_DOMAIN_WHITELIST中，就记录
     if (!isReferrerDomainWhitelist) {
-      const md5Id = this.md5hex(referrer)
+      const md5Id = md5hex(`${referrerType}:${referrer}`)
       // 判断是否存在计时器
       if (referrerRecordTimerMap[md5Id]) {
         // 如果存在计时器，就不操作

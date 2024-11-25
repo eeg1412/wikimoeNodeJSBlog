@@ -1,6 +1,6 @@
 var express = require('express')
 var router = express.Router()
-const { } = require('../utils/utils')
+const { referrerRecord } = require('../utils/utils')
 
 const checkIsReady = (req, res, next) => {
   const isReady = global.$isReady
@@ -9,6 +9,11 @@ const checkIsReady = (req, res, next) => {
   } else {
     res.status(503).send('Service Unavailable')
   }
+}
+
+const referrerRecordMiddleware = (req, res, next) => {
+  referrerRecord(req.headers.referer, 'blogApi')
+  next()
 }
 
 const blogRouteSetting = [
@@ -238,7 +243,7 @@ const blogRouteSetting = [
 ]
 
 blogRouteSetting.forEach(item => {
-  const middleware = [checkIsReady, ...item.middleware]
+  const middleware = [checkIsReady, referrerRecordMiddleware, ...item.middleware]
   router[item.method](item.path, ...middleware, item.controller)
 })
 
