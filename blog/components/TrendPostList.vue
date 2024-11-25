@@ -23,7 +23,7 @@
           ><span class="tenten"></span><span>{{ getTrendCategory(item) }}</span>
         </div>
         <div
-          class="line-clamp-2 text-gray-800 font-semibold text-sm break-words"
+          class="line-clamp-2 text-gray-800 font-semibold text-sm break-words trend-item-title"
         >
           {{ getTrendTitle(item) }}
         </div>
@@ -114,6 +114,9 @@ const getTrendTitle = (item) => {
     default:
       break
   }
+  if (!title) {
+    title = '暂无标题或内容'
+  }
   return title
 }
 const getTrendCategory = (item) => {
@@ -182,6 +185,9 @@ const getBackgroundImage = (item) => {
 }
 .trend-right-hot-body {
   min-width: 4.25rem;
+}
+.trend-item-title {
+  height: 2.68rem;
 }
 /* .trend-item-body:hover .trend-item-left {
   @apply bg-primary-50;
