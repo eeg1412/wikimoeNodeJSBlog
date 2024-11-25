@@ -1,4 +1,5 @@
 global.$cacheData = {}
+global.$isReady = false
 var express = require('express');
 const log4js = require('log4js')
 var path = require('path');

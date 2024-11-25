@@ -8,6 +8,15 @@ const multer = require('multer')
 const storage = multer.memoryStorage()
 const upload = multer({ storage: storage })
 
+const checkIsReady = (req, res, next) => {
+  const isReady = global.$isReady
+  if (isReady) {
+    next()
+  } else {
+    res.status(503).send('Service Unavailable')
+  }
+}
+
 // jwt权限校验
 const checkAuth = async (req, res, next) => {
   const jwtVersion = 1
@@ -1247,6 +1256,7 @@ const adminRouteSetting = [
 ]
 
 adminRouteSetting.forEach(item => {
+  const middleware = [checkIsReady, ...item.middleware]
   router[item.method](item.path, (req, res, next) => {
     if (item.roleType && item.role) {
       req.roleCheckInfo = {
@@ -1255,7 +1265,7 @@ adminRouteSetting.forEach(item => {
       }
     }
     next();
-  }, ...item.middleware, item.controller)
+  }, ...middleware, item.controller)
 })
 
 module.exports = router

@@ -2,6 +2,15 @@ var express = require('express')
 var router = express.Router()
 const { } = require('../utils/utils')
 
+const checkIsReady = (req, res, next) => {
+  const isReady = global.$isReady
+  if (isReady) {
+    next()
+  } else {
+    res.status(503).send('Service Unavailable')
+  }
+}
+
 const blogRouteSetting = [
   {
     path: '/options',
@@ -229,7 +238,8 @@ const blogRouteSetting = [
 ]
 
 blogRouteSetting.forEach(item => {
-  router[item.method](item.path, ...item.middleware, item.controller)
+  const middleware = [checkIsReady, ...item.middleware]
+  router[item.method](item.path, ...middleware, item.controller)
 })
 
 module.exports = router
