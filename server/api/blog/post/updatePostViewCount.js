@@ -94,6 +94,7 @@ module.exports = async function (req, res, next) {
     default:
       break
   }
+  const isSearchEngineResult = utils.isSearchEngine(req);
   const readerlogParams = {
     uuid: uuid,
     action: 'postView',
@@ -102,7 +103,7 @@ module.exports = async function (req, res, next) {
       targetId: id,
       content: content,
     },
-    ...utils.isSearchEngine(req),
+    ...isSearchEngineResult,
     deviceInfo: utils.deviceUAInfoUtils(req),
     ipInfo: await utils.IP2LocationUtils(ip, null, null, false),
     ip: ip
@@ -119,7 +120,11 @@ module.exports = async function (req, res, next) {
     return
   }
 
-  // 更新post的views
-  postUtils.updateOne({ _id: id }, params, true)
+  const siteSpiderPostVisitEnabled = global.$globalConfig?.otherSettings?.siteSpiderPostVisitEnabled;
+
+  if (siteSpiderPostVisitEnabled || !isSearchEngineResult.isBot) {
+    // 更新post的views
+    postUtils.updateOne({ _id: id }, params, true);
+  }
 
 }

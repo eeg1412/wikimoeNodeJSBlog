@@ -118,6 +118,8 @@ const initGlobalConfig = async () => {
     siteBannedKeywordList: [],
     // 排名统计来源忽略域名
     siteRankIgnoreReferrerDomainList: [],
+    // 爬虫增加文章查看数
+    siteSpiderPostVisitEnabled: true,
   }
   // 文章页设置
   const sitePostSettingsConfig = {

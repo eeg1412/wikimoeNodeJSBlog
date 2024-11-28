@@ -33,6 +33,14 @@
       ></el-input>
     </el-form-item>
 
+    <!-- 是否统计爬虫的文章查看数 -->
+    <el-form-item label="爬虫增加文章查看数">
+      <el-switch
+        v-model="otherSettingsForm.siteSpiderPostVisitEnabled"
+      ></el-switch>
+      <div class="w_10">※开启后，爬虫访问文章时也会增加文章查看数</div>
+    </el-form-item>
+
     <el-form-item>
       <el-button type="primary" @click="otherSettingsSubmit">提交</el-button>
     </el-form-item>
@@ -56,6 +64,8 @@ export default {
       siteBannedKeywordList: '',
       // 排名统计来源忽略域名
       siteRankIgnoreReferrerDomainList: '',
+      // 是否统计爬虫的文章查看数
+      siteSpiderPostVisitEnabled: true,
     })
     const otherSettingsRules = {}
     const otherSettingsSubmit = () => {
