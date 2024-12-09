@@ -103,11 +103,14 @@ export default defineNuxtConfig({
     // 因为nuxt的页面动画有BUG导致两次运行onmounted，所以关闭
     // pageTransition: { name: 'page', mode: 'default', duration: 200 },
   },
+
   devtools: { enabled: true },
+
   devServer: {
     // host: '0.0.0.0',
     port: 8078,
   },
+
   modules: ['@pinia/nuxt', '@nuxt/ui', 'nuxt-swiper', ...modulesPlus],
 
   swiper: {
@@ -117,17 +120,22 @@ export default defineNuxtConfig({
     styleLang: 'css',
     // modules: ['navigation', 'pagination'], // all modules are imported by default
   },
+
   css: ['~/assets/css/common.css', 'photoswipe/style.css'],
+
   runtimeConfig: {
     // apiDomain: '',
     public: {
       ...publicRuntimeConfigPlus,
     },
   },
+
   routeRules,
+
   colorMode: {
     preference: 'light',
   },
+
   nitro: {
     output: {
       dir: 'build/.output',
@@ -153,6 +161,7 @@ export default defineNuxtConfig({
       },
     },
   },
+
   vite: {
     esbuild: {
       drop: ['debugger'],
@@ -165,4 +174,6 @@ export default defineNuxtConfig({
       ],
     },
   },
+
+  compatibilityDate: '2024-12-09',
 })
