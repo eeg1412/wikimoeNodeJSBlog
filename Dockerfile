@@ -13,4 +13,4 @@ COPY --from=builder /app/server /app
 RUN chmod +x /app/entrypoint.sh && \
     apk add --no-cache bash
 CMD ["/app/entrypoint.sh"]
-EXPOSE 3000
+EXPOSE 3006
