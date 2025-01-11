@@ -17,7 +17,6 @@
   },
   "dependencies": {
     "@nuxt/ui": "^2.11.1",
-    "@nuxtjs/google-adsense": "^3.0.0",
     "@pinia/nuxt": "^0.5.1",
     "highlight.js": "^11.9.0",
     "moment": "^2.30.1",

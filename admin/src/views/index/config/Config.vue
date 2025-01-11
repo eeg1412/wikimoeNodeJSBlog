@@ -1,5 +1,5 @@
 <template>
-  <div class="common-right-panel-form common-limit-width config-com-body">
+  <div class="common-right-panel-form limit-width-800 config-com-body">
     <h3 class="common-title">设置</h3>
     <el-tabs v-model="activeName">
       <el-tab-pane label="网站设置" name="site">
@@ -22,6 +22,10 @@
       <el-tab-pane label="邮件设置" name="email">
         <ConfigEmailSettingsForm v-if="activeName === 'email'" />
       </el-tab-pane>
+      <!-- 广告设置 -->
+      <el-tab-pane label="广告设置" name="ad">
+        <ConfigAdSettingsForm v-if="activeName === 'ad'" />
+      </el-tab-pane>
       <!-- 其他设置 -->
       <el-tab-pane label="其他设置" name="other">
         <ConfigOtherSettingsForm v-if="activeName === 'other'" />
@@ -43,6 +47,7 @@ import ConfigMediaForm from '@/components/ConfigMediaForm'
 import ConfigEmailSettingsForm from '@/components/ConfigEmailSettingsForm'
 import ConfigOtherSettingsForm from '@/components/ConfigOtherSettingsForm'
 import ConfigSitePostForm from '@/components/ConfigSitePostForm'
+import ConfigAdSettingsForm from '@/components/ConfigAdSettingsForm'
 export default {
   components: {
     ConfigSiteSettingsForm,
@@ -52,6 +57,7 @@ export default {
     ConfigEmailSettingsForm,
     ConfigOtherSettingsForm,
     ConfigSitePostForm,
+    ConfigAdSettingsForm,
   },
   setup() {
     const activeName = ref('site')
@@ -63,4 +69,8 @@ export default {
   },
 }
 </script>
-<style scoped></style>
+<style scoped>
+.limit-width-800 {
+  max-width: 800px;
+}
+</style>

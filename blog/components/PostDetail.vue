@@ -263,9 +263,9 @@
     <!-- 广告 -->
     <div
       class="google-ad-post-detail mt-4"
-      v-if="GOOGLE_ADSENSE_POST_DETAIL_BT"
+      v-if="options.googleAdEnabled && options.googleAdPostBottomEnabled"
     >
-      <AdsbygoogleHave :ad="GOOGLE_ADSENSE_POST_DETAIL_BT" />
+      <AdsbygoogleHave :ad="options.googleAdPostBottomParams" />
     </div>
     <!-- 评论 -->
     <!-- 评论列表 commentList -->
@@ -865,11 +865,6 @@ const likePost = () => {
       likePostIsLoading.value = false
     })
 }
-
-// google ad
-const runtimeConfig = useRuntimeConfig()
-const GOOGLE_ADSENSE_POST_DETAIL_BT =
-  runtimeConfig.public.GOOGLE_ADSENSE_POST_DETAIL_BT || null
 
 // 过滤HTML标签
 const filterHtmlTag = (str) => {

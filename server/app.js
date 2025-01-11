@@ -81,6 +81,11 @@ app.use('/sitemap.xml', async function (req, res) {
 app.use('/sitemap.xsl', function (req, res) {
   res.sendFile(path.join(__dirname, 'seo/sitemap/sitemap.xsl'));
 });
+// AdAdsTxt ads.txt
+app.use('/ads.txt', function (req, res) {
+  res.type('text/plain');
+  res.send(global.$globalConfig.adSettings.AdAdsTxt);
+});
 // 所有第一级路径不是/admin的，都返回404
 app.use((req, res, next) => {
   const firstLevelPath = req.path.split('/')[1];

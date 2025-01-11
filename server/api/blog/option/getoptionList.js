@@ -20,7 +20,8 @@ module.exports = async function (req, res, next) {
       ...global.$globalConfig.siteSettings,
       ...global.$globalConfig.commentSettings,
       ...global.$globalConfig.rssSettings,
-      ...global.$globalConfig.sitePostSettings
+      ...global.$globalConfig.sitePostSettings,
+      ...global.$globalConfig.adSettings,
     }
   })
 }

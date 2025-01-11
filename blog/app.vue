@@ -46,6 +46,16 @@ const rssHead = () => {
     return []
   }
 }
+const script = []
+// console.log(options)
+if (options.value.googleAdEnabled) {
+  script.push({
+    src: `https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${options.value.googleAdId}`,
+    async: true,
+    crossorigin: 'anonymous',
+  })
+}
+
 useHead({
   titleTemplate: (titleChunk) => {
     if (!titleChunk) {
@@ -102,6 +112,7 @@ useHead({
     // rss
     ...rssHead(),
   ],
+  script: script,
 })
 const getPerformanceNavigationTiming = () => {
   let dataContentObj = null

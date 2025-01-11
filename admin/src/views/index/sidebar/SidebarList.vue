@@ -142,6 +142,13 @@
                     :precision="0"
                   ></el-input-number>
                 </el-form-item>
+                <el-form-item
+                  label="参数"
+                  prop="content"
+                  v-if="element.type === 10"
+                >
+                  <GoogleAdInput v-model="element.content" />
+                </el-form-item>
                 <el-form-item label="状态" prop="status">
                   <!-- 0显示 1不显示 -->
                   <el-switch
@@ -181,6 +188,7 @@ import { ElMessage, ElMessageBox } from 'element-plus'
 import { computed, onMounted, reactive, ref, watch } from 'vue'
 import draggable from 'vuedraggable'
 import RichEditor5 from '@/components/RichEditor5'
+import GoogleAdInput from '@/components/GoogleAdInput'
 import { escapeHtml } from '@/utils/utils'
 import CheckDialogService from '@/services/CheckDialogService'
 
@@ -188,6 +196,7 @@ export default {
   components: {
     RichEditor5,
     draggable,
+    GoogleAdInput,
   },
   setup() {
     const route = useRoute()
@@ -300,7 +309,7 @@ export default {
 
     const showConetntTypeList = [1]
     const showCountTypeList = [2, 3, 4, 5, 6, 12]
-    const showTextInputTypeList = [10]
+    const showTextInputTypeList = []
     const showTextareaTypeList = [11]
 
     const placeholderMap = {

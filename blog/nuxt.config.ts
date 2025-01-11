@@ -1,21 +1,8 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
-
-const modulesPlus = []
 const publicRuntimeConfigPlus: any = {}
 // SHOW_LOADING
 publicRuntimeConfigPlus.showLoading = process.env.SHOW_LOADING === '1'
-if (process.env.GOOGLE_ADSENSE_ID) {
-  modulesPlus.push('@nuxtjs/google-adsense')
-  publicRuntimeConfigPlus.googleAdsense = {
-    onPageLoad: true,
-    pageLevelAds: false,
-    id: process.env.GOOGLE_ADSENSE_ID,
-    test: process.env.GOOGLE_ADSENSE_TEST_MODE === '1',
-  }
-  // GOOGLE_ADSENSE_POST_DETAIL_BT
-  publicRuntimeConfigPlus.GOOGLE_ADSENSE_POST_DETAIL_BT =
-    process.env.GOOGLE_ADSENSE_POST_DETAIL_BT || null
-}
+
 // 缓存时间
 const cacheTime = process.env.SWR_CACHE_MAXAGE
   ? Number(process.env.SWR_CACHE_MAXAGE)
@@ -60,6 +47,10 @@ let routeRules = {
   // sitemap.xsl
   '/sitemap.xsl': {
     proxy: `${process.env.NUXT_API_DOMAIN}/sitemap.xsl`,
+  },
+  // ads.txt
+  '/ads.txt': {
+    proxy: `${process.env.NUXT_API_DOMAIN}/ads.txt`,
   },
 }
 // 如果开启了SWR
@@ -111,7 +102,7 @@ export default defineNuxtConfig({
     port: 8078,
   },
 
-  modules: ['@pinia/nuxt', '@nuxt/ui', 'nuxt-swiper', ...modulesPlus],
+  modules: ['@pinia/nuxt', '@nuxt/ui', 'nuxt-swiper'],
 
   swiper: {
     // Swiper options

@@ -4,12 +4,6 @@
     <div class="error-msg">{{ error.message || error.statusMessage }}</div>
     <!-- 尝试回到首页 -->
     <div class="error-btn pointer" @click="reflushHome">返回首页</div>
-    <div
-      class="mt-5 w-full max-w-xl mx-auto"
-      v-if="GOOGLE_ADSENSE_POST_DETAIL_BT"
-    >
-      <AdsbygoogleHave :ad="GOOGLE_ADSENSE_POST_DETAIL_BT" />
-    </div>
   </div>
 </template>
 <script setup>
@@ -17,10 +11,6 @@ const error = useError()
 const reflushHome = () => {
   window.location.href = '/'
 }
-// google ad
-const runtimeConfig = useRuntimeConfig()
-const GOOGLE_ADSENSE_POST_DETAIL_BT =
-  runtimeConfig.public.GOOGLE_ADSENSE_POST_DETAIL_BT || null
 </script>
 <style scoped>
 /* 报错页面式样，画面居中显示，code粉色 */
