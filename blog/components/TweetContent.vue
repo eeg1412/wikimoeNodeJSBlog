@@ -148,16 +148,31 @@ let observer = null
 const linkCoverShow = ref(false)
 onMounted(() => {
   nextTick(() => {
-    if (linkCover.value) {
-      observer = new IntersectionObserver((entries) => {
-        // 如果元素进入视口，entries[0].isIntersecting 将为 true
-        if (entries[0].isIntersecting) {
-          linkCoverShow.value = true
-          observer.disconnect()
-          observer = null
-        }
-      })
-      observer.observe(observee.value)
+    if (linkCover.value && observee.value) {
+      // 获取元素位置信息
+      const rect = observee.value.getBoundingClientRect()
+      const isVisible =
+        rect.top >= 0 &&
+        rect.left >= 0 &&
+        rect.bottom <=
+          (window.innerHeight || document.documentElement.clientHeight) &&
+        rect.right <=
+          (window.innerWidth || document.documentElement.clientWidth)
+
+      if (isVisible) {
+        // 如果元素已经在视口内，直接显示
+        linkCoverShow.value = true
+      } else {
+        // 如果元素不在视口内，创建 IntersectionObserver
+        observer = new IntersectionObserver((entries) => {
+          if (entries[0].isIntersecting) {
+            linkCoverShow.value = true
+            observer.disconnect()
+            observer = null
+          }
+        })
+        observer.observe(observee.value)
+      }
     }
   })
 })
