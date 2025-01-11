@@ -30,7 +30,7 @@ const adLayoutKey = adArray[2]
 const updateKey = ref(0)
 let routeChangeTimer = null
 watch(
-  () => route,
+  () => route.path,
   (newPath) => {
     clearTimeout(routeChangeTimer)
     routeChangeTimer = setTimeout(() => {
