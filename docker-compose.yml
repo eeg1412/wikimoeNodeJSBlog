@@ -55,7 +55,7 @@ services:
       - ./data/wikimoe-blog-server/cache:/app/cache
       - ./data/wikimoe-blog-server/public:/app/public
     ports:
-      - '3000:3000'
+      - '3006:3006'
     depends_on:
       - mongo
     networks:

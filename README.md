@@ -86,7 +86,7 @@ blog：博客部分
 curl -fsSL https://get.docker.com | bash -s docker --mirror Aliyun
 ```
 
-### 快速体验（不建议生产部署）
+### 快速体验
 
 从 repo 下载 docker-compose-dev.yml 以及 .env 文件
 
@@ -96,7 +96,7 @@ wget -O compose.yml https://raw.githubusercontent.com/eeg1412/wikimoeNodeJSBlog/
 wget -O .env https://raw.githubusercontent.com/eeg1412/wikimoeNodeJSBlog/main/example.env
 ```
 
-然后使用 `docker compose up -d` 即可在本地快速体验，注意：docker-compose-dev.yml 预设的内容仅为快速体验，不建议在生产环境使用
+然后使用 `docker compose up -d` 即可在本地快速体验，注意：docker-compose-dev.yml 预设了一部分配置，如果你想自定义更多参数，请参照下面的完整部署
 
 ### 完整部署
 
