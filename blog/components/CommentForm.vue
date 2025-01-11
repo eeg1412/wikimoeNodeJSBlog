@@ -72,7 +72,7 @@
                 color="white"
                 :trailing="false"
                 v-model="form.nickname"
-                placeholder="请输入昵称"
+                placeholder="昵称"
               />
             </UFormGroup>
           </div>
@@ -85,7 +85,7 @@
                 color="white"
                 :trailing="false"
                 v-model="form.email"
-                placeholder="请输入邮箱"
+                placeholder="邮箱（任意）"
             /></UFormGroup>
           </div>
           <div class="w-full sm:w-1/3">
@@ -98,7 +98,7 @@
                 :trailing="false"
                 name="url"
                 v-model="form.url"
-                placeholder="请输入URL"
+                placeholder="网址（任意）"
             /></UFormGroup>
           </div>
 
