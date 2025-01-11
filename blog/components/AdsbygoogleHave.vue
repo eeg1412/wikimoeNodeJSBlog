@@ -28,11 +28,14 @@ const adLayoutKey = adArray[2]
 
 // 检测路由变化，变化时更新广告
 const updateKey = ref(0)
+const routeChangeTimer = null
 watch(
   () => route,
   (newPath) => {
-    // 路由变化时执行的操作
-    updateKey.value++
+    clearTimeout(routeChangeTimer)
+    routeChangeTimer = setTimeout(() => {
+      updateKey.value++
+    }, 200)
   },
   { deep: true }
 )
