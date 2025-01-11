@@ -33,13 +33,13 @@ const props = defineProps({
 const adClient = options.googleAdId
 
 // 组件挂载后初始化广告
-onMounted(() => {
+if (import.meta.browser) {
   try {
     ;(window.adsbygoogle = window.adsbygoogle || []).push({})
   } catch (error) {
     console.error('广告加载失败:', error)
   }
-})
+}
 </script>
 
 <style scoped></style>
