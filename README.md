@@ -3,21 +3,24 @@
 ![N`AG~U3E547WKDN{J P2H22](https://github.com/eeg1412/wikimoeNodeJSBlog/assets/27753071/4b5177e5-6f1b-414b-938b-336c0b7a68ed)
 
 ## 特色系统
+
 ### 记录生活点滴
+
 ![image](https://github.com/user-attachments/assets/49dd9adc-c3ba-4d77-a56c-920da7e518ac)
 
-### 自动解析bilibili视频地址
+### 自动解析 bilibili 视频地址
+
 ![image](https://github.com/user-attachments/assets/bc99079b-dbae-41d4-8cb3-e72a7ec2c7cb)
 
-### 记录自己追过的ACGN
+### 记录自己追过的 ACGN
+
 ![image](https://github.com/user-attachments/assets/78cc341f-4a69-4a79-8318-66153415818b)
 ![image](https://github.com/user-attachments/assets/78e604ac-d6b7-4a8c-9a2c-010328f759a0)
 ![image](https://github.com/user-attachments/assets/3b1a311b-69a9-4c76-bd0c-28a4530ed86e)
 
 ### 管理与分享自己的日程
+
 ![image](https://github.com/user-attachments/assets/701ed64f-4e96-44b0-a0b7-57475f52501c)
-
-
 
 ## 当前已知问题
 
@@ -90,8 +93,8 @@ curl -fsSL https://get.docker.com | bash -s docker --mirror Aliyun
 
 ```bash
 cd && mkdir wikimoe && cd wikimoe
-wget -O compose.yml https://raw.githubusercontent.com/eeg1412/wikimoeNodeJSBlog/main/docker-compose-dev.yml 
-wget -O .env https://raw.githubusercontent.com/eeg1412/wikimoeNodeJSBlog/main/example.env 
+wget -O compose.yml https://raw.githubusercontent.com/eeg1412/wikimoeNodeJSBlog/main/docker-compose-dev.yml
+wget -O .env https://raw.githubusercontent.com/eeg1412/wikimoeNodeJSBlog/main/example.env
 ```
 
 然后使用 `docker compose up -d` 即可在本地快速体验，注意：docker-compose-dev.yml 预设的内容仅为快速体验，不建议在生产环境使用
@@ -240,15 +243,11 @@ yarn install
 
 ```env
 NUXT_API_DOMAIN="填写API的HTTP地址，如：http://localhost:3006"
-GOOGLE_ADSENSE_ID="如果需要设置谷歌广告，填写谷歌广告ID"
-GOOGLE_ADSENSE_TEST_MODE="是否启用测试模式 1 为启用，0 为不启用"
-GOOGLE_ADSENSE_POST_DETAIL_BT="文章底部广告，填写格式为：ad-slot,ad-format,ad-layout-key"
 SWR_ENABLED="设置为1时打开SWR缓存，将会消耗大量内存提升访问速度"
 SWR_CACHE_MAXAGE="SWR缓存时间，单位秒，默认10秒"
 SWR_CACHE_STALEMAXAGE="staleMaxAge的时间，单位秒，默认3600秒"
 CACHE_MAX_PAGE="开启SWR时的缓存页面数量，默认10个页面"
 CACHE_TTL="缓存的过期时间，单位毫秒，默认60000毫秒"
-SHOW_LOADING="是否显示进入网站时的读取动画，需要时为1"
 ```
 
 ### 配置谷歌广告 ads.txt （如果需要）
