@@ -17,7 +17,6 @@ services:
     image: eeg1412/wikimoe-blog-server:latest
     environment:
       - TZ=Asia/Shanghai
-      - NODE_ENV=production
       - PORT=${PORT}
       - DB_HOST=${DB_HOST}
       - JSON_LIMIT=${JSON_LIMIT}

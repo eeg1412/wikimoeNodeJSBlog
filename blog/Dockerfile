@@ -2,7 +2,6 @@ FROM node:20-alpine AS builder
 
 WORKDIR /app
 COPY . .
-ENV NODE_ENV=production
 ARG NUXT_API_DOMAIN=http://wikimoe-blog-server:3006
 ARG SWR_ENABLED=0
 ARG SWR_CACHE_MAXAGE
