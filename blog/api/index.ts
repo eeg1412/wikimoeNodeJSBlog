@@ -53,7 +53,7 @@ class HttpRequest {
     // 查看options内包含shouldUuid
     const shouldUuid = options.shouldUuid
     // 如果有就去本地拿uuid
-    if (shouldUuid && process.client) {
+    if (shouldUuid && import.meta.client) {
       const uuid = checkUuid()
       // 删除shouldUuid
       delete options.shouldUuid

@@ -30,7 +30,7 @@ const props = defineProps({
 const emits = defineEmits()
 const commonDialogOpen = computed({
   get: () => {
-    if (process.client) {
+    if (import.meta.client) {
       if (props.show) {
         addStyle()
       } else {
@@ -47,7 +47,7 @@ const commonDialogOpen = computed({
 
 const styleId = generateRandomString(8)
 const addStyle = () => {
-  if (process.client) {
+  if (import.meta.client) {
     const style = document.createElement('style')
     style.id = styleId
     style.innerHTML = `
@@ -60,7 +60,7 @@ const addStyle = () => {
   }
 }
 const removeStyle = () => {
-  if (process.client) {
+  if (import.meta.client) {
     const style = document.getElementById(styleId)
     if (style) {
       document.body.removeChild(style)

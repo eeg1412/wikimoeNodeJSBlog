@@ -390,7 +390,7 @@ const [postsDataResponse] = await Promise.all([
 
 const { data: postsData } = postsDataResponse
 
-if (postsData?.value?.list && process.server) {
+if (postsData?.value?.list && import.meta.server) {
   postsData.value.list.forEach((item, index) => {
     postsData.value.list[index].dateStr = fromNow(item.date, 'yyyy-MM-dd')
   })

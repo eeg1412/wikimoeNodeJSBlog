@@ -593,7 +593,7 @@ const commentSize = computed(() => {
 })
 const commentLoading = ref(false)
 let postCommentId = null
-if (process.client) {
+if (import.meta.client) {
   postCommentId = sessionStorage.getItem('wm-post-commentid')
   if (postCommentId) {
     // 用逗号拆成数组
