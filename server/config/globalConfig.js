@@ -62,6 +62,10 @@ const initGlobalConfig = async () => {
     siteExtraCss: '',
     // Gravatar头像图源
     siteGravatarSource: '',
+    // 页面加载动画
+    siteShowLoading: true,
+    // 加载动画文案
+    siteShowLoadingText: '',
   }
   const commentSettingsConfig = {
     // 开启评论

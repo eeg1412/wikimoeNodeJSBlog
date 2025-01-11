@@ -125,6 +125,14 @@
         >
       </div>
     </el-form-item>
+    <!-- 页面加载动画 -->
+    <el-form-item label="页面加载动画" prop="siteShowLoading">
+      <el-switch v-model="siteSettingsForm.siteShowLoading"></el-switch>
+    </el-form-item>
+    <!-- 加载动画文案 -->
+    <el-form-item label="加载动画文案" prop="siteShowLoadingText">
+      <el-input v-model="siteSettingsForm.siteShowLoadingText"></el-input>
+    </el-form-item>
 
     <el-form-item>
       <el-button type="primary" @click="siteSettingsSubmit">提交</el-button>
@@ -178,6 +186,10 @@ export default {
       siteShowSitemapInFooter: false,
       // Gravatar头像图源
       siteGravatarSource: '',
+      // 页面加载动画
+      siteShowLoading: true,
+      // 加载动画文案
+      siteShowLoadingText: '',
     })
     const onSiteUrlBlur = () => {
       // 去掉最末尾的斜杠

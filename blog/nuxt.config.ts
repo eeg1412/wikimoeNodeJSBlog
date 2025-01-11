@@ -1,7 +1,5 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 const publicRuntimeConfigPlus: any = {}
-// SHOW_LOADING
-publicRuntimeConfigPlus.showLoading = process.env.SHOW_LOADING === '1'
 
 // 缓存时间
 const cacheTime = process.env.SWR_CACHE_MAXAGE

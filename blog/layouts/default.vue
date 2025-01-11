@@ -7,7 +7,7 @@
     <Transition name="fade">
       <div class="loader-body" v-if="showLoading && pageLoading">
         <span class="loader"><span class="loader-inner"></span></span>
-        <div class="loader-text">正在召唤神秘力量</div>
+        <div class="loader-text">{{ siteShowLoadingText }}</div>
       </div>
     </Transition>
     <!-- 小于1024宽度时出现的顶部栏 -->
@@ -229,10 +229,9 @@ const optionStore = useOptionStore()
 const { options } = storeToRefs(optionStore)
 
 // RSS
-const { siteEnableRss, siteShowRssInFooter, siteUrl } = options.value
+const { siteShowLoading, siteShowLoadingText } = options.value
 
-const runtimeConfig = useRuntimeConfig()
-const showLoading = runtimeConfig.public.showLoading
+const showLoading = siteShowLoading
 
 // const toast = useToast()
 // sidebar
