@@ -1,4 +1,4 @@
-FROM node:20-alpine as builder
+FROM node:20-alpine AS builder
 WORKDIR /app
 COPY . .
 RUN cd admin && \
@@ -7,7 +7,7 @@ RUN cd admin && \
     cd ../server && \
     yarn install 
 
-FROM node:20-alpine as runner
+FROM node:20-alpine AS runner
 WORKDIR /app
 COPY --from=builder /app/server /app
 RUN chmod +x /app/entrypoint.sh && \
