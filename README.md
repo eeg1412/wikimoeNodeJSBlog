@@ -86,17 +86,18 @@ blog：博客部分
 curl -fsSL https://get.docker.com | bash -s docker --mirror Aliyun
 ```
 
-### 快速体验
+### lite 快速体验版
 
-从 repo 下载 docker-compose-dev.yml 以及 .env 文件
+从 repo 下载 docker-compose-lite.yml 以及 .env 文件
 
 ```bash
 cd && mkdir wikimoe && cd wikimoe
-wget -O compose.yml https://raw.githubusercontent.com/eeg1412/wikimoeNodeJSBlog/main/docker-compose-dev.yml
+wget -O compose.yml https://raw.githubusercontent.com/eeg1412/wikimoeNodeJSBlog/main/docker-compose-lite.yml
 wget -O .env https://raw.githubusercontent.com/eeg1412/wikimoeNodeJSBlog/main/example.env
 ```
 
-然后使用 `docker compose up -d` 即可在本地快速体验，注意：docker-compose-dev.yml 预设了一部分配置，如果你想自定义更多参数，请参照下面的完整部署
+然后使用 `docker compose up -d` 即可在本地快速体验，注意：docker-compose-lite.yml 预设了一部分配置，如果你想自定义更多参数，请参照下面的完整部署  
+相比较完整版，lite 版没有 SWR 缓存技术，并且限制了（后端）Server 的端口必须为 3006。
 
 ### 完整部署
 

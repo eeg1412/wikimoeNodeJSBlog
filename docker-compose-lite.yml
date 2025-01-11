@@ -5,12 +5,6 @@ services:
     environment:
       - TZ=Asia/Shanghai
       - NODE_ENV=production
-      - NUXT_API_DOMAIN=${NUXT_API_DOMAIN}
-      - SWR_ENABLED=${SWR_ENABLED}
-      - SWR_CACHE_MAXAGE=${SWR_CACHE_MAXAGE}
-      - SWR_CACHE_STALEMAXAGE=${SWR_CACHE_STALEMAXAGE}
-      - CACHE_MAX_PAGE=${CACHE_MAX_PAGE}
-      - CACHE_TTL=${CACHE_TTL}
     ports:
       - '3007:3007'
     depends_on:
