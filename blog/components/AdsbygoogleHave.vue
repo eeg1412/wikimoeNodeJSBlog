@@ -28,7 +28,7 @@ const adLayoutKey = adArray[2]
 
 // 检测路由变化，变化时更新广告
 const updateKey = ref(0)
-const routeChangeTimer = null
+let routeChangeTimer = null
 watch(
   () => route,
   (newPath) => {
