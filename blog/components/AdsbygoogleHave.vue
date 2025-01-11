@@ -31,11 +31,13 @@ const updateKey = ref(0)
 let routeChangeTimer = null
 watch(
   () => route.path,
-  (newPath) => {
-    clearTimeout(routeChangeTimer)
-    routeChangeTimer = setTimeout(() => {
-      updateKey.value++
-    }, 200)
+  (newPath, oldPath) => {
+    if (newPath !== oldPath) {
+      clearTimeout(routeChangeTimer)
+      routeChangeTimer = setTimeout(() => {
+        updateKey.value++
+      }, 200)
+    }
   },
   { deep: true }
 )
