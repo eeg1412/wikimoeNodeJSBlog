@@ -27,7 +27,7 @@ services:
       - MAX_HISTORYLOGS_SIZE=${MAX_HISTORYLOGS_SIZE}
       - USER_NAME=${USER_NAME} # option
     volumes:
-      - ./data/wikimoe-blog-server:/app/log
+      - ./data/wikimoe-blog-server/log:/app/log
       - ./data/wikimoe-blog-server/ip2location:/app/utils/ip2location
       - ./data/wikimoe-blog-server/backups:/app/backups
       - ./data/wikimoe-blog-server/cache:/app/cache
