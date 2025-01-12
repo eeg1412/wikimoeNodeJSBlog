@@ -96,9 +96,10 @@ wget -O compose.yml https://raw.githubusercontent.com/eeg1412/wikimoeNodeJSBlog/
 wget -O .env https://raw.githubusercontent.com/eeg1412/wikimoeNodeJSBlog/main/example.env
 ```
 
-然后使用 `docker compose up -d` 即可在本地快速体验，注意：docker-compose-lite.yml 预设了一部分配置，如果你想自定义更多参数，请参照下面的完整部署  
+然后使用 `docker-compose up -d` 即可在本地快速体验，注意：docker-compose-lite.yml 预设了一部分配置，如果你想自定义更多参数，请参照下面的完整部署  
 相比较完整版，lite 版没有 SWR 缓存技术，并且限制了（后端）Server 的端口必须为 3006。  
-完成部署后，账号为.env 里的 USER_NAME（默认为`admin`），密码为`7@wVUo6BL6LHjNR*#x`，请初始化后及时修改。
+完成部署后，账号为.env 里的 USER_NAME（默认为`admin`），密码为`7@wVUo6BL6LHjNR*#x`，请初始化后及时修改。  
+注意事项和 lite 版的完整的部署过程可以查看[如何使用 Docker 一键部署猛男自用的维基萌博客 lite 版](https://www.wikimoe.com/post/a91p25pa)
 
 ### 完整部署
 
@@ -111,7 +112,7 @@ cd wikimoeNodeJSBlog && mv example.env .env
 
 按照 [API 配置部分](#配置env-文件) 、[Blog 配置部分](#配置env-文件-1) 修改 `.env` 文件中的 USER_NAME 环境变量（此环境变量为站长初始用户名），以及其他相关环境变量。注意：port 相关请修改 compose.yml 文件来修改端口映射
 
-然后使用 `docker compose up -d`拉起容器，你所修改的环境变量会传递给容器
+然后使用 `docker-compose up -d`拉起容器，你所修改的环境变量会传递给容器
 
 Server 容器会自动检查 USER_NAME 环境变量，并为你创建站长用户（默认为`admin`），注意：此用户的初始密码为 `7@wVUo6BL6LHjNR*#x` ，请初始化后及时修改。  
 创建用户后会生成 install.lock 防止重复初始化，请不要删除该文件！
