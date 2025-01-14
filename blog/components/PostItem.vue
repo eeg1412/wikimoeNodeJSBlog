@@ -50,7 +50,7 @@ const defaultCover = options.value.siteDefaultCover || ''
 }
 .post-list-title-body {
   border-radius: 0px 0px 0.75rem 0.75rem;
-  padding: 10px 20px;
+  padding: 0.6rem 1rem;
   box-sizing: border-box;
   font-size: 15px;
 }
