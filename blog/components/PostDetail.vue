@@ -16,7 +16,7 @@
       </div>
       <div class="post-right-info">
         <h2 class="post-title mb-1" v-if="postData.data.type === 1">
-          {{ postData.data.title }}
+          {{ postData.data.title || '暂无标题' }}
         </h2>
         <h2 class="post-title mb-1" v-else-if="postData.data.type === 2">
           推文

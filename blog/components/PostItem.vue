@@ -23,7 +23,9 @@
     <div
       class="post-list-title-body border border-gray-200 border-solid group-hover:border-primary-300 bg-white"
     >
-      <div class="group-hover:text-primary-500">{{ post.title }}</div>
+      <div class="group-hover:text-primary-500">
+        {{ post.title || '暂无标题' }}
+      </div>
     </div>
   </div>
 </template>
