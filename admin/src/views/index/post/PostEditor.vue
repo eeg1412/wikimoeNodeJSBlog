@@ -122,6 +122,7 @@
               @start="attachmentDrag = true"
               @end="attachmentDrag = false"
               item-key="_id"
+              handle=".handle"
             >
               <template #item="{ element, index }">
                 <div class="post-cover-image-item">
@@ -130,23 +131,30 @@
                       element.thumfor || element.filepath
                     }?s=${$formatTimestamp(element.updatedAt)}`"
                     fit="contain"
-                    @click="openPreviewer(element)"
+                    @click.stop.prevent="openPreviewer(element)"
                     style="width: 100%; height: 100%"
                   />
                   <!-- 如果是视频 isVideo 中间显示播放图标 -->
                   <div
                     class="attachment-play-icon zoom-in"
                     v-if="element.mimetype.includes('video')"
-                    @click="openPreviewer(element)"
+                    @click.stop.prevent="openPreviewer(element)"
                   >
                     <el-icon><VideoPlay /></el-icon>
                   </div>
                   <!-- 删除按钮 -->
                   <div
                     class="post-cover-image-item-delete"
-                    @click.stop="form.coverImages.splice(index, 1)"
+                    @click.stop.prevent="form.coverImages.splice(index, 1)"
                   >
                     <el-icon><Close /></el-icon>
+                  </div>
+                  <!-- 拖动按钮 -->
+                  <div
+                    class="handle post-cover-image-item-handle"
+                    v-show="coverImagesDataList.length > 1"
+                  >
+                    <el-icon><Rank /></el-icon>
                   </div>
                 </div>
               </template>
@@ -1188,6 +1196,24 @@ export default {
   color: #f56c6c;
   cursor: pointer;
   background-color: rgba(255, 255, 255, 0.85);
+  z-index: 3;
+}
+.post-cover-image-item-handle {
+  position: absolute;
+  bottom: 2px;
+  left: 2px;
+  width: 20px;
+  height: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 20px;
+  font-size: 14px;
+  text-align: center;
+  color: #666;
+  cursor: move;
+  background-color: rgba(255, 255, 255, 0.85);
+  z-index: 3;
 }
 .post-cover-image-item.type-add {
   border: 1px dashed #ccc;
