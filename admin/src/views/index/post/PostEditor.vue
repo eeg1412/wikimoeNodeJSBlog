@@ -144,7 +144,7 @@
                   <!-- 删除按钮 -->
                   <div
                     class="post-cover-image-item-delete"
-                    @click="form.coverImages.splice(index, 1)"
+                    @click.stop="form.coverImages.splice(index, 1)"
                   >
                     <el-icon><Close /></el-icon>
                   </div>
