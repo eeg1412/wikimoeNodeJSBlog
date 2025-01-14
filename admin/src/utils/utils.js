@@ -396,16 +396,16 @@ export const seasonToStr = (season) => {
     let str = ''
     switch (season) {
         case 1:
-            str = '春'
+            str = '冬'
             break
         case 2:
-            str = '夏'
+            str = '春'
             break
         case 3:
-            str = '秋'
+            str = '夏'
             break
         case 4:
-            str = '冬'
+            str = '秋'
             break
     }
     return str
