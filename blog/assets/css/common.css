@@ -1064,3 +1064,8 @@ ins.adsbygoogle[data-ad-status='unfilled'] {
 .system-ui-font {
   font-family: 'system-ui';
 }
+.acgn-time {
+  font-size: 0.52rem;
+  /* 不换行 */
+  white-space: nowrap;
+}

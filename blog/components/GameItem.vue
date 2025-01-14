@@ -50,30 +50,24 @@
           />已弃坑
         </div>
         <!-- 用时 -->
-        <UPopover
-          :popper="{ offsetDistance: 0, placement: 'bottom-start' }"
-          v-if="game.startTime && !game.giveUp"
-        >
+        <div v-if="game.startTime && !game.giveUp">
+          <div class="acgn-time text-gray-400">
+            {{
+              `${formatDate(game.startTime, 'yyyy年M月dd日 h时')} ~ ${
+                game.endTime
+                  ? formatDate(game.endTime, 'yyyy年M月dd日 h时')
+                  : '攻略中'
+              }`
+            }}
+          </div>
           <div
-            class="text-sm mb-1 text-gray-400 flex-shrink-0 pointer w_10 flex items-center"
+            class="text-sm mb-1 text-gray-400 flex-shrink-0 w_10 flex items-center"
           >
-            <UIcon
-              name="i-heroicons-clock"
-              class="align-middle mr-1"
-            /><template v-if="!game.endTime">累计游玩</template
+            <template v-if="!game.endTime">累计游玩</template
             ><template v-else>共计游玩</template
             >{{ getACGDuration(game.startTime, game.endTime) }}
           </div>
-          <template #panel>
-            <div class="px-2 py-1">
-              {{
-                `${formatDate(game.startTime)} ~ ${
-                  game.endTime ? formatDate(game.endTime) : '至今'
-                }`
-              }}
-            </div>
-          </template>
-        </UPopover>
+        </div>
         <!-- 链接 -->
         <div
           class="text-sm mb-1 text-gray-500 flex-shrink-0"
