@@ -555,10 +555,6 @@ onMounted(() => {
 /* 奇数图片组的最后一个元素样式 */
 .w-e-image-group-odd .w-e-image-group-img-body:last-child {
   grid-column: 1 / -1; /* 跨越所有列 */
-}
-
-.w-e-image-group-odd .w-e-image-group-img-body:last-child .w-e-image-group-img {
-  height: 100%;
-  object-fit: cover;
+  aspect-ratio: 2/1;
 }
 </style>

@@ -38,7 +38,7 @@ function parseHtml (elem, children, editor) {
 }
 
 const parseHtmlConf = {
-  selector: 'div[data-w-e-type="imagegroup"]',
+  selector: 'div[data-w-e-type="imageGroup"]',
   parseElemHtml: parseHtml,
 }
 

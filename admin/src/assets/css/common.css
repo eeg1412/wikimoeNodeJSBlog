@@ -1076,9 +1076,18 @@ input[type='password'] {
 /* 奇数图片组的最后一个元素样式 */
 .w-e-image-group-odd .w-e-image-group-img-body:last-child {
   grid-column: 1 / -1; /* 跨越所有列 */
+  aspect-ratio: 2/1;
 }
 
 .w-e-image-group-odd .w-e-image-group-img-body:last-child .w-e-image-group-img {
   height: 100%;
   object-fit: cover;
+}
+.w-e-bar-item button[data-menu-key='insertImage'],
+.w-e-bar-item button[data-menu-key='uploadImage'],
+.w-e-bar-item button[data-menu-key='imageGroup'],
+.w-e-bar-item button[data-menu-key='insertVideo'],
+.w-e-bar-item button[data-menu-key='uploadVideo'] {
+  width: 100%;
+  justify-content: flex-start;
 }
