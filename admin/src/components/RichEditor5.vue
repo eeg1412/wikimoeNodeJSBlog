@@ -125,7 +125,7 @@ export default {
           title: '图片',
           iconSvg:
             '<svg viewBox="0 0 1024 1024"><path d="M959.877 128l0.123 0.123v767.775l-0.123 0.122H64.102l-0.122-0.122V128.123l0.122-0.123h895.775zM960 64H64C28.795 64 0 92.795 0 128v768c0 35.205 28.795 64 64 64h896c35.205 0 64-28.795 64-64V128c0-35.205-28.795-64-64-64zM832 288.01c0 53.023-42.988 96.01-96.01 96.01s-96.01-42.987-96.01-96.01S682.967 192 735.99 192 832 234.988 832 288.01zM896 832H128V704l224.01-384 256 320h64l224.01-192z"></path></svg>',
-          menuKeys: ['insertImage', 'uploadImage'],
+          menuKeys: ['insertImage', 'uploadImage', 'imageGroup'],
         },
         {
           key: 'group-video',
@@ -202,6 +202,7 @@ export default {
     const handleCreated = (editor) => {
       editorRef.value = editor // 记录 editor 实例，重要！
       editor['openEventDialog'] = openEventDialog
+      editor['openAttachmentsDialog'] = openAttachmentsDialog
       console.log(editor)
       const editorDom = editor.getEditableContainer()
       const { insertBreak } = editor
@@ -285,7 +286,14 @@ export default {
     let insertFn_ = null
     const insertFnType = ref(null)
     const attachmentsDialogRef = ref(null)
-    const openAttachmentsDialog = () => {
+    const openAttachmentsDialogType = ref('')
+    const openAttachmentsDialog = (type) => {
+      if (type) {
+        openAttachmentsDialogType.value = type
+        if (type === 'imageGroup') {
+          insertFnType.value = 'image'
+        }
+      }
       attachmentsDialogRef.value.open()
     }
 
@@ -297,7 +305,6 @@ export default {
     }
     const selectAttachments = async (attachments) => {
       console.log(attachments)
-      const editor = editorRef.value
       // let html = ''
       // attachments.forEach((item) => {
       //   // 写入img标签
@@ -307,44 +314,71 @@ export default {
       //     item.thumHeight || item.height
       //   }" loading="lazy" />`
       // })
-
-      for (const item of attachments) {
-        if (insertFn_) {
-          let insertFnPromise = null
-          if (insertFnType.value === 'image') {
-            insertFnPromise = insertFn_(
-              item.thumfor
+      if (openAttachmentsDialogType.value === 'imageGroup') {
+        const editor = editorRef.value
+        editor.restoreSelection()
+        setTimeout(() => {
+          const children = attachments.map((item) => {
+            return {
+              src: item.thumfor
                 ? `${siteUrl.value + item.thumfor}?t=${getTime()}`
                 : `${siteUrl.value + item.filepath}?t=${getTime()}`,
-              item.description || item.filename,
-              `${siteUrl.value + item.filepath}?t=${getTime()}`
-            )
-          } else if (insertFnType.value === 'video') {
-            insertFnPromise = insertFn_(
-              `${siteUrl.value + item.filepath}?t=${getTime()}`,
-              `${siteUrl.value + item.thumfor}?t=${getTime()}`
-            )
-          }
-
-          await insertFnPromise
-          const editor = editorRef.value
-          console.log(editor)
-          SlateTransforms.setNodes(
-            editor,
-            {
               width: item.thumWidth || item.width,
               height: item.thumHeight || item.height,
-              hrefWidth: item.width,
-              hrefHeight: item.height,
-            },
-            {
-              match: (n) => {
-                return n.type === 'image' || n.type === 'video'
-              },
+              dataHref: `${siteUrl.value + item.filepath}?t=${getTime()}`,
+              dataHrefWidth: item.width,
+              dataHrefHeight: item.height,
+              alt: item.description || item.filename || '',
+              text: '',
             }
-          )
+          })
+          const imageGroupElem = {
+            type: 'imageGroup',
+            children: [{ text: '' }],
+            childrenList: children,
+          }
+          SlateTransforms.insertNodes(editor, [imageGroupElem])
+        }, 100)
+      } else {
+        for (const item of attachments) {
+          if (insertFn_) {
+            let insertFnPromise = null
+            if (insertFnType.value === 'image') {
+              insertFnPromise = insertFn_(
+                item.thumfor
+                  ? `${siteUrl.value + item.thumfor}?t=${getTime()}`
+                  : `${siteUrl.value + item.filepath}?t=${getTime()}`,
+                item.description || item.filename || '',
+                `${siteUrl.value + item.filepath}?t=${getTime()}`
+              )
+            } else if (insertFnType.value === 'video') {
+              insertFnPromise = insertFn_(
+                `${siteUrl.value + item.filepath}?t=${getTime()}`,
+                `${siteUrl.value + item.thumfor}?t=${getTime()}`
+              )
+            }
+
+            await insertFnPromise
+            const editor = editorRef.value
+            console.log(editor)
+            SlateTransforms.setNodes(
+              editor,
+              {
+                width: item.thumWidth || item.width,
+                height: item.thumHeight || item.height,
+                hrefWidth: item.width,
+                hrefHeight: item.height,
+              },
+              {
+                match: (n) => {
+                  return n.type === 'image' || n.type === 'video'
+                },
+              }
+            )
+          }
         }
       }
+      openAttachmentsDialogType.value = ''
     }
 
     const handleBlur = () => {

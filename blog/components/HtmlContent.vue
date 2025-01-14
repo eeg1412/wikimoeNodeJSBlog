@@ -532,4 +532,33 @@ onMounted(() => {
   margin-left: 0.25rem;
   font-size: 0.9rem;
 }
+
+.w-e-image-group {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  /* gap: 2px; */
+  width: 100%;
+}
+
+.w-e-image-group-img-body {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1/1;
+}
+
+.html-content-body .w-e-image-group-img {
+  width: 100%;
+  height: 100% !important;
+  object-fit: cover; /* 确保图片填充整个容器并裁切多余部分 */
+}
+
+/* 奇数图片组的最后一个元素样式 */
+.w-e-image-group-odd .w-e-image-group-img-body:last-child {
+  grid-column: 1 / -1; /* 跨越所有列 */
+}
+
+.w-e-image-group-odd .w-e-image-group-img-body:last-child .w-e-image-group-img {
+  height: 100%;
+  object-fit: cover;
+}
 </style>

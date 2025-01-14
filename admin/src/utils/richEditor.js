@@ -1,14 +1,15 @@
 import { i18nAddResources } from '@wangeditor/editor'
 import { Boot } from '@wangeditor/editor'
 import editorMenuEventSpan from './editorMenu/event'
+import editorMenuImageGroup from './editorMenu/imageGroup'
 import editorMenuImage from './editorMenu/image'
 
 i18nAddResources('zh-CN', {
   videoModule: {
-    uploadVideo: '视频媒体库',
+    uploadVideo: '从媒体库插入视频',
   },
   uploadImgModule: {
-    uploadImage: '图片媒体库',
+    uploadImage: '从媒体库插入图片',
   },
 })
 
@@ -130,5 +131,6 @@ export const initRichEditor = () => {
   Boot.registerParseElemHtml(parseImgHtmlConf)
   Boot.registerElemToHtml(videoToHtmlConf)
   Boot.registerModule(editorMenuEventSpan)
+  Boot.registerModule(editorMenuImageGroup)
   Boot.registerModule(editorMenuImage)
 }
