@@ -508,7 +508,7 @@ onUnmounted(() => {})
 .blog-tweet-img-list-body.cover-count-1-1 {
   /* 宽高跟着内容走 */
   display: inline-block;
-  border-radius: 20px;
+  border-radius: 0.75rem;
   max-width: 100%;
   isolation: isolate;
 }
@@ -586,16 +586,16 @@ onUnmounted(() => {})
   top: calc(50% + 10px);
 }
 .blog-tweet-img-swiper-body {
-  border-radius: 20px;
+  border-radius: 0.75rem;
   /* border: 1px solid #e2e2e2; */
   overflow: hidden;
   isolation: isolate;
 }
 .blog-tweet-img-swiper-body.type-no-swiper {
-  border-radius: 5px;
+  border-radius: 0.75rem;
 }
 .blog-tweet-img-list-body.cover-count-1-1.no-swiper-mode {
-  border-radius: 5px;
+  border-radius: 0.75rem;
 }
 .blog-tweet-img-swiper-item {
   width: 100%;
@@ -608,7 +608,7 @@ onUnmounted(() => {})
   left: 0;
   width: 100%;
   height: 100%;
-  border-radius: 20px;
+  border-radius: 0.75rem;
 }
 .blog-tweet-img-list-body-item-video-mask {
   background: rgba(0, 0, 0, 0.3);
@@ -644,7 +644,7 @@ onUnmounted(() => {})
   width: auto !important;
   background: rgba(0, 0, 0, 0.5) !important;
   padding: 2px 10px !important;
-  border-radius: 20px !important;
+  border-radius: 0.75rem !important;
   font-size: 12px !important;
 }
 .blog-tweet-img-list-body .blog-tweet-1img-list-body {

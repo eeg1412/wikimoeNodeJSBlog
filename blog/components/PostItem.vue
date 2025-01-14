@@ -46,10 +46,10 @@ const defaultCover = options.value.siteDefaultCover || ''
   margin-bottom: 12px;
 }
 .post-list-blog-cover-img {
-  border-radius: 20px 20px 0px 0px;
+  border-radius: 0.75rem 0.75rem 0px 0px;
 }
 .post-list-title-body {
-  border-radius: 0px 0px 20px 20px;
+  border-radius: 0px 0px 0.75rem 0.75rem;
   padding: 10px 20px;
   box-sizing: border-box;
   font-size: 15px;

@@ -185,7 +185,7 @@ onUnmounted(() => {
   aspect-ratio: 16/9;
   width: 100%;
   height: auto;
-  border-radius: 20px;
+  border-radius: 0.75rem;
 }
 </style>
 <style>
@@ -193,6 +193,6 @@ onUnmounted(() => {
   aspect-ratio: 16/9;
   width: 100%;
   height: auto;
-  border-radius: 20px;
+  border-radius: 0.75rem;
 }
 </style>
