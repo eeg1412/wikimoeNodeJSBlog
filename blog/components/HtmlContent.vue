@@ -536,8 +536,11 @@ onMounted(() => {
 .w-e-image-group {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  /* gap: 2px; */
+  gap: 2px;
   width: 100%;
+  border-radius: 0.75rem;
+  isolation: isolate;
+  overflow: hidden;
 }
 
 .w-e-image-group-img-body {
