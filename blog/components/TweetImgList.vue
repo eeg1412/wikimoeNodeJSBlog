@@ -644,7 +644,7 @@ onUnmounted(() => {})
   width: auto !important;
   background: rgba(0, 0, 0, 0.5) !important;
   padding: 2px 10px !important;
-  border-radius: 0.75rem !important;
+  border-radius: 22px !important;
   font-size: 12px !important;
 }
 .blog-tweet-img-list-body .blog-tweet-1img-list-body {
