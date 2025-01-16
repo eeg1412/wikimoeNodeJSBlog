@@ -538,7 +538,7 @@ onMounted(() => {
   grid-template-columns: repeat(2, 1fr);
   gap: 2px;
   width: 100%;
-  border-radius: 0.75rem;
+  border-radius: 0.375rem;
   isolation: isolate;
   overflow: hidden;
 }
