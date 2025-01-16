@@ -242,12 +242,14 @@ const onSubmit = (event) => {
           title: '评论成功，将在审核后显示',
           icon: 'i-heroicons-check-circle',
           color: 'green',
+          timeout: 10000,
         })
       } else {
         toast.add({
           title: '评论成功',
           icon: 'i-heroicons-check-circle',
           color: 'green',
+          timeout: 10000,
         })
         // 刷新评论列表
         emits('refresh')
@@ -263,6 +265,7 @@ const onSubmit = (event) => {
             title: message,
             icon: 'i-heroicons-x-circle',
             color: 'red',
+            timeout: 10000,
           })
         })
       }
