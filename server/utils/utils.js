@@ -264,20 +264,20 @@ exports.generateTreeData = function (data, parentKey = 'parent') {
 
 
 exports.initIp2location = function () {
-  const binFilePath = path.join('./utils/ip2location/', process.env.IP2LOCATION_FILE_NAME)
+  const binFilePath = path.join('./utils/ip2location/', process.env.IP2LOCATION_FILE_NAME || 'IP2LOCATION.BIN')
   if (!fs.existsSync(binFilePath)) {
-    console.error(('ip2location文件不存在,如果需要IP解析请先从：https://lite.ip2location.com 下载BIN文件，然后放到utils/ip2location目录下'))
+    console.warn(('ip2location文件不存在,如果需要IP解析请先从：https://lite.ip2location.com 下载BIN文件，然后放到utils/ip2location目录下'))
     return
   }
   ip2location = new IP2Location();
   ip2location.open(binFilePath);
+  console.info('ip2location初始化成功')
 }
 let ip2location = null
-if (process.env.IP2LOCATION === '1') {
-  this.initIp2location()
-}
+this.initIp2location()
+
 exports.IP2LocationUtils = function (ip, id, modelUtils, updateMongodb = true) {
-  if (process.env.IP2LOCATION === '1') {
+  if (ip2location) {
     const promise = new Promise((resolve, reject) => {
       console.time('ip2location')
       try {
@@ -314,7 +314,6 @@ exports.IP2LocationUtils = function (ip, id, modelUtils, updateMongodb = true) {
     })
     return promise
   }
-  console.log('ip2location未开启,跳过ip解析')
   return new Promise((resolve) => {
     resolve(null)
   })
