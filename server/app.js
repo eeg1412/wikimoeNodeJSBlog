@@ -1,6 +1,10 @@
 global.$cacheData = {}
 global.$isReady = false
-var express = require('express');
+global.$secret = {}
+var express = require('express')
+const utils = require('./utils/utils')
+const JWTSecretAdmin = utils.ensureJWTSecret()
+global.$secret.JWTSecretAdmin = JWTSecretAdmin
 const log4js = require('log4js')
 var path = require('path');
 var cookieParser = require('cookie-parser');
@@ -12,7 +16,6 @@ var history = require('connect-history-api-fallback');
 var adminRouter = require('./routes/admin');
 const blogRouter = require('./routes/blog');
 const rssRouter = require('./routes/rss/index');
-const utils = require('./utils/utils')
 const sitemapToolUtils = require('./utils/sitemap')
 
 var app = express();

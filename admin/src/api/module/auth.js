@@ -313,6 +313,12 @@ export default function (api) {
         shouldAdminJWT: true
       })
     },
+    // put /option/flushjwtsecretadmin
+    flushJWTSecretAdmin () {
+      return api.put('/option/flushjwtsecretadmin', {}, {
+        shouldAdminJWT: true
+      })
+    },
     // get dashboard
     getDashboard () {
       return api.get('/dashboard', {

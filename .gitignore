@@ -23,6 +23,7 @@ data
 /server/utils/ip2location/*
 /server/tools/backupFromEmlogJson/*
 /server/cache/*
+/server/secret/*
 /server/backups/*
 /blog/public/ads.txt
 /blog/public/robots.txt

@@ -546,6 +546,15 @@ const adminRouteSetting = [
     roleType: null,
     role: null
   },
+  // put /option/flushjwtsecretadmin
+  {
+    path: '/option/flushjwtsecretadmin',
+    method: 'put',
+    middleware: [checkAuth],
+    controller: require('../api/admin/option/reflushJWTScretAdmin'),
+    roleType: 'eq',
+    role: 999
+  },
   // get dashboard
   {
     path: '/dashboard',

@@ -3,6 +3,7 @@ const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
 const validator = require('validator')
 const fs = require('fs')
+const fsExtra = require('fs-extra')
 const path = require('path');
 const { IP2Location } = require("ip2location-nodejs");
 const parser = require('ua-parser-js');
@@ -43,7 +44,48 @@ exports.creatBcryptStr = function (str) {
 exports.checkBcryptStr = function (str, hash) {
   return bcrypt.compareSync(str, hash)
 }
+exports.generateJwtSecret = function (byteLength = 256) {
+  try {
+    // 生成随机字节
+    const randomBytes = crypto.randomBytes(byteLength);
+    // 转换为 base64 字符串
+    const jwtSecret = randomBytes.toString('base64');
 
+    return jwtSecret;
+  } catch (error) {
+    console.error('生成 JWT SECRET 失败:', error);
+    throw error;
+  }
+}
+exports.ensureJWTSecret = function (reflush = false) {
+  const secretDir = path.join('./secret')
+  const keyPath = path.join(secretDir, 'JWTSecretAdmin.key')
+
+  try {
+    // 确保secret目录存在
+    fsExtra.ensureDirSync(secretDir)
+
+    // 检查密钥文件是否存在
+    const exists = fsExtra.pathExistsSync(keyPath)
+
+    if (!exists || reflush) {
+      console.info('将生成新的JWT密钥')
+      // 生成新的JWT密钥
+      const jwtSecret = this.generateJwtSecret()
+      // 写入文件
+      fsExtra.writeFileSync(keyPath, jwtSecret, 'utf8')
+      console.info('成功生成新的JWT-Admin密钥')
+    }
+
+    // 读取密钥
+    const secret = fsExtra.readFileSync(keyPath, 'utf8')
+    return secret
+
+  } catch (error) {
+    console.error('JWT密钥文件操作失败:', error)
+    throw error
+  }
+}
 exports.limitStr = (str, len) => {
   const strArray = Array.from(str)
   if (strArray.length > len) {
@@ -53,12 +95,19 @@ exports.limitStr = (str, len) => {
 }
 
 exports.creatJWT = function (payload, exp) {
-  const secret = process.env.JWT_SECRET
+  const secret = global.$secret.JWTSecretAdmin
+  if (!secret) {
+    throw new Error('JWT密钥不存在')
+  }
   const token = jwt.sign(payload, secret, { expiresIn: exp })
   return token
 }
 exports.checkJWT = function (token) {
-  const secret = process.env.JWT_SECRET
+  const secret = global.$secret.JWTSecretAdmin
+  if (!secret) {
+    throw new Error('JWT密钥不存在')
+  }
+  // console.time('checkJWT')
   let result = null
   try {
     const decoded = jwt.verify(token, secret)
@@ -66,6 +115,7 @@ exports.checkJWT = function (token) {
       isError: false,
       data: decoded,
     }
+    // console.timeEnd('checkJWT')
     return result
   } catch (err) {
     // {"name":"TokenExpiredError","message":"jwt expired","expiredAt":"2022-03-03T02:36:11.000Z"}
@@ -156,8 +206,7 @@ exports.getUserIp = function (req) {
 // checkEnv
 exports.checkEnv = function () {
   const envArr = [
-    'DB_HOST',
-    'JWT_SECRET',
+    'DB_HOST'
   ]
   const result = []
   envArr.forEach((env) => {

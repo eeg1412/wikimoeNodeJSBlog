@@ -41,6 +41,12 @@
       <div class="w_10">※开启后，爬虫访问文章时也会增加文章查看数</div>
     </el-form-item>
 
+    <el-form-item label="刷新密钥" v-if="adminInfo.role === 999">
+      <el-button type="danger" @click="handleFlushSecret"
+        >刷新管理端密钥</el-button
+      >
+    </el-form-item>
+
     <el-form-item>
       <el-button type="primary" @click="otherSettingsSubmit">提交</el-button>
     </el-form-item>
@@ -52,9 +58,11 @@ import { ref, reactive, onMounted, computed } from 'vue'
 import { authApi } from '@/api'
 import store from '@/store'
 import { ElMessage, ElMessageBox } from 'element-plus'
+import { useRouter } from 'vue-router'
 
 export default {
   setup(props, { emit }) {
+    const router = useRouter()
     // 其他设置
     const otherSettingsFormRef = ref(null)
     const otherSettingsForm = reactive({
@@ -116,6 +124,37 @@ export default {
           inited.value = true
         })
     }
+    const logout = () => {
+      router.replace({
+        name: 'Login',
+      })
+      // 清除token
+      localStorage.removeItem('adminToken')
+      sessionStorage.removeItem('adminToken')
+    }
+    const handleFlushSecret = () => {
+      ElMessageBox.confirm(
+        '确定要刷新管理端密钥吗？刷新后将立即登出，是否继续？',
+        '提示',
+        {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning',
+        }
+      )
+        .then(() => {
+          authApi.flushJWTSecretAdmin().then(() => {
+            ElMessage.success('密钥已刷新')
+            logout()
+          })
+        })
+        .catch(() => {})
+    }
+
+    const adminInfo = computed(() => {
+      return store.getters.adminInfo
+    })
+
     onMounted(() => {
       getOptionList()
     })
@@ -125,6 +164,8 @@ export default {
       otherSettingsRules,
       otherSettingsSubmit,
       inited,
+      handleFlushSecret,
+      adminInfo,
     }
   },
 }
