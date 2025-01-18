@@ -230,7 +230,7 @@ module.exports = async function (req, res, next) {
       if (reviewCount >= siteMaxCommentReview) {
         res.status(400).json({
           errors: [{
-            message: '评论审核数已达上限，请稍后再试'
+            message: '审核中的评论数已达上限，请稍后再试'
           }]
         })
         return
