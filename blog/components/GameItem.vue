@@ -58,13 +58,21 @@
                   ? formatDate(game.endTime, 'yyyy年M月dd日 h时')
                   : '攻略中'
               }`
-            }}
+            }}<LoadingDots v-if="!game.endTime" />
           </div>
           <div
             class="text-sm mb-1 text-gray-400 flex-shrink-0 w_10 flex items-center"
           >
-            <template v-if="!game.endTime">累计游玩</template
-            ><template v-else>共计游玩</template
+            <template v-if="!game.endTime"
+              ><UIcon
+                name="i-heroicons-clock"
+                class="align-middle mr-1"
+              />累计游玩</template
+            ><template v-else
+              ><UIcon
+                name="i-heroicons-star"
+                class="align-middle mr-1"
+              />共计游玩</template
             >{{ getACGDuration(game.startTime, game.endTime) }}
           </div>
         </div>

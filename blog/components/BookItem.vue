@@ -58,13 +58,21 @@
                   ? formatDate(book.endTime, 'yyyy年M月dd日 h时')
                   : '阅读中'
               }`
-            }}
+            }}<LoadingDots v-if="!book.endTime" />
           </div>
           <div
             class="text-sm mb-1 text-gray-400 flex-shrink-0 w_10 flex items-center"
           >
-            <template v-if="!book.endTime">累计阅读</template
-            ><template v-else>共计阅读</template
+            <template v-if="!book.endTime"
+              ><UIcon
+                name="i-heroicons-clock"
+                class="align-middle mr-1"
+              />累计阅读</template
+            ><template v-else
+              ><UIcon
+                name="i-heroicons-star"
+                class="align-middle mr-1"
+              />共计阅读</template
             >{{ getACGDuration(book.startTime, book.endTime) }}
           </div>
         </div>
