@@ -66,12 +66,12 @@
             <template v-if="!game.endTime"
               ><UIcon
                 name="i-heroicons-clock"
-                class="align-middle mr-1"
+                class="align-middle acgn-time-icon"
               />累计游玩</template
             ><template v-else
               ><UIcon
                 name="i-heroicons-star"
-                class="align-middle mr-1"
+                class="align-middle acgn-time-icon"
               />共计游玩</template
             >{{ getACGDuration(game.startTime, game.endTime) }}
           </div>

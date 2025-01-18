@@ -66,12 +66,12 @@
             <template v-if="!book.endTime"
               ><UIcon
                 name="i-heroicons-clock"
-                class="align-middle mr-1"
+                class="align-middle acgn-time-icon"
               />累计阅读</template
             ><template v-else
               ><UIcon
                 name="i-heroicons-star"
-                class="align-middle mr-1"
+                class="align-middle acgn-time-icon"
               />共计阅读</template
             >{{ getACGDuration(book.startTime, book.endTime) }}
           </div>

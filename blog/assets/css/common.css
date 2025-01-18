@@ -1069,3 +1069,6 @@ ins.adsbygoogle[data-ad-status='unfilled'] {
   /* 不换行 */
   white-space: nowrap;
 }
+.acgn-time-icon {
+  margin-right: 0.14rem;
+}
