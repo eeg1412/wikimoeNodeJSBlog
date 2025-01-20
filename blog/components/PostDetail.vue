@@ -427,6 +427,7 @@
                     <div class="comment-list-item-btns">
                       <CommentRetractBtn
                         :commentid="item._id"
+                        :content="item.content"
                         @refresh="refreshCommentList"
                       />
                     </div>

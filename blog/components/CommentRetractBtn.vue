@@ -36,6 +36,10 @@ const props = defineProps({
     type: String,
     default: '',
   },
+  content: {
+    type: String,
+    default: '',
+  },
 })
 const toast = useToast()
 const now = ref(Date.now())
@@ -107,7 +111,13 @@ const retractComment = () => {
         title: '已成功撤回评论',
         icon: 'i-heroicons-check-circle',
         color: 'green',
-        timeout: 10000,
+        timeout: 60000,
+        actions: [
+          {
+            label: '复制评论内容',
+            click: () => copyToClipboard(props.content, toast),
+          },
+        ],
       })
       isModalOpen.value = false
       isSuccess.value = true

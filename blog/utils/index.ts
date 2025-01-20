@@ -234,3 +234,24 @@ export const seasonToName = (season: number) => {
 export const nextFrame = (fn: () => void) => {
   window.requestAnimationFrame(() => window.requestAnimationFrame(fn))
 }
+
+export const copyToClipboard = async (text: string, toast: any) => {
+  try {
+    await navigator.clipboard.writeText(text)
+    if (!toast) return
+    toast.add({
+      title: '复制成功',
+      icon: 'i-heroicons-check-circle',
+      color: 'green',
+      timeout: 10000,
+    })
+  } catch (err) {
+    if (!toast) return
+    toast.add({
+      title: '复制失败',
+      icon: 'i-heroicons-x-circle',
+      color: 'red',
+      timeout: 10000,
+    })
+  }
+}
