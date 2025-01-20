@@ -319,6 +319,12 @@ export default function (api) {
         shouldAdminJWT: true
       })
     },
+    // put /option/flushjwtsecretblog
+    flushJWTSecretBlog () {
+      return api.put('/option/flushjwtsecretblog', {}, {
+        shouldAdminJWT: true
+      })
+    },
     // get dashboard
     getDashboard () {
       return api.get('/dashboard', {

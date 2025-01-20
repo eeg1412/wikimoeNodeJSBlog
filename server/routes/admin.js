@@ -555,6 +555,15 @@ const adminRouteSetting = [
     roleType: 'eq',
     role: 999
   },
+  // put /option/flushjwtsecretblog
+  {
+    path: '/option/flushjwtsecretblog',
+    method: 'put',
+    middleware: [checkAuth, checkRole],
+    controller: require('../api/admin/option/reflushJWTScretBlog'),
+    roleType: 'eq',
+    role: 999
+  },
   // get dashboard
   {
     path: '/dashboard',

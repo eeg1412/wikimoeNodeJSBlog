@@ -45,6 +45,9 @@
       <el-button type="danger" @click="handleFlushSecret"
         >刷新管理端密钥</el-button
       >
+      <!-- 刷新博客端密钥 -->
+      <el-button type="danger" @click="handleFlushSecretBlog"
+        >刷新博客端密钥</el-button>
     </el-form-item>
 
     <el-form-item>
@@ -150,6 +153,23 @@ export default {
         })
         .catch(() => {})
     }
+    const handleFlushSecretBlog = () => {
+      ElMessageBox.confirm(
+        '确定要刷新博客端密钥吗？',
+        '提示',
+        {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning',
+        }
+      )
+        .then(() => {
+          authApi.flushJWTSecretBlog().then(() => {
+            ElMessage.success('密钥已刷新')
+          })
+        })
+        .catch(() => {})
+    }
 
     const adminInfo = computed(() => {
       return store.getters.adminInfo
@@ -165,6 +185,7 @@ export default {
       otherSettingsSubmit,
       inited,
       handleFlushSecret,
+      handleFlushSecretBlog,
       adminInfo,
     }
   },

@@ -111,6 +111,7 @@ const retractComment = () => {
       })
       isModalOpen.value = false
       isSuccess.value = true
+      clearInterval(timer)
       // 刷新评论列表
       emits('refresh')
     })
@@ -134,7 +135,10 @@ const retractComment = () => {
         localStorage.removeItem('commentRetractJWT')
         setCommentRetractAuthDecode()
       }
-      isLoading.value = false
+      isModalOpen.value = false
+      nextTick(() => {
+        isLoading.value = false
+      })
     })
     .finally(() => {})
 }
