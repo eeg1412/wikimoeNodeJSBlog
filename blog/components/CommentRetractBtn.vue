@@ -99,7 +99,7 @@ const countDown = computed(() => {
   if (time <= 0) {
     return 0
   }
-  return Math.ceil(time / 1000)
+  return Math.floor(time / 1000)
 })
 const isModalOpen = ref(false)
 const isLoading = ref(false)
