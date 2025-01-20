@@ -37,7 +37,22 @@
         :min="1"
         :step="1"
         :precision="0"
-      ></el-input-number>
+      ></el-input-number
+      ><span class="pl5">条</span>
+    </el-form-item>
+    <!-- 24小时撤回限额 -->
+    <el-form-item label="24小时撤回限额" prop="siteCommentRetractLimit">
+      <!-- 数字 1-100 -->
+      <el-input-number
+        v-model="commentSettingsForm.siteCommentRetractLimit"
+        controls-position="right"
+        :min="0"
+        :max="100"
+        :step="1"
+        :precision="0"
+      ></el-input-number
+      ><span class="pl5">次</span>
+      <div class="w_10">※0为禁止撤回</div>
     </el-form-item>
     <el-form-item label="评论分页" prop="siteCommentPageSize">
       <!-- 数字 1-100 -->
@@ -48,7 +63,8 @@
         :max="100"
         :step="1"
         :precision="0"
-      ></el-input-number>
+      ></el-input-number
+      ><span class="pl5">条/页</span>
     </el-form-item>
 
     <el-form-item>
@@ -78,6 +94,8 @@ export default {
       siteMaxCommentReview: 100,
       // 评论分页
       siteCommentPageSize: 10,
+      // 24小时撤回限额
+      siteCommentRetractLimit: 3,
     })
     const commentSettingsRules = {
       siteCommentInterval: [

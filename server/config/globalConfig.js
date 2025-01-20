@@ -78,6 +78,8 @@ const initGlobalConfig = async () => {
     siteMaxCommentReview: 100,
     // 评论分页
     siteCommentPageSize: 10,
+    // 24小时撤回限额
+    siteCommentRetractLimit: 3,
   }
 
   const rssSettingsConfig = {
