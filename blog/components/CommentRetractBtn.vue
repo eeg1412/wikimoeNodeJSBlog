@@ -76,8 +76,7 @@ const showBtn = computed(() => {
   if (expDate < now.value) {
     return false
   }
-  const commentList = commentRetractAuthDecode.value.commentList || []
-  const comment = commentList.find((item) => item.id === props.commentid)
+  const comment = currentComment.value
   if (!comment) {
     return false
   }
@@ -90,8 +89,7 @@ const countDown = computed(() => {
   if (!showBtn.value) {
     return 0
   }
-  const commentList = commentRetractAuthDecode.value.commentList || []
-  const comment = commentList.find((item) => item.id === props.commentid)
+  const comment = currentComment.value
   if (!comment) {
     return 0
   }
@@ -186,6 +184,22 @@ const retractComment = () => {
     })
     .finally(() => {})
 }
+
+const currentComment = ref(null)
+const findCurrentComment = () => {
+  const commentList = commentRetractAuthDecode.value?.commentList || []
+  currentComment.value = commentList.find((item) => item.id === props.commentid)
+}
+
+// 只在 commentid 和 commentRetractAuthDecode 变化时更新 currentComment
+watch(
+  [() => props.commentid, commentRetractAuthDecode],
+  () => {
+    findCurrentComment()
+  },
+  { immediate: true }
+)
+
 onMounted(() => {
   if (showBtn.value) {
     timer = setInterval(() => {
@@ -194,7 +208,7 @@ onMounted(() => {
   }
   if (commentRetractCountData.value) {
     const todayEndTime = new Date(
-      commentRetractCountData.todayEndTime || 0
+      commentRetractCountData.value.todayEndTime || 0
     ).getTime()
     if (todayEndTime < now.value) {
       // 重新获取commentRetractCountData
@@ -202,6 +216,7 @@ onMounted(() => {
       setCommentRetractCountData()
     }
   }
+  findCurrentComment()
 })
 onUnmounted(() => {
   clearInterval(timer)

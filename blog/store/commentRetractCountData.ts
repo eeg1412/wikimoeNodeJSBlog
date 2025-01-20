@@ -27,6 +27,7 @@ export const useCommentRetractCountDataStore = defineStore(
             commentRetractCountData.value = null
             // 清空localStorage中的commentRetractCountData
             localStorage.removeItem('commentRetractCountData')
+            console.log('commentRetractCountData过期')
             return
           }
           // 将解码后的值赋值给commentRetractCountData
@@ -35,6 +36,7 @@ export const useCommentRetractCountDataStore = defineStore(
           // 如果解码失败，将commentRetractCountData置为null
           commentRetractCountData.value = null
           localStorage.removeItem('commentRetractCountData')
+          console.log('commentRetractCountData解码失败')
         }
       } else {
         // 如果commentRetractJWT不存在，将commentRetractCountData置为null
