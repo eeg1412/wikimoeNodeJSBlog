@@ -57,7 +57,7 @@ exports.generateJwtSecret = function (byteLength = 256) {
     throw error;
   }
 }
-exports.ensureJWTSecret = function (reflush = false) {
+exports.ensureJWTSecretAdmin = function (reflush = false) {
   const secretDir = path.join('./secret')
   const keyPath = path.join(secretDir, 'JWTSecretAdmin.key')
 

@@ -4,7 +4,7 @@ const adminApiLog = log4js.getLogger('adminApi')
 
 module.exports = async function (req, res, next) {
   try {
-    const JWTSecretAdmin = utils.ensureJWTSecret(true)
+    const JWTSecretAdmin = utils.ensureJWTSecretAdmin(true)
     global.$secret.JWTSecretAdmin = JWTSecretAdmin
     res.send({
       message: '刷新成功'
