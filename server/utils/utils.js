@@ -503,6 +503,43 @@ exports.sendCommentAddNotice = function (post, comment) {
   }
 
 }
+// 评论撤回通知，参数是文章信息post，评论信息comment
+exports.sendRetractCommentNotice = function (post, comment) {
+  const siteSettings = global.$globalConfig.siteSettings
+  const emailSettings = global.$globalConfig.emailSettings
+  const { emailRetractCommentTemplate, emailEnable, emailSendOptions, emailReceiver } = emailSettings
+
+  // 如果没有设置emailRetractCommentTemplate，就不发送邮件
+  if (!emailRetractCommentTemplate) {
+    console.error('请在后台设置emailRetractCommentTemplate')
+    return
+  }
+
+  // 判断emailEnable为true，且emailSendOptions包含字符串retractComment
+  if (emailEnable && emailSendOptions.includes('retractComment')) {
+    const { siteUrl, siteTitle } = siteSettings
+    const { title, excerpt } = post
+    let linkTitle = title || excerpt
+    if (linkTitle.length > 200) {
+      linkTitle = this.limitStr(linkTitle, 200)
+    }
+    let { nickname, content, user } = comment
+    content = this.escapeHtml(content)
+    if (user) {
+      nickname = user.nickname
+    }
+    nickname = this.escapeHtml(nickname)
+    const to = emailReceiver
+    const subject = `【${siteTitle}】的评论被评论者撤回`
+    let contentHtml = emailRetractCommentTemplate
+    // 替换模板中的变量
+    contentHtml = contentHtml.replace(/\${comment}/g, `${content}`)
+    contentHtml = contentHtml.replace(/\${nickname}/g, nickname)
+    contentHtml = contentHtml.replace(/\${title}/g, `<a href="${this.getPostPagePath(post)}">${linkTitle}</a>`)
+    contentHtml = contentHtml.replace(/\${siteTitle}/g, `<a href="${siteUrl}">${siteTitle}</a>`)
+    this.sendEmail(to, contentHtml, subject)
+  }
+}
 
 // 发送回复评论通知，参数是文章信息post，评论信息comment，父级评论信息parentComment
 exports.sendReplyCommentNotice = async function (post, comment) {

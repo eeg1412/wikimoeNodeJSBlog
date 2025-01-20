@@ -75,6 +75,25 @@
         <div>${parentNickname}为被回复者昵称</div>
         <div>${parentComment}为被回复的内容</div>
       </el-form-item>
+      <!-- 撤回评论模板 -->
+      <el-form-item
+        label="撤回评论模板"
+        prop="emailRetractCommentTemplate"
+        class="blok-form-item"
+      >
+        <RichEditor5Switch
+          v-model:content="emailSettingsForm.emailRetractCommentTemplate"
+          v-model:isRichMode="
+            emailSettingsForm.emailRetractCommentTemplateIsRichMode
+          "
+          v-if="inited"
+        />
+        <!-- siteTitle -->
+        <div>${siteTitle}为站点名称</div>
+        <div>${title}为文章标题</div>
+        <div>${nickname}为评论者昵称</div>
+        <div>${comment}为评论内容</div>
+      </el-form-item>
 
       <el-form-item label="发送选项" prop="emailSendOptions">
         <el-checkbox-group v-model="emailSettingsForm.emailSendOptions">
@@ -124,12 +143,15 @@ export default {
       // 发送选项
       // 收到评论时通知自己,回复评论时通知评论者
       emailSendOptions: [],
-      // 通知自己模板
+      // 收到评论时通知自己模板
       emailSendToMeTemplate: '',
       emailSendToMeTemplateIsRichMode: true,
-      // 通知评论者模板
+      // 回复评论时通知评论者模板
       emailSendToCommenterTemplate: '',
       emailSendToCommenterTemplateIsRichMode: true,
+      // 撤回评论时通知自己模板
+      emailRetractCommentTemplate: '',
+      emailRetractCommentTemplateIsRichMode: true,
     })
     const emailSendOptions = ref([
       {
@@ -139,6 +161,11 @@ export default {
       {
         label: '回复评论时通知评论者',
         value: 'replyComment',
+      },
+      // 撤回时通知自己
+      {
+        label: '撤回评论时通知自己',
+        value: 'retractComment',
       },
     ])
     const emailSettingsRules = computed(() => {

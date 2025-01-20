@@ -113,6 +113,9 @@ const initGlobalConfig = async () => {
     // 通知评论者模板
     emailSendToCommenterTemplate: '',
     emailSendToCommenterTemplateIsRichMode: true,
+    // 撤回评论时通知自己模板
+    emailRetractCommentTemplate: '',
+    emailRetractCommentTemplateIsRichMode: true,
   }
   // 其他配置
   const otherSettingsConfig = {
