@@ -26,6 +26,9 @@ const commentRetractAuthDecodeStore = useCommentRetractAuthDecodeStore()
 const { commentRetractAuthDecode } = storeToRefs(commentRetractAuthDecodeStore)
 
 const showBtn = computed(() => {
+  if (isSuccess.value) {
+    return false
+  }
   if (!commentRetractAuthDecode.value) {
     return false
   }
@@ -61,6 +64,7 @@ const countDown = computed(() => {
 })
 
 const isLoading = ref(false)
+const isSuccess = ref(false)
 const retractComment = () => {
   if (isLoading.value) {
     return
@@ -72,11 +76,12 @@ const retractComment = () => {
     .then((res) => {
       console.log(res)
       toast.add({
-        title: '成功撤回评论',
+        title: '已成功撤回评论',
         icon: 'i-heroicons-check-circle',
         color: 'green',
         timeout: 10000,
       })
+      isSuccess.value = true
       // 刷新评论列表
       emits('refresh')
     })
