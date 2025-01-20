@@ -28,7 +28,9 @@
 </template>
 
 <script setup>
+import { useOptionStore } from '@/store/options'
 import { useCommentRetractAuthDecodeStore } from '@/store/commentRetractAuthDecode'
+import { useCommentRetractCountDataStore } from '@/store/commentRetractCountData'
 import { deleteCommentRetractApi } from '@/api/comment'
 const emits = defineEmits(['refresh'])
 const props = defineProps({
@@ -41,11 +43,17 @@ const props = defineProps({
     default: '',
   },
 })
+const optionStore = useOptionStore()
+const { options } = storeToRefs(optionStore)
 const toast = useToast()
 const now = ref(Date.now())
 const commentRetractAuthDecodeStore = useCommentRetractAuthDecodeStore()
 const { setCommentRetractAuthDecode } = commentRetractAuthDecodeStore
 const { commentRetractAuthDecode } = storeToRefs(commentRetractAuthDecodeStore)
+
+const commentRetractCountDataStore = useCommentRetractCountDataStore()
+const { setCommentRetractCountData } = commentRetractCountDataStore
+const { commentRetractCountData } = storeToRefs(commentRetractCountDataStore)
 
 const showBtn = computed(() => {
   if (isSuccess.value) {
@@ -53,6 +61,15 @@ const showBtn = computed(() => {
   }
   if (!commentRetractAuthDecode.value) {
     return false
+  }
+  if (options.value.siteCommentRetractLimit === 0) {
+    return false
+  }
+  if (commentRetractCountData.value) {
+    const count = commentRetractCountData.value.count || 0
+    if (count >= options.value.siteCommentRetractLimit) {
+      return false
+    }
   }
   const exp = commentRetractAuthDecode.value.exp || 0
   const expDate = new Date(exp * 1000)
@@ -119,6 +136,14 @@ const retractComment = () => {
           },
         ],
       })
+      const commentRetractCountData = res.commentRetractCountData
+      if (commentRetractCountData) {
+        localStorage.setItem(
+          'commentRetractCountData',
+          JSON.stringify(commentRetractCountData)
+        )
+        setCommentRetractCountData(commentRetractCountData)
+      }
       isModalOpen.value = false
       isSuccess.value = true
       clearInterval(timer)
@@ -145,6 +170,15 @@ const retractComment = () => {
         localStorage.removeItem('commentRetractJWT')
         setCommentRetractAuthDecode()
       }
+      const commentRetractCountData =
+        err.response?._data?.commentRetractCountData
+      if (commentRetractCountData) {
+        localStorage.setItem(
+          'commentRetractCountData',
+          JSON.stringify(commentRetractCountData)
+        )
+        setCommentRetractCountData(commentRetractCountData)
+      }
       isModalOpen.value = false
       nextTick(() => {
         isLoading.value = false
@@ -157,6 +191,16 @@ onMounted(() => {
     timer = setInterval(() => {
       now.value = Date.now()
     }, 1000)
+  }
+  if (commentRetractCountData.value) {
+    const todayEndTime = new Date(
+      commentRetractCountData.todayEndTime || 0
+    ).getTime()
+    if (todayEndTime < now.value) {
+      // 重新获取commentRetractCountData
+      console.log('重新获取commentRetractCountData')
+      setCommentRetractCountData()
+    }
   }
 })
 onUnmounted(() => {

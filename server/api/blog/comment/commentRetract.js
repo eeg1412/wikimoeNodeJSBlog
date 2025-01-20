@@ -82,6 +82,8 @@ module.exports = async function (req, res, next) {
       })
       return
     }
+    const todayStartTime = utils.getTodayStartTime()
+    const todayEndTime = utils.getTodayEndTime()
     const readerlogCount = await readerlogUtils.count({
       $or: [
         {
@@ -93,15 +95,21 @@ module.exports = async function (req, res, next) {
       ],
       action: 'commentRetract',
       createdAt: {
-        $gte: utils.getTodayStartTime(),
-        $lte: utils.getTodayEndTime()
+        $gte: todayStartTime,
+        $lte: todayEndTime
       }
     })
+    const commentRetractCountData = {
+      count: readerlogCount,
+      todayStartTime: todayStartTime,
+      todayEndTime: todayEndTime
+    }
     if (readerlogCount >= siteCommentRetractLimit) {
       res.status(400).json({
         errors: [{
           message: '已到达今日撤回上限'
-        }]
+        }],
+        commentRetractCountData
       })
       return
     }
@@ -132,10 +140,12 @@ module.exports = async function (req, res, next) {
         // utils.reflushBlogCache()
       }
       // 返回成功
+      commentRetractCountData.count++
       res.send({
         data: {
           message: '撤回成功'
-        }
+        },
+        commentRetractCountData
       })
       userApiLog.info(`comment retract success`)
       // 发送邮件

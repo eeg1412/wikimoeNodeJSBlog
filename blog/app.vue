@@ -12,10 +12,13 @@ import { useIsFullscreenStore } from '@/store/isFullscreen'
 import { storeToRefs } from 'pinia'
 import { postLogCreateApi, putLogUpdatePerformanceApi } from '@/api/log'
 import { useCommentRetractAuthDecodeStore } from '@/store/commentRetractAuthDecode'
+import { useCommentRetractCountDataStore } from '@/store/commentRetractCountData'
 
 const optionStore = useOptionStore()
 const commentRetractAuthDecodeStore = useCommentRetractAuthDecodeStore()
 const { setCommentRetractAuthDecode } = commentRetractAuthDecodeStore
+const commentRetractCountDataStore = useCommentRetractCountDataStore()
+const { setCommentRetractCountData } = commentRetractCountDataStore
 const { getOptions } = optionStore
 await getOptions()
 const { options } = storeToRefs(optionStore)
@@ -259,6 +262,7 @@ onMounted(() => {
   postLogCreate()
   addFullscreenChangeListener()
   setCommentRetractAuthDecode()
+  setCommentRetractCountData()
 })
 onUnmounted(() => {
   removeFullscreenChangeListener()

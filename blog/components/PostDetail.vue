@@ -663,7 +663,7 @@ const getCommentList = async (goToCommentListRef) => {
           } else {
             console.warn('postCommentId 找不到对应的评论')
           }
-        } else if (goToCommentListRef) {
+        } else if (goToCommentListRef && commentListRef.value) {
           // const rect = commentListRef.value.getBoundingClientRect()
           const elementRect = commentListRef.value.getBoundingClientRect()
           const parentRect = postDetailBody.value.getBoundingClientRect()

@@ -18,7 +18,11 @@ export const useCommentRetractAuthDecodeStore = defineStore(
             atob(commentRetractJWT.split('.')[1])
           )
           // 验证exp是否过期
-          if (commentRetractAuthDecodeValue.exp * 1000 < Date.now()) {
+          if (
+            new Date(
+              (commentRetractAuthDecodeValue.exp || 0) * 1000
+            ).getTime() < Date.now()
+          ) {
             // 如果过期，将commentRetractAuthDecode置为null
             commentRetractAuthDecode.value = null
             // 清空localStorage中的commentRetractJWT
