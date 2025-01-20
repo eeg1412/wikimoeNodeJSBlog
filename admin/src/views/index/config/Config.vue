@@ -34,7 +34,7 @@
   </div>
 </template>
 <script>
-import { onMounted, reactive, ref, computed } from 'vue'
+import { onMounted, reactive, ref, computed, watch } from 'vue'
 import store from '@/store'
 import { useRoute, useRouter } from 'vue-router'
 import { authApi } from '@/api'
@@ -60,7 +60,19 @@ export default {
     ConfigAdSettingsForm,
   },
   setup() {
-    const activeName = ref('site')
+    const route = useRoute()
+    const router = useRouter()
+    const activeName = ref(null)
+    if (route.query.active) {
+      activeName.value = route.query.active
+    } else {
+      activeName.value = 'site'
+    }
+
+    watch(activeName, (val) => {
+      const query = { active: val }
+      router.replace({ query })
+    })
 
     onMounted(() => {})
     return {
