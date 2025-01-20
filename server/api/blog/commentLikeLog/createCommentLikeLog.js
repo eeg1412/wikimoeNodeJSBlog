@@ -195,7 +195,7 @@ module.exports = async function (req, res, next) {
     let content = comment.content
     // 控制content长度在20字，超过...
     if (content.length > 20) {
-      content = content.substring(0, 20) + '...'
+      content = utils.limitStr(content, 20)
     }
     const readerlogParams = {
       uuid: uuid,

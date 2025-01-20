@@ -288,7 +288,6 @@
             <div class="comment-list-title">评论：</div>
             <div
               class="comment-list-item"
-              :class="{ 'opacity-50': item.status === 0 }"
               v-for="(item, index) in commentList"
               :id="`post-detail-comment-${item._id}`"
               :key="item._id"
@@ -376,10 +375,13 @@
                   <div class="comment-list-item-content">
                     {{ item.content }}
                   </div>
-                  <template v-if="item.status === 1">
+                  <div class="flex items-center">
                     <!-- 按钮 -->
                     <!-- 喜欢按钮 -->
-                    <div class="comment-list-item-btns">
+                    <div
+                      class="comment-list-item-btns mr-2"
+                      v-if="item.status === 1"
+                    >
                       <UButton
                         size="2xs"
                         icon="i-heroicons-heart-solid"
@@ -422,7 +424,13 @@
                         >
                       </template>
                     </div>
-                  </template>
+                    <div class="comment-list-item-btns">
+                      <CommentRetractBtn
+                        :commentid="item._id"
+                        @refresh="refreshCommentList"
+                      />
+                    </div>
+                  </div>
                   <div class="mt-5" v-if="commentid === item._id">
                     <!-- 回复表单 -->
                     <CommentForm

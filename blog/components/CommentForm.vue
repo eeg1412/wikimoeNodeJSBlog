@@ -119,10 +119,13 @@
 import { storeToRefs } from 'pinia'
 import { useOptionStore } from '@/store/options'
 import { getCommentCreateApi } from '@/api/comment'
+import { useCommentRetractAuthDecodeStore } from '@/store/commentRetractAuthDecode'
 
 const toast = useToast()
 const optionStore = useOptionStore()
+const commentRetractAuthDecodeStore = useCommentRetractAuthDecodeStore()
 const { options } = storeToRefs(optionStore)
+const { setCommentRetractAuthDecode } = commentRetractAuthDecodeStore
 
 const props = defineProps({
   postid: {
@@ -251,6 +254,11 @@ const onSubmit = (event) => {
           color: 'green',
           timeout: 10000,
         })
+      }
+      const commentRetractJWT = res.commentRetractJWT
+      if (commentRetractJWT) {
+        localStorage.setItem('commentRetractJWT', commentRetractJWT)
+        setCommentRetractAuthDecode()
       }
       // 刷新评论列表
       emits('refresh')

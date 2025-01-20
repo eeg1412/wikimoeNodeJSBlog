@@ -131,8 +131,41 @@ exports.creatJWT = function (payload, exp) {
   const token = jwt.sign(payload, secret, { expiresIn: exp })
   return token
 }
+exports.creatJWTBlog = function (payload, exp) {
+  const secret = global.$secret.JWTSecretBlog
+  if (!secret) {
+    throw new Error('JWT密钥不存在')
+  }
+  const token = jwt.sign(payload, secret, { expiresIn: exp })
+  return token
+}
 exports.checkJWT = function (token) {
   const secret = global.$secret.JWTSecretAdmin
+  if (!secret) {
+    throw new Error('JWT密钥不存在')
+  }
+  // console.time('checkJWT')
+  let result = null
+  try {
+    const decoded = jwt.verify(token, secret)
+    result = {
+      isError: false,
+      data: decoded,
+    }
+    // console.timeEnd('checkJWT')
+    return result
+  } catch (err) {
+    // {"name":"TokenExpiredError","message":"jwt expired","expiredAt":"2022-03-03T02:36:11.000Z"}
+    // {"name":"JsonWebTokenError","message":"invalid token"}
+    result = {
+      isError: true,
+      errorData: { ...err },
+    }
+    return result
+  }
+}
+exports.checkJWTBlog = function (token) {
+  const secret = global.$secret.JWTSecretBlog
   if (!secret) {
     throw new Error('JWT密钥不存在')
   }

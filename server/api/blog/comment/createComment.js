@@ -280,8 +280,29 @@ module.exports = async function (req, res, next) {
 
     // save
     commentUtils.save(params).then((data) => {
+      const jwtBody = {
+        version: 1,
+        commentList: []
+      }
+      const commentRetractAuthDecode = req['commentRetractAuthDecode']
+      if (commentRetractAuthDecode?.commentList) {
+        // 继承评论时间在5分钟内的评论
+        const now = new Date()
+        const fiveMinutesAgo = new Date(now - 5 * 60 * 1000)
+        const canAddCommentList = commentRetractAuthDecode.commentList.filter(item => {
+          const date = new Date(item.date)
+          return date > fiveMinutesAgo
+        })
+        jwtBody.commentList = canAddCommentList
+      }
+      jwtBody.commentList.push({
+        id: data._id,
+        date: data.date
+      })
+      const commentRetractJWT = utils.creatJWTBlog(jwtBody, '5m')
       res.send({
-        status: params.status
+        status: params.status,
+        commentRetractJWT: commentRetractJWT
       })
       userApiLog.info(`comment:${content} create success`)
       if (params.status === 1) {

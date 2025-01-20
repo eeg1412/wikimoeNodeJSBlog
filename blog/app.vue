@@ -11,8 +11,11 @@ import { useOptionStore } from '@/store/options'
 import { useIsFullscreenStore } from '@/store/isFullscreen'
 import { storeToRefs } from 'pinia'
 import { postLogCreateApi, putLogUpdatePerformanceApi } from '@/api/log'
+import { useCommentRetractAuthDecodeStore } from '@/store/commentRetractAuthDecode'
 
 const optionStore = useOptionStore()
+const commentRetractAuthDecodeStore = useCommentRetractAuthDecodeStore()
+const { setCommentRetractAuthDecode } = commentRetractAuthDecodeStore
 const { getOptions } = optionStore
 await getOptions()
 const { options } = storeToRefs(optionStore)
@@ -255,6 +258,7 @@ onMounted(() => {
   // 获取referrer
   postLogCreate()
   addFullscreenChangeListener()
+  setCommentRetractAuthDecode()
 })
 onUnmounted(() => {
   removeFullscreenChangeListener()

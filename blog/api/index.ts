@@ -65,6 +65,21 @@ class HttpRequest {
         }
       }
     }
+    // 查看options内包含shouldCommentRetractJWT
+    const shouldCommentRetractJWT = options.shouldCommentRetractJWT
+    // 如果有就去本地拿commentRetractJWT
+    if (shouldCommentRetractJWT && import.meta.client) {
+      const commentRetractJWT = localStorage.getItem('commentRetractJWT')
+      // 删除shouldCommentRetractJWT
+      delete options.shouldCommentRetractJWT
+      if (commentRetractJWT) {
+        options.headers = {
+          ...options.headers,
+          // 将commentRetractJWT放入请求头 comment-retract-jwt
+          'wm-comment-retract-authorization': `Bearer ${commentRetractJWT}`,
+        }
+      }
+    }
     return new Promise((resolve, reject) => {
       $fetch(url, options)
         .then((res: any) => {

@@ -78,7 +78,7 @@ const initGlobalConfig = async () => {
     siteMaxCommentReview: 100,
     // 评论分页
     siteCommentPageSize: 10,
-    // 24小时撤回限额
+    // 当日撤回限制
     siteCommentRetractLimit: 3,
   }
 

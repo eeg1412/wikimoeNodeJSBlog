@@ -40,8 +40,8 @@
       ></el-input-number
       ><span class="pl5">条</span>
     </el-form-item>
-    <!-- 24小时撤回限额 -->
-    <el-form-item label="24小时撤回限额" prop="siteCommentRetractLimit">
+    <!-- 当日撤回限制 -->
+    <el-form-item label="当日撤回限制" prop="siteCommentRetractLimit">
       <!-- 数字 1-100 -->
       <el-input-number
         v-model="commentSettingsForm.siteCommentRetractLimit"
@@ -94,7 +94,7 @@ export default {
       siteMaxCommentReview: 100,
       // 评论分页
       siteCommentPageSize: 10,
-      // 24小时撤回限额
+      // 当日撤回限制
       siteCommentRetractLimit: 3,
     })
     const commentSettingsRules = {

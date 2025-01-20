@@ -1,6 +1,6 @@
 var express = require('express')
 var router = express.Router()
-const { referrerRecord } = require('../utils/utils')
+const { checkJWTBlog, referrerRecord } = require('../utils/utils')
 
 const checkIsReady = (req, res, next) => {
   const isReady = global.$isReady
@@ -14,6 +14,28 @@ const checkIsReady = (req, res, next) => {
 const referrerRecordMiddleware = (req, res, next) => {
   referrerRecord(req.headers.referer, 'blogApi')
   next()
+}
+
+// jwt权限校验
+const checkAuth = (req, res, next, typeName, token) => {
+  const jwtVersion = 1
+  if (!token) {
+    next()
+  } else {
+    const decoded = checkJWTBlog(token.split(' ')[1] || '')
+    // console.log(decoded)
+    if (!decoded.isError) {
+      if (decoded.data.version === jwtVersion) {
+        req[`${typeName}Decode`] = decoded.data
+      }
+    }
+    next()
+  }
+}
+
+const checkCommentRetractAuth = (req, res, next) => {
+  const token = req.headers['wm-comment-retract-authorization']
+  checkAuth(req, res, next, 'commentRetractAuth', token)
 }
 
 const blogRouteSetting = [
@@ -90,8 +112,15 @@ const blogRouteSetting = [
   {
     path: '/comment/create',
     method: 'post',
-    middleware: [],
+    middleware: [checkCommentRetractAuth],
     controller: require('../api/blog/comment/createComment'),
+  },
+  // post commentRetract
+  {
+    path: '/comment/retract',
+    method: 'post',
+    middleware: [checkCommentRetractAuth],
+    controller: require('../api/blog/comment/commentRetract'),
   },
   // put updatePostViewCount
   {

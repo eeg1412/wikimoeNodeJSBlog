@@ -74,6 +74,9 @@ exports.deleteMany = async function (filters) {
   // document查询
   return await commentsModel.deleteMany(filters);
 }
+exports.findOneAndDelete = async function (filters) {
+  return await commentsModel.findOneAndDelete(filters);
+}
 
 // 查询总数
 exports.count = async function (parmas) {

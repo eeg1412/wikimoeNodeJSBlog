@@ -24,6 +24,17 @@ const getCommentCreateApi = (params: any, options: any) => {
   return httpRequest.postFetch(commentCreateURL, params, {
     ...options,
     shouldUuid: true,
+    shouldCommentRetractJWT: true,
+  })
+}
+
+// post /comment/retract
+const commentRetractURL = `/comment/retract`
+const deleteCommentRetractApi = (params: any, options: any) => {
+  return httpRequest.postFetch(`${commentRetractURL}`, params, {
+    ...options,
+    shouldUuid: true,
+    shouldCommentRetractJWT: true,
   })
 }
 
@@ -45,6 +56,7 @@ export {
   getCommentLatestApi,
   getCommentListApi,
   getCommentCreateApi,
+  deleteCommentRetractApi,
   postCommentLikeLogApi,
   postCommentLikeLogListApi,
 }
