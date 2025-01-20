@@ -12,6 +12,15 @@ module.exports = async function (req, res, next) {
     const uuid = req.headers['wmb-request-id']
     const ip = utils.getUserIp(req)
     const commentRetractAuthDecode = req['commentRetractAuthDecode']
+    if (!commentRetractAuthDecode) {
+      res.status(400).json({
+        errors: [{
+          message: '撤回失败，认证信息已过期'
+        }],
+        code: 401
+      })
+      return
+    }
     // 判断id是否符合格式
     if (!utils.isObjectId(id)) {
       res.status(400).json({
@@ -27,16 +36,6 @@ module.exports = async function (req, res, next) {
         errors: [{
           message: '参数错误'
         }]
-      })
-      return
-    }
-
-    if (!commentRetractAuthDecode) {
-      res.status(400).json({
-        errors: [{
-          message: '撤回失败，认证信息已过期'
-        }],
-        code: 401
       })
       return
     }
