@@ -134,10 +134,9 @@ const retractComment = () => {
         localStorage.removeItem('commentRetractJWT')
         setCommentRetractAuthDecode()
       }
-    })
-    .finally(() => {
       isLoading.value = false
     })
+    .finally(() => {})
 }
 onMounted(() => {
   if (showBtn.value) {
