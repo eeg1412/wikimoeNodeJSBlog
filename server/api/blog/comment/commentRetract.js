@@ -34,8 +34,9 @@ module.exports = async function (req, res, next) {
     if (!commentRetractAuthDecode) {
       res.status(400).json({
         errors: [{
-          message: '撤回失败，权限错误'
-        }]
+          message: '撤回失败，认证信息已过期'
+        }],
+        code: 401
       })
       return
     }

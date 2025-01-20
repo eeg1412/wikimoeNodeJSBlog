@@ -5,15 +5,32 @@
     variant="soft"
     v-if="showBtn"
     :loading="isLoading"
-    @click="retractComment"
+    @click="isModalOpen = true"
     >撤回(剩余{{ countDown }}秒)</UButton
   >
+  <CommonDialog v-model:show="isModalOpen">
+    <template #title>
+      <div class="text-xl font-bold">确认撤回评论</div>
+    </template>
+
+    <template #body>
+      <div class="flex flex-col gap-4">
+        <div>确定要撤回这条评论吗？</div>
+        <div class="flex justify-end gap-3">
+          <UButton color="gray" @click="isModalOpen = false">取消</UButton>
+          <UButton color="primary" :loading="isLoading" @click="retractComment"
+            >确认撤回</UButton
+          >
+        </div>
+      </div>
+    </template>
+  </CommonDialog>
 </template>
 
 <script setup>
 import { useCommentRetractAuthDecodeStore } from '@/store/commentRetractAuthDecode'
 import { deleteCommentRetractApi } from '@/api/comment'
-const emits = defineEmits()
+const emits = defineEmits(['refresh'])
 const props = defineProps({
   commentid: {
     type: String,
@@ -23,6 +40,7 @@ const props = defineProps({
 const toast = useToast()
 const now = ref(Date.now())
 const commentRetractAuthDecodeStore = useCommentRetractAuthDecodeStore()
+const { setCommentRetractAuthDecode } = commentRetractAuthDecodeStore
 const { commentRetractAuthDecode } = storeToRefs(commentRetractAuthDecodeStore)
 
 const showBtn = computed(() => {
@@ -62,11 +80,21 @@ const countDown = computed(() => {
   }
   return Math.ceil(time / 1000)
 })
-
+const isModalOpen = ref(false)
 const isLoading = ref(false)
 const isSuccess = ref(false)
 const retractComment = () => {
-  if (isLoading.value) {
+  if (isLoading.value || !isModalOpen.value) {
+    return
+  }
+  if (!showBtn.value) {
+    toast.add({
+      title: '已超过撤回时间，无法撤回评论',
+      icon: 'i-heroicons-x-circle',
+      color: 'red',
+      timeout: 10000,
+    })
+    isModalOpen.value = false
     return
   }
   isLoading.value = true
@@ -81,6 +109,7 @@ const retractComment = () => {
         color: 'green',
         timeout: 10000,
       })
+      isModalOpen.value = false
       isSuccess.value = true
       // 刷新评论列表
       emits('refresh')
@@ -98,6 +127,12 @@ const retractComment = () => {
             timeout: 10000,
           })
         })
+      }
+      const code = err.response?._data?.code
+      if (code === 401) {
+        // 清空commentRetractJWT 并 重新 setCommentRetractAuthDecode
+        localStorage.removeItem('commentRetractJWT')
+        setCommentRetractAuthDecode()
       }
     })
     .finally(() => {
