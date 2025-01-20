@@ -107,14 +107,16 @@ module.exports = async function (req, res, next) {
     }
 
     // 删除评论
+    const fiveMinutesAgo = new Date(Date.now() - 5 * 60 * 1000)
     commentUtils.findOneAndDelete({
-      _id: id
+      _id: id,
+      date: { $gte: fiveMinutesAgo }
     }).then(async (comment) => {
       // 判断是否删除成功
       if (!comment) {
         res.status(400).json({
           errors: [{
-            message: '撤回失败，评论不存在'
+            message: '该评论暂时无法撤回'
           }]
         })
         userApiLog.error(`comment retract fail, comment not exist`)
