@@ -86,6 +86,35 @@ exports.ensureJWTSecretAdmin = function (reflush = false) {
     throw error
   }
 }
+exports.ensureJWTSecretBlog = function (reflush = false) {
+  const secretDir = path.join('./secret')
+  const keyPath = path.join(secretDir, 'JWTSecretBlog.key')
+
+  try {
+    // 确保secret目录存在
+    fsExtra.ensureDirSync(secretDir)
+
+    // 检查密钥文件是否存在
+    const exists = fsExtra.pathExistsSync(keyPath)
+
+    if (!exists || reflush) {
+      console.info('将生成新的JWT密钥')
+      // 生成新的JWT密钥
+      const jwtSecret = this.generateJwtSecret()
+      // 写入文件
+      fsExtra.writeFileSync(keyPath, jwtSecret, 'utf8')
+      console.info('成功生成新的JWT-Blog密钥')
+    }
+
+    // 读取密钥
+    const secret = fsExtra.readFileSync(keyPath, 'utf8')
+    return secret
+
+  } catch (error) {
+    console.error('JWT密钥文件操作失败:', error)
+    throw error
+  }
+}
 exports.limitStr = (str, len) => {
   const strArray = Array.from(str)
   if (strArray.length > len) {
