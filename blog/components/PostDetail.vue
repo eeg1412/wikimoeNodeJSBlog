@@ -288,6 +288,7 @@
             <div class="comment-list-title">评论：</div>
             <div
               class="comment-list-item"
+              :class="{ 'opacity-50': item.status === 0 }"
               v-for="(item, index) in commentList"
               :id="`post-detail-comment-${item._id}`"
               :key="item._id"
@@ -315,6 +316,14 @@
                         <span v-else>{{ item.nickname }}</span>
                         <UBadge class="ml-1" size="xs" v-if="item.isAdmin"
                           >管理员</UBadge
+                        >
+                        <UBadge
+                          class="ml-1"
+                          size="xs"
+                          color="primary"
+                          variant="outline"
+                          v-if="item.status === 0"
+                          >审核中</UBadge
                         >
                       </div>
 
@@ -367,52 +376,54 @@
                   <div class="comment-list-item-content">
                     {{ item.content }}
                   </div>
-                  <!-- 按钮 -->
-                  <!-- 喜欢按钮 -->
-                  <div class="comment-list-item-btns">
-                    <UButton
-                      size="2xs"
-                      icon="i-heroicons-heart-solid"
-                      color="primary"
-                      v-if="checkIsCommentLike(item._id)"
-                      @click="likeComment(item._id)"
-                      :loading="likeCommentIsLoading[item._id] === true"
-                      >{{ formatNumber(item.likes) }}</UButton
-                    >
-                    <UButton
-                      size="2xs"
-                      icon="i-heroicons-heart"
-                      color="white"
-                      variant="solid"
-                      @click="likeComment(item._id)"
-                      :loading="likeCommentIsLoading[item._id] === true"
-                      v-else
-                      >{{ formatNumber(item.likes) }}</UButton
-                    >
-                    <template
-                      v-if="
-                        options.siteEnableComment && postData.data.allowRemark
-                      "
-                    >
+                  <template v-if="item.status === 1">
+                    <!-- 按钮 -->
+                    <!-- 喜欢按钮 -->
+                    <div class="comment-list-item-btns">
                       <UButton
                         size="2xs"
-                        color="white"
-                        variant="ghost"
-                        @click="openComment(item._id)"
-                        v-if="item._id !== commentid"
-                        >回复</UButton
+                        icon="i-heroicons-heart-solid"
+                        color="primary"
+                        v-if="checkIsCommentLike(item._id)"
+                        @click="likeComment(item._id)"
+                        :loading="likeCommentIsLoading[item._id] === true"
+                        >{{ formatNumber(item.likes) }}</UButton
                       >
                       <UButton
                         size="2xs"
+                        icon="i-heroicons-heart"
                         color="white"
-                        variant="ghost"
-                        @click="closeComment"
+                        variant="solid"
+                        @click="likeComment(item._id)"
+                        :loading="likeCommentIsLoading[item._id] === true"
                         v-else
-                        >取消</UButton
+                        >{{ formatNumber(item.likes) }}</UButton
                       >
-                    </template>
-                  </div>
-                  <div class="mt-5">
+                      <template
+                        v-if="
+                          options.siteEnableComment && postData.data.allowRemark
+                        "
+                      >
+                        <UButton
+                          size="2xs"
+                          color="white"
+                          variant="ghost"
+                          @click="openComment(item._id)"
+                          v-if="item._id !== commentid"
+                          >回复</UButton
+                        >
+                        <UButton
+                          size="2xs"
+                          color="white"
+                          variant="ghost"
+                          @click="closeComment"
+                          v-else
+                          >取消</UButton
+                        >
+                      </template>
+                    </div>
+                  </template>
+                  <div class="mt-5" v-if="commentid === item._id">
                     <!-- 回复表单 -->
                     <CommentForm
                       :id="`${item._id}-reply`"
@@ -421,7 +432,6 @@
                       :parentNickname="item.nickname || item.user?.nickname"
                       @refresh="refreshCommentList"
                       :allowRemark="postData.data.allowRemark"
-                      v-if="commentid === item._id"
                     />
                   </div>
                 </div>

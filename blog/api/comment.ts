@@ -13,7 +13,10 @@ const getCommentLatestApi = () => {
 // /comment/list
 const commentListURL = `/comment/list`
 const getCommentListApi = (params: any, options: any) => {
-  return httpRequest.getFetch(commentListURL, params, options)
+  return httpRequest.getFetch(commentListURL, params, {
+    ...options,
+    shouldUuid: true,
+  })
 }
 // /comment/create
 const commentCreateURL = `/comment/create`

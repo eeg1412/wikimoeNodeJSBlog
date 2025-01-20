@@ -244,7 +244,17 @@ module.exports = async function (req, res, next) {
       if (!utils.isObjectId(parent)) {
         res.status(400).json({
           errors: [{
-            message: 'parent格式错误'
+            message: '回复评论的对象不存在或已删除'
+          }]
+        })
+        return
+      }
+      // 校验parent是否存在
+      const parentComment = await commentUtils.findOne({ _id: parent, status: 1 })
+      if (!parentComment) {
+        res.status(400).json({
+          errors: [{
+            message: '回复评论的对象不存在或已删除'
           }]
         })
         return

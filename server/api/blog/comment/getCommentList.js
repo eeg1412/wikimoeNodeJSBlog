@@ -16,9 +16,19 @@ module.exports = async function (req, res, next) {
     })
     return
   }
+  const uuid = req.headers['wmb-request-id']
+  // 构建查询参数
   const params = {
-    status: 1,
-    post: id
+    post: id,
+    $or: [
+      { status: 1 }, // 正常状态的评论
+    ]
+  }
+  if (uuid) {
+    params.$or.push({
+      status: 0,
+      uuid: uuid
+    })
   }
   const sort = {
     // top置顶
@@ -29,7 +39,7 @@ module.exports = async function (req, res, next) {
     // 返回格式list,total
     const list = JSON.parse(JSON.stringify(data.list))
     // 需要获取的key数组
-    const keys = ['_id', 'avatar', 'content', 'date', 'nickname', 'url', 'likes', 'isAdmin', 'parent', 'top']
+    const keys = ['_id', 'avatar', 'content', 'date', 'nickname', 'url', 'likes', 'isAdmin', 'parent', 'top', 'status']
     // 将list的email字段替换为gravatar头像
     list.forEach((item) => {
       const email = item.email

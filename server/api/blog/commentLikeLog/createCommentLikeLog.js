@@ -115,11 +115,11 @@ module.exports = async function (req, res, next) {
 
     let data = null
     // 查询comment
-    const comment = await commentUtils.findOne({ _id: id }, 'content likes')
+    const comment = await commentUtils.findOne({ _id: id, status: 1 }, 'content likes')
     if (!comment) {
       res.status(400).json({
         errors: [{
-          message: '更新失败，评论不存在'
+          message: '点赞失败，评论不存在或已被删除'
         }]
       })
       return
@@ -183,7 +183,7 @@ module.exports = async function (req, res, next) {
       data: sendData
     })
     userApiLog.info(`commentLikeLog create success`)
-    // 异步更新文章点赞数
+    // 异步更新评论点赞数
     let likes = 0
     if (like) {
       likes = 1

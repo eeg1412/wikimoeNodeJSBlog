@@ -239,7 +239,7 @@ const onSubmit = (event) => {
       // 0是审核中，1是审核通过
       if (dataStatus === 0) {
         toast.add({
-          title: '评论成功，将在审核后显示',
+          title: '评论成功，将在审核后公开',
           icon: 'i-heroicons-check-circle',
           color: 'green',
           timeout: 10000,
@@ -251,9 +251,9 @@ const onSubmit = (event) => {
           color: 'green',
           timeout: 10000,
         })
-        // 刷新评论列表
-        emits('refresh')
       }
+      // 刷新评论列表
+      emits('refresh')
     })
     .catch((err) => {
       console.log(err)
