@@ -234,7 +234,7 @@
                 <i class="fas fa-fw fa-thumbs-up pr10"></i>
                 <template #title>评论点赞日志</template>
               </el-menu-item>
-              <!-- 读者访问日志 ReaderlogList -->
+              <!-- 读者操作日志 ReaderlogList -->
               <el-menu-item
                 index="ReaderlogList"
                 @click="removeParam('ReaderlogList')"
@@ -242,7 +242,7 @@
                 :route="{ name: 'ReaderlogList' }"
               >
                 <i class="fas fa-fw fa-user-clock pr10"></i>
-                <template #title>读者访问日志</template>
+                <template #title>读者操作日志</template>
               </el-menu-item>
               <!-- RSS访问日志 RsslogList -->
               <el-menu-item

@@ -21,7 +21,7 @@ module.exports = async function (req, res, next) {
 
   if (actionList) {
     // 判断action是否合法
-    const validActions = ['open', 'postList', 'postListArchive', 'postListSort', 'postListTag', 'postListKeyword', 'postView', 'postLike', 'postDislike', 'commentLike', 'commentDislike']
+    const validActions = ['open', 'postList', 'postListArchive', 'postListSort', 'postListTag', 'postListKeyword', 'postView', 'postLike', 'postDislike', 'commentLike', 'commentDislike', 'commentRetract']
     const isValid = actionList.every(action => validActions.includes(action))
     if (!isValid) {
       res.status(400).json({
@@ -62,7 +62,7 @@ module.exports = async function (req, res, next) {
   }).catch((err) => {
     res.status(400).json({
       errors: [{
-        message: '读者访问日志列表获取失败'
+        message: '读者操作日志列表获取失败'
       }]
     })
     adminApiLog.error(`readerlog list get fail, ${JSON.stringify(err)

@@ -2,7 +2,7 @@
   <div class="common-right-panel-form">
     <div class="pb20">
       <el-breadcrumb separator="/">
-        <el-breadcrumb-item>读者访问日志列表</el-breadcrumb-item>
+        <el-breadcrumb-item>读者操作日志列表</el-breadcrumb-item>
       </el-breadcrumb>
     </div>
     <div class="clearfix pb20">
@@ -73,7 +73,7 @@
         >
       </div>
     </div>
-    <!-- 读者访问日志 -->
+    <!-- 读者操作日志 -->
     <div class="mb20 list-table-body">
       <el-table
         ref="tableRef"
@@ -330,6 +330,7 @@ export default {
       postDislike: '取消文章点赞',
       commentLike: '评论点赞',
       commentDislike: '取消评论点赞',
+      commentRetract: '撤回评论',
     }
     const actionList = ref(
       Object.keys(actionMap).map((key) => ({

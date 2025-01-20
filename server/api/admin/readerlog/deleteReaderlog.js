@@ -61,7 +61,7 @@ module.exports = async function (req, res, next) {
   }).catch((err) => {
     res.status(400).json({
       errors: [{
-        message: '读者访问日志删除失败'
+        message: '读者操作日志删除失败'
       }]
     })
     adminApiLog.error(`readerlog delete fail, ${logErrorToText(err)}`)
