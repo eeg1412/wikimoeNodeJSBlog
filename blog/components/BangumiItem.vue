@@ -40,7 +40,7 @@
         >
           <UIcon
             name="i-heroicons-calendar-20-solid"
-            class="align-middle mr-1"
+            class="align-middle acgn-time-icon"
           />{{ bangumi.year }}年{{ seasonToName(bangumi.season) }}
         </div>
         <div
