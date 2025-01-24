@@ -105,7 +105,7 @@
                 class="common-blockquote"
                 v-else-if="!row.parent && row.parentId"
               >
-                评论已被删除
+                该评论审核暂未通过或已被删除
               </blockquote>
               <div>{{ row.content }}</div>
             </div>
