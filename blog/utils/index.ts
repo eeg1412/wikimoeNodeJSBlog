@@ -36,7 +36,9 @@ export function fromNow(
     return formatDate(date, fmt)
   }
   const diff = (now - Number(date)) / 1000
-  if (diff < 60) {
+  if (diff <= 1) {
+    return '刚刚'
+  } else if (diff < 60) {
     return `${Math.floor(diff)}秒前`
   } else if (diff < 60 * 60) {
     return `${Math.floor(diff / 60)}分钟前`
