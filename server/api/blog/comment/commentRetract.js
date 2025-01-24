@@ -11,6 +11,7 @@ module.exports = async function (req, res, next) {
     const id = req.body.id
     const uuid = req.headers['wmb-request-id']
     const ip = utils.getUserIp(req)
+    const min5 = 300000 // 5分钟
     const commentRetractAuthDecode = req['commentRetractAuthDecode']
     if (!commentRetractAuthDecode) {
       res.status(400).json({
@@ -55,7 +56,7 @@ module.exports = async function (req, res, next) {
       const currDate = new Date(currComment.date)
       const nowDate = new Date()
       const diff = nowDate - currDate
-      if (diff > 5 * 60 * 1000) {
+      if (diff > min5) {
         res.status(400).json({
           errors: [{
             message: '撤回失败，评论已超过5分钟'
@@ -115,7 +116,7 @@ module.exports = async function (req, res, next) {
     }
 
     // 删除评论
-    const fiveMinutesAgo = new Date(Date.now() - 5 * 60 * 1000)
+    const fiveMinutesAgo = new Date(Date.now() - min5)
     commentUtils.findOneAndDelete({
       _id: id,
       date: { $gte: fiveMinutesAgo }

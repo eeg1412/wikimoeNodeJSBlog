@@ -54,6 +54,7 @@ const { commentRetractAuthDecode } = storeToRefs(commentRetractAuthDecodeStore)
 const commentRetractCountDataStore = useCommentRetractCountDataStore()
 const { setCommentRetractCountData } = commentRetractCountDataStore
 const { commentRetractCountData } = storeToRefs(commentRetractCountDataStore)
+const min5 = 300000 // 5分钟
 
 const showBtn = computed(() => {
   if (isSuccess.value) {
@@ -81,7 +82,7 @@ const showBtn = computed(() => {
     return false
   }
   // 对比date是否超过5分钟
-  return now.value - new Date(comment.date || 0).getTime() < 5 * 60 * 1000
+  return now.value - new Date(comment.date || 0).getTime() < min5
 })
 // 倒计时数字
 let timer = null
@@ -93,7 +94,7 @@ const countDown = computed(() => {
   if (!comment) {
     return 0
   }
-  const time = new Date(comment.date || 0).getTime() + 5 * 60 * 1000 - now.value
+  const time = new Date(comment.date || 0).getTime() + min5 - now.value
   if (time <= 0) {
     return 0
   }
