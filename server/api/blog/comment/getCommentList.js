@@ -36,40 +36,42 @@ module.exports = async function (req, res, next) {
     date: -1
   }
   commentUtils.findPage(params, sort, page, size, '-post').then((data) => {
-    // 返回格式list,total
-    const list = JSON.parse(JSON.stringify(data.list))
-    // 需要获取的key数组
-    const keys = ['_id', 'avatar', 'content', 'date', 'nickname', 'url', 'likes', 'isAdmin', 'parent', 'top', 'status']
-    // 将list的email字段替换为gravatar头像
-    list.forEach((item) => {
-      const email = item.email
-      if (email) {
-        item.avatar = utils.md5hex(email)
+    const keys = ['_id', 'avatar', 'content', 'date', 'nickname', 'url', 'likes', 'isAdmin', 'parent', 'parentId', 'top', 'status'];
+
+    const list = data.list.map((item, index) => {
+      const jsonItem = item.toJSON();
+
+      // 设置parentId
+      jsonItem.parentId = item.populated('parent');
+
+      // 处理头像和用户信息
+      if (jsonItem.email) {
+        jsonItem.avatar = utils.md5hex(jsonItem.email);
       }
-      if (item.user) {
-        item.avatar = item.user.photo
-        item.nickname = item.user.nickname
-        item.isAdmin = true
+      if (jsonItem.user) {
+        jsonItem.avatar = jsonItem.user.photo;
+        jsonItem.nickname = jsonItem.user.nickname;
+        jsonItem.isAdmin = true;
       } else {
-        item.isAdmin = false
+        jsonItem.isAdmin = false;
       }
-      // 判断parent是status是否为1,如果不是parent的content设置为 该评论咱不可见
-      if (item.parent) {
-        if (item.parent.status !== 1) {
-          item.parent.content = '啊呀！？这个评论怎么不见了！？难道是那个坏坏的魔法师把它删掉了！？'
+
+      // 处理父评论
+      if (jsonItem.parent) {
+        if (jsonItem.parent.status !== 1) {
+          jsonItem.parent = null;
         }
-        if (item.parent.user) {
-          item.parent.nickname = item.parent.user.nickname
+        if (jsonItem.parent?.user) {
+          jsonItem.parent.nickname = jsonItem.parent.user.nickname;
         }
-        delete item.parent.user
+        delete jsonItem.parent.user;
       }
+
       // 只保留需要的key
-      Object.keys(item).forEach((key) => {
-        if (!keys.includes(key)) {
-          delete item[key]
-        }
-      })
-    })
+      return Object.fromEntries(
+        Object.entries(jsonItem).filter(([key]) => keys.includes(key))
+      );
+    });
     res.send({
       list: list,
       total: data.total,

@@ -44,8 +44,13 @@ module.exports = async function (req, res, next) {
   }
   commentUtils.findPage(params, sort, page, size).then((data) => {
     // 返回格式list,total
+    const list = data.list.map(item => {
+      const newItem = item.toJSON()
+      newItem.parentId = item.populated('parent')
+      return newItem
+    });
     res.send({
-      list: data.list,
+      list: list,
       total: data.total
     })
 

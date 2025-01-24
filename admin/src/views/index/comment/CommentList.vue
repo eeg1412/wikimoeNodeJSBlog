@@ -101,6 +101,12 @@
                 <div>{{ $formatDate(row.date) }}</div>
                 <div class="mt5">{{ row.parent.content }}</div>
               </blockquote>
+              <blockquote
+                class="common-blockquote"
+                v-else-if="!row.parent && row.parentId"
+              >
+                评论已被删除
+              </blockquote>
               <div>{{ row.content }}</div>
             </div>
           </template>

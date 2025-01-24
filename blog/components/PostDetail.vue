@@ -372,6 +372,12 @@
                     </div>
                     <div>{{ item.parent.content }}</div>
                   </blockquote>
+                  <blockquote
+                    class="comment-list-item-parent-content"
+                    v-else-if="!item.parent && item.parentId"
+                  >
+                    <div>这条评论已经去异世界了...</div>
+                  </blockquote>
                   <div class="comment-list-item-content">
                     {{ item.content }}
                   </div>
