@@ -305,7 +305,22 @@
               class="common-blockquote"
               v-if="commentParentData?.parent?.content"
             >
-              {{ commentParentData.parent?.content }}
+              <div class="fb">
+                {{
+                  commentParentData.parent.user?.nickname ||
+                  commentParentData.parent.nickname
+                }}
+              </div>
+              <div>{{ $formatDate(commentParentData.date) }}</div>
+              <div class="mt5">{{ commentParentData.parent?.content }}</div>
+            </blockquote>
+            <blockquote
+              class="common-blockquote"
+              v-else-if="
+                !commentParentData.parent && commentParentData.parentId
+              "
+            >
+              该评论审核暂未通过或已被删除
             </blockquote>
             <div>{{ commentParentData.content }}</div>
           </div>

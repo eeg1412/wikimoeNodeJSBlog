@@ -890,6 +890,7 @@ input[type='password'] {
   margin-bottom: 4px;
   color: #979797;
   font-size: 12px;
+  line-height: 18px;
 }
 .el-statistic__suffix {
   vertical-align: baseline;
