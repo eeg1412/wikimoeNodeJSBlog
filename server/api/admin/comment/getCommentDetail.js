@@ -23,8 +23,11 @@ module.exports = async function (req, res, next) {
       })
       return
     }
+    const parentId = data.populated('parent')
+    const newData = data.toJSON()
+    newData.parentId = parentId
     res.send({
-      data: data
+      data: newData
     })
   }).catch((err) => {
     res.status(400).json({

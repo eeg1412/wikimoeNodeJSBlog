@@ -8,7 +8,7 @@
         <el-breadcrumb-item>编辑</el-breadcrumb-item>
       </el-breadcrumb>
     </div>
-    <div>
+    <div v-if="showForm">
       <el-form :model="form" :rules="rules" ref="formRef" label-width="80px">
         <template v-if="detailData.user">
           <el-form-item label="昵称">
@@ -30,11 +30,11 @@
           </el-form-item>
         </template>
         <!-- 父级评论内容 -->
-        <el-form-item
-          label="父级评论"
-          v-if="detailData.parent && detailData.parent?.content"
-        >
-          <blockquote class="common-blockquote comment-detail-blockquote">
+        <el-form-item label="父级评论" v-if="detailData.parentId">
+          <blockquote
+            class="common-blockquote comment-detail-blockquote"
+            v-if="detailData.parent && detailData.parent?.content"
+          >
             <div class="fb">
               {{
                 detailData.parent.user?.nickname || detailData.parent.nickname
@@ -42,6 +42,12 @@
             </div>
             <div>{{ $formatDate(detailData.date) }}</div>
             <div class="mt5">{{ detailData.parent.content }}</div>
+          </blockquote>
+          <blockquote
+            class="common-blockquote comment-detail-blockquote"
+            v-else-if="!detailData.parent && detailData.parentId"
+          >
+            该评论审核暂未通过或已被删除
           </blockquote>
         </el-form-item>
         <el-form-item label="评论内容" prop="content">
@@ -117,6 +123,7 @@ export default {
     // 回复Flag
     const replyFlag = ref(false)
     const detailData = ref({})
+    const showForm = ref(false)
     const rules = computed(() => {
       const ruleList = {
         content: [
@@ -206,6 +213,9 @@ export default {
           form.reply.parent = res.data.data._id
         })
         .catch(() => {})
+        .finally(() => {
+          showForm.value = true
+        })
     }
 
     onMounted(() => {
@@ -218,6 +228,7 @@ export default {
       form,
       replyFlag,
       detailData,
+      showForm,
       rules,
       formRef,
       submit,
@@ -227,6 +238,6 @@ export default {
 </script>
 <style scoped>
 .comment-detail-blockquote {
-  line-height: 24px;
+  line-height: 18px;
 }
 </style>
