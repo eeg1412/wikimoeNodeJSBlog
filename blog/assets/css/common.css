@@ -640,6 +640,8 @@ html {
   -webkit-text-size-adjust: none;
   width: 100%;
   height: 100%;
+  /* 小滚动条 */
+  scrollbar-width: thin;
 }
 
 body {
