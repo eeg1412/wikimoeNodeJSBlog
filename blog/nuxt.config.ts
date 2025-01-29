@@ -115,6 +115,7 @@ export default defineNuxtConfig({
   runtimeConfig: {
     // apiDomain: '',
     public: {
+      version: process.env.npm_package_version,
       ...publicRuntimeConfigPlus,
     },
   },

@@ -41,6 +41,10 @@ module.exports = defineConfig({
   },
   // 不生成console
   chainWebpack: (config) => {
+    config.plugin('define').tap((args) => {
+      args[0]['process.env'].VUE_APP_VERSION = JSON.stringify(process.env.npm_package_version)
+      return args;
+    })
     config.optimization.minimizer('terser').tap((args) => {
       const compress = args[0].terserOptions.compress
       compress.drop_console = true

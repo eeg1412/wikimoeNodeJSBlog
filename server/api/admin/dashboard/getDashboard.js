@@ -83,7 +83,8 @@ module.exports = async function (req, res, next) {
       cpu,
       memory,
       arch,
-      uptime
+      uptime,
+      version: process.env.npm_package_version
     }
   })
 }

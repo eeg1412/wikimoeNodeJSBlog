@@ -208,6 +208,7 @@
         <div>
           <span>Powered by </span>
           <a href="https://www.wikimoe.com/" target="_blank">wikimoeBlog</a>
+          <span class="text-xs"> (v{{ version }})</span>
         </div>
       </div>
     </div>
@@ -227,6 +228,9 @@ const route = useRoute()
 const router = useRouter()
 const optionStore = useOptionStore()
 const { options } = storeToRefs(optionStore)
+
+const config = useRuntimeConfig()
+const version = config.public.version
 
 // RSS
 const { siteShowLoading, siteShowLoadingText } = options.value

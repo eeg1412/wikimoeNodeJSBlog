@@ -56,6 +56,14 @@
       <el-descriptions-item label="NodeJs版本">{{
         data.nodeVersion
       }}</el-descriptions-item>
+      <!-- 管理后台版本 -->
+      <el-descriptions-item label="管理后台前端版本"
+        >v{{ version }}</el-descriptions-item
+      >
+      <!-- API版本 -->
+      <el-descriptions-item label="API版本"
+        >v{{ data.version }}</el-descriptions-item
+      >
       <el-descriptions-item label="JSON大小限制">{{
         data.jsonLimit
       }}</el-descriptions-item>
@@ -136,6 +144,8 @@ export default {
       })
     }
 
+    const version = process.env.VUE_APP_VERSION
+
     onMounted(() => {
       getDashboard()
     })
@@ -143,6 +153,7 @@ export default {
     return {
       data,
       goCommentAudit,
+      version,
     }
   },
 }
