@@ -1,11 +1,12 @@
 {
   "name": "wikimoenodejsblog",
-  "version": "0.24.0",
+  "version": "0.24.1",
   "description": "猛男自用博客系统，基于nodejs，mongodb",
   "main": "index.js",
   "scripts": {
     "start": "node index.js",
-    "build-all": "node build-all.js"
+    "build-all": "node build-all.js",
+    "ver-change": "node ver-change.js"
   },
   "repository": {
     "type": "git",

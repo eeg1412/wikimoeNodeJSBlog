@@ -22,5 +22,6 @@
     "moment": "^2.30.1",
     "nuxt-swiper": "^1.2.2",
     "photoswipe": "^5.4.4"
-  }
+  },
+  "version": "0.24.1"
 }
