@@ -247,7 +247,7 @@ const layoutContentBodyMinHeightStyle = computed(() => {
   return {}
 })
 const pageTransition = ref(false)
-
+let pageTransitionTimer = null
 if (import.meta.client) {
   let pageStart = false
   const nuxtApp = useNuxtApp()
@@ -267,13 +267,13 @@ if (import.meta.client) {
   // nuxtApp.hook('page:loading:start', () => {
   //   console.log('page:loading:start')
   // })
-  let pageTransitionTimer = null
   nuxtApp.hook('page:loading:end', () => {
     layoutContentBodyMinHeight.value = null
     pageStart = false
     clearTimeout(pageTransitionTimer)
     pageTransitionTimer = setTimeout(() => {
       pageTransition.value = false
+      pageTransitionTimer = null
     }, 200)
     console.log('page:loading:end')
   })
@@ -345,8 +345,8 @@ const goSearch = () => {
 }
 
 const layoutRightBox = ref(null)
-let windowHeight = 0
-let setWindowHeightTimer = null
+// let windowHeight = 0
+// let setWindowHeightTimer = null
 // const setWindowHeight = () => {
 //   if (windowHeight !== undefined) {
 //     windowHeight = window.innerHeight || 0
@@ -378,6 +378,7 @@ const pageLoading = ref(true)
 // 左右菜单
 const leftMenuActive = ref(false)
 const rightSidebarActive = ref(false)
+let menuActiveTimer = null
 const toggleLeftMenu = () => {
   leftMenuActive.value = !leftMenuActive.value
 }
@@ -390,8 +391,12 @@ const nowYear = new Date().getFullYear()
 watch(
   () => route.path,
   (newVal, oldVal) => {
-    leftMenuActive.value = false
-    rightSidebarActive.value = false
+    clearTimeout(menuActiveTimer)
+    menuActiveTimer = setTimeout(() => {
+      leftMenuActive.value = false
+      rightSidebarActive.value = false
+      menuActiveTimer = null
+    }, 100)
   }
 )
 
@@ -399,7 +404,14 @@ watch(
 onMounted(async () => {
   pageLoading.value = false
 })
-onUnmounted(() => {})
+onUnmounted(() => {
+  if (pageTransitionTimer) {
+    clearTimeout(pageTransitionTimer)
+  }
+  if (menuActiveTimer) {
+    clearTimeout(menuActiveTimer)
+  }
+})
 </script>
 <style scoped>
 /* flex布局 左边固定300px 右边固定300px margin10 */
