@@ -208,7 +208,9 @@
         <div>
           <span>Powered by </span>
           <a href="https://www.wikimoe.com/" target="_blank">wikimoeBlog</a>
-          <span class="text-xs"> (v{{ version }})</span>
+          <span class="text-xs" v-if="siteShowBlogVersion">
+            (v{{ version }})</span
+          >
         </div>
       </div>
     </div>
@@ -233,7 +235,8 @@ const config = useRuntimeConfig()
 const version = config.public.version
 
 // RSS
-const { siteShowLoading, siteShowLoadingText } = options.value
+const { siteShowLoading, siteShowLoadingText, siteShowBlogVersion } =
+  options.value
 
 const showLoading = siteShowLoading
 

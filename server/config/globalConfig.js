@@ -66,6 +66,8 @@ const initGlobalConfig = async () => {
     siteShowLoading: true,
     // 加载动画文案
     siteShowLoadingText: '',
+    // 显示版本号
+    siteShowBlogVersion: false,
   }
   const commentSettingsConfig = {
     // 开启评论

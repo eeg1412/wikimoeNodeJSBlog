@@ -113,6 +113,10 @@
         placeholder="自定义CSS样式，会插入到head标签内，覆盖时可能需要添加!important。"
       ></el-input>
     </el-form-item>
+    <!-- 显示版本号 -->
+    <el-form-item label="底部显示版本号" prop="siteShowBlogVersion">
+      <el-switch v-model="siteSettingsForm.siteShowBlogVersion"></el-switch>
+    </el-form-item>
     <!-- Gravatar头像图源 -->
     <el-form-item label="Gravatar头像图源" prop="siteGravatarSource">
       <el-input
@@ -190,6 +194,8 @@ export default {
       siteShowLoading: true,
       // 加载动画文案
       siteShowLoadingText: '',
+      // 显示版本号
+      siteShowBlogVersion: false,
     })
     const onSiteUrlBlur = () => {
       // 去掉最末尾的斜杠
