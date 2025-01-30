@@ -226,18 +226,6 @@
     <div class="right-tool-bar" id="rightToolBar">
       <GoTop />
     </div>
-    <!-- v-if="pageTransition" -->
-    <Transition name="fade" :duration="{ enter: 100, leave: 100 }">
-      <div v-if="pageTransition">
-        <div class="blog-layout-content-loading">
-          <div
-            class="inset-0 flex items-center justify-center text-primary-500 text-6xl p-4 bg-white/60 rounded-lg blog-layout-content-loading-box"
-          >
-            <UIcon class="animate-spin" name="i-heroicons-arrow-path" />
-          </div>
-        </div>
-      </div>
-    </Transition>
   </div>
 </template>
 <script setup>
@@ -261,27 +249,32 @@ const layoutContentBodyMinHeightStyle = computed(() => {
 const pageTransition = ref(false)
 
 if (import.meta.client) {
+  let pageStart = false
   const nuxtApp = useNuxtApp()
   nuxtApp.hook('page:start', () => {
     if (layoutContentBody.value) {
       layoutContentBodyMinHeight.value = layoutContentBody.value.offsetHeight
     }
-    pageTransition.value = true
+    pageStart = true
     console.log('page:start')
   })
-  // nuxtApp.hook('page:finish', () => {
-  //   console.log('page:finish')
-  // })
+  nuxtApp.hook('page:finish', () => {
+    if (pageStart) {
+      pageTransition.value = true
+    }
+    console.log('page:finish')
+  })
   // nuxtApp.hook('page:loading:start', () => {
   //   console.log('page:loading:start')
   // })
   let pageTransitionTimer = null
   nuxtApp.hook('page:loading:end', () => {
     layoutContentBodyMinHeight.value = null
+    pageStart = false
     clearTimeout(pageTransitionTimer)
     pageTransitionTimer = setTimeout(() => {
       pageTransition.value = false
-    }, 100)
+    }, 200)
     console.log('page:loading:end')
   })
 }
@@ -872,37 +865,11 @@ onUnmounted(() => {})
   bottom: 20px;
 }
 
-.blog-layout-content-loading {
-  position: fixed;
-  z-index: 999999;
-  width: 100%;
-  height: 100%;
-  left: 0;
-  top: 0;
-  background: rgba(255, 255, 255, 0);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  animation: delayFadeIn 1.2s forwards;
+.page-enter-active {
+  transition: opacity 0.2s ease;
 }
-@keyframes delayFadeIn {
-  0% {
-    opacity: 0;
-  }
-  50% {
-    opacity: 0;
-  }
-  100% {
-    opacity: 1;
-  }
-}
-.blog-layout-content-loading-box {
-  border: 1px solid rgba(255, 255, 255, 0.5);
-}
-
-.page-enter-active,
 .page-leave-active {
-  transition: opacity 0.1s ease;
+  transition: opacity 0s ease;
 }
 
 .page-leave-active {
