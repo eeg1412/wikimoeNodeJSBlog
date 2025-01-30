@@ -273,12 +273,12 @@ onUnmounted(() => {
   font-size: 14px;
 }
 </style>
-<style>
+<!-- <style>
 .page-enter-active {
   transition: all 0.4s;
-  /* transition-delay: 0.2s; */
+  transition-delay: 0.2s;
 }
 .page-enter-from {
   opacity: 0;
 }
-</style>
+</style> -->

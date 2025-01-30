@@ -169,7 +169,15 @@
         </div>
       </div>
       <!-- 中间内容 -->
-      <div class="blog-layout-content-body">
+      <div
+        class="blog-layout-content-body"
+        ref="layoutContentBody"
+        :class="{
+          'page-leave-active': pageTransition,
+          'page-enter-active': !pageTransition,
+        }"
+        :style="layoutContentBodyMinHeightStyle"
+      >
         <slot></slot>
       </div>
     </div>
@@ -228,6 +236,44 @@ import { getSidebarListApi } from '@/api/sidebar'
 
 const route = useRoute()
 const router = useRouter()
+const layoutContentBody = ref(null)
+const layoutContentBodyMinHeight = ref(null)
+const layoutContentBodyMinHeightStyle = computed(() => {
+  if (layoutContentBodyMinHeight.value) {
+    return {
+      minHeight: `${layoutContentBodyMinHeight.value}px`,
+    }
+  }
+  return {}
+})
+const pageTransition = ref(false)
+
+if (import.meta.client) {
+  const nuxtApp = useNuxtApp()
+  nuxtApp.hook('page:start', () => {
+    if (layoutContentBody.value) {
+      layoutContentBodyMinHeight.value = layoutContentBody.value.offsetHeight
+    }
+    pageTransition.value = true
+    console.log('page:start')
+  })
+  // nuxtApp.hook('page:finish', () => {
+  //   console.log('page:finish')
+  // })
+  // nuxtApp.hook('page:loading:start', () => {
+  //   console.log('page:loading:start')
+  // })
+  let pageTransitionTimer = null
+  nuxtApp.hook('page:loading:end', () => {
+    layoutContentBodyMinHeight.value = null
+    clearTimeout(pageTransitionTimer)
+    pageTransitionTimer = setTimeout(() => {
+      pageTransition.value = false
+    }, 100)
+    console.log('page:loading:end')
+  })
+}
+
 const optionStore = useOptionStore()
 const { options } = storeToRefs(optionStore)
 
@@ -812,5 +858,30 @@ onUnmounted(() => {})
   position: fixed;
   right: 20px;
   bottom: 20px;
+}
+
+.page-enter-active,
+.page-leave-active {
+  transition: opacity 0.1s ease;
+}
+
+.page-leave-active {
+  opacity: 0;
+}
+
+.page-enter-active {
+  opacity: 1;
+}
+
+.page-leave-active::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  @apply bg-white;
+  z-index: 5;
+  opacity: 0;
 }
 </style>
