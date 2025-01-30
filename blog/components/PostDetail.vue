@@ -1033,6 +1033,9 @@ const getActiveHeader = () => {
   const parentElement = document.querySelector(
     '#postHtmlContent .html-content-body'
   )
+  if (!parentElement) {
+    return
+  }
   const headers = parentElement.querySelectorAll('h1, h2, h3, h4, h5, h6')
   let closest = null
   let closestDistance = Infinity
