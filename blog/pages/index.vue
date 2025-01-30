@@ -1,7 +1,12 @@
 <template>
   <div>
     <NuxtLayout>
-      <NuxtPage></NuxtPage>
+      <NuxtPage
+        :transition="{
+          name: 'page',
+          mode: 'out-in',
+        }"
+      ></NuxtPage>
     </NuxtLayout>
   </div>
 </template>

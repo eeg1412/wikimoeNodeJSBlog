@@ -90,7 +90,7 @@ export default defineNuxtConfig({
         'width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0',
     },
     // 因为nuxt的页面动画有BUG导致两次运行onmounted，所以关闭
-    // pageTransition: { name: 'page', mode: 'default', duration: 200 },
+    // pageTransition: { name: 'page', mode: 'out-in' },
   },
 
   devtools: { enabled: true },
