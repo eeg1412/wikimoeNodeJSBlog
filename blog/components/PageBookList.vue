@@ -190,7 +190,7 @@ const initParams = () => {
       params.booktypeId = queryBooktypeId
     }
   }
-  if (process.client && (queryPage || querySortType || queryBooktypeId)) {
+  if (import.meta.client && (queryPage || querySortType || queryBooktypeId)) {
     router.replace({
       query: {
         ...route.query,

@@ -339,7 +339,7 @@ const initImgs = () => {
 const initFlag = ref(false)
 
 const init = () => {
-  if (process.client && htmlContent.value) {
+  if (import.meta.client && htmlContent.value) {
     nextTick(() => {
       initHljs()
       initImgs()

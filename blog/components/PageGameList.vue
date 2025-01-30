@@ -190,7 +190,10 @@ const initParams = () => {
       params.gamePlatformId = queryGamePlatformId
     }
   }
-  if (process.client && (queryPage || querySortType || queryGamePlatformId)) {
+  if (
+    import.meta.client &&
+    (queryPage || querySortType || queryGamePlatformId)
+  ) {
     router.replace({
       query: {
         ...route.query,

@@ -299,7 +299,7 @@ const initParams = () => {
   }
 
   // 客户端执行
-  if (process.client) {
+  if (import.meta.client) {
     const newQuery = {}
     if (queryYear && selectYear.value !== queryYear) {
       newQuery.year = selectYear.value
