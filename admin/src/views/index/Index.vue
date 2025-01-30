@@ -418,6 +418,7 @@ export default {
     }
 
     const goLoginUserEditor = () => {
+      sessionStorage.setItem('LoginUserEditor-from', route.name)
       router.push({
         name: 'LoginUserEditor',
       })

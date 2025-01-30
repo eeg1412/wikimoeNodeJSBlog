@@ -232,8 +232,21 @@ export default {
             .updateLoginUserInfo(newForm)
             .then((res) => {
               setForm()
-              store.dispatch('setAdminInfo')
               ElMessage.success('资料修改成功')
+              store.dispatch('setAdminInfo')
+              const from = sessionStorage.getItem('LoginUserEditor-from')
+              sessionStorage.removeItem('LoginUserEditor-from')
+              if (from) {
+                try {
+                  router.push({
+                    name: from,
+                  })
+                } catch (error) {
+                  router.push({
+                    name: 'Home',
+                  })
+                }
+              }
             })
             .catch((err) => {
               console.log(err)

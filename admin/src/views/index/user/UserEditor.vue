@@ -160,6 +160,7 @@ export default {
           authApi
             .updateUser(data)
             .then(() => {
+              ElMessage.success('修改成功')
               router.push({
                 name: 'UserList',
               })

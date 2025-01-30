@@ -98,11 +98,7 @@
         </el-table-column>
         <el-table-column label="操作" width="140" fixed="right">
           <template #default="{ row }">
-            <el-button
-              type="primary"
-              size="small"
-              @click="goEdit(row._id)"
-              :disabled="adminInfo.id === row._id"
+            <el-button type="primary" size="small" @click="goEdit(row._id)"
               >编辑</el-button
             >
             <el-button
@@ -191,12 +187,19 @@ export default {
     )
 
     const goEdit = (id) => {
-      router.push({
-        name: 'UserEdit',
-        params: {
-          id,
-        },
-      })
+      if (id === adminInfo.value.id) {
+        sessionStorage.setItem('LoginUserEditor-from', route.name)
+        router.push({
+          name: 'LoginUserEditor',
+        })
+      } else {
+        router.push({
+          name: 'UserEdit',
+          params: {
+            id,
+          },
+        })
+      }
     }
 
     const showDeleteDialog = ref(false)
