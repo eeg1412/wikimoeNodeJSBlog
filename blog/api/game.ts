@@ -11,7 +11,7 @@ const getGameListApi = (params: any) => {
   return httpRequest.get(URL, params)
 }
 const getGameListApiFetch = (params: any) => {
-  return httpRequest.get(URL, params)
+  return httpRequest.getFetch(URL, params)
 }
 
 const URL2 = `/game/platform/list`

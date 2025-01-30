@@ -123,7 +123,11 @@
   </div>
 </template>
 <script setup>
-import { getGameListApi, getGamePlatformListApi } from '@/api/game'
+import {
+  getGameListApi,
+  getGameListApiFetch,
+  getGamePlatformListApi,
+} from '@/api/game'
 const route = useRoute()
 const router = useRouter()
 
@@ -224,9 +228,9 @@ const fetchGameList = async () => {
   const newParams = {
     ...params,
   }
-  const res = await getGameListApi(newParams)
-  gameList.value = res?.data?.value?.list || []
-  total.value = res?.data?.value?.total || 0
+  const res = await getGameListApiFetch(newParams)
+  gameList.value = res?.list || []
+  total.value = res?.total || 0
   gameLoading.value = false
   router.replace({
     query: {

@@ -162,7 +162,11 @@
   </div>
 </template>
 <script setup>
-import { getBangumiListApi, getBangumiYearListApi } from '@/api/bangumi'
+import {
+  getBangumiListApi,
+  getBangumiListApiFetch,
+  getBangumiYearListApi,
+} from '@/api/bangumi'
 const route = useRoute()
 const router = useRouter()
 const setRouterQuert = (query) => {
@@ -349,7 +353,7 @@ const fetchBangumiList = async () => {
     params.season = selectSeason.value
   }
   bangumiLoading.value = true
-  const res = await getBangumiListApi(params)
+  const res = await getBangumiListApiFetch(params)
     .then((res) => {
       const query = {
         year: selectYear.value,
@@ -364,8 +368,8 @@ const fetchBangumiList = async () => {
     .catch(() => {
       return null
     })
-  bangumiList.value = res?.data?.value?.data?.list || []
-  total.value = res?.data?.value?.data?.total || 0
+  bangumiList.value = res?.data?.list || []
+  total.value = res?.data?.total || 0
   bangumiLoading.value = false
   nextTick(() => {
     if (listRef.value) {

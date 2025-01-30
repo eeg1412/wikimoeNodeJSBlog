@@ -121,7 +121,11 @@
   </div>
 </template>
 <script setup>
-import { getBookListApi, getBooktypeListApi } from '@/api/book'
+import {
+  getBookListApi,
+  getBookListApiFetch,
+  getBooktypeListApi,
+} from '@/api/book'
 const route = useRoute()
 const router = useRouter()
 
@@ -220,9 +224,9 @@ const fetchBookList = async () => {
   const newParams = {
     ...params,
   }
-  const res = await getBookListApi(newParams)
-  bookList.value = res?.data?.value?.list || []
-  total.value = res?.data?.value?.total || 0
+  const res = await getBookListApiFetch(newParams)
+  bookList.value = res?.list || []
+  total.value = res?.total || 0
   bookLoading.value = false
   router.replace({
     query: {

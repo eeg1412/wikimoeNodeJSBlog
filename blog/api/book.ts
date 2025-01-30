@@ -11,7 +11,7 @@ const getBookListApi = (params: any) => {
   return httpRequest.get(URL, params)
 }
 const getBookListApiFetch = (params: any) => {
-  return httpRequest.get(URL, params)
+  return httpRequest.getFetch(URL, params)
 }
 
 const URL2 = `/booktype/list`
