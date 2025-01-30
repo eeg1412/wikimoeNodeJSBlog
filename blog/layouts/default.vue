@@ -226,6 +226,17 @@
     <div class="right-tool-bar" id="rightToolBar">
       <GoTop />
     </div>
+    <Transition name="fade" :duration="{ enter: 100, leave: 200 }">
+      <div v-if="pageTransition">
+        <div class="blog-layout-content-loading">
+          <div
+            class="inset-0 flex items-center justify-center text-primary-500"
+          >
+            <UIcon class="animate-spin" name="i-heroicons-arrow-path" />
+          </div>
+        </div>
+      </div>
+    </Transition>
   </div>
 </template>
 <script setup>
@@ -860,6 +871,31 @@ onUnmounted(() => {})
   bottom: 20px;
 }
 
+.blog-layout-content-loading {
+  position: fixed;
+  z-index: 999999;
+  width: 100%;
+  height: 100%;
+  left: 0;
+  top: 0;
+  background: rgba(255, 255, 255, 0);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  animation: delayFadeIn 1.5s forwards;
+}
+@keyframes delayFadeIn {
+  0% {
+    opacity: 0;
+  }
+  50% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
 .page-enter-active,
 .page-leave-active {
   transition: opacity 0.1s ease;
@@ -871,17 +907,5 @@ onUnmounted(() => {})
 
 .page-enter-active {
   opacity: 1;
-}
-
-.page-leave-active::after {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  @apply bg-white;
-  z-index: 5;
-  opacity: 0;
 }
 </style>
