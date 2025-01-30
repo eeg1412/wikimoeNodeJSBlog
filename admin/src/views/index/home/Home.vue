@@ -52,7 +52,7 @@
     <StatisticsReader />
     <Statistics />
     <el-divider />
-    <el-descriptions title="服务器信息" v-if="data">
+    <el-descriptions title="配置信息" v-if="data">
       <el-descriptions-item label="NodeJs版本">{{
         data.nodeVersion
       }}</el-descriptions-item>
