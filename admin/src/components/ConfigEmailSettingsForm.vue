@@ -21,6 +21,9 @@
       <el-form-item label="SMTP端口" prop="emailSmtpPort">
         <el-input v-model="emailSettingsForm.emailSmtpPort"></el-input>
       </el-form-item>
+      <el-form-item label="开启SSL" prop="emailSmtpSsl">
+        <el-switch v-model="emailSettingsForm.emailSmtpSsl"></el-switch>
+      </el-form-item>
       <el-form-item label="发信邮箱" prop="emailSender">
         <el-input v-model="emailSettingsForm.emailSender"></el-input>
       </el-form-item>
@@ -134,6 +137,8 @@ export default {
       emailSmtpHost: '',
       // smtp端口
       emailSmtpPort: '',
+      // ssl
+      emailSmtpSsl: true,
       // 发信邮箱
       emailSender: '',
       // 发信密码

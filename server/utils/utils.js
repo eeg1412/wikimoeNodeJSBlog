@@ -436,7 +436,7 @@ exports.sendEmail = function (to, content, subject) {
     console.error('请在后台设置邮箱')
     return
   }
-  const { emailSmtpHost, emailSmtpPort, emailSender, emailPassword } = emailSettings
+  const { emailSmtpHost, emailSmtpPort, emailSmtpSsl, emailSender, emailPassword } = emailSettings
   // 以上参数缺一不可
   if (!emailSmtpHost || !emailSmtpPort || !emailSender || !emailPassword) {
     console.error('请在后台设置邮箱')
@@ -450,7 +450,7 @@ exports.sendEmail = function (to, content, subject) {
   const transporter = nodemailer.createTransport({
     host: emailSmtpHost,
     port: emailSmtpPort,
-    secure: true, // true for 465, false for other ports
+    secure: emailSmtpSsl || false, // true for 465, false for other ports
     auth: {
       user: emailSender,
       pass: emailPassword
