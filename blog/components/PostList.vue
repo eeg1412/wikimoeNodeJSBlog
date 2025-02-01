@@ -53,7 +53,8 @@
               <UIcon
                 class="cPink f18"
                 name="i-heroicons-bars-arrow-up"
-                v-if="showTopIcon(item)"
+                title="置顶"
+                v-if="item.showTopIcon"
               />
             </div>
           </div>
@@ -389,17 +390,6 @@ const [postsDataResponse] = await Promise.all([
 ])
 
 const { data: postsData } = postsDataResponse
-
-if (postsData?.value?.list && import.meta.server) {
-  postsData.value.list.forEach((item, index) => {
-    postsData.value.list[index].dateStr = fromNow(item.date, 'yyyy-MM-dd')
-  })
-}
-
-const totalPage = computed(() => {
-  return Math.ceil(postsData.value.total / postsData.value.size)
-})
-
 const showTopIcon = (item) => {
   switch (routeName.value) {
     case 'postList':
@@ -411,6 +401,16 @@ const showTopIcon = (item) => {
       break
   }
 }
+if (postsData?.value?.list) {
+  postsData.value.list.forEach((item, index) => {
+    postsData.value.list[index].dateStr = fromNow(item.date, 'yyyy-MM-dd')
+    postsData.value.list[index].showTopIcon = showTopIcon(item)
+  })
+}
+
+const totalPage = computed(() => {
+  return Math.ceil(postsData.value.total / postsData.value.size)
+})
 
 const goPostDetail = (e, item, middle) => {
   console.log(e)
