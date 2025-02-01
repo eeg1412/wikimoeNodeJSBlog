@@ -15,7 +15,8 @@
       <div class="comment-latest-item-content-body">
         <!-- 昵称 -->
         <div class="comment-latest-item-nickname-body fb">
-          {{ item.nickname }}
+          {{ item.nickname
+          }}<UBadge class="ml-1" size="xs" v-if="item.isAdmin">管理员</UBadge>
         </div>
         <div class="comment-latest-item-date">
           <ClientOnly
