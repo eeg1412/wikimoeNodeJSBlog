@@ -485,6 +485,7 @@ exports.sendEmail = function (to, content, subject) {
     const emailSendHistory = {
       to,
       content,
+      subject,
       status: 0,
       errInfo: JSON.stringify(err)
     }
