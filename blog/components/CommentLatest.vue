@@ -15,8 +15,8 @@
       <div class="comment-latest-item-content-body">
         <!-- 昵称 -->
         <div class="comment-latest-item-nickname-body fb">
-          {{ item.nickname
-          }}<UBadge class="ml-1" size="xs" v-if="item.isAdmin">管理员</UBadge>
+          <span class="pr-1">{{ item.nickname }}</span
+          ><UBadge size="xs" v-if="item.isAdmin">管理员</UBadge>
         </div>
         <div class="comment-latest-item-date">
           <ClientOnly
@@ -110,9 +110,9 @@ const goPostDetail = (e, item, middle) => {
 }
 .comment-latest-item-nickname-body {
   /* 单行省略 */
-  overflow: hidden;
+  /* overflow: hidden;
   text-overflow: ellipsis;
-  white-space: nowrap;
+  white-space: nowrap; */
   width: 100%;
 }
 .comment-latest-item-comment-body {

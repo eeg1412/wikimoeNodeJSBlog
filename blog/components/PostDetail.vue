@@ -309,15 +309,18 @@
                       class="comment-list-item-author flex justify-between items-center"
                     >
                       <div>
-                        <a :href="item.url" target="_blank" v-if="item.url">{{
-                          item.nickname
-                        }}</a>
-                        <span v-else>{{ item.nickname }}</span>
-                        <UBadge class="ml-1" size="xs" v-if="item.isAdmin"
+                        <a
+                          class="pr-1"
+                          :href="item.url"
+                          target="_blank"
+                          v-if="item.url"
+                          >{{ item.nickname }}</a
+                        >
+                        <span class="pr-1" v-else>{{ item.nickname }}</span>
+                        <UBadge class="mr-1" size="xs" v-if="item.isAdmin"
                           >管理员</UBadge
                         >
                         <UBadge
-                          class="ml-1"
                           size="xs"
                           color="primary"
                           variant="outline"
