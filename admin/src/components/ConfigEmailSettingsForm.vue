@@ -21,8 +21,11 @@
       <el-form-item label="SMTP端口" prop="emailSmtpPort">
         <el-input v-model="emailSettingsForm.emailSmtpPort"></el-input>
       </el-form-item>
-      <el-form-item label="开启安全模式" prop="emailSmtpSsl">
+      <el-form-item label="开启安全协议" prop="emailSmtpSsl">
         <el-switch v-model="emailSettingsForm.emailSmtpSsl"></el-switch>
+        <div>
+          ※在大多数情况下，如果您连接到465端口时请开启安全协议。对于587端口或25端口，请不要开启。
+        </div>
       </el-form-item>
       <el-form-item label="发信邮箱" prop="emailSender">
         <el-input v-model="emailSettingsForm.emailSender"></el-input>
