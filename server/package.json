@@ -13,7 +13,8 @@
     "sumPostComment": "node ./tools/sumPostComment",
     "fixAttachmentMimetype": "node ./tools/fixAttachmentMimetype",
     "backupFromEmlogJSON": "node ./tools/backupFromEmlogJSON",
-    "fixPostLastChangDate": "node ./tools/fixPostLastChangDate"
+    "fixPostLastChangDate": "node ./tools/fixPostLastChangDate",
+    "deleteEmailSmtpSslOption": "node ./tools/deleteEmailSmtpSslOption"
   },
   "dependencies": {
     "archiver": "^7.0.1",
