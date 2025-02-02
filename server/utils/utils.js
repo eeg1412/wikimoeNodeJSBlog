@@ -436,7 +436,7 @@ exports.sendEmail = function (to, content, subject) {
     console.error('请在后台设置邮箱')
     return
   }
-  const { emailSmtpHost, emailSmtpPort, emailSmtpSsl, emailSender, emailPassword } = emailSettings
+  const { emailSmtpHost, emailSmtpPort, emailSmtpSecure, emailSender, emailPassword } = emailSettings
   // 以上参数缺一不可
   if (!emailSmtpHost || !emailSmtpPort || !emailSender || !emailPassword) {
     console.error('请在后台设置邮箱')
@@ -450,7 +450,7 @@ exports.sendEmail = function (to, content, subject) {
   const transporter = nodemailer.createTransport({
     host: emailSmtpHost,
     port: emailSmtpPort,
-    secure: emailSmtpSsl || false, // true for 465, false for other ports
+    secure: emailSmtpSecure || false, // true for 465, false for other ports
     auth: {
       user: emailSender,
       pass: emailPassword
@@ -482,12 +482,23 @@ exports.sendEmail = function (to, content, subject) {
     }
     emailSendHistoryUtils.save(emailSendHistory)
   }).catch((err) => {
+    let errInfo = ''
+    const errorType = typeof err
+    if (errorType === 'string') {
+      errInfo = err
+    }
+    if (errorType === 'object') {
+      errInfo = JSON.stringify(err)
+      if (err instanceof Error && errInfo === '{}') {
+        errInfo = err.message
+      }
+    }
     const emailSendHistory = {
       to,
       content,
       subject,
       status: 0,
-      errInfo: JSON.stringify(err)
+      errInfo: errInfo
     }
     emailSendHistoryUtils.save(emailSendHistory)
   })

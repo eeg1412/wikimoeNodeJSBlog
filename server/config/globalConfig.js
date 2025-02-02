@@ -102,8 +102,8 @@ const initGlobalConfig = async () => {
     emailSmtpHost: '',
     // smtp端口
     emailSmtpPort: '',
-    // ssl
-    emailSmtpSsl: true,
+    // 安全协议
+    emailSmtpSecure: true,
     // 发信邮箱
     emailSender: '',
     // 发信密码
