@@ -31,13 +31,84 @@ module.exports = async function (req, res, next) {
     lastusetime: -1,
     _id: -1
   }
-  tagUtils.findPage(params, sort, page, size).then((data) => {
-    // 返回格式list,total
-    res.send({
-      list: data.list,
-      total: data.total
-    })
+  // 构建聚合管道
+  const pipeline = [
+    // 条件过滤
+    {
+      $match: params
+    },
+    {
+      $lookup: {
+        from: 'posts',
+        localField: '_id',
+        foreignField: 'tags',
+        as: 'posts'
+      }
+    },
+    // 添加文章数量字段
+    {
+      $addFields: {
+        publicPostCount: { $size: '$posts' }
+      }
+    },
+    {
+      $addFields: {
+        totalPostCount: { $size: '$posts' },
+        publicPostCount: {
+          $size: {
+            $filter: {
+              input: '$posts',
+              as: 'post',
+              cond: { $eq: ['$$post.status', 1] }
+            }
+          }
+        }
+      }
+    },
+    // 移除posts字段
+    {
+      $project: {
+        posts: 0
+      }
+    },
+    // 排序
+    {
+      $sort: sort
+    },
+    // 分页
+    {
+      $skip: (page - 1) * size
+    },
+    {
+      $limit: size
+    }
+  ]
 
+  // 使用facet实现分页
+  const aggregatePipeline = [
+    {
+      $facet: {
+        // 获取分页数据
+        list: pipeline,
+        // 获取总数
+        total: [
+          {
+            $match: params
+          },
+          {
+            $count: 'count'
+          }
+        ]
+      }
+    }
+  ]
+
+  tagUtils.aggregate(aggregatePipeline).then((result) => {
+    const data = {
+      list: result[0].list,
+      total: result[0].total[0]?.count || 0
+    }
+    res.send(data)
   }).catch((err) => {
     res.status(400).json({
       errors: [{

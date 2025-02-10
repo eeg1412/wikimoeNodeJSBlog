@@ -60,6 +60,22 @@
             </div>
           </template>
         </el-table-column>
+        <!-- totalPostCount -->
+        <el-table-column prop="totalPostCount" label="总文章数" min-width="100">
+          <template #default="{ row }">
+            {{ row.totalPostCount }}
+          </template>
+        </el-table-column>
+        <!-- publicPostCount -->
+        <el-table-column
+          prop="publicPostCount"
+          label="公开文章数"
+          min-width="100"
+        >
+          <template #default="{ row }">
+            {{ row.publicPostCount }}
+          </template>
+        </el-table-column>
         <!-- 最后一次使用时间 -->
         <el-table-column prop="last_use_time" label="最终使用时间">
           <template #default="{ row }">
