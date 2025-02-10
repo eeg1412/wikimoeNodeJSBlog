@@ -57,14 +57,46 @@ module.exports = async function (req, res, next) {
       const pipe = [
         {
           $sample: {
-            size: limit
+            size: limit + 10
           },
+        },
+        {
+          $lookup: {
+            from: "posts",
+            localField: "_id",
+            foreignField: "tags",
+            pipeline: [
+              {
+                $match: {
+                  status: 1 // 只统计已发布的文章
+                }
+              }
+            ],
+            as: "posts"
+          }
+        },
+        // 计算公开文章数量
+        {
+          $addFields: {
+            publicPostCount: { $size: "$posts" }
+          }
+        },
+        // 过滤掉文章数为0的标签
+        {
+          $match: {
+            publicPostCount: { $gt: 0 }
+          }
+        },
+        // 只输出limit个
+        {
+          $limit: limit
         },
         // 只输出_id和tagname
         {
           $project: {
             _id: 1,
-            tagname: 1
+            tagname: 1,
+            publicPostCount: 1
           }
         }
       ];
@@ -81,7 +113,6 @@ module.exports = async function (req, res, next) {
             list: data
           })
         }
-
       }).catch((err) => {
         userApiLog.error(`getRandomTagList error, ${logErrorToText(err)}`)
       })
