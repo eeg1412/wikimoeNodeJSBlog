@@ -27,6 +27,12 @@ var sorts = new Schema({
   description: {
     type: String,
   },
+  // 公开的文章数量
+  publicPost: {
+    type: Number,
+    default: 0,
+    index: true
+  },
   // template 模板
   template: {
     type: String,

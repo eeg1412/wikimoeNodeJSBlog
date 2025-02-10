@@ -59,3 +59,9 @@ exports.aggregate = async function (pipe) {
   // document查询
   return await tagsModel.aggregate(pipe);
 }
+
+// 查询Cursor
+exports.findCursor = function (parmas, sort, projection) {
+  // document查询
+  return tagsModel.find(parmas, projection).sort(sort).cursor();
+}

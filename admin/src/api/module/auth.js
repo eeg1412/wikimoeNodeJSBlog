@@ -325,6 +325,18 @@ export default function (api) {
         shouldAdminJWT: true
       })
     },
+    // put /option/reflushtagspublicpost
+    reflushTagsPublicPost () {
+      return api.put('/option/reflushtagspublicpost', {}, {
+        shouldAdminJWT: true
+      })
+    },
+    // put /option/reflushsortspublicpost
+    reflushSortsPublicPost () {
+      return api.put('/option/reflushsortspublicpost', {}, {
+        shouldAdminJWT: true
+      })
+    },
     // get dashboard
     getDashboard () {
       return api.get('/dashboard', {

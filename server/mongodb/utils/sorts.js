@@ -34,3 +34,9 @@ exports.deleteMany = async function (filters) {
   // document查询
   return await sortsModel.deleteMany(filters);
 }
+
+// 查询Cursor
+exports.findCursor = function (parmas, sort, projection) {
+  // document查询
+  return sortsModel.find(parmas, projection).sort(sort).cursor();
+}

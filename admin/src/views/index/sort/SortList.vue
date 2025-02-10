@@ -42,6 +42,18 @@
         </el-table-column>
         <el-table-column prop="alias" label="分类别名" />
         <el-table-column prop="taxis" label="排序值" />
+        <!-- publicPost 公开文章数 -->
+        <el-table-column prop="publicPost" label="公开文章数">
+          <template #default="{ row }">
+            <span>{{ row.publicPost }}</span>
+            <span v-if="row.children && row.children.length > 0">
+              + {{ row.childrenPublicPost }} ({{
+                row.publicPost + row.childrenPublicPost
+              }})
+            </span>
+          </template>
+        </el-table-column>
+
         <el-table-column prop="description" label="分类描述" />
         <el-table-column label="操作" width="140">
           <template #default="{ row }">
@@ -79,6 +91,17 @@ export default {
       authApi
         .getSortList()
         .then((res) => {
+          const data = res.data.data
+          // 遍历数据
+          data.forEach((item) => {
+            if (item.children && item.children.length > 0) {
+              let childrenPublicPost = 0
+              item.children.forEach((child) => {
+                childrenPublicPost += child.publicPost
+              })
+              item.childrenPublicPost = childrenPublicPost
+            }
+          })
           list.value = res.data.data
         })
         .catch(() => {})

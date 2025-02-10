@@ -6,53 +6,71 @@
     label-width="160px"
     v-if="inited"
   >
-    <el-form-item label="引用域名白名单" prop="siteReferrerWhiteList">
-      <el-input
-        type="textarea"
-        v-model="otherSettingsForm.siteReferrerWhiteList"
-        placeholder="英文逗号隔开"
-      ></el-input>
-    </el-form-item>
+    <div class="config-border-item">
+      <div class="config-border-item-title mb5">其他配置项</div>
+      <el-form-item label="引用域名白名单" prop="siteReferrerWhiteList">
+        <el-input
+          type="textarea"
+          v-model="otherSettingsForm.siteReferrerWhiteList"
+          placeholder="英文逗号隔开"
+        ></el-input>
+      </el-form-item>
 
-    <el-form-item label="敏感关键词" prop="siteBannedKeywordList">
-      <el-input
-        type="textarea"
-        v-model="otherSettingsForm.siteBannedKeywordList"
-        placeholder="英文逗号隔开"
-      ></el-input>
-    </el-form-item>
+      <el-form-item label="敏感关键词" prop="siteBannedKeywordList">
+        <el-input
+          type="textarea"
+          v-model="otherSettingsForm.siteBannedKeywordList"
+          placeholder="英文逗号隔开"
+        ></el-input>
+      </el-form-item>
 
-    <el-form-item
-      label="排名统计来源忽略域名"
-      prop="siteRankIgnoreReferrerDomainList"
-    >
-      <el-input
-        type="textarea"
-        v-model="otherSettingsForm.siteRankIgnoreReferrerDomainList"
-        placeholder="英文逗号隔开"
-      ></el-input>
-    </el-form-item>
-
-    <!-- 是否统计爬虫的文章查看数 -->
-    <el-form-item label="爬虫增加文章查看数">
-      <el-switch
-        v-model="otherSettingsForm.siteSpiderPostVisitEnabled"
-      ></el-switch>
-      <div class="w_10">※开启后，爬虫访问文章时也会增加文章查看数</div>
-    </el-form-item>
-
-    <el-form-item label="刷新密钥" v-if="adminInfo.role === 999">
-      <el-button type="danger" @click="handleFlushSecret"
-        >刷新管理端密钥</el-button
+      <el-form-item
+        label="排名统计来源忽略域名"
+        prop="siteRankIgnoreReferrerDomainList"
       >
-      <!-- 刷新博客端密钥 -->
-      <el-button type="danger" @click="handleFlushSecretBlog"
-        >刷新博客端密钥</el-button>
-    </el-form-item>
+        <el-input
+          type="textarea"
+          v-model="otherSettingsForm.siteRankIgnoreReferrerDomainList"
+          placeholder="英文逗号隔开"
+        ></el-input>
+      </el-form-item>
 
-    <el-form-item>
-      <el-button type="primary" @click="otherSettingsSubmit">提交</el-button>
-    </el-form-item>
+      <!-- 是否统计爬虫的文章查看数 -->
+      <el-form-item label="爬虫增加文章查看数">
+        <el-switch
+          v-model="otherSettingsForm.siteSpiderPostVisitEnabled"
+        ></el-switch>
+        <div class="w_10">※开启后，爬虫访问文章时也会增加文章查看数</div>
+      </el-form-item>
+      <el-form-item>
+        <el-button type="primary" @click="otherSettingsSubmit">提交</el-button>
+      </el-form-item>
+    </div>
+  </el-form>
+  <el-form label-width="138px" v-if="inited && adminInfo.role === 999">
+    <div class="config-border-item">
+      <div class="config-border-item-title mb5">其他操作</div>
+      <el-form-item label="刷新密钥">
+        <el-button type="danger" @click="handleFlushSecret"
+          >刷新管理端密钥</el-button
+        >
+        <!-- 刷新博客端密钥 -->
+        <el-button type="danger" @click="handleFlushSecretBlog"
+          >刷新博客端密钥</el-button
+        >
+      </el-form-item>
+      <!-- 重新统计 -->
+      <el-form-item label="重新统计">
+        <!-- reflushTagsPublicPost -->
+        <el-button type="danger" @click="reflushTagsPublicPost"
+          >标签的公开文章数</el-button
+        >
+        <!-- 分类的公开文章数 reflushSortsPublicPost -->
+        <el-button type="danger" @click="reflushSortsPublicPost"
+          >分类的公开文章数</el-button
+        >
+      </el-form-item>
+    </div>
   </el-form>
 </template>
 <script>
@@ -154,8 +172,22 @@ export default {
         .catch(() => {})
     }
     const handleFlushSecretBlog = () => {
+      ElMessageBox.confirm('确定要刷新博客端密钥吗？', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning',
+      })
+        .then(() => {
+          authApi.flushJWTSecretBlog().then(() => {
+            ElMessage.success('密钥已刷新')
+          })
+        })
+        .catch(() => {})
+    }
+
+    const reflushTagsPublicPost = () => {
       ElMessageBox.confirm(
-        '确定要刷新博客端密钥吗？',
+        '确定要重新统计标签的公开文章数吗？在统计期间博客和管理后台将不可用，是否继续？',
         '提示',
         {
           confirmButtonText: '确定',
@@ -164,8 +196,26 @@ export default {
         }
       )
         .then(() => {
-          authApi.flushJWTSecretBlog().then(() => {
-            ElMessage.success('密钥已刷新')
+          authApi.reflushTagsPublicPost().then(() => {
+            ElMessage.success('已开始重新统计，请稍后刷新页面')
+          })
+        })
+        .catch(() => {})
+    }
+
+    const reflushSortsPublicPost = () => {
+      ElMessageBox.confirm(
+        '确定要重新统计分类的公开文章数吗？在统计期间博客和管理后台将不可用，是否继续？',
+        '提示',
+        {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning',
+        }
+      )
+        .then(() => {
+          authApi.reflushSortsPublicPost().then(() => {
+            ElMessage.success('已开始重新统计，请稍后刷新页面')
           })
         })
         .catch(() => {})
@@ -186,6 +236,8 @@ export default {
       inited,
       handleFlushSecret,
       handleFlushSecretBlog,
+      reflushTagsPublicPost,
+      reflushSortsPublicPost,
       adminInfo,
     }
   },

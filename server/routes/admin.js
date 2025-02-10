@@ -564,6 +564,24 @@ const adminRouteSetting = [
     roleType: 'eq',
     role: 999
   },
+  // put /option/reflushtagspublicpost
+  {
+    path: '/option/reflushtagspublicpost',
+    method: 'put',
+    middleware: [checkAuth, checkRole],
+    controller: require('../api/admin/option/reflushTagsPublicPost'),
+    roleType: 'eq',
+    role: 999
+  },
+  // put /option/reflushsortspublicpost
+  {
+    path: '/option/reflushsortspublicpost',
+    method: 'put',
+    middleware: [checkAuth, checkRole],
+    controller: require('../api/admin/option/reflushSortsPublicPost'),
+    roleType: 'eq',
+    role: 999
+  },
   // get dashboard
   {
     path: '/dashboard',
