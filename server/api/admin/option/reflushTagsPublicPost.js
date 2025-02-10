@@ -11,8 +11,8 @@ module.exports = async function (req, res, next) {
   global.$isReady = false
 
   try {
-    const tagsCursor = tagUtils.findCursor({}, {}, '_id')
-
+    const tagsCursor = tagUtils.findCursor({}, {}, '_id publicPost')
+    let changeCount = 0
     const promiseArr = []
     for await (const tag of tagsCursor) {
       const _id = tag._id
@@ -23,11 +23,13 @@ module.exports = async function (req, res, next) {
             tags: _id,
             status: 1
           })
-
-          await tagUtils.updateOne(
-            { _id: tag._id },
-            { publicPost: count }
-          )
+          if (count !== tag.publicPost) {
+            await tagUtils.updateOne(
+              { _id: tag._id },
+              { publicPost: count }
+            )
+            changeCount++
+          }
           resolve()
         } catch (err) {
           reject(err)
@@ -45,6 +47,7 @@ module.exports = async function (req, res, next) {
 
     console.info(`处理剩余标签 ${promiseArr.length}`)
     await Promise.all(promiseArr);
+    console.info(`已处理标签数：${changeCount}`)
 
     global.$isReady = true
   } catch (err) {
