@@ -112,7 +112,17 @@ module.exports = async function (req, res, next) {
     }
   }
 
-  // 校验tags 是否含有空内容
+  // 校验tags 
+  if (!Array.isArray(tags)) {
+    res.status(400).json({
+      errors: [{
+        message: 'tags必须是数组'
+      }]
+    })
+    return
+  }
+
+  // 校验是否含有空内容
   for (let i = 0; i < tags.length; i++) {
     if (!tags[i]) {
       res.status(400).json({
@@ -122,6 +132,17 @@ module.exports = async function (req, res, next) {
       })
       return
     }
+  }
+
+  // 校验是否有重复
+  const uniqueTags = new Set(tags)
+  if (uniqueTags.size !== tags.length) {
+    res.status(400).json({
+      errors: [{
+        message: 'tags不能重复'
+      }]
+    })
+    return
   }
 
 

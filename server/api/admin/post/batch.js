@@ -84,6 +84,17 @@ module.exports = async function (req, res, next) {
         return;
       }
     }
+
+    // 检查重复
+    const uniqueTagIds = new Set(tagIdList);
+    if (uniqueTagIds.size !== tagIdList.length) {
+      res.status(400).json({
+        errors: [{
+          message: 'tagId不能重复'
+        }]
+      });
+      return;
+    }
   }
 
   // 批量操作--更改分类
