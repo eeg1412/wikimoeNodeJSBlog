@@ -52,7 +52,7 @@ exports.refreshTagsPublicPost = async function (query = {}) {
 
 exports.refreshSortsPublicPost = async function (query = {}) {
   try {
-    const sortsCursor = sortUtils.findCursor({}, {}, '_id publicPost')
+    const sortsCursor = sortUtils.findCursor(query, {}, '_id publicPost')
     let changeCount = 0
     const promiseArr = []
     for await (const sort of sortsCursor) {
