@@ -61,7 +61,18 @@ module.exports = async function (req, res, next) {
     params.sort = sort
   }
   // 如果tags存在，就加入查询条件
-  if (tags) {
+  if (tags && tags?.length > 0) {
+    // 校验tags 是否含有空内容
+    for (let i = 0; i < tags.length; i++) {
+      if (!tags[i]) {
+        res.status(400).json({
+          errors: [{
+            message: 'tags格式错误'
+          }]
+        })
+        return
+      }
+    }
     // tags是数组
     params.tags = {
       $in: tags

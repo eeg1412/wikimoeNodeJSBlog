@@ -8,7 +8,7 @@ module.exports = async function (req, res, next) {
   const { tagname } = req.body
   // 校验格式
   const params = {
-    tagname: utils.replaceSpacesWithUnderscores(tagname),
+    tagname: utils.replaceSpacesWithUnderscores(tagname || ''),
   }
   const rule = [
     {

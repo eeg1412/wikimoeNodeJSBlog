@@ -61,16 +61,30 @@ module.exports = async function (req, res, next) {
   }
   // 校验idList的每个id是否合法
   // utils.isObjectId
-  idList.forEach(id => {
+  for (const id of idList) {
     if (!validator.isMongoId(id)) {
       res.status(400).json({
         errors: [{
           message: 'id参数有误'
         }]
-      })
-      return false
+      });
+      return;
     }
-  })
+  }
+
+  // tagIdList校验
+  if (tagIdList.length > 0) {
+    for (const id of tagIdList) {
+      if (!id) {
+        res.status(400).json({
+          errors: [{
+            message: 'tagId参数有误'
+          }]
+        });
+        return;
+      }
+    }
+  }
 
   // 批量操作--更改分类
   const changeSort = async function () {

@@ -648,7 +648,7 @@ export default {
       if (tagsIsLoading.value) {
         return
       }
-      const formatTagKeyword = replaceSpacesWithUnderscores(tagKeyword)
+      const formatTagKeyword = replaceSpacesWithUnderscores(tagKeyword || '')
       tagsIsLoading.value = true
       authApi
         .getTagList({ keyword: formatTagKeyword, size: 50, page: 1 }, true)

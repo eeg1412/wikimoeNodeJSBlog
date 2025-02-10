@@ -25,7 +25,7 @@ module.exports = async function (req, res, next) {
   }
   // 校验格式
   const params = {
-    tagname: utils.replaceSpacesWithUnderscores(tagname),
+    tagname: utils.replaceSpacesWithUnderscores(tagname || ''),
   }
   const rule = [
     {

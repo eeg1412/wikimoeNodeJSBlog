@@ -15,7 +15,9 @@
           <el-input
             v-model="form.tagname"
             placeholder="请输入标签名称"
-            @blur="form.tagname = replaceSpacesWithUnderscores(form.tagname)"
+            @blur="
+              form.tagname = replaceSpacesWithUnderscores(form.tagname || '')
+            "
           ></el-input>
         </el-form-item>
         <el-form-item>

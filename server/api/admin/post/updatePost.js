@@ -112,6 +112,18 @@ module.exports = async function (req, res, next) {
     }
   }
 
+  // 校验tags 是否含有空内容
+  for (let i = 0; i < tags.length; i++) {
+    if (!tags[i]) {
+      res.status(400).json({
+        errors: [{
+          message: 'tags格式错误'
+        }]
+      })
+      return
+    }
+  }
+
 
   // 1blog,2tweet,3page
   const type = post.type

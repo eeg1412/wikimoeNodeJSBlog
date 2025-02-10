@@ -41,7 +41,7 @@ module.exports = async function (req, res, next) {
   }).catch((err) => {
     res.status(400).json({
       errors: [{
-        message: '分类列表获取失败'
+        message: '标签列表获取失败'
       }]
     })
     adminApiLog.error(`tag list get fail, ${logErrorToText(err)}`)
