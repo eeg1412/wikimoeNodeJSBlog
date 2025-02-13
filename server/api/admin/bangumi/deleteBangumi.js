@@ -1,4 +1,5 @@
 const bangumiUtils = require('../../../mongodb/utils/bangumis')
+const postUtils = require('../../../mongodb/utils/posts')
 const utils = require('../../../utils/utils')
 const log4js = require('log4js')
 const adminApiLog = log4js.getLogger('adminApi')
@@ -58,10 +59,21 @@ module.exports = async function (req, res, next) {
       })
       return
     }
-    res.send({
-      data: {
-        message: '删除成功'
-      }
+    // 删除文章下的番剧
+    postUtils.updateMany({ bangumiList: id }, { $pull: { bangumiList: id } }).then((data) => {
+      // console.log('data', data)
+      res.send({
+        data: {
+          message: '删除成功'
+        }
+      })
+    }).catch((err) => {
+      res.status(400).json({
+        errors: [{
+          message: '删除失败'
+        }]
+      })
+      adminApiLog.error(`bangumi delete fail, ${logErrorToText(err)}`)
     })
     cacheDataUtils.getBangumiYearList()
     // utils.reflushBlogCache()

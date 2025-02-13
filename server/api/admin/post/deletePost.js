@@ -27,11 +27,23 @@ module.exports = async function (req, res, next) {
       })
       return
     }
-    res.send({
-      data: {
-        message: '删除成功'
-      }
+    // 删除文章下的关联文章
+    postUtils.updateMany({ postList: id }, { $pull: { postList: id } }).then((postData) => {
+      // console.log(postData)
+      res.send({
+        data: {
+          message: '删除成功'
+        }
+      })
+    }).catch((err) => {
+      res.status(400).json({
+        errors: [{
+          message: '删除失败'
+        }]
+      })
+      adminApiLog.error(`post delete fail, ${logErrorToText(err)}`)
     })
+
     cacheDataUtils.getPostArchiveList()
     rssToolUtils.reflushRSS()
     sitemapToolUtils.reflushSitemap()

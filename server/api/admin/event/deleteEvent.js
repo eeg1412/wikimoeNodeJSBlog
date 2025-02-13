@@ -1,4 +1,5 @@
 const eventUtils = require('../../../mongodb/utils/events')
+const postUtils = require('../../../mongodb/utils/posts')
 const utils = require('../../../utils/utils')
 const log4js = require('log4js')
 const adminApiLog = log4js.getLogger('adminApi')
@@ -23,10 +24,21 @@ module.exports = async function (req, res, next) {
       })
       return
     }
-    res.send({
-      data: {
-        message: '删除成功'
-      }
+    // 删除文章下的活动
+    postUtils.updateMany({ eventList: id }, { $pull: { eventList: id } }).then((postData) => {
+      // console.log(postData)
+      res.send({
+        data: {
+          message: '删除成功'
+        }
+      })
+    }).catch((err) => {
+      res.status(400).json({
+        errors: [{
+          message: '删除失败'
+        }]
+      })
+      adminApiLog.error(`event delete fail, ${logErrorToText(err)}`)
     })
   }).catch((err) => {
     res.status(400).json({
