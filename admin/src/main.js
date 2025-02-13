@@ -31,6 +31,15 @@ initRichEditor()
 const formatTimestamp = (time) => {
   return new Date(time).getTime()
 }
+
+const limitStr = (str = '', len = 20) => {
+  const strArray = Array.from(str || '')
+  if (strArray.length > len) {
+    return strArray.slice(0, len).join('') + '...'
+  }
+  return str
+}
 app.config.globalProperties.$formatDate = formatDate;
 app.config.globalProperties.$formatTimestamp = formatTimestamp;
+app.config.globalProperties.$limitStr = limitStr;
 

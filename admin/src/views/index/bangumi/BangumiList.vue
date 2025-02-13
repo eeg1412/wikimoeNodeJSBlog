@@ -97,7 +97,11 @@
         <!-- 标题 title -->
         <el-table-column prop="title" label="标题" min-width="200px" />
         <!-- 简评 -->
-        <el-table-column prop="summary" label="简评" min-width="250px" />
+        <el-table-column prop="summary" label="简评" min-width="250px">
+          <template #default="{ row }">
+            <div :title="row.summary">{{ $limitStr(row.summary, 50) }}</div>
+          </template>
+        </el-table-column>
         <!-- 评分 rating -->
         <el-table-column prop="rating" label="评分" width="60px" />
         <!-- 年份 year -->
