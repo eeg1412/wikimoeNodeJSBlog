@@ -227,6 +227,10 @@ h6 {
 .lh300 {
   line-height: 300%;
 }
+/* 支持换行 */
+.pre-wrap {
+  white-space: pre-wrap;
+}
 .ellipsis {
   overflow: hidden;
   white-space: nowrap;
