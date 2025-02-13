@@ -9,6 +9,11 @@ exports.save = async function (parmas) {
 
 
 exports.findOne = async function (parmas, projection, options = {}) {
+  const isAdmin = options.isAdmin || false;
+  let matchStatus = 1;
+  if (isAdmin) {
+    matchStatus = { $in: [0, 1] }
+  }
   // document查询
   return await postsModel.findOne(parmas, projection).populate({
     path: 'author',
@@ -21,12 +26,12 @@ exports.findOne = async function (parmas, projection, options = {}) {
     .populate(
       {
         path: 'bangumiList',
-        match: { status: 1 },
+        match: { status: matchStatus },
         select: '-coverFileName -coverFolder -createdAt -updatedAt',
       }
     ).populate({
       path: 'gameList',
-      match: { status: 1 },
+      match: { status: matchStatus },
       select: '-coverFileName -coverFolder -createdAt -updatedAt',
       populate: [
         {
@@ -41,7 +46,7 @@ exports.findOne = async function (parmas, projection, options = {}) {
       ]
     }).populate({
       path: 'bookList',
-      match: { status: 1 },
+      match: { status: matchStatus },
       select: '-coverFileName -coverFolder -createdAt -updatedAt',
       populate: {
         path: 'booktype',
@@ -49,15 +54,15 @@ exports.findOne = async function (parmas, projection, options = {}) {
       }
     }).populate({
       path: 'postList',
-      match: { status: 1, type: 1 },
-      select: 'title _id coverImages alias date',
+      match: { status: matchStatus, type: 1 },
+      select: 'title _id coverImages alias date status',
       populate: {
         path: 'coverImages',
       }
     }).populate({
       path: 'eventList',
-      match: { status: 1 },
-      select: '_id title eventtype startTime',
+      match: { status: matchStatus },
+      select: '_id title eventtype startTime status',
       populate: {
         path: 'eventtype',
         select: '_id name color'
@@ -78,6 +83,11 @@ exports.findCursor = function (parmas, sort, projection) {
 
 // 分页查询
 exports.findPage = async function (parmas, sort, page, limit, projection, options = {}) {
+  const isAdmin = options.isAdmin || false;
+  let matchStatus = 1;
+  if (isAdmin) {
+    matchStatus = { $in: [0, 1] }
+  }
   // document查询
   let query = postsModel.find(parmas, projection)
     .populate('author', options.authorFilter || 'nickname _id photo')
@@ -88,16 +98,16 @@ exports.findPage = async function (parmas, sort, page, limit, projection, option
   if (projection && !projection.includes('-bangumiList')) {
     query = query.populate({
       path: 'bangumiList',
-      match: { status: 1 },
-      select: '_id title year season',
+      match: { status: matchStatus },
+      select: '_id title year season status',
     });
   }
 
   if (projection && !projection.includes('-gameList')) {
     query = query.populate({
       path: 'gameList',
-      match: { status: 1 },
-      select: '_id title gamePlatform',
+      match: { status: matchStatus },
+      select: '_id title gamePlatform status',
       populate: {
         path: 'gamePlatform',
         select: '_id name color'
@@ -108,8 +118,8 @@ exports.findPage = async function (parmas, sort, page, limit, projection, option
   if (projection && !projection.includes('-bookList')) {
     query = query.populate({
       path: 'bookList',
-      match: { status: 1 },
-      select: '_id title booktype',
+      match: { status: matchStatus },
+      select: '_id title booktype status',
       populate: {
         path: 'booktype',
         select: '_id name color'
@@ -120,16 +130,16 @@ exports.findPage = async function (parmas, sort, page, limit, projection, option
   if (projection && !projection.includes('-postList')) {
     query = query.populate({
       path: 'postList',
-      match: { status: 1, type: 1 },
-      select: 'title _id alias date',
+      match: { status: matchStatus, type: 1 },
+      select: 'title _id alias date status',
     });
   }
 
   if (projection && !projection.includes('-eventList')) {
     query = query.populate({
       path: 'eventList',
-      match: { status: 1 },
-      select: '_id title startTime',
+      match: { status: matchStatus },
+      select: '_id title startTime status',
     });
   }
 

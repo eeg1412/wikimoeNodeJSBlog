@@ -210,22 +210,24 @@
               v-for="content in mergeContentList(row)"
               :key="content._id"
               class="postlist-content-item"
+              :class="{ danger: content.status === 0 }"
             >
               <template v-if="content.type === 'bangumi'">
-                <i class="fas fa-fw fa-tv"></i
-                >{{
+                <i class="fas fa-fw fa-tv"></i>{{ `${checkShowText(content)}`
+                }}{{
                   `【${content.year}年${seasonToStr(content.season)}季新番】`
                 }}
               </template>
               <template v-else-if="content.type === 'book'">
-                <i class="fas fa-fw fa-book"></i
-                >{{
+                <i class="fas fa-fw fa-book"></i>{{ `${checkShowText(content)}`
+                }}{{
                   content.booktype?.name ? `【${content.booktype.name}】` : ''
                 }}
               </template>
               <template v-else-if="content.type === 'game'">
                 <i class="fas fa-fw fa-gamepad"></i
-                >{{
+                >{{ `${checkShowText(content)}`
+                }}{{
                   content.gamePlatform?.name
                     ? `【${content.gamePlatform.name}】`
                     : ''
@@ -233,7 +235,8 @@
               </template>
               <template v-else-if="content.type === 'post'">
                 <i class="fas fa-fw fa-newspaper"></i
-                >{{
+                >{{ `${checkShowText(content)}`
+                }}{{
                   `${
                     content.date
                       ? $formatDate(content.date, '【YYYY年MM月DD日】')
@@ -243,7 +246,8 @@
               </template>
               <template v-else-if="content.type === 'event'">
                 <i class="fas fa-fw fa-calendar-alt"></i
-                >{{ `【${$formatDate(content.startTime, 'YYYY年MM月')}】` }}
+                >{{ `${checkShowText(content)}`
+                }}{{ `【${$formatDate(content.startTime, 'YYYY年MM月')}】` }}
               </template>
               {{ content.title }}
             </div>
@@ -673,6 +677,13 @@ export default {
       getPostList(false, false, false)
     }
 
+    const checkShowText = (item) => {
+      if (item.status === 0) {
+        return '【状态:不显示】'
+      }
+      return ''
+    }
+
     // 监听 params.page 的变化
     watch(
       () => params.page,
@@ -727,6 +738,7 @@ export default {
       postBatchFormSuccess,
       // 搜索标签
       SearchTagSelectorRef,
+      checkShowText,
     }
   },
 }
@@ -750,5 +762,11 @@ export default {
   border-width: 1px;
   border-style: solid;
   box-sizing: border-box;
+}
+.postlist-content-item.danger {
+  --el-tag-text-color: var(--el-color-danger);
+  --el-tag-bg-color: var(--el-color-danger-light-9);
+  --el-tag-border-color: var(--el-color-danger-light-8);
+  --el-tag-hover-color: var(--el-color-danger);
 }
 </style>

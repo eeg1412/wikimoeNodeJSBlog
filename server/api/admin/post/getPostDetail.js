@@ -15,7 +15,7 @@ module.exports = async function (req, res, next) {
     return
   }
   // findOne
-  postUtils.findOne({ _id: id }).then((data) => {
+  postUtils.findOne({ _id: id }, undefined, { isAdmin: true }).then((data) => {
     if (!data) {
       res.status(404).json({
         errors: [{

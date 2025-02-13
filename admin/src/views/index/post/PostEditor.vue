@@ -229,9 +229,9 @@
               <el-option
                 v-for="item in bangumiList"
                 :key="item._id"
-                :label="`【${item.year}年${seasonToStr(item.season)}季新番】${
-                  item.title
-                }`"
+                :label="`${checkShowText(item)}【${item.year}年${seasonToStr(
+                  item.season
+                )}季新番】${item.title}`"
                 :value="item._id"
               ></el-option>
             </el-select>
@@ -254,7 +254,7 @@
               <el-option
                 v-for="item in gameList"
                 :key="item._id"
-                :label="`${
+                :label="`${checkShowText(item)}${
                   item.gamePlatform?.name ? `【${item.gamePlatform.name}】` : ''
                 }${item.title}`"
                 :value="item._id"
@@ -279,7 +279,7 @@
               <el-option
                 v-for="item in bookList"
                 :key="item._id"
-                :label="`${
+                :label="`${checkShowText(item)}${
                   item.booktype?.name ? `【${item.booktype.name}】` : ''
                 }${item.title}`"
                 :value="item._id"
@@ -304,9 +304,10 @@
               <el-option
                 v-for="item in eventList"
                 :key="item._id"
-                :label="`【${$formatDate(item.startTime, 'YYYY年MM月')}】${
-                  item.title
-                }`"
+                :label="`${checkShowText(item)}【${$formatDate(
+                  item.startTime,
+                  'YYYY年MM月'
+                )}】${item.title}`"
                 :value="item._id"
               ></el-option>
             </el-select>
@@ -329,7 +330,7 @@
               <el-option
                 v-for="item in postList"
                 :key="item._id"
-                :label="`${
+                :label="`${checkShowText(item)}${
                   item.date ? $formatDate(item.date, '【YYYY年MM月DD日】') : ''
                 }${item.title}`"
                 :value="item._id"
@@ -1078,6 +1079,13 @@ export default {
       return obj
     }
 
+    const checkShowText = (item) => {
+      if (item.status === 0) {
+        return '【状态:不显示】'
+      }
+      return ''
+    }
+
     // watch form.excerpt
     watch(
       () => form.excerpt,
@@ -1165,6 +1173,7 @@ export default {
       openPreviewer,
       // tweetContentParse
       tweetContentParseRes,
+      checkShowText,
     }
   },
 }
