@@ -1,5 +1,7 @@
 const attachmentUtils = require('../../../mongodb/utils/attachments')
 const albumUtils = require('../../../mongodb/utils/albums')
+const postUtils = require('../../../mongodb/utils/posts')
+const userUtils = require('../../../mongodb/utils/users')
 const log4js = require('log4js')
 const adminApiLog = log4js.getLogger('adminApi')
 const fs = require('fs')
@@ -69,11 +71,35 @@ module.exports = async function (req, res, next) {
         throw error
       }
 
-      res.send({
-        data: {
-          message: '删除成功'
+      // 删除文章中的引用
+      const postPromise = postUtils.updateMany({ 'coverImages': id }, {
+        $pull: {
+          coverImages: id
         }
       })
+      const userPromise = userUtils.updateMany({ 'cover': id }, {
+        $set: {
+          cover: null
+        }
+      })
+
+
+      Promise.all([postPromise, userPromise]).then(() => {
+        res.send({
+          data: {
+            message: '删除成功'
+          }
+        })
+      }).catch((err) => {
+        res.status(400).json({
+          errors: [{
+            message: '删除失败'
+          }]
+        })
+        adminApiLog.error(`attachment delete reference fail, ${logErrorToText(err)}`)
+      })
+
+
     }).catch((err) => {
       res.status(400).json({
         errors: [{
