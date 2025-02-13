@@ -8,8 +8,6 @@
           class="w-full rounded game-cover"
           :src="game.cover || '/img/nopic400-565.png'"
           :alt="game.title"
-          :width="400"
-          :height="565"
           :data-href="game.cover"
           :data-href-list="game.cover ? setDataHrefList(game.cover) : null"
           loading="lazy"

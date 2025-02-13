@@ -8,8 +8,6 @@
           class="w-full rounded book-cover"
           :src="book.cover || '/img/nopic400-565.png'"
           :alt="book.title"
-          :width="400"
-          :height="565"
           :data-href="book.cover"
           :data-href-list="book.cover ? setDataHrefList(book.cover) : null"
           loading="lazy"
