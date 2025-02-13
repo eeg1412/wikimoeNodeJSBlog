@@ -25,9 +25,8 @@
         </el-form-item>
         <el-form-item label="封面" prop="cover">
           <Cropper
-            :aspectRatio="400 / 565"
-            :width="400"
-            :height="565"
+            :maxWidth="480"
+            :maxHeight="480"
             :src="form.cover"
             @crop="setCover"
           ></Cropper>

@@ -8,14 +8,12 @@
           class="w-full rounded bangumi-cover"
           :src="bangumi.cover || '/img/nopic400-565.png'"
           :alt="bangumi.title"
-          :width="400"
-          :height="565"
           :data-href="bangumi.cover"
           :data-href-list="
             bangumi.cover ? setDataHrefList(bangumi.cover) : null
           "
           loading="lazy"
-          fit="cover"
+          fit="contain"
         />
         <div class="absolute bottom-0 left-0 p-1">
           <UBadge
@@ -88,8 +86,6 @@ const setDataHrefList = (cover) => {
   return [
     {
       filepath: cover,
-      width: 400,
-      height: 565,
     },
   ]
 }
