@@ -42,6 +42,32 @@
         </el-table-column>
         <el-table-column prop="alias" label="分类别名" />
         <el-table-column prop="taxis" label="排序值" />
+        <!-- totalPostCount -->
+        <el-table-column prop="totalPostCount" label="总文章数" min-width="100">
+          <template #default="{ row }">
+            <span>{{ row.totalPostCount }}</span>
+            <span v-if="row.children && row.children.length > 0">
+              + {{ row.childrenTotalPostCount }} ({{
+                row.totalPostCount + row.childrenTotalPostCount
+              }})
+            </span>
+          </template>
+        </el-table-column>
+        <!-- publicPostCount 公开文章数 -->
+        <el-table-column
+          prop="publicPostCount"
+          label="公开文章数"
+          min-width="100"
+        >
+          <template #default="{ row }">
+            <span>{{ row.publicPostCount }}</span>
+            <span v-if="row.children && row.children.length > 0">
+              + {{ row.childrenPublicPostCount }} ({{
+                row.publicPostCount + row.childrenPublicPostCount
+              }})
+            </span>
+          </template>
+        </el-table-column>
         <el-table-column prop="description" label="分类描述" />
         <el-table-column label="操作" width="140">
           <template #default="{ row }">
@@ -79,6 +105,20 @@ export default {
       authApi
         .getSortList()
         .then((res) => {
+          const data = res.data.data
+          // 遍历数据
+          data.forEach((item, index) => {
+            if (item.children && item.children.length > 0) {
+              let childrenPublicPostCount = 0
+              let childrenTotalPostCount = 0
+              item.children.forEach((child) => {
+                childrenPublicPostCount += child.publicPostCount
+                childrenTotalPostCount += child.totalPostCount
+              })
+              item.childrenPublicPostCount = childrenPublicPostCount
+              item.childrenTotalPostCount = childrenTotalPostCount
+            }
+          })
           list.value = res.data.data
         })
         .catch(() => {})
@@ -129,6 +169,7 @@ export default {
       const url = getPath(row)
       copyToClipboard(url)
     }
+
     onMounted(() => {
       getSortList()
     })
@@ -143,4 +184,3 @@ export default {
   },
 }
 </script>
-<style lang=""></style>
