@@ -1,10 +1,10 @@
 <template>
   <div class="archive-list-content-body">
-    <ul class="archive-list-body custom-scroll clearfix">
+    <ul class="archive-list-body custom-scroll">
       <li
         v-for="(item, index) in archiveList"
         :key="index"
-        class="archive-list-item fl"
+        class="archive-list-item"
       >
         <NuxtLink
           :to="{
@@ -13,7 +13,7 @@
           }"
           class="archive-list-item-link common-a"
         >
-          {{ item.year }}年{{ item.month }}月({{ item.count }})
+          {{ item.year }}年{{ item.month }}月({{ formatCount(item.count) }})
         </NuxtLink>
       </li>
     </ul>
@@ -42,17 +42,24 @@ const archiveList = computed(() => {
 
   return newList
 })
+
+const formatCount = (count) => {
+  return count > 999 ? '999+' : count
+}
 </script>
 <style scoped>
 .archive-list-content-body {
   padding-top: 10px;
 }
-.archive-list-item {
+/* .archive-list-item {
   width: 50%;
-}
+} */
 .archive-list-body {
   max-height: 200px;
   overflow: auto;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  width: 100%;
 }
 .archive-list-item-link {
   display: inline-block;
