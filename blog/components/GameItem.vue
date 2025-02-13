@@ -13,7 +13,7 @@
           loading="lazy"
           fit="contain"
         />
-        <div class="absolute bottom-0 left-0 p-1">
+        <div class="absolute bottom-0 left-0 p-1" v-if="game.label?.length > 0">
           <UBadge
             v-for="(label, index) in game.label"
             :key="index"
