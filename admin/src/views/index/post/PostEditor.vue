@@ -403,6 +403,7 @@
       ref="attachmentsDialogRef"
       :selectLimit="maxCoverLength - form.coverImages.length"
       :typeList="attachmentsDialogType"
+      :hasDelete="false"
       @selectAttachments="selectAttachments"
     />
   </div>

@@ -90,6 +90,7 @@
       ref="attachmentsDialogRef"
       :selectLimit="1"
       :typeList="['image']"
+      :hasDelete="false"
       @selectAttachments="selectAttachments"
     />
   </div>

@@ -17,6 +17,7 @@
       :shouldSelectOk="true"
       ref="attachmentsDialogRef"
       @selectAttachments="selectAttachments"
+      :hasDelete="false"
       :typeList="[insertFnType]"
     />
     <RichEditorEventSelectorDialog

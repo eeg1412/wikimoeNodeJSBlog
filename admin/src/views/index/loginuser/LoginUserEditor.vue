@@ -119,6 +119,7 @@
       :shouldSelectOk="true"
       ref="attachmentsDialogRef"
       :selectLimit="1"
+      :hasDelete="false"
       :typeList="['image']"
       @selectAttachments="selectAttachments"
     />

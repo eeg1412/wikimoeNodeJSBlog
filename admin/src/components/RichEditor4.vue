@@ -4,6 +4,7 @@
     <AttachmentsDialog
       :shouldSelectOk="true"
       ref="attachmentsDialogRef"
+      :hasDelete="false"
       @selectAttachments="selectAttachments"
     />
   </div>

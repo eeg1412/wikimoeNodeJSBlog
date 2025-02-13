@@ -73,6 +73,7 @@
               :icon="Delete"
               circle
               @click="deleteAttachments"
+              v-if="hasDelete"
               :title="`删除${selectedImageList.length}件媒体文件`"
             />
             <!-- 移动相册按钮 icon SetUp -->
@@ -391,6 +392,10 @@ export default {
     shouldSelectOk: {
       type: Boolean,
       default: false,
+    },
+    hasDelete: {
+      type: Boolean,
+      default: true,
     },
     // 选择上限
     selectLimit: {
