@@ -99,7 +99,7 @@
                   {{ row.parent.user?.nickname || row.parent.nickname }}
                 </div>
                 <div>{{ $formatDate(row.date) }}</div>
-                <div class="mt5">{{ row.parent.content }}</div>
+                <div class="mt5 pre-wrap">{{ row.parent.content }}</div>
               </blockquote>
               <blockquote
                 class="common-blockquote"
@@ -107,7 +107,7 @@
               >
                 该评论审核暂未通过或已被删除
               </blockquote>
-              <div>{{ row.content }}</div>
+              <div class="pre-wrap">{{ row.content }}</div>
             </div>
           </template>
         </el-table-column>
@@ -312,7 +312,9 @@
                 }}
               </div>
               <div>{{ $formatDate(commentParentData.date) }}</div>
-              <div class="mt5">{{ commentParentData.parent?.content }}</div>
+              <div class="mt5 pre-wrap">
+                {{ commentParentData.parent?.content }}
+              </div>
             </blockquote>
             <blockquote
               class="common-blockquote"
@@ -322,7 +324,7 @@
             >
               该评论审核暂未通过或已被删除
             </blockquote>
-            <div>{{ commentParentData.content }}</div>
+            <div class="pre-wrap">{{ commentParentData.content }}</div>
           </div>
         </el-form-item>
         <el-form-item label="回复内容" prop="content">

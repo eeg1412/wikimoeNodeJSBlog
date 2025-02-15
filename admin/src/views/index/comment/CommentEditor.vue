@@ -41,7 +41,7 @@
               }}
             </div>
             <div>{{ $formatDate(detailData.date) }}</div>
-            <div class="mt5">{{ detailData.parent.content }}</div>
+            <div class="mt5 pre-wrap">{{ detailData.parent.content }}</div>
           </blockquote>
           <blockquote
             class="common-blockquote comment-detail-blockquote"
