@@ -129,6 +129,7 @@ export default {
       page: 1,
       size: 50,
       keyword: '',
+      shouldCount: '1',
     })
     const total = ref(0)
     const tableRef = ref(null)

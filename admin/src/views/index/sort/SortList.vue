@@ -103,7 +103,7 @@ export default {
     const list = ref([])
     const getSortList = () => {
       authApi
-        .getSortList()
+        .getSortList({ shouldCount: '1' })
         .then((res) => {
           const data = res.data.data
           // 遍历数据

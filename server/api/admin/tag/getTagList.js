@@ -4,7 +4,7 @@ const log4js = require('log4js')
 const adminApiLog = log4js.getLogger('adminApi')
 
 module.exports = async function (req, res, next) {
-  let { page, size, keyword, idList } = req.query
+  let { page, size, keyword, idList, shouldCount } = req.query
   page = parseInt(page)
   size = parseInt(size)
   // 判断page和size是否为数字
@@ -36,41 +36,44 @@ module.exports = async function (req, res, next) {
     // 条件过滤
     {
       $match: params
-    },
-    {
-      $lookup: {
-        from: 'posts',
-        localField: '_id',
-        foreignField: 'tags',
-        as: 'posts'
-      }
-    },
-    // 添加文章数量字段
-    {
-      $addFields: {
-        publicPostCount: { $size: '$posts' }
-      }
-    },
-    {
-      $addFields: {
-        totalPostCount: { $size: '$posts' },
-        publicPostCount: {
-          $size: {
-            $filter: {
-              input: '$posts',
-              as: 'post',
-              cond: { $eq: ['$$post.status', 1] }
+    }
+  ]
+
+  if (shouldCount === '1') {
+    pipeline.push(
+      {
+        $lookup: {
+          from: 'posts',
+          localField: '_id',
+          foreignField: 'tags',
+          as: 'posts'
+        }
+      },
+      // 添加文章数量字段
+      {
+        $addFields: {
+          totalPostCount: { $size: '$posts' },
+          publicPostCount: {
+            $size: {
+              $filter: {
+                input: '$posts',
+                as: 'post',
+                cond: { $eq: ['$$post.status', 1] }
+              }
             }
           }
         }
+      },
+      // 移除posts字段
+      {
+        $project: {
+          posts: 0
+        }
       }
-    },
-    // 移除posts字段
-    {
-      $project: {
-        posts: 0
-      }
-    },
+    )
+  }
+
+  pipeline.push(
     // 排序
     {
       $sort: sort
@@ -82,7 +85,7 @@ module.exports = async function (req, res, next) {
     {
       $limit: size
     }
-  ]
+  )
 
   // 使用facet实现分页
   const aggregatePipeline = [

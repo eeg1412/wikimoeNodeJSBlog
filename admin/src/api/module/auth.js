@@ -22,8 +22,9 @@ export default function (api) {
       })
     },
     // get sort/list
-    getSortList () {
+    getSortList (data) {
       return api.get('/sort/list', {
+        params: data,
         shouldAdminJWT: true
       })
     },
