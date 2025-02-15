@@ -1,4 +1,5 @@
 const gamePlatformUtils = require('../../../mongodb/utils/gamePlatforms')
+const gameUtils = require('../../../mongodb/utils/games')
 const utils = require('../../../utils/utils')
 const log4js = require('log4js')
 const adminApiLog = log4js.getLogger('adminApi')
@@ -9,6 +10,16 @@ module.exports = async function (req, res, next) {
     res.status(400).json({
       errors: [{
         message: 'id不能为空'
+      }]
+    })
+    return
+  }
+  // 查看对应游戏数量
+  const gameCount = await gameUtils.count({ gamePlatform: id })
+  if (gameCount > 0) {
+    res.status(400).json({
+      errors: [{
+        message: '该平台下有游戏，不能删除'
       }]
     })
     return

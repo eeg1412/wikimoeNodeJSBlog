@@ -49,3 +49,9 @@ exports.deleteMany = async function (filters) {
   // document查询
   return await booksModel.deleteMany(filters);
 }
+
+// count
+exports.count = async function (filters) {
+  // document查询
+  return await booksModel.countDocuments(filters);
+}

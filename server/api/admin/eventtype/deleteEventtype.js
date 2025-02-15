@@ -1,4 +1,5 @@
 const eventtypeUtils = require('../../../mongodb/utils/eventtypes')
+const eventUtils = require('../../../mongodb/utils/events')
 const utils = require('../../../utils/utils')
 const log4js = require('log4js')
 const adminApiLog = log4js.getLogger('adminApi')
@@ -9,6 +10,16 @@ module.exports = async function (req, res, next) {
     res.status(400).json({
       errors: [{
         message: 'id不能为空'
+      }]
+    })
+    return
+  }
+  // 查看对应活动数量
+  const eventCount = await eventUtils.count({ eventtype: id })
+  if (eventCount > 0) {
+    res.status(400).json({
+      errors: [{
+        message: '该类型下有活动，不能删除'
       }]
     })
     return

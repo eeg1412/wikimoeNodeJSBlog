@@ -1,4 +1,5 @@
 const booktypeUtils = require('../../../mongodb/utils/booktypes')
+const bookUtils = require('../../../mongodb/utils/books')
 const utils = require('../../../utils/utils')
 const log4js = require('log4js')
 const adminApiLog = log4js.getLogger('adminApi')
@@ -9,6 +10,16 @@ module.exports = async function (req, res, next) {
     res.status(400).json({
       errors: [{
         message: 'id不能为空'
+      }]
+    })
+    return
+  }
+  // 查看对应书籍数量
+  const bookCount = await bookUtils.count({ booktype: id })
+  if (bookCount > 0) {
+    res.status(400).json({
+      errors: [{
+        message: '该类型下有书籍，不能删除'
       }]
     })
     return
