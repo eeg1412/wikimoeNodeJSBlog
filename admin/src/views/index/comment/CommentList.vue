@@ -250,7 +250,7 @@
             <el-button
               size="small"
               @click="openCommentForm(row)"
-              :disabled="!row.post"
+              :disabled="!row.post || row.status !== 1"
               ><el-icon><ChatLineSquare /></el-icon
             ></el-button>
             <el-button
