@@ -257,7 +257,7 @@ export default {
           { text: 'Markdown', value: 'markdown' },
           { text: 'JSON', value: 'json' },
           { text: 'Bash', value: 'bash' },
-          { text: 'Shell', value: 'shell' },
+          { text: 'sh', value: 'sh' },
         ],
       }
       config.MENU_CONF['uploadImage'] = {
