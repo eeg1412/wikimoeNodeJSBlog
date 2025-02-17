@@ -233,6 +233,33 @@ export default {
             ' '
           ), // 数组
       }
+      config.MENU_CONF['codeSelectLang'] = {
+        codeLangs: [
+          { text: 'CSS', value: 'css' },
+          { text: 'HTML', value: 'html' },
+          { text: 'XML', value: 'xml' },
+          { text: 'Javascript', value: 'javascript' },
+          { text: 'Typescript', value: 'typescript' },
+          { text: 'JSX', value: 'jsx' },
+          { text: 'Go', value: 'go' },
+          { text: 'PHP', value: 'php' },
+          { text: 'Python', value: 'python' },
+          { text: 'Java', value: 'java' },
+          { text: 'C', value: 'c' },
+          { text: 'C++', value: 'cpp' },
+          { text: 'C#', value: 'csharp' },
+          { text: 'Visual Basic', value: 'visual-basic' },
+          { text: 'SQL', value: 'sql' },
+          { text: 'Ruby', value: 'ruby' },
+          { text: 'Swift', value: 'swift' },
+          { text: 'Lua', value: 'lua' },
+          { text: 'Groovy', value: 'groovy' },
+          { text: 'Markdown', value: 'markdown' },
+          { text: 'JSON', value: 'json' },
+          { text: 'Bash', value: 'bash' },
+          { text: 'Shell', value: 'shell' },
+        ],
+      }
       config.MENU_CONF['uploadImage'] = {
         // 自定义选择图片
         customBrowseAndUpload(insertFn) {
