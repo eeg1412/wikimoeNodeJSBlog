@@ -278,7 +278,7 @@ const initHljs = () => {
     const hasLanguageClass = regex.test(codeBlock.className)
     // 去掉block前后的空格和空行
     codeBlock.textContent = codeBlock.textContent.trim()
-    hljs.highlightBlock(codeBlock)
+    hljs.highlightElement(codeBlock)
     const result = codeBlock.result
     let language = 'code'
     if (hasLanguageClass) {
