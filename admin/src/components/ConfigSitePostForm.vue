@@ -87,6 +87,7 @@
           <el-checkbox label="1">博文</el-checkbox>
           <el-checkbox label="2">推文</el-checkbox>
         </el-checkbox-group>
+        <div class="w_10">※相似内容的检索范围</div>
       </el-form-item>
       <!-- 显示范围 1博文 2推文 checkbox -->
       <el-form-item label="显示范围" prop="sitePostRandomSimilarShowRange">
@@ -96,6 +97,7 @@
           <el-checkbox label="1">博文</el-checkbox>
           <el-checkbox label="2">推文</el-checkbox>
         </el-checkbox-group>
+        <div class="w_10">※相似内容会在哪些类型的文章中出现</div>
       </el-form-item>
       <!-- 随机相似内容标题 -->
       <el-form-item label="标题" prop="sitePostRandomSimilarTitle">
