@@ -63,7 +63,7 @@ const contentCount = computed(() => {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
   .post-acg-grid.odd .post-acg-item:last-child {
-    grid-column: span 2 / span 2;
+    grid-column: span 2;
   }
 }
 </style>
