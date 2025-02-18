@@ -103,7 +103,7 @@
         <div class="acg-summary">
           <!-- prettier-ignore -->
           <div class="text-sm whitespace-pre-line text-gray-500 flex-grow" v-if="game.summary">{{ game.summary }}</div>
-          <div v-else class="text-sm flex-grow text-gray-400">暂无简评</div>
+          <div v-else class="text-sm text-gray-400">暂无内容</div>
         </div>
       </div>
     </div>

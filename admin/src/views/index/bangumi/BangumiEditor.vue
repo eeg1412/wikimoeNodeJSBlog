@@ -10,7 +10,7 @@
       </el-breadcrumb>
     </div>
     <div>
-      <el-form :model="form" :rules="rules" ref="formRef" label-width="80px">
+      <el-form :model="form" :rules="rules" ref="formRef" label-width="140px">
         <!-- title: '',
       cover: '',
       summary: '',
@@ -36,8 +36,8 @@
             </el-button>
           </div>
         </el-form-item>
-        <!-- 简评用textarea -->
-        <el-form-item label="简评" prop="summary">
+        <!-- 介绍文/简评用textarea -->
+        <el-form-item label="介绍文/简评" prop="summary">
           <el-input type="textarea" :rows="5" v-model="form.summary"></el-input>
         </el-form-item>
         <el-form-item label="评分" prop="rating">

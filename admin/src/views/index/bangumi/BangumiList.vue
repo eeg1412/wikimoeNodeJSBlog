@@ -96,8 +96,8 @@
         </el-table-column>
         <!-- 标题 title -->
         <el-table-column prop="title" label="标题" min-width="200px" />
-        <!-- 简评 -->
-        <el-table-column prop="summary" label="简评" min-width="250px">
+        <!-- 介绍文/简评 -->
+        <el-table-column prop="summary" label="介绍文/简评" min-width="250px">
           <template #default="{ row }">
             <div :title="row.summary" class="pre-wrap">
               {{ $limitStr(row.summary, 50) }}
