@@ -5,7 +5,7 @@
         class="relative content-h-139 flex justify-center items-center border border-solid border-gray-300 rounded-md p-1"
       >
         <WikimoeImage
-          class="w-full rounded book-cover"
+          class="max-image rounded book-cover"
           :src="book.cover || '/img/nopic400-565.png'"
           :alt="book.title"
           :data-href="book.cover"

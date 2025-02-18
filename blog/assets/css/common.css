@@ -1074,3 +1074,10 @@ ins.adsbygoogle[data-ad-status='unfilled'] {
 .acgn-time-icon {
   margin-right: 0.14rem;
 }
+.max-image,
+.blog-body .wikimoe-image.max-image {
+  max-width: 100%;
+  max-height: 100%;
+  width: auto;
+  height: auto;
+}

@@ -5,7 +5,7 @@
         class="relative content-h-139 flex justify-center items-center border border-solid border-gray-300 rounded-md p-1"
       >
         <WikimoeImage
-          class="w-full rounded game-cover"
+          class="max-image rounded game-cover"
           :src="game.cover || '/img/nopic400-565.png'"
           :alt="game.title"
           :data-href="game.cover"
