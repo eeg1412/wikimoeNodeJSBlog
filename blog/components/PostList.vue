@@ -149,7 +149,7 @@
                   :to="{
                     name: 'postDetail',
                     params: { id: item.alias || item._id },
-                    hash: '#commentList-body',
+                    hash: '#comment-list-container',
                   }"
                 >
                   <!-- icon chat-bubble-left-ellipsis -->

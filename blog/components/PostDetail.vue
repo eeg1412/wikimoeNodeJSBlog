@@ -270,14 +270,14 @@
     <!-- 评论 -->
     <!-- 评论列表 commentList -->
     <div>
-      <div class="comment-list-body" id="commentList-body">
+      <div class="comment-list-body">
         <!-- 评论form -->
         <CommentForm
           :postid="postid"
           :allowRemark="postData.data.allowRemark"
           @refresh="refreshCommentList"
         />
-        <div class="relative pt-5">
+        <div class="relative pt-5" id="comment-list-container">
           <DivLoading :loading="commentLoading" text="拼命加载中..." />
           <!-- 评论 -->
           <div
