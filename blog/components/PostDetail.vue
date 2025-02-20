@@ -270,7 +270,7 @@
     <!-- 评论 -->
     <!-- 评论列表 commentList -->
     <ClientOnly>
-      <div class="comment-list-body">
+      <div class="comment-list-body" id="commentList-body">
         <!-- 评论form -->
         <CommentForm
           :postid="postid"

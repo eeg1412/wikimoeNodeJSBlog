@@ -110,6 +110,7 @@
           <!-- 图片 -->
           <template v-if="item.type === 1">
             <NuxtLink
+              @click.stop
               :to="{
                 name: 'postDetail',
                 params: { id: item.alias || item._id },
@@ -129,7 +130,8 @@
             <div class="dflex flexCenter">
               <div class="mr15">
                 <NuxtLink
-                  class="dflex flexCenter"
+                  class="dflex flexCenter cGray94 hover:text-primary-500"
+                  @click.stop
                   :to="{
                     name: 'postDetail',
                     params: { id: item.alias || item._id },
@@ -137,17 +139,17 @@
                 >
                   <!-- icon book-open -->
                   <UIcon class="mr5 f15" name="i-heroicons-book-open" />
-                  <span class="cGray94"
-                    >{{ formatNumber(item.views) }} 阅读</span
-                  >
+                  <span>{{ formatNumber(item.views) }} 阅读</span>
                 </NuxtLink>
               </div>
               <div>
                 <NuxtLink
-                  class="dflex flexCenter"
+                  class="dflex flexCenter cGray94 hover:text-primary-500"
+                  @click.stop
                   :to="{
                     name: 'postDetail',
                     params: { id: item.alias || item._id },
+                    hash: '#commentList-body',
                   }"
                 >
                   <!-- icon chat-bubble-left-ellipsis -->
@@ -155,9 +157,7 @@
                     class="mr5 f15"
                     name="i-heroicons-chat-bubble-left-ellipsis"
                   />
-                  <span class="cGray94"
-                    >{{ formatNumber(item.comnum) }} 评论</span
-                  >
+                  <span>{{ formatNumber(item.comnum) }} 评论</span>
                 </NuxtLink>
               </div>
             </div>
