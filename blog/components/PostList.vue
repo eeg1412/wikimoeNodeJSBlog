@@ -5,13 +5,17 @@
         <div
           v-for="(item, index) in postsData.list"
           :key="item._id"
-          class="post-list-body-item pointer hover:bg-gray-50"
+          class="post-list-body-item hover:bg-gray-50"
+          :class="{
+            pointer: isHydrated,
+            'cursor-progress': !isHydrated,
+          }"
           @click="(e) => goPostDetail(e, item)"
           @click.middle="(e) => goPostDetail(e, item, true)"
         >
           <!-- seo 为了抓取链接 -->
           <NuxtLink
-            class="none"
+            class="none seo"
             :to="{
               name: 'postDetail',
               params: { id: item.alias || item._id },
@@ -105,7 +109,14 @@
 
           <!-- 图片 -->
           <template v-if="item.type === 1">
-            <PostItem :post="item" />
+            <NuxtLink
+              :to="{
+                name: 'postDetail',
+                params: { id: item.alias || item._id },
+              }"
+            >
+              <PostItem :post="item" />
+            </NuxtLink>
           </template>
           <div
             v-else-if="item.type === 2 && item.coverImages.length > 0"
@@ -116,20 +127,38 @@
           <!-- 统计信息左边阅读数 右边点赞数 -->
           <div class="post-list-info-bottom-body cGray94">
             <div class="dflex flexCenter">
-              <div class="mr15 dflex flexCenter">
-                <!-- icon book-open -->
-                <UIcon class="mr5 f15" name="i-heroicons-book-open" />
-                <span class="cGray94">{{ formatNumber(item.views) }} 阅读</span>
-              </div>
-              <div class="dflex flexCenter">
-                <!-- icon chat-bubble-left-ellipsis -->
-                <UIcon
-                  class="mr5 f15"
-                  name="i-heroicons-chat-bubble-left-ellipsis"
-                />
-                <span class="cGray94"
-                  >{{ formatNumber(item.comnum) }} 评论</span
+              <div class="mr15">
+                <NuxtLink
+                  class="dflex flexCenter"
+                  :to="{
+                    name: 'postDetail',
+                    params: { id: item.alias || item._id },
+                  }"
                 >
+                  <!-- icon book-open -->
+                  <UIcon class="mr5 f15" name="i-heroicons-book-open" />
+                  <span class="cGray94"
+                    >{{ formatNumber(item.views) }} 阅读</span
+                  >
+                </NuxtLink>
+              </div>
+              <div>
+                <NuxtLink
+                  class="dflex flexCenter"
+                  :to="{
+                    name: 'postDetail',
+                    params: { id: item.alias || item._id },
+                  }"
+                >
+                  <!-- icon chat-bubble-left-ellipsis -->
+                  <UIcon
+                    class="mr5 f15"
+                    name="i-heroicons-chat-bubble-left-ellipsis"
+                  />
+                  <span class="cGray94"
+                    >{{ formatNumber(item.comnum) }} 评论</span
+                  >
+                </NuxtLink>
               </div>
             </div>
 
@@ -566,8 +595,11 @@ const switchPostType = (type) => {
   showFilterMenu.value = false
 }
 
+const isHydrated = ref(false)
+
 onMounted(() => {
   postLikeLogList()
+  isHydrated.value = true
 })
 </script>
 <style scoped>
