@@ -269,7 +269,7 @@
     </div>
     <!-- 评论 -->
     <!-- 评论列表 commentList -->
-    <div>
+    <ClientOnly>
       <div class="comment-list-body">
         <!-- 评论form -->
         <CommentForm
@@ -277,7 +277,7 @@
           :allowRemark="postData.data.allowRemark"
           @refresh="refreshCommentList"
         />
-        <div class="relative pt-5" id="comment-list-container">
+        <div class="relative pt-5" id="commentlist-container">
           <DivLoading :loading="commentLoading" text="拼命加载中..." />
           <!-- 评论 -->
           <div
@@ -510,7 +510,7 @@
           </div>
         </div>
       </div>
-    </div>
+    </ClientOnly>
     <ClientOnly>
       <!-- headerList -->
       <Teleport to="#rightToolBarMenu">
@@ -645,7 +645,7 @@ let alertCommentTimer = null
 const postDetailBody = ref(null)
 const getCommentList = async (goToCommentListRef) => {
   commentLoading.value = true
-  getCommentListApi({
+  await getCommentListApi({
     id: postid,
     page: commentPage.value,
   })
@@ -1069,8 +1069,10 @@ const showPostCommonFooter = computed(() => {
   }
 })
 
+if (import.meta.client) {
+  await getCommentList()
+}
 onMounted(() => {
-  getCommentList()
   putViewCount()
   postLikeLogList()
   getHeaderList()
