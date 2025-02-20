@@ -269,7 +269,7 @@
     </div>
     <!-- 评论 -->
     <!-- 评论列表 commentList -->
-    <ClientOnly>
+    <div>
       <div class="comment-list-body" id="commentList-body">
         <!-- 评论form -->
         <CommentForm
@@ -510,7 +510,7 @@
           </div>
         </div>
       </div>
-    </ClientOnly>
+    </div>
     <ClientOnly>
       <!-- headerList -->
       <Teleport to="#rightToolBarMenu">
@@ -619,7 +619,7 @@ const commentTotal = computed(() => {
 const commentSize = computed(() => {
   return commentData.value.size
 })
-const commentLoading = ref(false)
+const commentLoading = ref(true)
 let postCommentId = null
 if (import.meta.client) {
   postCommentId = sessionStorage.getItem('wm-post-commentid')

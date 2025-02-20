@@ -103,8 +103,15 @@
           </div>
 
           <div class="w-full sm:w-20">
-            <UButton :block="true" type="submit" :loading="commentIsSending"
+            <UButton
+              :block="true"
+              type="submit"
+              v-if="isInit"
+              :loading="commentIsSending"
               ><template v-if="!commentIsSending">提交</template></UButton
+            >
+            <UButton :block="true" type="submit" :disabled="true" v-else
+              >提交</UButton
             >
           </div>
         </div>
@@ -363,8 +370,11 @@ watch(
   }
 )
 
+const isInit = ref(false)
+
 onMounted(() => {
   initCommentSaveUserInfo()
+  isInit.value = true
 })
 </script>
 <style scoped></style>
