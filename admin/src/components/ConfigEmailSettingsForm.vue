@@ -53,8 +53,8 @@
           v-if="inited"
         />
         <!-- siteTitle -->
-        <div>${siteTitle}为站点名称</div>
-        <div>${title}为文章标题</div>
+        <div>${siteTitle}为带链接的站点名称</div>
+        <div>${title}为带链接的文章标题</div>
         <div>${nickname}为评论者昵称</div>
         <div>${comment}为评论内容</div>
       </el-form-item>
@@ -73,8 +73,8 @@
         />
 
         <!-- siteTitle -->
-        <div>${siteTitle}为站点名称</div>
-        <div>${title}为文章标题</div>
+        <div>${siteTitle}为带链接的站点名称</div>
+        <div>${title}为带链接的文章标题</div>
         <!-- nickname -->
         <div>${nickname}为评论者昵称</div>
         <div>${comment}为评论内容</div>
@@ -95,8 +95,8 @@
           v-if="inited"
         />
         <!-- siteTitle -->
-        <div>${siteTitle}为站点名称</div>
-        <div>${title}为文章标题</div>
+        <div>${siteTitle}为带链接的站点名称</div>
+        <div>${title}为带链接的文章标题</div>
         <div>${nickname}为评论者昵称</div>
         <div>${comment}为评论内容</div>
       </el-form-item>
