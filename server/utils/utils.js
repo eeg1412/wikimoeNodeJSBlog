@@ -542,8 +542,8 @@ exports.sendCommentAddNotice = function (post, comment) {
     // 开始替换
     contentHtml = contentHtml.replace(/\${comment}/g, content)
     contentHtml = contentHtml.replace(/\${nickname}/g, nickname)
-    contentHtml = contentHtml.replace(/\${title}/g, `<a href="${this.getPostPagePath(post)}">${linkTitle}</a>`)
-    contentHtml = contentHtml.replace(/\${siteTitle}/g, `<a href="${siteUrl}">${siteTitle}</a>`)
+    contentHtml = contentHtml.replace(/\${title}/g, `<a href="${this.getPostPagePath(post)}" target="_blank">${linkTitle}</a>`)
+    contentHtml = contentHtml.replace(/\${siteTitle}/g, `<a href="${siteUrl}" target="_blank">${siteTitle}</a>`)
     this.sendEmail(to, contentHtml, subject)
   }
 
@@ -580,8 +580,8 @@ exports.sendRetractCommentNotice = function (post, comment) {
     // 替换模板中的变量
     contentHtml = contentHtml.replace(/\${comment}/g, `${content}`)
     contentHtml = contentHtml.replace(/\${nickname}/g, nickname)
-    contentHtml = contentHtml.replace(/\${title}/g, `<a href="${this.getPostPagePath(post)}">${linkTitle}</a>`)
-    contentHtml = contentHtml.replace(/\${siteTitle}/g, `<a href="${siteUrl}">${siteTitle}</a>`)
+    contentHtml = contentHtml.replace(/\${title}/g, `<a href="${this.getPostPagePath(post)}" target="_blank">${linkTitle}</a>`)
+    contentHtml = contentHtml.replace(/\${siteTitle}/g, `<a href="${siteUrl}" target="_blank">${siteTitle}</a>`)
     this.sendEmail(to, contentHtml, subject)
   }
 }
@@ -681,8 +681,8 @@ exports.sendReplyCommentNotice = async function (post, comment) {
     // 开始替换
     contentHtml = contentHtml.replace(/\${comment}/g, content)
     contentHtml = contentHtml.replace(/\${nickname}/g, nickname)
-    contentHtml = contentHtml.replace(/\${title}/g, `<a href="${this.getPostPagePath(post)}/#comment-${comment._id}">${linkTitle}</a>`)
-    contentHtml = contentHtml.replace(/\${siteTitle}/g, `<a href="${siteUrl}">${siteTitle}</a>`)
+    contentHtml = contentHtml.replace(/\${title}/g, `<a href="${this.getPostPagePath(post)}/#comment-${comment._id}" target="_blank">${linkTitle}</a>`)
+    contentHtml = contentHtml.replace(/\${siteTitle}/g, `<a href="${siteUrl}" target="_blank">${siteTitle}</a>`)
     contentHtml = contentHtml.replace(/\${parentComment}/g, parentContent)
     contentHtml = contentHtml.replace(/\${parentNickname}/g, parentNickname)
     this.sendEmail(to, contentHtml, subject)
