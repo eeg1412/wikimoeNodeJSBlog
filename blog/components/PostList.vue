@@ -12,6 +12,7 @@
           }"
           @click="(e) => goPostDetail(e, item)"
           @click.middle="(e) => goPostDetail(e, item, true)"
+          @mousedown="preventDefaultMiddleClick"
         >
           <!-- seo 为了抓取链接 -->
           <NuxtLink
@@ -111,6 +112,7 @@
           <template v-if="item.type === 1">
             <NuxtLink
               @click.stop
+              @click.middle.stop
               :to="{
                 name: 'postDetail',
                 params: { id: item.alias || item._id },
@@ -132,6 +134,7 @@
                 <NuxtLink
                   class="dflex flexCenter cGray94 hover:text-primary-500"
                   @click.stop
+                  @click.middle.stop
                   :to="{
                     name: 'postDetail',
                     params: { id: item.alias || item._id },
@@ -146,6 +149,7 @@
                 <NuxtLink
                   class="dflex flexCenter cGray94 hover:text-primary-500"
                   @click.stop
+                  @click.middle.stop
                   :to="{
                     name: 'postDetail',
                     params: { id: item.alias || item._id },
@@ -166,6 +170,7 @@
               class="dflex flexCenter cursor-pointer hover:text-primary-500"
               :class="item.isLike ? 'text-primary-500' : 'cGray94'"
               @click.stop="likePost(item._id)"
+              @click.middle.stop
               v-if="likeListInited"
             >
               <!-- 加载 -->
@@ -466,9 +471,7 @@ const goPostDetail = (e, item, middle) => {
   // 判断是否按着ctrl键，如果是就在新标签页打开
   // 如果middle为true，就在新标签页打开
   if (middle || e.ctrlKey || e.metaKey) {
-    if (middle) {
-      e.preventDefault()
-    }
+    console.log('middle')
     // resolveUrl
     const url = router.resolve({
       name: routeName,
@@ -476,12 +479,21 @@ const goPostDetail = (e, item, middle) => {
     }).href
     window.open(url, '_blank')
   } else {
+    console.log('post push')
     router.push({
       name: routeName,
       params: {
         id: id,
       },
     })
+  }
+}
+
+const preventDefaultMiddleClick = (e) => {
+  console.log(e.button, e.target.tagName)
+  if (e.button === 1 && e.target.tagName !== 'A') {
+    console.log('preventDefault middle click')
+    e.preventDefault()
   }
 }
 
