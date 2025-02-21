@@ -466,6 +466,9 @@ const goPostDetail = (e, item, middle) => {
   // 判断是否按着ctrl键，如果是就在新标签页打开
   // 如果middle为true，就在新标签页打开
   if (middle || e.ctrlKey || e.metaKey) {
+    if (middle) {
+      e.preventDefault()
+    }
     // resolveUrl
     const url = router.resolve({
       name: routeName,
