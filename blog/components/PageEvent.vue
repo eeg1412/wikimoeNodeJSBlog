@@ -145,7 +145,7 @@ const monthYear = computed(() => {
   return `${start.getFullYear()}年${start.getMonth() + 1}月`
 })
 const eventLoading = ref(false)
-const getList = async () => {
+const getList = async (hash) => {
   eventLoading.value = true
   eventList.value = []
   const res = await getEventListApiFetch({
@@ -157,7 +157,7 @@ const getList = async () => {
       const year = startTime.value.getFullYear()
       const month = startTime.value.getMonth() + 1
       // 设置
-      changeRouter({ year, month })
+      changeRouter({ year, month }, hash)
       return res
     })
     .catch((err) => {
@@ -372,7 +372,7 @@ const getEventListByDay = (dateYYYYMMDD) => {
   dayEventListOpen.value = true
 }
 
-const changeRouter = (newQuery) => {
+const changeRouter = (newQuery, hash) => {
   const query = route.query
   router.replace({
     query: {
@@ -381,6 +381,7 @@ const changeRouter = (newQuery) => {
       month: newQuery.month || query.month || undefined,
       daydetail: newQuery.daydetail || query.daydetail || undefined,
     },
+    hash: hash || undefined,
   })
 }
 
@@ -393,7 +394,7 @@ const removeRouterQuery = (key) => {
 onMounted(() => {
   nextTick(async () => {
     initTime()
-    await getList()
+    await getList(route.hash)
     nextTick(() => {
       if (route.query.eventid) {
         getEventDetail()
