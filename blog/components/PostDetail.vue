@@ -1046,10 +1046,6 @@ const checkCommentScroll = () => {
         alertCommentTimer = setTimeout(() => {
           alertCommentId.value = null
           alertCommentTimer = null
-          // 如果此时hash还是comment-，则清除hash
-          if (route.hash.includes('comment-')) {
-            window.history.replaceState(null, null, ' ')
-          }
         }, 4500)
       } else {
         console.warn('postCommentId 找不到对应的评论')
