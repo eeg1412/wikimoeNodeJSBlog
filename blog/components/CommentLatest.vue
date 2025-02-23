@@ -75,7 +75,10 @@ const goPostDetail = (e, item, middle) => {
   if (middle) {
     newTabOpen()
   } else {
-    if (router.currentRoute.value.path === url) {
+    if (
+      router.currentRoute.value.name === routeName &&
+      router.currentRoute.value.params?.id === id
+    ) {
       newTabOpen()
       return
     }
