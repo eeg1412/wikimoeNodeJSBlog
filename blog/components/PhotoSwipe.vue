@@ -338,7 +338,7 @@ let photoswipeInitialLayoutPromise = null
 const initLightbox = async () => {
   const lightboxopen = window.location.hash === '#photo-swipelightboxopen'
   if (lightboxopen) {
-    window.location.hash = ''
+    window.history.replaceState(null, null, ' ')
   }
   lightbox = new PhotoSwipeLightbox({
     pswpModule: () => import('photoswipe'),
