@@ -6,6 +6,7 @@
       class="comment-latest-item-body pointer"
       @click="(e) => goPostDetail(e, item)"
       @click.middle="(e) => goPostDetail(e, item, true)"
+      @mousedown="preventDefaultMiddleClick"
     >
       <!-- 左边头像 -->
       <div class="comment-latest-item-avatar-body">
@@ -65,13 +66,10 @@ const goPostDetail = (e, item, middle) => {
   const url = router.resolve({
     name: routeName,
     params: { id },
+    hash: `#comment-${item._id}`,
   }).href
   const newTabOpen = () => {
-    const newtab = window.open(url, '_blank')
-    newtab.sessionStorage.setItem(
-      'wm-post-commentid',
-      `${item.post._id},${item._id}`
-    )
+    window.open(url, '_blank')
   }
   // 如果middle为true，就在新标签页打开
   if (middle) {
@@ -81,13 +79,20 @@ const goPostDetail = (e, item, middle) => {
       newTabOpen()
       return
     }
-    sessionStorage.setItem('wm-post-commentid', `${item.post._id},${item._id}`)
     router.push({
       name: routeName,
       params: {
         id: id,
       },
+      hash: `#comment-${item._id}`,
     })
+  }
+}
+const preventDefaultMiddleClick = (e) => {
+  console.log(e.button, e.target.tagName)
+  if (e.button === 1 && e.target.tagName !== 'A') {
+    console.log('preventDefault middle click')
+    e.preventDefault()
   }
 }
 </script>

@@ -1081,3 +1081,8 @@ ins.adsbygoogle[data-ad-status='unfilled'] {
   width: auto;
   height: auto;
 }
+@media (max-width: 1024px) {
+  .header-scroll-margin-top {
+    scroll-margin-top: 70px;
+  }
+}

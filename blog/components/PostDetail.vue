@@ -277,7 +277,10 @@
           :allowRemark="postData.data.allowRemark"
           @refresh="refreshCommentList"
         />
-        <div class="relative pt-5" id="commentlist-container">
+        <div
+          class="relative pt-5 header-scroll-margin-top"
+          id="commentlist-container"
+        >
           <DivLoading :loading="commentLoading" text="拼命加载中..." />
           <!-- 评论 -->
           <div
@@ -287,9 +290,9 @@
           >
             <div class="comment-list-title">评论：</div>
             <div
-              class="comment-list-item"
+              class="comment-list-item header-scroll-margin-top"
               v-for="(item, index) in commentList"
-              :id="`post-detail-comment-${item._id}`"
+              :id="`comment-${item._id}`"
               :key="item._id"
             >
               <div
@@ -620,28 +623,6 @@ const commentSize = computed(() => {
   return commentData.value.size
 })
 const commentLoading = ref(true)
-let postCommentId = null
-if (import.meta.client) {
-  postCommentId = sessionStorage.getItem('wm-post-commentid')
-  if (postCommentId) {
-    // 用逗号拆成数组
-    postCommentId = postCommentId.split(',')
-    // 取第0个比对postid，如果不一样清空postCommentId
-    if (postCommentId[0] !== postid) {
-      console.warn('postCommentId postId不一致')
-      postCommentId = null
-    } else {
-      // 取第1个，转为数字
-      postCommentId = postCommentId[1]
-    }
-    // 清空sessionStorage
-    sessionStorage.removeItem('wm-post-commentid')
-  } else if (route.hash.includes('comment-')) {
-    postCommentId = route.hash.split('comment-')[1]
-  }
-}
-const alertCommentId = ref(null)
-let alertCommentTimer = null
 const postDetailBody = ref(null)
 const getCommentList = async (goToCommentListRef) => {
   commentLoading.value = true
@@ -653,36 +634,16 @@ const getCommentList = async (goToCommentListRef) => {
       console.log(res)
       commentData.value = res
       commentLikeLogList()
-      nextTick(() => {
-        if (commentPage.value === 1 && postCommentId) {
-          // 查询id对应的dom
-          const commentDom = document.getElementById(
-            `post-detail-comment-${postCommentId}`
-          )
-          if (commentDom) {
-            window.scrollBy({
-              top: commentDom.getBoundingClientRect().top - 100,
-              behavior: 'smooth',
-            })
-            alertCommentId.value = postCommentId
-            alertCommentTimer = setTimeout(() => {
-              alertCommentId.value = null
-              alertCommentTimer = null
-            }, 4500)
-          } else {
-            console.warn('postCommentId 找不到对应的评论')
-          }
-        } else if (goToCommentListRef && commentListRef.value) {
-          // const rect = commentListRef.value.getBoundingClientRect()
-          const elementRect = commentListRef.value.getBoundingClientRect()
-          const parentRect = postDetailBody.value.getBoundingClientRect()
-          const distanceToParentTop = elementRect.top - parentRect.top
-          window.scrollTo({
-            top: distanceToParentTop - 100,
-            behavior: 'smooth',
-          })
-        }
-      })
+      if (goToCommentListRef && commentListRef.value) {
+        // const rect = commentListRef.value.getBoundingClientRect()
+        const elementRect = commentListRef.value.getBoundingClientRect()
+        const parentRect = postDetailBody.value.getBoundingClientRect()
+        const distanceToParentTop = elementRect.top - parentRect.top
+        window.scrollTo({
+          top: distanceToParentTop - 100,
+          behavior: 'smooth',
+        })
+      }
     })
     .finally(() => {
       commentLoading.value = false
@@ -1069,6 +1030,30 @@ const showPostCommonFooter = computed(() => {
   }
 })
 
+let postCommentId = null
+const alertCommentId = ref(null)
+let alertCommentTimer = null
+const checkCommentScroll = () => {
+  setTimeout(() => {
+    if (route.hash.includes('comment-')) {
+      postCommentId = route.hash.split('comment-')[1]
+    }
+    if (postCommentId) {
+      // 查询id对应的dom
+      const commentDom = document.getElementById(`comment-${postCommentId}`)
+      if (commentDom) {
+        alertCommentId.value = postCommentId
+        alertCommentTimer = setTimeout(() => {
+          alertCommentId.value = null
+          alertCommentTimer = null
+        }, 4500)
+      } else {
+        console.warn('postCommentId 找不到对应的评论')
+      }
+    }
+  }, 100)
+}
+
 if (import.meta.client) {
   await getCommentList()
 }
@@ -1076,6 +1061,7 @@ onMounted(() => {
   putViewCount()
   postLikeLogList()
   getHeaderList()
+  checkCommentScroll()
 })
 onUnmounted(() => {
   window.removeEventListener('scroll', onScroll)
