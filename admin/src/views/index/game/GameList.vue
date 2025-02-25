@@ -296,6 +296,7 @@ export default {
         params.keyword = sessionParams.keyword
         params.gamePlatform = sessionParams.gamePlatform
         params.status = sessionParams.status
+        params.playStatus = sessionParams.playStatus
         if (params.gamePlatform) {
           queryGamePlatformList(null, {
             idList: params.gamePlatform,

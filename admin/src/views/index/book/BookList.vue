@@ -293,6 +293,7 @@ export default {
         params.keyword = sessionParams.keyword
         params.booktype = sessionParams.booktype
         params.status = sessionParams.status
+        params.readStatus = sessionParams.readStatus
         if (params.booktype) {
           queryBooktypeList(null, {
             idList: params.booktype,
