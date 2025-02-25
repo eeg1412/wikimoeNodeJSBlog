@@ -108,7 +108,7 @@
           <!-- 搜索 -->
           <div class="blog-search-body">
             <UInput
-              v-model="keyword"
+              v-model.trim="keyword"
               placeholder="请输入关键词"
               size="lg"
               variant="none"
