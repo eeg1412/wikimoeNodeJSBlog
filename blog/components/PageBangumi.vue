@@ -44,11 +44,11 @@
                     <div
                       v-for="year in yearList"
                       :key="year.year"
-                      class="p-1 mr-2 mb-2"
+                      class="p-1 mr-1 mb-1"
                     >
                       <UButton
                         :label="`${formatYearText(year.year)}`"
-                        size="xs"
+                        size="2xs"
                         :variant="
                           year.year === filterCache.year ? 'solid' : 'ghost'
                         "
@@ -69,11 +69,11 @@
                     <div
                       v-for="season in selectSeasonList"
                       :key="season"
-                      class="p-1 mr-2 mb-2"
+                      class="p-1 mr-1 mb-1"
                     >
                       <UButton
                         :label="seasonToName(season)"
-                        size="xs"
+                        size="2xs"
                         :variant="
                           season === filterCache.season ? 'solid' : 'ghost'
                         "
@@ -90,11 +90,11 @@
                     <div
                       v-for="status in statusList"
                       :key="status.value"
-                      class="p-1 mr-2 mb-2"
+                      class="p-1 mr-1 mb-1"
                     >
                       <UButton
                         :label="status.label"
-                        size="xs"
+                        size="2xs"
                         :variant="
                           status.value === filterCache.status
                             ? 'solid'
@@ -153,7 +153,7 @@
               >
                 <UButton
                   :label="item.label"
-                  size="sm"
+                  size="2xs"
                   :variant="sortType === item.value ? 'solid' : 'ghost'"
                   @click="selectType(item.value, close)"
                 />
