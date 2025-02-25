@@ -14,7 +14,7 @@
             <div class="w-80">
               <div class="pt-3 pl-3 pr-3">
                 <!-- 关键词输入 -->
-                <div class="mb-2">
+                <div class="mb-3">
                   <div class="text-sm font-medium mb-1">关键词</div>
                   <UInput
                     v-model.trim="filterCache.keyword"
@@ -38,13 +38,13 @@
                 </div>
 
                 <!-- 年份选择 -->
-                <div>
+                <div class="mb-2">
                   <div class="text-sm font-medium mb-1">年份</div>
                   <div class="flex flex-wrap">
                     <div
                       v-for="year in yearList"
                       :key="year.year"
-                      class="p-1 mr-1 mb-1"
+                      class="mr-1 mb-1"
                     >
                       <UButton
                         :label="`${formatYearText(year.year)}`"
@@ -59,7 +59,7 @@
                 </div>
 
                 <!-- 季度选择器 -->
-                <div>
+                <div class="mb-2">
                   <div class="text-sm font-medium mb-1">季度</div>
                   <TransitionGroup
                     name="season-list"
@@ -69,7 +69,7 @@
                     <div
                       v-for="season in selectSeasonList"
                       :key="season"
-                      class="p-1 mr-1 mb-1"
+                      class="mr-1 mb-1"
                     >
                       <UButton
                         :label="seasonToName(season)"
@@ -84,13 +84,13 @@
                 </div>
 
                 <!-- 状态选择器 -->
-                <div>
+                <div class="mb-2">
                   <div class="text-sm font-medium mb-1">状态</div>
                   <div class="flex flex-wrap">
                     <div
                       v-for="status in statusList"
                       :key="status.value"
-                      class="p-1 mr-1 mb-1"
+                      class="mr-1 mb-1"
                     >
                       <UButton
                         :label="status.label"
@@ -147,7 +147,7 @@
             <!-- 排序选择器 -->
             <div class="flex flex-wrap">
               <div
-                class="p-1 mr-1 mb-1"
+                class="mr-1 mb-1"
                 v-for="(item, index) in sortTypeList"
                 :key="item.value"
               >
