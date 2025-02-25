@@ -489,6 +489,7 @@ export default {
 }
 .common-aside.isCollapse {
   width: 8px;
+  overflow: hidden;
 }
 .common-aside-body {
   width: 200px;
@@ -501,6 +502,10 @@ export default {
   text-align: center;
   font-size: 16px;
   font-weight: 600;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  background-color: #ffffff;
 }
 .common-logo img {
   width: 50%;
@@ -530,7 +535,6 @@ export default {
   background-color: #f9f9f9;
 }
 .admin-left-menu-body {
-  height: calc(100dvh - 62px);
   overflow: auto;
   margin-right: 10px;
 }
@@ -569,7 +573,7 @@ export default {
   .common-logo {
     padding: 10px 0;
     font-size: 14px;
-    position: relative;
+    /* position: relative; */
   }
   .common-logo-close-btn {
     position: absolute;
