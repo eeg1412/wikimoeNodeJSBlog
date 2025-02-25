@@ -11,7 +11,7 @@
             trailing-icon="i-heroicons-chevron-down-20-solid"
           />
           <template #panel="{ close }">
-            <div class="w-80">
+            <div class="acgn-filter-popover-body">
               <div class="pt-3 pl-3 pr-3">
                 <!-- 关键词输入 -->
                 <div class="mb-3">
