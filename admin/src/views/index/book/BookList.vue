@@ -18,7 +18,7 @@
           <el-form-item>
             <el-input
               v-model="params.keyword"
-              placeholder="请输入书籍名称"
+              placeholder="请输入关键词"
               clearable
             ></el-input>
           </el-form-item>
@@ -44,12 +44,29 @@
               ></el-option>
             </el-select>
           </el-form-item>
+          <!-- 阅读状态 -->
+          <el-form-item>
+            <el-select
+              v-model="params.readStatus"
+              placeholder="请选择阅读状态"
+              style="width: 150px"
+              clearable
+            >
+              <el-option
+                v-for="item in readStatusList"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value"
+              ></el-option>
+            </el-select>
+          </el-form-item>
+
           <!-- 状态 0不显示 1显示 -->
           <el-form-item>
             <el-select
               v-model="params.status"
-              placeholder="请选择状态"
-              style="width: 100px"
+              placeholder="请选择显示状态"
+              style="width: 150px"
               clearable
             >
               <el-option label="显示" :value="1"></el-option>
@@ -206,6 +223,7 @@ export default {
       keyword: '',
       booktype: '',
       status: '',
+      readStatus: null,
     })
     const total = ref(0)
     const tableRef = ref(null)
@@ -311,6 +329,28 @@ export default {
           })
       }, 300)
     }
+
+    // 阅读状态
+    const readStatusList = [
+      // 1 尚未阅读
+      {
+        label: '尚未阅读',
+        value: 1,
+      },
+      {
+        label: '阅读中',
+        value: 2,
+      },
+      // 2已读完
+      {
+        label: '已读完',
+        value: 3,
+      },
+      {
+        label: '弃坑',
+        value: 99,
+      },
+    ]
     onMounted(() => {
       initParams()
       getBookList()
@@ -327,6 +367,7 @@ export default {
       booktypeList,
       booktypeListIsLoading,
       queryBooktypeList,
+      readStatusList,
     }
   },
 }

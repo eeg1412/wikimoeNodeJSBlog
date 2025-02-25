@@ -4,7 +4,7 @@ const log4js = require('log4js')
 const adminApiLog = log4js.getLogger('adminApi')
 
 module.exports = async function (req, res, next) {
-  let { page, size, keyword, booktype, status } = req.query
+  let { page, size, keyword, booktype, status, readStatus } = req.query
   page = parseInt(page)
   size = parseInt(size)
   // 判断page和size是否为数字
@@ -31,6 +31,61 @@ module.exports = async function (req, res, next) {
   // 如果status存在，就加入查询条件
   if (status) {
     params.status = status
+  }
+
+  if (readStatus) {
+    const readStatusList = [99, 1, 2, 3]
+    const readStatusNumber = Number(readStatus)
+    // 如果status在statusList中，就加入查询条件
+    if (readStatusList.includes(readStatusNumber)) {
+      switch (readStatusNumber) {
+        case 99:
+          params.giveUp = true
+          break;
+        case 1:
+          params.giveUp = false
+          params.startTime = null
+          params.endTime = null
+          break;
+        case 2:
+          // 查询有开始时间没结束时间
+          params.giveUp = false
+          params.startTime = { $ne: null }
+          params.endTime = null
+          break;
+        case 3:
+          // 查询有开始和结束时间
+          params.giveUp = false
+          params.startTime = { $ne: null }
+          params.endTime = { $ne: null }
+          break;
+
+        default:
+          break;
+      }
+
+    }
+  }
+
+  if (keyword) {
+    keyword = String(keyword)
+    // keyword去掉前后空格
+    keyword = keyword?.trim()
+    const keywordArray = keyword.split(' ');
+    const regexArray = keywordArray.map(keyword => {
+      const escapedKeyword = utils.escapeSpecialChars(keyword);
+      const regex = new RegExp(escapedKeyword, 'i');
+      return regex;
+    });
+    // 检索title和excerpt
+    params.$or = [
+      {
+        title: { $in: regexArray }
+      },
+      {
+        label: { $in: regexArray }
+      }
+    ]
   }
 
   const sort = {
