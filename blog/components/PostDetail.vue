@@ -1049,6 +1049,16 @@ const checkCommentScroll = () => {
         }, 4500)
       } else {
         console.warn('postCommentId 找不到对应的评论')
+        // 提示用户
+        let title = '这条评论可能已经去了异世界...'
+        if (commentTotal.value / commentSize.value > 1) {
+          title = '这条评论可能已经去了异世界或被刷到更深层次的评论页去了...'
+        }
+        toast.add({
+          title: title,
+          icon: 'i-heroicons-x-circle',
+          color: 'red',
+        })
       }
     }
   }, 100)
