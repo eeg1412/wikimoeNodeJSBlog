@@ -38,7 +38,7 @@
 
                 <!-- 类型选择器 -->
                 <div class="mb-2">
-                  <div class="text-sm font-medium mb-1">类型</div>
+                  <div class="text-sm font-medium mb-1">平台</div>
                   <div class="flex flex-wrap">
                     <div class="mr-1 mb-1">
                       <UButton
