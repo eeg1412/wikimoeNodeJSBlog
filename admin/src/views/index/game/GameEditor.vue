@@ -179,6 +179,17 @@
         <el-form-item label="弃坑" prop="giveUp">
           <el-switch v-model="form.giveUp"></el-switch>
         </el-form-item>
+        <!-- 攻略状态 -->
+        <el-form-item label="攻略状态">
+          <div class="w_10">{{ playStatus }}</div>
+          <!-- 提示是怎么产生阅读状态的原理 -->
+          <div class="f12 cGray666">
+            尚未攻略：无开始时间 无结束时间<br />
+            攻略中：有开始时间 无结束时间<br />
+            已通关：有开始时间 有结束时间<br />
+            弃坑：弃坑状态
+          </div>
+        </el-form-item>
         <el-form-item label="状态" prop="status">
           <!-- radio 分别对应 0 1 不显示 显示 -->
           <el-radio-group v-model="form.status">
@@ -196,7 +207,7 @@
 </template>
 <script>
 import { useRouter, useRoute } from 'vue-router'
-import { onMounted, reactive, ref } from 'vue'
+import { onMounted, reactive, ref, computed } from 'vue'
 import { authApi } from '@/api'
 import GamePlatformEditor from '@/components/GamePlatformEditor.vue'
 export default {
@@ -400,6 +411,26 @@ export default {
       GamePlatformEditorRef.value.open()
     }
 
+    const playStatus = computed(() => {
+      // giveUp 为true时 为弃坑
+      if (form.giveUp) {
+        return '弃坑'
+      }
+      // 有开始时间 无结束时间 攻略中
+      if (form.startTime && !form.endTime) {
+        return '攻略中'
+      }
+      // 结束时间和开始时间都没有 尚未攻略
+      if (!form.startTime && !form.endTime) {
+        return '尚未攻略'
+      }
+      // 有开始时间 有结束时间 已通关
+      if (form.startTime && form.endTime) {
+        return '已通关'
+      }
+      return '-'
+    })
+
     onMounted(() => {
       if (id.value) {
         getGameDetail()
@@ -423,6 +454,7 @@ export default {
       queryScreenshotAlbumList,
       GamePlatformEditorRef,
       open,
+      playStatus,
     }
   },
 }

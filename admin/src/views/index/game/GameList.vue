@@ -18,7 +18,7 @@
           <el-form-item>
             <el-input
               v-model="params.keyword"
-              placeholder="请输入游戏名称"
+              placeholder="请输入关键词"
               clearable
             ></el-input>
           </el-form-item>
@@ -41,6 +41,21 @@
                 :key="item._id"
                 :label="item.name"
                 :value="item._id"
+              ></el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item>
+            <el-select
+              v-model="params.playStatus"
+              placeholder="请选择攻略状态"
+              style="width: 150px"
+              clearable
+            >
+              <el-option
+                v-for="item in playStatusList"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value"
               ></el-option>
             </el-select>
           </el-form-item>
@@ -211,6 +226,7 @@ export default {
       keyword: '',
       gamePlatform: '',
       status: '',
+      playStatus: null,
     })
     const total = ref(0)
     const tableRef = ref(null)
@@ -316,6 +332,27 @@ export default {
           })
       }, 300)
     }
+
+    // 阅读状态
+    const playStatusList = [
+      {
+        label: '尚未攻略',
+        value: 1,
+      },
+      {
+        label: '攻略中',
+        value: 2,
+      },
+      {
+        label: '已通关',
+        value: 3,
+      },
+      {
+        label: '弃坑',
+        value: 99,
+      },
+    ]
+
     onMounted(() => {
       initParams()
       getGameList()
@@ -332,6 +369,7 @@ export default {
       gamePlatformList,
       gamePlatformListIsLoading,
       queryGamePlatformList,
+      playStatusList,
     }
   },
 }

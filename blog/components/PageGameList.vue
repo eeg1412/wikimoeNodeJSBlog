@@ -1,48 +1,131 @@
 <template>
   <div class="pt-2 pb-2 page-game-body">
     <div class="flex items-center">
-      <!-- 顶部年份季度选择 -->
-      <UPopover :popper="{ arrow: true }">
-        <UButton
-          :label="`${selectPlatformData.name}`"
-          size="sm"
-          variant="soft"
-          trailing-icon="i-heroicons-chevron-down-20-solid"
-          class="mr-3"
-        />
+      <div class="mr-3 acgn-filter-popover">
+        <UPopover :popper="{ arrow: true }" v-model:open="filterOpen">
+          <UButton
+            :label="filterText"
+            size="sm"
+            variant="soft"
+            trailing-icon="i-heroicons-chevron-down-20-solid"
+          />
+          <template #panel="{ close }">
+            <div class="acgn-filter-popover-body">
+              <div class="pt-3 pl-3 pr-3">
+                <!-- 关键词输入 -->
+                <div class="mb-3">
+                  <div class="text-sm font-medium mb-1">关键词</div>
+                  <UInput
+                    v-model.trim="filterCache.keyword"
+                    @keydown.enter="applyFilters(close)"
+                    size="sm"
+                    maxlength="20"
+                    :ui="{ icon: { trailing: { pointer: '' } } }"
+                    placeholder="请输入关键词"
+                  >
+                    <template #trailing>
+                      <UButton
+                        v-show="filterCache.keyword !== ''"
+                        color="gray"
+                        variant="link"
+                        icon="i-heroicons-x-mark-20-solid"
+                        :padded="false"
+                        @click="filterCache.keyword = ''"
+                      />
+                    </template>
+                  </UInput>
+                </div>
 
-        <template #panel="{ close }">
-          <div class="p-4 w-60 max-h-96 overflow-auto">
-            <!-- 平台选择器 -->
-            <div class="flex flex-wrap">
-              <div class="p-2 mr-1 mb-1">
-                <UButton
-                  label="全部平台"
-                  size="sm"
-                  :variant="selectPlatformData._id === null ? 'solid' : 'ghost'"
-                  @click="
-                    selectPlatform({ name: '全部平台', _id: null }, close)
-                  "
-                />
+                <!-- 类型选择器 -->
+                <div class="mb-2">
+                  <div class="text-sm font-medium mb-1">类型</div>
+                  <div class="flex flex-wrap">
+                    <div class="mr-1 mb-1">
+                      <UButton
+                        label="全部平台"
+                        size="2xs"
+                        :variant="
+                          filterCache.gamePlatformId === undefined
+                            ? 'solid'
+                            : 'ghost'
+                        "
+                        @click="
+                          selectPlatform(
+                            { name: '全部平台', _id: undefined },
+                            close
+                          )
+                        "
+                      />
+                    </div>
+                    <div
+                      v-for="item in gamePlatformList"
+                      :key="item._id"
+                      class="mr-1 mb-1"
+                    >
+                      <UButton
+                        :label="`${item.name}`"
+                        size="2xs"
+                        :variant="
+                          item._id === filterCache.gamePlatformId
+                            ? 'solid'
+                            : 'ghost'
+                        "
+                        @click="selectPlatform(item, close)"
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                <!-- 状态选择器 -->
+                <div class="mb-2">
+                  <div class="text-sm font-medium mb-1">状态</div>
+                  <div class="flex flex-wrap">
+                    <div
+                      v-for="status in statusList"
+                      :key="status.value"
+                      class="mr-1 mb-1"
+                    >
+                      <UButton
+                        :label="status.label"
+                        size="2xs"
+                        :variant="
+                          status.value === filterCache.status
+                            ? 'solid'
+                            : 'ghost'
+                        "
+                        @click="filterCache.status = status.value"
+                      />
+                    </div>
+                  </div>
+                </div>
               </div>
+
+              <!-- 应用按钮 -->
               <div
-                v-for="item in gamePlatformList"
-                :key="item._id"
-                class="p-2 mr-1 mb-1"
+                class="flex justify-end p-3 border-solid border-t border-gray-200"
               >
+                <!-- 取消 -->
                 <UButton
-                  :label="`${item.name}`"
+                  label="取消"
                   size="sm"
-                  :variant="
-                    item._id === selectPlatformData._id ? 'solid' : 'ghost'
-                  "
-                  @click="selectPlatform(item, close)"
+                  variant="ghost"
+                  class="mr-2"
+                  @click="close"
+                />
+                <!-- 筛选 -->
+                <UButton
+                  label="筛选"
+                  size="sm"
+                  variant="solid"
+                  color="primary"
+                  @click="applyFilters(close)"
                 />
               </div>
             </div>
-          </div>
-        </template>
-      </UPopover>
+          </template>
+        </UPopover>
+      </div>
+
       <UPopover :popper="{ arrow: true }">
         <UButton
           :label="`${sortTypeMap[params.sortType]}`"
@@ -53,17 +136,17 @@
         />
 
         <template #panel="{ close }">
-          <div class="p-4">
+          <div class="p-2">
             <!-- 排序选择器 -->
             <div class="flex flex-wrap">
               <div
-                class="p-2 mr-1 mb-1"
+                class="mr-1 mb-1"
                 v-for="(item, index) in sortTypeList"
                 :key="item.value"
               >
                 <UButton
                   :label="item.label"
-                  size="sm"
+                  size="2xs"
                   :variant="params.sortType === item.value ? 'solid' : 'ghost'"
                   @click="selectType(item.value, close)"
                 />
@@ -135,7 +218,7 @@ const router = useRouter()
 const gamePlatformList = ref([])
 const selectPlatformData = ref({
   name: '全部平台',
-  _id: null,
+  _id: undefined,
 })
 await getGamePlatformListApi().then((res) => {
   gamePlatformList.value = res.data.value.data
@@ -146,8 +229,34 @@ const size = 20
 const params = reactive({
   page: 1,
   sortType: 'startTime',
-  gamePlatformId: null,
+  gamePlatformId: undefined,
+  status: undefined,
+  keyword: '',
 })
+
+const statusList = [
+  {
+    label: '全部',
+    value: undefined,
+  },
+  {
+    label: '尚未攻略',
+    value: 1,
+  },
+  {
+    label: '攻略中',
+    value: 2,
+  },
+  {
+    label: '已通关',
+    value: 3,
+  },
+  {
+    label: '弃坑',
+    value: 99,
+  },
+]
+
 const sortTypeMap = {
   startTime: '按开始时间排序',
   rating: '按评分排序',
@@ -175,6 +284,10 @@ const initParams = () => {
     : null
   const querySortType = route.query.sortType
   const queryGamePlatformId = route.query.gamePlatformId
+  const queryStatus = route.query.status
+    ? Number(route.query.status)
+    : undefined
+  const queryKeyword = route.query.keyword
   // page必须是数字
   if (queryPage && !isNaN(queryPage)) {
     params.page = queryPage
@@ -194,15 +307,29 @@ const initParams = () => {
       params.gamePlatformId = queryGamePlatformId
     }
   }
+
+  if (queryStatus && statusList.some((item) => item.value === queryStatus)) {
+    params.status = queryStatus
+  }
+
+  if (queryKeyword && queryKeyword.length <= 20) {
+    params.keyword = queryKeyword
+  }
+
   if (
     import.meta.client &&
-    (queryPage || querySortType || queryGamePlatformId)
+    (queryPage ||
+      querySortType ||
+      queryGamePlatformId ||
+      queryStatus ||
+      queryKeyword)
   ) {
     router.replace({
       query: {
         ...route.query,
         ...params,
       },
+      hash: route.hash,
     })
   }
 }
@@ -263,10 +390,52 @@ const toNext = () => {
 
 const selectPlatform = (item, close) => {
   selectPlatformData.value = item
-  params.gamePlatformId = item?._id
+  filterCache.gamePlatformId = item?._id
+}
+
+const filterOpen = ref(false)
+const filterCache = reactive({
+  gamePlatformId: params.gamePlatformId,
+  status: params.status,
+  keyword: params.keyword,
+})
+const filterCount = computed(() => {
+  let count = 0
+  if (params.gamePlatformId) {
+    count++
+  }
+  if (params.status) {
+    count++
+  }
+  if (params.keyword) {
+    count++
+  }
+  return count
+})
+const filterText = computed(() => {
+  if (filterCount.value > 0) {
+    return `已应用${filterCount.value}项筛选`
+  }
+  return '所有内容'
+})
+// watch filterOpen
+watch(filterOpen, (val) => {
+  console.log('filterOpen', val)
+  if (val) {
+    // 还原filterCache
+    filterCache.gamePlatformId = params.gamePlatformId
+    filterCache.status = params.status
+    filterCache.keyword = params.keyword
+  }
+})
+// 添加一个方法，用于同时应用年份和季度筛选
+const applyFilters = async (close) => {
+  if (close) close()
+  params.gamePlatformId = filterCache.gamePlatformId
+  params.status = filterCache.status
+  params.keyword = filterCache.keyword
   params.page = 1
   fetchGameList()
-  close()
 }
 
 onMounted(() => {
