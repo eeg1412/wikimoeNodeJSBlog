@@ -65,7 +65,7 @@
               ><UIcon
                 name="i-heroicons-clock"
                 class="align-middle acgn-time-icon"
-              />累计游玩</template
+              />已累计游玩</template
             ><template v-else
               ><UIcon
                 name="i-heroicons-star"
