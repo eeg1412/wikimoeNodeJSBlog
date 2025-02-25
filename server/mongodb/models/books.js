@@ -50,11 +50,13 @@ var books = new Schema({
   // 开始阅读时间
   startTime: {
     type: Date,
+    default: null,
     index: true
   },
   // 结束阅读时间
   endTime: {
     type: Date,
+    default: null,
     index: true
   },
   // 弃坑

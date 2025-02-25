@@ -55,11 +55,13 @@ var games = new Schema({
   // 游玩开始时间
   startTime: {
     type: Date,
+    default: null,
     index: true
   },
   // 游玩结束时间
   endTime: {
     type: Date,
+    default: null,
     index: true
   },
   // 弃坑
