@@ -42,13 +42,33 @@
           class="text-sm mb-1 text-gray-400 flex-shrink-0 w_10 flex items-center"
           v-if="book.giveUp"
         >
-          <UIcon
-            name="i-heroicons-bookmark-slash"
-            class="align-middle mr-1"
-          />已弃坑
+          <div v-if="book.startTime && book.endTime">
+            <div class="acgn-time text-gray-400">
+              {{
+                `${formatDate(
+                  book.startTime,
+                  'yyyy年M月dd日 h时'
+                )} ~ ${formatDate(book.endTime, 'yyyy年M月dd日 h时')}`
+              }}
+            </div>
+            <div
+              class="text-sm mb-1 text-gray-400 flex-shrink-0 w_10 flex items-center"
+            >
+              <UIcon
+                name="i-heroicons-bookmark-slash"
+                class="align-middle acgn-time-icon"
+              />阅读{{ getACGDuration(book.startTime, book.endTime) }}后弃坑
+            </div>
+          </div>
+          <template v-else>
+            <UIcon
+              name="i-heroicons-bookmark-slash"
+              class="align-middle acgn-time-icon"
+            />已弃坑
+          </template>
         </div>
         <!-- 用时 -->
-        <div v-else-if="book.startTime && !book.giveUp">
+        <div v-else-if="book.startTime">
           <div class="acgn-time text-gray-400">
             {{
               `${formatDate(book.startTime, 'yyyy年M月dd日 h时')} ~ ${

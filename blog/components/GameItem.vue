@@ -42,13 +42,33 @@
           class="text-sm mb-1 text-gray-400 flex-shrink-0 w_10 flex items-center"
           v-if="game.giveUp"
         >
-          <UIcon
-            name="i-heroicons-bookmark-slash"
-            class="align-middle mr-1"
-          />已弃坑
+          <div v-if="game.startTime && game.endTime">
+            <div class="acgn-time text-gray-400">
+              {{
+                `${formatDate(
+                  game.startTime,
+                  'yyyy年M月dd日 h时'
+                )} ~ ${formatDate(game.endTime, 'yyyy年M月dd日 h时')}`
+              }}
+            </div>
+            <div
+              class="text-sm mb-1 text-gray-400 flex-shrink-0 w_10 flex items-center"
+            >
+              <UIcon
+                name="i-heroicons-bookmark-slash"
+                class="align-middle acgn-time-icon"
+              />游玩{{ getACGDuration(game.startTime, game.endTime) }}后弃坑
+            </div>
+          </div>
+          <template v-else>
+            <UIcon
+              name="i-heroicons-bookmark-slash"
+              class="align-middle acgn-time-icon"
+            />已弃坑
+          </template>
         </div>
         <!-- 用时 -->
-        <div v-if="game.startTime && !game.giveUp">
+        <div v-else-if="game.startTime">
           <div class="acgn-time text-gray-400">
             {{
               `${formatDate(game.startTime, 'yyyy年M月dd日 h时')} ~ ${
