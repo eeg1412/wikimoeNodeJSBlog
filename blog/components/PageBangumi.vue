@@ -384,8 +384,6 @@ const initParams = () => {
   let queryKeyword = route.query.keyword
   if (queryKeyword && queryKeyword.length <= 20) {
     keyword.value = queryKeyword
-  } else {
-    queryKeyword = ''
   }
 
   // 客户端执行，校验是否产生路由不一致
