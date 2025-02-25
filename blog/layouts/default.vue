@@ -113,6 +113,7 @@
               size="lg"
               variant="none"
               @keydown.enter="goSearch"
+              maxlength="20"
               :ui="{ icon: { trailing: { pointer: '' } } }"
             >
               <template #trailing>
