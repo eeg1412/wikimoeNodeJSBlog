@@ -236,7 +236,10 @@ const setRouterQuery = (query) => {
   if (queryCopy.keyword === '') {
     queryCopy.keyword = undefined
   }
-  router.replace({ query: { ...nowQuery, ...queryCopy } })
+  router.replace({
+    query: { ...nowQuery, ...queryCopy },
+    hash: route.hash,
+  })
 }
 
 const { data: yearListData } = await getBangumiYearListApi()
