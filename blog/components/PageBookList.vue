@@ -287,7 +287,9 @@ const initParams = () => {
     : null
   const querySortType = route.query.sortType
   const queryBooktypeId = route.query.booktypeId
-  const queryStatus = route.query.status ? Number(route.query.status) : null
+  const queryStatus = route.query.status
+    ? Number(route.query.status)
+    : undefined
   const queryKeyword = route.query.keyword
   // page必须是数字
   if (queryPage && !isNaN(queryPage)) {
@@ -317,7 +319,14 @@ const initParams = () => {
     params.keyword = queryKeyword
   }
 
-  if (import.meta.client && (queryPage || querySortType || queryBooktypeId)) {
+  if (
+    import.meta.client &&
+    (queryPage ||
+      querySortType ||
+      queryBooktypeId ||
+      queryStatus ||
+      queryKeyword)
+  ) {
     router.replace({
       query: {
         ...route.query,
