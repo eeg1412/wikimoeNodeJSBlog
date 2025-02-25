@@ -128,8 +128,9 @@
       </div>
     </div>
   </div>
-
-  <AlbumPhotoSwipe ref="AlbumPhotoSwipeRef" :albumId="activeAlbumId" />
+  <ClientOnly>
+    <AlbumPhotoSwipe ref="AlbumPhotoSwipeRef" :albumId="activeAlbumId" />
+  </ClientOnly>
 </template>
 <script setup>
 const props = defineProps({
