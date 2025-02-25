@@ -38,7 +38,7 @@
                 </div>
 
                 <!-- 年份选择 -->
-                <div class="mb-2">
+                <div>
                   <div class="text-sm font-medium mb-1">年份</div>
                   <div class="flex flex-wrap">
                     <div
@@ -59,7 +59,7 @@
                 </div>
 
                 <!-- 季度选择器 -->
-                <div class="mb-2">
+                <div>
                   <div class="text-sm font-medium mb-1">季度</div>
                   <TransitionGroup
                     name="season-list"
@@ -84,7 +84,7 @@
                 </div>
 
                 <!-- 状态选择器 -->
-                <div class="mb-2">
+                <div>
                   <div class="text-sm font-medium mb-1">状态</div>
                   <div class="flex flex-wrap">
                     <div
