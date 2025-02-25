@@ -46,19 +46,19 @@ module.exports = async function (req, res, next) {
           break;
         case 1:
           // 未开始：startTime和endTime都为空
-          params.giveUp = false
+          params.giveUp = { $ne: true }
           params.startTime = { $eq: null }
           params.endTime = { $eq: null }
           break;
         case 2:
           // 进行中：startTime有值，endTime为空
-          params.giveUp = false
+          params.giveUp = { $ne: true }
           params.startTime = { $ne: null }
           params.endTime = { $eq: null }
           break;
         case 3:
           // 已完成：startTime和endTime都有值
-          params.giveUp = false
+          params.giveUp = { $ne: true }
           params.startTime = { $ne: null }
           params.endTime = { $ne: null }
           break;
