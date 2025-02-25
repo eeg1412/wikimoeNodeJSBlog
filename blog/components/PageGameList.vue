@@ -339,12 +339,10 @@ const gameList = ref([])
 const total = ref(0)
 
 // 获取数据
-await Promise.all([
-  getGameListApi(params).then((res) => {
-    gameList.value = res.data.value.list
-    total.value = res.data.value.total
-  }),
-])
+await getGameListApi(params).then((res) => {
+  gameList.value = res.data.value.list
+  total.value = res.data.value.total
+})
 const hasPrev = computed(() => params.page > 1)
 const hasNext = computed(() => params.page * size < total.value)
 

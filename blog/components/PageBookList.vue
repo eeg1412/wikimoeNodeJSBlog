@@ -341,12 +341,10 @@ const bookList = ref([])
 const total = ref(0)
 
 // 获取数据
-await Promise.all([
-  getBookListApi(params).then((res) => {
-    bookList.value = res.data.value.list
-    total.value = res.data.value.total
-  }),
-])
+await getBookListApi(params).then((res) => {
+  bookList.value = res.data.value.list
+  total.value = res.data.value.total
+})
 const hasPrev = computed(() => params.page > 1)
 const hasNext = computed(() => params.page * size < total.value)
 
