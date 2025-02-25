@@ -8,7 +8,7 @@ import httpRequest from '~/api'
 
 const URL = `/book/list`
 const getBookListApi = (params: any) => {
-  return httpRequest.get(URL, params)
+  return httpRequest.get(URL, params, { watch: false })
 }
 const getBookListApiFetch = (params: any) => {
   return httpRequest.getFetch(URL, params)
@@ -16,7 +16,7 @@ const getBookListApiFetch = (params: any) => {
 
 const URL2 = `/booktype/list`
 const getBooktypeListApi = (params: any) => {
-  return httpRequest.get(URL2, params)
+  return httpRequest.get(URL2, params, { watch: false })
 }
 
 export { getBookListApi, getBookListApiFetch, getBooktypeListApi }

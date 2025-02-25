@@ -8,7 +8,7 @@ import httpRequest from '~/api'
 
 const URL = `/game/list`
 const getGameListApi = (params: any) => {
-  return httpRequest.get(URL, params)
+  return httpRequest.get(URL, params, { watch: false })
 }
 const getGameListApiFetch = (params: any) => {
   return httpRequest.getFetch(URL, params)
@@ -16,7 +16,7 @@ const getGameListApiFetch = (params: any) => {
 
 const URL2 = `/game/platform/list`
 const getGamePlatformListApi = (params: any) => {
-  return httpRequest.get(URL2, params)
+  return httpRequest.get(URL2, params, { watch: false })
 }
 
 export { getGameListApi, getGameListApiFetch, getGamePlatformListApi }

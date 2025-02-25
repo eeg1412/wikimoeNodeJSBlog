@@ -8,7 +8,7 @@ import httpRequest from '~/api'
 
 const URL = `/bangumi/list`
 const getBangumiListApi = (params: any) => {
-  return httpRequest.get(URL, params)
+  return httpRequest.get(URL, params, { watch: false })
 }
 const getBangumiListApiFetch = (params: any) => {
   return httpRequest.getFetch(URL, params)
@@ -17,7 +17,7 @@ const getBangumiListApiFetch = (params: any) => {
 // /bangumi/year/list
 const URL2 = `/bangumi/year/list`
 const getBangumiYearListApi = (params: any) => {
-  return httpRequest.get(URL2)
+  return httpRequest.get(URL2, { watch: false })
 }
 
 export { getBangumiListApi, getBangumiListApiFetch, getBangumiYearListApi }
