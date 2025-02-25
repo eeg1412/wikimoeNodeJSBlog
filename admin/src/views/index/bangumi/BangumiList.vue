@@ -18,7 +18,7 @@
           <el-form-item>
             <el-input
               v-model="params.keyword"
-              placeholder="请输入番剧名称"
+              placeholder="请输入关键词"
               style="width: 160px"
               clearable
             ></el-input>

@@ -20,8 +20,24 @@ module.exports = async function (req, res, next) {
   }
   // 如果keyword存在，就加入查询条件
   if (keyword) {
-    keyword = utils.escapeSpecialChars(keyword)
-    params.title = new RegExp(keyword, 'i')
+    keyword = String(keyword)
+    // keyword去掉前后空格
+    keyword = keyword?.trim()
+    const keywordArray = keyword.split(' ');
+    const regexArray = keywordArray.map(keyword => {
+      const escapedKeyword = utils.escapeSpecialChars(keyword);
+      const regex = new RegExp(escapedKeyword, 'i');
+      return regex;
+    });
+    // 检索title和excerpt
+    params.$or = [
+      {
+        title: { $in: regexArray }
+      },
+      {
+        label: { $in: regexArray }
+      }
+    ]
   }
   // 如果year存在，就加入查询条件
   if (year) {
