@@ -220,7 +220,7 @@ import {
 } from '@/api/bangumi'
 const route = useRoute()
 const router = useRouter()
-const setRouterQuert = (query) => {
+const setRouterQuery = (query) => {
   const nowQuery = route.query
   const queryCopy = JSON.parse(JSON.stringify(query))
   if (queryCopy.year === -1) {
@@ -233,7 +233,7 @@ const setRouterQuert = (query) => {
     queryCopy.status = undefined
   }
   // keyword为空时，不传递keyword
-  if (!queryCopy.keyword) {
+  if (queryCopy.keyword === '') {
     queryCopy.keyword = undefined
   }
   router.replace({ query: { ...nowQuery, ...queryCopy } })
@@ -411,7 +411,7 @@ const initParams = () => {
     }
     console.log('newQuery', newQuery)
     if (Object.keys(newQuery).length > 0) {
-      setRouterQuert(newQuery)
+      setRouterQuery(newQuery)
     }
   }
 }
@@ -469,7 +469,7 @@ const fetchBangumiList = async () => {
         keyword: keyword.value,
       }
 
-      setRouterQuert(query)
+      setRouterQuery(query)
       return res
     })
     .catch(() => {
