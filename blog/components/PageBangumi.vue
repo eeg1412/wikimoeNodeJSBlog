@@ -2,86 +2,137 @@
   <div class="pt-2 pb-2 page-bangumi-body">
     <div class="flex items-center">
       <!-- 顶部年份季度选择 -->
-      <UPopover :popper="{ arrow: true }">
-        <UButton
-          :label="`${formatYearText(selectYear)}`"
-          size="sm"
-          variant="soft"
-          trailing-icon="i-heroicons-chevron-down-20-solid"
-          class="mr-3"
-        />
+      <div class="mr-3 acgn-filter-popover">
+        <UPopover :popper="{ arrow: true }" v-model:open="filterOpen">
+          <UButton
+            :label="filterText"
+            size="sm"
+            variant="soft"
+            trailing-icon="i-heroicons-chevron-down-20-solid"
+          />
+          <template #panel="{ close }">
+            <div class="w-80">
+              <div class="pt-3 pl-3 pr-3">
+                <!-- 关键词输入 -->
+                <div class="mb-2">
+                  <div class="text-sm font-medium mb-1">关键词</div>
+                  <UInput
+                    v-model.trim="filterCache.keyword"
+                    @keydown.enter="applyFilters(close)"
+                    size="sm"
+                    maxlength="20"
+                    :ui="{ icon: { trailing: { pointer: '' } } }"
+                    placeholder="请输入关键词"
+                  >
+                    <template #trailing>
+                      <UButton
+                        v-show="filterCache.keyword !== ''"
+                        color="gray"
+                        variant="link"
+                        icon="i-heroicons-x-mark-20-solid"
+                        :padded="false"
+                        @click="filterCache.keyword = ''"
+                      />
+                    </template>
+                  </UInput>
+                </div>
 
-        <template #panel="{ close }">
-          <div class="p-4 w-60">
-            <!-- 年份选择表 -->
-            <div class="flex flex-wrap">
+                <!-- 年份选择 -->
+                <div class="mb-2">
+                  <div class="text-sm font-medium mb-1">年份</div>
+                  <div class="flex flex-wrap">
+                    <div
+                      v-for="year in yearList"
+                      :key="year.year"
+                      class="p-1 mr-2 mb-2"
+                    >
+                      <UButton
+                        :label="`${formatYearText(year.year)}`"
+                        size="xs"
+                        :variant="
+                          year.year === filterCache.year ? 'solid' : 'ghost'
+                        "
+                        @click="selectYearHandle(year.year)"
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                <!-- 季度选择器 -->
+                <div class="mb-2">
+                  <div class="text-sm font-medium mb-1">季度</div>
+                  <TransitionGroup
+                    name="season-list"
+                    tag="div"
+                    class="flex flex-wrap"
+                  >
+                    <div
+                      v-for="season in selectSeasonList"
+                      :key="season"
+                      class="p-1 mr-2 mb-2"
+                    >
+                      <UButton
+                        :label="seasonToName(season)"
+                        size="xs"
+                        :variant="
+                          season === filterCache.season ? 'solid' : 'ghost'
+                        "
+                        @click="selectSeasonHandle(season)"
+                      />
+                    </div>
+                  </TransitionGroup>
+                </div>
+
+                <!-- 状态选择器 -->
+                <div class="mb-2">
+                  <div class="text-sm font-medium mb-1">状态</div>
+                  <div class="flex flex-wrap">
+                    <div
+                      v-for="status in statusList"
+                      :key="status.value"
+                      class="p-1 mr-2 mb-2"
+                    >
+                      <UButton
+                        :label="status.label"
+                        size="xs"
+                        :variant="
+                          status.value === filterCache.status
+                            ? 'solid'
+                            : 'ghost'
+                        "
+                        @click="filterCache.status = status.value"
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- 应用按钮 -->
               <div
-                v-for="year in yearPageList"
-                :key="year.year"
-                class="w-1/2 p-2"
+                class="flex justify-end p-3 border-solid border-t border-gray-200"
               >
+                <!-- 取消 -->
                 <UButton
-                  :label="`${formatYearText(year.year)}`"
+                  label="取消"
                   size="sm"
-                  :variant="year.year === selectYear ? 'solid' : 'ghost'"
-                  @click="selectYearHandle(year.year, close)"
+                  variant="ghost"
+                  class="mr-2"
+                  @click="close"
+                />
+                <!-- 筛选 -->
+                <UButton
+                  label="筛选"
+                  size="sm"
+                  variant="solid"
+                  color="primary"
+                  @click="applyFilters(close)"
                 />
               </div>
             </div>
-            <!-- 翻页器 -->
-            <div class="flex justify-between items-center mt-4">
-              <UButton
-                :disabled="yearPage === 1"
-                size="sm"
-                variant="ghost"
-                @click="yearPage--"
-              >
-                <UIcon class="mr5" name="i-heroicons-chevron-left" />
-              </UButton>
-              <span class="mx-4 text-gray-500"
-                >{{ yearPage }}/{{ yearTotalPage }}</span
-              >
-              <UButton
-                :disabled="yearPage === yearTotalPage"
-                size="sm"
-                variant="ghost"
-                @click="yearPage++"
-              >
-                <UIcon class="mr5" name="i-heroicons-chevron-right" />
-              </UButton>
-            </div>
-          </div>
-        </template>
-      </UPopover>
-      <UPopover :popper="{ arrow: true }">
-        <UButton
-          :label="seasonToName(selectSeason)"
-          size="sm"
-          variant="soft"
-          trailing-icon="i-heroicons-chevron-down-20-solid"
-          class="mr-3"
-        />
+          </template>
+        </UPopover>
+      </div>
 
-        <template #panel="{ close }">
-          <div class="p-4 w-80">
-            <!-- 季度选择器 -->
-            <div class="flex flex-wrap">
-              <div
-                v-for="season in selectSeasonList"
-                :key="season"
-                class="w-1/3 p-2"
-              >
-                <UButton
-                  :label="seasonToName(season)"
-                  size="sm"
-                  :variant="season === selectSeason ? 'solid' : 'ghost'"
-                  @click="selectSeasonHandle(season, close)"
-                />
-              </div>
-            </div>
-          </div>
-        </template>
-      </UPopover>
       <UPopover :popper="{ arrow: true }">
         <UButton
           :label="`${sortTypeMap[sortType]}`"
@@ -92,11 +143,11 @@
         />
 
         <template #panel="{ close }">
-          <div class="p-4">
+          <div class="p-2">
             <!-- 排序选择器 -->
             <div class="flex flex-wrap">
               <div
-                class="p-2 mr-1 mb-1"
+                class="p-1 mr-1 mb-1"
                 v-for="(item, index) in sortTypeList"
                 :key="item.value"
               >
@@ -178,6 +229,13 @@ const setRouterQuert = (query) => {
   if (queryCopy.season === -1) {
     queryCopy.season = undefined
   }
+  if (queryCopy.status === -1) {
+    queryCopy.status = undefined
+  }
+  // keyword为空时，不传递keyword
+  if (!queryCopy.keyword) {
+    queryCopy.keyword = undefined
+  }
   router.replace({ query: { ...nowQuery, ...queryCopy } })
 }
 
@@ -241,29 +299,35 @@ const formatYearText = (year) => {
   return year === -1 ? '所有年份' : `${year}年`
 }
 const total = ref(0)
-const selectYear = ref(null)
-const yearPageSize = ref(4)
-const yearPage = ref(1)
-const yearTotalPage = computed(() => {
-  return Math.ceil(yearList.value.length / yearPageSize.value)
-})
-// 当前页的年份列表
-const yearPageList = computed(() => {
-  const start = (yearPage.value - 1) * yearPageSize.value
-  const end = start + yearPageSize.value
-  return yearList.value.slice(start, end)
-})
+const selectYear = ref(-1)
 
-const selectSeason = ref(null)
+const selectSeason = ref(-1)
 const selectSeasonList = computed(() => {
   // yearList.value
-  const year = selectYear.value
+  const year = filterCache.year
   if (!year) return []
   const yearItem = yearList.value.find((item) => item.year === year)
   const seasonList = JSON.parse(JSON.stringify(yearItem?.seasonList || '[]'))
   seasonList.unshift(-1)
   return seasonList
 })
+
+// 状态
+const selectStatus = ref(-1)
+const statusList = [
+  {
+    label: '全部',
+    value: -1,
+  },
+  {
+    label: '弃坑',
+    value: 99,
+  },
+]
+
+// 关键词
+const keyword = ref('')
+
 const initParams = () => {
   const queryYear = route.query.year ? Number(route.query.year) : null
   const querySeason = route.query.season ? Number(route.query.season) : null
@@ -302,7 +366,29 @@ const initParams = () => {
     sortType.value = querySortType
   }
 
-  // 客户端执行
+  // 检查状态
+  let queryStatus = route.query.status
+  // status必须是数字且在statusList里
+  if (queryStatus) {
+    const queryStatusNumber = Number(queryStatus)
+    const statusItem = statusList.find(
+      (item) => item.value === queryStatusNumber
+    )
+    if (statusItem) {
+      queryStatus = queryStatusNumber
+      selectStatus.value = queryStatus
+    }
+  }
+
+  // 检查关键词
+  let queryKeyword = route.query.keyword
+  if (queryKeyword && queryKeyword.length <= 20) {
+    keyword.value = queryKeyword
+  } else {
+    queryKeyword = ''
+  }
+
+  // 客户端执行，校验是否产生路由不一致
   if (import.meta.client) {
     const newQuery = {}
     if (queryYear && selectYear.value !== queryYear) {
@@ -317,6 +403,13 @@ const initParams = () => {
     if (querySortType && sortType.value !== querySortType) {
       newQuery.sortType = sortType.value
     }
+    if (queryStatus && selectStatus.value !== queryStatus) {
+      newQuery.status = selectStatus.value
+    }
+    if (queryKeyword && keyword.value !== queryKeyword) {
+      newQuery.keyword = keyword.value
+    }
+    console.log('newQuery', newQuery)
     if (Object.keys(newQuery).length > 0) {
       setRouterQuert(newQuery)
     }
@@ -333,6 +426,12 @@ if (selectYear.value && selectYear.value !== -1) {
 }
 if (selectSeason.value && selectSeason.value !== -1) {
   params.season = selectSeason.value
+}
+if (selectStatus.value && selectStatus.value !== -1) {
+  params.status = selectStatus.value
+}
+if (keyword.value) {
+  params.keyword = keyword.value
 }
 await getBangumiListApi(params).then((res) => {
   bangumiList.value = res.data.value.data.list
@@ -352,6 +451,12 @@ const fetchBangumiList = async () => {
   if (selectSeason.value && selectSeason.value !== -1) {
     params.season = selectSeason.value
   }
+  if (selectStatus.value && selectStatus.value !== -1) {
+    params.status = selectStatus.value
+  }
+  if (keyword.value) {
+    params.keyword = keyword.value
+  }
   bangumiLoading.value = true
   const res = await getBangumiListApiFetch(params)
     .then((res) => {
@@ -360,6 +465,8 @@ const fetchBangumiList = async () => {
         season: selectSeason.value,
         page: page.value,
         sortType: sortType.value,
+        status: selectStatus.value,
+        keyword: keyword.value,
       }
 
       setRouterQuert(query)
@@ -382,18 +489,63 @@ const fetchBangumiList = async () => {
   })
 }
 // 选择了年份
-const selectYearHandle = async (year, close) => {
-  if (close) close()
-  page.value = 1
-  selectYear.value = year
-  selectSeason.value = selectSeasonList.value[0]
-  await fetchBangumiList()
+const selectYearHandle = async (year) => {
+  filterCache.year = year
+  filterCache.season = selectSeasonList.value[0]
 }
 // 选择了季度
-const selectSeasonHandle = async (season, close) => {
+const selectSeasonHandle = async (season) => {
+  filterCache.season = season
+}
+
+const filterOpen = ref(false)
+const filterCache = reactive({
+  year: selectYear.value,
+  season: selectSeason.value,
+  status: selectStatus.value,
+  keyword: keyword.value,
+})
+const filterCount = computed(() => {
+  let count = 0
+  if (selectYear.value !== -1) {
+    count++
+  }
+  if (selectSeason.value !== -1) {
+    count++
+  }
+  if (selectStatus.value !== -1) {
+    count++
+  }
+  if (keyword.value) {
+    count++
+  }
+  return count
+})
+const filterText = computed(() => {
+  if (filterCount.value > 0) {
+    return `已应用${filterCount.value}项筛选`
+  }
+  return '所有内容'
+})
+// watch filterOpen
+watch(filterOpen, (val) => {
+  console.log('filterOpen', val)
+  if (val) {
+    // 还原filterCache
+    filterCache.year = selectYear.value
+    filterCache.season = selectSeason.value
+    filterCache.status = selectStatus.value
+    filterCache.keyword = keyword.value
+  }
+})
+// 添加一个方法，用于同时应用年份和季度筛选
+const applyFilters = async (close) => {
   if (close) close()
+  selectYear.value = filterCache.year
+  selectSeason.value = filterCache.season
+  selectStatus.value = filterCache.status
+  keyword.value = filterCache.keyword
   page.value = 1
-  selectSeason.value = season
   await fetchBangumiList()
 }
 
@@ -406,4 +558,20 @@ onMounted(() => {
   })
 })
 </script>
-<style scoped></style>
+<style scoped>
+.season-list-move,
+.season-list-enter-active,
+.season-list-leave-active {
+  transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+.season-list-enter-from,
+.season-list-leave-to {
+  opacity: 0;
+  transform: scale(0.95);
+}
+
+.season-list-leave-active {
+  position: absolute;
+}
+</style>
