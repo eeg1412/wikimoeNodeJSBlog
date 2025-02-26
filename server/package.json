@@ -14,7 +14,8 @@
     "fixAttachmentMimetype": "node ./tools/fixAttachmentMimetype",
     "backupFromEmlogJSON": "node ./tools/backupFromEmlogJSON",
     "fixPostLastChangDate": "node ./tools/fixPostLastChangDate",
-    "deleteEmailSmtpSslOption": "node ./tools/deleteEmailSmtpSslOption"
+    "deleteEmailSmtpSslOption": "node ./tools/deleteEmailSmtpSslOption",
+    "fixMongoDbDefaultValues": "node ./tools/fixMongoDbDefaultValues"
   },
   "dependencies": {
     "archiver": "^7.0.1",
