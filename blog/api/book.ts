@@ -19,4 +19,15 @@ const getBooktypeListApi = (params: any) => {
   return httpRequest.get(URL2, params, { watch: false })
 }
 
-export { getBookListApi, getBookListApiFetch, getBooktypeListApi }
+// /book/reading/list
+const URL3 = `/book/reading/list`
+const getBookReadingListApi = (params: any) => {
+  return httpRequest.get(URL3, { watch: false })
+}
+
+export {
+  getBookListApi,
+  getBookListApiFetch,
+  getBooktypeListApi,
+  getBookReadingListApi,
+}

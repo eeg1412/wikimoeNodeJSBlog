@@ -1,8 +1,8 @@
 <template>
-  <div class="flex content-h-170">
+  <div class="flex content-h-170 acgn-item-body">
     <div class="flex-shrink-0 relative bangumi-cover-body">
       <div
-        class="relative content-h-139 flex justify-center items-center border border-solid border-gray-300 rounded-md p-1"
+        class="acgn-item-cover-body relative content-h-139 flex justify-center items-center border border-solid border-gray-300 rounded-md p-1"
       >
         <WikimoeImage
           class="max-image rounded bangumi-cover"
@@ -31,7 +31,7 @@
       </div>
       <Rating :rating="bangumi.rating" />
     </div>
-    <div class="acg-right-content content-h-170 custom-scroll">
+    <div class="acgn-right-content content-h-170 custom-scroll">
       <div class="w-full flex flex-col">
         <div class="font-bold mb-1 flex-shrink-0">
           {{ bangumi.title }}

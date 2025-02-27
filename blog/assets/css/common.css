@@ -944,7 +944,7 @@ ins.adsbygoogle[data-ad-status='unfilled'] {
   border-top: 1px solid rgb(209, 213, 219);
   padding: 5px 0px;
 }
-.acg-right-content {
+.acgn-right-content {
   border: 1px solid rgb(209, 213, 219);
   padding: 5px 8px;
   border-radius: 4px;
@@ -1089,4 +1089,28 @@ ins.adsbygoogle[data-ad-status='unfilled'] {
 .acgn-filter-popover-body {
   width: calc(100vw - 40px);
   max-width: 25rem;
+}
+
+.acgn-sidebar-item-body {
+  margin: 0.5rem 0;
+}
+@media (min-width: 769px) {
+  .acgn-sidebar-item-body {
+    width: 100%;
+    height: 135.57px;
+    position: relative;
+  }
+  .acgn-sidebar-item {
+    width: 326px;
+    transform: scale(0.7975);
+    transform-origin: top left;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 1;
+  }
+
+  .acgn-sidebar-item .acgn-time {
+    font-size: 0.85em;
+  }
 }

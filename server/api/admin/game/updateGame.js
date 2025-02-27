@@ -4,6 +4,7 @@ const log4js = require('log4js')
 const adminApiLog = log4js.getLogger('adminApi')
 const fs = require('fs')
 const nodePath = require('path')
+const cacheDataUtils = require('../../../config/cacheData')
 
 module.exports = async function (req, res, next) {
   const {
@@ -134,6 +135,7 @@ module.exports = async function (req, res, next) {
       data: data
     })
     adminApiLog.info(`game update success`)
+    cacheDataUtils.getPlayingGameList()
   }).catch((err) => {
     res.status(400).json({
       errors: [{

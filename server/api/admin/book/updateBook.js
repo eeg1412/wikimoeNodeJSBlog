@@ -4,6 +4,7 @@ const log4js = require('log4js')
 const adminApiLog = log4js.getLogger('adminApi')
 const fs = require('fs')
 const nodePath = require('path')
+const cacheDataUtils = require('../../../config/cacheData')
 
 module.exports = async function (req, res, next) {
   // bookname	String	是	否	无	书籍名称
@@ -138,6 +139,7 @@ module.exports = async function (req, res, next) {
       data: data
     })
     adminApiLog.info(`book update success`)
+    cacheDataUtils.getReadingBookList()
   }).catch((err) => {
     res.status(400).json({
       errors: [{

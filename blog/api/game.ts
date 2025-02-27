@@ -19,4 +19,15 @@ const getGamePlatformListApi = (params: any) => {
   return httpRequest.get(URL2, params, { watch: false })
 }
 
-export { getGameListApi, getGameListApiFetch, getGamePlatformListApi }
+// /game/playing/list
+const URL3 = `/game/playing/list`
+const getGamePlayingListApi = (params: any) => {
+  return httpRequest.get(URL3, { watch: false })
+}
+
+export {
+  getGameListApi,
+  getGameListApiFetch,
+  getGamePlatformListApi,
+  getGamePlayingListApi,
+}

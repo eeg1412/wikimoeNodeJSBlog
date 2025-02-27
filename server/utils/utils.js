@@ -989,6 +989,19 @@ exports.replaceSpacesWithUnderscores = (str) => {
   return str.replace(/[\s\u3000]/g, '-');
 }
 
+exports.getYearSeason = () => {
+  const now = new Date()
+  const year = now.getFullYear()
+  const month = now.getMonth() + 1
+  // 根据当前月份计算季度
+  const seasonMap = [1, 1, 1, 2, 2, 2, 3, 3, 3, 4, 4, 4];
+  const season = seasonMap[month - 1]; // 月份从1开始，数组从0开始
+  return {
+    year,
+    season
+  }
+}
+
 // let reflushBlogCacheTimer = null
 // exports.reflushBlogCache = async () => {
 //   if (reflushBlogCacheTimer) {

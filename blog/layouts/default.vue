@@ -166,6 +166,15 @@
             <template v-else-if="item.type === 12">
               <TrendPostList />
             </template>
+            <template v-else-if="item.type === 13">
+              <BangumiSeasonList />
+            </template>
+            <template v-else-if="item.type === 14">
+              <PlayingGameList />
+            </template>
+            <template v-else-if="item.type === 15">
+              <ReadingBookList />
+            </template>
           </div>
         </div>
       </div>

@@ -3,6 +3,7 @@ const utils = require('../../../utils/utils')
 const log4js = require('log4js')
 const adminApiLog = log4js.getLogger('adminApi')
 const mongoose = require('mongoose')
+const cacheDataUtils = require('../../../config/cacheData')
 
 module.exports = async function (req, res, next) {
   const {
@@ -83,6 +84,7 @@ module.exports = async function (req, res, next) {
       data: data
     })
     adminApiLog.info(`game create success`)
+    cacheDataUtils.getPlayingGameList()
   }).catch((err) => {
     res.status(400).json({
       errors: [{

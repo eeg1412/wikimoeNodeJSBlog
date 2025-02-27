@@ -4,11 +4,13 @@ const bannerUtils = require('../mongodb/utils/banners')
 const sortUtils = require('../mongodb/utils/sorts')
 const postUtils = require('../mongodb/utils/posts')
 const bangumiUtils = require('../mongodb/utils/bangumis')
+const bookUtils = require('../mongodb/utils/books')
+const gameUtils = require('../mongodb/utils/games')
 const commentUtils = require('../mongodb/utils/comments')
 
 const utils = require('../utils/utils')
 
-exports.getNaviList = async function (req, res, next) {
+exports.getNaviList = async function () {
   console.info('naviList get')
   const sort = {
     taxis: 1,
@@ -31,7 +33,7 @@ exports.getNaviList = async function (req, res, next) {
   return promise
 }
 
-exports.getSortList = async function (req, res, next) {
+exports.getSortList = async function () {
   console.info('sortList get')
   const sort = {
     taxis: 1,
@@ -54,7 +56,7 @@ exports.getSortList = async function (req, res, next) {
   return promise
 }
 
-exports.getSidebarList = async function (req, res, next) {
+exports.getSidebarList = async function () {
   console.info('sidebarList get')
   const sort = {
     taxis: 1,
@@ -66,6 +68,12 @@ exports.getSidebarList = async function (req, res, next) {
       resolve(data)
       // 更新 getCommentList
       this.getCommentList()
+      // 更新 getBangumiSeasonList
+      this.getBangumiSeasonList()
+      // 更新 getPlayingGameList
+      this.getPlayingGameList()
+      // 更新 getReadingBookList
+      this.getReadingBookList()
       // 重置
       exports.resetCacheDataByType(12, 'trendPostListData');
       exports.resetCacheDataByType(4, 'randomTagListData');
@@ -102,7 +110,7 @@ exports.resetCacheDataByType = (sidebarType, cacheDataName) => {
 }
 
 
-exports.getBannerList = async function (req, res, next) {
+exports.getBannerList = async function () {
   console.info('bannerList get')
   const sort = {
     taxis: 1,
@@ -123,7 +131,7 @@ exports.getBannerList = async function (req, res, next) {
 }
 
 // 获取最新评论列表,根据date
-exports.getCommentList = async function (req, res, next) {
+exports.getCommentList = async function () {
   console.info('commentList get')
   // 查询global.$cacheData.sidebarList里type为3的侧边栏
   const sidebarList = global.$cacheData.sidebarList || []
@@ -191,7 +199,7 @@ exports.getCommentList = async function (req, res, next) {
 }
 
 // 根据服务器提供的时区，查询每个月的status为1的post总数，返回的数据包含 2023年12月 和 count
-exports.getPostArchiveList = async function (req, res, next) {
+exports.getPostArchiveList = async function () {
   console.info('postArchive get')
   const siteTimeZone = global.$globalConfig.siteSettings.siteTimeZone || 'Asia/Shanghai'
   const promise = new Promise((resolve, reject) => {
@@ -231,7 +239,7 @@ exports.getPostArchiveList = async function (req, res, next) {
   return promise
 }
 // 获取bangumi的年份表
-exports.getBangumiYearList = async function (req, res, next) {
+exports.getBangumiYearList = async function () {
   console.info('bangumiYearList get')
   const promise = new Promise((resolve, reject) => {
     bangumiUtils.aggregate([
@@ -291,6 +299,141 @@ exports.getBangumiYearList = async function (req, res, next) {
       global.$cacheData.bangumiYearList = null
       reject(err)
       console.error('bangumiYearList get fail')
+    })
+  })
+  return promise
+}
+
+// 获取当季追番
+exports.getBangumiSeasonList = async function () {
+  console.info('bangumiSeasonList get')
+  // 查询global.$cacheData.sidebarList里type为13的侧边栏
+  const sidebarList = global.$cacheData.sidebarList || []
+  const bangumiSeasonSidebar = sidebarList.find((item) => {
+    return item.type === 13
+  })
+  // 不存在type为13的侧边栏
+  if (!bangumiSeasonSidebar) {
+    global.$cacheData.bangumiSeasonObj = null
+    // reject
+    return []
+  }
+  // 存在type为13的侧边栏,获取count
+  const count = bangumiSeasonSidebar.count || 0
+  // 如果count小于等于0，不获取当季追番
+  if (count <= 0) {
+    global.$cacheData.bangumiSeasonObj = null
+    // reject
+    return []
+  }
+  const sort = {
+    rating: -1,
+    _id: -1
+  }
+  const yearSeason = utils.getYearSeason()
+  const promise = new Promise((resolve, reject) => {
+    bangumiUtils.findPage({ status: 1, year: yearSeason.year, season: yearSeason.season }, sort, 1, count, '_id cover label rating season status summary title year giveUp urlList').then((data) => {
+      global.$cacheData.bangumiSeasonObj = {
+        year: yearSeason.year,
+        season: yearSeason.season,
+        list: data.list
+      }
+      resolve(global.$cacheData.bangumiSeasonObj)
+      console.info('bangumiSeasonList get success')
+    }).catch((err) => {
+      global.$cacheData.bangumiSeasonObj = null
+      reject(err)
+      console.error('bangumiSeasonList get fail')
+    })
+  })
+  return promise
+}
+// 检查当季追番是否需要更新
+exports.checkBangumiSeasonList = async function () {
+  const yearSeason = utils.getYearSeason()
+  if (global.$cacheData.bangumiSeasonObj && global.$cacheData.bangumiSeasonObj?.year === yearSeason.year && global.$cacheData.bangumiSeasonObj?.season === yearSeason.season) {
+    return global.$cacheData.bangumiSeasonObj
+  }
+  console.info('bangumiSeason should update')
+  await this.getBangumiSeasonList()
+  return global.$cacheData.bangumiSeasonObj
+}
+
+// 获取攻略中的游戏
+exports.getPlayingGameList = async function () {
+  console.info('playingGameList get')
+  const sidebarList = global.$cacheData.sidebarList || []
+  const playingGameSidebar = sidebarList.find((item) => {
+    return item.type === 14
+  })
+  if (!playingGameSidebar) {
+    global.$cacheData.playingGameList = null
+    return []
+  }
+  const count = playingGameSidebar.count || 0
+  if (count <= 0) {
+    global.$cacheData.playingGameList = null
+    return []
+  }
+  const sort = {
+    rating: -1,
+    _id: -1
+  }
+  const params = {
+    status: 1,
+    giveUp: { $ne: true },
+    startTime: { $ne: null },
+    endTime: { $eq: null }
+  }
+  const promise = new Promise((resolve, reject) => {
+    gameUtils.findPage(params, sort, 1, count, '_id cover endTime gamePlatform label rating screenshotAlbum startTime status summary title urlList giveUp').then((data) => {
+      global.$cacheData.playingGameList = data.list
+      resolve(data.list)
+      console.info('playingGameList get success')
+    }).catch((err) => {
+      global.$cacheData.playingGameList = null
+      reject(err)
+      console.error('playingGameList get fail')
+    })
+  })
+  return promise
+}
+
+// 获取阅读中的书籍
+exports.getReadingBookList = async function () {
+  console.info('readingBookList get')
+  const sidebarList = global.$cacheData.sidebarList || []
+  const readingBookSidebar = sidebarList.find((item) => {
+    return item.type === 15
+  })
+  if (!readingBookSidebar) {
+    global.$cacheData.readingBookList = null
+    return []
+  }
+  const count = readingBookSidebar.count || 0
+  if (count <= 0) {
+    global.$cacheData.readingBookList = null
+    return []
+  }
+  const sort = {
+    rating: -1,
+    _id: -1
+  }
+  const params = {
+    status: 1,
+    giveUp: { $ne: true },
+    startTime: { $ne: null },
+    endTime: { $eq: null }
+  }
+  const promise = new Promise((resolve, reject) => {
+    bookUtils.findPage(params, sort, 1, count, '_id cover endTime booktype label rating startTime status summary title urlList giveUp').then((data) => {
+      global.$cacheData.readingBookList = data.list
+      resolve(data.list)
+      console.info('readingBookList get success')
+    }).catch((err) => {
+      global.$cacheData.readingBookList = null
+      reject(err)
+      console.error('readingBookList get fail')
     })
   })
   return promise

@@ -20,4 +20,15 @@ const getBangumiYearListApi = (params: any) => {
   return httpRequest.get(URL2, { watch: false })
 }
 
-export { getBangumiListApi, getBangumiListApiFetch, getBangumiYearListApi }
+// /bangumi/season/list
+const URL3 = `/bangumi/season/list`
+const getBangumiSeasonListApi = (params: any) => {
+  return httpRequest.get(URL3, { watch: false })
+}
+
+export {
+  getBangumiListApi,
+  getBangumiListApiFetch,
+  getBangumiYearListApi,
+  getBangumiSeasonListApi,
+}

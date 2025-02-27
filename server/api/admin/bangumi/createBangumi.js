@@ -57,6 +57,7 @@ module.exports = async function (req, res, next) {
     })
     adminApiLog.info(`bangumi create success`)
     cacheDataUtils.getBangumiYearList()
+    cacheDataUtils.getBangumiSeasonList()
     // utils.reflushBlogCache()
   }).catch((err) => {
     res.status(400).json({

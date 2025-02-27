@@ -171,6 +171,13 @@ const blogRouteSetting = [
     middleware: [],
     controller: require('../api/blog/bangumi/getBangumiList'),
   },
+  // getBangumiSeasonList
+  {
+    path: '/bangumi/season/list',
+    method: 'get',
+    middleware: [],
+    controller: require('../api/blog/bangumi/getBangumiSeasonList'),
+  },
   // getBangumiYearList
   {
     path: '/bangumi/year/list',
@@ -206,6 +213,13 @@ const blogRouteSetting = [
     middleware: [],
     controller: require('../api/blog/game/getGameList'),
   },
+  // getPlayingGameList
+  {
+    path: '/game/playing/list',
+    method: 'get',
+    middleware: [],
+    controller: require('../api/blog/game/getPlayingGameList'),
+  },
   // getGamePlatformList
   {
     path: '/game/platform/list',
@@ -219,6 +233,13 @@ const blogRouteSetting = [
     method: 'get',
     middleware: [],
     controller: require('../api/blog/book/getBookList'),
+  },
+  // getReadingBookList
+  {
+    path: '/book/reading/list',
+    method: 'get',
+    middleware: [],
+    controller: require('../api/blog/book/getReadingBookList'),
   },
   // getBooktypeList
   {

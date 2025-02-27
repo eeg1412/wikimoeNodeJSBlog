@@ -76,6 +76,7 @@ module.exports = async function (req, res, next) {
       adminApiLog.error(`bangumi delete fail, ${logErrorToText(err)}`)
     })
     cacheDataUtils.getBangumiYearList()
+    cacheDataUtils.getBangumiSeasonList()
     // utils.reflushBlogCache()
   }).catch((err) => {
     res.status(400).json({
