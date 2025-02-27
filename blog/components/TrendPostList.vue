@@ -47,7 +47,7 @@
       <!-- <div class="text-2xl mb-2">
         <UIcon name="i-heroicons-cube-transparent" class="align-middle mr-1" />
       </div> -->
-      <div>暂无数据</div>
+      <div>暂无内容</div>
     </div>
   </div>
 </template>

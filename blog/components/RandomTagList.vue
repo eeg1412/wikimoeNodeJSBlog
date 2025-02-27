@@ -14,7 +14,7 @@
       class="text-center py-4 text-gray-500"
       v-if="randomTagList.length === 0"
     >
-      <div>暂无数据</div>
+      <div>暂无内容</div>
     </div>
   </div>
 </template>
