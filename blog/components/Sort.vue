@@ -38,6 +38,12 @@
         </ul>
       </li>
     </ul>
+    <div
+      class="text-center py-4 text-gray-500"
+      v-if="sortListData.length === 0"
+    >
+      <div>暂无内容</div>
+    </div>
   </div>
 </template>
 <script setup>

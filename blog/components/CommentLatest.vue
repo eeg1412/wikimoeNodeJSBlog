@@ -35,6 +35,12 @@
         </div>
       </div>
     </div>
+    <div
+      class="text-center py-4 text-gray-500"
+      v-if="commentLatest.length === 0"
+    >
+      <div>暂无内容</div>
+    </div>
   </div>
 </template>
 <script setup>
