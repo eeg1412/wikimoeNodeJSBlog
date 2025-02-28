@@ -10,8 +10,10 @@
             class="common-aside-collapse-btn dflex flexCenter"
             @click="switchCollapse"
           >
-            <el-icon v-if="isCollapse"><ArrowRight /></el-icon>
-            <el-icon v-else><ArrowLeft /></el-icon>
+            <div class="common-aside-collapse-btn-icon">
+              <el-icon v-if="isCollapse"><ArrowRight /></el-icon>
+              <el-icon v-else><ArrowLeft /></el-icon>
+            </div>
           </div>
           <div class="common-logo">
             <div>博客管理后台</div>
@@ -492,7 +494,8 @@ export default {
   overflow: hidden;
 }
 .common-aside-body {
-  width: 200px;
+  width: 100%;
+  position: relative;
 }
 .common-layout .el-menu {
   border-right: 0px;
@@ -524,7 +527,7 @@ export default {
   top: 0;
   right: 0;
   bottom: 0;
-  z-index: 2;
+  z-index: 11;
   width: 8px;
   cursor: pointer;
   background-color: #fdfdfd;
@@ -567,9 +570,9 @@ export default {
     height: 100%;
     background: #fff;
   }
-  .common-aside-body {
+  /* .common-aside-body {
     width: 100%;
-  }
+  } */
   .common-logo {
     padding: 10px 0;
     font-size: 14px;
@@ -580,6 +583,9 @@ export default {
     right: 10px;
     top: 50%;
     transform: translateY(-50%);
+  }
+  .admin-left-menu-body {
+    margin-right: 0;
   }
   .common-aside-collapse-btn {
     display: none;
