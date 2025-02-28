@@ -76,7 +76,7 @@
                   ? formatDate(game.endTime, 'yyyy年M月dd日 h时')
                   : '攻略中'
               }`
-            }}<LoadingDots :showAnimeDot="showAnimeDot" v-if="!game.endTime" />
+            }}<LoadingDots v-if="!game.endTime && showAnimeDot" />
           </div>
           <div
             class="text-sm mb-1 text-gray-400 flex-shrink-0 w_10 flex items-center"

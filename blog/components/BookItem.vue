@@ -76,7 +76,7 @@
                   ? formatDate(book.endTime, 'yyyy年M月dd日 h时')
                   : '阅读中'
               }`
-            }}<LoadingDots :showAnimeDot="showAnimeDot" v-if="!book.endTime" />
+            }}<LoadingDots v-if="!book.endTime && showAnimeDot" />
           </div>
           <div
             class="text-sm mb-1 text-gray-400 flex-shrink-0 w_10 flex items-center"
