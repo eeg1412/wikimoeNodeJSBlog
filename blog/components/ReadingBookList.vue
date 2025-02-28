@@ -6,7 +6,7 @@
       class="acgn-sidebar-item-body"
     >
       <div class="acgn-sidebar-item">
-        <BookItem :book="book" />
+        <BookItem :book="book" :showAnimeDot="false" />
       </div>
     </div>
     <div

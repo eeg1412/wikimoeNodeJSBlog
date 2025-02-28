@@ -76,7 +76,7 @@
                   ? formatDate(book.endTime, 'yyyy年M月dd日 h时')
                   : '阅读中'
               }`
-            }}<LoadingDots v-if="!book.endTime" />
+            }}<LoadingDots :showAnimeDot="showAnimeDot" v-if="!book.endTime" />
           </div>
           <div
             class="text-sm mb-1 text-gray-400 flex-shrink-0 w_10 flex items-center"
@@ -125,6 +125,10 @@ const props = defineProps({
   book: {
     type: Object,
     required: true,
+  },
+  showAnimeDot: {
+    type: Boolean,
+    default: true,
   },
 })
 

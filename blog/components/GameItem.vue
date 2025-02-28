@@ -76,7 +76,7 @@
                   ? formatDate(game.endTime, 'yyyy年M月dd日 h时')
                   : '攻略中'
               }`
-            }}<LoadingDots v-if="!game.endTime" />
+            }}<LoadingDots :showAnimeDot="showAnimeDot" v-if="!game.endTime" />
           </div>
           <div
             class="text-sm mb-1 text-gray-400 flex-shrink-0 w_10 flex items-center"
@@ -137,6 +137,10 @@ const props = defineProps({
   game: {
     type: Object,
     required: true,
+  },
+  showAnimeDot: {
+    type: Boolean,
+    default: true,
   },
 })
 

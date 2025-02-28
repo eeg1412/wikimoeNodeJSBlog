@@ -5,13 +5,22 @@
 <script setup>
 import { ref, onMounted, onBeforeUnmount } from 'vue'
 
-const dots = ref('')
+const props = defineProps({
+  showAnimeDot: {
+    type: Boolean,
+    default: true,
+  },
+})
+
+const dots = ref(props.showAnimeDot ? '' : '...')
 let interval
 
 onMounted(() => {
-  interval = setInterval(() => {
-    dots.value = dots.value.length >= 3 ? '' : dots.value + '.'
-  }, 500)
+  if (props.showAnimeDot) {
+    interval = setInterval(() => {
+      dots.value = dots.value.length >= 3 ? '' : dots.value + '.'
+    }, 500)
+  }
 })
 
 onBeforeUnmount(() => {
