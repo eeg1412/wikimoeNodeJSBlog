@@ -38,10 +38,10 @@ exports.findPage = async function (parmas, sort, page, limit, projection) {
   }
 }
 
-exports.updateOne = async function (filters, parmas) {
+exports.updateOne = async function (filters, parmas, options = {}) {
   // document查询
   parmas.$inc = { __v: 1, ...parmas.$inc }
-  return await navisModel.updateOne(filters, parmas);
+  return await navisModel.updateOne(filters, parmas, options);
 }
 // 删除
 exports.deleteOne = async function (filters) {

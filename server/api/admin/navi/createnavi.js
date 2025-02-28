@@ -62,7 +62,7 @@ module.exports = async function (req, res, next) {
     taxis: taxis || 0,
     parent: parent || null,
     isdefault: isdefault || false,
-    query: query || {}
+    query: query || ''
   }
   const rule = [
     {

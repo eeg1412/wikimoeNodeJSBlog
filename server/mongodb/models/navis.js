@@ -38,9 +38,8 @@ var navis = new Schema({
   },
   // query
   query: {
-    // object
-    type: Object,
-    default: {}
+    type: String,
+    default: ''
   },
 }, { timestamps: true });
 
