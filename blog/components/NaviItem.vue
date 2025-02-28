@@ -32,9 +32,15 @@
       </Transition>
     </template>
     <template v-else-if="item.isdefault && !item.newtab">
+      <div
+        class="blog-layout-sidebar-item active"
+        v-if="item.url === currentPath"
+      >
+        <span>{{ item.naviname }}</span>
+      </div>
       <nuxt-link
         class="blog-layout-sidebar-item"
-        :class="{ active: item.url === currentPath }"
+        v-else
         :to="item.url + (item.query || '')"
       >
         <span>{{ item.naviname }}</span>
