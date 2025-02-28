@@ -15,7 +15,8 @@
     "backupFromEmlogJSON": "node ./tools/backupFromEmlogJSON",
     "fixPostLastChangDate": "node ./tools/fixPostLastChangDate",
     "deleteEmailSmtpSslOption": "node ./tools/deleteEmailSmtpSslOption",
-    "fixMongoDbDefaultValues": "node ./tools/fixMongoDbDefaultValues"
+    "fixMongoDbDefaultValues": "node ./tools/fixMongoDbDefaultValues",
+    "fixNavisQuery": "node ./tools/fixNavisQuery"
   },
   "dependencies": {
     "archiver": "^7.0.1",
