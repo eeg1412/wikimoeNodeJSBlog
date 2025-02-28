@@ -55,21 +55,33 @@ exports.save = async function (parmas) {
 }
 
 
-exports.findOne = async function (parmas, projection) {
+exports.findOne = async function (parmas, projection, options = {}) {
   // document查询
-  return await ${tableName}sModel.findOne(parmas, projection);
+  const q = ${tableName}sModel.findOne(parmas, projection);
+  if (options.lean) {
+    q.lean();
+  }
+  return await q;
 }
 
 // 查找所有
-exports.find = async function (parmas, sort, projection) {
+exports.find = async function (parmas, sort, projection, options = {}) {
   // document查询
-  return await ${tableName}sModel.find(parmas, projection).sort(sort);
+  const q = ${tableName}sModel.find(parmas, projection).sort(sort);
+  if (options.lean) {
+    q.lean();
+  }
+  return await q;
 }
 
 // 分页查询
-exports.findPage = async function (parmas, sort, page, limit, projection) {
+exports.findPage = async function (parmas, sort, page, limit, projection, options = {}) {
   // document查询
-  const list = await ${tableName}sModel.find(parmas, projection).sort(sort).skip((page - 1) * limit).limit(limit);
+  const q = ${tableName}sModel.find(parmas, projection).sort(sort).skip((page - 1) * limit).limit(limit);
+  if (options.lean) {
+    q.lean();
+  }
+  const list = await q;
   const total = await ${tableName}sModel.countDocuments(parmas);
   // 查询失败
   if (!list || total === undefined) {
