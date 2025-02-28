@@ -14,9 +14,13 @@ exports.findOne = async function (parmas, projection) {
 }
 
 // 查找所有
-exports.find = async function (parmas, sort, projection) {
+exports.find = async function (parmas, sort, projection, options = {}) {
   // document查询
-  return await bannersModel.find(parmas, projection).sort(sort);
+  const q = bannersModel.find(parmas, projection).sort(sort);
+  if (options.lean) {
+    q.lean();
+  }
+  return await q;
 }
 
 // 分页查询

@@ -20,9 +20,13 @@ exports.find = async function (parmas, sort, projection) {
 }
 
 // 分页查询
-exports.findPage = async function (parmas, sort, page, limit, projection) {
+exports.findPage = async function (parmas, sort, page, limit, projection, options = {}) {
   // document查询
-  const list = await booksModel.find(parmas, projection).populate('booktype', '_id name color').sort(sort).skip((page - 1) * limit).limit(limit);
+  const q = booksModel.find(parmas, projection).populate('booktype', '_id name color').sort(sort).skip((page - 1) * limit).limit(limit);
+  if (options.lean) {
+    q.lean();
+  }
+  const list = await q;
   const total = await booksModel.countDocuments(parmas);
   // 查询失败
   if (!list || total === undefined) {

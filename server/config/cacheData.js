@@ -17,9 +17,9 @@ exports.getNaviList = async function () {
     _id: -1
   }
   const promise = new Promise((resolve, reject) => {
-    naviUtils.find({ status: 1 }, sort).then((data) => {
+    naviUtils.find({ status: 1 }, sort, undefined, { lean: true }).then((data) => {
       // 根据返回的data，配合parent字段，生成树形结构
-      const jsonData = data.map(doc => doc.toJSON())
+      const jsonData = data
       const treeData = utils.generateTreeData(jsonData)
       global.$cacheData.naviList = treeData
       resolve(treeData)
@@ -40,9 +40,9 @@ exports.getSortList = async function () {
     _id: -1
   }
   const promise = new Promise((resolve, reject) => {
-    sortUtils.find({}, sort).then((data) => {
+    sortUtils.find({}, sort, undefined, { lean: true }).then((data) => {
       // 根据返回的data，配合parent字段，生成树形结构
-      const jsonData = data.map(doc => doc.toJSON())
+      const jsonData = data
       const treeData = utils.generateTreeData(jsonData)
       global.$cacheData.sortList = treeData
       resolve(treeData)
@@ -63,7 +63,7 @@ exports.getSidebarList = async function () {
     _id: -1
   }
   const promise = await new Promise((resolve, reject) => {
-    sidebarUtils.find({ status: 1 }, sort).then((data) => {
+    sidebarUtils.find({ status: 1 }, sort, undefined, { lean: true }).then((data) => {
       global.$cacheData.sidebarList = data
       resolve(data)
       // 更新 getCommentList
@@ -117,7 +117,7 @@ exports.getBannerList = async function () {
     _id: -1
   }
   const promise = new Promise((resolve, reject) => {
-    bannerUtils.find({ status: 1 }, sort).then((data) => {
+    bannerUtils.find({ status: 1 }, sort, undefined, { lean: true }).then((data) => {
       global.$cacheData.bannerList = data
       resolve(data)
       console.info('bannerList get success')
@@ -157,8 +157,8 @@ exports.getCommentList = async function () {
     _id: -1
   }
   const promise = new Promise((resolve, reject) => {
-    commentUtils.findPage({ status: 1 }, sort, 1, count, undefined, { postFilter: 'status _id alias type' }).then((data) => {
-      let list = JSON.parse(JSON.stringify(data.list))
+    commentUtils.findPage({ status: 1 }, sort, 1, count, undefined, { postFilter: 'status _id alias type', lean: true }).then((data) => {
+      let list = data.list
       // 需要获取的key数组
       const keys = ['_id', 'avatar', 'content', 'date', 'nickname', 'url', 'post', 'likes', 'isAdmin']
       // 去掉post.status不为1的list项
@@ -332,7 +332,7 @@ exports.getBangumiSeasonList = async function () {
   }
   const yearSeason = utils.getYearSeason()
   const promise = new Promise((resolve, reject) => {
-    bangumiUtils.findPage({ status: 1, year: yearSeason.year, season: yearSeason.season }, sort, 1, count, '_id cover label rating season status summary title year giveUp urlList').then((data) => {
+    bangumiUtils.findPage({ status: 1, year: yearSeason.year, season: yearSeason.season }, sort, 1, count, '_id cover label rating season status summary title year giveUp urlList', { lean: true }).then((data) => {
       global.$cacheData.bangumiSeasonObj = {
         year: yearSeason.year,
         season: yearSeason.season,
@@ -386,7 +386,7 @@ exports.getPlayingGameList = async function () {
     endTime: { $eq: null }
   }
   const promise = new Promise((resolve, reject) => {
-    gameUtils.findPage(params, sort, 1, count, '_id cover endTime gamePlatform label rating screenshotAlbum startTime status summary title urlList giveUp').then((data) => {
+    gameUtils.findPage(params, sort, 1, count, '_id cover endTime gamePlatform label rating screenshotAlbum startTime status summary title urlList giveUp', { lean: true }).then((data) => {
       global.$cacheData.playingGameList = data.list
       resolve(data.list)
       console.info('playingGameList get success')
@@ -426,7 +426,7 @@ exports.getReadingBookList = async function () {
     endTime: { $eq: null }
   }
   const promise = new Promise((resolve, reject) => {
-    bookUtils.findPage(params, sort, 1, count, '_id cover endTime booktype label rating startTime status summary title urlList giveUp').then((data) => {
+    bookUtils.findPage(params, sort, 1, count, '_id cover endTime booktype label rating startTime status summary title urlList giveUp', { lean: true }).then((data) => {
       global.$cacheData.readingBookList = data.list
       resolve(data.list)
       console.info('readingBookList get success')
