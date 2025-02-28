@@ -127,6 +127,7 @@ const afterLeave = (el) => {
 }
 .blog-layout-sidebar-item.active {
   @apply bg-primary-500 text-white;
+  cursor: default;
 }
 
 .blog-layout-sidebar-item:hover {
