@@ -492,6 +492,7 @@ export default {
 .common-aside.isCollapse {
   width: 8px;
   overflow: hidden;
+  margin-right: 0px;
 }
 .common-aside-body {
   width: 100%;
