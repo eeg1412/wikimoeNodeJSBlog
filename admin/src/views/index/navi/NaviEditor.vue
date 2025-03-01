@@ -18,7 +18,10 @@
           ></el-input>
         </el-form-item>
         <el-form-item label="导航URL" prop="url">
-          <el-input v-model="form.url" placeholder="请输入导航URL"></el-input>
+          <el-input
+            v-model.trim="form.url"
+            placeholder="请输入导航URL"
+          ></el-input>
         </el-form-item>
         <el-form-item label="新标签打开" prop="newtab">
           <el-switch v-model="form.newtab" />
@@ -52,8 +55,7 @@
         </el-form-item>
         <el-form-item label="页面参数" prop="query">
           <el-input
-            v-model="form.query"
-            type="textarea"
+            v-model.trim="form.query"
             placeholder="请输入页面参数如：?id=1&name=2"
           ></el-input>
         </el-form-item>
@@ -87,6 +89,28 @@ export default {
     const rules = reactive({
       naviname: [
         { required: true, message: '请输入导航名称', trigger: 'blur' },
+      ],
+      url: [
+        {
+          validator: (rule, value, callback) => {
+            if (value) {
+              const queryParamMatch = value.match(/(\?.+)$/)
+              if (queryParamMatch) {
+                const queryPart = queryParamMatch[1]
+                callback(
+                  new Error(
+                    `URL中包含了查询参数"${queryPart}"，请将这部分内容填写到下方的"页面参数"一栏`
+                  )
+                )
+              } else {
+                callback()
+              }
+            } else {
+              callback()
+            }
+          },
+          trigger: 'blur',
+        },
       ],
     })
     const formRef = ref(null)
