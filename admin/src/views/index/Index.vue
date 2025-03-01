@@ -483,8 +483,8 @@ export default {
   height: 45px;
 }
 .common-aside {
-  width: 200px;
-  border-right: 1px solid #dee2e6;
+  width: 191px;
+  margin-right: 9px;
   overflow-x: hidden;
   overflow-y: auto;
   position: relative;
@@ -523,9 +523,9 @@ export default {
   display: none;
 }
 .common-aside-collapse-btn {
-  position: absolute;
+  position: fixed;
   top: 0;
-  right: 0;
+  left: 191px;
   bottom: 0;
   z-index: 11;
   width: 8px;
@@ -533,13 +533,17 @@ export default {
   background-color: #fdfdfd;
   color: #979797;
   font-size: 10px;
+  border-right: 1px solid #dee2e6;
 }
 .common-aside-collapse-btn:hover {
   background-color: #f9f9f9;
 }
+.isCollapse .common-aside-collapse-btn {
+  left: 0px;
+}
 .admin-left-menu-body {
   overflow: auto;
-  margin-right: 10px;
+  /* margin-right: 10px; */
 }
 .common-header-nickname {
   max-width: 100px;
