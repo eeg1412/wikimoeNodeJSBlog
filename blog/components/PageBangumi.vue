@@ -43,7 +43,7 @@
                   <div class="flex flex-wrap">
                     <div
                       v-for="year in yearList"
-                      :key="year.year"
+                      :key="year.year || -1"
                       class="mr-1 mb-1"
                     >
                       <UButton
@@ -68,7 +68,7 @@
                   >
                     <div
                       v-for="season in selectSeasonList"
-                      :key="season"
+                      :key="season || -1"
                       class="mr-1 mb-1"
                     >
                       <UButton
@@ -220,24 +220,11 @@ import {
 } from '@/api/bangumi'
 const route = useRoute()
 const router = useRouter()
+const onlyRouteChange = ref(false)
 const setRouterQuery = (query) => {
   const nowQuery = route.query
-  const queryCopy = JSON.parse(JSON.stringify(query))
-  if (queryCopy.year === -1) {
-    queryCopy.year = undefined
-  }
-  if (queryCopy.season === -1) {
-    queryCopy.season = undefined
-  }
-  if (queryCopy.status === -1) {
-    queryCopy.status = undefined
-  }
-  // keyword为空时，不传递keyword
-  if (queryCopy.keyword === '') {
-    queryCopy.keyword = undefined
-  }
   router.replace({
-    query: { ...nowQuery, ...queryCopy },
+    query: { ...nowQuery, ...query },
     hash: route.hash,
   })
 }
@@ -261,7 +248,7 @@ const sortTypeList = [
 ]
 const selectType = (type, close) => {
   sortType.value = type
-  fetchBangumiList()
+  setRouterQuery({ sortType: type })
   close()
 }
 
@@ -272,13 +259,13 @@ const hasNext = computed(() => page.value * size < total.value)
 const toPrev = () => {
   if (hasPrev.value) {
     page.value--
-    fetchBangumiList()
+    setRouterQuery({ page: page.value })
   }
 }
 const toNext = () => {
   if (hasNext.value) {
     page.value++
-    fetchBangumiList()
+    setRouterQuery({ page: page.value })
   }
 }
 
@@ -291,7 +278,7 @@ const yearList = computed(() => {
     })
   })
   const allYear = {
-    year: -1,
+    year: undefined,
     seasonList: [1, 2, 3, 4],
   }
   list.unshift(allYear)
@@ -299,28 +286,28 @@ const yearList = computed(() => {
 })
 
 const formatYearText = (year) => {
-  return year === -1 ? '所有年份' : `${year}年`
+  return year === undefined ? '所有年份' : `${year}年`
 }
 const total = ref(0)
-const selectYear = ref(-1)
+const selectYear = ref(undefined)
 
-const selectSeason = ref(-1)
+const selectSeason = ref(undefined)
 const selectSeasonList = computed(() => {
   // yearList.value
   const year = filterCache.year
-  if (!year) return []
+  if (!year && year !== undefined) return []
   const yearItem = yearList.value.find((item) => item.year === year)
   const seasonList = JSON.parse(JSON.stringify(yearItem?.seasonList || '[]'))
-  seasonList.unshift(-1)
+  seasonList.unshift(undefined)
   return seasonList
 })
 
 // 状态
-const selectStatus = ref(-1)
+const selectStatus = ref(undefined)
 const statusList = [
   {
     label: '全部',
-    value: -1,
+    value: undefined,
   },
   {
     label: '弃坑',
@@ -340,7 +327,7 @@ const initParams = () => {
   if (yearItem) {
     selectYear.value = queryYear
   } else {
-    selectYear.value = -1
+    selectYear.value = undefined
   }
   // 校验季度是否存在
   if (yearItem) {
@@ -349,10 +336,10 @@ const initParams = () => {
     if (seasonItem) {
       selectSeason.value = querySeason
     } else {
-      selectSeason.value = -1
+      selectSeason.value = undefined
     }
   } else {
-    selectSeason.value = -1
+    selectSeason.value = undefined
   }
   // 检查page
   const queryPage = route.query.page
@@ -412,6 +399,7 @@ const initParams = () => {
     }
     console.log('newQuery', newQuery)
     if (Object.keys(newQuery).length > 0) {
+      onlyRouteChange.value = true
       setRouterQuery(newQuery)
     }
   }
@@ -422,13 +410,13 @@ const params = {
   page: page.value,
   sortType: sortType.value,
 }
-if (selectYear.value && selectYear.value !== -1) {
+if (selectYear.value) {
   params.year = selectYear.value
 }
-if (selectSeason.value && selectSeason.value !== -1) {
+if (selectSeason.value) {
   params.season = selectSeason.value
 }
-if (selectStatus.value && selectStatus.value !== -1) {
+if (selectStatus.value) {
   params.status = selectStatus.value
 }
 if (keyword.value) {
@@ -442,35 +430,17 @@ await getBangumiListApi(params).then((res) => {
 const listRef = ref(null)
 const bangumiLoading = ref(false)
 const fetchBangumiList = async () => {
-  const params = {
-    page: page.value,
-    sortType: sortType.value,
-  }
-  if (selectYear.value && selectYear.value !== -1) {
-    params.year = selectYear.value
-  }
-  if (selectSeason.value && selectSeason.value !== -1) {
-    params.season = selectSeason.value
-  }
-  if (selectStatus.value && selectStatus.value !== -1) {
-    params.status = selectStatus.value
-  }
-  if (keyword.value) {
-    params.keyword = keyword.value
-  }
   bangumiLoading.value = true
+  const params = {
+    year: route.query.year || undefined,
+    season: route.query.season || undefined,
+    page: page.value || 1,
+    sortType: route.query.sortType || 'default',
+    status: route.query.status || undefined,
+    keyword: route.query.keyword || undefined,
+  }
   const res = await getBangumiListApiFetch(params)
     .then((res) => {
-      const query = {
-        year: selectYear.value,
-        season: selectSeason.value,
-        page: page.value,
-        sortType: sortType.value,
-        status: selectStatus.value,
-        keyword: keyword.value,
-      }
-
-      setRouterQuery(query)
       return res
     })
     .catch(() => {
@@ -508,13 +478,13 @@ const filterCache = reactive({
 })
 const filterCount = computed(() => {
   let count = 0
-  if (selectYear.value !== -1) {
+  if (selectYear.value) {
     count++
   }
-  if (selectSeason.value !== -1) {
+  if (selectSeason.value) {
     count++
   }
-  if (selectStatus.value !== -1) {
+  if (selectStatus.value) {
     count++
   }
   if (keyword.value) {
@@ -547,14 +517,48 @@ const applyFilters = async (close) => {
   selectStatus.value = filterCache.status
   keyword.value = filterCache.keyword
   page.value = 1
-  await fetchBangumiList()
+
+  const params = {}
+  if (selectYear.value) {
+    params.year = selectYear.value
+  } else {
+    params.year = undefined
+  }
+  if (selectSeason.value) {
+    params.season = selectSeason.value
+  } else {
+    params.season = undefined
+  }
+  if (selectStatus.value) {
+    params.status = selectStatus.value
+  } else {
+    params.status = undefined
+  }
+  if (keyword.value) {
+    params.keyword = keyword.value
+  } else {
+    params.keyword = undefined
+  }
+  setRouterQuery(params)
 }
+
+// watch route
+watch(
+  () => route.query,
+  (query) => {
+    if (onlyRouteChange.value) {
+      onlyRouteChange.value = false
+      return
+    }
+    fetchBangumiList()
+  }
+)
 
 onMounted(() => {
   nextTick(() => {
     if (bangumiList.value.length === 0 && params.page > 1) {
       page.value = 1
-      fetchBangumiList()
+      setRouterQuery({ page: 1 })
     }
   })
 })
