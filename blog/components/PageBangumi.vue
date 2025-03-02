@@ -125,6 +125,7 @@
                   size="sm"
                   variant="solid"
                   color="primary"
+                  :loading="bangumiLoading"
                   @click="applyFilters(close)"
                 />
               </div>
@@ -135,7 +136,7 @@
 
       <UPopover :popper="{ arrow: true }">
         <UButton
-          :label="`${sortTypeMap[sortType]}`"
+          :label="`${sortTypeMap[params.sortType]}`"
           size="sm"
           variant="soft"
           trailing-icon="i-heroicons-chevron-down-20-solid"
@@ -154,7 +155,7 @@
                 <UButton
                   :label="item.label"
                   size="2xs"
-                  :variant="sortType === item.value ? 'solid' : 'ghost'"
+                  :variant="params.sortType === item.value ? 'solid' : 'ghost'"
                   @click="selectType(item.value, close)"
                 />
               </div>
@@ -231,7 +232,31 @@ const setRouterQuery = (query) => {
 
 const { data: yearListData } = await getBangumiYearListApi()
 
-const sortType = ref('default')
+const rawQuery = {
+  year: undefined,
+  season: undefined,
+  page: 1,
+  sortType: 'default',
+  status: undefined,
+  keyword: undefined,
+}
+const params = computed(() => {
+  const routeQuery = JSON.parse(JSON.stringify(route.query))
+  const numberKey = ['page', 'status', 'year', 'season']
+  numberKey.forEach((key) => {
+    if (routeQuery[key]) {
+      const num = Number(routeQuery[key])
+      if (!isNaN(num)) {
+        routeQuery[key] = num
+      }
+    }
+  })
+  return {
+    ...rawQuery,
+    ...routeQuery,
+  }
+})
+
 const sortTypeMap = {
   default: '默认排序',
   rating: '按评分排序',
@@ -247,25 +272,24 @@ const sortTypeList = [
   },
 ]
 const selectType = (type, close) => {
-  sortType.value = type
+  if (bangumiLoading.value) return
   setRouterQuery({ sortType: type })
   close()
 }
 
-const page = ref(1)
 const size = 20
-const hasPrev = computed(() => page.value > 1)
-const hasNext = computed(() => page.value * size < total.value)
+const hasPrev = computed(() => params.value.value > 1)
+const hasNext = computed(() => params.value.page * size < total.value)
 const toPrev = () => {
   if (hasPrev.value) {
-    page.value--
-    setRouterQuery({ page: page.value })
+    const page = params.value.page - 1
+    setRouterQuery({ page })
   }
 }
 const toNext = () => {
   if (hasNext.value) {
-    page.value++
-    setRouterQuery({ page: page.value })
+    const page = params.value.page + 1
+    setRouterQuery({ page })
   }
 }
 
@@ -289,9 +313,6 @@ const formatYearText = (year) => {
   return year === undefined ? '所有年份' : `${year}年`
 }
 const total = ref(0)
-const selectYear = ref(undefined)
-
-const selectSeason = ref(undefined)
 const selectSeasonList = computed(() => {
   // yearList.value
   const year = filterCache.year
@@ -303,7 +324,6 @@ const selectSeasonList = computed(() => {
 })
 
 // 状态
-const selectStatus = ref(undefined)
 const statusList = [
   {
     label: '全部',
@@ -315,9 +335,9 @@ const statusList = [
   },
 ]
 
-// 关键词
-const keyword = ref('')
-
+const checkedParams = {
+  ...rawQuery,
+}
 const initParams = () => {
   const queryYear = route.query.year ? Number(route.query.year) : null
   const querySeason = route.query.season ? Number(route.query.season) : null
@@ -325,21 +345,15 @@ const initParams = () => {
   let yearItem =
     queryYear && yearList.value.find((item) => item.year === queryYear)
   if (yearItem) {
-    selectYear.value = queryYear
-  } else {
-    selectYear.value = undefined
+    checkedParams.year = queryYear
   }
   // 校验季度是否存在
   if (yearItem) {
     const seasonItem =
       querySeason && yearItem.seasonList.find((item) => item === querySeason)
     if (seasonItem) {
-      selectSeason.value = querySeason
-    } else {
-      selectSeason.value = undefined
+      checkedParams.season = querySeason
     }
-  } else {
-    selectSeason.value = undefined
   }
   // 检查page
   const queryPage = route.query.page
@@ -347,17 +361,17 @@ const initParams = () => {
     : 1
   // page必须是数字
   if (queryPage && !isNaN(queryPage)) {
-    page.value = queryPage
+    checkedParams.page = queryPage
   }
 
   // sortType必须是sortTypeList里的
   const querySortType = route.query.sortType
   if (sortTypeList.find((item) => item.value === querySortType)) {
-    sortType.value = querySortType
+    checkedParams.sortType = querySortType
   }
 
   // 检查状态
-  let queryStatus = route.query.status
+  const queryStatus = route.query.status
   // status必须是数字且在statusList里
   if (queryStatus) {
     const queryStatusNumber = Number(queryStatus)
@@ -365,64 +379,29 @@ const initParams = () => {
       (item) => item.value === queryStatusNumber
     )
     if (statusItem) {
-      queryStatus = queryStatusNumber
-      selectStatus.value = queryStatus
+      checkedParams.status = queryStatus
     }
   }
 
   // 检查关键词
-  let queryKeyword = route.query.keyword
+  const queryKeyword = route.query.keyword
   if (queryKeyword && queryKeyword.length <= 20) {
-    keyword.value = queryKeyword
+    checkedParams.keyword = queryKeyword
   }
 
   // 客户端执行，校验是否产生路由不一致
-  if (import.meta.client) {
-    const newQuery = {}
-    if (queryYear && selectYear.value !== queryYear) {
-      newQuery.year = selectYear.value
-    }
-    if (querySeason && selectSeason.value !== querySeason) {
-      newQuery.season = selectSeason.value
-    }
-    if (page.value !== queryPage) {
-      newQuery.page = page.value
-    }
-    if (querySortType && sortType.value !== querySortType) {
-      newQuery.sortType = sortType.value
-    }
-    if (queryStatus && selectStatus.value !== queryStatus) {
-      newQuery.status = selectStatus.value
-    }
-    if (queryKeyword && keyword.value !== queryKeyword) {
-      newQuery.keyword = keyword.value
-    }
-    console.log('newQuery', newQuery)
-    if (Object.keys(newQuery).length > 0) {
-      onlyRouteChange.value = true
-      setRouterQuery(newQuery)
-    }
+  if (
+    import.meta.client &&
+    changedParams(checkedParams, params.value).length > 0
+  ) {
+    console.warn('需要更新路由')
+    onlyRouteChange.value = true
+    setRouterQuery(checkedParams)
   }
 }
 initParams()
 const bangumiList = ref([])
-const params = {
-  page: page.value,
-  sortType: sortType.value,
-}
-if (selectYear.value) {
-  params.year = selectYear.value
-}
-if (selectSeason.value) {
-  params.season = selectSeason.value
-}
-if (selectStatus.value) {
-  params.status = selectStatus.value
-}
-if (keyword.value) {
-  params.keyword = keyword.value
-}
-await getBangumiListApi(params).then((res) => {
+await getBangumiListApi(checkedParams).then((res) => {
   bangumiList.value = res.data.value.data.list
   total.value = res.data.value.data.total
 })
@@ -431,15 +410,10 @@ const listRef = ref(null)
 const bangumiLoading = ref(false)
 const fetchBangumiList = async () => {
   bangumiLoading.value = true
-  const params = {
-    year: route.query.year || undefined,
-    season: route.query.season || undefined,
-    page: page.value || 1,
-    sortType: route.query.sortType || 'default',
-    status: route.query.status || undefined,
-    keyword: route.query.keyword || undefined,
+  const newParams = {
+    ...params.value,
   }
-  const res = await getBangumiListApiFetch(params)
+  const res = await getBangumiListApiFetch(newParams)
     .then((res) => {
       return res
     })
@@ -471,23 +445,23 @@ const selectSeasonHandle = async (season) => {
 
 const filterOpen = ref(false)
 const filterCache = reactive({
-  year: selectYear.value,
-  season: selectSeason.value,
-  status: selectStatus.value,
-  keyword: keyword.value,
+  year: params.value.year,
+  season: params.value.season,
+  status: params.value.status,
+  keyword: params.value.keyword,
 })
 const filterCount = computed(() => {
   let count = 0
-  if (selectYear.value) {
+  if (params.value.year) {
     count++
   }
-  if (selectSeason.value) {
+  if (params.value.season) {
     count++
   }
-  if (selectStatus.value) {
+  if (params.value.status) {
     count++
   }
-  if (keyword.value) {
+  if (params.value.keyword) {
     count++
   }
   return count
@@ -503,61 +477,61 @@ watch(filterOpen, (val) => {
   console.log('filterOpen', val)
   if (val) {
     // 还原filterCache
-    filterCache.year = selectYear.value
-    filterCache.season = selectSeason.value
-    filterCache.status = selectStatus.value
-    filterCache.keyword = keyword.value
+    filterCache.year = params.value.year
+    filterCache.season = params.value.season
+    filterCache.status = params.value.status
+    filterCache.keyword = params.value.keyword
   }
 })
 // 添加一个方法，用于同时应用年份和季度筛选
 const applyFilters = async (close) => {
   if (close) close()
-  selectYear.value = filterCache.year
-  selectSeason.value = filterCache.season
-  selectStatus.value = filterCache.status
-  keyword.value = filterCache.keyword
-  page.value = 1
-
-  const params = {}
-  if (selectYear.value) {
-    params.year = selectYear.value
-  } else {
-    params.year = undefined
-  }
-  if (selectSeason.value) {
-    params.season = selectSeason.value
-  } else {
-    params.season = undefined
-  }
-  if (selectStatus.value) {
-    params.status = selectStatus.value
-  } else {
-    params.status = undefined
-  }
-  if (keyword.value) {
-    params.keyword = keyword.value
-  } else {
-    params.keyword = undefined
-  }
-  setRouterQuery(params)
+  setRouterQuery({
+    year: filterCache.year,
+    season: filterCache.season,
+    status: filterCache.status,
+    keyword: filterCache.keyword,
+    page: 1,
+  })
 }
 
-// watch route
+// 监听路由变化
 watch(
   () => route.query,
-  (query) => {
+  (newQuery, oldQuery) => {
     if (onlyRouteChange.value) {
       onlyRouteChange.value = false
       return
     }
-    fetchBangumiList()
+    console.log('新的query:', newQuery)
+    console.log('旧的query:', oldQuery)
+    // 需要对比的key
+    const compareKeys = Object.keys(rawQuery)
+    // 拾取newQuery中的compareKeys
+    const newQueryCompareObj = {}
+    compareKeys.forEach((key) => {
+      if (newQuery[key]) {
+        newQueryCompareObj[key] = newQuery[key]
+      }
+    })
+    // 拾取oldQuery中的compareKeys
+    const oldQueryCompareObj = {}
+    compareKeys.forEach((key) => {
+      if (oldQuery[key]) {
+        oldQueryCompareObj[key] = oldQuery[key]
+      }
+    })
+    // 对比两个对象
+    const diff = changedParams(newQueryCompareObj, oldQueryCompareObj)
+    if (diff.length > 0) {
+      fetchBangumiList()
+    }
   }
 )
 
 onMounted(() => {
   nextTick(() => {
-    if (bangumiList.value.length === 0 && params.page > 1) {
-      page.value = 1
+    if (bangumiList.value.length === 0 && params.value.page > 1) {
       setRouterQuery({ page: 1 })
     }
   })
