@@ -508,7 +508,7 @@ export default {
   font-weight: 600;
   position: sticky;
   top: 0;
-  z-index: 10;
+  z-index: 1;
   background-color: #ffffff;
 }
 .common-logo img {
@@ -528,7 +528,7 @@ export default {
   top: 0;
   left: 191px;
   bottom: 0;
-  z-index: 11;
+  z-index: 2;
   width: 8px;
   cursor: pointer;
   background-color: #fdfdfd;
