@@ -118,6 +118,7 @@
                   size="sm"
                   variant="solid"
                   color="primary"
+                  :loading="bookLoading"
                   @click="applyFilters(close)"
                 />
               </div>
@@ -299,6 +300,7 @@ const sortTypeList = [
   },
 ]
 const selectType = (type, close) => {
+  if (bookLoading.value) return
   setRouterQuery({
     sortType: type,
   })
