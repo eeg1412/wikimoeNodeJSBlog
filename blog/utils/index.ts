@@ -258,3 +258,23 @@ export const copyToClipboard = async (text: string, toast: any) => {
     })
   }
 }
+
+export const changedParams = (
+  checkedParams: object,
+  paramsValue: object
+): string[] => {
+  console.log(checkedParams, paramsValue)
+
+  // 获取两个对象的所有唯一字段
+  const allKeys = [
+    ...new Set([...Object.keys(checkedParams), ...Object.keys(paramsValue)]),
+  ]
+
+  // 比较所有字段的值
+  const list = allKeys.filter(
+    (key) => (checkedParams as any)[key] !== (paramsValue as any)[key]
+  )
+
+  console.log(list)
+  return list
+}
