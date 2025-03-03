@@ -236,6 +236,28 @@
               ></el-option>
             </el-select>
           </el-form-item>
+          <el-form-item label="关联电影" prop="movie">
+            <el-select
+              v-model="form.movieList"
+              multiple
+              filterable
+              remote
+              :remote-method="queryMovies"
+              :automatic-dropdown="true"
+              default-first-option
+              :reserve-keyword="false"
+              :loading="movieIsLoading"
+              placeholder="请选择电影"
+              style="width: 100%"
+            >
+              <el-option
+                v-for="item in movieList"
+                :key="item._id"
+                :label="`${checkShowText(item)}${setMovieTitle(item)}`"
+                :value="item._id"
+              ></el-option>
+            </el-select>
+          </el-form-item>
           <!-- game -->
           <el-form-item label="关联游戏" prop="game">
             <el-select
@@ -502,6 +524,10 @@ export default {
                 form[key] = res.data.data[key].map((item) => item._id)
                 bangumiList.value = res.data.data[key]
                 break
+              case 'movieList':
+                form[key] = res.data.data[key].map((item) => item._id)
+                movieList.value = res.data.data[key]
+                break
               case 'gameList':
                 form[key] = res.data.data[key].map((item) => item._id)
                 gameList.value = res.data.data[key]
@@ -594,6 +620,7 @@ export default {
       type: null,
       tags: [],
       bangumiList: [],
+      movieList: [],
       gameList: [],
       bookList: [],
       postList: [],
@@ -737,6 +764,44 @@ export default {
       queryBangumisTimer = setTimeout(() => {
         getBangumiList(query)
       }, 50)
+    }
+    // movie
+    const movieList = ref([])
+    const movieIsLoading = ref(false)
+    const getMovieList = (movieKeyword = null) => {
+      if (movieIsLoading.value) {
+        return
+      }
+      movieIsLoading.value = true
+      authApi
+        .getMovieList(
+          { keyword: movieKeyword, status: 1, size: 50, page: 1 },
+          true
+        )
+        .then((res) => {
+          movieList.value = res.data.list
+        })
+        .finally(() => {
+          movieIsLoading.value = false
+        })
+    }
+    let queryMoviesTimer = null
+    const queryMovies = (query) => {
+      if (queryMoviesTimer) {
+        clearTimeout(queryMoviesTimer)
+      }
+      queryMoviesTimer = setTimeout(() => {
+        getMovieList(query)
+      }, 50)
+    }
+    const setMovieTitle = (item) => {
+      const year = item.year
+      const month = item.month
+      const day = item.day
+      if (year && month && day) {
+        return `【${year}年${month}月${day}日观看】${item.title}`
+      }
+      return item.title
     }
     // game
     const gameList = ref([])
@@ -936,6 +1001,10 @@ export default {
       {
         label: '番剧',
         value: 'bangumi',
+      },
+      {
+        label: '电影',
+        value: 'movieList',
       },
       {
         label: '游戏列表',
@@ -1139,6 +1208,11 @@ export default {
       bangumiList,
       banggumiIsLoading,
       queryBangumis,
+      // movie
+      movieList,
+      movieIsLoading,
+      queryMovies,
+      setMovieTitle,
       // game
       gameList,
       gameIsLoading,

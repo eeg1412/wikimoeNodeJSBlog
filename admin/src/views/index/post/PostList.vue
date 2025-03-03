@@ -218,6 +218,11 @@
                   `【${content.year}年${seasonToStr(content.season)}季新番】`
                 }}
               </template>
+              <!-- movie -->
+              <template v-else-if="content.type === 'movie'">
+                <i class="fas fa-fw fa-film"></i>{{ `${checkShowText(content)}`
+                }}{{ setMovieTitle(content) }}
+              </template>
               <template v-else-if="content.type === 'book'">
                 <i class="fas fa-fw fa-book"></i>{{ `${checkShowText(content)}`
                 }}{{
@@ -629,7 +634,14 @@ export default {
 
     // 合并bookList,bangumiList,gameList,postList
     const mergeContentList = (row) => {
-      const { bookList, bangumiList, gameList, postList, eventList } = row
+      const {
+        bookList,
+        bangumiList,
+        movieList,
+        gameList,
+        postList,
+        eventList,
+      } = row
       const contentList = []
       if (bookList && bookList.length) {
         const type = 'book'
@@ -640,6 +652,12 @@ export default {
       if (bangumiList && bangumiList.length) {
         const type = 'bangumi'
         bangumiList.forEach((item) => {
+          contentList.push({ ...item, type })
+        })
+      }
+      if (movieList && movieList.length) {
+        const type = 'movie'
+        movieList.forEach((item) => {
           contentList.push({ ...item, type })
         })
       }
@@ -694,6 +712,16 @@ export default {
 
     const SearchTagSelectorRef = ref(null)
 
+    const setMovieTitle = (item) => {
+      const year = item.year
+      const month = item.month
+      const day = item.day
+      if (year && month && day) {
+        return `【${year}年${month}月${day}日观看】`
+      }
+      return item.title
+    }
+
     onMounted(() => {
       initParams()
       getPostList()
@@ -739,6 +767,7 @@ export default {
       // 搜索标签
       SearchTagSelectorRef,
       checkShowText,
+      setMovieTitle,
     }
   },
 }
