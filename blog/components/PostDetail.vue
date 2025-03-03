@@ -1037,6 +1037,8 @@ const checkCommentScroll = () => {
   setTimeout(() => {
     if (route.hash.includes('comment-')) {
       postCommentId = route.hash.split('comment-')[1]
+      const urlWithoutHash = window.location.href.split('#')[0]
+      window.history.replaceState({}, '', urlWithoutHash)
     }
     if (postCommentId) {
       // 查询id对应的dom
