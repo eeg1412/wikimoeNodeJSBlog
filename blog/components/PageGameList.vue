@@ -59,7 +59,7 @@
                     </div>
                     <div
                       v-for="item in gamePlatformList"
-                      :key="item._id"
+                      :key="item._id || -1"
                       class="mr-1 mb-1"
                     >
                       <UButton
@@ -82,7 +82,7 @@
                   <div class="flex flex-wrap">
                     <div
                       v-for="status in statusList"
-                      :key="status.value"
+                      :key="status.value || -1"
                       class="mr-1 mb-1"
                     >
                       <UButton
@@ -118,6 +118,7 @@
                   size="sm"
                   variant="solid"
                   color="primary"
+                  :loading="gameLoading"
                   @click="applyFilters(close)"
                 />
               </div>
@@ -213,6 +214,14 @@ import {
 } from '@/api/game'
 const route = useRoute()
 const router = useRouter()
+const onlyRouteChange = ref(false)
+const setRouterQuery = (query) => {
+  const nowQuery = route.query
+  router.replace({
+    query: { ...nowQuery, ...query },
+    hash: route.hash,
+  })
+}
 
 // 平台
 const gamePlatformList = ref([])
@@ -226,12 +235,33 @@ await getGamePlatformListApi().then((res) => {
 
 // 游戏列表
 const size = 20
-const params = reactive({
+const rawQuery = {
   page: 1,
   sortType: 'startTime',
   gamePlatformId: undefined,
   status: undefined,
   keyword: '',
+}
+const params = computed(() => {
+  const routeQuery = JSON.parse(JSON.stringify(route.query))
+  const numberKey = ['page', 'status']
+  const newParams = { ...rawQuery }
+  Object.keys(newParams).forEach((key) => {
+    if (routeQuery[key]) {
+      newParams[key] = routeQuery[key]
+    }
+  })
+  numberKey.forEach((key) => {
+    if (newParams[key]) {
+      const num = Number(newParams[key])
+      if (!isNaN(num)) {
+        newParams[key] = num
+      } else {
+        newParams[key] = rawQuery[key]
+      }
+    }
+  })
+  return newParams
 })
 
 const statusList = [
@@ -272,11 +302,16 @@ const sortTypeList = [
   },
 ]
 const selectType = (type, close) => {
-  params.sortType = type
-  fetchGameList()
+  if (gameLoading.value) return
+  setRouterQuery({
+    sortType: type,
+  })
   close()
 }
 
+const checkedParams = {
+  ...rawQuery,
+}
 const initParams = () => {
   // page必须是数字，sortType必须是sortTypeList，gamePlatformId必须是isObjectId
   const queryPage = route.query.page
@@ -290,11 +325,11 @@ const initParams = () => {
   const queryKeyword = route.query.keyword
   // page必须是数字
   if (queryPage && !isNaN(queryPage)) {
-    params.page = queryPage
+    params.page = Number(queryPage)
   }
   // sortType必须是sortTypeList里的
   if (sortTypeList.find((item) => item.value === querySortType)) {
-    params.sortType = querySortType
+    checkedParams.sortType = querySortType
   }
   // gamePlatformId必须是isObjectId
   if (queryGamePlatformId && isObjectId(queryGamePlatformId)) {
@@ -304,33 +339,25 @@ const initParams = () => {
     )
     if (gamePlatform) {
       selectPlatformData.value = gamePlatform
-      params.gamePlatformId = queryGamePlatformId
+      checkedParams.gamePlatformId = queryGamePlatformId
     }
   }
 
   if (queryStatus && statusList.some((item) => item.value === queryStatus)) {
-    params.status = queryStatus
+    checkedParams.status = queryStatus
   }
 
   if (queryKeyword && queryKeyword.length <= 20) {
-    params.keyword = queryKeyword
+    checkedParams.keyword = queryKeyword
   }
 
   if (
     import.meta.client &&
-    (queryPage ||
-      querySortType ||
-      queryGamePlatformId ||
-      queryStatus ||
-      queryKeyword)
+    changedParams(checkedParams, params.value).length > 0
   ) {
-    router.replace({
-      query: {
-        ...route.query,
-        ...params,
-      },
-      hash: route.hash,
-    })
+    console.warn('需要更新路由')
+    onlyRouteChange.value = true
+    setRouterQuery(checkedParams)
   }
 }
 initParams()
@@ -339,30 +366,24 @@ const gameList = ref([])
 const total = ref(0)
 
 // 获取数据
-await getGameListApi(params).then((res) => {
+await getGameListApi(checkedParams).then((res) => {
   gameList.value = res.data.value.list
   total.value = res.data.value.total
 })
-const hasPrev = computed(() => params.page > 1)
-const hasNext = computed(() => params.page * size < total.value)
+const hasPrev = computed(() => params.value.page > 1)
+const hasNext = computed(() => params.value.page * size < total.value)
 
 const gameLoading = ref(false)
 const listRef = ref(null)
 const fetchGameList = async () => {
   gameLoading.value = true
   const newParams = {
-    ...params,
+    ...params.value,
   }
   const res = await getGameListApiFetch(newParams)
   gameList.value = res?.list || []
   total.value = res?.total || 0
   gameLoading.value = false
-  router.replace({
-    query: {
-      ...route.query,
-      ...params,
-    },
-  })
   nextTick(() => {
     if (listRef.value) {
       // const rect = listRef.value.getBoundingClientRect()
@@ -375,14 +396,14 @@ const fetchGameList = async () => {
 }
 const toPrev = () => {
   if (hasPrev.value) {
-    params.page--
-    fetchGameList()
+    const page = params.value.page - 1
+    setRouterQuery({ page })
   }
 }
 const toNext = () => {
   if (hasNext.value) {
-    params.page++
-    fetchGameList()
+    const page = params.value.page + 1
+    setRouterQuery({ page })
   }
 }
 
@@ -393,19 +414,19 @@ const selectPlatform = (item, close) => {
 
 const filterOpen = ref(false)
 const filterCache = reactive({
-  gamePlatformId: params.gamePlatformId,
-  status: params.status,
-  keyword: params.keyword,
+  gamePlatformId: params.value.gamePlatformId,
+  status: params.value.status,
+  keyword: params.value.keyword,
 })
 const filterCount = computed(() => {
   let count = 0
-  if (params.gamePlatformId) {
+  if (params.value.gamePlatformId) {
     count++
   }
-  if (params.status) {
+  if (params.value.status) {
     count++
   }
-  if (params.keyword) {
+  if (params.value.keyword) {
     count++
   }
   return count
@@ -421,28 +442,64 @@ watch(filterOpen, (val) => {
   console.log('filterOpen', val)
   if (val) {
     // 还原filterCache
-    filterCache.gamePlatformId = params.gamePlatformId
-    filterCache.status = params.status
-    filterCache.keyword = params.keyword
+    filterCache.gamePlatformId = params.value.gamePlatformId
+    filterCache.status = params.value.status
+    filterCache.keyword = params.value.keyword
   }
 })
 // 添加一个方法，用于同时应用年份和季度筛选
 const applyFilters = async (close) => {
   if (close) close()
-  params.gamePlatformId = filterCache.gamePlatformId
-  params.status = filterCache.status
-  params.keyword = filterCache.keyword
-  params.page = 1
-  fetchGameList()
+  setRouterQuery({
+    gamePlatformId: filterCache.gamePlatformId,
+    status: filterCache.status,
+    keyword: filterCache.keyword,
+    page: 1,
+  })
 }
+
+// 监听路由变化
+watch(
+  () => route.query,
+  (newQuery, oldQuery) => {
+    if (onlyRouteChange.value) {
+      onlyRouteChange.value = false
+      return
+    }
+    console.log('新的query:', newQuery)
+    console.log('旧的query:', oldQuery)
+    // 需要对比的key
+    const compareKeys = Object.keys(rawQuery)
+    // 拾取newQuery中的compareKeys
+    const newQueryCompareObj = {}
+    compareKeys.forEach((key) => {
+      if (newQuery[key]) {
+        newQueryCompareObj[key] = newQuery[key]
+      }
+    })
+    // 拾取oldQuery中的compareKeys
+    const oldQueryCompareObj = {}
+    compareKeys.forEach((key) => {
+      if (oldQuery[key]) {
+        oldQueryCompareObj[key] = oldQuery[key]
+      }
+    })
+    // 对比两个对象
+    const diff = changedParams(newQueryCompareObj, oldQueryCompareObj)
+    if (diff.length > 0) {
+      fetchGameList()
+    }
+  }
+)
 
 onMounted(() => {
   nextTick(() => {
     // 如果gameList为0，且page不为1，则重新获取数据
     if (gameList.value.length === 0 && params.page > 1) {
       console.log('重新获取数据')
-      params.page = 1
-      fetchGameList()
+      setRouterQuery({
+        page: 1,
+      })
     }
   })
 })
