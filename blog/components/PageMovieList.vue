@@ -201,7 +201,7 @@ const setRouterQuery = (query) => {
 const size = 20
 const rawQuery = {
   page: 1,
-  sortType: 'startTime',
+  sortType: 'watchTime',
   year: undefined,
   keyword: undefined,
 }
@@ -228,7 +228,7 @@ const params = computed(() => {
 })
 
 const sortTypeMap = {
-  startTime: '按观看时间排序',
+  watchTime: '按观看时间排序',
   rating: '按评分排序',
 }
 const sortTypeList = [
