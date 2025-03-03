@@ -310,7 +310,11 @@ const open = async (list = [], showIndex = 0, closeCallback_) => {
   })
   lightbox.loadAndOpen(showIndex)
   if (window.location.hash !== '#photo-swipelightboxopen') {
-    window.history.pushState(null, '', '#photo-swipelightboxopen')
+    window.history.pushState(
+      window.history.state,
+      '',
+      '#photo-swipelightboxopen'
+    )
   }
 }
 
@@ -339,7 +343,7 @@ const initLightbox = async () => {
   const lightboxopen = window.location.hash === '#photo-swipelightboxopen'
   if (lightboxopen) {
     const urlWithoutHash = window.location.href.split('#')[0]
-    window.history.replaceState({}, '', urlWithoutHash)
+    window.history.replaceState(window.history.state, '', urlWithoutHash)
   }
   lightbox = new PhotoSwipeLightbox({
     pswpModule: () => import('photoswipe'),
