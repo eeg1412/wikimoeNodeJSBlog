@@ -807,6 +807,51 @@ const adminRouteSetting = [
     roleType: null,
     role: null
   },
+  // createMovie
+  {
+    path: '/movie/create',
+    method: 'post',
+    middleware: [checkAuth],
+    controller: require('../api/admin/movie/createMovie'),
+    roleType: null,
+    role: null
+  },
+  // deleteMovie
+  {
+    path: '/movie/delete',
+    method: 'delete',
+    middleware: [checkAuth],
+    controller: require('../api/admin/movie/deleteMovie'),
+    roleType: null,
+    role: null
+  },
+  // getMovieDetail
+  {
+    path: '/movie/detail',
+    method: 'get',
+    middleware: [checkAuth],
+    controller: require('../api/admin/movie/getMovieDetail'),
+    roleType: null,
+    role: null
+  },
+  // getMovieList
+  {
+    path: '/movie/list',
+    method: 'get',
+    middleware: [checkAuth],
+    controller: require('../api/admin/movie/getMovieList'),
+    roleType: null,
+    role: null
+  },
+  // updateMovie
+  {
+    path: '/movie/update',
+    method: 'put',
+    middleware: [checkAuth],
+    controller: require('../api/admin/movie/updateMovie'),
+    roleType: null,
+    role: null
+  },
   // getEmailSendHistoryList
   {
     path: '/emailsendhistory/list',

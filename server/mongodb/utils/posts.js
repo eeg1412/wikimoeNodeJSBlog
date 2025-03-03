@@ -30,6 +30,10 @@ exports.findOne = async function (parmas, projection, options = {}) {
         select: '-coverFileName -coverFolder -createdAt -updatedAt',
       }
     ).populate({
+      path: 'movieList',
+      match: { status: matchStatus },
+      select: '-coverFileName -coverFolder -createdAt -updatedAt',
+    }).populate({
       path: 'gameList',
       match: { status: matchStatus },
       select: '-coverFileName -coverFolder -createdAt -updatedAt',
@@ -102,6 +106,15 @@ exports.findPage = async function (parmas, sort, page, limit, projection, option
       select: '_id title year season status',
     });
   }
+
+  if (projection && !projection.includes('-movieList')) {
+    query = query.populate({
+      path: 'movieList',
+      match: { status: matchStatus },
+      select: '_id title year month day status',
+    })
+  }
+
 
   if (projection && !projection.includes('-gameList')) {
     query = query.populate({

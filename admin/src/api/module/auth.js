@@ -509,6 +509,40 @@ export default function (api) {
         shouldAdminJWT: true
       })
     },
+    // post /movie/create
+    createMovie (data) {
+      return api.post('/movie/create', data, {
+        shouldAdminJWT: true
+      })
+    },
+    // delete /movie/delete
+    deleteMovie (data) {
+      return api.delete('/movie/delete', {
+        params: data,
+        shouldAdminJWT: true
+      })
+    },
+    // get /movie/list
+    getMovieList (data, noLoading = false) {
+      return api.get('/movie/list', {
+        params: data,
+        shouldAdminJWT: true,
+        noLoading
+      })
+    },
+    // get /movie/detail
+    getMovieDetail (data) {
+      return api.get('/movie/detail', {
+        params: data,
+        shouldAdminJWT: true
+      })
+    },
+    // put /movie/update
+    updateMovie (data) {
+      return api.put('/movie/update', data, {
+        shouldAdminJWT: true
+      })
+    },
     // get /emailsendhistory/list
     getEmailSendHistoryList (data) {
       return api.get('/emailsendhistory/list', {

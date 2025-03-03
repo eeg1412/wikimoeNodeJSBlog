@@ -133,6 +133,16 @@
               <i class="fas fa-fw fa-tv pr10"></i>
               <template #title>番剧</template>
             </el-menu-item>
+            <!-- 电影 MovieList -->
+            <el-menu-item
+              index="MovieList"
+              @click="removeParam('MovieList')"
+              @click.middle="openNewTab('MovieList')"
+              :route="{ name: 'MovieList' }"
+            >
+              <i class="fas fa-fw fa-film pr10"></i>
+              <template #title>电影</template>
+            </el-menu-item>
             <el-sub-menu index="game">
               <template #title>
                 <!-- 游戏 -->

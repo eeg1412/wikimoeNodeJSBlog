@@ -1002,6 +1002,42 @@ exports.getYearSeason = () => {
   }
 }
 
+// 验证日期函数
+exports.validateDate = (year, month, day) => {
+  // 检查是否为数字
+  if (isNaN(Number(year)) || isNaN(Number(month)) || isNaN(Number(day))) {
+    return false;
+  }
+
+  // 转换为数字类型
+  const y = Number(year);
+  const m = Number(month);
+  const d = Number(day);
+
+  const now = new Date();
+  // 当前年份的100年后是年份的最大值
+  const maxYear = now.getFullYear() + 100;
+
+  // 检查年份是否合理
+  if (y < 1900 || y > maxYear) {
+    return false;
+  }
+
+  // 检查月份 (1-12)
+  if (m < 1 || m > 12) {
+    return false;
+  }
+
+  // 检查日期
+  // 获取指定年月的最大天数
+  const maxDay = new Date(y, m, 0).getDate();
+  if (d < 1 || d > maxDay) {
+    return false;
+  }
+
+  return true;
+}
+
 // let reflushBlogCacheTimer = null
 // exports.reflushBlogCache = async () => {
 //   if (reflushBlogCacheTimer) {

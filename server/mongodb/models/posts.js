@@ -117,6 +117,7 @@ var posts = new Schema({
   },
   coverImages: [{ type: Schema.ObjectId, ref: 'attachments' }],
   bangumiList: [{ type: Schema.ObjectId, ref: 'bangumis', default: [] }],
+  movieList: [{ type: Schema.ObjectId, ref: 'movies', default: [] }],
   gameList: [{ type: Schema.ObjectId, ref: 'games', default: [] }],
   bookList: [{ type: Schema.ObjectId, ref: 'books', default: [] }],
   postList: [{ type: Schema.ObjectId, ref: 'posts', default: [] }],

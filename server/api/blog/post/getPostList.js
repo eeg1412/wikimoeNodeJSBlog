@@ -268,7 +268,7 @@ module.exports = async function (req, res, next) {
         break;
     }
   }
-  const filter = '-content -bangumiList -bookList -eventList -gameList -postList -code -editorVersion'
+  const filter = '-content -bangumiList -movieList -bookList -eventList -gameList -postList -code -editorVersion'
   postUtils.findPage(params, postSorting, page, size, filter).then((data) => {
 
     // 返回格式list,total

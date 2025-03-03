@@ -139,6 +139,24 @@ const routes = [
         name: 'BangumiAdd',
         component: () => import(/* webpackChunkName: "BangumiEditor" */ '../views/index/bangumi/BangumiEditor.vue')
       },
+      // MovieList
+      {
+        path: '/movie/list',
+        name: 'MovieList',
+        component: () => import(/* webpackChunkName: "MovieList" */ '../views/index/movie/MovieList.vue')
+      },
+      // MovieEditor
+      {
+        path: '/movie/editor/:id',
+        name: 'MovieEdit',
+        component: () => import(/* webpackChunkName: "MovieEditor" */ '../views/index/movie/MovieEditor.vue')
+      },
+      // MovieEditor
+      {
+        path: '/movie/add',
+        name: 'MovieAdd',
+        component: () => import(/* webpackChunkName: "MovieEditor" */ '../views/index/movie/MovieEditor.vue')
+      },
       // SidebarList
       {
         path: '/sidebar/list',

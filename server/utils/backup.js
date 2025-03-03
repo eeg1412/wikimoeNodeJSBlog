@@ -14,6 +14,7 @@ const albumsUtil = require('../mongodb/utils/albums');
 const attachmentsUtil = require('../mongodb/utils/attachments');
 const backupsUtil = require('../mongodb/utils/backups');
 const bangumisUtil = require('../mongodb/utils/bangumis');
+const moviesUtil = require('../mongodb/utils/movies');
 const bannersUtil = require('../mongodb/utils/banners');
 const booksUtil = require('../mongodb/utils/books');
 const booktypesUtil = require('../mongodb/utils/booktypes');
@@ -43,6 +44,7 @@ const modelUtilMap = {
   'attachments': attachmentsUtil,
   'backups': backupsUtil,
   'bangumis': bangumisUtil,
+  'movies': moviesUtil,
   'banners': bannersUtil,
   'books': booksUtil,
   'booktypes': booktypesUtil,

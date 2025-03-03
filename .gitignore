@@ -8,6 +8,7 @@ data
 /server/public/upload/banner/*
 /server/public/upload/siteImg/*
 /server/public/upload/bangumi/*
+/server/public/upload/movie/*
 /server/public/upload/gameCover/*
 /server/public/upload/bookCover/*
 /server/public/content/uploadfile/*
