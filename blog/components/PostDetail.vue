@@ -103,6 +103,13 @@
           <PageBangumi />
         </div>
       </template>
+      <!-- movieList -->
+      <template v-else-if="pageTemplate === 'movieList'">
+        <div>
+          <h2 class="post-title mb-3">{{ postData.data.title }}</h2>
+          <PageMovieList />
+        </div>
+      </template>
       <!-- gameList -->
       <template v-else-if="pageTemplate === 'gameList'">
         <div>
@@ -252,6 +259,7 @@
       :bangumiList="postData.data.bangumiList"
       :gameList="postData.data.gameList"
       :bookList="postData.data.bookList"
+      :movieList="postData.data.movieList"
     />
     <!-- randomPostList -->
     <PostPageRandomPostList

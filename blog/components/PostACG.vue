@@ -18,6 +18,9 @@
       >
         <BangumiItem :bangumi="bangumi" />
       </div>
+      <div v-for="movie in movieList" :key="movie._id" class="post-acg-item">
+        <MovieItem :movie="movie" />
+      </div>
       <div v-for="book in bookList" :key="book._id" class="post-acg-item">
         <BookItem :book="book" />
       </div>
@@ -30,6 +33,12 @@
 <script setup>
 const props = defineProps({
   bangumiList: {
+    type: Array,
+    default() {
+      return []
+    },
+  },
+  movieList: {
     type: Array,
     default() {
       return []
@@ -50,7 +59,10 @@ const props = defineProps({
 })
 const contentCount = computed(() => {
   return (
-    props.bangumiList.length + props.gameList.length + props.bookList.length
+    props.bangumiList.length +
+    props.gameList.length +
+    props.bookList.length +
+    props.movieList.length
   )
 })
 </script>

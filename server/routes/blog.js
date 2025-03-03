@@ -185,6 +185,13 @@ const blogRouteSetting = [
     middleware: [],
     controller: require('../api/blog/bangumi/getBangumiYearList'),
   },
+  // getMovieList
+  {
+    path: '/movie/list',
+    method: 'get',
+    middleware: [],
+    controller: require('../api/blog/movie/getMovieList'),
+  },
   // getSortDetail
   {
     path: '/sort/detail',
