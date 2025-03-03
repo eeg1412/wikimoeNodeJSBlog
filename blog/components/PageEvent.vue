@@ -133,11 +133,12 @@ import moment from 'moment'
 const router = useRouter()
 const route = useRoute()
 const onlyRouteChange = ref(false)
+let hash = route.hash
 const setRouterQuery = (query) => {
   const nowQuery = route.query
   router.replace({
     query: { ...nowQuery, ...query },
-    hash: route.hash,
+    hash: hash,
   })
 }
 const now = new Date()
@@ -436,6 +437,7 @@ onMounted(() => {
         }
       }
     })
+    hash = undefined
   })
 })
 onUnmounted(() => {})

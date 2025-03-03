@@ -215,11 +215,12 @@ import {
 const route = useRoute()
 const router = useRouter()
 const onlyRouteChange = ref(false)
+let hash = route.hash
 const setRouterQuery = (query) => {
   const nowQuery = route.query
   router.replace({
     query: { ...nowQuery, ...query },
-    hash: route.hash,
+    hash: hash,
   })
 }
 
@@ -501,6 +502,7 @@ onMounted(() => {
         page: 1,
       })
     }
+    hash = undefined
   })
 })
 </script>
