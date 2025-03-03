@@ -34,7 +34,8 @@
     <div class="acgn-right-content content-h-170 custom-scroll">
       <div class="w-full flex flex-col">
         <div class="font-bold mb-1 flex-shrink-0">
-          {{ bangumi.title }}
+          <span class="bangumi-block bg-orange-700" v-if="showType">番剧</span
+          >{{ bangumi.title }}
         </div>
         <div
           class="text-sm mb-1 text-gray-400 flex-shrink-0 w_10 flex items-center"
@@ -84,6 +85,10 @@ const props = defineProps({
     type: Object,
     required: true,
   },
+  showType: {
+    type: Boolean,
+    default: false,
+  },
 })
 const setDataHrefList = (cover) => {
   return [
@@ -97,7 +102,7 @@ const setDataHrefList = (cover) => {
 .bangumi-cover-body {
   width: 100px;
 }
-.bangumi-platform-block {
+.bangumi-block {
   color: #fff;
   padding: 2px 5px;
   border-radius: 2px;

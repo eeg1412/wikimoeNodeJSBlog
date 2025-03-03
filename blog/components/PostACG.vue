@@ -16,10 +16,10 @@
         :key="bangumi._id"
         class="post-acg-item"
       >
-        <BangumiItem :bangumi="bangumi" />
+        <BangumiItem :bangumi="bangumi" showType />
       </div>
       <div v-for="movie in movieList" :key="movie._id" class="post-acg-item">
-        <MovieItem :movie="movie" />
+        <MovieItem :movie="movie" showType />
       </div>
       <div v-for="book in bookList" :key="book._id" class="post-acg-item">
         <BookItem :book="book" />

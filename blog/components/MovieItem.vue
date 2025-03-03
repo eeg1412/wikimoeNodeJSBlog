@@ -32,7 +32,8 @@
     <div class="acgn-right-content content-h-170 custom-scroll">
       <div class="w-full flex flex-col">
         <div class="font-bold mb-1 flex-shrink-0">
-          {{ movie.title }}
+          <span class="movie-block bg-cyan-700" v-if="showType">电影</span
+          >{{ movie.title }}
         </div>
         <div
           class="text-sm mb-1 text-gray-400 flex-shrink-0 w_10 flex items-center"
@@ -74,6 +75,10 @@ const props = defineProps({
     type: Object,
     required: true,
   },
+  showType: {
+    type: Boolean,
+    default: false,
+  },
 })
 const setDataHrefList = (cover) => {
   return [
@@ -93,7 +98,7 @@ const watDate = computed(() => {
 .movie-cover-body {
   width: 100px;
 }
-.movie-platform-block {
+.movie-block {
   color: #fff;
   padding: 2px 5px;
   border-radius: 2px;
