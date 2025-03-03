@@ -35,6 +35,42 @@
                     </template>
                   </UInput>
                 </div>
+
+                <!-- 观看年份 -->
+                <div class="mb-3">
+                  <div class="text-sm font-medium mb-1">观看年份</div>
+                  <div class="flex flex-wrap">
+                    <div class="mr-1 mb-1">
+                      <UButton
+                        label="全部年份"
+                        size="2xs"
+                        :variant="
+                          filterCache.year === undefined ? 'solid' : 'ghost'
+                        "
+                        @click="
+                          selectYear(
+                            { name: '全部平台', _id: undefined },
+                            close
+                          )
+                        "
+                      />
+                    </div>
+                    <div
+                      class="mr-1 mb-1"
+                      v-for="(year, index) in yearList"
+                      :key="year"
+                    >
+                      <UButton
+                        :label="yearText(year)"
+                        size="2xs"
+                        :variant="
+                          filterCache.year === year.year ? 'solid' : 'ghost'
+                        "
+                        @click="selectYear(year, close)"
+                      />
+                    </div>
+                  </div>
+                </div>
               </div>
 
               <!-- 应用按钮 -->
@@ -144,7 +180,11 @@
   </div>
 </template>
 <script setup>
-import { getMovieListApi, getMovieListApiFetch } from '@/api/movie'
+import {
+  getMovieListApi,
+  getMovieListApiFetch,
+  getMovieYearListApi,
+} from '@/api/movie'
 const route = useRoute()
 const router = useRouter()
 const onlyRouteChange = ref(false)
@@ -162,11 +202,12 @@ const size = 20
 const rawQuery = {
   page: 1,
   sortType: 'startTime',
+  year: undefined,
   keyword: '',
 }
 const params = computed(() => {
   const routeQuery = JSON.parse(JSON.stringify(route.query))
-  const numberKey = ['page']
+  const numberKey = ['page', 'year']
   const newParams = { ...rawQuery }
   Object.keys(newParams).forEach((key) => {
     if (routeQuery[key]) {
@@ -208,6 +249,15 @@ const selectType = (type, close) => {
   close()
 }
 
+// 观看年份
+const yearList = ref([])
+await getMovieYearListApi().then((res) => {
+  yearList.value = res.data.value.data?.list || []
+})
+const selectYear = (year, close) => {
+  filterCache.year = year.year
+}
+
 const checkedParams = {
   ...rawQuery,
 }
@@ -216,11 +266,16 @@ const initParams = () => {
   const queryPage = route.query.page
     ? Math.abs(parseInt(route.query.page, 10))
     : null
+  const queryYear = Number(route.query.year)
   const querySortType = route.query.sortType
   const queryKeyword = route.query.keyword
   // page必须是数字
   if (queryPage && !isNaN(queryPage)) {
     params.page = Number(queryPage)
+  }
+  // year必须是年份列表里的
+  if (yearList.value.find((item) => item.year === queryYear)) {
+    checkedParams.year = queryYear
   }
   // sortType必须是sortTypeList里的
   if (sortTypeList.find((item) => item.value === querySortType)) {
@@ -290,10 +345,14 @@ const toNext = () => {
 const filterOpen = ref(false)
 const filterCache = reactive({
   keyword: params.value.keyword,
+  year: params.value.year,
 })
 const filterCount = computed(() => {
   let count = 0
   if (params.value.keyword) {
+    count++
+  }
+  if (params.value.year) {
     count++
   }
   return count
@@ -310,6 +369,7 @@ watch(filterOpen, (val) => {
   if (val) {
     // 还原filterCache
     filterCache.keyword = params.value.keyword
+    filterCache.year = params.value.year
   }
 })
 // 添加一个方法，用于同时应用年份和季度筛选
@@ -317,8 +377,13 @@ const applyFilters = async (close) => {
   if (close) close()
   setRouterQuery({
     keyword: filterCache.keyword,
+    year: filterCache.year,
     page: 1,
   })
+}
+
+const yearText = (year) => {
+  return `${year.year}年(${year.count})`
 }
 
 // 监听路由变化

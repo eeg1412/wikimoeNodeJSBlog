@@ -4,7 +4,7 @@ const log4js = require('log4js')
 const userApiLog = log4js.getLogger('userApi')
 
 module.exports = async function (req, res, next) {
-  let { page, sortType, keyword } = req.query
+  let { page, sortType, keyword, year } = req.query
   page = parseInt(page)
   let size = 20
   // 判断page和size是否为数字
@@ -18,6 +18,19 @@ module.exports = async function (req, res, next) {
   }
   const params = {
     status: 1,
+  }
+
+  if (year) {
+    year = parseInt(year)
+    if (!utils.validateDate(year, 12, 31)) {
+      res.status(400).json({
+        errors: [{
+          message: '日期格式不正确'
+        }]
+      });
+      return
+    }
+    params.year = year
   }
 
   if (keyword) {

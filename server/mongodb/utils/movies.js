@@ -60,3 +60,8 @@ exports.deleteOne = async function (filters) {
   // document查询
   return await moviesModel.deleteOne(filters);
 }
+
+// 聚合
+exports.aggregate = async function (pipeline) {
+  return await moviesModel.aggregate(pipeline);
+}

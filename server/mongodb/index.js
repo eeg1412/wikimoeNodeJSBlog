@@ -40,6 +40,7 @@ db.on('open', async () => {
   cacheDataUtils.getSortList()
   cacheDataUtils.getPostArchiveList()
   cacheDataUtils.getBangumiYearList()
+  cacheDataUtils.getMovieYearList()
   rssToolUtils.reflushRSS()
   sitemapToolUtils.reflushSitemap()
   global.$isReady = true

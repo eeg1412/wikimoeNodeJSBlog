@@ -116,6 +116,7 @@ module.exports = async function (req, res, next) {
       data: data
     })
     adminApiLog.info(`movie update success`)
+    cacheDataUtils.getMovieYearList()
     // utils.reflushBlogCache()
   }).catch((err) => {
     res.status(400).json({

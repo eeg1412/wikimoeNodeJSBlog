@@ -3,6 +3,7 @@ const utils = require('../../../utils/utils')
 const log4js = require('log4js')
 const mongoose = require('mongoose')
 const adminApiLog = log4js.getLogger('adminApi')
+const cacheDataUtils = require('../../../config/cacheData')
 
 module.exports = async function (req, res, next) {
 
@@ -64,6 +65,7 @@ module.exports = async function (req, res, next) {
     res.send({
       data: data
     })
+    cacheDataUtils.getMovieYearList()
     adminApiLog.info(`movie create success`)
   }).catch((err) => {
     res.status(400).json({

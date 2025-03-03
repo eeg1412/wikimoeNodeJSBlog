@@ -4,6 +4,7 @@ const bannerUtils = require('../mongodb/utils/banners')
 const sortUtils = require('../mongodb/utils/sorts')
 const postUtils = require('../mongodb/utils/posts')
 const bangumiUtils = require('../mongodb/utils/bangumis')
+const movieUtils = require('../mongodb/utils/movies')
 const bookUtils = require('../mongodb/utils/books')
 const gameUtils = require('../mongodb/utils/games')
 const commentUtils = require('../mongodb/utils/comments')
@@ -348,6 +349,67 @@ exports.getBangumiSeasonList = async function () {
   })
   return promise
 }
+// 获取电影观看年份
+exports.getMovieYearList = async function () {
+  console.info('movieYearList get')
+  const promise = new Promise((resolve, reject) => {
+    movieUtils.aggregate([
+      {
+        $match: {
+          status: 1,
+          // 有year month day
+          year: { $ne: null },
+          month: { $ne: null },
+          day: { $ne: null }
+        }
+      },
+      {
+        $facet: {
+          data: [
+            {
+              $group: {
+                _id: "$year",
+                count: { $sum: 1 }
+              }
+            },
+            {
+              $project: {
+                _id: 0,
+                year: "$_id",
+                count: 1
+              }
+            },
+            {
+              $sort: {
+                'year': -1
+              }
+            }
+          ]
+        }
+      }
+    ]).then((data) => {
+      let base = {
+        list: []
+      }
+      const data_ = data[0]
+      if (data_) {
+        if (data_.data.length > 0) {
+          base.list = data_.data
+        }
+      }
+      global.$cacheData.movieYearList = base
+      resolve(data)
+      console.info('movieYearList get success')
+    }).catch((err) => {
+      global.$cacheData.movieYearList = null
+      reject(err)
+      console.error('movieYearList get fail')
+    })
+  })
+  return promise
+}
+
+
 // 检查当季追番是否需要更新
 exports.checkBangumiSeasonList = async function () {
   const yearSeason = utils.getYearSeason()

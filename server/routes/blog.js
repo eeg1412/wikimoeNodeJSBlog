@@ -192,6 +192,13 @@ const blogRouteSetting = [
     middleware: [],
     controller: require('../api/blog/movie/getMovieList'),
   },
+  // getMovieYearList
+  {
+    path: '/movie/year/list',
+    method: 'get',
+    middleware: [],
+    controller: require('../api/blog/movie/getMovieYearList'),
+  },
   // getSortDetail
   {
     path: '/sort/detail',

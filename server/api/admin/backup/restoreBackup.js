@@ -110,6 +110,7 @@ module.exports = async function (req, res, next) {
         cacheDataUtils.getSortList()
         cacheDataUtils.getPostArchiveList()
         cacheDataUtils.getBangumiYearList()
+        cacheDataUtils.getMovieYearList()
         rssToolUtils.reflushRSS()
         sitemapToolUtils.reflushSitemap()
       });
