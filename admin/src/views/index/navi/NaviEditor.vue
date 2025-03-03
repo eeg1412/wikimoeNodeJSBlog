@@ -108,6 +108,15 @@ export default {
                     `URL中包含了查询参数"${queryPart}"，请将这部分内容填写到下方的"页面参数"一栏`
                   )
                 )
+              } else if (form.isdefault) {
+                // 校验是否包含了域名或者协议，否则不是本站链接，提醒用户
+                if (!value.startsWith('/') || value.startsWith('//:')) {
+                  callback(
+                    new Error(`本站链接应该以'/'开头，如：/path/to/page`)
+                  )
+                } else {
+                  callback()
+                }
               } else {
                 callback()
               }
