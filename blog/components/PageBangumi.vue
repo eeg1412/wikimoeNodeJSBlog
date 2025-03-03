@@ -243,18 +243,23 @@ const rawQuery = {
 const params = computed(() => {
   const routeQuery = JSON.parse(JSON.stringify(route.query))
   const numberKey = ['page', 'status', 'year', 'season']
-  numberKey.forEach((key) => {
+  const newParams = { ...rawQuery }
+  Object.keys(newParams).forEach((key) => {
     if (routeQuery[key]) {
-      const num = Number(routeQuery[key])
+      newParams[key] = routeQuery[key]
+    }
+  })
+  numberKey.forEach((key) => {
+    if (newParams[key]) {
+      const num = Number(newParams[key])
       if (!isNaN(num)) {
-        routeQuery[key] = num
+        newParams[key] = num
+      } else {
+        newParams[key] = rawQuery[key]
       }
     }
   })
-  return {
-    ...rawQuery,
-    ...routeQuery,
-  }
+  return newParams
 })
 
 const sortTypeMap = {
