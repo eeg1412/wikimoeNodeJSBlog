@@ -5,7 +5,17 @@ const userApiLog = log4js.getLogger('userApi')
 
 module.exports = async function (req, res, next) {
   let { year, season, page, sortType, status, keyword } = req.query
+  page = parseInt(page)
   let size = 20
+  // 判断page和size是否为数字
+  if (!utils.isNumber(page)) {
+    res.status(400).json({
+      errors: [{
+        message: '参数错误'
+      }]
+    })
+    return
+  }
   const params = {
     status: 1,
   }
@@ -72,15 +82,6 @@ module.exports = async function (req, res, next) {
       options: {
         min: 1,
         max: 4
-      }
-    },
-    {
-      key: 'page',
-      label: '页码',
-      type: 'isInt',
-      required: false,
-      options: {
-        min: 1
       }
     }
   ]
