@@ -279,7 +279,10 @@ const tryOpenEvent = (data) => {
   currentData.value = data
   eventOpen.value = true
   // 路由添加eventid
-  setRouterQuery({ eventid: data._id })
+  const year = startTime.value.getFullYear()
+  const month = startTime.value.getMonth() + 1
+  onlyRouteChange.value = true
+  setRouterQuery({ eventid: data._id, year, month })
 }
 
 const getEventDetail = async () => {
@@ -391,7 +394,10 @@ const dayClick = (day, dayEventIdMap) => {
   dayEventList.value = eventList.value.filter((item) =>
     idList.includes(item._id)
   )
-  setRouterQuery({ daydetail: day.monthDay })
+  const year = startTime.value.getFullYear()
+  const month = startTime.value.getMonth() + 1
+  onlyRouteChange.value = true
+  setRouterQuery({ daydetail: day.monthDay, year, month })
 }
 
 watch(
