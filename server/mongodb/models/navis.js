@@ -41,6 +41,10 @@ var navis = new Schema({
     type: String,
     default: ''
   },
+  deepmatch: {
+    type: Boolean,
+    default: false
+  }
 }, { timestamps: true });
 
 module.exports = mongoose.model('navis', navis);

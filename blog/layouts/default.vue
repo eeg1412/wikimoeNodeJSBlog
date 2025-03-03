@@ -76,7 +76,7 @@
           <!-- 导航 -->
           <ul class="blog-layout-sidebar-body custom-scroll">
             <template v-for="(item, index) in naviList" :key="index">
-              <NaviItem :item="item" :currentPath="currentPath" />
+              <NaviItem :item="item" />
             </template>
           </ul>
           <!-- 图片 -->
@@ -328,10 +328,6 @@ const naviList = computed(() => {
   ]
   // console.log(newList)
   return newList
-})
-// 当前路由的path
-const currentPath = computed(() => {
-  return route.path
 })
 
 const keyword = ref('')

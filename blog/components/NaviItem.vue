@@ -26,21 +26,24 @@
           v-show="showChildren"
         >
           <template v-for="(item, index) in item.children" :key="index">
-            <NaviItem :item="item" :currentPath="currentPath" />
+            <NaviItem :item="item" />
           </template>
         </ul>
       </Transition>
     </template>
-    <template v-else-if="item.isdefault && !item.newtab">
-      <div
-        class="blog-layout-sidebar-item active"
-        v-if="item.url === currentPath"
-      >
+    <template v-else-if="checkActive(item)">
+      <div class="blog-layout-sidebar-item active">
         <span>{{ item.naviname }}</span>
+        <UIcon
+          class="ml5"
+          name="i-heroicons-arrow-top-right-on-square"
+          v-if="!item.isdefault"
+        />
       </div>
+    </template>
+    <template v-else-if="item.isdefault && !item.newtab">
       <nuxt-link
         class="blog-layout-sidebar-item"
-        v-else
         :to="item.url + (item.query || '')"
       >
         <span>{{ item.naviname }}</span>
@@ -50,7 +53,6 @@
       <!-- 非本站链接 -->
       <a
         class="blog-layout-sidebar-item"
-        :class="{ active: item.url === currentPath }"
         :href="item.url + (item.query || '')"
         :target="item.newtab ? '_blank' : '_self'"
       >
@@ -71,12 +73,24 @@ const props = defineProps({
     type: Object,
     required: true,
   },
-  currentPath: {
-    type: String,
-    required: true,
-  },
 })
+const route = useRoute()
 const showChildren = ref(false)
+const checkActive = (item) => {
+  const currentPath = route.path
+  if (item.deepmatch) {
+    const currentQuery = route.query
+    let currentQueryStr = Object.keys(currentQuery)
+      .map((key) => `${key}=${currentQuery[key]}`)
+      .join('&')
+    currentQueryStr = currentQueryStr ? `?${currentQueryStr}` : ''
+    const itemQuery = item.query
+    const itemUrl = item.url
+    return itemUrl + itemQuery === currentPath + currentQueryStr
+  } else {
+    return item.url === currentPath
+  }
+}
 
 const enter = (el) => {
   el.style.overflow = 'hidden'

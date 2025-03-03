@@ -53,6 +53,11 @@
         <el-form-item label="本站链接" prop="isdefault">
           <el-switch v-model="form.isdefault" />
         </el-form-item>
+        <!-- deepmatch 深度匹配 -->
+        <el-form-item label="深度匹配" prop="deepmatch">
+          <el-switch v-model="form.deepmatch" />
+          <div class="w_10">※开启深度匹配后导航的激活状态将会匹配页面参数</div>
+        </el-form-item>
         <el-form-item label="页面参数" prop="query">
           <el-input
             v-model.trim="form.query"
@@ -83,6 +88,7 @@ export default {
       taxis: 0,
       parent: null,
       isdefault: false,
+      deepmatch: false,
       query: '',
       __v: null,
     })
@@ -163,6 +169,7 @@ export default {
           form.taxis = res.data.data.taxis
           form.parent = res.data.data.parent || null
           form.isdefault = res.data.data.isdefault
+          form.deepmatch = res.data.data.deepmatch
           form.query = res.data.data.query
         })
         .catch(() => {})

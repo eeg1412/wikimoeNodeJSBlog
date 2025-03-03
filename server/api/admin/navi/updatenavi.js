@@ -15,6 +15,7 @@ module.exports = async function (req, res, next) {
     taxis,
     parent,
     isdefault,
+    deepmatch,
     query
   } = req.body
   if (!id) {
@@ -47,11 +48,12 @@ module.exports = async function (req, res, next) {
   const params = {
     naviname: naviname,
     url,
-    newtab: newtab || false,
+    newtab: newtab ? true : false,
     status: status || 0,
     taxis: taxis || 0,
     parent: parent || null,
-    isdefault: isdefault || false,
+    isdefault: isdefault ? true : false,
+    deepmatch: deepmatch ? true : false,
     query: query || ''
   }
   const rule = [

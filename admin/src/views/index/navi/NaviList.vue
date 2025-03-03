@@ -46,6 +46,13 @@
             <el-tag v-else type="danger">否</el-tag>
           </template>
         </el-table-column>
+        <!-- deepmatch -->
+        <el-table-column prop="deepmatch" label="深度匹配" min-width="110px">
+          <template #default="{ row }">
+            <el-tag v-if="row.deepmatch" type="success">是</el-tag>
+            <el-tag v-else type="danger">否</el-tag>
+          </template>
+        </el-table-column>
         <el-table-column prop="query" label="参数" min-width="150px" />
         <el-table-column label="操作" width="140" fixed="right">
           <template #default="{ row }">
