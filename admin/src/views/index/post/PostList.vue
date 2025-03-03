@@ -719,7 +719,7 @@ export default {
       if (year && month && day) {
         return `【${year}年${month}月${day}日观看】`
       }
-      return item.title
+      return ''
     }
 
     onMounted(() => {
