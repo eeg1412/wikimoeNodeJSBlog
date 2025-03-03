@@ -34,7 +34,7 @@
     <div class="acgn-right-content content-h-170 custom-scroll">
       <div class="w-full flex flex-col">
         <div class="font-bold mb-1 flex-shrink-0">
-          <span class="bangumi-block bg-orange-700" v-if="showType">番剧</span
+          <span class="bangumi-block bg-orange-500" v-if="showType">番剧</span
           >{{ bangumi.title }}
         </div>
         <div

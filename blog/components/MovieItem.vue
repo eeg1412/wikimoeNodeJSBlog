@@ -32,7 +32,7 @@
     <div class="acgn-right-content content-h-170 custom-scroll">
       <div class="w-full flex flex-col">
         <div class="font-bold mb-1 flex-shrink-0">
-          <span class="movie-block bg-cyan-700" v-if="showType">电影</span
+          <span class="movie-block bg-cyan-600" v-if="showType">电影</span
           >{{ movie.title }}
         </div>
         <div
