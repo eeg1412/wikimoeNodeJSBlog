@@ -25,12 +25,12 @@
                   >
                     <template #trailing>
                       <UButton
-                        v-show="filterCache.keyword !== ''"
+                        v-show="filterCache.keyword"
                         color="gray"
                         variant="link"
                         icon="i-heroicons-x-mark-20-solid"
                         :padded="false"
-                        @click="filterCache.keyword = ''"
+                        @click="filterCache.keyword = undefined"
                       />
                     </template>
                   </UInput>
@@ -203,7 +203,7 @@ const rawQuery = {
   page: 1,
   sortType: 'startTime',
   year: undefined,
-  keyword: '',
+  keyword: undefined,
 }
 const params = computed(() => {
   const routeQuery = JSON.parse(JSON.stringify(route.query))
