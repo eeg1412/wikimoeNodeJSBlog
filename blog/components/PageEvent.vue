@@ -132,12 +132,65 @@ import moment from 'moment'
 
 const router = useRouter()
 const route = useRoute()
+const onlyRouteChange = ref(false)
+const setRouterQuery = (query) => {
+  const nowQuery = route.query
+  router.replace({
+    query: { ...nowQuery, ...query },
+    hash: route.hash,
+  })
+}
+const now = new Date()
 
 const toast = useToast()
 
 const eventList = ref([])
-const startTime = ref(null)
-const endTime = ref(null)
+const rawQuery = {
+  year: undefined,
+  month: undefined,
+}
+const params = computed(() => {
+  const routeQuery = JSON.parse(JSON.stringify(route.query))
+  const numberKey = ['year', 'month']
+  const newParams = { ...rawQuery }
+  Object.keys(newParams).forEach((key) => {
+    if (routeQuery[key]) {
+      newParams[key] = routeQuery[key]
+    }
+  })
+  numberKey.forEach((key) => {
+    if (newParams[key]) {
+      const num = Number(newParams[key])
+      if (!isNaN(num)) {
+        newParams[key] = num
+      } else {
+        newParams[key] = rawQuery[key]
+      }
+    }
+  })
+  return newParams
+})
+const startTime = computed(() => {
+  const year = params.value.year || now.getFullYear()
+  const month = params.value.month || now.getMonth() + 1
+  // year的范围是1980年到当前年份+20年,不符合返回null
+  if (year < 1980 || year > now.getFullYear() + 20) {
+    return null
+  }
+  // month的范围是1-12
+  if (month < 1 || month > 12) {
+    return null
+  }
+
+  return new Date(year, month - 1, 1)
+})
+const endTime = computed(() => {
+  const date = startTime.value
+  if (!date) {
+    return null
+  }
+  return new Date(date.getFullYear(), date.getMonth() + 1, 0, 23, 59, 59)
+})
 // 月
 const monthYear = computed(() => {
   const start = new Date(startTime.value)
@@ -145,7 +198,11 @@ const monthYear = computed(() => {
   return `${start.getFullYear()}年${start.getMonth() + 1}月`
 })
 const eventLoading = ref(false)
-const getList = async (hash) => {
+const getList = async () => {
+  if (!startTime.value || !endTime.value) {
+    setRouterQuery({ year: undefined, month: undefined })
+    return
+  }
   eventLoading.value = true
   eventList.value = []
   const res = await getEventListApiFetch({
@@ -153,11 +210,6 @@ const getList = async (hash) => {
     endTime: new Date(endTime.value).toISOString(),
   })
     .then((res) => {
-      // 获取startTime.value的年和月
-      const year = startTime.value.getFullYear()
-      const month = startTime.value.getMonth() + 1
-      // 设置
-      changeRouter({ year, month }, hash)
       return res
     })
     .catch((err) => {
@@ -169,35 +221,10 @@ const getList = async (hash) => {
 
 // 开始时间和结束时间的范围在1980年1月1日到本地时间的20年之后
 // 20年之后的时间
-const maxDate = new Date(new Date().getFullYear() + 20, 11, 31)
+const maxDate = new Date(now.getFullYear() + 20, 11, 31)
 // 1980年1月1日
 const minDate = new Date(1980, 0, 1)
-// 初始化时间
-const initTime = () => {
-  // 从query中获取年和月
-  const query = route.query
-  const year = parseInt(query.year)
-  const month = parseInt(query.month) - 1
 
-  if (year && month >= 0 && month <= 11) {
-    const proposedStartDate = new Date(year, month, 1)
-    const proposedEndDate = new Date(year, month + 1, 0)
-    proposedEndDate.setHours(23, 59, 59)
-
-    if (proposedStartDate >= minDate && proposedEndDate <= maxDate) {
-      startTime.value = proposedStartDate
-      endTime.value = proposedEndDate
-      return
-    }
-  }
-
-  const now = new Date()
-  // 获取当前系统的月的第一天和最后一天
-  startTime.value = new Date(now.getFullYear(), now.getMonth(), 1)
-  const endDate = new Date(now.getFullYear(), now.getMonth() + 1, 0)
-  endDate.setHours(23, 59, 59)
-  endTime.value = endDate
-}
 // 是否显示上一年
 const showLastYear = computed(() => {
   const date = new Date(startTime.value)
@@ -224,41 +251,25 @@ const showNextMonth = computed(() => {
 const lastYear = () => {
   const date = new Date(startTime.value)
   date.setFullYear(date.getFullYear() - 1)
-  startTime.value = new Date(date.getFullYear(), date.getMonth(), 1)
-  let endDate = new Date(date.getFullYear(), date.getMonth() + 1, 0)
-  endDate.setHours(23, 59, 59)
-  endTime.value = endDate
-  getList()
+  setRouterQuery({ year: date.getFullYear(), month: date.getMonth() + 1 })
 }
 // 下一年
 const nextYear = () => {
   const date = new Date(startTime.value)
   date.setFullYear(date.getFullYear() + 1)
-  startTime.value = new Date(date.getFullYear(), date.getMonth(), 1)
-  let endDate = new Date(date.getFullYear(), date.getMonth() + 1, 0)
-  endDate.setHours(23, 59, 59)
-  endTime.value = endDate
-  getList()
+  setRouterQuery({ year: date.getFullYear(), month: date.getMonth() + 1 })
 }
 // 上个月
 const lastMonth = () => {
   const date = new Date(startTime.value)
   date.setMonth(date.getMonth() - 1)
-  startTime.value = new Date(date.getFullYear(), date.getMonth(), 1)
-  let endDate = new Date(date.getFullYear(), date.getMonth() + 1, 0)
-  endDate.setHours(23, 59, 59)
-  endTime.value = endDate
-  getList()
+  setRouterQuery({ year: date.getFullYear(), month: date.getMonth() + 1 })
 }
 // 下个月
 const nextMonth = () => {
   const date = new Date(startTime.value)
   date.setMonth(date.getMonth() + 1)
-  startTime.value = new Date(date.getFullYear(), date.getMonth(), 1)
-  let endDate = new Date(date.getFullYear(), date.getMonth() + 1, 0)
-  endDate.setHours(23, 59, 59)
-  endTime.value = endDate
-  getList()
+  setRouterQuery({ year: date.getFullYear(), month: date.getMonth() + 1 })
 }
 
 const eventOpen = ref(false)
@@ -267,7 +278,7 @@ const tryOpenEvent = (data) => {
   currentData.value = data
   eventOpen.value = true
   // 路由添加eventid
-  changeRouter({ eventid: data._id })
+  setRouterQuery({ eventid: data._id })
 }
 
 const getEventDetail = async () => {
@@ -294,7 +305,7 @@ const getEventDetail = async () => {
         })
       }
       if (route.query.eventid) {
-        removeRouterQuery('eventid')
+        setRouterQuery({ eventid: undefined })
       }
     })
     .finally(() => {
@@ -305,9 +316,9 @@ const getEventDetail = async () => {
 // watch route
 watch(
   () => route.query,
-  (newVal, oldVal) => {
-    if (newVal.eventid) {
-      const data = eventList.value.find((item) => item._id === newVal.eventid)
+  (newQuery, oldQuery) => {
+    if (newQuery.eventid) {
+      const data = eventList.value.find((item) => item._id === newQuery.eventid)
       if (data) {
         currentData.value = data
         eventOpen.value = true
@@ -317,6 +328,41 @@ watch(
     } else {
       eventOpen.value = false
     }
+    if (
+      newQuery.daydetail &&
+      moment(newQuery.daydetail, 'YYYY-MM-DD', true).isValid()
+    ) {
+      getEventListByDay()
+    } else {
+      dayEventListOpen.value = false
+    }
+    if (onlyRouteChange.value) {
+      onlyRouteChange.value = false
+    } else {
+      console.log('新的query:', newQuery)
+      console.log('旧的query:', oldQuery)
+      // 需要对比的key
+      const compareKeys = Object.keys(rawQuery)
+      // 拾取newQuery中的compareKeys
+      const newQueryCompareObj = {}
+      compareKeys.forEach((key) => {
+        if (newQuery[key]) {
+          newQueryCompareObj[key] = newQuery[key]
+        }
+      })
+      // 拾取oldQuery中的compareKeys
+      const oldQueryCompareObj = {}
+      compareKeys.forEach((key) => {
+        if (oldQuery[key]) {
+          oldQueryCompareObj[key] = oldQuery[key]
+        }
+      })
+      // 对比两个对象
+      const diff = changedParams(newQueryCompareObj, oldQueryCompareObj)
+      if (diff.length > 0) {
+        getList()
+      }
+    }
   }
 )
 
@@ -324,26 +370,27 @@ watch(
   () => eventOpen.value,
   (newVal) => {
     if (!newVal && route.query.eventid) {
-      removeRouterQuery('eventid')
+      setRouterQuery({ eventid: undefined })
     }
   }
 )
 
 const dayEventListOpen = ref(false)
 const dayEventList = ref([])
-const dayEventTitle = ref('')
-const setDayEventTitle = (YYYYMMDD) => {
-  const date = moment(YYYYMMDD, 'YYYY-MM-DD')
-  dayEventTitle.value = `${date.format('YYYY年M月D日')}活动`
-}
+const dayEventTitle = computed(() => {
+  if (route.query.daydetail) {
+    const date = moment(route.query.daydetail, 'YYYY-MM-DD')
+    return `${date.format('YYYY年M月D日')}活动`
+  }
+  return ''
+})
+
 const dayClick = (day, dayEventIdMap) => {
   const idList = dayEventIdMap[day.monthDay] || []
   dayEventList.value = eventList.value.filter((item) =>
     idList.includes(item._id)
   )
-  setDayEventTitle(day.monthDay)
-  dayEventListOpen.value = true
-  changeRouter({ daydetail: day.monthDay })
+  setRouterQuery({ daydetail: day.monthDay })
 }
 
 watch(
@@ -352,13 +399,14 @@ watch(
     if (!newVal) {
       const query = route.query
       if (query.daydetail) {
-        removeRouterQuery('daydetail')
+        setRouterQuery({ daydetail: undefined })
       }
     }
   }
 )
 
-const getEventListByDay = (dateYYYYMMDD) => {
+const getEventListByDay = () => {
+  const dateYYYYMMDD = route.query.daydetail
   const momentDate = moment(dateYYYYMMDD, 'YYYY-MM-DD')
   // 将eventList中开始和结束时间转换成YYYY-MM-DD
   dayEventList.value = eventList.value.filter((item) => {
@@ -368,33 +416,12 @@ const getEventListByDay = (dateYYYYMMDD) => {
       momentDate.isSameOrAfter(startTime) && momentDate.isSameOrBefore(endTime)
     )
   })
-  setDayEventTitle(dateYYYYMMDD)
   dayEventListOpen.value = true
-}
-
-const changeRouter = (newQuery, hash) => {
-  const query = route.query
-  router.replace({
-    query: {
-      eventid: newQuery.eventid || query.eventid || undefined,
-      year: newQuery.year || query.year || undefined,
-      month: newQuery.month || query.month || undefined,
-      daydetail: newQuery.daydetail || query.daydetail || undefined,
-    },
-    hash: hash || undefined,
-  })
-}
-
-const removeRouterQuery = (key) => {
-  const query = JSON.parse(JSON.stringify(route.query))
-  delete query[key]
-  router.replace({ query })
 }
 
 onMounted(() => {
   nextTick(async () => {
-    initTime()
-    await getList(route.hash)
+    await getList()
     nextTick(() => {
       if (route.query.eventid) {
         getEventDetail()
@@ -405,7 +432,7 @@ onMounted(() => {
         if (moment(daydetail, 'YYYY-MM-DD', true).isValid()) {
           getEventListByDay(daydetail)
         } else {
-          removeRouterQuery('daydetail')
+          setRouterQuery({ daydetail: undefined })
         }
       }
     })
