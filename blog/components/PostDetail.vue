@@ -296,7 +296,27 @@
             ref="commentListRef"
             v-if="commentTotal > 0"
           >
-            <div class="comment-list-title">评论：</div>
+            <div class="comment-list-title flex justify-between items-center">
+              <div>评论：</div>
+              <div class="comment-list-sort flex justify-between items-center">
+                <UButton
+                  size="2xs"
+                  :color="commentSortType === 'date' ? 'primary' : 'gray'"
+                  variant="link"
+                  @click="changeCommentSort('date')"
+                  >按时间</UButton
+                >
+                <!-- 中间间隔线 -->
+                <span class="comment-list-sort-line"></span>
+                <UButton
+                  size="2xs"
+                  :color="commentSortType === 'like' ? 'primary' : 'gray'"
+                  variant="link"
+                  @click="changeCommentSort('like')"
+                  >按点赞</UButton
+                >
+              </div>
+            </div>
             <div
               class="comment-list-item header-scroll-margin-top"
               v-for="(item, index) in commentList"
@@ -632,10 +652,19 @@ const commentSize = computed(() => {
 })
 const commentLoading = ref(true)
 const postDetailBody = ref(null)
+const commentSortType = ref('date')
+const changeCommentSort = (type) => {
+  if (commentLoading.value) {
+    return
+  }
+  commentSortType.value = type
+  getCommentList()
+}
 const getCommentList = async (goToCommentListRef) => {
   commentLoading.value = true
   await getCommentListApi({
     id: postid,
+    sorttype: commentSortType.value,
     page: commentPage.value,
   })
     .then((res) => {
@@ -1238,5 +1267,12 @@ onUnmounted(() => {
 .post-html-content-body,
 .post-tweet-detail-content-body {
   font-size: 16px;
+}
+
+.comment-list-sort-line {
+  display: inline-block;
+  width: 1px;
+  height: 0.75rem;
+  background-color: #949494;
 }
 </style>

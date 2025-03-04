@@ -4,7 +4,7 @@ const log4js = require('log4js')
 const userApiLog = log4js.getLogger('userApi')
 
 module.exports = async function (req, res, next) {
-  let { page, id } = req.query
+  let { page, id, sorttype } = req.query
   page = parseInt(page)
   const { siteCommentPageSize: size, } = global.$globalConfig.commentSettings
   // 判断page和size是否为数字
@@ -30,10 +30,18 @@ module.exports = async function (req, res, next) {
       uuid: uuid
     })
   }
-  const sort = {
+  let sort = {
     // top置顶
     top: -1,
-    date: -1
+    date: -1,
+    _id: -1
+  }
+  if (sorttype === 'like') {
+    sort = {
+      top: -1,
+      likes: -1,
+      _id: -1
+    }
   }
   commentUtils.findPage(params, sort, page, size, '-post').then((data) => {
     const keys = ['_id', 'avatar', 'content', 'date', 'nickname', 'url', 'likes', 'isAdmin', 'parent', 'parentId', 'top', 'status'];
