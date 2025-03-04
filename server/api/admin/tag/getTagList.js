@@ -2,6 +2,8 @@ const tagUtils = require('../../../mongodb/utils/tags')
 const utils = require('../../../utils/utils')
 const log4js = require('log4js')
 const adminApiLog = log4js.getLogger('adminApi')
+const mongoose = require('mongoose');
+
 
 module.exports = async function (req, res, next) {
   let { page, size, keyword, idList, shouldCount } = req.query
@@ -24,6 +26,19 @@ module.exports = async function (req, res, next) {
     params.tagname = new RegExp(keyword, 'i')
   }
   if (idList) {
+    // 校验idList是否为数组且是否为ObjectId
+    for (let i = 0; i < idList.length; i++) {
+      if (!utils.isObjectId(idList[i])) {
+        res.status(400).json({
+          errors: [{
+            message: '参数错误'
+          }]
+        })
+        return
+      }
+      // idList[i] 转换为ObjectId
+      idList[i] = new mongoose.Types.ObjectId(idList[i])
+    }
     params._id = { $in: idList }
   }
 
