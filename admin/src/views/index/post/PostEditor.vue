@@ -454,6 +454,7 @@ import {
   loadAndOpenImg,
   replaceSpacesWithUnderscores,
   seasonToStr,
+  nowTimestampToBase36WithRandom,
 } from '@/utils/utils'
 import store from '@/store'
 
@@ -552,7 +553,8 @@ export default {
                 break
               case 'alias':
                 if (isNew) {
-                  form[key] = res.data.data[key] || generateRandomString(8)
+                  form[key] =
+                    res.data.data[key] || nowTimestampToBase36WithRandom()
                 } else {
                   form[key] = res.data.data[key]
                 }

@@ -415,3 +415,19 @@ export const seasonToStr = (season) => {
 export const escapeHtml = (str) => {
     return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
 }
+
+export const nowTimestampToBase36WithRandom = () => {
+    const timestamp = Math.floor(Date.now() / 1000); // 当前时间戳（秒）
+    // 将时间戳转换为36进制字符串
+    let base36String = timestamp.toString(36);
+
+    // 生成2位随机字符串
+    const chars = '0123456789abcdefghijklmnopqrstuvwxyz';
+    let randomString = '';
+    for (let i = 0; i < 2; i++) {
+        randomString += chars.charAt(Math.floor(Math.random() * chars.length));
+    }
+
+    // 返回结果
+    return base36String + randomString;
+}
