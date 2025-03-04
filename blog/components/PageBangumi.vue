@@ -284,7 +284,7 @@ const selectType = (type, close) => {
 }
 
 const size = 20
-const hasPrev = computed(() => params.value.value > 1)
+const hasPrev = computed(() => params.value.page > 1)
 const hasNext = computed(() => params.value.page * size < total.value)
 const toPrev = () => {
   if (hasPrev.value) {

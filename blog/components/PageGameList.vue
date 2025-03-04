@@ -326,7 +326,7 @@ const initParams = () => {
   const queryKeyword = route.query.keyword
   // page必须是数字
   if (queryPage && !isNaN(queryPage)) {
-    params.page = Number(queryPage)
+    checkedParams.page = Number(queryPage)
   }
   // sortType必须是sortTypeList里的
   if (sortTypeList.find((item) => item.value === querySortType)) {

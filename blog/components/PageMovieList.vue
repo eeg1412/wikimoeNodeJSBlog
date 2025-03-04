@@ -271,7 +271,7 @@ const initParams = () => {
   const queryKeyword = route.query.keyword
   // page必须是数字
   if (queryPage && !isNaN(queryPage)) {
-    params.page = Number(queryPage)
+    checkedParams.page = Number(queryPage)
   }
   // year必须是年份列表里的
   if (yearList.value.find((item) => item.year === queryYear)) {
