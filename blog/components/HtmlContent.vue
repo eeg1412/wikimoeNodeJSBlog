@@ -454,7 +454,7 @@ onMounted(() => {
 }
 /* blockquote */
 .html-content-body blockquote {
-  @apply border-l-4 border-primary-200 p-2 mt-2 mb-2 text-primary-400 bg-primary-50 rounded-md;
+  @apply border-l-4 border-primary-200 dark:border-primary-400/40 p-2 mt-2 mb-2 text-primary-400 dark:text-primary-400 bg-primary-50 dark:bg-primary-400/20 rounded-md;
 }
 .html-content-body pre code::-webkit-scrollbar {
   width: 6px;
