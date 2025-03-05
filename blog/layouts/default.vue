@@ -235,6 +235,9 @@
     <div id="rightToolBarMenu"></div>
     <div class="right-tool-bar" id="rightToolBar">
       <GoTop />
+      <ClientOnly>
+        <ThemeChanger />
+      </ClientOnly>
     </div>
   </div>
 </template>

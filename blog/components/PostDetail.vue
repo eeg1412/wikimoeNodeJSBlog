@@ -967,7 +967,18 @@ useSeoMeta({
 const showHeaderListMenu = ref(false)
 const switchShowHeaderListMenu = () => {
   showHeaderListMenu.value = !showHeaderListMenu.value
+  if (showHeaderListMenu.value) {
+    tryCloseRightMenu()
+    setRightMenuCloseFn(() => {
+      showHeaderListMenu.value = false
+    }, 'showHeaderListMenu')
+  }
 }
+watch(showHeaderListMenu, (val) => {
+  if (!val) {
+    clearRightMenuCloseFn('showHeaderListMenu')
+  }
+})
 const activeHeaderDom = ref(null)
 const parseHeaders = () => {
   const parentElement = document.querySelector(

@@ -596,7 +596,18 @@ const likePost = (postId) => {
 const showFilterMenu = ref(false)
 const switchFilterMenu = () => {
   showFilterMenu.value = !showFilterMenu.value
+  if (showFilterMenu.value) {
+    tryCloseRightMenu()
+    setRightMenuCloseFn(() => {
+      showFilterMenu.value = false
+    }, 'postListFilter')
+  }
 }
+watch(showFilterMenu, (val) => {
+  if (!val) {
+    clearRightMenuCloseFn('postListFilter')
+  }
+})
 const switchPostType = (type) => {
   if (type === postType.value) {
     return
