@@ -1128,6 +1128,7 @@ onUnmounted(() => {
   if (alertCommentTimer) {
     clearTimeout(alertCommentTimer)
   }
+  clearRightMenuCloseFn('showHeaderListMenu')
 })
 </script>
 <style scoped>

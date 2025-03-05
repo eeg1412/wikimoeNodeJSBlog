@@ -627,6 +627,9 @@ onMounted(() => {
   postLikeLogList()
   isHydrated.value = true
 })
+onUnmounted(() => {
+  clearRightMenuCloseFn('postListFilter')
+})
 </script>
 <style scoped>
 /* .post-list-body {

@@ -90,6 +90,9 @@ watch(showFilterMenu, (val) => {
     clearRightMenuCloseFn('themeChanger')
   }
 })
+onUnmounted(() => {
+  clearRightMenuCloseFn('themeChanger')
+})
 </script>
 
 <style scoped></style>
