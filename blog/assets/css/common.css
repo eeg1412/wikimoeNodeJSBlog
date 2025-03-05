@@ -1218,3 +1218,10 @@ html.dark .blog-layout-info-menu-bg {
 .common-right-tool-menu-body {
   @apply dark:bg-gray-900;
 }
+html.dark .div-loading-body {
+  background-color: var(--wikimoe-dark-panel-bg);
+}
+html.dark .wikimoe-image,
+html.dark .blog-avatar {
+  @apply dark:opacity-90;
+}

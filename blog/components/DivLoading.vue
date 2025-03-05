@@ -1,7 +1,7 @@
 <template>
   <transition name="fade">
     <div
-      class="absolute inset-0 flex items-center justify-center bg-white dark:bg-black text-primary-500 opacity-80 div-loading-body"
+      class="absolute inset-0 flex items-center justify-center bg-white text-primary-500 opacity-80 div-loading-body"
       v-if="loading"
     >
       <UIcon class="animate-spin" name="i-heroicons-arrow-path" /><span
