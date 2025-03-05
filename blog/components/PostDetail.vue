@@ -549,7 +549,7 @@
           <div class="common-right-tool-menu-body" v-show="showHeaderListMenu">
             <div class="common-right-tool-menu-box">
               <div
-                class="flex justify-between items-center bg-white border-b border-solid border-gray-200 text-base px-4 py-3"
+                class="flex justify-between items-center bg-white border-b border-solid border-gray-200 dark:border-gray-700 text-base px-4 py-3"
               >
                 <div>文章目录</div>
                 <button
@@ -1129,7 +1129,7 @@ onUnmounted(() => {
   /* 垂直居中 */
   align-items: center;
   margin-bottom: 0px;
-  @apply border-solid border-b border-gray-200;
+  @apply border-solid border-b border-gray-200 dark:border-gray-700;
   padding-bottom: 10px;
 }
 .post-author-avatar-body {
@@ -1253,7 +1253,7 @@ onUnmounted(() => {
   cursor: pointer;
 }
 .comment-list-item-btn.type-like {
-  @apply border-solid border-b border-gray-200;
+  @apply border-solid border-b border-gray-200 dark:border-gray-700;
   color: #949494;
   padding: 1px 8px;
   border-radius: 10px;

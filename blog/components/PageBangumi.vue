@@ -109,7 +109,7 @@
 
               <!-- 应用按钮 -->
               <div
-                class="flex justify-end p-3 border-solid border-t border-gray-200"
+                class="flex justify-end p-3 border-solid border-t border-gray-200 dark:border-gray-700"
               >
                 <!-- 取消 -->
                 <UButton

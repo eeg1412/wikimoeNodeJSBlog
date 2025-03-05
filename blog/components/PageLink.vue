@@ -5,7 +5,7 @@
       :href="item.siteurl"
       target="_blank"
       :key="index"
-      class="group flex border border-solid border-gray-200 rounded-lg p-3 transition-colors duration-200 hover:bg-primary-500"
+      class="group flex border border-solid border-gray-200 dark:border-gray-700 rounded-lg p-3 transition-colors duration-200 hover:bg-primary-500"
     >
       <!-- icon -->
       <div class="w-16 h-16 flex-shrink-0">
