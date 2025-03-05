@@ -1,7 +1,7 @@
 <template>
   <div class="mt-4">
     <div
-      class="mb-4 text-gray-600 font-bold text-base border-b border-dotted pb-3 border-gray-300"
+      class="mb-4 text-gray-600 dark:text-gray-50 font-bold text-base border-b border-dotted pb-3 border-gray-300"
     >
       {{ options.sitePostRandomSimilarTitle }}：
     </div>
@@ -30,16 +30,21 @@
               backgroundImage: getBackgroundImage(item),
             }"
           ></div>
-          <div class="text-sm text-gray-500 mb-1 flex items-center">
+          <div
+            class="text-sm text-gray-500 dark:text-gray-300 mb-1 flex items-center"
+          >
             <span>{{ getRandomPostCategory(item) }}</span>
           </div>
           <div
-            class="line-clamp-2 text-gray-800 font-semibold text-sm break-words random-post-item-title"
+            class="line-clamp-2 text-gray-800 dark:text-gray-50 font-semibold text-sm break-words random-post-item-title"
           >
             {{ getRandomPostTitle(item) }}
           </div>
           <!-- 时间 -->
-          <div class="text-xs text-gray-600 mt-1" v-if="item.date">
+          <div
+            class="text-xs text-gray-600 dark:text-gray-300 mt-1"
+            v-if="item.date"
+          >
             发表于：{{ formatDate(item.date, 'yyyy-MM-dd hh:mm') }}
           </div>
         </div>

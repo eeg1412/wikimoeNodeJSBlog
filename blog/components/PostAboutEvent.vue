@@ -1,7 +1,7 @@
 <template>
   <div v-if="eventList.length > 0" class="mt-4 relative">
     <div
-      class="mb-4 text-gray-600 font-bold text-base border-b border-dotted pb-3 border-gray-300"
+      class="mb-4 text-gray-600 font-bold dark:text-gray-50 text-base border-b border-dotted pb-3 border-gray-300"
     >
       相关活动：
     </div>
