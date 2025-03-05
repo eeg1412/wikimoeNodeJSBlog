@@ -5,7 +5,7 @@
         <div
           v-for="(item, index) in postsData.list"
           :key="item._id"
-          class="post-list-body-item hover:bg-gray-50"
+          class="post-list-body-item hover:bg-gray-50 dark:hover:bg-gray-800"
           :class="{
             pointer: isHydrated,
             'cursor-progress': !isHydrated,
@@ -626,7 +626,7 @@ onMounted(() => {
   font-size: 15px;
 }
 .post-list-body-item {
-  @apply border-solid border-b border-gray-200;
+  @apply border-solid border-b border-gray-200 dark:border-gray-700;
   padding: 13px 18px;
 }
 .post-list-info-body {

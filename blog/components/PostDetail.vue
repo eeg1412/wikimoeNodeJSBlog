@@ -292,7 +292,7 @@
           <DivLoading :loading="commentLoading" text="拼命加载中..." />
           <!-- 评论 -->
           <div
-            class="pt-5 border-t border-solid border-gray-200"
+            class="pt-5 border-t border-solid border-gray-200 dark:border-gray-700"
             ref="commentListRef"
             v-if="commentTotal > 0"
           >
@@ -1185,7 +1185,7 @@ onUnmounted(() => {
   font-weight: 700;
 }
 .comment-list-item {
-  @apply border-solid border-b border-gray-200;
+  @apply border-solid border-b border-gray-200 dark:border-gray-700;
   padding: 18px 0;
   position: relative;
 }
@@ -1234,7 +1234,7 @@ onUnmounted(() => {
   word-break: break-word;
 }
 .comment-list-item-parent-content {
-  @apply border-l-4 border-gray-200 p-2 mt-2 mb-2 text-gray-500 bg-gray-50 rounded-md;
+  @apply border-l-4 border-gray-200 dark:border-gray-500 p-2 mt-2 mb-2 text-gray-500 bg-gray-50 dark:bg-gray-800 rounded-md;
 }
 .comment-list-item-content {
   font-size: 14px;

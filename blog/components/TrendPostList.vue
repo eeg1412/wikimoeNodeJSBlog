@@ -23,16 +23,16 @@
           ><span class="tenten"></span><span>{{ getTrendCategory(item) }}</span>
         </div>
         <div
-          class="line-clamp-2 text-gray-800 font-semibold text-sm break-words trend-item-title"
+          class="line-clamp-2 text-gray-800 dark:text-gray-50 font-semibold text-sm break-words trend-item-title"
         >
           {{ getTrendTitle(item) }}
         </div>
       </div>
 
       <div
-        class="trend-right-hot-body px-1 flex flex-col items-center justify-center text-sm bg-white"
+        class="trend-right-hot-body px-1 flex flex-col items-center justify-center text-sm bg-white dark:bg-gray-800"
       >
-        <div class="text-gray-800 text-xs">热度</div>
+        <div class="text-gray-800 text-xs dark:text-gray-50">热度</div>
         <div class="text-primary-600 text-base font-semibold">
           {{ formatNumber(item.hot) }}
         </div>
