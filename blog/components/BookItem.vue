@@ -6,6 +6,7 @@
       >
         <WikimoeImage
           class="max-image rounded book-cover"
+          :class="{ 'movie-cover-none': !book.cover }"
           :src="book.cover || '/img/nopic400-565.png'"
           :alt="book.title"
           :data-href="book.cover"
@@ -113,7 +114,7 @@
 
         <div class="acg-summary">
           <!-- prettier-ignore -->
-          <div class="text-sm whitespace-pre-line text-gray-500 flex-grow" v-if="book.summary">{{ book.summary }}</div>
+          <div class="text-sm whitespace-pre-line text-gray-500 flex-grow dark:text-gray-300" v-if="book.summary">{{ book.summary }}</div>
           <div v-else class="text-sm text-gray-400">暂无内容</div>
         </div>
       </div>

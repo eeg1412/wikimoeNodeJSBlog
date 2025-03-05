@@ -5,7 +5,7 @@
         <div
           v-for="(item, index) in postsData.list"
           :key="item._id"
-          class="post-list-body-item hover:bg-gray-50 dark:hover:bg-gray-800"
+          class="post-list-body-item hover:bg-gray-50 dark:hover:bg-gray-800/30"
           :class="{
             pointer: isHydrated,
             'cursor-progress': !isHydrated,
@@ -252,7 +252,7 @@
           <div class="common-right-tool-menu-body" v-show="showFilterMenu">
             <div class="common-right-tool-menu-box">
               <div
-                class="flex justify-between items-center bg-white border-b border-solid border-gray-200 dark:border-gray-700 text-base px-4 py-3"
+                class="flex justify-between items-center bg-white dark:bg-gray-900 border-b border-solid border-gray-200 dark:border-gray-700 text-base px-4 py-3"
               >
                 <div>类型筛选</div>
                 <button

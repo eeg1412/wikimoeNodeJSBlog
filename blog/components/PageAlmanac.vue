@@ -1,6 +1,6 @@
 <template>
-  <div class="container">
-    <div class="title bg-primary text-white">程序员老黄历</div>
+  <div class="container dark:opacity-70">
+    <div class="title bg-primary text-white dark:text-black">程序员老黄历</div>
     <div class="date">{{ isLoading ? '正在计算今日运势...' : titleDate }}</div>
     <div class="good">
       <div class="title">

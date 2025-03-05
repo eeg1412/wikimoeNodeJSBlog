@@ -140,7 +140,7 @@ const afterLeave = (el) => {
   border: 1px solid rgba(255, 255, 255, 0);
 }
 .blog-layout-sidebar-item.active {
-  @apply bg-primary-500 text-white;
+  @apply bg-primary-500 dark:bg-primary-500/90 text-white;
   cursor: default;
 }
 

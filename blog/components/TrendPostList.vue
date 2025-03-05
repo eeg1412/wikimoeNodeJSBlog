@@ -18,8 +18,12 @@
             backgroundImage: getBackgroundImage(item),
           }"
         ></div>
-        <div class="text-sm text-gray-500 mb-1 flex items-center">
-          <span class="font-medium text-gray-700">{{ index + 1 }}</span
+        <div
+          class="text-sm text-gray-500 dark:text-gray-300 mb-1 flex items-center"
+        >
+          <span class="font-medium text-gray-700 dark:text-gray-300">{{
+            index + 1
+          }}</span
           ><span class="tenten"></span><span>{{ getTrendCategory(item) }}</span>
         </div>
         <div
@@ -30,7 +34,7 @@
       </div>
 
       <div
-        class="trend-right-hot-body px-1 flex flex-col items-center justify-center text-sm bg-white dark:bg-gray-800"
+        class="trend-right-hot-body px-1 flex flex-col items-center justify-center text-sm bg-white dark:bg-gray-800/40"
       >
         <div class="text-gray-800 text-xs dark:text-gray-200">热度</div>
         <div class="text-primary-600 text-base font-semibold">

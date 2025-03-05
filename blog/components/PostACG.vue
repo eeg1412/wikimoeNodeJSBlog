@@ -1,7 +1,7 @@
 <template>
   <div v-if="contentCount > 0" class="mt-4">
     <div
-      class="mb-4 text-gray-600 dark:text-gray-200 font-bold text-base border-b border-dotted pb-3 border-gray-300"
+      class="mb-4 text-gray-600 dark:text-gray-200 font-bold text-base border-b border-dotted pb-3 border-gray-300 dark:border-gray-700"
     >
       相关作品：
     </div>

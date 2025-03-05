@@ -1119,60 +1119,102 @@ ins.adsbygoogle[data-ad-status='unfilled'] {
 }
 
 /* 暗模式 */
+:root {
+  --wikimoe-dark-bg: rgba(20, 20, 20, 1);
+  --wikimoe-dark-panel-bg: rgba(17, 17, 17, 1);
+}
 html.dark body {
-  @apply dark:text-gray-50;
-  background-color: #0f172a;
+  @apply dark:text-gray-200;
+  background-color: var(--wikimoe-dark-bg);
   background-image: none;
 }
 html.dark .blog-layout-body {
-  background-color: #0f172a;
+  background-color: var(--wikimoe-dark-panel-bg);
+  box-shadow: 0 0 1px 0 rgba(0, 0, 0, 0.6);
 }
 html.dark .blog-layout-sticky {
-  background-color: #0f172a;
+  background-color: var(--wikimoe-dark-panel-bg);
 }
 html.dark .blog-layout-sidebar-item {
-  @apply dark:text-gray-50;
+  @apply dark:text-gray-200;
 }
 html.dark .blog-layout-content-body {
-  background-color: #0f172a;
+  background-color: var(--wikimoe-dark-panel-bg);
 }
 html.dark .blog-layout-right-top-body {
-  background-color: #0f172a;
+  background-color: var(--wikimoe-dark-panel-bg);
 }
 html.dark .blog-layout-right-body.blog-layout-right-body-full-height {
-  background-color: #0f172a;
+  background-color: var(--wikimoe-dark-panel-bg);
 }
 html.dark .blog-layout-right-box {
-  background-color: #0f172a;
+  background-color: var(--wikimoe-dark-panel-bg);
 }
 html.dark .blog-layout-left-body {
-  border-right-color: rgb(var(--color-gray-700) / var(--tw-border-opacity, 1));
+  border-right-color: rgb(var(--color-gray-100) / 0.05);
 }
 html.dark .blog-layout-right-body {
-  border-left-color: rgb(var(--color-gray-700) / var(--tw-border-opacity, 1));
+  border-left-color: rgb(var(--color-gray-100) / 0.05);
 }
 html.dark .blog-layout-right-body .blog-layout-right-title-body,
-html.dark .comment-latest-item-body {
-  border-bottom-color: rgb(var(--color-gray-700) / var(--tw-border-opacity, 1));
+html.dark .comment-latest-item-body,
+html.dark .comment-list-item,
+html.dark .blog-layout-desc {
+  border-bottom-color: rgb(var(--color-gray-100) / 0.05);
 }
 html.dark .blog-search-body {
   @apply bg-gray-700;
 }
 html.dark .blog-top-bar {
-  background-color: #0f172a;
+  background-color: var(--wikimoe-dark-panel-bg);
 }
-html.dark .trend-item-left {
-  border-color: rgb(var(--color-gray-700) / var(--tw-border-opacity, 1));
+html.dark .trend-item-left,
+html.dark .trend-item-body {
+  @apply dark:border-gray-600 hover:dark:border-primary-400;
 }
 html.dark .sort-list-item-link {
-  @apply dark:text-gray-50;
-  background-color: #0f172a;
+  @apply dark:text-gray-200;
+  background-color: var(--wikimoe-dark-panel-bg);
 }
 html.dark .layout-mobile-navi-btn-body {
-  background-color: #0f172a;
+  background-color: var(--wikimoe-dark-panel-bg);
 }
 @media (max-width: 1024px) {
   html.dark .blog-layout-left-body {
-    background-color: #0f172a;
+    background-color: var(--wikimoe-dark-panel-bg);
   }
+}
+html.dark .acgn-right-content,
+html.dark .acgn-item-cover-body,
+html.dark .acg-summary {
+  @apply dark:border-gray-600;
+}
+html.dark .movie-cover-none {
+  /* 滤镜 */
+  filter: grayscale(100%);
+  filter: brightness(0.3);
+}
+html.dark .comment-list-item-parent-content {
+  @apply dark:text-gray-300;
+}
+html.dark .random-post-item-body {
+  @apply dark:border-gray-600 hover:dark:border-primary-400;
+}
+html.dark .selecttable td {
+  @apply dark:bg-gray-500;
+}
+html.dark .selecttable td:hover {
+  @apply dark:bg-gray-600;
+}
+
+html.dark .selecttable td.selected {
+  @apply dark:bg-gray-800;
+  color: #fff;
+}
+html.dark .blog-layout-info-menu-bg {
+  background-color: var(--wikimoe-dark-panel-bg);
+  background-blend-mode: soft-light;
+}
+.common-right-tool-menu-body {
+  @apply dark:bg-gray-900;
 }

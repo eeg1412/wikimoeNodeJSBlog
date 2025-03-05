@@ -526,6 +526,7 @@ onUnmounted(() => {
   overflow: auto;
 }
 .blog-footer-body {
+  @apply dark:bg-black;
   width: 100%;
   padding: 35px 0;
   background: #171717;

@@ -6,6 +6,7 @@
       >
         <WikimoeImage
           class="max-image rounded bangumi-cover"
+          :class="{ 'movie-cover-none': !bangumi.cover }"
           :src="bangumi.cover || '/img/nopic400-565.png'"
           :alt="bangumi.title"
           :data-href="bangumi.cover"
@@ -72,7 +73,7 @@
         </div>
         <div class="acg-summary">
           <!-- prettier-ignore -->
-          <div class="text-sm whitespace-pre-line text-gray-500 overflow-auto custom-scroll flex-grow" v-if="bangumi.summary">{{ bangumi.summary }}</div>
+          <div class="text-sm whitespace-pre-line text-gray-500 dark:text-gray-300 overflow-auto custom-scroll flex-grow" v-if="bangumi.summary">{{ bangumi.summary }}</div>
           <div v-else class="text-sm text-gray-400">暂无内容</div>
         </div>
       </div>

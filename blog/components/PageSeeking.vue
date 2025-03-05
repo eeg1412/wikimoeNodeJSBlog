@@ -1,6 +1,6 @@
 <template>
-  <div class="container">
-    <div class="title bg-primary text-white">程序员求签</div>
+  <div class="container dark:opacity-70">
+    <div class="title bg-primary text-white dark:text-black">程序员求签</div>
     <div class="info">
       <strong>求</strong>婚丧嫁娶亲友疾病编程测试升职跳槽陨石核弹各类吉凶
     </div>
@@ -41,7 +41,7 @@
           v-for="(item, index) in cardList"
           :key="index + '_' + item.title"
         >
-          <div class="title">{{ item.title }}</div>
+          <div class="title dark:bg-gray-700/80">{{ item.title }}</div>
           <div class="desc">{{ item.desc }}</div>
         </div>
       </TransitionGroup>

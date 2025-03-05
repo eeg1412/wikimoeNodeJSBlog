@@ -6,7 +6,7 @@
       :to="getLinkObj(item)"
       v-for="(item, index) in randomTagList"
       :key="index"
-      class="random-tag-item-body border border-primary-400 text-primary-400 rounded inline-block bg-white dark:bg-gray-900 hover:bg-primary-400 hover:text-white transition-colors duration-200 break-words"
+      class="random-tag-item-body border border-primary-400 text-primary-400 rounded inline-block bg-white dark:bg-primary-500/20 hover:bg-primary-400 hover:dark:bg-primary-400 hover:text-white hover:dark:text-black transition-colors duration-200 break-words"
       >{{ item.tagname }}</nuxt-link
     >
     <!-- 空列表 -->

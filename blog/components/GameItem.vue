@@ -6,6 +6,7 @@
       >
         <WikimoeImage
           class="max-image rounded game-cover"
+          :class="{ 'movie-cover-none': !game.cover }"
           :src="game.cover || '/img/nopic400-565.png'"
           :alt="game.title"
           :data-href="game.cover"
@@ -122,7 +123,7 @@
 
         <div class="acg-summary">
           <!-- prettier-ignore -->
-          <div class="text-sm whitespace-pre-line text-gray-500 flex-grow" v-if="game.summary">{{ game.summary }}</div>
+          <div class="text-sm whitespace-pre-line text-gray-500 flex-grow dark:text-gray-300" v-if="game.summary">{{ game.summary }}</div>
           <div v-else class="text-sm text-gray-400">暂无内容</div>
         </div>
       </div>

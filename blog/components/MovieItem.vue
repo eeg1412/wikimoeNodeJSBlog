@@ -6,6 +6,7 @@
       >
         <WikimoeImage
           class="max-image rounded movie-cover"
+          :class="{ 'movie-cover-none': !movie.cover }"
           :src="movie.cover || '/img/nopic400-565.png'"
           :alt="movie.title"
           :data-href="movie.cover"
@@ -62,7 +63,7 @@
         </div>
         <div class="acg-summary">
           <!-- prettier-ignore -->
-          <div class="text-sm whitespace-pre-line text-gray-500 overflow-auto custom-scroll flex-grow" v-if="movie.summary">{{ movie.summary }}</div>
+          <div class="text-sm whitespace-pre-line text-gray-500 dark:text-gray-300 overflow-auto custom-scroll flex-grow" v-if="movie.summary">{{ movie.summary }}</div>
           <div v-else class="text-sm text-gray-400">暂无内容</div>
         </div>
       </div>

@@ -549,7 +549,7 @@
           <div class="common-right-tool-menu-body" v-show="showHeaderListMenu">
             <div class="common-right-tool-menu-box">
               <div
-                class="flex justify-between items-center bg-white border-b border-solid border-gray-200 dark:border-gray-700 text-base px-4 py-3"
+                class="flex justify-between items-center bg-white dark:bg-gray-900 border-b border-solid border-gray-200 dark:border-gray-700 text-base px-4 py-3"
               >
                 <div>文章目录</div>
                 <button
@@ -1185,7 +1185,7 @@ onUnmounted(() => {
   font-weight: 700;
 }
 .comment-list-item {
-  @apply border-solid border-b border-gray-200 dark:border-gray-700;
+  @apply border-solid border-b border-gray-200;
   padding: 18px 0;
   position: relative;
 }
@@ -1234,7 +1234,7 @@ onUnmounted(() => {
   word-break: break-word;
 }
 .comment-list-item-parent-content {
-  @apply border-l-4 border-gray-200 dark:border-gray-500 p-2 mt-2 mb-2 text-gray-500 bg-gray-50 dark:bg-gray-800 rounded-md;
+  @apply border-l-4 border-gray-200 dark:border-gray-500 p-2 mt-2 mb-2 text-gray-500 bg-gray-50 dark:bg-gray-800/50 rounded-md;
 }
 .comment-list-item-content {
   font-size: 14px;
