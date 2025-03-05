@@ -1,7 +1,7 @@
 <template>
   <div class="mt-4">
     <div
-      class="mb-4 text-gray-600 dark:text-gray-50 font-bold text-base border-b border-dotted pb-3 border-gray-300"
+      class="mb-4 text-gray-600 dark:text-gray-200 font-bold text-base border-b border-dotted pb-3 border-gray-300"
     >
       {{ options.sitePostRandomSimilarTitle }}：
     </div>
@@ -36,7 +36,7 @@
             <span>{{ getRandomPostCategory(item) }}</span>
           </div>
           <div
-            class="line-clamp-2 text-gray-800 dark:text-gray-50 font-semibold text-sm break-words random-post-item-title"
+            class="line-clamp-2 text-gray-800 dark:text-gray-200 font-semibold text-sm break-words random-post-item-title"
           >
             {{ getRandomPostTitle(item) }}
           </div>

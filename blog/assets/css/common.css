@@ -1120,9 +1120,9 @@ ins.adsbygoogle[data-ad-status='unfilled'] {
 
 /* 暗模式 */
 html.dark body {
+  @apply dark:text-gray-50;
   background-color: #0f172a;
   background-image: none;
-  color: #f9fafb;
 }
 html.dark .blog-layout-body {
   background-color: #0f172a;
@@ -1131,7 +1131,7 @@ html.dark .blog-layout-sticky {
   background-color: #0f172a;
 }
 html.dark .blog-layout-sidebar-item {
-  color: #f9fafb;
+  @apply dark:text-gray-50;
 }
 html.dark .blog-layout-content-body {
   background-color: #0f172a;
@@ -1165,8 +1165,8 @@ html.dark .trend-item-left {
   border-color: rgb(var(--color-gray-700) / var(--tw-border-opacity, 1));
 }
 html.dark .sort-list-item-link {
+  @apply dark:text-gray-50;
   background-color: #0f172a;
-  color: #f9fafb;
 }
 html.dark .layout-mobile-navi-btn-body {
   background-color: #0f172a;
