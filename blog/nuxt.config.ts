@@ -123,7 +123,9 @@ export default defineNuxtConfig({
   routeRules,
 
   colorMode: {
-    preference: 'light',
+    preference: 'system',
+    fallback: 'light',
+    hid: 'nuxt-color-mode-script',
   },
 
   nitro: {
