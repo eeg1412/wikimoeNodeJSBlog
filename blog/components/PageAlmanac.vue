@@ -7,7 +7,7 @@
         <table>
           <tbody>
             <tr>
-              <td>宜</td>
+              <td class="dark:text-white">宜</td>
             </tr>
           </tbody>
         </table>
@@ -28,7 +28,7 @@
         <table>
           <tbody>
             <tr>
-              <td>不宜</td>
+              <td class="dark:text-white">不宜</td>
             </tr>
           </tbody>
         </table>

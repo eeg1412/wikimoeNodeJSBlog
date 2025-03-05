@@ -264,6 +264,7 @@ onUnmounted(() => {
 }
 
 .card {
+  @apply dark:bg-gray-600/80;
   background: #ffffff;
   text-align: center;
   line-height: 200px;
