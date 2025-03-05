@@ -1120,17 +1120,19 @@ ins.adsbygoogle[data-ad-status='unfilled'] {
 
 /* 暗模式 */
 :root {
-  --wikimoe-dark-bg: rgba(20, 20, 20, 1);
-  --wikimoe-dark-panel-bg: rgba(17, 17, 17, 1);
+  /* --wikimoe-dark-bg: rgba(20, 20, 20, 1);
+  --wikimoe-dark-panel-bg: rgba(17, 17, 17, 1); */
+  --wikimoe-dark-bg: rgba(17, 17, 17, 1);
+  --wikimoe-dark-panel-bg: rgba(20, 20, 20, 1);
 }
 html.dark body {
   @apply dark:text-gray-200;
   background-color: var(--wikimoe-dark-bg);
-  background-image: none;
+  background-blend-mode: overlay;
 }
 html.dark .blog-layout-body {
   background-color: var(--wikimoe-dark-panel-bg);
-  box-shadow: 0 0 1px 0 rgba(0, 0, 0, 0.6);
+  box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.3);
 }
 html.dark .blog-layout-sticky {
   background-color: var(--wikimoe-dark-panel-bg);
@@ -1182,6 +1184,9 @@ html.dark .layout-mobile-navi-btn-body {
 @media (max-width: 1024px) {
   html.dark .blog-layout-left-body {
     background-color: var(--wikimoe-dark-panel-bg);
+  }
+  html.dark .blog-top-bar-body {
+    box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.4);
   }
 }
 html.dark .acgn-right-content,
