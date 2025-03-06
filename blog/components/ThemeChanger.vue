@@ -30,6 +30,15 @@
             <li>
               <div
                 class="m-2 px-3 py-1 transition duration-300 hover:text-primary-400 hover:border-primary-400 border-solid border border-transparent cursor-pointer common-right-tool-menu-item-text rounded"
+                :class="{ active: colorMode.preference === 'system' }"
+                @click="setColorMode('system')"
+              >
+                跟随系统
+              </div>
+            </li>
+            <li>
+              <div
+                class="m-2 px-3 py-1 transition duration-300 hover:text-primary-400 hover:border-primary-400 border-solid border border-transparent cursor-pointer common-right-tool-menu-item-text rounded"
                 :class="{
                   active: colorMode.preference === 'light',
                 }"
@@ -45,15 +54,6 @@
                 @click="setColorMode('dark')"
               >
                 深色模式
-              </div>
-            </li>
-            <li>
-              <div
-                class="m-2 px-3 py-1 transition duration-300 hover:text-primary-400 hover:border-primary-400 border-solid border border-transparent cursor-pointer common-right-tool-menu-item-text rounded"
-                :class="{ active: colorMode.preference === 'system' }"
-                @click="setColorMode('system')"
-              >
-                跟随系统
               </div>
             </li>
           </ul>
