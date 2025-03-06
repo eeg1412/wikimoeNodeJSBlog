@@ -1243,5 +1243,5 @@ html.dark .blog-top-bar-sitelogo.dark {
   display: block;
 }
 html.dark .adsbygoogle {
-  @apply dark:opacity-60;
+  @apply dark:opacity-80;
 }
