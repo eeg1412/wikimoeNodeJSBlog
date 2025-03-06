@@ -605,7 +605,7 @@ onUnmounted(() => {
   right: 0;
   bottom: 0;
   /* 背景色 */
-  @apply bg-primary-500;
+  @apply bg-primary-500 dark:bg-black dark:text-primary-400;
   z-index: 99999;
   /* flex 居中 column */
   flex-direction: column;
@@ -618,7 +618,7 @@ onUnmounted(() => {
   width: 30px;
   height: 30px;
   position: relative;
-  @apply border-solid border-4 border-white;
+  @apply border-solid border-4 border-white dark:border-primary-400;
   animation: loader 2s infinite ease;
 }
 
@@ -626,11 +626,11 @@ onUnmounted(() => {
   vertical-align: top;
   display: inline-block;
   width: 100%;
-  @apply bg-white;
+  @apply bg-white dark:bg-primary-400;
   animation: loader-inner 2s infinite ease-in;
 }
 .loader-text {
-  @apply text-white;
+  @apply text-white dark:text-primary-400;
   font-size: 16px;
   margin-top: 20px;
 }
