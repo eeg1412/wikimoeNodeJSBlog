@@ -1019,10 +1019,10 @@ ins.adsbygoogle[data-ad-status='unfilled'] {
 }
 .common-right-tool-menu-item-text.active {
   /* border-primary-400 */
-  @apply bg-primary-400 text-white;
+  @apply bg-primary-400 text-white dark:bg-primary-500/90 dark:text-gray-900;
 }
 .common-right-tool-btn {
-  @apply bg-primary-500;
+  @apply bg-primary-500 dark:bg-primary-500/90 dark:text-gray-900;
   cursor: pointer;
   z-index: 10;
   transition: all 0.3s;

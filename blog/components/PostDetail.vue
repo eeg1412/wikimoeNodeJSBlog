@@ -226,7 +226,7 @@
         icon="i-heroicons-heart-solid"
         size="md"
         color="primary"
-        variant="solid"
+        :variant="colorMode.value === 'dark' ? 'soft' : 'solid'"
         :label="`${formatNumber(postData.data.likes)}点赞`"
         :trailing="false"
         :loading="likeListLoading || likePostIsLoading"
@@ -426,6 +426,7 @@
                         size="2xs"
                         icon="i-heroicons-heart-solid"
                         color="primary"
+                        :variant="colorMode.value === 'dark' ? 'soft' : 'solid'"
                         v-if="checkIsCommentLike(item._id)"
                         @click="likeComment(item._id)"
                         :loading="likeCommentIsLoading[item._id] === true"
@@ -1113,7 +1114,7 @@ const checkCommentScroll = () => {
     }
   }, 100)
 }
-
+const colorMode = useColorMode()
 if (import.meta.client) {
   await getCommentList()
 }

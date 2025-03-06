@@ -139,8 +139,11 @@ const afterLeave = (el) => {
   transition: all 0.3s;
   border: 1px solid rgba(255, 255, 255, 0);
 }
+.blog-layout-sidebar-item.active:hover {
+  @apply dark:text-gray-900;
+}
 .blog-layout-sidebar-item.active {
-  @apply bg-primary-500 dark:bg-primary-500/90 text-white;
+  @apply bg-primary-500 dark:bg-primary-500/90 text-white dark:text-gray-900;
   cursor: default;
 }
 
