@@ -47,7 +47,11 @@
 </template>
 
 <script>
-import { formatResToForm, formatResToObj } from '@/utils/utils'
+import {
+  formatResToForm,
+  formatResToObj,
+  fieldErrorNotice,
+} from '@/utils/utils'
 import { ref, reactive, onMounted, computed } from 'vue'
 import { authApi } from '@/api'
 import store from '@/store'
@@ -92,7 +96,7 @@ export default {
     }))
 
     const adSettingsSubmit = () => {
-      adSettingsFormRef.value.validate((valid) => {
+      adSettingsFormRef.value.validate((valid, fields) => {
         if (valid) {
           const params = []
           Object.keys(adSettingsForm).forEach((key) => {
@@ -113,6 +117,10 @@ export default {
             .catch((err) => {
               console.log(err)
             })
+        } else {
+          // 弹窗
+          fieldErrorNotice(fields)
+          return false
         }
       })
     }

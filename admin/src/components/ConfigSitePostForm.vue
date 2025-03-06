@@ -111,7 +111,11 @@
   </el-form>
 </template>
 <script>
-import { formatResToForm, formatResToObj } from '@/utils/utils'
+import {
+  formatResToForm,
+  formatResToObj,
+  fieldErrorNotice,
+} from '@/utils/utils'
 import { ref, reactive, onMounted, computed } from 'vue'
 import { authApi } from '@/api'
 import store from '@/store'
@@ -145,7 +149,7 @@ export default {
     })
     const sitePostRules = {}
     const sitePostSubmit = () => {
-      sitePostFormRef.value.validate((valid) => {
+      sitePostFormRef.value.validate((valid, fields) => {
         if (valid) {
           const params = []
           Object.keys(sitePostForm).forEach((key) => {
@@ -176,6 +180,8 @@ export default {
               console.log(err)
             })
         } else {
+          // 弹窗
+          fieldErrorNotice(fields)
           return false
         }
       })

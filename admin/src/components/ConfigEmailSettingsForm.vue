@@ -120,7 +120,11 @@
 </template>
 <script>
 import RichEditor5Switch from '@/components/RichEditor5Switch'
-import { formatResToForm, formatResToObj } from '@/utils/utils'
+import {
+  formatResToForm,
+  formatResToObj,
+  fieldErrorNotice,
+} from '@/utils/utils'
 import { ref, reactive, onMounted, computed } from 'vue'
 import { authApi } from '@/api'
 import store from '@/store'
@@ -232,7 +236,7 @@ export default {
       }
     })
     const emailSettingsSubmit = () => {
-      emailSettingsFormRef.value.validate((valid) => {
+      emailSettingsFormRef.value.validate((valid, fields) => {
         if (valid) {
           const params = []
           Object.keys(emailSettingsForm).forEach((key) => {
@@ -264,6 +268,8 @@ export default {
               console.log(err)
             })
         } else {
+          // 弹窗
+          fieldErrorNotice(fields)
           return false
         }
       })

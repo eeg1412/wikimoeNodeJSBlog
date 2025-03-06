@@ -163,6 +163,7 @@ import {
   installFFmpeg,
   uninstallFFmpeg,
   getFFmpegInstalled,
+  fieldErrorNotice,
 } from '@/utils/utils'
 import { ref, reactive, onMounted } from 'vue'
 import { authApi } from '@/api'
@@ -225,7 +226,7 @@ export default {
     }
 
     const mediaSubmit = () => {
-      mediaFormRef.value.validate((valid) => {
+      mediaFormRef.value.validate((valid, fields) => {
         if (valid) {
           const params = []
           Object.keys(mediaForm).forEach((key) => {
@@ -248,6 +249,8 @@ export default {
               console.log(err)
             })
         } else {
+          // 弹窗
+          fieldErrorNotice(fields)
           return false
         }
       })

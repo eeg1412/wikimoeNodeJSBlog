@@ -47,7 +47,8 @@
       >
       <!-- 刷新博客端密钥 -->
       <el-button type="danger" @click="handleFlushSecretBlog"
-        >刷新博客端密钥</el-button>
+        >刷新博客端密钥</el-button
+      >
     </el-form-item>
 
     <el-form-item>
@@ -56,7 +57,11 @@
   </el-form>
 </template>
 <script>
-import { formatResToForm, formatResToObj } from '@/utils/utils'
+import {
+  formatResToForm,
+  formatResToObj,
+  fieldErrorNotice,
+} from '@/utils/utils'
 import { ref, reactive, onMounted, computed } from 'vue'
 import { authApi } from '@/api'
 import store from '@/store'
@@ -80,7 +85,7 @@ export default {
     })
     const otherSettingsRules = {}
     const otherSettingsSubmit = () => {
-      otherSettingsFormRef.value.validate((valid) => {
+      otherSettingsFormRef.value.validate((valid, fields) => {
         if (valid) {
           const params = []
           Object.keys(otherSettingsForm).forEach((key) => {
@@ -103,6 +108,8 @@ export default {
               console.log(err)
             })
         } else {
+          // 弹窗
+          fieldErrorNotice(fields)
           return false
         }
       })
@@ -154,15 +161,11 @@ export default {
         .catch(() => {})
     }
     const handleFlushSecretBlog = () => {
-      ElMessageBox.confirm(
-        '确定要刷新博客端密钥吗？',
-        '提示',
-        {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          type: 'warning',
-        }
-      )
+      ElMessageBox.confirm('确定要刷新博客端密钥吗？', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning',
+      })
         .then(() => {
           authApi.flushJWTSecretBlog().then(() => {
             ElMessage.success('密钥已刷新')

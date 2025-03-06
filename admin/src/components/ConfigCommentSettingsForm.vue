@@ -73,7 +73,11 @@
   </el-form>
 </template>
 <script>
-import { formatResToForm, formatResToObj } from '@/utils/utils'
+import {
+  formatResToForm,
+  formatResToObj,
+  fieldErrorNotice,
+} from '@/utils/utils'
 import { ref, reactive, onMounted } from 'vue'
 import { authApi } from '@/api'
 import store from '@/store'
@@ -106,7 +110,7 @@ export default {
       ],
     }
     const commentSettingsSubmit = () => {
-      commentSettingsFormRef.value.validate((valid) => {
+      commentSettingsFormRef.value.validate((valid, fields) => {
         if (valid) {
           const params = []
           Object.keys(commentSettingsForm).forEach((key) => {
@@ -130,6 +134,8 @@ export default {
               console.log(err)
             })
         } else {
+          // 弹窗
+          fieldErrorNotice(fields)
           return false
         }
       })
