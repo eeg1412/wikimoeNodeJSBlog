@@ -91,6 +91,6 @@ const { data: sortListData } = sortData
   padding-left: 18px;
 }
 .sort-list-item-link.active {
-  @apply bg-primary-500 text-white;
+  @apply bg-primary-500 text-white dark:bg-primary-500/90 dark:text-gray-900;
 }
 </style>
