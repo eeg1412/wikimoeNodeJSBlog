@@ -15,11 +15,7 @@
         aspectRatio: `${coverImages[0].thumWidth || coverImages[0].width} / ${
           coverImages[0].thumHeight || coverImages[0].height
         }`,
-        ...(isHeight
-          ? {
-              height: `${coverImages[0].thumHeight || coverImages[0].height}px`,
-            }
-          : { width: `${coverImages[0].thumWidth || coverImages[0].width}px` }),
+        ...checkHeightWidth(coverImages),
       }"
       v-if="coverImages.length === 1"
     >
@@ -88,7 +84,7 @@
           v-show="videoPlayId !== coverImages[0]._id"
         >
           <div
-            class="rounded px-1 py-0.5 bg-primary-500 text-white bg-opacity-80 text-xs flex align-middle justify-center pointer"
+            class="rounded px-1 py-0.5 bg-primary-500 text-white dark:text-gray-900 bg-opacity-80 text-xs flex align-middle justify-center pointer"
             @click.stop="tryOpenHref(0)"
             :title="coverImages[0].description"
           >
@@ -189,7 +185,7 @@
                   v-show="videoPlayId !== img._id"
                 >
                   <div
-                    class="rounded px-1 py-0.5 bg-primary-500 text-white bg-opacity-80 text-xs flex align-middle justify-center pointer"
+                    class="rounded px-1 py-0.5 bg-primary-500 text-white dark:text-gray-900 bg-opacity-80 text-xs flex align-middle justify-center pointer"
                     @click.stop="tryOpenHref(img.dataHrefIndex)"
                     :title="img.description"
                   >
@@ -274,7 +270,7 @@
                   v-show="videoPlayId !== img._id"
                 >
                   <div
-                    class="rounded px-1 py-0.5 bg-primary-500 text-white bg-opacity-80 text-xs flex align-middle justify-center pointer"
+                    class="rounded px-1 py-0.5 bg-primary-500 text-white dark:text-gray-900 bg-opacity-80 text-xs flex align-middle justify-center pointer"
                     @click.stop="tryOpenHref(img.dataHrefIndex)"
                     :title="img.description"
                   >
@@ -470,6 +466,31 @@ const isHeight = computed(() => {
   }
   return false
 })
+const checkHeightWidth = (item) => {
+  let h = item[0].thumHeight || item[0].height
+  let w = item[0].thumWidth || item[0].width
+  if (h > w) {
+    if (w < 150) {
+      // 计算w和h的比例
+      const ratio = w / h
+      w = 150
+      h = w / ratio
+    }
+    return {
+      height: `${h}px`,
+    }
+  } else {
+    if (h < 150) {
+      // 计算w和h的比例
+      const ratio = h / w
+      h = 150
+      w = h / ratio
+    }
+    return {
+      width: `${w}px`,
+    }
+  }
+}
 
 onMounted(() => {
   componentUUID.value = `tw-${uuid()}`
@@ -508,6 +529,7 @@ onUnmounted(() => {})
   display: inline-block;
   border-radius: 0.75rem;
   max-width: 100%;
+  min-height: 150px;
   isolation: isolate;
 }
 .blog-tweet-img-list-body.cover-count-1-1.is-height {

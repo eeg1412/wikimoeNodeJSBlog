@@ -2,7 +2,7 @@
   <ClientOnly>
     <Teleport :to="`#caption-${componentId}`" v-if="showUI && description">
       <div
-        class="photo-swipe-photo-swipe-caption bg-primary bg-opacity-80 rounded px-2 py-1 text-white text-sm whitespace-pre-line"
+        class="photo-swipe-photo-swipe-caption bg-primary bg-opacity-80 rounded px-2 py-1 text-white dark:text-gray-900 text-sm whitespace-pre-line"
         v-show="showDescription"
       >
         {{ description }}
