@@ -1224,8 +1224,9 @@ html.dark .div-loading-body {
 }
 html.dark .wikimoe-image,
 html.dark .blog-avatar,
-html.dark .tweet-content-link-cover-body iframe {
-  @apply dark:opacity-90;
+html.dark .tweet-content-link-cover-body iframe,
+html.dark .adsbygoogle {
+  @apply dark:brightness-90;
 }
 .blog-layout-sitelogo.light,
 .blog-top-bar-sitelogo.light {
@@ -1242,7 +1243,4 @@ html.dark .blog-top-bar-sitelogo.light {
 html.dark .blog-layout-sitelogo.dark,
 html.dark .blog-top-bar-sitelogo.dark {
   display: block;
-}
-html.dark .adsbygoogle {
-  @apply dark:opacity-80;
 }

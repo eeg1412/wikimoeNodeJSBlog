@@ -318,6 +318,6 @@ onMounted(() => {})
   text-overflow: ellipsis;
   padding-right: 4px;
   cursor: pointer;
-  @apply dark:opacity-80;
+  @apply dark:brightness-90;
 }
 </style>
