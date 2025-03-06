@@ -1128,7 +1128,7 @@ ins.adsbygoogle[data-ad-status='unfilled'] {
 html.dark body {
   @apply dark:text-gray-200;
   background-color: var(--wikimoe-dark-bg);
-  background-blend-mode: overlay;
+  background-image: url(/img/bg_02_dark.png);
 }
 html.dark .blog-layout-body {
   background-color: var(--wikimoe-dark-panel-bg);
