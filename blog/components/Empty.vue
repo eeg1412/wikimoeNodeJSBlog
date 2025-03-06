@@ -15,6 +15,7 @@
   padding: 40px 0;
 }
 .empty-body-content {
+  @apply dark:mix-blend-soft-light;
   text-align: center;
   font-size: 18px;
   position: relative;

@@ -1194,11 +1194,6 @@ html.dark .acgn-item-cover-body,
 html.dark .acg-summary {
   @apply dark:border-gray-600;
 }
-html.dark .movie-cover-none {
-  /* 滤镜 */
-  filter: grayscale(100%);
-  filter: brightness(0.3);
-}
 html.dark .comment-list-item-parent-content {
   @apply dark:text-gray-300;
 }
