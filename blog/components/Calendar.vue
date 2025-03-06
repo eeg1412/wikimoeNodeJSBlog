@@ -255,7 +255,7 @@ onMounted(() => {})
 .calendar {
   max-width: 100%;
   border-top: 1px solid;
-  @apply border-primary-200;
+  @apply border-primary-200 dark:border-gray-700;
   font-size: 0.8em;
 }
 .calendar-weekly {
@@ -271,7 +271,7 @@ onMounted(() => {})
   box-sizing: border-box;
   font-size: 13px;
   line-height: 22px;
-  @apply border-primary-200;
+  @apply border-primary-200 dark:border-gray-700;
 }
 .calendar-weekly:last-child .calendar-daily {
   border-bottom: none;
@@ -283,7 +283,7 @@ onMounted(() => {})
   text-align: center;
 }
 .calendar-day.is-now {
-  @apply text-white bg-primary-500;
+  @apply text-white bg-primary-500 dark:bg-primary-500 dark:text-gray-900;
 }
 .calendar-youbi {
   width: 14.2857%;
@@ -293,7 +293,7 @@ onMounted(() => {})
   text-align: center;
   font-size: 13px;
   line-height: 22px;
-  @apply bg-primary-50 border-primary-200;
+  @apply bg-primary-50 border-primary-200 dark:border-gray-700 dark:bg-gray-800;
 }
 .calendar-youbi:last-child {
   border-right: none;
@@ -318,5 +318,6 @@ onMounted(() => {})
   text-overflow: ellipsis;
   padding-right: 4px;
   cursor: pointer;
+  @apply dark:opacity-80;
 }
 </style>

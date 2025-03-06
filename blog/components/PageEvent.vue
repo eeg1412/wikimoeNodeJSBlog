@@ -91,7 +91,7 @@
                 <div class="flex items-center">
                   <UIcon name="i-heroicons-clock" />
                 </div>
-                <div class="text-gray-700 text-xs ml-2">
+                <div class="text-gray-700 dark:text-gray-400 text-xs ml-2">
                   {{ formatDate(item.startTime) }} ~
                   {{ formatDate(item.endTime) }}
                 </div>
@@ -489,7 +489,7 @@ onUnmounted(() => {})
   border-bottom-right-radius: 0;
 }
 .page-event-body {
-  @apply border border-primary-200 border-solid;
+  @apply border border-primary-200 border-solid dark:border-gray-700;
   border-radius: 8px;
   overflow: hidden;
   position: relative;

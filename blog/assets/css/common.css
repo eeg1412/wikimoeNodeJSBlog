@@ -1161,7 +1161,8 @@ html.dark .blog-layout-right-body {
 html.dark .blog-layout-right-body .blog-layout-right-title-body,
 html.dark .comment-latest-item-body,
 html.dark .comment-list-item,
-html.dark .blog-layout-desc {
+html.dark .blog-layout-desc,
+html.dark .page-commonDialog-current-commonDialog-title {
   border-bottom-color: rgb(var(--color-gray-100) / 0.2);
 }
 html.dark .blog-search-body {
