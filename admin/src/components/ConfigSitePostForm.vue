@@ -147,7 +147,58 @@ export default {
       // 随机相似内容标题
       sitePostRandomSimilarTitle: '相似内容',
     })
-    const sitePostRules = {}
+    const sitePostRules = {
+      sitePostRandomSimilarCount: [
+        {
+          required: true,
+          message: '请输入随机相似内容文章数',
+          trigger: 'blur',
+        },
+      ],
+      // sitePostRandomSimilarTitle
+      sitePostRandomSimilarTitle: [
+        {
+          required: true,
+          message: '请输入随机相似内容标题',
+          trigger: 'blur',
+        },
+      ],
+      // sitePostRandomSimilarRange 必须选择一个
+      sitePostRandomSimilarRange: [
+        {
+          required: true,
+          message: '请选择随机相似内容范围',
+          trigger: 'blur',
+        },
+        {
+          validator: (rule, value, callback) => {
+            if (!value || value.length === 0) {
+              callback(new Error('请选择随机相似内容范围'))
+            } else {
+              callback()
+            }
+          },
+          trigger: 'change',
+        },
+      ],
+      sitePostRandomSimilarShowRange: [
+        {
+          required: true,
+          message: '请选择随机相似内容显示范围',
+          trigger: 'blur',
+        },
+        {
+          validator: (rule, value, callback) => {
+            if (!value || value.length === 0) {
+              callback(new Error('请选择随机相似内容显示范围'))
+            } else {
+              callback()
+            }
+          },
+          trigger: 'change',
+        },
+      ],
+    }
     const sitePostSubmit = () => {
       sitePostFormRef.value.validate((valid, fields) => {
         if (valid) {
