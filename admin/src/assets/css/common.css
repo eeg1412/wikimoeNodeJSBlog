@@ -1099,3 +1099,6 @@ input[type='password'] {
   width: 100%;
   justify-content: flex-start;
 }
+.dark .avatar-uploader {
+  background: rgba(0, 0, 0, 0.8);
+}

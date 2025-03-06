@@ -1,5 +1,5 @@
 import store from "@/store";
-import { ElLoading, ElMessage } from 'element-plus'
+import { ElLoading, ElMessage, ElNotification } from 'element-plus'
 import moment from "moment";
 import { get, set, delMany } from 'idb-keyval'
 import { FFmpeg } from '@ffmpeg/ffmpeg'
@@ -430,4 +430,30 @@ export const nowTimestampToBase36WithRandom = () => {
 
     // 返回结果
     return base36String + randomString;
+}
+export const fieldErrorNotice = (fields) => {
+    // 检查fields是否是Object
+    if (typeof fields === 'object') {
+        // 遍历Object
+        for (const key in fields) {
+            // 判断是否是数组
+            if (Array.isArray(fields[key]) && fields[key].length > 0) {
+                // 遍历数组
+                fields[key].forEach((field) => {
+                    // 判断是否是对象
+                    if (typeof field === 'object') {
+                        // 判断是否有message属性
+                        if (field.message) {
+                            setTimeout(() => {
+                                ElNotification.error({
+                                    message: field.message,
+                                    type: 'error',
+                                });
+                            }, 10);
+                        }
+                    }
+                })
+            }
+        }
+    }
 }

@@ -3,7 +3,7 @@
     :model="siteSettingsForm"
     :rules="siteSettingsRules"
     ref="siteSettingsFormRef"
-    label-width="150px"
+    label-width="160px"
     v-if="inited"
   >
     <el-form-item label="站点标题" prop="siteTitle">
@@ -20,6 +20,32 @@
         putImageType="image/webp"
         @crop="setSiteLogo"
       ></Cropper>
+    </el-form-item>
+    <!-- siteDarkLogo -->
+    <el-form-item label="深色模式站点LOGO" class="dark" prop="siteDarkLogo">
+      <Cropper
+        :maxWidth="1024"
+        :maxHeight="1024"
+        :src="siteSettingsForm.siteDarkLogo"
+        putImageType="image/webp"
+        @crop="setSiteDarkLogo"
+      ></Cropper>
+    </el-form-item>
+    <!-- siteAllowSwitchTheme -->
+    <el-form-item label="允许用户切换主题模式" prop="siteAllowSwitchTheme">
+      <el-switch v-model="siteSettingsForm.siteAllowSwitchTheme"></el-switch>
+    </el-form-item>
+    <!-- siteThemeMode -->
+    <el-form-item
+      label="站点主题模式"
+      prop="siteThemeMode"
+      v-if="!siteSettingsForm.siteAllowSwitchTheme"
+    >
+      <el-radio-group v-model="siteSettingsForm.siteThemeMode">
+        <el-radio label="system">跟随系统</el-radio>
+        <el-radio label="light">浅色模式</el-radio>
+        <el-radio label="dark">深色模式</el-radio>
+      </el-radio-group>
     </el-form-item>
     <!-- siteFavicon -->
     <el-form-item label="站点图标" prop="siteFavicon">
@@ -144,7 +170,11 @@
   </el-form>
 </template>
 <script>
-import { formatResToForm, formatResToObj } from '@/utils/utils'
+import {
+  formatResToForm,
+  formatResToObj,
+  fieldErrorNotice,
+} from '@/utils/utils'
 import { ref, reactive, onMounted } from 'vue'
 import { authApi } from '@/api'
 import store from '@/store'
@@ -164,6 +194,12 @@ export default {
       siteSubTitle: '',
       // 站点LOGO
       siteLogo: '',
+      // 深色模式站点LOGO
+      siteDarkLogo: '',
+      // 允许用户切换主题模式
+      siteAllowSwitchTheme: false,
+      // 站点主题模式
+      siteThemeMode: 'system',
       // 站点图标
       siteFavicon: '',
       // 默认封面图
@@ -214,6 +250,10 @@ export default {
       siteLogo: [
         { required: true, message: '请上传站点LOGO', trigger: 'blur' },
       ],
+      // siteDarkLogo
+      siteDarkLogo: [
+        { required: true, message: '请上传深色模式站点LOGO', trigger: 'blur' },
+      ],
       siteFavicon: [
         { required: true, message: '请上传站点图标', trigger: 'blur' },
       ],
@@ -248,6 +288,9 @@ export default {
       // file to base64
       siteSettingsForm.siteLogo = crop
     }
+    const setSiteDarkLogo = (crop) => {
+      siteSettingsForm.siteDarkLogo = crop
+    }
     const setSiteDefaultCover = (crop) => {
       siteSettingsForm.siteDefaultCover = crop
     }
@@ -255,7 +298,7 @@ export default {
       siteSettingsForm.siteFavicon = crop
     }
     const siteSettingsSubmit = () => {
-      siteSettingsFormRef.value.validate((valid) => {
+      siteSettingsFormRef.value.validate((valid, fields) => {
         if (valid) {
           const params = []
           Object.keys(siteSettingsForm).forEach((key) => {
@@ -277,6 +320,8 @@ export default {
               console.log(err)
             })
         } else {
+          // 弹窗
+          fieldErrorNotice(fields)
           return false
         }
       })
@@ -416,6 +461,7 @@ export default {
       siteSettingsForm,
       siteSettingsRules,
       setSiteLogo,
+      setSiteDarkLogo,
       setSiteDefaultCover,
       setSiteFavicon,
       siteSettingsSubmit,

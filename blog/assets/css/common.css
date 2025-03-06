@@ -1226,3 +1226,19 @@ html.dark .blog-avatar,
 html.dark .tweet-content-link-cover-body iframe {
   @apply dark:opacity-90;
 }
+.blog-layout-sitelogo.light,
+.blog-top-bar-sitelogo.light {
+  display: block;
+}
+.blog-layout-sitelogo.dark,
+.blog-top-bar-sitelogo.dark {
+  display: none;
+}
+html.dark .blog-layout-sitelogo.light,
+html.dark .blog-top-bar-sitelogo.light {
+  display: none;
+}
+html.dark .blog-layout-sitelogo.dark,
+html.dark .blog-top-bar-sitelogo.dark {
+  display: block;
+}

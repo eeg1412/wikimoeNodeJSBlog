@@ -36,6 +36,12 @@ const initGlobalConfig = async () => {
     siteSubTitle: '',
     // 站点LOGO
     siteLogo: '',
+    // 深色模式站点LOGO
+    siteDarkLogo: '',
+    // 允许用户切换主题模式
+    siteAllowSwitchTheme: false,
+    // 站点主题模式
+    siteThemeMode: 'system',
     // 站点封面
     siteDefaultCover: '',
     // 站点Favicon

@@ -19,6 +19,7 @@ module.exports = async function (req, res, next) {
     const base64Reg = /^data:image\/\w+;base64,/
     switch (name) {
       case 'siteLogo':
+      case 'siteDarkLogo':
       case 'siteDefaultCover':
       case 'siteFavicon':
         // 判断value是否是base64

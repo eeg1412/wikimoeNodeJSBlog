@@ -16,8 +16,13 @@
         <div class="blog-top-bar-left-body">
           <nuxt-link to="/">
             <img
-              class="blog-top-bar-sitelogo"
+              class="blog-top-bar-sitelogo light"
               :src="options.siteLogo"
+              :alt="options.siteTitle"
+            />
+            <img
+              class="blog-top-bar-sitelogo dark"
+              :src="options.siteDarkLogo"
               :alt="options.siteTitle"
             />
           </nuxt-link>
@@ -62,8 +67,13 @@
             <div>
               <nuxt-link to="/">
                 <img
-                  class="blog-layout-sitelogo"
+                  class="blog-layout-sitelogo light"
                   :src="options.siteLogo"
+                  :alt="options.siteTitle"
+                />
+                <img
+                  class="blog-layout-sitelogo dark"
+                  :src="options.siteDarkLogo"
                   :alt="options.siteTitle"
                 />
               </nuxt-link>
@@ -235,7 +245,7 @@
     <div id="rightToolBarMenu"></div>
     <div class="right-tool-bar" id="rightToolBar">
       <GoTop />
-      <ClientOnly>
+      <ClientOnly v-if="options.siteAllowSwitchTheme">
         <ThemeChanger />
       </ClientOnly>
     </div>
@@ -297,6 +307,16 @@ const { options } = storeToRefs(optionStore)
 
 const config = useRuntimeConfig()
 const version = config.public.version
+
+// 主题模式
+const colorMode = useColorMode()
+const siteThemeModeList = ['system', 'light', 'dark']
+if (
+  !options.value.siteAllowSwitchTheme &&
+  siteThemeModeList.includes(options.value.siteThemeMode)
+) {
+  colorMode.preference = options.value.siteThemeMode
+}
 
 // RSS
 const { siteShowLoading, siteShowLoadingText, siteShowBlogVersion } =
