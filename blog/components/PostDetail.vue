@@ -1203,7 +1203,7 @@ onUnmounted(() => {
   position: relative;
 }
 .comment-list-item-alert {
-  @apply bg-primary-100 rounded-md;
+  @apply bg-primary-100 rounded-md dark:bg-primary-800/50;
   position: absolute;
   top: 0;
   left: 0;
