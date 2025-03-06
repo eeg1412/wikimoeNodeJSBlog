@@ -5,7 +5,7 @@
       :href="item.siteurl"
       target="_blank"
       :key="index"
-      class="group flex border border-solid border-gray-200 dark:border-gray-700 rounded-lg p-3 transition-colors duration-200 hover:bg-primary-500"
+      class="group flex border border-solid border-gray-200 dark:border-gray-700 rounded-lg p-3 transition-colors duration-200 hover:bg-primary-500 dark:hover:bg-primary-500/0 dark:hover:border-primary-500"
     >
       <!-- icon -->
       <div class="w-16 h-16 flex-shrink-0">
@@ -27,7 +27,7 @@
           {{ item.sitename }}
         </div>
         <div
-          class="line-clamp-2 overflow-ellipsis overflow-hidden h-10 leading-5 text-gray-500 group-hover:text-white"
+          class="line-clamp-2 overflow-ellipsis overflow-hidden h-10 leading-5 text-gray-500 dark:text-gray-400 group-hover:text-white dark:group-hover:text-gray-400"
         >
           <!-- description -->
           {{ item.description || '暂无描述' }}
