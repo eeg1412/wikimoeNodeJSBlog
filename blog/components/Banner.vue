@@ -110,7 +110,7 @@ const openLink = (item, midClick) => {
 .top-banner-list-body
   .swiper-pagination-progressbar
   .swiper-pagination-progressbar-fill {
-  @apply bg-primary-500;
+  @apply bg-primary-500 dark:bg-primary-500/75;
 }
 .top-banner-list-body .swiper-pagination-progressbar {
   top: unset !important;
