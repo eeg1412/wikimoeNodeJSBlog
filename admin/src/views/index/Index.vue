@@ -332,17 +332,17 @@
               ></el-button>
             </div>
             <template v-if="adminInfo">
-              <div class="fr pt5 pl5">
+              <div class="fr pt5">
                 <el-button type="primary" circle text @click="logout">
                   <i class="fas fa-fw fa-sign-out-alt"></i>
                 </el-button>
               </div>
-              <div class="fr pt5 pl5">
+              <div class="fr pt5">
                 <el-button type="primary" circle text @click="goToBlog">
                   <i class="fas fa-fw fa-home"></i>
                 </el-button>
               </div>
-              <div class="fr pt5 pl5">
+              <div class="fr pt5">
                 <el-button
                   type="primary"
                   circle
