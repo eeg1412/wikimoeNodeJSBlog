@@ -1,6 +1,7 @@
 <template>
   <div class="login-body">
     <div class="we-login">
+      <div class="we-login-theme-changer"><ThemeChanger /></div>
       <div class="login-logo">
         <div class="pt10">博客管理系统</div>
       </div>
@@ -38,8 +39,12 @@ import { authApi } from '@/api'
 import { ElMessage } from 'element-plus'
 import { useRoute, useRouter } from 'vue-router'
 import store from '@/store'
+import ThemeChanger from '@/components/ThemeChanger.vue'
 
 export default {
+  components: {
+    ThemeChanger,
+  },
   setup() {
     const route = useRoute()
     const router = useRouter()
@@ -130,6 +135,12 @@ export default {
 .login-btn {
   width: 70%;
   margin: 20px auto 0 auto;
+}
+.we-login-theme-changer {
+  position: absolute;
+  right: 10px;
+  top: 10px;
+  z-index: 2;
 }
 </style>
 <style>

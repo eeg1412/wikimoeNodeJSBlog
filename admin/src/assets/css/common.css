@@ -1127,7 +1127,8 @@ html.dark {
 }
 html.dark .common-logo,
 html.dark .common-aside-collapse-btn,
-html.dark .common-header {
+html.dark .common-header,
+html.dark .login-body {
   background: var(--el-bg-color);
 }
 html.dark .common-aside-collapse-btn {
@@ -1135,6 +1136,18 @@ html.dark .common-aside-collapse-btn {
 }
 html.dark .common-header {
   border-bottom-color: var(--el-border-color);
+}
+html.dark .common-blockquote {
+  border-left-color: var(--el-border-color);
+}
+html.dark .we-login {
+  background: #1b1b1b;
+}
+html.dark .login-body .el-input__wrapper {
+  background: #333333;
+}
+html.dark .w-e-text-container pre > code {
+  text-shadow: none;
 }
 @media (max-width: 767px) {
   html.dark .common-aside {

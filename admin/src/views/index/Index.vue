@@ -1,35 +1,5 @@
 <template>
   <div class="common-layout">
-    <div>
-      <!-- 主题切换控制 -->
-      <div class="theme-controls">
-        <!-- 系统支持主题检测时显示跟随系统选项 -->
-        <label v-if="systemPreferenceSupported" class="theme-switch">
-          <input
-            type="checkbox"
-            :checked="followSystem"
-            @change="toggleFollowSystem(!followSystem)"
-          />
-          <span>跟随系统主题</span>
-        </label>
-
-        <!-- 手动主题切换 -->
-        <div v-if="!followSystem || !systemPreferenceSupported">
-          <button
-            :class="{ active: theme === 'light' }"
-            @click="setTheme('light')"
-          >
-            🌞 亮色
-          </button>
-          <button
-            :class="{ active: theme === 'dark' }"
-            @click="setTheme('dark')"
-          >
-            🌙 暗色
-          </button>
-        </div>
-      </div>
-    </div>
     <el-container>
       <el-aside
         class="common-aside custom-scroll scroll-not-hide"
@@ -362,17 +332,17 @@
               ></el-button>
             </div>
             <template v-if="adminInfo">
-              <div class="fr pt5">
+              <div class="fr pt5 pl5">
                 <el-button type="primary" circle text @click="logout">
                   <i class="fas fa-fw fa-sign-out-alt"></i>
                 </el-button>
               </div>
-              <div class="fr pt5">
+              <div class="fr pt5 pl5">
                 <el-button type="primary" circle text @click="goToBlog">
                   <i class="fas fa-fw fa-home"></i>
                 </el-button>
               </div>
-              <div class="fr pt5">
+              <div class="fr pt5 pl5">
                 <el-button
                   type="primary"
                   circle
@@ -381,6 +351,9 @@
                 >
                   <i class="fas fa-fw fa-user-edit"></i>
                 </el-button>
+              </div>
+              <div class="fr pt5">
+                <ThemeChanger />
               </div>
               <!-- adminInfo.role 999为站长 990 为管理员 -->
               <div class="fr pt10 fb dflex">
@@ -418,9 +391,12 @@ import {
 import { authApi } from '@/api'
 import store from '@/store'
 import { ElMessage, ElMessageBox } from 'element-plus'
-import { useTheme } from '@/composables/useTheme'
+import ThemeChanger from '@/components/ThemeChanger.vue'
 
 export default {
+  components: {
+    ThemeChanger,
+  },
   setup() {
     const route = useRoute()
     const router = useRouter()
@@ -483,15 +459,6 @@ export default {
       window.open(routeData.href, '_blank')
     }
 
-    const {
-      theme,
-      systemTheme,
-      followSystem,
-      systemPreferenceSupported,
-      setTheme,
-      toggleFollowSystem,
-    } = useTheme()
-
     onMounted(() => {
       store.dispatch('setAdminInfo')
       store.dispatch('setOptions')
@@ -518,16 +485,6 @@ export default {
       phoneMenuOpen,
       switchOpenMenu,
       openNewTab,
-
-      // 主题相关状态
-      theme,
-      systemTheme,
-      followSystem,
-      systemPreferenceSupported,
-
-      // 主题切换方法
-      setTheme,
-      toggleFollowSystem,
     }
   },
 }
@@ -607,13 +564,19 @@ export default {
   /* margin-right: 10px; */
 }
 .common-header-nickname {
-  max-width: 100px;
+  max-width: 200px;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 /* 媒体查询 手机模式 */
 @media (max-width: 767px) {
+  .common-header-nickname {
+    max-width: 75px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
   /* 在手机模式下应用以下样式 */
   .switch-btn-body {
     display: none;
