@@ -1151,21 +1151,20 @@ html.dark .blog-layout-right-body.blog-layout-right-body-full-height {
 html.dark .blog-layout-right-box {
   background-color: var(--wikimoe-dark-panel-bg);
 }
-html.dark .blog-layout-left-body {
-  border-right-color: rgb(var(--color-gray-100) / 0.05);
-}
+html.dark .blog-layout-left-body,
 html.dark .blog-layout-right-body {
-  border-left-color: rgb(var(--color-gray-100) / 0.05);
+  @apply dark:border-gray-100/5;
 }
 html.dark .blog-layout-right-body .blog-layout-right-title-body,
 html.dark .comment-latest-item-body,
 html.dark .comment-list-item,
 html.dark .blog-layout-desc,
-html.dark .page-commonDialog-current-commonDialog-title {
-  border-bottom-color: rgb(var(--color-gray-100) / 0.2);
+html.dark .page-commonDialog-current-commonDialog-title,
+html.dark .post-list-body-item {
+  @apply dark:border-gray-100/20;
 }
 html.dark .blog-search-body {
-  @apply bg-gray-700;
+  @apply dark:bg-gray-700;
 }
 html.dark .blog-top-bar {
   background-color: var(--wikimoe-dark-panel-bg);

@@ -1,5 +1,5 @@
 <template>
-  <div class="container dark:opacity-70">
+  <div class="container dark:opacity-80">
     <div class="title bg-primary text-white dark:text-black">程序员老黄历</div>
     <div class="date">{{ isLoading ? '正在计算今日运势...' : titleDate }}</div>
     <div class="good">
@@ -7,7 +7,7 @@
         <table>
           <tbody>
             <tr>
-              <td class="dark:text-white">宜</td>
+              <td class="dark:text-black">宜</td>
             </tr>
           </tbody>
         </table>

@@ -640,7 +640,7 @@ onUnmounted(() => {
   font-size: 15px;
 }
 .post-list-body-item {
-  @apply border-solid border-b border-gray-200 dark:border-gray-700;
+  @apply border-solid border-b border-gray-200;
   padding: 13px 18px;
 }
 .post-list-info-body {

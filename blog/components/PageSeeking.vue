@@ -1,5 +1,5 @@
 <template>
-  <div class="container dark:opacity-70">
+  <div class="container dark:opacity-80">
     <div class="title bg-primary text-white dark:text-black">程序员求签</div>
     <div class="info">
       <strong>求</strong>婚丧嫁娶亲友疾病编程测试升职跳槽陨石核弹各类吉凶
@@ -202,7 +202,7 @@ onUnmounted(() => {
 .info {
   text-align: center;
   color: #dc143c;
-  font-size: 9pt;
+  font-size: 14px;
 }
 
 .info strong {
