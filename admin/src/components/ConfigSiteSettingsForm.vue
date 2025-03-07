@@ -12,7 +12,7 @@
     <el-form-item label="站点副标题" prop="siteSubTitle">
       <el-input v-model="siteSettingsForm.siteSubTitle"></el-input>
     </el-form-item>
-    <el-form-item label="站点LOGO" prop="siteLogo">
+    <el-form-item label="站点LOGO" class="light" prop="siteLogo">
       <Cropper
         :maxWidth="1024"
         :maxHeight="1024"

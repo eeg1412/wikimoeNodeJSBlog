@@ -89,10 +89,13 @@ export function loadAndOpenImg (index, DataSource, isFromCache) {
 
 const startLoading = () => {
     store.dispatch("setLoading", true);
+    // 获取当前html标签中是否包含dark的class
+    const isDark = document.documentElement.classList.contains('dark')
+    const background = isDark ? 'rgba(0, 0, 0, 0.7)' : 'rgba(255, 255, 255, 0.7)'
     loading = ElLoading.service({
         lock: true,
         text: 'Loading',
-        background: 'rgba(255, 255, 255, 0.7)',
+        background: background,
     })
 };
 

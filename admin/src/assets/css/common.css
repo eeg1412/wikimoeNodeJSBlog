@@ -1102,3 +1102,42 @@ input[type='password'] {
 .dark .avatar-uploader {
   background: rgba(0, 0, 0, 0.8);
 }
+.light .avatar-uploader {
+  background: rgba(255, 255, 255, 0.8);
+}
+
+/* 深色模式适配 */
+html.dark {
+  --w-e-textarea-bg-color: #1e1e1e;
+  --w-e-textarea-color: #e0e0e0;
+  --w-e-textarea-border-color: #444;
+  --w-e-textarea-slight-border-color: #333;
+  --w-e-textarea-slight-color: #aaa;
+  --w-e-textarea-slight-bg-color: #2c2c2c;
+  --w-e-textarea-selected-border-color: #4d8bca;
+  --w-e-textarea-handler-bg-color: #4290f7;
+  --w-e-toolbar-color: #c0c0c0;
+  --w-e-toolbar-bg-color: #252525;
+  --w-e-toolbar-active-color: #ffffff;
+  --w-e-toolbar-active-bg-color: #3a3a3a;
+  --w-e-toolbar-disabled-color: #666;
+  --w-e-toolbar-border-color: #444;
+  --w-e-modal-button-bg-color: #2d2d2d;
+  --w-e-modal-button-border-color: #555;
+}
+html.dark .common-logo,
+html.dark .common-aside-collapse-btn,
+html.dark .common-header {
+  background: var(--el-bg-color);
+}
+html.dark .common-aside-collapse-btn {
+  border-right-color: var(--el-border-color);
+}
+html.dark .common-header {
+  border-bottom-color: var(--el-border-color);
+}
+@media (max-width: 767px) {
+  html.dark .common-aside {
+    background: var(--el-bg-color);
+  }
+}
