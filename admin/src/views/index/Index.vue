@@ -1,5 +1,35 @@
 <template>
   <div class="common-layout">
+    <div>
+      <!-- 主题切换控制 -->
+      <div class="theme-controls">
+        <!-- 系统支持主题检测时显示跟随系统选项 -->
+        <label v-if="systemPreferenceSupported" class="theme-switch">
+          <input
+            type="checkbox"
+            :checked="followSystem"
+            @change="toggleFollowSystem(!followSystem)"
+          />
+          <span>跟随系统主题</span>
+        </label>
+
+        <!-- 手动主题切换 -->
+        <div v-if="!followSystem || !systemPreferenceSupported">
+          <button
+            :class="{ active: theme === 'light' }"
+            @click="setTheme('light')"
+          >
+            🌞 亮色
+          </button>
+          <button
+            :class="{ active: theme === 'dark' }"
+            @click="setTheme('dark')"
+          >
+            🌙 暗色
+          </button>
+        </div>
+      </div>
+    </div>
     <el-container>
       <el-aside
         class="common-aside custom-scroll scroll-not-hide"
@@ -388,6 +418,7 @@ import {
 import { authApi } from '@/api'
 import store from '@/store'
 import { ElMessage, ElMessageBox } from 'element-plus'
+import { useTheme } from '@/composables/useTheme'
 
 export default {
   setup() {
@@ -452,6 +483,15 @@ export default {
       window.open(routeData.href, '_blank')
     }
 
+    const {
+      theme,
+      systemTheme,
+      followSystem,
+      systemPreferenceSupported,
+      setTheme,
+      toggleFollowSystem,
+    } = useTheme()
+
     onMounted(() => {
       store.dispatch('setAdminInfo')
       store.dispatch('setOptions')
@@ -478,6 +518,16 @@ export default {
       phoneMenuOpen,
       switchOpenMenu,
       openNewTab,
+
+      // 主题相关状态
+      theme,
+      systemTheme,
+      followSystem,
+      systemPreferenceSupported,
+
+      // 主题切换方法
+      setTheme,
+      toggleFollowSystem,
     }
   },
 }
