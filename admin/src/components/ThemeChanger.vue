@@ -18,13 +18,13 @@
             command="light"
             :class="{ 'active-theme': !followSystem && theme === 'light' }"
           >
-            <i class="fas fa-sun"></i> 亮色主题
+            <i class="fas fa-sun"></i> 浅色模式
           </el-dropdown-item>
           <el-dropdown-item
             command="dark"
             :class="{ 'active-theme': !followSystem && theme === 'dark' }"
           >
-            <i class="fas fa-moon"></i> 暗色主题
+            <i class="fas fa-moon"></i> 深色模式
           </el-dropdown-item>
         </el-dropdown-menu>
       </template>
@@ -82,7 +82,7 @@ export default {
   align-items: center;
 }
 
-:deep(.active-theme) {
+:deep(.el-dropdown-menu__item.active-theme) {
   color: #fff;
   background-color: var(--el-color-primary);
 }

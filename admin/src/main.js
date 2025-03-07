@@ -14,6 +14,17 @@ import IpInfoDisplay from '@/components/IpInfoDisplay.vue'
 import { formatDate } from '@/utils/utils'
 import { initRichEditor } from '@/utils/richEditor'
 import zhCn from 'element-plus/dist/locale/zh-cn.mjs'
+import { applyThemeToDom } from '@/utils/theme.js'
+
+
+const savedTheme = localStorage.getItem('theme-preference');
+const savedFollowSystem = localStorage.getItem('theme-follow-system');
+if (savedFollowSystem === 'true') {
+  const isDarkMode = window.matchMedia('(prefers-color-scheme: dark)')?.matches || false;
+  applyThemeToDom(isDarkMode ? 'dark' : 'light');
+} else {
+  applyThemeToDom(savedTheme || 'light');
+}
 
 
 const app = createApp(App)

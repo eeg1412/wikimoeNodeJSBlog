@@ -1,5 +1,6 @@
 // src/composables/useTheme.js
 import { ref, onMounted, onUnmounted, watch } from 'vue';
+import { applyThemeToDom } from '@/utils/theme.js'
 
 export function useTheme () {
   const theme = ref('light'); // 当前使用的主题
@@ -30,14 +31,7 @@ export function useTheme () {
 
   // 应用主题
   const applyTheme = (newTheme) => {
-    document.documentElement.setAttribute('data-theme', newTheme);
-    if (newTheme === 'dark') {
-      document.documentElement.classList.add('dark');
-      document.documentElement.classList.remove('light');
-    } else {
-      document.documentElement.classList.add('light');
-      document.documentElement.classList.remove('dark');
-    }
+    applyThemeToDom(newTheme);
     localStorage.setItem('theme-preference', newTheme);
     localStorage.setItem('theme-follow-system', followSystem.value);
   };
