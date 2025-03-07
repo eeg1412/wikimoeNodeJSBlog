@@ -1024,7 +1024,6 @@ ins.adsbygoogle[data-ad-status='unfilled'] {
 .common-right-tool-btn {
   @apply bg-primary-500 dark:bg-primary-500/90 dark:text-gray-900;
   cursor: pointer;
-  z-index: 10;
   transition: all 0.3s;
   display: flex;
   align-items: center;

@@ -905,6 +905,7 @@ onUnmounted(() => {
   position: fixed;
   right: 20px;
   bottom: 20px;
+  z-index: 10;
 }
 
 .page-enter-active {
