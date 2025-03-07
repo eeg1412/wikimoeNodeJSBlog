@@ -4,12 +4,8 @@
     class="themeBtn common-right-tool-btn opacity-70 text-white"
     @click="switchFilterMenu"
   >
-    <UIcon v-if="colorMode.preference === 'light'" name="i-heroicons-sun" />
-    <UIcon
-      v-else-if="colorMode.preference === 'dark'"
-      name="i-heroicons-moon"
-    />
-    <UIcon v-else name="i-heroicons-computer-desktop" />
+    <UIcon v-if="colorMode.value === 'light'" name="i-heroicons-sun" />
+    <UIcon v-else-if="colorMode.value === 'dark'" name="i-heroicons-moon" />
   </div>
   <transition name="fade">
     <div class="common-right-tool-menu-body" v-show="showFilterMenu">

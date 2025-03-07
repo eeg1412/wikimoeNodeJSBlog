@@ -52,9 +52,6 @@ export default {
     } = useTheme()
 
     const themeIcon = computed(() => {
-      if (followSystem.value) {
-        return 'fas fa-desktop'
-      }
       return theme.value === 'dark' ? 'fas fa-moon' : 'fas fa-sun'
     })
 
