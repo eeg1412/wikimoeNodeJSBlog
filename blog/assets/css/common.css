@@ -1164,7 +1164,7 @@ html.dark .post-list-body-item {
   @apply dark:border-gray-100/20;
 }
 html.dark .blog-search-body {
-  @apply dark:bg-gray-700;
+  @apply dark:bg-gray-900 dark:ring-1 dark:ring-inset dark:ring-gray-700;
 }
 html.dark .blog-top-bar {
   background-color: var(--wikimoe-dark-panel-bg);
