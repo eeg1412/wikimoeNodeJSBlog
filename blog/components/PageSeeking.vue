@@ -203,6 +203,7 @@ onUnmounted(() => {
   text-align: center;
   color: #dc143c;
   font-size: 14px;
+  padding-bottom: 5px;
 }
 
 .info strong {
