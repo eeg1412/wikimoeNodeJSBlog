@@ -2,8 +2,7 @@
   <div class="login-body">
     <div class="we-login">
       <div class="we-login-theme-changer">
-        <span class="we-login-theme-changer-title">主题模式:</span
-        ><ThemeChanger />
+        <ThemeChanger />
       </div>
       <div class="login-logo">
         <div class="pt10">博客管理系统</div>
