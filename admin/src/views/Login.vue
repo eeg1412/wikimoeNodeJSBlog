@@ -1,7 +1,10 @@
 <template>
   <div class="login-body">
     <div class="we-login">
-      <div class="we-login-theme-changer"><ThemeChanger /></div>
+      <div class="we-login-theme-changer">
+        <span class="we-login-theme-changer-title">主题模式:</span
+        ><ThemeChanger />
+      </div>
       <div class="login-logo">
         <div class="pt10">博客管理系统</div>
       </div>
@@ -141,6 +144,10 @@ export default {
   right: 10px;
   top: 10px;
   z-index: 2;
+}
+.we-login-theme-changer-title {
+  color: var(--el-text-color-regular);
+  padding-right: 3px;
 }
 </style>
 <style>
