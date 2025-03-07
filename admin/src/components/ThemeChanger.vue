@@ -7,6 +7,10 @@
       </el-button>
       <template #dropdown>
         <el-dropdown-menu>
+          <el-dropdown-item disabled class="dropdown-title"
+            >主题模式</el-dropdown-item
+          >
+          <el-divider class="dropdown-divider" />
           <el-dropdown-item
             v-if="systemPreferenceSupported"
             command="system"
@@ -90,5 +94,15 @@ export default {
 :deep(.el-dropdown-menu__item.is-disabled) {
   cursor: not-allowed;
   opacity: 0.7;
+}
+:deep(.el-dropdown-menu__item.dropdown-title) {
+  font-weight: bold;
+  color: inherit;
+  text-align: center;
+  opacity: 1;
+  cursor: default;
+}
+:deep(.dropdown-divider) {
+  margin: 5px 0;
 }
 </style>
