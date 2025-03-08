@@ -55,6 +55,7 @@ const props = defineProps({
   margin-right: -18px;
 }
 .my-page-avatar {
+  @apply dark:border-gray-800 dark:bg-gray-800;
   margin-top: -40px;
   border: 4px solid #fff;
   background-color: #fff;
