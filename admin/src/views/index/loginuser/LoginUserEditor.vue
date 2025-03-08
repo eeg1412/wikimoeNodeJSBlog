@@ -1,6 +1,10 @@
 <template>
   <div class="common-right-panel-form common-limit-width">
-    <h3 class="common-title">用户设置</h3>
+    <div class="pb20">
+      <el-breadcrumb separator="/">
+        <el-breadcrumb-item>用户设置</el-breadcrumb-item>
+      </el-breadcrumb>
+    </div>
     <div>
       <el-tabs v-model="activeName">
         <el-tab-pane label="资料修改" name="profile">

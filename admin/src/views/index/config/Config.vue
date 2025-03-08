@@ -1,6 +1,10 @@
 <template>
   <div class="common-right-panel-form limit-width-800 config-com-body">
-    <h3 class="common-title">设置</h3>
+    <div class="pb20">
+      <el-breadcrumb separator="/">
+        <el-breadcrumb-item>设置</el-breadcrumb-item>
+      </el-breadcrumb>
+    </div>
     <el-tabs v-model="activeName">
       <el-tab-pane label="网站设置" name="site">
         <ConfigSiteSettingsForm v-if="activeName === 'site'" />
