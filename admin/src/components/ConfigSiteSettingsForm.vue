@@ -36,11 +36,7 @@
       <el-switch v-model="siteSettingsForm.siteAllowSwitchTheme"></el-switch>
     </el-form-item>
     <!-- siteThemeMode -->
-    <el-form-item
-      label="站点主题模式"
-      prop="siteThemeMode"
-      v-if="!siteSettingsForm.siteAllowSwitchTheme"
-    >
+    <el-form-item label="默认站点主题模式" prop="siteThemeMode">
       <el-radio-group v-model="siteSettingsForm.siteThemeMode">
         <el-radio label="system">跟随系统</el-radio>
         <el-radio label="light">浅色模式</el-radio>

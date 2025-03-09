@@ -308,16 +308,6 @@ const { options } = storeToRefs(optionStore)
 const config = useRuntimeConfig()
 const version = config.public.version
 
-// 主题模式
-const colorMode = useColorMode()
-const siteThemeModeList = ['system', 'light', 'dark']
-if (
-  !options.value.siteAllowSwitchTheme &&
-  siteThemeModeList.includes(options.value.siteThemeMode)
-) {
-  colorMode.preference = options.value.siteThemeMode
-}
-
 // RSS
 const { siteShowLoading, siteShowLoadingText, siteShowBlogVersion } =
   options.value

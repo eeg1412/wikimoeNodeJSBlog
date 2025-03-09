@@ -62,6 +62,24 @@ if (options.value.googleAdEnabled) {
   })
 }
 
+// 主题模式
+const siteThemeModeList = ['system', 'light', 'dark']
+const siteThemeMode = options.value.siteThemeMode
+if (siteThemeModeList && siteThemeModeList.includes(siteThemeMode)) {
+  // 给script添加主题模式 先读取 nuxt-color-mode 有没有值，如果没有写入siteThemeMode
+  script.push({
+    innerHTML: `
+      (function() {
+        const colorMode = localStorage.getItem('nuxt-color-mode');
+        if (!colorMode) {
+          localStorage.setItem('nuxt-color-mode', '${siteThemeMode}');
+        }
+      })();
+    `,
+    type: 'text/javascript',
+  })
+}
+
 useHead({
   titleTemplate: (titleChunk) => {
     if (!titleChunk) {
