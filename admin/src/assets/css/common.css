@@ -1125,6 +1125,11 @@ html.dark {
   --w-e-modal-button-bg-color: #2d2d2d;
   --w-e-modal-button-border-color: #555;
 }
+.common-layout .w-e-toolbar,
+.common-layout .w-e-text-container,
+.common-layout .w-e-menu-panel {
+  background-color: var(--w-e-toolbar-bg-color);
+}
 html.dark .common-logo,
 html.dark .common-aside-collapse-btn,
 html.dark .common-header,
