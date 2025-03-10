@@ -4,7 +4,7 @@ const log4js = require('log4js')
 const adminApiLog = log4js.getLogger('adminApi')
 
 module.exports = async function (req, res, next) {
-  const { id, __v, title, maxSelect, showResult, status, options, endTime } = req.body
+  const { id, __v, title, maxSelect, showResultAfter, status, options, endTime } = req.body
   if (!utils.isObjectId(id || '')) {
     res.status(400).json({
       errors: [{
@@ -47,8 +47,8 @@ module.exports = async function (req, res, next) {
   const params = {
     title,
     maxSelect: Number(maxSelect),
-    showResult: showResult ? true : false,
-    endtime: endTime || null,
+    showResultAfter: showResultAfter ? true : false,
+    endTime: endTime || null,
     status,
   }
   const rule = [
@@ -71,7 +71,6 @@ module.exports = async function (req, res, next) {
       key: 'endTime',
       label: '结束时间',
       type: 'isISO8601',
-      required: true,
       options: {
         strict: true,
         strictSeparator: true,

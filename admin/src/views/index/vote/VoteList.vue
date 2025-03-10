@@ -23,7 +23,9 @@
             ></el-input>
           </el-form-item>
           <el-form-item>
-            <el-button type="primary" @click="getVoteList(true)">搜索</el-button>
+            <el-button type="primary" @click="getVoteList(true)"
+              >搜索</el-button
+            >
           </el-form-item>
         </el-form>
       </div>
@@ -35,13 +37,64 @@
     </div>
     <!-- 投票 -->
     <div class="mb20 list-table-body">
-      <el-table height="100%" :data="voteList" row-key="_id" ref="tableRef" border>
+      <el-table
+        height="100%"
+        :data="listCom"
+        row-key="_id"
+        ref="tableRef"
+        default-expand-all
+        border
+      >
+        <!-- title -->
+        <el-table-column prop="title" label="标题/内容" min-width="200" />
+        <!-- 投票数 votes -->
+        <el-table-column prop="votes" label="投票数" width="100" />
+        <!-- maxSelect -->
+        <el-table-column
+          prop="maxSelect"
+          label="最多可选择的选项数"
+          width="200"
+        />
+        <!-- showResultAfter -->
+        <el-table-column
+          prop="showResultAfter"
+          label="投票后才显示结果"
+          width="200"
+        >
+          <template #default="{ row }">
+            <el-tag
+              v-if="row.isParent === true"
+              :type="row.showResultAfter === true ? 'success' : 'danger'"
+              size="small"
+              >{{ row.showResultAfter === true ? '是' : '不是' }}</el-tag
+            >
+          </template>
+        </el-table-column>
+        <!-- endTime -->
+        <el-table-column prop="endTime" label="结束时间" width="200">
+          <template #default="{ row }">
+            {{ $formatDate(row.endTime) }}
+          </template>
+        </el-table-column>
+        <!-- 排序 sort -->
+        <el-table-column prop="sort" label="排序" width="100" />
+        <!-- 状态 -->
+        <el-table-column prop="status" label="状态" width="100">
+          <template #default="{ row }">
+            <el-tag
+              v-if="row.isParent === true"
+              :type="row.status === 1 ? 'success' : 'danger'"
+              size="small"
+              >{{ row.status === 1 ? '显示' : '不显示' }}</el-tag
+            >
+          </template>
+        </el-table-column>
         <el-table-column label="操作" width="140" fixed="right">
           <template #default="{ row }">
             <el-button type="primary" size="small" @click="goEdit(row._id)"
               >编辑</el-button
             >
-            <el-button type="danger" size="small" @click="deleteVote(row._id)"
+            <el-button type="danger" size="small" @click="deleteVote(row)"
               >删除</el-button
             >
           </template>
@@ -67,8 +120,8 @@
 import { useRoute, useRouter } from 'vue-router'
 import { authApi } from '@/api'
 import { ElMessage, ElMessageBox } from 'element-plus'
-import { onMounted, reactive, ref, watch } from 'vue'
-import { setSessionParams, getSessionParams } from '@/utils/utils'
+import { onMounted, reactive, ref, watch, computed } from 'vue'
+import { setSessionParams, getSessionParams, escapeHtml } from '@/utils/utils'
 import CheckDialogService from '@/services/CheckDialogService'
 
 export default {
@@ -76,6 +129,16 @@ export default {
     const route = useRoute()
     const router = useRouter()
     const voteList = ref([])
+    const listCom = computed(() => {
+      // 将options转换为children
+      return voteList.value.map((item) => {
+        return {
+          isParent: true,
+          ...item,
+          children: item.options,
+        }
+      })
+    })
     const params = reactive({
       page: 1,
       size: 50,
@@ -123,15 +186,15 @@ export default {
     }
     const deleteVote = (row) => {
       const id = row._id
-      const title = escapeHtml(row.title) || '未命名'
+      const title = escapeHtml(row.title || '') || '未命名'
 
       CheckDialogService.open({
         correctAnswer: '是',
         content: `此操作将<span class="cRed">永久删除活动：【${title}】</span>, 是否继续?`,
         success: () => {
-          return authApi.deleteEvent({ id }).then(() => {
+          return authApi.deleteVote({ id }).then(() => {
             ElMessage.success('删除成功')
-            getEventList()
+            getVoteList()
           })
         },
       })
@@ -155,6 +218,7 @@ export default {
     })
     return {
       voteList,
+      listCom,
       params,
       total,
       tableRef,

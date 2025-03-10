@@ -1099,6 +1099,11 @@ input[type='password'] {
   width: 100%;
   justify-content: flex-start;
 }
+.required::before {
+  content: '*';
+  color: var(--el-color-danger);
+  margin-right: 4px;
+}
 .dark .avatar-uploader {
   background: rgba(0, 0, 0, 0.8);
 }

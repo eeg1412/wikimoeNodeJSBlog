@@ -5,7 +5,7 @@ const adminApiLog = log4js.getLogger('adminApi')
 
 module.exports = async function (req, res, next) {
 
-  const { title, maxSelect, showResult, status, options, endTime } = req.body
+  const { title, maxSelect, showResultAfter, status, options, endTime } = req.body
   // options 不是数组则报错
   if (!Array.isArray(options)) {
     res.status(400).json({
@@ -28,8 +28,8 @@ module.exports = async function (req, res, next) {
   const params = {
     title,
     maxSelect: Number(maxSelect),
-    showResult: showResult ? true : false,
-    endtime: endTime || null,
+    showResultAfter: showResultAfter ? true : false,
+    endTime: endTime || null,
     status,
   }
   const rule = [
@@ -52,7 +52,6 @@ module.exports = async function (req, res, next) {
       key: 'endTime',
       label: '结束时间',
       type: 'isISO8601',
-      required: true,
       options: {
         strict: true,
         strictSeparator: true,

@@ -20,12 +20,12 @@
           <el-input-number
             v-model="form.maxSelect"
             :min="1"
-            :max="options.length || 1"
+            :max="form.options.length || 1"
           ></el-input-number>
         </el-form-item>
-        <!-- showResult -->
-        <el-form-item label="是否投票后显示结果" prop="showResult">
-          <el-switch v-model="form.showResult"></el-switch>
+        <!-- showResultAfter -->
+        <el-form-item label="投票后才显示结果" prop="showResultAfter">
+          <el-switch v-model="form.showResultAfter"></el-switch>
         </el-form-item>
         <!-- 结束时间 -->
         <el-form-item label="结束时间" prop="endTime">
@@ -34,9 +34,64 @@
             type="datetime"
             placeholder="选择日期时间"
           ></el-date-picker>
+          <div class="w_10">※不填写则不限制</div>
         </el-form-item>
         <!-- 选项 -->
-        <el-form-item label="投票选项" prop="options"> </el-form-item>
+        <el-form-item label="投票选项">
+          <!-- 遍历options -->
+          <template v-for="(item, index) in form.options" :key="index">
+            <div class="w_10">
+              <el-row
+                class="mb20 vote-option-row"
+                v-if="item.action !== 'delete'"
+              >
+                <el-col :span="24">
+                  <div class="mb20">
+                    <el-form-item
+                      :prop="'options.' + index + '.title'"
+                      :rules="{
+                        required: true,
+                        message: '请输入选项内容',
+                        trigger: 'blur',
+                      }"
+                    >
+                      <div class="w_10 required">内容</div>
+                      <el-input
+                        v-model="item.title"
+                        placeholder="请输入选项内容"
+                      ></el-input>
+                    </el-form-item>
+                  </div>
+                </el-col>
+                <el-col :span="24">
+                  <div class="mb20">
+                    <el-form-item
+                      :prop="'options.' + index + '.sort'"
+                      :rules="{
+                        required: true,
+                        message: '请输入排序',
+                        trigger: 'blur',
+                      }"
+                    >
+                      <div class="w_10 required">排序</div>
+                      <el-input-number
+                        v-model="item.sort"
+                        placeholder="请输入排序"
+                        :min="1"
+                        :max="999999999"
+                        :precision="0"
+                      ></el-input-number>
+                    </el-form-item>
+                  </div>
+                </el-col>
+              </el-row>
+            </div>
+          </template>
+          <!-- 添加按钮 -->
+          <el-form-item class="w_10" prop="options">
+            <el-button type="primary" @click="addOption">添加选项</el-button>
+          </el-form-item>
+        </el-form-item>
         <!-- status -->
         <el-form-item label="状态" prop="status">
           <!-- radio 分别对应 0 1 不显示 显示 -->
@@ -65,19 +120,19 @@ export default {
     // title: { type: String, required: true },
     // // 最多可选择的选项数
     // maxSelect: { type: Number, default: 1 },
-    // // 是否投票后显示结果
-    // showResult: { type: Boolean, default: true },
+    // // 投票后才显示结果
+    // showResultAfter: { type: Boolean, default: true },
     // // 状态 0 不显示 1 显示
     // status: { type: Number, default: 0 },
     const form = reactive({
       title: '',
       maxSelect: 1,
-      showResult: true,
+      showResultAfter: true,
       endTime: null,
+      options: [],
       status: 0,
       __v: null,
     })
-    const options = ref([])
     const rules = reactive({
       title: [{ required: true, message: '请输入标题', trigger: 'blur' }],
       maxSelect: [
@@ -91,7 +146,7 @@ export default {
       options: [
         {
           validator: (rule, value) => {
-            if (options.value.length < 2) {
+            if (value.length < 2) {
               return Promise.reject('至少需要2个选项')
             }
             return Promise.resolve()
@@ -106,11 +161,13 @@ export default {
         if (!valid) {
           return false
         }
-        const data = {}
+        const data = {
+          ...form,
+        }
         if (id.value) {
           // 编辑
           data.id = id.value
-          data.__v = form.__v
+
           authApi
             .updateVote(data)
             .then(() => {
@@ -144,6 +201,13 @@ export default {
         })
         .catch(() => {})
     }
+    const addOption = () => {
+      form.options.push({
+        title: '',
+        sort: form.options.length + 1,
+        action: 'add',
+      })
+    }
     onMounted(() => {
       if (id.value) {
         getVoteDetail()
@@ -152,12 +216,17 @@ export default {
     return {
       id,
       form,
-      options,
       rules,
       formRef,
       submit,
+      addOption,
     }
   },
 }
 </script>
-<style scoped></style>
+<style scoped>
+.vote-option-row {
+  border: 1px solid var(--el-border-color);
+  padding: 20px;
+}
+</style>

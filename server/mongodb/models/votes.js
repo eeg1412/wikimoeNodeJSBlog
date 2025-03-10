@@ -21,8 +21,8 @@ var votes = new Schema({
   options: [OptionSchema],
   // 最多可选择的选项数
   maxSelect: { type: Number, default: 1 },
-  // 是否投票后显示结果
-  showResult: { type: Boolean, default: true },
+  // 投票后才显示结果
+  showResultAfterAfter: { type: Boolean, default: false },
   endTime: { type: Date, default: null },
   // 状态 0 不显示 1 显示
   status: { type: Number, default: 0 },
