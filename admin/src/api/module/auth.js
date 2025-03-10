@@ -887,5 +887,38 @@ export default function (api) {
         shouldAdminJWT: true
       })
     },
+    // post /vote/create
+    createVote (data) {
+      return api.post('/vote/create', data, {
+        shouldAdminJWT: true
+      })
+    },
+    // get /vote/list
+    getVoteList (data) {
+      return api.get('/vote/list', {
+        params: data,
+        shouldAdminJWT: true
+      })
+    },
+    // get /vote/detail
+    getVoteDetail (data) {
+      return api.get('/vote/detail', {
+        params: data,
+        shouldAdminJWT: true
+      })
+    },
+    // put /vote/update
+    updateVote (data) {
+      return api.put('/vote/update', data, {
+        shouldAdminJWT: true
+      })
+    },
+    // delete /vote/delete
+    deleteVote (data) {
+      return api.delete('/vote/delete', {
+        params: data,
+        shouldAdminJWT: true
+      })
+    },
   }
 }

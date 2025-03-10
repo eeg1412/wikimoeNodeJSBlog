@@ -301,6 +301,25 @@ const routes = [
         name: 'UserEdit',
         component: () => import(/* webpackChunkName: "UserEditor" */ '../views/index/user/UserEditor.vue')
       },
+      // VoteList
+      {
+        path: '/vote/list',
+        name: 'VoteList',
+        component: () => import(/* webpackChunkName: "VoteList" */ '../views/index/vote/VoteList.vue')
+      },
+      // VoteAdd
+      {
+        path: '/vote/add',
+        name: 'VoteAdd',
+        component: () => import(/* webpackChunkName: "VoteAdd" */ '../views/index/vote/VoteEditor.vue')
+      },
+      // VoteEditor
+      {
+        path: '/vote/editor/:id',
+        name: 'VoteEdit',
+        component: () => import(/* webpackChunkName: "VoteEditor" */ '../views/index/vote/VoteEditor.vue')
+      },
+
       // config
       {
         path: '/config',

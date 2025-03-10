@@ -1321,6 +1321,51 @@ const adminRouteSetting = [
     roleType: 'eq',
     role: 999
   },
+  // post createVote
+  {
+    path: '/vote/create',
+    method: 'post',
+    middleware: [checkAuth],
+    controller: require('../api/admin/vote/createVote'),
+    roleType: null,
+    role: null
+  },
+  // delete deleteVote
+  {
+    path: '/vote/delete',
+    method: 'delete',
+    middleware: [checkAuth],
+    controller: require('../api/admin/vote/deleteVote'),
+    roleType: null,
+    role: null
+  },
+  // get getVoteDetail
+  {
+    path: '/vote/detail',
+    method: 'get',
+    middleware: [checkAuth],
+    controller: require('../api/admin/vote/getVoteDetail'),
+    roleType: null,
+    role: null
+  },
+  // get getVoteList
+  {
+    path: '/vote/list',
+    method: 'get',
+    middleware: [checkAuth],
+    controller: require('../api/admin/vote/getVoteList'),
+    roleType: null,
+    role: null
+  },
+  // update updateVote
+  {
+    path: '/vote/update',
+    method: 'put',
+    middleware: [checkAuth],
+    controller: require('../api/admin/vote/updateVote'),
+    roleType: null,
+    role: null
+  },
 ]
 
 adminRouteSetting.forEach(item => {

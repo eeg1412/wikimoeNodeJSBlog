@@ -221,6 +221,16 @@
                 <template #title>活动列表</template>
               </el-menu-item>
             </el-sub-menu>
+            <!-- 投票 -->
+            <el-menu-item
+              index="VoteList"
+              @click="removeParam('VoteList')"
+              @click.middle="openNewTab('VoteList')"
+              :route="{ name: 'VoteList' }"
+            >
+              <i class="fas fa-fw fa-poll-h pr10"></i>
+              <template #title>投票</template>
+            </el-menu-item>
             <el-sub-menu index="history">
               <template #title>
                 <!-- 日志图标 -->
