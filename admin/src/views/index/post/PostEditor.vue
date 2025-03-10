@@ -1282,7 +1282,7 @@ export default {
   color: #f56c6c;
   cursor: pointer;
   background-color: rgba(255, 255, 255, 0.85);
-  z-index: 3;
+  z-index: 2;
 }
 .post-cover-image-item-handle {
   position: absolute;
@@ -1299,7 +1299,7 @@ export default {
   color: #666;
   cursor: move;
   background-color: rgba(255, 255, 255, 0.85);
-  z-index: 3;
+  z-index: 2;
 }
 .post-cover-image-item.type-add {
   border: 1px dashed #ccc;
