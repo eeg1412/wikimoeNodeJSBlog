@@ -278,4 +278,8 @@ export default {
   margin-bottom: 5px;
   vertical-align: bottom;
 }
+.url-link-row {
+  border: 1px solid var(--el-border-color);
+  padding: 20px;
+}
 </style>
