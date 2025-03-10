@@ -354,7 +354,7 @@ export default {
 </script>
 <style scoped>
 .url-link-row {
-  border: 1px solid #eee;
+  border: 1px solid var(--el-border-color);
   padding: 20px;
 }
 </style>
