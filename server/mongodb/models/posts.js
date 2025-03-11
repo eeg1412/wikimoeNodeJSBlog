@@ -122,6 +122,7 @@ var posts = new Schema({
   bookList: [{ type: Schema.ObjectId, ref: 'books', default: [] }],
   postList: [{ type: Schema.ObjectId, ref: 'posts', default: [] }],
   eventList: [{ type: Schema.ObjectId, ref: 'events', default: [] }],
+  voteList: [{ type: Schema.ObjectId, ref: 'votes', default: [] }],
 }, { timestamps: true });
 
 module.exports = mongoose.model('posts', posts);

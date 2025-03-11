@@ -71,6 +71,10 @@ exports.findOne = async function (parmas, projection, options = {}) {
         path: 'eventtype',
         select: '_id name color'
       }
+    }).populate({
+      path: 'voteList',
+      match: { status: matchStatus },
+      select: options.voteFliter || undefined,
     });
 }
 
@@ -154,6 +158,14 @@ exports.findPage = async function (parmas, sort, page, limit, projection, option
       match: { status: matchStatus },
       select: '_id title startTime status',
     });
+  }
+
+  if (projection && !projection.includes('-voteList')) {
+    query = query.populate({
+      path: 'voteList',
+      match: { status: matchStatus },
+      select: options.voteFliter || undefined,
+    })
   }
 
   const list = await query.sort(sort).skip((page - 1) * limit).limit(limit);
