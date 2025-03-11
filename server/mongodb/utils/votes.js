@@ -51,6 +51,10 @@ exports.updateOne = async function (filters, parmas) {
   parmas.$inc = { __v: 1, ...parmas.$inc }
   return await votesModel.updateOne(filters, parmas);
 }
+exports.updateOneOptionsPromise = async function (filters, parmas) {
+  // document查询
+  return votesModel.updateOne(filters, parmas);
+}
 // deleteMany
 exports.deleteMany = async function (filters) {
   return await votesModel.deleteMany(filters);

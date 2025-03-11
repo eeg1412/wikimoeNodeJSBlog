@@ -40,11 +40,11 @@
         <el-form-item label="投票选项">
           <!-- 遍历options -->
           <template v-for="(item, index) in form.options" :key="index">
-            <div class="w_10">
-              <el-row
-                class="mb20 vote-option-row"
-                v-if="item.action !== 'delete'"
-              >
+            <div
+              class="w_10 vote-option-row mb20"
+              v-if="item.action !== 'delete'"
+            >
+              <el-row class="mb20">
                 <el-col :span="24">
                   <div class="mb20">
                     <el-form-item
@@ -64,7 +64,7 @@
                   </div>
                 </el-col>
                 <el-col :span="24">
-                  <div class="mb20">
+                  <div>
                     <el-form-item
                       :prop="'options.' + index + '.sort'"
                       :rules="{
@@ -85,6 +85,16 @@
                   </div>
                 </el-col>
               </el-row>
+              <div class="vote-delete">
+                <!-- 删除按钮 -->
+                <el-button
+                  type="danger"
+                  text
+                  circle
+                  @click="removeOption(index)"
+                  icon="Close"
+                ></el-button>
+              </div>
             </div>
           </template>
           <!-- 添加按钮 -->
@@ -126,8 +136,8 @@ export default {
     // status: { type: Number, default: 0 },
     const form = reactive({
       title: '',
-      maxSelect: 1,
-      showResultAfter: true,
+      maxSelect: null,
+      showResultAfter: false,
       endTime: null,
       options: [],
       status: 0,
@@ -146,7 +156,10 @@ export default {
       options: [
         {
           validator: (rule, value) => {
-            if (value.length < 2) {
+            const notDeleteOptions = value.filter((item) => {
+              return item.action !== 'delete'
+            })
+            if (notDeleteOptions.length < 2) {
               return Promise.reject('至少需要2个选项')
             }
             return Promise.resolve()
@@ -167,6 +180,10 @@ export default {
         if (id.value) {
           // 编辑
           data.id = id.value
+          const actionArr = ['add', 'delete', 'update']
+          data.options = data.options.filter((item) => {
+            return actionArr.includes(item.action)
+          })
 
           authApi
             .updateVote(data)
@@ -198,6 +215,12 @@ export default {
         .getVoteDetail(params)
         .then((res) => {
           form.__v = res.data.data.__v
+          form.title = res.data.data.title
+          form.maxSelect = res.data.data.maxSelect
+          form.showResultAfter = res.data.data.showResultAfter
+          form.endTime = res.data.data.endTime
+          form.status = res.data.data.status
+          form.options = res.data.data.options
         })
         .catch(() => {})
     }
@@ -207,6 +230,15 @@ export default {
         sort: form.options.length + 1,
         action: 'add',
       })
+    }
+    const removeOption = (index) => {
+      // 如果action为add，则直接删除
+      if (form.options[index].action === 'add') {
+        form.options.splice(index, 1)
+      } else {
+        // 否则将action改为delete
+        form.options[index].action = 'delete'
+      }
     }
     onMounted(() => {
       if (id.value) {
@@ -220,6 +252,7 @@ export default {
       formRef,
       submit,
       addOption,
+      removeOption,
     }
   },
 }
@@ -227,6 +260,13 @@ export default {
 <style scoped>
 .vote-option-row {
   border: 1px solid var(--el-border-color);
-  padding: 20px;
+  padding: 20px 20px 20px 20px;
+  position: relative;
+}
+.vote-delete {
+  position: absolute;
+  right: 5px;
+  top: 5px;
+  z-index: 1;
 }
 </style>

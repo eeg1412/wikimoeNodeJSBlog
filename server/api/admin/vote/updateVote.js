@@ -43,6 +43,34 @@ module.exports = async function (req, res, next) {
     return
   }
 
+  // 根据id和__v查询数据
+  const voteData = await voteUtils.findOne({ _id: id, __v })
+  if (!voteData) {
+    res.status(400).json({
+      errors: [{
+        message: '更新失败，数据可能不存在或者已被修改'
+      }]
+    })
+    return
+  }
+
+  const optionsLength = options.length
+  const voteOptionsLength = voteData.options.length
+  // 查询options里action为add的个数
+  const addLength = options.filter(option => option.action === 'add').length
+  // 查询options里action为delete的个数
+  const deleteLength = options.filter(option => option.action === 'delete').length
+  // 最终options的个数
+  const finalOptionsLength = voteOptionsLength + addLength - deleteLength
+  if (finalOptionsLength < 2) {
+    res.status(400).json({
+      errors: [{
+        message: '选项数不正确'
+      }]
+    })
+    return
+  }
+
   // 校验格式
   const params = {
     title,
@@ -64,7 +92,7 @@ module.exports = async function (req, res, next) {
       type: 'isInt',
       options: {
         min: 1,
-        max: options.length
+        max: finalOptionsLength
       }
     },
     {
@@ -96,7 +124,7 @@ module.exports = async function (req, res, next) {
       return
     }
     if (option.action === 'delete' || option.action === 'update') {
-      if (!utils.isObjectId(option.id || '')) {
+      if (!utils.isObjectId(option._id || '')) {
         res.status(400).json({
           errors: [{
             message: '选项id格式不正确'
@@ -108,7 +136,7 @@ module.exports = async function (req, res, next) {
 
 
     const optionParams = {
-      _id: option.id || undefined,
+      _id: option._id || undefined,
       title: option.title,
       sort: Number(option.sort),
       action: option.action,
@@ -137,14 +165,6 @@ module.exports = async function (req, res, next) {
     }
     checkedOptions.push(optionParams)
   }
-  if (checkedOptions.length < 2) {
-    res.status(400).json({
-      errors: [{
-        message: '选项数不能少于2个'
-      }]
-    })
-    return
-  }
 
 
   // updateOne
@@ -164,7 +184,7 @@ module.exports = async function (req, res, next) {
       const option = checkedOptions[i]
       switch (option.action) {
         case 'add':
-          optionPromises.push(voteUtils.updateOne({
+          optionPromises.push(voteUtils.updateOneOptionsPromise({
             _id: id,
           }, {
             $push: {
@@ -176,7 +196,7 @@ module.exports = async function (req, res, next) {
           }))
           break;
         case 'delete':
-          optionPromises.push(voteUtils.updateOne({
+          optionPromises.push(voteUtils.updateOneOptionsPromise({
             _id: id,
           }, {
             $pull: {
@@ -187,7 +207,7 @@ module.exports = async function (req, res, next) {
           }))
           break;
         case 'update':
-          optionPromises.push(voteUtils.updateOne({
+          optionPromises.push(voteUtils.updateOneOptionsPromise({
             _id: id,
             'options._id': option._id
           }, {
@@ -201,11 +221,14 @@ module.exports = async function (req, res, next) {
         default:
           break;
       }
+    }
+    if (optionPromises.length > 0) {
       Promise.all(optionPromises).then((optionData) => {
         res.send({
           votedata: data,
           optiondata: optionData
         })
+        adminApiLog.info(`vote update success`)
       }).catch((err) => {
         res.status(400).json({
           errors: [{
@@ -214,11 +237,13 @@ module.exports = async function (req, res, next) {
         })
         adminApiLog.error(`vote options update fail, ${logErrorToText(err)}`)
       })
+    } else {
+      res.send({
+        votedata: data,
+      })
+      adminApiLog.info(`vote update success`)
     }
-    // res.send({
-    //   data: data
-    // })
-    adminApiLog.info(`vote update success`)
+
   }).catch((err) => {
     res.status(400).json({
       errors: [{

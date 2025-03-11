@@ -26,6 +26,24 @@ var votes = new Schema({
   endTime: { type: Date, default: null, index: true },
   // 状态 0 不显示 1 显示
   status: { type: Number, default: 0, index: true },
-}, { timestamps: true });
+}, {
+  timestamps: true,
+  toJSON: {
+    transform: function (doc, ret) {
+      if (ret.options && Array.isArray(ret.options)) {
+        ret.options.sort((a, b) => a.sort - b.sort);
+      }
+      return ret;
+    }
+  },
+  toObject: {
+    transform: function (doc, ret) {
+      if (ret.options && Array.isArray(ret.options)) {
+        ret.options.sort((a, b) => a.sort - b.sort);
+      }
+      return ret;
+    }
+  }
+});
 
 module.exports = mongoose.model('votes', votes);

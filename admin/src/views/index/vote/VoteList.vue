@@ -91,12 +91,14 @@
         </el-table-column>
         <el-table-column label="操作" width="140" fixed="right">
           <template #default="{ row }">
-            <el-button type="primary" size="small" @click="goEdit(row._id)"
-              >编辑</el-button
-            >
-            <el-button type="danger" size="small" @click="deleteVote(row)"
-              >删除</el-button
-            >
+            <template v-if="row.isParent === true">
+              <el-button type="primary" size="small" @click="goEdit(row._id)"
+                >编辑</el-button
+              >
+              <el-button type="danger" size="small" @click="deleteVote(row)"
+                >删除</el-button
+              >
+            </template>
           </template>
         </el-table-column>
       </el-table>
