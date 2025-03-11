@@ -209,6 +209,15 @@
     </div>
     <!-- 推文图片 -->
     <template v-if="postData.data.type === 2">
+      <div>
+        <div
+          v-for="(vote, index) in postData.data.voteList"
+          :key="vote._id"
+          class="mt-3"
+        >
+          <VoteItem :item="vote" />
+        </div>
+      </div>
       <div
         class="post-tweet-detail-cover-list-body mt-3"
         v-if="postData.data.coverImages.length > 0"

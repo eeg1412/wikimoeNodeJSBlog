@@ -107,7 +107,11 @@
               </TweetContent>
             </template>
           </div>
-
+          <div>
+            <div v-for="(vote, index) in item.voteList" :key="vote._id">
+              <VoteItem :item="vote" />
+            </div>
+          </div>
           <!-- 图片 -->
           <template v-if="item.type === 1">
             <NuxtLink
