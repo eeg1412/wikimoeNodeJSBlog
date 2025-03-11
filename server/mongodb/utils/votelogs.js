@@ -60,3 +60,9 @@ exports.deleteOne = async function (filters) {
   // document查询
   return await votelogsModel.deleteOne(filters);
 }
+
+// 数量
+exports.countDocuments = async function (parmas) {
+  // document查询
+  return await votelogsModel.countDocuments(parmas);
+}

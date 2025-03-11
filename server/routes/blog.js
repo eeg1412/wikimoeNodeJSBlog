@@ -304,6 +304,20 @@ const blogRouteSetting = [
     middleware: [],
     controller: require('../api/blog/trend/getTrendPostList'),
   },
+  // getVoteDetail
+  {
+    path: '/vote/detail',
+    method: 'get',
+    middleware: [],
+    controller: require('../api/blog/vote/getVoteDetail'),
+  },
+  // postVote
+  {
+    path: '/vote',
+    method: 'post',
+    middleware: [],
+    controller: require('../api/blog/vote/postVote'),
+  },
 ]
 
 blogRouteSetting.forEach(item => {

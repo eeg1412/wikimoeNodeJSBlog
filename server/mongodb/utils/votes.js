@@ -51,6 +51,9 @@ exports.updateOne = async function (filters, parmas) {
   parmas.$inc = { __v: 1, ...parmas.$inc }
   return await votesModel.updateOne(filters, parmas);
 }
+exports.updateOneByVote = async function (filters, parmas, options = {}) {
+  return await votesModel.updateOne(filters, parmas, options);
+}
 exports.updateOneOptionsPromise = async function (filters, parmas) {
   // document查询
   return votesModel.updateOne(filters, parmas);
