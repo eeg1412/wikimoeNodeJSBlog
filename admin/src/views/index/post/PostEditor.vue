@@ -361,6 +361,31 @@
             </el-select>
           </el-form-item>
         </template>
+        <template v-if="type === 2">
+          <!-- 关联投票 -->
+          <el-form-item label="关联投票" prop="vote">
+            <el-select
+              v-model="form.voteList"
+              multiple
+              filterable
+              remote
+              :remote-method="queryVotes"
+              :automatic-dropdown="true"
+              default-first-option
+              :reserve-keyword="false"
+              :loading="voteIsLoading"
+              placeholder="请选择投票"
+              style="width: 100%"
+            >
+              <el-option
+                v-for="item in voteList"
+                :key="item._id"
+                :label="item.title"
+                :value="item._id"
+              ></el-option>
+            </el-select>
+          </el-form-item>
+        </template>
         <!-- 文章别名 -->
         <el-form-item label="文章别名" prop="alias">
           <el-input
@@ -545,6 +570,10 @@ export default {
                 form[key] = res.data.data[key].map((item) => item._id)
                 eventList.value = res.data.data[key]
                 break
+              case 'voteList':
+                form[key] = res.data.data[key].map((item) => item._id)
+                voteList.value = res.data.data[key]
+                break
               case 'coverImages':
                 form[key] = res.data.data[key].map((item) => item._id)
                 res.data.data[key].forEach((item) => {
@@ -627,6 +656,7 @@ export default {
       bookList: [],
       postList: [],
       eventList: [],
+      voteList: [],
       top: false,
       sortop: false,
       status: 0,
@@ -921,6 +951,36 @@ export default {
       }
       queryEventsTimer = setTimeout(() => {
         getEventList(query)
+      }, 50)
+    }
+
+    // vote
+    const voteList = ref([])
+    const voteIsLoading = ref(false)
+    const getVoteList = (voteKeyword = null) => {
+      if (voteIsLoading.value) {
+        return
+      }
+      voteIsLoading.value = true
+      authApi
+        .getVoteList(
+          { keyword: voteKeyword, status: 1, size: 50, page: 1 },
+          true
+        )
+        .then((res) => {
+          voteList.value = res.data.list
+        })
+        .finally(() => {
+          voteIsLoading.value = false
+        })
+    }
+    let queryVotesTimer = null
+    const queryVotes = (query) => {
+      if (queryVotesTimer) {
+        clearTimeout(queryVotesTimer)
+      }
+      queryVotesTimer = setTimeout(() => {
+        getVoteList(query)
       }, 50)
     }
 
@@ -1231,6 +1291,10 @@ export default {
       eventList,
       eventIsLoading,
       queryEvents,
+      // vote
+      voteList,
+      voteIsLoading,
+      queryVotes,
       // sorts
       sortList,
       // attachments

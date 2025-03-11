@@ -254,6 +254,11 @@
                 >{{ `${checkShowText(content)}`
                 }}{{ `【${$formatDate(content.startTime, 'YYYY年MM月')}】` }}
               </template>
+              <!-- vote -->
+              <template v-else-if="content.type === 'vote'">
+                <i class="fas fa-fw fa-poll-h"></i
+                >{{ `${checkShowText(content)}` }}{{ `【投票】` }}
+              </template>
               {{ content.title }}
             </div>
           </template>
@@ -641,6 +646,7 @@ export default {
         gameList,
         postList,
         eventList,
+        voteList,
       } = row
       const contentList = []
       if (bookList && bookList.length) {
@@ -676,6 +682,12 @@ export default {
       if (eventList && eventList.length) {
         const type = 'event'
         eventList.forEach((item) => {
+          contentList.push({ ...item, type })
+        })
+      }
+      if (voteList && voteList.length) {
+        const type = 'vote'
+        voteList.forEach((item) => {
           contentList.push({ ...item, type })
         })
       }

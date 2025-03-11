@@ -894,10 +894,11 @@ export default function (api) {
       })
     },
     // get /vote/list
-    getVoteList (data) {
+    getVoteList (data, noLoading = false) {
       return api.get('/vote/list', {
         params: data,
-        shouldAdminJWT: true
+        shouldAdminJWT: true,
+        noLoading
       })
     },
     // get /vote/detail
