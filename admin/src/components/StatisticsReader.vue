@@ -324,6 +324,9 @@ export default {
       },
       scales: {
         y: {
+          grid: {
+            color: 'rgba(155, 155, 155, 0.2)', // X轴网格线颜色
+          },
           ticks: {
             beginAtZero: true,
             precision: 0,
@@ -331,6 +334,9 @@ export default {
           },
         },
         x: {
+          grid: {
+            color: 'rgba(155, 155, 155, 0.2)', // X轴网格线颜色
+          },
           ticks: {
             // 禁止倾斜
             maxRotation: 0,
