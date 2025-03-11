@@ -58,6 +58,7 @@
                       <div class="w_10 required">内容</div>
                       <el-input
                         v-model="item.title"
+                        @change="changeOption(index)"
                         placeholder="请输入选项内容"
                       ></el-input>
                     </el-form-item>
@@ -80,6 +81,7 @@
                         :min="1"
                         :max="999999999"
                         :precision="0"
+                        @change="changeOption(index)"
                       ></el-input-number>
                     </el-form-item>
                   </div>
@@ -240,6 +242,9 @@ export default {
         form.options[index].action = 'delete'
       }
     }
+    const changeOption = (index) => {
+      form.options[index].action = 'update'
+    }
     onMounted(() => {
       if (id.value) {
         getVoteDetail()
@@ -253,6 +258,7 @@ export default {
       submit,
       addOption,
       removeOption,
+      changeOption,
     }
   },
 }
