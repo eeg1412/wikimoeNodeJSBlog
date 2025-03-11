@@ -319,6 +319,12 @@ const routes = [
         name: 'VoteEdit',
         component: () => import(/* webpackChunkName: "VoteEditor" */ '../views/index/vote/VoteEditor.vue')
       },
+      // VotelogList
+      {
+        path: '/votelog/list',
+        name: 'VotelogList',
+        component: () => import(/* webpackChunkName: "VotelogList" */ '../views/index/votelog/VotelogList.vue')
+      },
 
       // config
       {

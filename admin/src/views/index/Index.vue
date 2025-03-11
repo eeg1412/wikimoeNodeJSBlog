@@ -286,6 +286,16 @@
                 <i class="fas fa-fw fa-envelope pr10"></i>
                 <template #title>邮件发送日志</template>
               </el-menu-item>
+              <!-- 投票日志 VotelogList -->
+              <el-menu-item
+                index="VotelogList"
+                @click="removeParam('VotelogList')"
+                @click.middle="openNewTab('VotelogList')"
+                :route="{ name: 'VotelogList' }"
+              >
+                <i class="fas fa-fw fa-poll-h pr10"></i>
+                <template #title>投票日志</template>
+              </el-menu-item>
               <!-- 引用日志 ReferrerList -->
               <el-menu-item
                 index="ReferrerList"

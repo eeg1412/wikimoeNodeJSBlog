@@ -921,5 +921,25 @@ export default function (api) {
         shouldAdminJWT: true
       })
     },
+    // delete /votelog/delete
+    deleteVoteLog (data) {
+      return api.delete('/votelog/delete', {
+        params: data,
+        shouldAdminJWT: true
+      })
+    },
+    // get /votelog/list
+    getVoteLogList (data) {
+      return api.get('/votelog/list', {
+        params: data,
+        shouldAdminJWT: true
+      })
+    },
+    // get /votelog/stats
+    getVoteLogStats () {
+      return api.get('/votelog/stats', {
+        shouldAdminJWT: true
+      })
+    },
   }
 }
