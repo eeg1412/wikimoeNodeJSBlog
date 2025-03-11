@@ -1366,6 +1366,33 @@ const adminRouteSetting = [
     roleType: null,
     role: null
   },
+  // delete deleteVotelog
+  {
+    path: '/votelog/delete',
+    method: 'delete',
+    middleware: [checkAuth],
+    controller: require('../api/admin/votelog/deleteVotelog'),
+    roleType: null,
+    role: null
+  },
+  // get getVotelogList
+  {
+    path: '/votelog/list',
+    middleware: [checkAuth],
+    method: 'get',
+    controller: require('../api/admin/votelog/getVotelogList'),
+    roleType: null,
+    role: null
+  },
+  // get getVotelogStats
+  {
+    path: '/votelog/stats',
+    method: 'get',
+    middleware: [checkAuth],
+    controller: require('../api/admin/votelog/getVotelogStats'),
+    roleType: null,
+    role: null
+  },
 ]
 
 adminRouteSetting.forEach(item => {

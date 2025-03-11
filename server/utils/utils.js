@@ -984,6 +984,23 @@ exports.getCommentLikeLogsSize = async () => {
   }
 }
 
+// votelogs
+exports.getVoteLogsSize = async () => {
+  const mongodb = global.$mongodDB
+  const db = mongodb.db.collection('votelogs')
+  const stats = await db.stats()
+  const size = stats.size
+  // 从环境变量获取最大大小,默认1GB
+  const maxVoteLogsSize = process.env.MAX_HISTORYLOGS_SIZE ? Number(process.env.MAX_HISTORYLOGS_SIZE) : 1073741824
+  // 是否超过最大大小
+  const isExceedMaxSize = size > maxVoteLogsSize
+  return {
+    size,
+    maxVoteLogsSize,
+    isExceedMaxSize,
+  }
+}
+
 // 文字中的空格和全角空格替换为下划线
 exports.replaceSpacesWithUnderscores = (str) => {
   return str.replace(/[\s\u3000]/g, '-');
