@@ -20,33 +20,44 @@
     </div>
     <!-- 选项列表 -->
     <div class="space-y-2 mb-4">
-      <div
-        v-for="option in itemCom.options"
-        :key="option._id"
-        class="flex items-center p-2 rounded-md border border-solid border-gray-300 dark:border-gray-600 hover:border-primary/80 dark:hover:border-primary/80 transition-colors"
-      >
-        <div class="flex-1">
-          <label class="flex items-center cursor-pointer">
-            <span>{{ option.title }}</span>
-          </label>
-        </div>
-        <!-- 如果存在votes 显示投票数 -->
+      <div v-for="option in itemCom.options" :key="option._id">
         <div
-          class="text-sm text-gray-500"
-          v-if="option.votes || option.votes === 0"
+          class="flex items-center p-2 rounded-md border border-solid border-gray-300 dark:border-gray-600 hover:border-primary/80 dark:hover:border-primary/80 transition-colors cursor-pointer vote-item-option"
+          :class="{
+            disabled: btnDisabled,
+            active: optionIdList.includes(option._id),
+          }"
+          @click="handleSelect(option)"
         >
-          {{ option.votes }} 票
+          <div class="flex-1">
+            <div class="flex items-center">
+              <span>{{ option.title }}</span>
+            </div>
+          </div>
+          <!-- 如果存在votes 显示投票数 -->
+          <div
+            class="text-sm text-gray-500 vote-item-option-votes"
+            v-if="option.votes || option.votes === 0"
+          >
+            {{ option.votes }} 票
+          </div>
         </div>
       </div>
     </div>
 
     <!-- 提交按钮 -->
-    <UButton block>提交</UButton>
+    <UButton
+      block
+      :loading="isLoading"
+      :disabled="btnDisabled"
+      @click="doVote"
+      >{{ btnText }}</UButton
+    >
   </div>
 </template>
 
 <script setup>
-import { getVoteDetailApi } from '@/api/vote'
+import { getVoteDetailApi, postVoteApi } from '@/api/vote'
 // props
 const props = defineProps({
   item: {
@@ -54,6 +65,8 @@ const props = defineProps({
     required: true,
   },
 })
+const toast = useToast()
+
 const voteItemRef = ref(null)
 const itemRes = ref(null)
 const getVoteDetail = async () => {
@@ -62,6 +75,9 @@ const getVoteDetail = async () => {
   })
   if (res) {
     itemRes.value = res.data
+    voted.value = res.voted
+    isExpired.value = res.isExpired
+    isLoading.value = false
   }
 }
 
@@ -71,6 +87,98 @@ const itemCom = computed(() => {
     ...itemRes.value,
   }
 })
+
+const voted = ref(false)
+const isExpired = ref(false)
+const btnDisabled = computed(() => {
+  return voted.value || isExpired.value || isLoading.value
+})
+const btnText = computed(() => {
+  if (isLoading.value) {
+    return '加载中...'
+  } else if (voted.value) {
+    return '已投票'
+  } else if (isExpired.value) {
+    return '投票已结束'
+  } else {
+    return '提交'
+  }
+})
+
+const isLoading = ref(true)
+
+const optionIdList = ref([])
+const handleSelect = (option) => {
+  if (voted.value || isExpired.value || isLoading.value) return
+  const maxSelect = itemCom.value.maxSelect
+  const index = optionIdList.value.indexOf(option._id)
+  if (maxSelect === 1) {
+    if (index > -1) {
+      optionIdList.value = []
+    } else {
+      optionIdList.value = [option._id]
+    }
+  } else {
+    if (index > -1) {
+      optionIdList.value.splice(index, 1)
+    } else {
+      if (optionIdList.value.length < maxSelect) {
+        optionIdList.value.push(option._id)
+      } else {
+        toast.add({
+          title: '最多只能选择' + maxSelect + '项',
+          icon: 'i-heroicons-x-circle',
+          color: 'red',
+        })
+      }
+    }
+  }
+}
+const doVote = async () => {
+  if (optionIdList.value.length < 1) {
+    toast.add({
+      title: '请选择选项',
+      icon: 'i-heroicons-x-circle',
+      color: 'red',
+    })
+    return
+  }
+  if (isLoading.value) return
+  isLoading.value = true
+  postVoteApi({
+    voteId: itemCom.value._id,
+    optionIdList: optionIdList.value,
+  })
+    .then((res) => {
+      if (res) {
+        toast.add({
+          title: '投票成功',
+          icon: 'i-heroicons-check-circle',
+          color: 'success',
+        })
+        getVoteDetail()
+        voted.value = true
+      }
+    })
+    .catch((err) => {
+      console.log(err)
+      const errors = err.response?._data?.errors
+      if (errors) {
+        errors.forEach((item) => {
+          const message = item.message
+          toast.add({
+            title: message,
+            icon: 'i-heroicons-x-circle',
+            color: 'red',
+            timeout: 10000,
+          })
+        })
+      }
+    })
+    .finally(() => {
+      isLoading.value = false
+    })
+}
 
 let observer = null
 onMounted(() => {
@@ -96,4 +204,18 @@ onUnmounted(() => {
 })
 </script>
 
-<style scoped></style>
+<style scoped>
+.vote-item-option.active {
+  @apply border-primary-400 bg-primary-400 text-white dark:text-gray-900;
+}
+.vote-item-option.disabled {
+  @apply cursor-not-allowed hover:border-gray-300 dark:hover:border-gray-600;
+}
+.vote-item-option.active .vote-item-option-votes {
+  @apply text-white dark:text-gray-900;
+}
+.vote-item-option-votes {
+  width: 100px;
+  text-align: right;
+}
+</style>
