@@ -54,7 +54,7 @@ module.exports = async function (req, res, next) {
   const logData = await votelogUtils.countDocuments(logParams)
   const showResultAfterAfter = voteData.showResultAfterAfter
   const endTime = voteData.endTime
-  // 未过期
+  // 是否过期
   const now = new Date()
   const isExpired = endTime ? endTime < now : false
 
