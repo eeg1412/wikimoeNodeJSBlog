@@ -52,13 +52,13 @@ module.exports = async function (req, res, next) {
     ],
   }
   const logData = await votelogUtils.countDocuments(logParams)
-  const showResultAfterAfter = voteData.showResultAfterAfter
+  const showResultAfter = voteData.showResultAfter
   const endTime = voteData.endTime
   // 是否过期
   const now = new Date()
   const isExpired = endTime ? endTime < now : false
 
-  if (showResultAfterAfter && !isExpired) {
+  if (showResultAfter && !isExpired) {
     if (logData <= 0) {
       // 需要将votes和options.votes数隐藏
       voteData.votes = null

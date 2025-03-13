@@ -36,7 +36,7 @@ module.exports = async function (req, res, next) {
     params.alias = id
   }
   // findOne
-  postUtils.findOne(params, undefined, { authorFilter: 'nickname _id photo description cover', voteFliter: '_id endTime maxSelect showResultAfterAfter title options.title options._id' }).then(async (data) => {
+  postUtils.findOne(params, undefined, { authorFilter: 'nickname _id photo description cover', voteFliter: '_id endTime maxSelect showResultAfter title options.title options._id' }).then(async (data) => {
     if (!data) {
       res.status(404).json({
         errors: [{

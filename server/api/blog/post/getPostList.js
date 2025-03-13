@@ -270,7 +270,7 @@ module.exports = async function (req, res, next) {
   }
   const filter = '-content -bangumiList -movieList -bookList -eventList -gameList -postList -code -editorVersion'
   postUtils.findPage(params, postSorting, page, size, filter, {
-    voteFliter: '_id endTime maxSelect showResultAfterAfter title options.title options._id'
+    voteFliter: '_id endTime maxSelect showResultAfter title options.title options._id'
   }).then((data) => {
 
     // 返回格式list,total
