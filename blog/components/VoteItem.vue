@@ -1,6 +1,6 @@
 <template>
   <div
-    class="rounded-lg border border-solid border-gray-300 dark:border-gray-600 p-4 mb-4 cursor-default bg-white dark:bg-gray-800"
+    class="rounded-lg border border-solid border-gray-300 dark:border-gray-600 mb-4 cursor-default bg-white dark:bg-gray-800 vote-item-body"
     @click.stop
     ref="voteItemRef"
   >
@@ -231,6 +231,9 @@ onUnmounted(() => {
 </script>
 
 <style scoped>
+.vote-item-body {
+  padding: 0.68rem 1rem 1rem 1rem;
+}
 .vote-item-option {
   position: relative;
   z-index: 1;
