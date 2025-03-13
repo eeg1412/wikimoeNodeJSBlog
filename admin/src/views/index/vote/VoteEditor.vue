@@ -244,7 +244,9 @@ export default {
       }
     }
     const changeOption = (index) => {
-      form.options[index].action = 'update'
+      if (form.options[index].action !== 'add') {
+        form.options[index].action = 'update'
+      }
     }
     onMounted(() => {
       if (id.value) {

@@ -795,7 +795,6 @@ export default {
   --el-tag-border-color: var(--el-color-primary-light-8);
   --el-tag-hover-color: var(--el-color-primary);
   background-color: var(--el-tag-bg-color);
-  border-color: var(--el-tag-border-color);
   color: var(--el-tag-text-color);
   border-color: var(--el-tag-border-color);
   vertical-align: middle;

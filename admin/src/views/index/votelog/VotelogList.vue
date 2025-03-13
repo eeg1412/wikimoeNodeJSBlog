@@ -57,6 +57,27 @@
         row-key="_id"
         border
       >
+        <!-- 投票 -->
+        <el-table-column label="投票" min-width="180">
+          <template #default="{ row }">
+            <!-- 需要判断是否存在Vote -->
+            <div v-if="row.vote">
+              <div>{{ row.vote.title }}</div>
+            </div>
+            <div v-else class="cRed">投票已删除</div>
+          </template>
+        </el-table-column>
+        <!-- 选项 -->
+        <el-table-column label="选择选项" min-width="180">
+          <template #default="{ row }">
+            <div v-if="row.vote">
+              <template v-for="optionId in row.options" :key="optionId">
+                <CheckOption :vote="row.vote" :optionId="optionId" />
+              </template>
+            </div>
+            <div v-else class="cRed">投票已删除</div>
+          </template>
+        </el-table-column>
         <el-table-column label="文章/推文" min-width="180">
           <template #default="{ row }">
             <div v-if="row.post">
@@ -70,7 +91,7 @@
                 ></el-link>
               </div>
             </div>
-            <div v-else class="cRed">文章/推文已删除</div>
+            <div v-else class="cRed">文章/推文未指定或已删除</div>
           </template>
         </el-table-column>
         <!-- uuid -->
@@ -197,8 +218,12 @@ import {
 } from '@/utils/utils'
 import store from '@/store'
 import CheckDialogService from '@/services/CheckDialogService'
+import CheckOption from '@/components/CheckOption.vue'
 
 export default {
+  components: {
+    CheckOption,
+  },
   setup() {
     const route = useRoute()
     const router = useRouter()
@@ -387,6 +412,15 @@ export default {
               console.log('Dialog closed:', error)
             })
         }
+      })
+    }
+
+    const checkOption = (row, optionId) => {
+      const vote = row.vote
+      const voteOptions = vote.options
+      // 查询_id 是否在选项中
+      const option = voteOptions.find((item) => {
+        return item._id === optionId
       })
     }
 

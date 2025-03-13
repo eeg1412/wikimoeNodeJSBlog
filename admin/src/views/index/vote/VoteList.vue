@@ -48,7 +48,26 @@
         <!-- title -->
         <el-table-column prop="title" label="标题/内容" min-width="200" />
         <!-- 投票数 votes -->
-        <el-table-column prop="votes" label="投票数" width="100" />
+        <el-table-column prop="votes" label="投票数" width="200">
+          <template #default="{ row }">
+            <div v-if="row.isParent === true">{{ row.votes || 0 }}</div>
+            <div class="vote-item-votes" v-else>
+              <span class="vote-item-votes-text"
+                >{{ row.votes || 0
+                }}<template v-if="row.percent">
+                  ({{ row.percent }})</template
+                ></span
+              >
+              <!-- bar -->
+              <div class="vote-item-votes-bar" v-if="row.percent">
+                <div
+                  class="vote-item-votes-bar-inner"
+                  :style="{ width: row.percent }"
+                ></div>
+              </div>
+            </div>
+          </template>
+        </el-table-column>
         <!-- maxSelect -->
         <el-table-column
           prop="maxSelect"
@@ -134,6 +153,13 @@ export default {
     const listCom = computed(() => {
       // 将options转换为children
       return voteList.value.map((item) => {
+        const votes = item.votes || 0
+        item.options.forEach((option) => {
+          const optionVotes = option.votes || 0
+          // 计算百分比
+          option.percent =
+            (votes ? ((optionVotes / votes) * 100).toFixed(0) : '0') + '%'
+        })
         return {
           isParent: true,
           ...item,
@@ -232,4 +258,34 @@ export default {
   },
 }
 </script>
-<style lang=""></style>
+<style scoped>
+.vote-item-votes {
+  position: relative;
+  z-index: 1;
+  border-width: 1px;
+  border-style: solid;
+  border-color: var(--el-color-primary-light-8);
+  color: var(--el-color-primary);
+  padding: 0 9px;
+  border-radius: 4px;
+}
+.vote-item-votes-text {
+  position: relative;
+  z-index: 1;
+  white-space: nowrap;
+}
+.vote-item-votes-bar {
+  position: absolute;
+  z-index: 0;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+}
+.vote-item-votes-bar-inner {
+  width: 0%;
+  height: 100%;
+  background-color: var(--el-color-primary-light-9);
+  transition: width 0.3s;
+}
+</style>

@@ -54,7 +54,6 @@ module.exports = async function (req, res, next) {
     return
   }
 
-  const optionsLength = options.length
   const voteOptionsLength = voteData.options.length
   // 查询options里action为add的个数
   const addLength = options.filter(option => option.action === 'add').length
@@ -111,6 +110,7 @@ module.exports = async function (req, res, next) {
     return
   }
 
+  let deleteOptionVotes = 0
   const checkedOptions = []
   for (let i = 0; i < options.length; i++) {
     const option = options[i]
@@ -131,6 +131,20 @@ module.exports = async function (req, res, next) {
           }]
         })
         return
+      }
+      // 检查voteData里是否有该选项
+      const voteOptions = voteData.options
+      const optionData = voteOptions.find(optionData => optionData._id.toString() === option._id)
+      if (!optionData) {
+        res.status(400).json({
+          errors: [{
+            message: '有不存在的选项'
+          }]
+        })
+        return
+      }
+      if (option.action === 'delete') {
+        deleteOptionVotes += optionData.votes
       }
     }
 
@@ -163,7 +177,14 @@ module.exports = async function (req, res, next) {
       res.status(400).json({ errors })
       return
     }
+
     checkedOptions.push(optionParams)
+  }
+
+  if (deleteOptionVotes !== 0) {
+    params.$inc = {
+      votes: -deleteOptionVotes
+    }
   }
 
 

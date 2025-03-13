@@ -41,7 +41,7 @@
               >{{ option.votes }} 票 ({{
                 option.votes
                   ? ((option.votes / itemCom.votes) * 100).toFixed(0)
-                  : '0.00'
+                  : '0'
               }}%)</span
             >
             <span v-else-if="itemCom.showResultAfter">投票后显示票数</span>
