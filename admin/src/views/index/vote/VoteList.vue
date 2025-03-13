@@ -281,6 +281,7 @@ export default {
   height: 100%;
   top: 0;
   left: 0;
+  overflow: hidden;
 }
 .vote-item-votes-bar-inner {
   width: 0%;

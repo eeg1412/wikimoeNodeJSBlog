@@ -49,7 +49,7 @@ module.exports = async function (req, res, next) {
   }
   // 删除开始结束时间之间的数据
   votelogUtils.deleteMany({
-    date: {
+    expireAt: {
       $gte: new Date(startTime),
       $lte: new Date(endTime),
     }

@@ -154,6 +154,21 @@ export default {
           message: '请输入最多可选择的选项数',
           trigger: 'blur',
         },
+        // maxSelect 不能大于 options.length
+        {
+          validator: (rule, value) => {
+            const notDeleteOptions = form.options.filter((item) => {
+              return item.action !== 'delete'
+            })
+            if (notDeleteOptions.length < 2) {
+              return Promise.resolve()
+            } else if (notDeleteOptions.length < value) {
+              return Promise.reject('最多可选择的选项数不能大于选项数')
+            }
+            return Promise.resolve()
+          },
+          trigger: 'blur',
+        },
       ],
       // options 检查 options.value.length 是否大于等于 2
       options: [

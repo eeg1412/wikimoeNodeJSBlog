@@ -66,7 +66,7 @@ module.exports = async function (req, res, next) {
       return
     }
   }
-  utils.executeInLock(`blogVote-${voteId}`, async () => {
+  utils.executeInLock(`voteupdate-${voteId}`, async () => {
     const { isExceedMaxSize } = await utils.getVoteLogsSize()
     if (isExceedMaxSize) {
       res.status(400).json({ errors: [{ message: '投票失败，请稍后再试' }] })
@@ -175,8 +175,8 @@ module.exports = async function (req, res, next) {
     votelogUtils.save(voteLogParams)
 
   }).then(() => {
-    console.info(`blogVote-${voteId} unlock`)
+    console.info(`voteupdate-${voteId} unlock`)
   }).catch((err) => {
-    userApiLog.error(`blogVote-${voteId} unlock error, ${logErrorToText(err)}`)
+    userApiLog.error(`voteupdate-${voteId} unlock error, ${logErrorToText(err)}`)
   })
 }
