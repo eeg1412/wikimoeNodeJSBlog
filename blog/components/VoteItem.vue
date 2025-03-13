@@ -5,41 +5,56 @@
     ref="voteItemRef"
   >
     <!-- 标题 -->
-    <h3 class="text-lg font-bold mb-2">{{ itemCom.title }}</h3>
+    <h3 class="text-lg font-bold mb-1">{{ itemCom.title }}</h3>
 
     <!-- 截止时间 -->
-    <div class="text-sm text-gray-500 mb-4" v-if="itemCom.endTime">
+    <div class="text-sm text-gray-500 mb-2" v-if="itemCom.endTime">
       截止时间: {{ formatDate(itemCom.endTime) }}
     </div>
 
     <!-- 最大选择提示 -->
     <div class="text-xs text-gray-500 mb-3">
-      <span class="pr-3" v-if="itemCom.votes || itemCom.votes === 0"
-        >共 {{ itemCom.votes }} 票</span
-      ><span>(最多可选择 {{ itemCom.maxSelect }} 项)</span>
+      <span v-if="itemCom.votes || itemCom.votes === 0"
+        >共 {{ itemCom.votes }} 票<span class="tenten"></span></span
+      ><span>最多可选择 {{ itemCom.maxSelect }} 项</span>
     </div>
     <!-- 选项列表 -->
-    <div class="space-y-2 mb-4">
-      <div v-for="option in itemCom.options" :key="option._id">
+    <div>
+      <div class="mb-4" v-for="option in itemCom.options" :key="option._id">
         <div
-          class="flex items-center p-2 rounded-md border border-solid border-gray-300 dark:border-gray-600 hover:border-primary/80 dark:hover:border-primary/80 transition-colors cursor-pointer vote-item-option"
+          class="flex justify-between items-center p-2 rounded-md border border-solid border-gray-300 dark:border-gray-600 hover:border-primary/80 dark:hover:border-primary/80 transition-colors cursor-pointer vote-item-option"
           :class="{
             disabled: btnDisabled,
             active: optionIdList.includes(option._id),
           }"
           @click="handleSelect(option)"
         >
-          <div class="flex-1">
-            <div class="flex items-center">
-              <span>{{ option.title }}</span>
-            </div>
+          <div class="vote-item-option-title">
+            <span>{{ option.title }}</span>
           </div>
           <!-- 如果存在votes 显示投票数 -->
           <div
-            class="text-sm text-gray-500 vote-item-option-votes"
-            v-if="option.votes || option.votes === 0"
+            class="text-gray-500 dark:text-gray-400 pl-2 vote-item-option-votes"
           >
-            {{ option.votes }} 票
+            <span v-if="isLoading">加载中...</span>
+            <span v-else-if="option.votes || option.votes === 0"
+              >{{ option.votes }} 票 ({{
+                option.votes
+                  ? ((option.votes / itemCom.votes) * 100).toFixed(0)
+                  : '0.00'
+              }}%)</span
+            >
+            <span v-else-if="itemCom.showResultAfter">投票后显示票数</span>
+          </div>
+          <div class="vote-item-option-bar">
+            <div
+              class="vote-item-option-bar-inner"
+              :style="{
+                width: option.votes
+                  ? (option.votes / itemCom.votes) * 100 + '%'
+                  : '0%',
+              }"
+            ></div>
           </div>
         </div>
       </div>
@@ -48,7 +63,7 @@
     <!-- 提交按钮 -->
     <UButton
       block
-      :loading="isLoading"
+      :loading="isLoading || isVoting"
       :disabled="btnDisabled"
       @click="doVote"
       >{{ btnText }}</UButton
@@ -64,6 +79,10 @@ const props = defineProps({
     type: Object,
     required: true,
   },
+  postId: {
+    type: String,
+    default: null,
+  },
 })
 const toast = useToast()
 
@@ -78,6 +97,7 @@ const getVoteDetail = async () => {
     voted.value = res.voted
     isExpired.value = res.isExpired
     isLoading.value = false
+    optionIdList.value = res.options
   }
 }
 
@@ -91,11 +111,13 @@ const itemCom = computed(() => {
 const voted = ref(false)
 const isExpired = ref(false)
 const btnDisabled = computed(() => {
-  return voted.value || isExpired.value || isLoading.value
+  return voted.value || isExpired.value || isLoading.value || isVoting.value
 })
 const btnText = computed(() => {
   if (isLoading.value) {
     return '加载中...'
+  } else if (isVoting.value) {
+    return '正在投票...'
   } else if (voted.value) {
     return '已投票'
   } else if (isExpired.value) {
@@ -109,7 +131,8 @@ const isLoading = ref(true)
 
 const optionIdList = ref([])
 const handleSelect = (option) => {
-  if (voted.value || isExpired.value || isLoading.value) return
+  if (voted.value || isExpired.value || isLoading.value || isVoting.value)
+    return
   const maxSelect = itemCom.value.maxSelect
   const index = optionIdList.value.indexOf(option._id)
   if (maxSelect === 1) {
@@ -134,6 +157,7 @@ const handleSelect = (option) => {
     }
   }
 }
+const isVoting = ref(false)
 const doVote = async () => {
   if (optionIdList.value.length < 1) {
     toast.add({
@@ -143,10 +167,11 @@ const doVote = async () => {
     })
     return
   }
-  if (isLoading.value) return
-  isLoading.value = true
+  if (isLoading.value || isVoting.value) return
+  isVoting.value = true
   postVoteApi({
     voteId: itemCom.value._id,
+    postId: props.postId,
     optionIdList: optionIdList.value,
   })
     .then((res) => {
@@ -154,7 +179,8 @@ const doVote = async () => {
         toast.add({
           title: '投票成功',
           icon: 'i-heroicons-check-circle',
-          color: 'success',
+          color: 'green',
+          timeout: 10000,
         })
         getVoteDetail()
         voted.value = true
@@ -176,7 +202,7 @@ const doVote = async () => {
       }
     })
     .finally(() => {
-      isLoading.value = false
+      isVoting.value = false
     })
 }
 
@@ -205,17 +231,59 @@ onUnmounted(() => {
 </script>
 
 <style scoped>
+.vote-item-option {
+  position: relative;
+  z-index: 1;
+}
 .vote-item-option.active {
-  @apply border-primary-400 bg-primary-400 text-white dark:text-gray-900;
+  @apply border-primary-400 text-primary-500 dark:text-primary-400;
 }
 .vote-item-option.disabled {
-  @apply cursor-not-allowed hover:border-gray-300 dark:hover:border-gray-600;
+  @apply cursor-default hover:border-gray-300 dark:hover:border-gray-600;
 }
-.vote-item-option.active .vote-item-option-votes {
-  @apply text-white dark:text-gray-900;
+.vote-item-option.active.disabled {
+  @apply hover:border-primary-400 dark:hover:border-primary-400;
 }
 .vote-item-option-votes {
-  width: 100px;
+  font-size: 0.75rem;
+  white-space: nowrap;
+  min-width: 6.2rem;
   text-align: right;
 }
+.vote-item-option.active .vote-item-option-votes {
+  @apply text-primary-500 dark:text-primary-400;
+}
+.vote-item-option-votes {
+  text-align: right;
+}
+/* .vote-item-option.active .vote-item-option-bar {
+  opacity: 0.3;
+} */
+.vote-item-option-bar {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+  transition: opacity 0.3s;
+}
+.vote-item-option-bar-inner {
+  @apply bg-gray-400/20;
+  width: 0%;
+  height: 100%;
+  border-radius: 0.1rem;
+  transition: width 0.3s;
+}
+.vote-item-option.active .vote-item-option-bar-inner {
+  @apply bg-primary-400/20;
+}
+.vote-item-option-title,
+.vote-item-option-votes {
+  position: relative;
+  z-index: 1;
+}
+/* .vote-item-option.active .vote-item-option-bar-inner {
+  @apply bg-primary-800;
+} */
 </style>

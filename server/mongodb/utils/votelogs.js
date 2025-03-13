@@ -30,7 +30,7 @@ exports.find = async function (parmas, sort, projection, options = {}) {
 // 分页查询
 exports.findPage = async function (parmas, sort, page, limit, projection, options = {}) {
   // document查询
-  const q = votelogsModel.find(parmas, projection).sort(sort).skip((page - 1) * limit).limit(limit);
+  const q = votelogsModel.find(parmas, projection).populate('vote', '_id title options').populate('post', 'title _id excerpt alias type').sort(sort).skip((page - 1) * limit).limit(limit);
   if (options.lean) {
     q.lean();
   }

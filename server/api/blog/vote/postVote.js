@@ -8,6 +8,7 @@ module.exports = async function (req, res, next) {
   const uuid = req.headers['wmb-request-id']
   const ip = utils.getUserIp(req)
   const voteId = req.body.voteId
+  const postId = req.body.postId
   const optionIdList = req.body.optionIdList
   // 判断uuid是否符合格式
   if (!utils.isUUID(uuid)) {
@@ -20,6 +21,15 @@ module.exports = async function (req, res, next) {
   }
   // 判断voteId是否符合格式
   if (!utils.isObjectId(voteId)) {
+    res.status(400).json({
+      errors: [{
+        message: '参数错误'
+      }]
+    })
+    return
+  }
+  // 判断postId是否符合格式
+  if (postId && !utils.isObjectId(postId)) {
     res.status(400).json({
       errors: [{
         message: '参数错误'
@@ -86,6 +96,14 @@ module.exports = async function (req, res, next) {
       })
       return
     }
+    if (voteData.maxSelect < optionIdList.length) {
+      res.status(400).json({
+        errors: [{
+          message: '超出最大选择数'
+        }]
+      })
+      return
+    }
     // 查询optionIdList是否都存在
     const options = voteData.options
     // 将 options 中的 ID 转换为字符串集合以便高效比较
@@ -113,7 +131,7 @@ module.exports = async function (req, res, next) {
     if (logData > 0) {
       res.status(400).json({
         errors: [{
-          message: '已经投过票'
+          message: '已经投过票，请勿重复投票'
         }]
       })
       return
@@ -147,6 +165,7 @@ module.exports = async function (req, res, next) {
     const ipInfo = await utils.IP2LocationUtils(ip, null, null, false)
     const voteLogParams = {
       vote: voteId,
+      post: postId || null,
       uuid,
       ipInfo,
       ip,

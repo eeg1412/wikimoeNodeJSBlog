@@ -109,7 +109,7 @@
           </div>
           <div>
             <div v-for="(vote, index) in item.voteList" :key="vote._id">
-              <VoteItem :item="vote" />
+              <VoteItem :item="vote" :postId="item._id" />
             </div>
           </div>
           <!-- 图片 -->

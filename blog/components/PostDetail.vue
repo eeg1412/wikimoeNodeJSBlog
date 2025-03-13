@@ -215,7 +215,7 @@
           :key="vote._id"
           class="mt-3"
         >
-          <VoteItem :item="vote" />
+          <VoteItem :item="vote" :postId="postData.data._id" />
         </div>
       </div>
       <div

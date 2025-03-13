@@ -15,29 +15,8 @@
         <el-form-item label="标题" prop="title">
           <el-input v-model="form.title" placeholder="请输入标题"></el-input>
         </el-form-item>
-        <!-- maxSelect -->
-        <el-form-item label="最多可选择的选项数" prop="maxSelect">
-          <el-input-number
-            v-model="form.maxSelect"
-            :min="1"
-            :max="form.options.length || 1"
-          ></el-input-number>
-        </el-form-item>
-        <!-- showResultAfter -->
-        <el-form-item label="投票后才显示结果" prop="showResultAfter">
-          <el-switch v-model="form.showResultAfter"></el-switch>
-        </el-form-item>
-        <!-- 结束时间 -->
-        <el-form-item label="结束时间" prop="endTime">
-          <el-date-picker
-            v-model="form.endTime"
-            type="datetime"
-            placeholder="选择日期时间"
-          ></el-date-picker>
-          <div class="w_10">※不填写则不限制</div>
-        </el-form-item>
         <!-- 选项 -->
-        <el-form-item label="投票选项">
+        <el-form-item label="投票选项" required>
           <!-- 遍历options -->
           <template v-for="(item, index) in form.options" :key="index">
             <div
@@ -103,6 +82,28 @@
           <el-form-item class="w_10" prop="options">
             <el-button type="primary" @click="addOption">添加选项</el-button>
           </el-form-item>
+        </el-form-item>
+        <!-- maxSelect -->
+        <el-form-item label="最多可选择的选项数" prop="maxSelect">
+          <el-input-number
+            v-model="form.maxSelect"
+            :min="1"
+            :max="form.options.length || 1"
+          ></el-input-number>
+        </el-form-item>
+        <!-- showResultAfter -->
+        <el-form-item label="投票后才显示结果" prop="showResultAfter">
+          <el-switch v-model="form.showResultAfter"></el-switch>
+          <div class="w_10">※仅限投票期间，时间结束后依然会显示投票结果</div>
+        </el-form-item>
+        <!-- 结束时间 -->
+        <el-form-item label="结束时间" prop="endTime">
+          <el-date-picker
+            v-model="form.endTime"
+            type="datetime"
+            placeholder="选择日期时间"
+          ></el-date-picker>
+          <div class="w_10">※不填写则不限制</div>
         </el-form-item>
         <!-- status -->
         <el-form-item label="状态" prop="status">
@@ -248,6 +249,9 @@ export default {
     onMounted(() => {
       if (id.value) {
         getVoteDetail()
+      } else {
+        addOption()
+        addOption()
       }
     })
     return {

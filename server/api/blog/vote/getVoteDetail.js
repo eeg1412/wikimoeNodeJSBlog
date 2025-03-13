@@ -51,7 +51,7 @@ module.exports = async function (req, res, next) {
       { ip },
     ],
   }
-  const logData = await votelogUtils.countDocuments(logParams)
+  const logData = await votelogUtils.findOne(logParams, '_id options', { lean: true })
   const showResultAfter = voteData.showResultAfter
   const endTime = voteData.endTime
   // 是否过期
@@ -70,7 +70,8 @@ module.exports = async function (req, res, next) {
   res.send({
     data: voteData,
     // 是否投过票
-    voted: logData > 0,
+    voted: logData ? true : false,
+    options: logData?.options || [],
     isExpired,
   })
 }

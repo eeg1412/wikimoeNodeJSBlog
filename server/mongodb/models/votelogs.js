@@ -8,6 +8,12 @@ var votelogs = new Schema({
     required: true,
     index: true
   },
+  post: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'posts',
+    index: true,
+    default: null
+  },
   // 选项 数组
   options: [{
     type: mongoose.Schema.Types.ObjectId,
