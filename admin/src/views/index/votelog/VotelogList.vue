@@ -78,7 +78,7 @@
             <div v-else class="cRed">投票已删除</div>
           </template>
         </el-table-column>
-        <el-table-column label="文章/推文" min-width="180">
+        <el-table-column label="推文" min-width="180">
           <template #default="{ row }">
             <div v-if="row.post">
               <div :title="row.post.title || row.post.excerpt" class="di">
@@ -91,7 +91,7 @@
                 ></el-link>
               </div>
             </div>
-            <div v-else class="cRed">文章/推文未指定或已删除</div>
+            <div v-else class="cRed">推文未指定或已删除</div>
           </template>
         </el-table-column>
         <!-- uuid -->
