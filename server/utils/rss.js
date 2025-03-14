@@ -35,7 +35,8 @@ exports.updateRSS = async (type) => {
       _id: -1
     }
     const size = parseInt(siteRssMaxCount) || 1
-    const data = await postUtils.findPage(params, sort, 1, size, undefined, { authorFilter: 'nickname' }).then((res) => {
+    const filter = '-content -bangumiList -movieList -bookList -eventList -gameList -postList -code -editorVersion'
+    const data = await postUtils.findPage(params, sort, 1, size, filter, { authorFilter: 'nickname', voteFliter: '_id endTime maxSelect showResultAfter title options.title options._id' }).then((res) => {
       return res
     }).catch(err => {
       console.error(err)
@@ -66,6 +67,7 @@ exports.updateRSS = async (type) => {
     });
     list.forEach((item) => {
       const { title, excerpt, content, _id, author, type, date, alias } = item
+      const link = `${siteUrl}/post/${alias || _id}`
       // 注意如果用到作者的话，务必在更改作者的时候更新rss！！！
       let newTitle = title
       let newContent = content
@@ -95,11 +97,16 @@ exports.updateRSS = async (type) => {
             newContent += `<p><img src="${siteUrl}${image.thumfor || image.filepath}" alt="${image.name}" style="border-radius: 10px; margin-bottom: 10px; max-width: 100%;" /></p>`
           }
         })
+        // 遍历voteList，以链接形式展示
+        const voteList = item.voteList || []
+        voteList.forEach((vote) => {
+          newContent += `<p><a href="${link}#vote-item-${vote._id}-${item._id}" target="_blank">投票：${vote.title}</a></p>`
+        })
       }
       feed.addItem({
         title: newTitle,
-        id: `${siteUrl}/post/${alias || _id}`,
-        link: `${siteUrl}/post/${alias || _id}`,
+        id: link,
+        link: link,
         description: newContent,
         date: new Date(item.date),
       });

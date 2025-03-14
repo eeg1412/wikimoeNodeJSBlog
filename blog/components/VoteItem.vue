@@ -1,8 +1,9 @@
 <template>
   <div
-    class="rounded-lg border border-solid border-gray-300 dark:border-gray-600 mb-4 cursor-default bg-white dark:bg-gray-800 vote-item-body"
+    class="rounded-lg border border-solid border-gray-300 dark:border-gray-600 mb-4 cursor-default bg-white dark:bg-gray-800 vote-item-body header-scroll-margin-top"
     @click.stop
     ref="voteItemRef"
+    :id="domId"
   >
     <!-- 标题 -->
     <h3 class="text-lg font-bold mb-1">{{ itemCom.title }}</h3>
@@ -205,6 +206,14 @@ const doVote = async () => {
       isVoting.value = false
     })
 }
+
+const domId = computed(() => {
+  if (props.postId) {
+    return `vote-item-${itemCom.value._id}-${props.postId}`
+  } else {
+    return `vote-item-${itemCom.value._id}`
+  }
+})
 
 let observer = null
 onMounted(() => {
