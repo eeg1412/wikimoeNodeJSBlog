@@ -21,9 +21,9 @@
     </div>
     <!-- 选项列表 -->
     <div>
-      <div class="mb-4" v-for="option in itemCom.options" :key="option._id">
+      <div class="mb-3" v-for="option in itemCom.options" :key="option._id">
         <div
-          class="flex justify-between items-center p-2 rounded-md border border-solid border-gray-300 dark:border-gray-600 hover:border-primary/80 dark:hover:border-primary/80 transition-colors cursor-pointer vote-item-option"
+          class="flex justify-between items-center rounded-md border border-solid border-gray-300 dark:border-gray-600 hover:border-primary/80 dark:hover:border-primary/80 transition-colors cursor-pointer vote-item-option"
           :class="{
             disabled: btnDisabled,
             active: optionIdList.includes(option._id),
@@ -248,7 +248,8 @@ onUnmounted(() => {
   z-index: 1;
   isolation: isolate;
   overflow: hidden;
-  font-size: 0.75rem;
+  font-size: 0.875rem;
+  padding: 0.4rem 0.5rem;
 }
 .vote-item-option.active {
   @apply border-primary-400 text-primary-500 dark:text-primary-400;
