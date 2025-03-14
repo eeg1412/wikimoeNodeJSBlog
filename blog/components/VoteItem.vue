@@ -246,6 +246,9 @@ onUnmounted(() => {
 .vote-item-option {
   position: relative;
   z-index: 1;
+  isolation: isolate;
+  overflow: hidden;
+  font-size: 0.75rem;
 }
 .vote-item-option.active {
   @apply border-primary-400 text-primary-500 dark:text-primary-400;
