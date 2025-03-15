@@ -62,25 +62,27 @@ module.exports = async function (req, res, next) {
   let bothIP = false
   let bothUUID = false
   if (showResultAfter && !isExpired) {
-    if (logData <= 0) {
+    if (!logData) {
       // 需要将votes和options.votes数隐藏
       voteData.votes = null
       voteData.options.forEach(option => {
         option.votes = null
       })
-    } else {
-      const logIP = logData.ip
-      const logUUID = logData.uuid
-      if (logIP === ip) {
-        bothIP = true
-      }
-      if (logUUID === uuid) {
-        bothUUID = true
-        userOptions = logData.options || []
-      }
-
     }
   }
+  if (logData) {
+    const logIP = logData.ip
+    const logUUID = logData.uuid
+    if (logIP === ip) {
+      bothIP = true
+    }
+    if (logUUID === uuid) {
+      bothUUID = true
+      userOptions = logData.options || []
+    }
+
+  }
+
   res.send({
     data: voteData,
     // 是否投过票
