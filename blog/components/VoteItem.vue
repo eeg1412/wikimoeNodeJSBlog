@@ -224,25 +224,31 @@ const domId = computed(() => {
 })
 
 let observer = null
+let timer = null
 onMounted(() => {
   nextTick(() => {
-    if (voteItemRef.value) {
-      // 如果元素不在视口内，创建 IntersectionObserver
-      observer = new IntersectionObserver((entries) => {
-        if (entries[0].isIntersecting) {
-          getVoteDetail()
-          observer.disconnect()
-          observer = null
-        }
-      })
-      observer.observe(voteItemRef.value)
-    }
+    timer = setTimeout(() => {
+      if (voteItemRef.value) {
+        // 如果元素不在视口内，创建 IntersectionObserver
+        observer = new IntersectionObserver((entries) => {
+          if (entries[0].isIntersecting) {
+            getVoteDetail()
+            observer.disconnect()
+            observer = null
+          }
+        })
+        observer.observe(voteItemRef.value)
+      }
+    }, 100)
   })
 })
 onUnmounted(() => {
   if (observer) {
     observer.disconnect()
     observer = null
+  }
+  if (timer) {
+    clearTimeout(timer)
   }
 })
 </script>
