@@ -5,12 +5,17 @@
     ref="voteItemRef"
     :id="domId"
   >
+    <DivLoading :loading="isLoading" />
     <!-- 标题 -->
     <h3 class="text-lg font-bold mb-1">{{ itemCom.title }}</h3>
 
     <!-- 截止时间 -->
     <div class="text-sm text-gray-500 mb-2" v-if="itemCom.endTime">
-      截止时间: {{ formatDate(itemCom.endTime) }}
+      截止时间:
+      <ClientOnly
+        >{{ formatDate(itemCom.endTime)
+        }}<template #fallback>加载中...</template></ClientOnly
+      >
     </div>
 
     <!-- 最大选择提示 -->
@@ -64,7 +69,7 @@
     <!-- 提交按钮 -->
     <UButton
       block
-      :loading="isLoading || isVoting"
+      :loading="isVoting"
       :disabled="btnDisabled"
       @click="doVote"
       >{{ btnText }}</UButton
@@ -256,6 +261,10 @@ onUnmounted(() => {
 <style scoped>
 .vote-item-body {
   padding: 0.68rem 1rem 1rem 1rem;
+  overflow: hidden;
+  z-index: 1;
+  isolation: isolate;
+  position: relative;
 }
 .vote-item-option {
   position: relative;
