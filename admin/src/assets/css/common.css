@@ -673,11 +673,6 @@ input[type='submit'] {
   box-sizing: border-box;
   border: none;
 }
-input[type='checkbox'] {
-  vertical-align: middle;
-  margin-top: -3px;
-  margin-right: 5px;
-}
 input[type='tel'],
 input[type='text'],
 input[type='number'],

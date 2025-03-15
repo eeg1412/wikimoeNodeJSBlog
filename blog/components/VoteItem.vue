@@ -35,7 +35,13 @@
           }"
           @click="handleSelect(option)"
         >
-          <div class="vote-item-option-title">
+          <div class="vote-item-option-title flex items-center">
+            <div class="mr-2 pointer-events-none vote-item-option-checkbox">
+              <UCheckbox
+                :disabled="btnDisabled && !isVoting"
+                :modelValue="optionIdList.includes(option._id)"
+              />
+            </div>
             <span>{{ option.title }}</span>
           </div>
           <!-- 如果存在votes 显示投票数 -->
@@ -272,6 +278,7 @@ onUnmounted(() => {
   isolation: isolate;
   overflow: hidden;
   font-size: 0.875rem;
+  line-height: 1.25rem;
   padding: 0.4rem 0.5rem;
 }
 .vote-item-option.active {
@@ -325,4 +332,16 @@ onUnmounted(() => {
 /* .vote-item-option.active .vote-item-option-bar-inner {
   @apply bg-primary-800;
 } */
+
+/* deep .vote-item-option-checkbox input checkbox */
+:deep(.vote-item-option-checkbox input[type='checkbox']) {
+  /* 动画效果 */
+  transition: all 0.3s;
+}
+.vote-item-option-circle {
+  @apply bg-primary-400;
+  width: 0.825rem;
+  height: 0.825rem;
+  border-radius: 50%;
+}
 </style>
