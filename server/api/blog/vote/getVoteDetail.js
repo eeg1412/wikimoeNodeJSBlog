@@ -51,13 +51,16 @@ module.exports = async function (req, res, next) {
       { ip },
     ],
   }
-  const logData = await votelogUtils.findOne(logParams, '_id options', { lean: true })
+  const logData = await votelogUtils.findOne(logParams, '_id options uuid ip', { lean: true })
   const showResultAfter = voteData.showResultAfter
   const endTime = voteData.endTime
   // 是否过期
   const now = new Date()
   const isExpired = endTime ? endTime < now : false
 
+  let userOptions = []
+  let bothIP = false
+  let bothUUID = false
   if (showResultAfter && !isExpired) {
     if (logData <= 0) {
       // 需要将votes和options.votes数隐藏
@@ -65,13 +68,26 @@ module.exports = async function (req, res, next) {
       voteData.options.forEach(option => {
         option.votes = null
       })
+    } else {
+      const logIP = logData.ip
+      const logUUID = logData.uuid
+      if (logIP === ip) {
+        bothIP = true
+      }
+      if (logUUID === uuid) {
+        bothUUID = true
+        userOptions = logData.options || []
+      }
+
     }
   }
   res.send({
     data: voteData,
     // 是否投过票
     voted: logData ? true : false,
-    options: logData?.options || [],
+    options: userOptions,
     isExpired,
+    bothIP,
+    bothUUID
   })
 }

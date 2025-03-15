@@ -97,6 +97,8 @@ const getVoteDetail = async () => {
     itemRes.value = res.data
     voted.value = res.voted
     isExpired.value = res.isExpired
+    bothIP.value = res.bothIP
+    bothUUID.value = res.bothUUID
     isLoading.value = false
     optionIdList.value = res.options
   }
@@ -111,6 +113,8 @@ const itemCom = computed(() => {
 
 const voted = ref(false)
 const isExpired = ref(false)
+const bothIP = ref(false)
+const bothUUID = ref(false)
 const btnDisabled = computed(() => {
   return voted.value || isExpired.value || isLoading.value || isVoting.value
 })
@@ -120,7 +124,11 @@ const btnText = computed(() => {
   } else if (isVoting.value) {
     return '正在投票...'
   } else if (voted.value) {
-    return '已投票'
+    if (bothUUID.value) {
+      return '已投票'
+    } else {
+      return '同IP地址已投票'
+    }
   } else if (isExpired.value) {
     return '投票已结束'
   } else {
