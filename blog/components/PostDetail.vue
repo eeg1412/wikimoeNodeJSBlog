@@ -306,13 +306,13 @@
           @refresh="refreshCommentList"
         />
         <div
-          class="relative pt-5 header-scroll-margin-top"
+          class="relative pt-4 header-scroll-margin-top"
           id="commentlist-container"
         >
           <DivLoading :loading="commentLoading" text="拼命加载中..." />
           <!-- 评论 -->
           <div
-            class="pt-5 border-t border-solid border-gray-200 dark:border-gray-700"
+            class="pt-3 border-t border-solid border-gray-200 dark:border-gray-700"
             ref="commentListRef"
             v-if="commentTotal > 0"
           >
@@ -1206,8 +1206,7 @@ onUnmounted(() => {
 }
 .post-detail-like-body {
   text-align: center;
-  margin-top: 20px;
-  margin-bottom: 20px;
+  @apply my-4;
 }
 /* 评论 */
 .comment-list-body {
@@ -1218,8 +1217,7 @@ onUnmounted(() => {
   font-weight: 700;
 }
 .comment-list-item {
-  @apply border-solid border-b border-gray-200;
-  padding: 18px 0;
+  @apply border-solid border-b border-gray-200 py-4;
   position: relative;
 }
 .comment-list-item-alert {
@@ -1293,9 +1291,9 @@ onUnmounted(() => {
 }
 .comment-page-body {
   /* 居中 */
+  @apply mt-3;
   display: flex;
   justify-content: center;
-  margin-top: 20px;
 }
 .post-html-content-body,
 .post-tweet-detail-content-body {
