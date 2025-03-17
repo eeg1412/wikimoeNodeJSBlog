@@ -1035,7 +1035,7 @@ input[type='password'] {
 }
 
 .config-border-item {
-  border: 1px solid #ebeef5;
+  border: 1px solid var(--el-border-color);
   padding: 20px;
   margin-bottom: 20px;
   border-radius: 10px;
@@ -1153,6 +1153,9 @@ html.dark .login-body .el-input__wrapper {
 }
 html.dark .w-e-text-container pre > code {
   text-shadow: none;
+}
+html.config-border-item {
+  border: 1px solid var(--el-border-color);
 }
 @media (max-width: 767px) {
   html.dark .common-aside {
