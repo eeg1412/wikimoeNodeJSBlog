@@ -211,64 +211,64 @@
               </el-option>
             </el-select>
           </el-form-item>
-          <!-- bangumi -->
-          <el-form-item label="关联番剧" prop="bangumi">
-            <bangumi-selector
-              v-model="form.bangumiList"
-              v-model:bangumiList="bangumiList"
-              placeholder="请选择番剧"
-            />
-          </el-form-item>
-          <el-form-item label="关联电影" prop="movie">
-            <movie-selector
-              v-model="form.movieList"
-              v-model:movieList="movieList"
-              placeholder="请选择电影"
-            />
-          </el-form-item>
-          <!-- game -->
-          <el-form-item label="关联游戏" prop="game">
-            <game-selector
-              v-model="form.gameList"
-              v-model:gameList="gameList"
-              placeholder="请选择游戏"
-            />
-          </el-form-item>
-          <!-- book -->
-          <el-form-item label="关联书籍" prop="book">
-            <book-selector
-              v-model="form.bookList"
-              v-model:bookList="bookList"
-              placeholder="请选择书籍"
-            />
-          </el-form-item>
-          <!-- event -->
-          <el-form-item label="关联活动" prop="event">
-            <event-selector
-              v-model="form.eventList"
-              v-model:eventList="eventList"
-              placeholder="请选择活动"
-            />
-          </el-form-item>
-          <!-- post -->
-          <el-form-item label="关联博文" prop="post">
-            <post-selector
-              v-model="form.postList"
-              v-model:postList="postList"
-              :current-post-id="id"
-              :format-date="$formatDate"
-              placeholder="请选择博文"
-            />
-          </el-form-item>
-          <!-- 关联投票 -->
-          <el-form-item label="关联投票" prop="vote">
-            <vote-selector
-              v-model="form.voteList"
-              v-model:voteList="voteList"
-              placeholder="请选择投票"
-            />
-          </el-form-item>
         </template>
+        <!-- bangumi -->
+        <el-form-item label="关联番剧" prop="bangumi">
+          <bangumi-selector
+            v-model="form.bangumiList"
+            v-model:bangumiList="bangumiList"
+            placeholder="请选择番剧"
+          />
+        </el-form-item>
+        <el-form-item label="关联电影" prop="movie">
+          <movie-selector
+            v-model="form.movieList"
+            v-model:movieList="movieList"
+            placeholder="请选择电影"
+          />
+        </el-form-item>
+        <!-- game -->
+        <el-form-item label="关联游戏" prop="game">
+          <game-selector
+            v-model="form.gameList"
+            v-model:gameList="gameList"
+            placeholder="请选择游戏"
+          />
+        </el-form-item>
+        <!-- book -->
+        <el-form-item label="关联书籍" prop="book">
+          <book-selector
+            v-model="form.bookList"
+            v-model:bookList="bookList"
+            placeholder="请选择书籍"
+          />
+        </el-form-item>
+        <!-- event -->
+        <el-form-item label="关联活动" prop="event">
+          <event-selector
+            v-model="form.eventList"
+            v-model:eventList="eventList"
+            placeholder="请选择活动"
+          />
+        </el-form-item>
+        <!-- post -->
+        <el-form-item label="关联博文" prop="post">
+          <post-selector
+            v-model="form.postList"
+            v-model:postList="postList"
+            :current-post-id="id"
+            :format-date="$formatDate"
+            placeholder="请选择博文"
+          />
+        </el-form-item>
+        <!-- 关联投票 -->
+        <el-form-item label="关联投票" prop="vote">
+          <vote-selector
+            v-model="form.voteList"
+            v-model:voteList="voteList"
+            placeholder="请选择投票"
+          />
+        </el-form-item>
 
         <!-- 文章别名 -->
         <el-form-item label="文章别名" prop="alias">
