@@ -212,63 +212,133 @@
             </el-select>
           </el-form-item>
         </template>
-        <!-- bangumi -->
-        <el-form-item label="关联番剧" prop="bangumi">
-          <bangumi-selector
-            v-model="form.bangumiList"
-            v-model:bangumiList="bangumiList"
-            placeholder="请选择番剧"
-          />
-        </el-form-item>
-        <el-form-item label="关联电影" prop="movie">
-          <movie-selector
-            v-model="form.movieList"
-            v-model:movieList="movieList"
-            placeholder="请选择电影"
-          />
-        </el-form-item>
-        <!-- game -->
-        <el-form-item label="关联游戏" prop="game">
-          <game-selector
-            v-model="form.gameList"
-            v-model:gameList="gameList"
-            placeholder="请选择游戏"
-          />
-        </el-form-item>
-        <!-- book -->
-        <el-form-item label="关联书籍" prop="book">
-          <book-selector
-            v-model="form.bookList"
-            v-model:bookList="bookList"
-            placeholder="请选择书籍"
-          />
-        </el-form-item>
-        <!-- event -->
-        <el-form-item label="关联活动" prop="event">
-          <event-selector
-            v-model="form.eventList"
-            v-model:eventList="eventList"
-            placeholder="请选择活动"
-          />
-        </el-form-item>
-        <!-- post -->
-        <el-form-item label="关联博文" prop="post">
-          <post-selector
-            v-model="form.postList"
-            v-model:postList="postList"
-            :current-post-id="id"
-            :format-date="$formatDate"
-            placeholder="请选择博文"
-          />
-        </el-form-item>
-        <!-- 关联投票 -->
-        <el-form-item label="关联投票" prop="vote">
-          <vote-selector
-            v-model="form.voteList"
-            v-model:voteList="voteList"
-            placeholder="请选择投票"
-          />
-        </el-form-item>
+        <div class="config-border-item" v-if="type === 2">
+          <div class="config-border-item-title">
+            <div>推文关联内容设定</div>
+            <div class="f12 cGray666">※会显示在文章列表页和详情页的正文中</div>
+          </div>
+          <!-- bangumi -->
+          <el-form-item label="关联番剧" prop="bangumi">
+            <bangumi-selector
+              v-model="form.contentBangumiList"
+              v-model:bangumiList="contentBangumiList"
+              placeholder="请选择番剧"
+            />
+          </el-form-item>
+          <el-form-item label="关联电影" prop="movie">
+            <movie-selector
+              v-model="form.contentMovieList"
+              v-model:movieList="contentMovieList"
+              placeholder="请选择电影"
+            />
+          </el-form-item>
+          <!-- game -->
+          <el-form-item label="关联游戏" prop="game">
+            <game-selector
+              v-model="form.contentGameList"
+              v-model:gameList="contentGameList"
+              placeholder="请选择游戏"
+            />
+          </el-form-item>
+          <!-- book -->
+          <el-form-item label="关联书籍" prop="book">
+            <book-selector
+              v-model="form.contentBookList"
+              v-model:bookList="contentBookList"
+              placeholder="请选择书籍"
+            />
+          </el-form-item>
+          <!-- event -->
+          <el-form-item label="关联活动" prop="event">
+            <event-selector
+              v-model="form.contentEventList"
+              v-model:eventList="contentEventList"
+              placeholder="请选择活动"
+            />
+          </el-form-item>
+          <!-- 关联投票 -->
+          <el-form-item label="关联投票" prop="vote">
+            <vote-selector
+              v-model="form.contentVoteList"
+              v-model:voteList="contentVoteList"
+              placeholder="请选择投票"
+            />
+          </el-form-item>
+          <!-- post -->
+          <el-form-item label="关联博文" prop="post">
+            <post-selector
+              v-model="form.contentPostList"
+              v-model:postList="contentPostList"
+              :current-post-id="id"
+              :format-date="$formatDate"
+              placeholder="请选择博文"
+            />
+          </el-form-item>
+        </div>
+
+        <div class="config-border-item">
+          <div class="config-border-item-title">
+            <div>详情页关联内容设定</div>
+            <div class="f12 cGray666">※仅显示在详情页下方的相关内容</div>
+          </div>
+          <!-- bangumi -->
+          <el-form-item label="相关番剧" prop="bangumi">
+            <bangumi-selector
+              v-model="form.bangumiList"
+              v-model:bangumiList="bangumiList"
+              placeholder="请选择番剧"
+            />
+          </el-form-item>
+          <el-form-item label="相关电影" prop="movie">
+            <movie-selector
+              v-model="form.movieList"
+              v-model:movieList="movieList"
+              placeholder="请选择电影"
+            />
+          </el-form-item>
+          <!-- game -->
+          <el-form-item label="相关游戏" prop="game">
+            <game-selector
+              v-model="form.gameList"
+              v-model:gameList="gameList"
+              placeholder="请选择游戏"
+            />
+          </el-form-item>
+          <!-- book -->
+          <el-form-item label="相关书籍" prop="book">
+            <book-selector
+              v-model="form.bookList"
+              v-model:bookList="bookList"
+              placeholder="请选择书籍"
+            />
+          </el-form-item>
+          <!-- event -->
+          <el-form-item label="相关活动" prop="event">
+            <event-selector
+              v-model="form.eventList"
+              v-model:eventList="eventList"
+              placeholder="请选择活动"
+            />
+          </el-form-item>
+          <!-- 关联投票 -->
+          <el-form-item label="相关投票" prop="vote">
+            <vote-selector
+              v-model="form.voteList"
+              v-model:voteList="voteList"
+              placeholder="请选择投票"
+            />
+          </el-form-item>
+          <!-- post -->
+          <el-form-item label="相关博文" prop="post">
+            <post-selector
+              v-model="form.postList"
+              v-model:postList="postList"
+              :current-post-id="id"
+              :format-date="$formatDate"
+              placeholder="请选择博文"
+            />
+          </el-form-item>
+        </div>
 
         <!-- 文章别名 -->
         <el-form-item label="文章别名" prop="alias">
@@ -472,6 +542,36 @@ export default {
                 form[key] = res.data.data[key].map((item) => item._id)
                 voteList.value = res.data.data[key]
                 break
+
+              case 'contentBangumiList':
+                form[key] = res.data.data[key].map((item) => item._id)
+                contentBangumiList.value = res.data.data[key]
+                break
+              case 'contentMovieList':
+                form[key] = res.data.data[key].map((item) => item._id)
+                contentMovieList.value = res.data.data[key]
+                break
+              case 'contentGameList':
+                form[key] = res.data.data[key].map((item) => item._id)
+                contentGameList.value = res.data.data[key]
+                break
+              case 'contentBookList':
+                form[key] = res.data.data[key].map((item) => item._id)
+                contentBookList.value = res.data.data[key]
+                break
+              case 'contentPostList':
+                form[key] = res.data.data[key].map((item) => item._id)
+                contentPostList.value = res.data.data[key]
+                break
+              case 'contentEventList':
+                form[key] = res.data.data[key].map((item) => item._id)
+                contentEventList.value = res.data.data[key]
+                break
+              case 'contentVoteList':
+                form[key] = res.data.data[key].map((item) => item._id)
+                contentVoteList.value = res.data.data[key]
+                break
+
               case 'coverImages':
                 form[key] = res.data.data[key].map((item) => item._id)
                 res.data.data[key].forEach((item) => {
@@ -555,6 +655,15 @@ export default {
       postList: [],
       eventList: [],
       voteList: [],
+
+      contentBangumiList: [],
+      contentMovieList: [],
+      contentGameList: [],
+      contentBookList: [],
+      contentPostList: [],
+      contentEventList: [],
+      contentVoteList: [],
+
       top: false,
       sortop: false,
       status: 0,
@@ -683,6 +792,24 @@ export default {
 
     // vote
     const voteList = ref([])
+
+    // bangumi
+    const contentBangumiList = ref([])
+    // movie
+    const contentMovieList = ref([])
+    // game
+    const contentGameList = ref([])
+
+    // book
+    const contentBookList = ref([])
+
+    // post
+    const contentPostList = ref([])
+    // event
+    const contentEventList = ref([])
+
+    // vote
+    const contentVoteList = ref([])
 
     // sorts
     const sortList = ref([])
@@ -980,6 +1107,22 @@ export default {
       eventList,
       // vote
       voteList,
+
+      // bangumi
+      contentBangumiList,
+      // movie
+      contentMovieList,
+      // game
+      contentGameList,
+      // book
+      contentBookList,
+      // post
+      contentPostList,
+      // event
+      contentEventList,
+      // vote
+      contentVoteList,
+
       // sorts
       sortList,
       // attachments
