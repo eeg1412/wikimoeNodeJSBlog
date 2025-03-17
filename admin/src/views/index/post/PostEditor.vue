@@ -213,179 +213,63 @@
           </el-form-item>
           <!-- bangumi -->
           <el-form-item label="关联番剧" prop="bangumi">
-            <el-select
+            <bangumi-selector
               v-model="form.bangumiList"
-              multiple
-              filterable
-              remote
-              :remote-method="queryBangumis"
-              :automatic-dropdown="true"
-              default-first-option
-              :reserve-keyword="false"
-              :loading="banggumiIsLoading"
+              v-model:bangumiList="bangumiList"
               placeholder="请选择番剧"
-              style="width: 100%"
-            >
-              <el-option
-                v-for="item in bangumiList"
-                :key="item._id"
-                :label="`${checkShowText(item)}【${item.year}年${seasonToStr(
-                  item.season
-                )}季新番】${item.title}`"
-                :value="item._id"
-              ></el-option>
-            </el-select>
+            />
           </el-form-item>
           <el-form-item label="关联电影" prop="movie">
-            <el-select
+            <movie-selector
               v-model="form.movieList"
-              multiple
-              filterable
-              remote
-              :remote-method="queryMovies"
-              :automatic-dropdown="true"
-              default-first-option
-              :reserve-keyword="false"
-              :loading="movieIsLoading"
+              v-model:movieList="movieList"
               placeholder="请选择电影"
-              style="width: 100%"
-            >
-              <el-option
-                v-for="item in movieList"
-                :key="item._id"
-                :label="`${checkShowText(item)}${setMovieTitle(item)}`"
-                :value="item._id"
-              ></el-option>
-            </el-select>
+            />
           </el-form-item>
           <!-- game -->
           <el-form-item label="关联游戏" prop="game">
-            <el-select
+            <game-selector
               v-model="form.gameList"
-              multiple
-              filterable
-              remote
-              :remote-method="queryGames"
-              :automatic-dropdown="true"
-              default-first-option
-              :reserve-keyword="false"
-              :loading="gameIsLoading"
+              v-model:gameList="gameList"
               placeholder="请选择游戏"
-              style="width: 100%"
-            >
-              <el-option
-                v-for="item in gameList"
-                :key="item._id"
-                :label="`${checkShowText(item)}${
-                  item.gamePlatform?.name ? `【${item.gamePlatform.name}】` : ''
-                }${item.title}`"
-                :value="item._id"
-              ></el-option>
-            </el-select>
+            />
           </el-form-item>
           <!-- book -->
           <el-form-item label="关联书籍" prop="book">
-            <el-select
+            <book-selector
               v-model="form.bookList"
-              multiple
-              filterable
-              remote
-              :remote-method="queryBooks"
-              :automatic-dropdown="true"
-              default-first-option
-              :reserve-keyword="false"
-              :loading="bookIsLoading"
+              v-model:bookList="bookList"
               placeholder="请选择书籍"
-              style="width: 100%"
-            >
-              <el-option
-                v-for="item in bookList"
-                :key="item._id"
-                :label="`${checkShowText(item)}${
-                  item.booktype?.name ? `【${item.booktype.name}】` : ''
-                }${item.title}`"
-                :value="item._id"
-              ></el-option>
-            </el-select>
+            />
           </el-form-item>
           <!-- event -->
           <el-form-item label="关联活动" prop="event">
-            <el-select
+            <event-selector
               v-model="form.eventList"
-              multiple
-              filterable
-              remote
-              :remote-method="queryEvents"
-              :automatic-dropdown="true"
-              default-first-option
-              :reserve-keyword="false"
-              :loading="eventIsLoading"
+              v-model:eventList="eventList"
               placeholder="请选择活动"
-              style="width: 100%"
-            >
-              <el-option
-                v-for="item in eventList"
-                :key="item._id"
-                :label="`${checkShowText(item)}【${$formatDate(
-                  item.startTime,
-                  'YYYY年MM月'
-                )}】${item.title}`"
-                :value="item._id"
-              ></el-option>
-            </el-select>
+            />
           </el-form-item>
           <!-- post -->
           <el-form-item label="关联博文" prop="post">
-            <el-select
+            <post-selector
               v-model="form.postList"
-              multiple
-              filterable
-              remote
-              :remote-method="queryPosts"
-              :automatic-dropdown="true"
-              default-first-option
-              :reserve-keyword="false"
-              :loading="postIsLoading"
+              v-model:postList="postList"
+              :current-post-id="id"
+              :format-date="$formatDate"
               placeholder="请选择博文"
-              style="width: 100%"
-            >
-              <el-option
-                v-for="item in postList"
-                :key="item._id"
-                :label="`${checkShowText(item)}${
-                  item.date ? $formatDate(item.date, '【YYYY年MM月DD日】') : ''
-                }${item.title}`"
-                :value="item._id"
-                :disabled="item._id === id"
-              ></el-option>
-            </el-select>
+            />
           </el-form-item>
-        </template>
-        <template v-if="type === 2">
           <!-- 关联投票 -->
           <el-form-item label="关联投票" prop="vote">
-            <el-select
+            <vote-selector
               v-model="form.voteList"
-              multiple
-              filterable
-              remote
-              :remote-method="queryVotes"
-              :automatic-dropdown="true"
-              default-first-option
-              :reserve-keyword="false"
-              :loading="voteIsLoading"
+              v-model:voteList="voteList"
               placeholder="请选择投票"
-              style="width: 100%"
-            >
-              <el-option
-                v-for="item in voteList"
-                :key="item._id"
-                :label="item.title"
-                :value="item._id"
-              ></el-option>
-            </el-select>
+            />
           </el-form-item>
         </template>
+
         <!-- 文章别名 -->
         <el-form-item label="文章别名" prop="alias">
           <el-input
@@ -472,6 +356,13 @@ import { ElMessage, ElMessageBox } from 'element-plus'
 import AttachmentsDialog from '@/components/AttachmentsDialog'
 import RichEditor4 from '@/components/RichEditor4'
 import RichEditor5 from '@/components/RichEditor5'
+import BangumiSelector from '@/components/BangumiSelector.vue'
+import MovieSelector from '@/components/MovieSelector.vue'
+import GameSelector from '@/components/GameSelector.vue'
+import BookSelector from '@/components/BookSelector.vue'
+import PostSelector from '@/components/PostSelector.vue'
+import EventSelector from '@/components/EventSelector.vue'
+import VoteSelector from '@/components/VoteSelector.vue'
 import draggable from 'vuedraggable'
 import EmojiTextarea from '@/components/EmojiTextarea.vue'
 import { onBeforeRouteLeave } from 'vue-router'
@@ -490,6 +381,13 @@ export default {
     RichEditor5,
     draggable,
     EmojiTextarea,
+    BangumiSelector,
+    MovieSelector,
+    GameSelector,
+    BookSelector,
+    PostSelector,
+    EventSelector,
+    VoteSelector,
   },
   setup() {
     const router = useRouter()
@@ -770,219 +668,21 @@ export default {
 
     // bangumi
     const bangumiList = ref([])
-    const banggumiIsLoading = ref(false)
-    const getBangumiList = (bangumiKeyword = null) => {
-      if (banggumiIsLoading.value) {
-        return
-      }
-      banggumiIsLoading.value = true
-      authApi
-        .getBangumiList(
-          { keyword: bangumiKeyword, status: 1, size: 50, page: 1 },
-          true
-        )
-        .then((res) => {
-          bangumiList.value = res.data.list
-        })
-        .finally(() => {
-          banggumiIsLoading.value = false
-        })
-    }
-    let queryBangumisTimer = null
-    const queryBangumis = (query) => {
-      if (queryBangumisTimer) {
-        clearTimeout(queryBangumisTimer)
-      }
-      queryBangumisTimer = setTimeout(() => {
-        getBangumiList(query)
-      }, 50)
-    }
     // movie
     const movieList = ref([])
-    const movieIsLoading = ref(false)
-    const getMovieList = (movieKeyword = null) => {
-      if (movieIsLoading.value) {
-        return
-      }
-      movieIsLoading.value = true
-      authApi
-        .getMovieList(
-          { keyword: movieKeyword, status: 1, size: 50, page: 1 },
-          true
-        )
-        .then((res) => {
-          movieList.value = res.data.list
-        })
-        .finally(() => {
-          movieIsLoading.value = false
-        })
-    }
-    let queryMoviesTimer = null
-    const queryMovies = (query) => {
-      if (queryMoviesTimer) {
-        clearTimeout(queryMoviesTimer)
-      }
-      queryMoviesTimer = setTimeout(() => {
-        getMovieList(query)
-      }, 50)
-    }
-    const setMovieTitle = (item) => {
-      const year = item.year
-      const month = item.month
-      const day = item.day
-      if (year && month && day) {
-        return `【${year}年${month}月${day}日观看】${item.title}`
-      }
-      return item.title
-    }
     // game
     const gameList = ref([])
-    const gameIsLoading = ref(false)
-    const getGameList = (gameKeyword = null) => {
-      if (gameIsLoading.value) {
-        return
-      }
-      gameIsLoading.value = true
-      authApi
-        .getGameList(
-          { keyword: gameKeyword, status: 1, size: 50, page: 1 },
-          true
-        )
-        .then((res) => {
-          gameList.value = res.data.list
-        })
-        .finally(() => {
-          gameIsLoading.value = false
-        })
-    }
-    let queryGamesTimer = null
-    const queryGames = (query) => {
-      if (queryGamesTimer) {
-        clearTimeout(queryGamesTimer)
-      }
-      queryGamesTimer = setTimeout(() => {
-        getGameList(query)
-      }, 50)
-    }
 
     // book
     const bookList = ref([])
-    const bookIsLoading = ref(false)
-    const getBookList = (bookKeyword = null) => {
-      if (bookIsLoading.value) {
-        return
-      }
-      bookIsLoading.value = true
-      authApi
-        .getBookList(
-          { keyword: bookKeyword, status: 1, size: 50, page: 1 },
-          true
-        )
-        .then((res) => {
-          bookList.value = res.data.list
-        })
-        .finally(() => {
-          bookIsLoading.value = false
-        })
-    }
-    let queryBooksTimer = null
-    const queryBooks = (query) => {
-      if (queryBooksTimer) {
-        clearTimeout(queryBooksTimer)
-      }
-      queryBooksTimer = setTimeout(() => {
-        getBookList(query)
-      }, 50)
-    }
 
     // post
     const postList = ref([])
-    const postIsLoading = ref(false)
-    const getPostList = (postKeyword = null) => {
-      if (postIsLoading.value) {
-        return
-      }
-      postIsLoading.value = true
-      authApi
-        .getPostList(
-          { keyword: postKeyword, status: 1, type: 1, size: 50, page: 1 },
-          true
-        )
-        .then((res) => {
-          postList.value = res.data.list
-        })
-        .finally(() => {
-          postIsLoading.value = false
-        })
-    }
-    let queryPostsTimer = null
-    const queryPosts = (query) => {
-      if (queryPostsTimer) {
-        clearTimeout(queryPostsTimer)
-      }
-      queryPostsTimer = setTimeout(() => {
-        getPostList(query)
-      }, 50)
-    }
     // event
     const eventList = ref([])
-    const eventIsLoading = ref(false)
-    const getEventList = (eventKeyword = null) => {
-      if (eventIsLoading.value) {
-        return
-      }
-      eventIsLoading.value = true
-      authApi
-        .getEventList(
-          { keyword: eventKeyword, status: 1, size: 50, page: 1 },
-          true
-        )
-        .then((res) => {
-          eventList.value = res.data.list
-        })
-        .finally(() => {
-          eventIsLoading.value = false
-        })
-    }
-    let queryEventsTimer = null
-    const queryEvents = (query) => {
-      if (queryEventsTimer) {
-        clearTimeout(queryEventsTimer)
-      }
-      queryEventsTimer = setTimeout(() => {
-        getEventList(query)
-      }, 50)
-    }
 
     // vote
     const voteList = ref([])
-    const voteIsLoading = ref(false)
-    const getVoteList = (voteKeyword = null) => {
-      if (voteIsLoading.value) {
-        return
-      }
-      voteIsLoading.value = true
-      authApi
-        .getVoteList(
-          { keyword: voteKeyword, status: 1, size: 50, page: 1 },
-          true
-        )
-        .then((res) => {
-          voteList.value = res.data.list
-        })
-        .finally(() => {
-          voteIsLoading.value = false
-        })
-    }
-    let queryVotesTimer = null
-    const queryVotes = (query) => {
-      if (queryVotesTimer) {
-        clearTimeout(queryVotesTimer)
-      }
-      queryVotesTimer = setTimeout(() => {
-        getVoteList(query)
-      }, 50)
-    }
 
     // sorts
     const sortList = ref([])
@@ -1268,33 +968,18 @@ export default {
       queryTags,
       // bangumi
       bangumiList,
-      banggumiIsLoading,
-      queryBangumis,
       // movie
       movieList,
-      movieIsLoading,
-      queryMovies,
-      setMovieTitle,
       // game
       gameList,
-      gameIsLoading,
-      queryGames,
       // book
       bookList,
-      bookIsLoading,
-      queryBooks,
       // post
       postList,
-      postIsLoading,
-      queryPosts,
       // event
       eventList,
-      eventIsLoading,
-      queryEvents,
       // vote
       voteList,
-      voteIsLoading,
-      queryVotes,
       // sorts
       sortList,
       // attachments
