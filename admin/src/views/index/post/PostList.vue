@@ -203,63 +203,131 @@
           </template>
         </el-table-column>
         <!-- 关联内容 -->
-        <el-table-column prop="related" label="关联内容" min-width="200">
+        <el-table-column prop="related" label="关联与相关内容" min-width="400">
           <template #default="{ row }">
-            <!-- tag -->
             <div
-              v-for="content in mergeContentList(row)"
-              :key="content._id"
-              class="postlist-content-item"
-              :class="{ danger: content.status === 0 }"
+              class="post-list-about-body"
+              v-if="row.mergeTweetContentList.length > 0"
             >
-              <template v-if="content.type === 'bangumi'">
-                <i class="fas fa-fw fa-tv"></i>{{ `${checkShowText(content)}`
-                }}{{
-                  `【${content.year}年${seasonToStr(content.season)}季新番】`
-                }}
-              </template>
-              <!-- movie -->
-              <template v-else-if="content.type === 'movie'">
-                <i class="fas fa-fw fa-film"></i>{{ `${checkShowText(content)}`
-                }}{{ setMovieTitle(content) }}
-              </template>
-              <template v-else-if="content.type === 'book'">
-                <i class="fas fa-fw fa-book"></i>{{ `${checkShowText(content)}`
-                }}{{
-                  content.booktype?.name ? `【${content.booktype.name}】` : ''
-                }}
-              </template>
-              <template v-else-if="content.type === 'game'">
-                <i class="fas fa-fw fa-gamepad"></i
-                >{{ `${checkShowText(content)}`
-                }}{{
-                  content.gamePlatform?.name
-                    ? `【${content.gamePlatform.name}】`
-                    : ''
-                }}
-              </template>
-              <template v-else-if="content.type === 'post'">
-                <i class="fas fa-fw fa-newspaper"></i
-                >{{ `${checkShowText(content)}`
-                }}{{
-                  `${
-                    content.date
-                      ? $formatDate(content.date, '【YYYY年MM月DD日】')
+              <div class="fb">推文内关联内容：</div>
+              <div
+                v-for="content in row.mergeTweetContentList"
+                :key="content._id"
+                class="postlist-content-item"
+                :class="{ danger: content.status === 0 }"
+              >
+                <template v-if="content.type === 'bangumi'">
+                  <i class="fas fa-fw fa-tv"></i>{{ `${checkShowText(content)}`
+                  }}{{
+                    `【${content.year}年${seasonToStr(content.season)}季新番】`
+                  }}
+                </template>
+                <!-- movie -->
+                <template v-else-if="content.type === 'movie'">
+                  <i class="fas fa-fw fa-film"></i
+                  >{{ `${checkShowText(content)}` }}{{ setMovieTitle(content) }}
+                </template>
+                <template v-else-if="content.type === 'book'">
+                  <i class="fas fa-fw fa-book"></i
+                  >{{ `${checkShowText(content)}`
+                  }}{{
+                    content.booktype?.name ? `【${content.booktype.name}】` : ''
+                  }}
+                </template>
+                <template v-else-if="content.type === 'game'">
+                  <i class="fas fa-fw fa-gamepad"></i
+                  >{{ `${checkShowText(content)}`
+                  }}{{
+                    content.gamePlatform?.name
+                      ? `【${content.gamePlatform.name}】`
                       : ''
-                  }`
-                }}
-              </template>
-              <template v-else-if="content.type === 'event'">
-                <i class="fas fa-fw fa-calendar-alt"></i
-                >{{ `${checkShowText(content)}`
-                }}{{ `【${$formatDate(content.startTime, 'YYYY年MM月')}】` }}
-              </template>
-              <!-- vote -->
-              <template v-else-if="content.type === 'vote'">
-                <i class="fas fa-fw fa-poll-h"></i
-                >{{ `${checkShowText(content)}` }}{{ `【投票】` }}
-              </template>
-              {{ content.title }}
+                  }}
+                </template>
+                <template v-else-if="content.type === 'post'">
+                  <i class="fas fa-fw fa-newspaper"></i
+                  >{{ `${checkShowText(content)}`
+                  }}{{
+                    `${
+                      content.date
+                        ? $formatDate(content.date, '【YYYY年MM月DD日】')
+                        : ''
+                    }`
+                  }}
+                </template>
+                <template v-else-if="content.type === 'event'">
+                  <i class="fas fa-fw fa-calendar-alt"></i
+                  >{{ `${checkShowText(content)}`
+                  }}{{ `【${$formatDate(content.startTime, 'YYYY年MM月')}】` }}
+                </template>
+                <!-- vote -->
+                <template v-else-if="content.type === 'vote'">
+                  <i class="fas fa-fw fa-poll-h"></i
+                  >{{ `${checkShowText(content)}` }}{{ `【投票】` }}
+                </template>
+                {{ content.title }}
+              </div>
+            </div>
+            <div
+              class="post-list-about-body"
+              v-if="row.mergeContentList.length > 0"
+            >
+              <div class="fb">详情页相关内容：</div>
+              <div
+                v-for="content in row.mergeContentList"
+                :key="content._id"
+                class="postlist-content-item"
+                :class="{ danger: content.status === 0 }"
+              >
+                <template v-if="content.type === 'bangumi'">
+                  <i class="fas fa-fw fa-tv"></i>{{ `${checkShowText(content)}`
+                  }}{{
+                    `【${content.year}年${seasonToStr(content.season)}季新番】`
+                  }}
+                </template>
+                <!-- movie -->
+                <template v-else-if="content.type === 'movie'">
+                  <i class="fas fa-fw fa-film"></i
+                  >{{ `${checkShowText(content)}` }}{{ setMovieTitle(content) }}
+                </template>
+                <template v-else-if="content.type === 'book'">
+                  <i class="fas fa-fw fa-book"></i
+                  >{{ `${checkShowText(content)}`
+                  }}{{
+                    content.booktype?.name ? `【${content.booktype.name}】` : ''
+                  }}
+                </template>
+                <template v-else-if="content.type === 'game'">
+                  <i class="fas fa-fw fa-gamepad"></i
+                  >{{ `${checkShowText(content)}`
+                  }}{{
+                    content.gamePlatform?.name
+                      ? `【${content.gamePlatform.name}】`
+                      : ''
+                  }}
+                </template>
+                <template v-else-if="content.type === 'post'">
+                  <i class="fas fa-fw fa-newspaper"></i
+                  >{{ `${checkShowText(content)}`
+                  }}{{
+                    `${
+                      content.date
+                        ? $formatDate(content.date, '【YYYY年MM月DD日】')
+                        : ''
+                    }`
+                  }}
+                </template>
+                <template v-else-if="content.type === 'event'">
+                  <i class="fas fa-fw fa-calendar-alt"></i
+                  >{{ `${checkShowText(content)}`
+                  }}{{ `【${$formatDate(content.startTime, 'YYYY年MM月')}】` }}
+                </template>
+                <!-- vote -->
+                <template v-else-if="content.type === 'vote'">
+                  <i class="fas fa-fw fa-poll-h"></i
+                  >{{ `${checkShowText(content)}` }}{{ `【投票】` }}
+                </template>
+                {{ content.title }}
+              </div>
             </div>
           </template>
         </el-table-column>
@@ -499,7 +567,12 @@ export default {
         return
       }
       authApi.getPostList(params).then((res) => {
-        list.value = res.data.list
+        const dataList = res.data.list
+        dataList.forEach((item) => {
+          item.mergeContentList = mergeContentList(item)
+          item.mergeTweetContentList = mergeContentList(item, 'content')
+        })
+        list.value = dataList
         total.value = res.data.total
         if (top) {
           tableRef.value.scrollTo({ top: 0 })
@@ -638,16 +711,37 @@ export default {
     }
 
     // 合并bookList,bangumiList,gameList,postList
-    const mergeContentList = (row) => {
+    const mergeContentList = (row, type) => {
+      // 根据type决定从哪里获取列表
       const {
-        bookList,
-        bangumiList,
-        movieList,
-        gameList,
-        postList,
-        eventList,
-        voteList,
+        bookList: originalBookList,
+        bangumiList: originalBangumiList,
+        movieList: originalMovieList,
+        gameList: originalGameList,
+        postList: originalPostList,
+        eventList: originalEventList,
+        voteList: originalVoteList,
+        contentBookList,
+        contentBangumiList,
+        contentMovieList,
+        contentGameList,
+        contentPostList,
+        contentEventList,
+        contentVoteList,
       } = row
+
+      // 根据type参数选择适当的列表
+      const bookList = type === 'content' ? contentBookList : originalBookList
+      const bangumiList =
+        type === 'content' ? contentBangumiList : originalBangumiList
+      const movieList =
+        type === 'content' ? contentMovieList : originalMovieList
+      const gameList = type === 'content' ? contentGameList : originalGameList
+      const postList = type === 'content' ? contentPostList : originalPostList
+      const eventList =
+        type === 'content' ? contentEventList : originalEventList
+      const voteList = type === 'content' ? contentVoteList : originalVoteList
+
       const contentList = []
       if (bookList && bookList.length) {
         const type = 'book'
@@ -808,5 +902,11 @@ export default {
   --el-tag-bg-color: var(--el-color-danger-light-9);
   --el-tag-border-color: var(--el-color-danger-light-8);
   --el-tag-hover-color: var(--el-color-danger);
+}
+.post-list-about-body {
+  margin-bottom: 10px;
+}
+.post-list-about-body:last-child {
+  margin-bottom: 0;
 }
 </style>

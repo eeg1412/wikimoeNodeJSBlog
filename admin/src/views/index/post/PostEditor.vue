@@ -214,7 +214,7 @@
         </template>
         <div class="config-border-item" v-if="type === 2">
           <div class="config-border-item-title">
-            <div>推文关联内容设定</div>
+            <div>推文内关联内容设定</div>
             <div class="f12 cGray666">※会显示在文章列表页和详情页的正文中</div>
           </div>
           <!-- bangumi -->
@@ -278,7 +278,7 @@
 
         <div class="config-border-item">
           <div class="config-border-item-title">
-            <div>详情页关联内容设定</div>
+            <div>详情页相关内容设定</div>
             <div class="f12 cGray666">※仅显示在详情页下方的相关内容</div>
           </div>
           <!-- bangumi -->
