@@ -15,7 +15,7 @@
     <el-option
       v-for="item in voteOptions"
       :key="item._id"
-      :label="item.title"
+      :label="`${checkShowText(item)}${item.title}`"
       :value="item._id"
     ></el-option>
   </el-select>
@@ -79,5 +79,13 @@ const queryVotes = (query) => {
   queryVotesTimer = setTimeout(() => {
     getVoteList(query)
   }, 50)
+}
+
+// 检查显示文本
+const checkShowText = (item) => {
+  if (item.status === 0) {
+    return '【状态:不显示】'
+  }
+  return ''
 }
 </script>
