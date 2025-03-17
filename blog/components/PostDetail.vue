@@ -42,42 +42,6 @@
         </p>
       </div>
     </div>
-    <!-- <div class="post-blog-head" v-else-if="postData.data.type === 2">
-      <div class="post-author-avatar-body">
-        <img
-          class="post-author-avatar"
-          :src="postData.data.author.photo"
-          :alt="postData.data.author.nickname"
-          width="50"
-          height="50"
-        />
-      </div>
-      <div class="post-right-info">
-        <h2 class="post-title">推文</h2>
-        <p class="post-extra cGray94">
-          作者：{{ postData.data.author.nickname
-          }}<span class="tenten"></span>时间：{{ formatDate(postData.data.date)
-          }}<template v-if="postData.data.sort"
-            ><span class="tenten"></span
-            ><span class="post_sort_link_span"
-              >分类 :
-              <NuxtLink
-                class="common-a"
-                :to="{
-                  name: 'postListSort',
-                  params: {
-                    sortid: postData.data.sort.alias || postData.data.sort._id,
-                    page: 1,
-                  },
-                }"
-              >
-                {{ postData.data.sort.sortname }}
-              </NuxtLink></span
-            ></template
-          >
-        </p>
-      </div>
-    </div> -->
     <div v-else-if="postData.data.type === 3">
       <template v-if="pageTemplate === 'almanac'">
         <div>
@@ -209,15 +173,42 @@
     </div>
     <!-- 推文图片 -->
     <template v-if="postData.data.type === 2">
-      <div>
-        <div
-          v-for="(vote, index) in postData.data.voteList"
-          :key="vote._id"
-          class="mt-3"
-        >
-          <VoteItem :item="vote" :postId="postData.data._id" />
-        </div>
-      </div>
+      <PostAboutEvent
+        :eventList="postData.data.contentEventList"
+        :showTitle="false"
+        :postId="postData.data._id"
+        idPrefix="content"
+        v-if="postData.data.contentEventList.length > 0"
+      />
+      <PostVote
+        :voteList="postData.data.contentVoteList"
+        :showTitle="false"
+        :postId="postData.data._id"
+        idPrefix="content"
+        v-if="postData.data.contentVoteList.length > 0"
+      />
+      <PostAbout
+        :postList="postData.data.contentPostList"
+        :showTitle="false"
+        :postId="postData.data._id"
+        idPrefix="content"
+        v-if="postData.data.contentPostList.length > 0"
+      />
+      <PostACG
+        :bangumiList="postData.data.contentBangumiList"
+        :gameList="postData.data.contentGameList"
+        :bookList="postData.data.contentBookList"
+        :movieList="postData.data.contentMovieList"
+        :showTitle="false"
+        :postId="postData.data._id"
+        idPrefix="content"
+        v-if="
+          postData.data.contentBangumiList.length > 0 ||
+          postData.data.contentGameList.length > 0 ||
+          postData.data.contentBookList.length > 0 ||
+          postData.data.contentMovieList.length > 0
+        "
+      />
       <div
         class="post-tweet-detail-cover-list-body mt-3"
         v-if="postData.data.coverImages.length > 0"
@@ -262,13 +253,33 @@
       :post="postData.data"
       v-if="showPostCommonFooter && postData.data"
     />
-    <PostAboutEvent :eventList="postData.data.eventList" />
-    <PostAbout :postList="postData.data.postList" />
+    <PostAboutEvent
+      :eventList="postData.data.eventList"
+      :postId="postData.data._id"
+      v-if="postData.data.eventList.length > 0"
+    />
+    <PostVote
+      :voteList="postData.data.voteList"
+      :postId="postData.data._id"
+      v-if="postData.data.voteList.length > 0"
+    />
+    <PostAbout
+      :postList="postData.data.postList"
+      :postId="postData.data._id"
+      v-if="postData.data.postList.length > 0"
+    />
     <PostACG
       :bangumiList="postData.data.bangumiList"
       :gameList="postData.data.gameList"
       :bookList="postData.data.bookList"
       :movieList="postData.data.movieList"
+      :postId="postData.data._id"
+      v-if="
+        postData.data.bangumiList.length > 0 ||
+        postData.data.gameList.length > 0 ||
+        postData.data.bookList.length > 0 ||
+        postData.data.movieList.length > 0
+      "
     />
     <!-- randomPostList -->
     <PostPageRandomPostList

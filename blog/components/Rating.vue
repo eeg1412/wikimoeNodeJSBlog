@@ -9,7 +9,7 @@
     </div>
     <div
       v-else
-      class="text-sm text-gray-300 border border-solid border-gray-300 text-center rounded flex items-center justify-center"
+      class="text-sm text-gray-300 dark:text-gray-500 border border-solid border-gray-300 dark:border-gray-600 text-center rounded flex items-center justify-center"
     >
       暂无评分
     </div>

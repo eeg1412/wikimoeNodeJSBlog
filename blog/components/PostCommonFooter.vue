@@ -1,5 +1,5 @@
 <template>
-  <div class="my-4">
+  <div class="my-3">
     <HtmlContent v-if="htmlMode" :content="content" />
     <div v-else v-html="content"></div>
   </div>

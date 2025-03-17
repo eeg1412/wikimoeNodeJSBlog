@@ -28,7 +28,16 @@ module.exports = async function (req, res, next) {
       return
     }
     // 删除文章下的关联文章
-    postUtils.updateMany({ postList: id }, { $pull: { postList: id } }).then((postData) => {
+    postUtils.updateMany({
+      $or: [
+        {
+          postList: id,
+        },
+        {
+          contentPostList: id
+        }
+      ]
+    }, { $pull: { postList: id, contentPostList: id } }).then((postData) => {
       // console.log(postData)
       res.send({
         data: {

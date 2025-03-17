@@ -116,6 +116,7 @@ var posts = new Schema({
     default: 0
   },
   coverImages: [{ type: Schema.ObjectId, ref: 'attachments' }],
+  // 仅用于详情页下方的推荐内容，可能是扩展阅读或相关作品推荐。
   bangumiList: [{ type: Schema.ObjectId, ref: 'bangumis', default: [] }],
   movieList: [{ type: Schema.ObjectId, ref: 'movies', default: [] }],
   gameList: [{ type: Schema.ObjectId, ref: 'games', default: [] }],
@@ -123,6 +124,14 @@ var posts = new Schema({
   postList: [{ type: Schema.ObjectId, ref: 'posts', default: [] }],
   eventList: [{ type: Schema.ObjectId, ref: 'events', default: [] }],
   voteList: [{ type: Schema.ObjectId, ref: 'votes', default: [] }],
+  // 用于文章列表页和详情页的文章内容里，表示与文章本身强相关的内容。
+  contentBangumiList: [{ type: Schema.ObjectId, ref: 'bangumis', default: [] }],
+  contentMovieList: [{ type: Schema.ObjectId, ref: 'movies', default: [] }],
+  contentGameList: [{ type: Schema.ObjectId, ref: 'games', default: [] }],
+  contentBookList: [{ type: Schema.ObjectId, ref: 'books', default: [] }],
+  contentPostList: [{ type: Schema.ObjectId, ref: 'posts', default: [] }],
+  contentEventList: [{ type: Schema.ObjectId, ref: 'events', default: [] }],
+  contentVoteList: [{ type: Schema.ObjectId, ref: 'votes', default: [] }],
 }, { timestamps: true });
 
 module.exports = mongoose.model('posts', posts);

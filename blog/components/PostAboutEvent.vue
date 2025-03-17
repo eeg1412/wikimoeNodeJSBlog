@@ -1,7 +1,8 @@
 <template>
-  <div v-if="eventList.length > 0" class="mt-4 relative">
+  <div v-if="eventList.length > 0" class="mt-3 mb-3 relative" @click.stop>
     <div
-      class="mb-4 text-gray-600 font-bold dark:text-gray-200 text-base border-b border-dotted pb-3 border-gray-300 dark:border-gray-700"
+      v-if="showTitle"
+      class="mb-3 text-gray-600 font-bold dark:text-gray-200 text-base border-b border-dotted pb-2 border-gray-300 dark:border-gray-700"
     >
       相关活动：
     </div>
@@ -10,7 +11,8 @@
         <li
           v-for="event in eventList"
           :key="event._id"
-          class="text-sm text-primary-500 pointer mb-2"
+          :id="`event-${idPrefix}-${event._id}-${postId}`"
+          class="text-sm text-primary-500 pointer mb-2 header-scroll-margin-top"
           @click="getEventDetail(event._id)"
         >
           <div class="overflow-hidden overflow-ellipsis whitespace-nowrap">
@@ -27,7 +29,7 @@
       </ul>
     </div>
     <ClientOnly>
-      <DivLoading :loading="contentIsLoading" />
+      <DivLoading :loading="contentIsLoading" v-if="showTitle" />
       <EventDialog v-model:show="eventOpen" :currentData="currentEventData" />
     </ClientOnly>
   </div>
@@ -40,6 +42,18 @@ const props = defineProps({
     default() {
       return []
     },
+  },
+  showTitle: {
+    type: Boolean,
+    default: true,
+  },
+  idPrefix: {
+    type: String,
+    default: '',
+  },
+  postId: {
+    type: String,
+    default: '',
   },
 })
 

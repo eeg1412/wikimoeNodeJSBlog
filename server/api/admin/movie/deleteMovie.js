@@ -61,7 +61,16 @@ module.exports = async function (req, res, next) {
     }
     cacheDataUtils.getMovieYearList()
     // 删除文章下的电影
-    postUtils.updateMany({ movieList: id }, { $pull: { movieList: id } }).then((data) => {
+    postUtils.updateMany({
+      $or: [
+        {
+          movieList: id,
+        },
+        {
+          contentMovieList: id
+        }
+      ]
+    }, { $pull: { movieList: id, contentMovieList: id } }).then((data) => {
       // console.log('data', data)
       res.send({
         data: {

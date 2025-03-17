@@ -61,7 +61,16 @@ module.exports = async function (req, res, next) {
       return
     }
     // 删除文章下的游戏
-    postUtils.updateMany({ gameList: id }, { $pull: { gameList: id } }).then((postData) => {
+    postUtils.updateMany({
+      $or: [
+        {
+          gameList: id,
+        },
+        {
+          contentGameList: id
+        }
+      ]
+    }, { $pull: { gameList: id, contentGameList: id } }).then((postData) => {
       // console.log(postData)
       res.send({
         data: {

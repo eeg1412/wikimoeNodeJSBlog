@@ -24,7 +24,16 @@ module.exports = async function (req, res, next) {
       })
       return
     }
-    postUtils.updateMany({ voteList: id }, { $pull: { voteList: id } }).then((data) => {
+    postUtils.updateMany({
+      $or: [
+        {
+          voteList: id,
+        },
+        {
+          contentVoteList: id
+        }
+      ]
+    }, { $pull: { voteList: id, contentVoteList: id } }).then((data) => {
       // console.log('data', data)
       res.send({
         data: {

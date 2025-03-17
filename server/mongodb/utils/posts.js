@@ -75,7 +75,61 @@ exports.findOne = async function (parmas, projection, options = {}) {
       path: 'voteList',
       match: { status: matchStatus },
       select: options.voteFliter || undefined,
-    });
+    })
+    .populate(
+      {
+        path: 'contentBangumiList',
+        match: { status: matchStatus },
+        select: '-coverFileName -coverFolder -createdAt -updatedAt',
+      }
+    ).populate({
+      path: 'contentMovieList',
+      match: { status: matchStatus },
+      select: '-coverFileName -coverFolder -createdAt -updatedAt',
+    }).populate({
+      path: 'contentGameList',
+      match: { status: matchStatus },
+      select: '-coverFileName -coverFolder -createdAt -updatedAt',
+      populate: [
+        {
+          path: 'gamePlatform',
+          select: '_id name color'
+        },
+        // screenshotAlbum
+        {
+          path: 'screenshotAlbum',
+          select: '_id name'
+        }
+      ]
+    }).populate({
+      path: 'contentBookList',
+      match: { status: matchStatus },
+      select: '-coverFileName -coverFolder -createdAt -updatedAt',
+      populate: {
+        path: 'booktype',
+        select: '_id name color'
+      }
+    }).populate({
+      path: 'contentPostList',
+      match: { status: matchStatus, type: 1 },
+      select: 'title _id coverImages alias date status',
+      populate: {
+        path: 'coverImages',
+      }
+    }).populate({
+      path: 'contentEventList',
+      match: { status: matchStatus },
+      select: '_id title eventtype startTime status',
+      populate: {
+        path: 'eventtype',
+        select: '_id name color'
+      }
+    }).populate({
+      path: 'contentVoteList',
+      match: { status: matchStatus },
+      select: options.voteFliter || undefined,
+    })
+    ;
 }
 
 // 查找所有
@@ -167,6 +221,88 @@ exports.findPage = async function (parmas, sort, page, limit, projection, option
       select: options.voteFliter || undefined,
     })
   }
+
+
+
+  if (projection && !projection.includes('-contentBangumiList')) {
+    query = query.populate({
+      path: 'contentBangumiList',
+      match: { status: matchStatus },
+      select: '-coverFileName -coverFolder -createdAt -updatedAt',
+    });
+  }
+
+  if (projection && !projection.includes('-contentMovieList')) {
+    query = query.populate({
+      path: 'contentMovieList',
+      match: { status: matchStatus },
+      select: '-coverFileName -coverFolder -createdAt -updatedAt',
+    })
+  }
+
+
+  if (projection && !projection.includes('-contentGameList')) {
+    query = query.populate({
+      path: 'contentGameList',
+      match: { status: matchStatus },
+      select: '-coverFileName -coverFolder -createdAt -updatedAt',
+      populate: [
+        {
+          path: 'gamePlatform',
+          select: '_id name color'
+        },
+        // screenshotAlbum
+        {
+          path: 'screenshotAlbum',
+          select: '_id name'
+        }
+      ]
+    });
+  }
+
+  if (projection && !projection.includes('-contentBookList')) {
+    query = query.populate({
+      path: 'contentBookList',
+      match: { status: matchStatus },
+      select: '-coverFileName -coverFolder -createdAt -updatedAt',
+      populate: {
+        path: 'booktype',
+        select: '_id name color'
+      }
+    });
+  }
+
+  if (projection && !projection.includes('-contentPostList')) {
+    query = query.populate({
+      path: 'contentPostList',
+      match: { status: matchStatus, type: 1 },
+      select: 'title _id coverImages alias date status',
+      populate: {
+        path: 'coverImages',
+      }
+    });
+  }
+
+  if (projection && !projection.includes('-contentEventList')) {
+    query = query.populate({
+      path: 'contentEventList',
+      match: { status: matchStatus },
+      select: '_id title eventtype startTime status',
+      populate: {
+        path: 'eventtype',
+        select: '_id name color'
+      }
+    });
+  }
+
+  if (projection && !projection.includes('-contentVoteList')) {
+    query = query.populate({
+      path: 'contentVoteList',
+      match: { status: matchStatus },
+      select: options.voteFliter || undefined,
+    })
+  }
+
 
   const list = await query.sort(sort).skip((page - 1) * limit).limit(limit);
   const total = await postsModel.countDocuments(parmas);

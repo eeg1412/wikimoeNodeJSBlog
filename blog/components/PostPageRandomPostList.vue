@@ -1,7 +1,7 @@
 <template>
-  <div class="mt-4">
+  <div class="mt-3">
     <div
-      class="mb-4 text-gray-600 dark:text-gray-200 font-bold text-base border-b border-dotted pb-3 border-gray-300 dark:border-gray-700"
+      class="mb-3 text-gray-600 dark:text-gray-200 font-bold text-base border-b border-dotted pb-2 border-gray-300 dark:border-gray-700"
     >
       {{ options.sitePostRandomSimilarTitle }}：
     </div>

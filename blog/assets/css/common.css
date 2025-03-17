@@ -1111,6 +1111,11 @@ ins.adsbygoogle[data-ad-status='unfilled'] {
 .div-loading-body {
   z-index: 9;
 }
+.acgn-item-cover-body,
+.rating-body,
+.acgn-right-content {
+  @apply bg-white;
+}
 
 /* 暗模式 */
 :root {
@@ -1118,6 +1123,11 @@ ins.adsbygoogle[data-ad-status='unfilled'] {
   --wikimoe-dark-panel-bg: rgba(17, 17, 17, 1); */
   --wikimoe-dark-bg: rgba(17, 17, 17, 1);
   --wikimoe-dark-panel-bg: rgba(20, 20, 20, 1);
+}
+html.dark .acgn-item-cover-body,
+html.dark .rating-body,
+html.dark .acgn-right-content {
+  background-color: var(--wikimoe-dark-bg);
 }
 html.dark body {
   @apply dark:text-gray-200;

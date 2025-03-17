@@ -28,7 +28,7 @@ module.exports = async function (req, res, next) {
   // - coverImages  博客时是封面图片字段，页面时是页面图片字段
   // - __v  版本号字段
   const id = req.body.id
-  let { title, date, content, excerpt, alias, sort, tags, top, sortop, status, allowRemark, template, code, coverImages, bangumiList, movieList, gameList, bookList, postList, eventList, voteList, __v } = req.body
+  let { title, date, content, excerpt, alias, sort, tags, top, sortop, status, allowRemark, template, code, coverImages, bangumiList, movieList, gameList, bookList, postList, eventList, voteList, contentBangumiList, contentMovieList, contentGameList, contentBookList, contentPostList, contentEventList, contentVoteList, __v } = req.body
   // 校验id是否存在
   if (!id) {
     res.status(400).json({
@@ -132,6 +132,79 @@ module.exports = async function (req, res, next) {
     }
   }
 
+  // 用 validator.isMongoId 校验 contentBangumiList, contentMovieList,contentGameList, contentBookList
+  for (let i = 0; i < contentBangumiList.length; i++) {
+    if (!validator.isMongoId(contentBangumiList[i])) {
+      res.status(400).json({
+        errors: [{
+          message: 'contentBangumiList格式错误'
+        }]
+      })
+      return
+    }
+  }
+  for (let i = 0; i < contentMovieList.length; i++) {
+    if (!validator.isMongoId(contentMovieList[i])) {
+      res.status(400).json({
+        errors: [{
+          message: 'contentMovieList格式错误'
+        }]
+      })
+      return
+    }
+  }
+  for (let i = 0; i < contentGameList.length; i++) {
+    if (!validator.isMongoId(contentGameList[i])) {
+      res.status(400).json({
+        errors: [{
+          message: 'contentGameList格式错误'
+        }]
+      })
+      return
+    }
+  }
+  for (let i = 0; i < contentBookList.length; i++) {
+    if (!validator.isMongoId(contentBookList[i])) {
+      res.status(400).json({
+        errors: [{
+          message: 'contentBookList格式错误'
+        }]
+      })
+      return
+    }
+  }
+  for (let i = 0; i < contentPostList.length; i++) {
+    if (!validator.isMongoId(contentPostList[i])) {
+      res.status(400).json({
+        errors: [{
+          message: 'contentPostList格式错误'
+        }]
+      })
+      return
+    }
+  }
+  for (let i = 0; i < contentEventList.length; i++) {
+    if (!validator.isMongoId(contentEventList[i])) {
+      res.status(400).json({
+        errors: [{
+          message: 'contentEventList格式错误'
+        }]
+      })
+      return
+    }
+  }
+  for (let i = 0; i < contentVoteList.length; i++) {
+    if (!validator.isMongoId(contentVoteList[i])) {
+      res.status(400).json({
+        errors: [{
+          message: 'contentVoteList格式错误'
+        }]
+      })
+      return
+    }
+  }
+
+
   // 校验tags 
   if (!Array.isArray(tags)) {
     res.status(400).json({
@@ -190,6 +263,13 @@ module.exports = async function (req, res, next) {
     postList: postList,
     eventList: eventList,
     voteList: voteList,
+    contentBangumiList: contentBangumiList,
+    contentMovieList: contentMovieList,
+    contentGameList: contentGameList,
+    contentBookList: contentBookList,
+    contentPostList: contentPostList,
+    contentEventList: contentEventList,
+    contentVoteList: contentVoteList,
     lastChangDate: new Date()
   }
   const rules = [

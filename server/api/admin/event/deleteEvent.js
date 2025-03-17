@@ -25,7 +25,16 @@ module.exports = async function (req, res, next) {
       return
     }
     // 删除文章下的活动
-    postUtils.updateMany({ eventList: id }, { $pull: { eventList: id } }).then((postData) => {
+    postUtils.updateMany({
+      $or: [
+        {
+          eventList: id,
+        },
+        {
+          contentEventList: id
+        }
+      ]
+    }, { $pull: { eventList: id, contentEventList: id } }).then((postData) => {
       // console.log(postData)
       res.send({
         data: {

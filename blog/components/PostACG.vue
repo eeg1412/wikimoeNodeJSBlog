@@ -1,7 +1,8 @@
 <template>
-  <div v-if="contentCount > 0" class="mt-4">
+  <div v-if="contentCount > 0" class="mt-3 mb-3">
     <div
-      class="mb-4 text-gray-600 dark:text-gray-200 font-bold text-base border-b border-dotted pb-3 border-gray-300 dark:border-gray-700"
+      v-if="showTitle"
+      class="mb-3 text-gray-600 dark:text-gray-200 font-bold text-base border-b border-dotted pb-2 border-gray-300 dark:border-gray-700"
     >
       相关作品：
     </div>
@@ -14,17 +15,37 @@
       <div
         v-for="bangumi in bangumiList"
         :key="bangumi._id"
-        class="post-acg-item"
+        class="post-acg-item cursor-default header-scroll-margin-top"
+        :id="`ent-title-${idPrefix}-${bangumi._id}-${postId}`"
+        @click.stop
       >
         <BangumiItem :bangumi="bangumi" showType />
       </div>
-      <div v-for="movie in movieList" :key="movie._id" class="post-acg-item">
+      <div
+        v-for="movie in movieList"
+        :key="movie._id"
+        class="post-acg-item cursor-default header-scroll-margin-top"
+        :id="`ent-title-${idPrefix}-${movie._id}-${postId}`"
+        @click.stop
+      >
         <MovieItem :movie="movie" showType />
       </div>
-      <div v-for="book in bookList" :key="book._id" class="post-acg-item">
+      <div
+        v-for="book in bookList"
+        :key="book._id"
+        class="post-acg-item cursor-default header-scroll-margin-top"
+        :id="`ent-title-${idPrefix}-${book._id}-${postId}`"
+        @click.stop
+      >
         <BookItem :book="book" />
       </div>
-      <div v-for="game in gameList" :key="game._id" class="post-acg-item">
+      <div
+        v-for="game in gameList"
+        :key="game._id"
+        class="post-acg-item cursor-default header-scroll-margin-top"
+        :id="`ent-title-${idPrefix}-${game._id}-${postId}`"
+        @click.stop
+      >
         <GameItem :game="game" />
       </div>
     </div>
@@ -55,6 +76,18 @@ const props = defineProps({
     default() {
       return []
     },
+  },
+  showTitle: {
+    type: Boolean,
+    default: true,
+  },
+  idPrefix: {
+    type: String,
+    default: '',
+  },
+  postId: {
+    type: String,
+    default: '',
   },
 })
 const contentCount = computed(() => {

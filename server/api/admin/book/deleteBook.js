@@ -61,7 +61,7 @@ module.exports = async function (req, res, next) {
       return
     }
     // 删除文章下的书籍
-    postUtils.updateMany({ bookList: id }, { $pull: { bookList: id } }).then((postData) => {
+    postUtils.updateMany({ bookList: id }, { $pull: { bookList: id, contentBookList: id } }).then((postData) => {
       // console.log(postData)
       res.send({
         data: {
