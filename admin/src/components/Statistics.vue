@@ -552,7 +552,7 @@ export default {
   line-height: 20px;
 }
 .statistics-panel {
-  border: 1px solid #ebeef5;
+  border: 1px solid var(--el-border-color);
   height: 485px;
   box-sizing: border-box;
   padding-bottom: 10px;
