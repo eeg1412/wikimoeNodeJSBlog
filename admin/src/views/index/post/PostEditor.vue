@@ -169,7 +169,12 @@
               </div>
             </div>
           </div>
-          <div v-if="coverImagesDataList.length > 1">※可以拖动改变顺序</div>
+          <div>
+            <p v-if="coverImagesDataList.length > 1">※可以拖动改变顺序</p>
+            <p v-if="type === 2">
+              ※【媒体内容】会显示在【推文内关联内容设定】的下方
+            </p>
+          </div>
         </el-form-item>
         <!-- 分类 -->
         <el-form-item label="分类" prop="sort" v-if="type !== 3">
@@ -217,37 +222,6 @@
             <div>推文内关联内容设定</div>
             <div class="f12 cGray666">※会显示在文章列表页和详情页的正文中</div>
           </div>
-          <!-- bangumi -->
-          <el-form-item label="关联番剧" prop="bangumi">
-            <bangumi-selector
-              v-model="form.contentBangumiList"
-              v-model:bangumiList="contentBangumiList"
-              placeholder="请选择番剧"
-            />
-          </el-form-item>
-          <el-form-item label="关联电影" prop="movie">
-            <movie-selector
-              v-model="form.contentMovieList"
-              v-model:movieList="contentMovieList"
-              placeholder="请选择电影"
-            />
-          </el-form-item>
-          <!-- game -->
-          <el-form-item label="关联游戏" prop="game">
-            <game-selector
-              v-model="form.contentGameList"
-              v-model:gameList="contentGameList"
-              placeholder="请选择游戏"
-            />
-          </el-form-item>
-          <!-- book -->
-          <el-form-item label="关联书籍" prop="book">
-            <book-selector
-              v-model="form.contentBookList"
-              v-model:bookList="contentBookList"
-              placeholder="请选择书籍"
-            />
-          </el-form-item>
           <!-- event -->
           <el-form-item label="关联活动" prop="event">
             <event-selector
@@ -274,6 +248,37 @@
               placeholder="请选择博文"
             />
           </el-form-item>
+          <!-- bangumi -->
+          <el-form-item label="关联番剧" prop="bangumi">
+            <bangumi-selector
+              v-model="form.contentBangumiList"
+              v-model:bangumiList="contentBangumiList"
+              placeholder="请选择番剧"
+            />
+          </el-form-item>
+          <el-form-item label="关联电影" prop="movie">
+            <movie-selector
+              v-model="form.contentMovieList"
+              v-model:movieList="contentMovieList"
+              placeholder="请选择电影"
+            />
+          </el-form-item>
+          <!-- book -->
+          <el-form-item label="关联书籍" prop="book">
+            <book-selector
+              v-model="form.contentBookList"
+              v-model:bookList="contentBookList"
+              placeholder="请选择书籍"
+            />
+          </el-form-item>
+          <!-- game -->
+          <el-form-item label="关联游戏" prop="game">
+            <game-selector
+              v-model="form.contentGameList"
+              v-model:gameList="contentGameList"
+              placeholder="请选择游戏"
+            />
+          </el-form-item>
         </div>
 
         <div class="config-border-item">
@@ -281,37 +286,6 @@
             <div>详情页相关内容设定</div>
             <div class="f12 cGray666">※仅显示在详情页下方的相关内容</div>
           </div>
-          <!-- bangumi -->
-          <el-form-item label="相关番剧" prop="bangumi">
-            <bangumi-selector
-              v-model="form.bangumiList"
-              v-model:bangumiList="bangumiList"
-              placeholder="请选择番剧"
-            />
-          </el-form-item>
-          <el-form-item label="相关电影" prop="movie">
-            <movie-selector
-              v-model="form.movieList"
-              v-model:movieList="movieList"
-              placeholder="请选择电影"
-            />
-          </el-form-item>
-          <!-- game -->
-          <el-form-item label="相关游戏" prop="game">
-            <game-selector
-              v-model="form.gameList"
-              v-model:gameList="gameList"
-              placeholder="请选择游戏"
-            />
-          </el-form-item>
-          <!-- book -->
-          <el-form-item label="相关书籍" prop="book">
-            <book-selector
-              v-model="form.bookList"
-              v-model:bookList="bookList"
-              placeholder="请选择书籍"
-            />
-          </el-form-item>
           <!-- event -->
           <el-form-item label="相关活动" prop="event">
             <event-selector
@@ -336,6 +310,37 @@
               :current-post-id="id"
               :format-date="$formatDate"
               placeholder="请选择博文"
+            />
+          </el-form-item>
+          <!-- bangumi -->
+          <el-form-item label="相关番剧" prop="bangumi">
+            <bangumi-selector
+              v-model="form.bangumiList"
+              v-model:bangumiList="bangumiList"
+              placeholder="请选择番剧"
+            />
+          </el-form-item>
+          <el-form-item label="相关电影" prop="movie">
+            <movie-selector
+              v-model="form.movieList"
+              v-model:movieList="movieList"
+              placeholder="请选择电影"
+            />
+          </el-form-item>
+          <!-- book -->
+          <el-form-item label="相关书籍" prop="book">
+            <book-selector
+              v-model="form.bookList"
+              v-model:bookList="bookList"
+              placeholder="请选择书籍"
+            />
+          </el-form-item>
+          <!-- game -->
+          <el-form-item label="相关游戏" prop="game">
+            <game-selector
+              v-model="form.gameList"
+              v-model:gameList="gameList"
+              placeholder="请选择游戏"
             />
           </el-form-item>
         </div>
