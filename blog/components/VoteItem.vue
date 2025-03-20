@@ -308,7 +308,7 @@ onUnmounted(() => {
   transition: opacity 0.3s;
 }
 .vote-item-option-bar-inner {
-  @apply bg-gray-400/20;
+  @apply bg-gray-300/20;
   width: 0%;
   height: 100%;
   border-radius: 0.1rem;
