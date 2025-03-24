@@ -171,9 +171,6 @@
           </div>
           <div>
             <p v-if="coverImagesDataList.length > 1">※可以拖动改变顺序</p>
-            <p v-if="type === 2">
-              ※【媒体内容】会显示在【推文内关联内容设定】的下方
-            </p>
           </div>
         </el-form-item>
         <!-- 分类 -->
@@ -279,6 +276,22 @@
               placeholder="请选择游戏"
             />
           </el-form-item>
+          <el-form-item label="更改排序" prop="contentSeriesSortListTurnOn">
+            <el-switch
+              v-model="form.contentSeriesSortListTurnOn"
+              @change="contentSeriesSortListTurnOnChange"
+            ></el-switch>
+          </el-form-item>
+          <el-form-item
+            label="排序"
+            v-if="form.contentSeriesSortListTurnOn"
+            prop="contentSeriesSortList"
+          >
+            <string-sort-edit-box
+              v-model:modelValue="form.contentSeriesSortList"
+              :map="listSortListMap"
+            />
+          </el-form-item>
         </div>
 
         <div class="config-border-item">
@@ -341,6 +354,22 @@
               v-model="form.gameList"
               v-model:gameList="gameList"
               placeholder="请选择游戏"
+            />
+          </el-form-item>
+          <el-form-item label="更改排序" prop="seriesSortListTurnOn">
+            <el-switch
+              v-model="form.seriesSortListTurnOn"
+              @change="seriesSortListTurnOnChange"
+            ></el-switch>
+          </el-form-item>
+          <el-form-item
+            label="排序"
+            v-if="form.seriesSortListTurnOn"
+            prop="seriesSortList"
+          >
+            <string-sort-edit-box
+              v-model:modelValue="form.seriesSortList"
+              :map="listSortListMap"
             />
           </el-form-item>
         </div>
@@ -440,6 +469,7 @@ import EventSelector from '@/components/EventSelector.vue'
 import VoteSelector from '@/components/VoteSelector.vue'
 import draggable from 'vuedraggable'
 import EmojiTextarea from '@/components/EmojiTextarea.vue'
+import StringSortEditBox from '@/components/StringSortEditBox.vue'
 import { onBeforeRouteLeave } from 'vue-router'
 import {
   loadAndOpenImg,
@@ -463,6 +493,7 @@ export default {
     PostSelector,
     EventSelector,
     VoteSelector,
+    StringSortEditBox,
   },
   setup() {
     const router = useRouter()
@@ -547,6 +578,20 @@ export default {
                 form[key] = res.data.data[key].map((item) => item._id)
                 voteList.value = res.data.data[key]
                 break
+              case 'seriesSortList':
+                if (res.data.data[key]) {
+                  form[key] = res.data.data[key]
+                } else {
+                  form[key] = []
+                }
+                break
+              case 'seriesSortListTurnOn':
+                form[key] =
+                  res.data.data['seriesSortList'] &&
+                  res.data.data['seriesSortList'].length > 0
+                    ? true
+                    : false
+                break
 
               case 'contentBangumiList':
                 form[key] = res.data.data[key].map((item) => item._id)
@@ -582,6 +627,20 @@ export default {
                 res.data.data[key].forEach((item) => {
                   coverImageListObj[item._id] = item
                 })
+                break
+              case 'contentSeriesSortList':
+                if (res.data.data[key]) {
+                  form[key] = res.data.data[key]
+                } else {
+                  form[key] = []
+                }
+                break
+              case 'contentSeriesSortListTurnOn':
+                form[key] =
+                  res.data.data['contentSeriesSortList'] &&
+                  res.data.data['contentSeriesSortList'].length > 0
+                    ? true
+                    : false
                 break
               case 'alias':
                 if (isNew) {
@@ -628,6 +687,13 @@ export default {
       form.alias = generateRandomString(8)
     }
 
+    const listSortListMap = {
+      media: '媒体内容',
+      event: '活动',
+      vote: '投票',
+      post: '博文',
+      acgn: '番剧/电影/游戏/书籍',
+    }
     const form = reactive({
       // - title	标题字段
       // - date	日期字段
@@ -660,6 +726,8 @@ export default {
       postList: [],
       eventList: [],
       voteList: [],
+      seriesSortListTurnOn: false,
+      seriesSortList: [],
 
       contentBangumiList: [],
       contentMovieList: [],
@@ -668,6 +736,9 @@ export default {
       contentPostList: [],
       contentEventList: [],
       contentVoteList: [],
+
+      contentSeriesSortListTurnOn: false,
+      contentSeriesSortList: [],
 
       top: false,
       sortop: false,
@@ -680,14 +751,148 @@ export default {
       id: null,
     })
 
+    const updateContentSeriesSortList = () => {
+      // 如果开关关闭，不处理
+      if (!form.contentSeriesSortListTurnOn) {
+        form.contentSeriesSortList = []
+        return
+      }
+
+      // 保存已存在的排序，用于保持原有顺序
+      const oldSortList = [...form.contentSeriesSortList]
+
+      // 获取当前应该存在的类别
+      const shouldExistTypes = []
+
+      // 检查媒体内容 (coverImages)
+      if (form.coverImages.length > 0 || tweetContentParseRes.value) {
+        shouldExistTypes.push('media')
+      }
+
+      // 检查活动
+      if (form.contentEventList.length > 0) {
+        shouldExistTypes.push('event')
+      }
+
+      // 检查投票
+      if (form.contentVoteList.length > 0) {
+        shouldExistTypes.push('vote')
+      }
+
+      // 检查博文
+      if (form.contentPostList.length > 0) {
+        shouldExistTypes.push('post')
+      }
+
+      // 检查番剧/电影/游戏/书籍，只要有一个不为空就添加acgn
+      if (
+        form.contentBangumiList.length > 0 ||
+        form.contentMovieList.length > 0 ||
+        form.contentGameList.length > 0 ||
+        form.contentBookList.length > 0
+      ) {
+        shouldExistTypes.push('acgn')
+      }
+
+      // 创建新的排序列表
+      const newSortList = oldSortList.filter((type) =>
+        shouldExistTypes.includes(type)
+      )
+
+      // 添加那些应该存在但不在原列表中的类型
+      shouldExistTypes.forEach((type) => {
+        if (!newSortList.includes(type)) {
+          newSortList.push(type)
+        }
+      })
+
+      // 更新排序列表
+      form.contentSeriesSortList = newSortList.length > 0 ? newSortList : []
+    }
+
+    // 修改开关状态变化处理函数
+    const contentSeriesSortListTurnOnChange = (val) => {
+      if (!val) {
+        form.contentSeriesSortList = []
+      } else {
+        updateContentSeriesSortList()
+      }
+    }
+
+    const updateSeriesSortList = () => {
+      // 如果开关关闭，不处理
+      if (!form.seriesSortListTurnOn) {
+        form.seriesSortList = []
+        return
+      }
+
+      // 保存已存在的排序，用于保持原有顺序
+      const oldSortList = [...form.seriesSortList]
+
+      // 获取当前应该存在的类别
+      const shouldExistTypes = []
+
+      // 检查活动
+      if (form.eventList.length > 0) {
+        shouldExistTypes.push('event')
+      }
+
+      // 检查投票
+      if (form.voteList.length > 0) {
+        shouldExistTypes.push('vote')
+      }
+
+      // 检查博文
+      if (form.postList.length > 0) {
+        shouldExistTypes.push('post')
+      }
+
+      // 检查番剧/电影/游戏/书籍，只要有一个不为空就添加acgn
+      if (
+        form.bangumiList.length > 0 ||
+        form.movieList.length > 0 ||
+        form.gameList.length > 0 ||
+        form.bookList.length > 0
+      ) {
+        shouldExistTypes.push('acgn')
+      }
+
+      // 创建新的排序列表
+      const newSortList = oldSortList.filter((type) =>
+        shouldExistTypes.includes(type)
+      )
+
+      // 添加那些应该存在但不在原列表中的类型
+      shouldExistTypes.forEach((type) => {
+        if (!newSortList.includes(type)) {
+          newSortList.push(type)
+        }
+      })
+
+      // 更新排序列表
+      form.seriesSortList = newSortList.length > 0 ? newSortList : []
+    }
+
+    // 修改开关状态变化处理函数
+    const seriesSortListTurnOnChange = (val) => {
+      if (!val) {
+        form.seriesSortList = []
+      } else {
+        updateSeriesSortList()
+      }
+    }
+
     const rules = reactive({})
     const formRef = ref(null)
     let submitSuccessFlag = false
     const submit = () => {
-      if (!form.sort) {
-        form.sort = null
+      const newForm = JSON.parse(JSON.stringify(form))
+      if (!newForm.sort) {
+        newForm.sort = null
       }
-      authApi.updatePost(form).then(() => {
+      delete newForm.seriesSortListTurnOn
+      delete newForm.contentSeriesSortListTurnOn
+      authApi.updatePost(newForm).then(() => {
         // 成功消息
         ElMessage.success('保存成功')
         submitSuccessFlag = true
@@ -1066,6 +1271,46 @@ export default {
       }
     )
 
+    // 监听相关数组的变化并更新排序列表
+    watch(
+      [
+        () => form.coverImages,
+        () => form.contentEventList,
+        () => form.contentVoteList,
+        () => form.contentPostList,
+        () => form.contentBangumiList,
+        () => form.contentMovieList,
+        () => form.contentGameList,
+        () => form.contentBookList,
+        () => tweetContentParseRes,
+      ],
+      () => {
+        if (form.contentSeriesSortListTurnOn) {
+          updateContentSeriesSortList()
+        }
+      },
+      { deep: true }
+    )
+
+    // 监听相关数组的变化并更新排序列表
+    watch(
+      [
+        () => form.eventList,
+        () => form.voteList,
+        () => form.postList,
+        () => form.bangumiList,
+        () => form.movieList,
+        () => form.gameList,
+        () => form.bookList,
+      ],
+      () => {
+        if (form.seriesSortListTurnOn) {
+          updateSeriesSortList()
+        }
+      },
+      { deep: true }
+    )
+
     onMounted(() => {
       getPostDetail()
       getSortList()
@@ -1085,7 +1330,10 @@ export default {
       typeTitle,
       maxCoverLength,
       // form
+      listSortListMap,
       form,
+      contentSeriesSortListTurnOnChange,
+      seriesSortListTurnOnChange,
       resetRandomAlias,
       rules,
       formRef,

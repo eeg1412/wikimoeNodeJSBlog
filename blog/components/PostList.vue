@@ -86,24 +86,18 @@
             <template v-else-if="item.type === 2">
               <TweetContent
                 :content="item.excerpt"
-                :coverLength="item?.coverImages?.length"
+                :tags="item.tags"
+                :contentEventList="item.contentEventList"
+                :contentVoteList="item.contentVoteList"
+                :contentPostList="item.contentPostList"
+                :contentBangumiList="item.contentBangumiList"
+                :contentGameList="item.contentGameList"
+                :contentBookList="item.contentBookList"
+                :contentMovieList="item.contentMovieList"
+                :coverImages="item.coverImages"
+                :contentSeriesSortList="item.contentSeriesSortList"
+                :postId="item._id"
               >
-                <!-- tags -->
-                <template v-slot:tags>
-                  <!-- tags -->
-                  <div class="post-list-tags-body" v-if="item.tags.length > 0">
-                    <template v-for="(tag, index) in item.tags" :key="index">
-                      <NuxtLink
-                        class="post-list-tag-item hover:underline"
-                        :to="{
-                          name: 'postListTag',
-                          params: { tagid: tag._id, page: 1 },
-                        }"
-                        >#{{ tag.tagname }}</NuxtLink
-                      >
-                    </template>
-                  </div>
-                </template>
               </TweetContent>
             </template>
           </div>
@@ -120,48 +114,6 @@
               <PostItem :post="item" />
             </NuxtLink>
           </template>
-          <div v-else-if="item.type === 2" class="post-list-tweet-cover-body">
-            <PostAboutEvent
-              :eventList="item.contentEventList"
-              :showTitle="false"
-              :postId="item._id"
-              idPrefix="content"
-              v-if="item.contentEventList.length > 0"
-            />
-            <PostVote
-              :voteList="item.contentVoteList"
-              :showTitle="false"
-              :postId="item._id"
-              idPrefix="content"
-              v-if="item.contentVoteList.length > 0"
-            />
-            <PostAbout
-              :postList="item.contentPostList"
-              :showTitle="false"
-              :postId="item._id"
-              idPrefix="content"
-              v-if="item.contentPostList.length > 0"
-            />
-            <PostACG
-              :bangumiList="item.contentBangumiList"
-              :gameList="item.contentGameList"
-              :bookList="item.contentBookList"
-              :movieList="item.contentMovieList"
-              :showTitle="false"
-              :postId="item._id"
-              idPrefix="content"
-              v-if="
-                item.contentBangumiList.length > 0 ||
-                item.contentGameList.length > 0 ||
-                item.contentBookList.length > 0 ||
-                item.contentMovieList.length > 0
-              "
-            />
-            <TweetImgList
-              :coverImages="item.coverImages"
-              v-if="item.coverImages.length > 0"
-            />
-          </div>
           <!-- 统计信息左边阅读数 右边点赞数 -->
           <div class="post-list-info-bottom-body cGray94">
             <div class="dflex flexCenter">
@@ -683,18 +635,6 @@ onUnmounted(() => {
 }
 .post-list-excerpt-body {
   margin-bottom: 0.75rem;
-}
-.post-list-tags-body {
-  margin-bottom: 0.75rem;
-  margin-top: 3px;
-}
-.post-list-tweet-cover-body {
-  margin-bottom: 0.75rem;
-}
-.post-list-tag-item {
-  margin-right: 9px;
-  display: inline-block;
-  @apply text-primary-500;
 }
 .post-list-info-bottom-body {
   display: flex;

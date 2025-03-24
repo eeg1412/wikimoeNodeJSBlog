@@ -124,6 +124,9 @@ var posts = new Schema({
   postList: [{ type: Schema.ObjectId, ref: 'posts', default: [] }],
   eventList: [{ type: Schema.ObjectId, ref: 'events', default: [] }],
   voteList: [{ type: Schema.ObjectId, ref: 'votes', default: [] }],
+  // 列表排序 String 数组
+  seriesSortList: [{ type: String, default: [] }],
+
   // 用于文章列表页和详情页的文章内容里，表示与文章本身强相关的内容。
   contentBangumiList: [{ type: Schema.ObjectId, ref: 'bangumis', default: [] }],
   contentMovieList: [{ type: Schema.ObjectId, ref: 'movies', default: [] }],
@@ -132,6 +135,8 @@ var posts = new Schema({
   contentPostList: [{ type: Schema.ObjectId, ref: 'posts', default: [] }],
   contentEventList: [{ type: Schema.ObjectId, ref: 'events', default: [] }],
   contentVoteList: [{ type: Schema.ObjectId, ref: 'votes', default: [] }],
+  // 列表排序 String 数组
+  contentSeriesSortList: [{ type: String, default: [] }],
 }, { timestamps: true });
 
 module.exports = mongoose.model('posts', posts);

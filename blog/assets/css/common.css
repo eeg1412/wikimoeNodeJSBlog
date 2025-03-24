@@ -1117,6 +1117,13 @@ ins.adsbygoogle[data-ad-status='unfilled'] {
   @apply bg-white;
 }
 
+.post-detail-tag-item {
+  margin-right: 12px;
+  font-size: 16px;
+  display: inline-block;
+  @apply text-primary-500;
+}
+
 /* 暗模式 */
 :root {
   /* --wikimoe-dark-bg: rgba(20, 20, 20, 1);

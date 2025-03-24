@@ -87,52 +87,67 @@ exports.updateRSS = async (type) => {
         // 换行符替换为br标签
         newContent = newContent.replace(/\n/g, '<br/>')
 
-        // 遍历contentEventList，以链接形式展示
-        const contentEventList = item.contentEventList || []
-        contentEventList.forEach((event) => {
-          newContent += `<p><a href="${link}#event-content-${event._id}-${item._id}" target="_blank">活动：${event.title}</a></p>`
-        })
-        // 遍历contentVoteList，以链接形式展示
-        const contentVoteList = item.contentVoteList || []
-        contentVoteList.forEach((vote) => {
-          newContent += `<p><a href="${link}#vote-item-content-${vote._id}-${item._id}" target="_blank">投票：${vote.title}</a></p>`
-        })
-        // 遍历contentPostList，以链接形式展示
-        const contentPostList = item.contentPostList || []
-        contentPostList.forEach((post) => {
-          newContent += `<p><a href="${siteUrl}/post/${post.alias || post._id}" target="_blank">文章：${post.title}</a></p>`
-        })
-        // 遍历contentBangumiList，以链接形式展示
-        const contentBangumiList = item.contentBangumiList || []
-        contentBangumiList.forEach((bangumi) => {
-          newContent += `<p><a href="${link}#ent-title-content-${bangumi._id}-${item._id}" target="_blank">番剧：${bangumi.title}</a></p>`
-        })
-        // 遍历contentMovieList，以链接形式展示
-        const contentMovieList = item.contentMovieList || []
-        contentMovieList.forEach((movie) => {
-          newContent += `<p><a href="${link}#ent-title-content-${movie._id}-${item._id}" target="_blank">电影：${movie.title}</a></p>`
-        })
-        // 遍历contentBookList，以链接形式展示
-        const contentBookList = item.contentBookList || []
-        contentBookList.forEach((book) => {
-          newContent += `<p><a href="${link}#ent-title-content-${book._id}-${item._id}" target="_blank">书籍：${book.title}</a></p>`
-        })
-        // 遍历contentGameList，以链接形式展示
-        const contentGameList = item.contentGameList || []
-        contentGameList.forEach((game) => {
-          newContent += `<p><a href="${link}#ent-title-content-${game._id}-${item._id}" target="_blank">游戏：${game.title}</a></p>`
-        })
+        let contentSeriesSortList = item.contentSeriesSortList
+        if (!contentSeriesSortList || contentSeriesSortList.length <= 0) {
+          contentSeriesSortList = ['media', 'event', 'vote', 'post', 'acgn']
+        }
 
-        // 遍历coverImages，以图片形式展示
-        const coverImages = item.coverImages || []
-        coverImages.forEach((image) => {
-          const imageIsVideo = image.mimetype.startsWith('video')
-          const createdAt = new Date(image.createdAt).getTime()
-          if (imageIsVideo) {
-            newContent += `<p><video src="${siteUrl}${image.filepath}" controls="controls" playsinline="true" preload="none" muted="muted" poster="${siteUrl}${image.thumfor}?${createdAt}" loop="loop" style="border-radius: 10px; margin-bottom: 10px; max-width: 100%;"></video></p>`
-          } else {
-            newContent += `<p><img src="${siteUrl}${image.thumfor || image.filepath}" alt="${image.name}" style="border-radius: 10px; margin-bottom: 10px; max-width: 100%;" /></p>`
+        contentSeriesSortList.forEach((typeName) => {
+          if (typeName === 'media') {
+            // 遍历coverImages，以图片形式展示
+            const coverImages = item.coverImages || []
+            coverImages.forEach((image) => {
+              const imageIsVideo = image.mimetype.startsWith('video')
+              const createdAt = new Date(image.createdAt).getTime()
+              if (imageIsVideo) {
+                newContent += `<p><video src="${siteUrl}${image.filepath}" controls="controls" playsinline="true" preload="none" muted="muted" poster="${siteUrl}${image.thumfor}?${createdAt}" loop="loop" style="border-radius: 10px; margin-bottom: 10px; max-width: 100%;"></video></p>`
+              } else {
+                newContent += `<p><img src="${siteUrl}${image.thumfor || image.filepath}" alt="${image.name}" style="border-radius: 10px; margin-bottom: 10px; max-width: 100%;" /></p>`
+              }
+            })
+          } else if (typeName === 'event') {
+
+
+            // 遍历contentEventList，以链接形式展示
+            const contentEventList = item.contentEventList || []
+            contentEventList.forEach((event) => {
+              newContent += `<p><a href="${link}#event-content-${event._id}-${item._id}" target="_blank">活动：${event.title}</a></p>`
+            })
+          } else if (typeName === 'vote') {
+            // 遍历contentVoteList，以链接形式展示
+            const contentVoteList = item.contentVoteList || []
+            contentVoteList.forEach((vote) => {
+              newContent += `<p><a href="${link}#vote-item-content-${vote._id}-${item._id}" target="_blank">投票：${vote.title}</a></p>`
+            })
+          } else if (typeName === 'post') {
+            // 遍历contentPostList，以链接形式展示
+            const contentPostList = item.contentPostList || []
+            contentPostList.forEach((post) => {
+              newContent += `<p><a href="${siteUrl}/post/${post.alias || post._id}" target="_blank">文章：${post.title}</a></p>`
+            })
+          } else if (typeName === 'acgn') {
+            // 遍历contentBangumiList，以链接形式展示
+            const contentBangumiList = item.contentBangumiList || []
+            contentBangumiList.forEach((bangumi) => {
+              newContent += `<p><a href="${link}#ent-title-content-${bangumi._id}-${item._id}" target="_blank">番剧：${bangumi.title}</a></p>`
+            })
+            // 遍历contentMovieList，以链接形式展示
+            const contentMovieList = item.contentMovieList || []
+            contentMovieList.forEach((movie) => {
+              newContent += `<p><a href="${link}#ent-title-content-${movie._id}-${item._id}" target="_blank">电影：${movie.title}</a></p>`
+            })
+            // 遍历contentBookList，以链接形式展示
+            const contentBookList = item.contentBookList || []
+            contentBookList.forEach((book) => {
+              newContent += `<p><a href="${link}#ent-title-content-${book._id}-${item._id}" target="_blank">书籍：${book.title}</a></p>`
+            })
+            // 遍历contentGameList，以链接形式展示
+            const contentGameList = item.contentGameList || []
+            contentGameList.forEach((game) => {
+              newContent += `<p><a href="${link}#ent-title-content-${game._id}-${item._id}" target="_blank">游戏：${game.title}</a></p>`
+            })
           }
+
         })
       }
       feed.addItem({

@@ -111,10 +111,7 @@
     >
       <HtmlContent :content="postData.data.content" />
       <!-- tags -->
-      <div
-        class="post-detail-tags-body mt-1 mb-1"
-        v-if="postData.data.tags.length > 0"
-      >
+      <div class="mt-1 mb-1" v-if="postData.data.tags.length > 0">
         <template v-for="(tag, index) in postData.data.tags" :key="index">
           <NuxtLink
             class="post-detail-tag-item"
@@ -135,27 +132,18 @@
       <div class="post-tweet-detail-content">
         <TweetContent
           :content="postData.data.excerpt"
-          :coverLength="postData?.data?.coverImages?.length"
+          :tags="postData.data.tags"
+          :contentEventList="postData.data.contentEventList"
+          :contentVoteList="postData.data.contentVoteList"
+          :contentPostList="postData.data.contentPostList"
+          :contentBangumiList="postData.data.contentBangumiList"
+          :contentGameList="postData.data.contentGameList"
+          :contentBookList="postData.data.contentBookList"
+          :contentMovieList="postData.data.contentMovieList"
+          :coverImages="postData.data.coverImages"
+          :contentSeriesSortList="postData.data.contentSeriesSortList"
+          :postId="postData.data._id"
         >
-          <!-- tags -->
-          <template v-slot:tags>
-            <!-- tags -->
-            <div
-              class="post-detail-tags-body mt-1 mb-1"
-              v-if="postData.data.tags.length > 0"
-            >
-              <template v-for="(tag, index) in postData.data.tags" :key="index">
-                <NuxtLink
-                  class="post-detail-tag-item"
-                  :to="{
-                    name: 'postListTag',
-                    params: { tagid: tag._id, page: 1 },
-                  }"
-                  >#{{ tag.tagname }}</NuxtLink
-                >
-              </template>
-            </div>
-          </template>
         </TweetContent>
       </div>
     </div>
@@ -171,54 +159,6 @@
         @click="runCode"
       />
     </div>
-    <!-- 推文图片 -->
-    <template v-if="postData.data.type === 2">
-      <PostAboutEvent
-        :eventList="postData.data.contentEventList"
-        :showTitle="false"
-        :postId="postData.data._id"
-        idPrefix="content"
-        v-if="postData.data.contentEventList.length > 0"
-      />
-      <PostVote
-        :voteList="postData.data.contentVoteList"
-        :showTitle="false"
-        :postId="postData.data._id"
-        idPrefix="content"
-        v-if="postData.data.contentVoteList.length > 0"
-      />
-      <PostAbout
-        :postList="postData.data.contentPostList"
-        :showTitle="false"
-        :postId="postData.data._id"
-        idPrefix="content"
-        v-if="postData.data.contentPostList.length > 0"
-      />
-      <PostACG
-        :bangumiList="postData.data.contentBangumiList"
-        :gameList="postData.data.contentGameList"
-        :bookList="postData.data.contentBookList"
-        :movieList="postData.data.contentMovieList"
-        :showTitle="false"
-        :postId="postData.data._id"
-        idPrefix="content"
-        v-if="
-          postData.data.contentBangumiList.length > 0 ||
-          postData.data.contentGameList.length > 0 ||
-          postData.data.contentBookList.length > 0 ||
-          postData.data.contentMovieList.length > 0
-        "
-      />
-      <div
-        class="post-tweet-detail-cover-list-body mt-3"
-        v-if="postData.data.coverImages.length > 0"
-      >
-        <TweetImgList
-          :coverImages="postData.data.coverImages"
-          :swiperMode="false"
-        />
-      </div>
-    </template>
 
     <!-- 点赞按钮 -->
     <div class="post-detail-like-body" v-if="likeListInited">
@@ -253,34 +193,45 @@
       :post="postData.data"
       v-if="showPostCommonFooter && postData.data"
     />
-    <PostAboutEvent
-      :eventList="postData.data.eventList"
-      :postId="postData.data._id"
-      v-if="postData.data.eventList.length > 0"
-    />
-    <PostVote
-      :voteList="postData.data.voteList"
-      :postId="postData.data._id"
-      v-if="postData.data.voteList.length > 0"
-    />
-    <PostAbout
-      :postList="postData.data.postList"
-      :postId="postData.data._id"
-      v-if="postData.data.postList.length > 0"
-    />
-    <PostACG
-      :bangumiList="postData.data.bangumiList"
-      :gameList="postData.data.gameList"
-      :bookList="postData.data.bookList"
-      :movieList="postData.data.movieList"
-      :postId="postData.data._id"
-      v-if="
-        postData.data.bangumiList.length > 0 ||
-        postData.data.gameList.length > 0 ||
-        postData.data.bookList.length > 0 ||
-        postData.data.movieList.length > 0
-      "
-    />
+    <!-- 循环seriesSortListCom -->
+    <template v-for="(item, index) in seriesSortListCom" :key="index">
+      <template v-if="item === 'event'">
+        <PostAboutEvent
+          :eventList="postData.data.eventList"
+          :postId="postData.data._id"
+          v-if="postData.data.eventList.length > 0"
+        />
+      </template>
+      <template v-else-if="item === 'vote'">
+        <PostVote
+          :voteList="postData.data.voteList"
+          :postId="postData.data._id"
+          v-if="postData.data.voteList.length > 0"
+        />
+      </template>
+      <template v-else-if="item === 'post'">
+        <PostAbout
+          :postList="postData.data.postList"
+          :postId="postData.data._id"
+          v-if="postData.data.postList.length > 0"
+        />
+      </template>
+      <template v-else-if="item === 'acgn'">
+        <PostACG
+          :bangumiList="postData.data.bangumiList"
+          :gameList="postData.data.gameList"
+          :bookList="postData.data.bookList"
+          :movieList="postData.data.movieList"
+          :postId="postData.data._id"
+          v-if="
+            postData.data.bangumiList.length > 0 ||
+            postData.data.gameList.length > 0 ||
+            postData.data.bookList.length > 0 ||
+            postData.data.movieList.length > 0
+          "
+        />
+      </template>
+    </template>
     <!-- randomPostList -->
     <PostPageRandomPostList
       v-if="
@@ -1134,6 +1085,17 @@ const checkCommentScroll = () => {
     }
   }, 100)
 }
+
+const seriesSortListCom = computed(() => {
+  if (
+    !postData.value?.data?.seriesSortList ||
+    postData.value.data.seriesSortList.length === 0
+  ) {
+    return ['media', 'event', 'vote', 'post', 'acgn']
+  }
+  return postData.value.data.seriesSortList
+})
+
 const colorMode = useColorMode()
 if (import.meta.client) {
   await getCommentList()
@@ -1194,15 +1156,6 @@ onUnmounted(() => {
   /* 支持换行 */
   white-space: pre-wrap;
   word-break: break-word;
-}
-.post-detail-tag-item {
-  margin-right: 12px;
-  font-size: 16px;
-  display: inline-block;
-  @apply text-primary-500;
-}
-.post-detail-tag-item:hover {
-  text-decoration: underline;
 }
 .post-detail-like-body {
   text-align: center;

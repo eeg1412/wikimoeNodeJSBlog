@@ -10,26 +10,92 @@
       ><span v-else>{{ item.text }}</span></template
     >
   </div>
-  <slot name="tags"></slot>
-  <div
-    ref="observee"
-    v-if="linkCover"
-    class="tweet-content-link-cover-body mt-3 mb-3"
-  >
-    <div v-html="linkCover" v-if="linkCoverShow"></div>
-    <div
-      class="tweet-content-link-cover-block bg-primary-300 dark:bg-primary-600/50"
-      v-else
-    >
-      <div
-        class="text-white dark:text-primary-100 flex justify-center items-center w-full h-full"
+  <div class="mt-1 mb-1" v-if="tags.length > 0">
+    <template v-for="(tag, index) in tags" :key="index">
+      <NuxtLink
+        class="post-detail-tag-item hover:underline"
+        :to="{
+          name: 'postListTag',
+          params: { tagid: tag._id, page: 1 },
+        }"
+        >#{{ tag.tagname }}</NuxtLink
       >
-        <div class="text-2xl text-center">
-          <UIcon class="animate-spin" name="i-heroicons-arrow-path" />
-          <div class="text-lg">读取中</div>
+    </template>
+  </div>
+  <div class="mb-2 mt-3" v-if="contentSeriesSortListCom.length > 0">
+    <!-- 遍历contentSeriesSortListCom -->
+    <template v-for="(item, index) in contentSeriesSortListCom" :key="index">
+      <template v-if="item === 'media'">
+        <div
+          ref="observee"
+          v-if="linkCover"
+          class="tweet-content-link-cover-body mt-3 mb-3"
+        >
+          <div v-html="linkCover" v-if="linkCoverShow"></div>
+          <div
+            class="tweet-content-link-cover-block bg-primary-300 dark:bg-primary-600/50"
+            v-else
+          >
+            <div
+              class="text-white dark:text-primary-100 flex justify-center items-center w-full h-full"
+            >
+              <div class="text-2xl text-center">
+                <UIcon class="animate-spin" name="i-heroicons-arrow-path" />
+                <div class="text-lg">读取中</div>
+              </div>
+            </div>
+          </div>
         </div>
-      </div>
-    </div>
+        <TweetImgList
+          :coverImages="coverImages"
+          v-if="coverImages.length > 0"
+        />
+      </template>
+      <template v-else-if="item === 'event'">
+        <PostAboutEvent
+          :eventList="contentEventList"
+          :showTitle="false"
+          :postId="postId"
+          idPrefix="content"
+          v-if="contentEventList.length > 0"
+        />
+      </template>
+      <template v-else-if="item === 'vote'">
+        <PostVote
+          :voteList="contentVoteList"
+          :showTitle="false"
+          :postId="postId"
+          idPrefix="content"
+          v-if="contentVoteList.length > 0"
+        />
+      </template>
+      <template v-else-if="item === 'post'">
+        <PostAbout
+          :postList="contentPostList"
+          :showTitle="false"
+          :postId="postId"
+          idPrefix="content"
+          v-if="contentPostList.length > 0"
+        />
+      </template>
+      <template v-else-if="item === 'acgn'">
+        <PostACG
+          :bangumiList="contentBangumiList"
+          :gameList="contentGameList"
+          :bookList="contentBookList"
+          :movieList="contentMovieList"
+          :showTitle="false"
+          :postId="postId"
+          idPrefix="content"
+          v-if="
+            contentBangumiList.length > 0 ||
+            contentGameList.length > 0 ||
+            contentBookList.length > 0 ||
+            contentMovieList.length > 0
+          "
+        />
+      </template>
+    </template>
   </div>
 </template>
 <script setup>
@@ -40,10 +106,71 @@ const props = defineProps({
     type: String,
     default: '',
   },
-  coverLength: {
-    type: Number,
-    default: 0,
+  tags: {
+    // 数组
+    type: Array,
+    default: () => [],
   },
+  contentEventList: {
+    // 数组
+    type: Array,
+    default: () => [],
+  },
+  contentVoteList: {
+    // 数组
+    type: Array,
+    default: () => [],
+  },
+  contentPostList: {
+    // 数组
+    type: Array,
+    default: () => [],
+  },
+  contentBangumiList: {
+    // 数组
+    type: Array,
+    default: () => [],
+  },
+  contentGameList: {
+    // 数组
+    type: Array,
+    default: () => [],
+  },
+  contentBookList: {
+    // 数组
+    type: Array,
+    default: () => [],
+  },
+  contentMovieList: {
+    // 数组
+    type: Array,
+    default: () => [],
+  },
+  coverImages: {
+    // 数组
+    type: Array,
+    default: () => [],
+  },
+  contentSeriesSortList: {
+    // 数组
+    type: Array,
+    default: () => [],
+  },
+  postId: {
+    type: String,
+    default: null,
+  },
+})
+
+const contentSeriesSortListCom = computed(() => {
+  // 如果 props 的 contentSeriesSortList 为空或者空数组，返回默认数组
+  if (
+    !props.contentSeriesSortList ||
+    props.contentSeriesSortList.length === 0
+  ) {
+    return ['media', 'event', 'vote', 'post', 'acgn']
+  }
+  return props.contentSeriesSortList
 })
 
 const contentJson = computed(() => {
@@ -125,7 +252,7 @@ const contentJson = computed(() => {
 })
 
 const linkCover = computed(() => {
-  if (props.content && props.coverLength === 0) {
+  if (props.content && props.coverImages?.length === 0) {
     const coverDatabase = [
       {
         linkTypeName: 'bilibili-video',
@@ -155,7 +282,7 @@ let timer = null
 onMounted(() => {
   nextTick(() => {
     timer = setTimeout(() => {
-      if (linkCover.value && observee.value) {
+      if (linkCover.value && observee.value && observee.value.length > 0) {
         // 如果元素不在视口内，创建 IntersectionObserver
         observer = new IntersectionObserver((entries) => {
           if (entries[0].isIntersecting) {
@@ -164,7 +291,7 @@ onMounted(() => {
             observer = null
           }
         })
-        observer.observe(observee.value)
+        observer.observe(observee.value[0])
       }
     }, 100)
   })

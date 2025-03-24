@@ -28,7 +28,7 @@ module.exports = async function (req, res, next) {
   // - coverImages  博客时是封面图片字段，页面时是页面图片字段
   // - __v  版本号字段
   const id = req.body.id
-  let { title, date, content, excerpt, alias, sort, tags, top, sortop, status, allowRemark, template, code, coverImages, bangumiList, movieList, gameList, bookList, postList, eventList, voteList, contentBangumiList, contentMovieList, contentGameList, contentBookList, contentPostList, contentEventList, contentVoteList, __v } = req.body
+  let { title, date, content, excerpt, alias, sort, tags, top, sortop, status, allowRemark, template, code, coverImages, bangumiList, movieList, gameList, bookList, postList, eventList, voteList, contentBangumiList, contentMovieList, contentGameList, contentBookList, contentPostList, contentEventList, contentVoteList, seriesSortList, contentSeriesSortList, __v } = req.body
   // 校验id是否存在
   if (!id) {
     res.status(400).json({
@@ -238,6 +238,25 @@ module.exports = async function (req, res, next) {
     return
   }
 
+  const listSortList = ['media', 'event', 'vote', 'post', 'acgn']
+  // seriesSortList 和 contentSeriesSortList 必须为数组且只能包含listSortList里面的值
+  if (!Array.isArray(seriesSortList) || seriesSortList.some(item => !listSortList.includes(item))) {
+    res.status(400).json({
+      errors: [{
+        message: 'seriesSortList格式错误'
+      }]
+    })
+    return
+  }
+  if (!Array.isArray(contentSeriesSortList) || contentSeriesSortList.some(item => !listSortList.includes(item))) {
+    res.status(400).json({
+      errors: [{
+        message: 'contentSeriesSortList格式错误'
+      }]
+    })
+    return
+  }
+
 
   // 1blog,2tweet,3page
   const type = post.type
@@ -263,6 +282,7 @@ module.exports = async function (req, res, next) {
     postList: postList,
     eventList: eventList,
     voteList: voteList,
+    seriesSortList: seriesSortList,
     contentBangumiList: contentBangumiList,
     contentMovieList: contentMovieList,
     contentGameList: contentGameList,
@@ -270,6 +290,7 @@ module.exports = async function (req, res, next) {
     contentPostList: contentPostList,
     contentEventList: contentEventList,
     contentVoteList: contentVoteList,
+    contentSeriesSortList: contentSeriesSortList,
     lastChangDate: new Date()
   }
   const rules = [
