@@ -70,10 +70,10 @@
             <template v-if="item.type === 1">
               <div class="whitespace-pre-wrap" v-if="item.type === 1">{{ item.excerpt || '发表了一篇博文' }}</div>
               <!-- tags -->
-              <div class="post-list-tags-body" v-if="item.tags.length > 0">
+              <div class="mt-1 mb-1" v-if="item.tags.length > 0">
                 <template v-for="(tag, index) in item.tags" :key="index">
                   <NuxtLink
-                    class="post-list-tag-item hover:underline"
+                    class="post-detail-tag-item hover:underline"
                     :to="{
                       name: 'postListTag',
                       params: { tagid: tag._id, page: 1 },
