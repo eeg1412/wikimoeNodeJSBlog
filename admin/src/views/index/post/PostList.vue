@@ -209,7 +209,11 @@
               class="post-list-about-body"
               v-if="row.mergeTweetContentList.length > 0"
             >
-              <div class="fb">推文内关联内容：</div>
+              <div class="fb">
+                推文内关联内容<template v-if="row.contentSeriesSortListTurnOn"
+                  >(自定义排序)</template
+                >：
+              </div>
               <div
                 v-for="content in row.mergeTweetContentList"
                 :key="content._id"
@@ -271,7 +275,11 @@
               class="post-list-about-body"
               v-if="row.mergeContentList.length > 0"
             >
-              <div class="fb">详情页相关内容：</div>
+              <div class="fb">
+                详情页相关内容<template v-if="row.seriesSortListTurnOn"
+                  >(自定义排序)</template
+                >：
+              </div>
               <div
                 v-for="content in row.mergeContentList"
                 :key="content._id"
@@ -569,9 +577,30 @@ export default {
       authApi.getPostList(params).then((res) => {
         const dataList = res.data.list
         dataList.forEach((item) => {
-          item.mergeContentList = mergeContentList(item)
-          item.mergeTweetContentList = mergeContentList(item, 'content')
+          const seriesSortList = item.seriesSortList
+          const contentSeriesSortList = item.contentSeriesSortList
+          if (seriesSortList && seriesSortList.length) {
+            item.seriesSortListTurnOn = true
+          } else {
+            item.seriesSortListTurnOn = false
+          }
+          if (contentSeriesSortList && contentSeriesSortList.length) {
+            item.contentSeriesSortListTurnOn = true
+          } else {
+            item.contentSeriesSortListTurnOn = false
+          }
+          item.mergeContentList = mergeContentList(
+            item,
+            undefined,
+            seriesSortList
+          )
+          item.mergeTweetContentList = mergeContentList(
+            item,
+            'content',
+            contentSeriesSortList
+          )
         })
+
         list.value = dataList
         total.value = res.data.total
         if (top) {
@@ -711,7 +740,7 @@ export default {
     }
 
     // 合并bookList,bangumiList,gameList,postList
-    const mergeContentList = (row, type) => {
+    const mergeContentList = (row, type, sort) => {
       // 根据type决定从哪里获取列表
       const {
         bookList: originalBookList,
@@ -743,48 +772,59 @@ export default {
       const voteList = type === 'content' ? contentVoteList : originalVoteList
 
       const contentList = []
-      if (bookList && bookList.length) {
-        const type = 'book'
-        bookList.forEach((item) => {
-          contentList.push({ ...item, type })
-        })
+      if (!sort || sort.length <= 0) {
+        sort = ['event', 'vote', 'post', 'acgn']
       }
-      if (bangumiList && bangumiList.length) {
-        const type = 'bangumi'
-        bangumiList.forEach((item) => {
-          contentList.push({ ...item, type })
-        })
-      }
-      if (movieList && movieList.length) {
-        const type = 'movie'
-        movieList.forEach((item) => {
-          contentList.push({ ...item, type })
-        })
-      }
-      if (gameList && gameList.length) {
-        const type = 'game'
-        gameList.forEach((item) => {
-          contentList.push({ ...item, type })
-        })
-      }
-      if (postList && postList.length) {
-        const type = 'post'
-        postList.forEach((item) => {
-          contentList.push({ ...item, type })
-        })
-      }
-      if (eventList && eventList.length) {
-        const type = 'event'
-        eventList.forEach((item) => {
-          contentList.push({ ...item, type })
-        })
-      }
-      if (voteList && voteList.length) {
-        const type = 'vote'
-        voteList.forEach((item) => {
-          contentList.push({ ...item, type })
-        })
-      }
+      sort.forEach((item) => {
+        if (item === 'event') {
+          if (eventList && eventList.length) {
+            const type = 'event'
+            eventList.forEach((item) => {
+              contentList.push({ ...item, type })
+            })
+          }
+        } else if (item === 'vote') {
+          if (voteList && voteList.length) {
+            const type = 'vote'
+            voteList.forEach((item) => {
+              contentList.push({ ...item, type })
+            })
+          }
+        } else if (item === 'post') {
+          if (postList && postList.length) {
+            const type = 'post'
+            postList.forEach((item) => {
+              contentList.push({ ...item, type })
+            })
+          }
+        } else if (item === 'acgn') {
+          if (bangumiList && bangumiList.length) {
+            const type = 'bangumi'
+            bangumiList.forEach((item) => {
+              contentList.push({ ...item, type })
+            })
+          }
+          if (movieList && movieList.length) {
+            const type = 'movie'
+            movieList.forEach((item) => {
+              contentList.push({ ...item, type })
+            })
+          }
+          if (bookList && bookList.length) {
+            const type = 'book'
+            bookList.forEach((item) => {
+              contentList.push({ ...item, type })
+            })
+          }
+          if (gameList && gameList.length) {
+            const type = 'game'
+            gameList.forEach((item) => {
+              contentList.push({ ...item, type })
+            })
+          }
+        }
+      })
+
       return contentList
     }
 
