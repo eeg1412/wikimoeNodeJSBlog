@@ -309,10 +309,7 @@ const open = async (list = [], showIndex = 0, closeCallback_) => {
     }
   })
   lightbox.loadAndOpen(showIndex)
-  if (
-    window.location.hash &&
-    window.location.hash !== '#photo-swipelightboxopen'
-  ) {
+  if (window.location.hash) {
     const urlWithoutHash = window.location.href.split('#')[0]
     window.history.replaceState(
       window.history.state,
