@@ -1076,11 +1076,11 @@ ins.adsbygoogle[data-ad-status='unfilled'] {
   height: auto;
 }
 .header-scroll-margin-top {
-  scroll-margin-top: 10px;
+  scroll-margin-top: 30px;
 }
 @media (max-width: 1024px) {
   .header-scroll-margin-top {
-    scroll-margin-top: 80px;
+    scroll-margin-top: 100px;
   }
 }
 .acgn-filter-popover-body {
