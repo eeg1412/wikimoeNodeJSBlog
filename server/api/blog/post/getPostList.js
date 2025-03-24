@@ -268,7 +268,7 @@ module.exports = async function (req, res, next) {
         break;
     }
   }
-  const filter = '-voteList -content -bangumiList -movieList -bookList -eventList -gameList -postList -code -editorVersion'
+  const filter = '-voteList -content -bangumiList -movieList -bookList -eventList -gameList -postList -seriesSortList -code -editorVersion'
   postUtils.findPage(params, postSorting, page, size, filter, {
     voteFliter: '_id endTime maxSelect showResultAfter title options.title options._id'
   }).then((data) => {

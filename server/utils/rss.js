@@ -35,7 +35,7 @@ exports.updateRSS = async (type) => {
       _id: -1
     }
     const size = parseInt(siteRssMaxCount) || 1
-    const filter = '-voteList -bangumiList -movieList -bookList -eventList -gameList -postList -code -editorVersion'
+    const filter = '-voteList -bangumiList -movieList -bookList -eventList -gameList -postList -seriesSortList -code -editorVersion'
     const data = await postUtils.findPage(params, sort, 1, size, filter, { authorFilter: 'nickname', voteFliter: '_id endTime maxSelect showResultAfter title options.title options._id' }).then((res) => {
       return res
     }).catch(err => {
