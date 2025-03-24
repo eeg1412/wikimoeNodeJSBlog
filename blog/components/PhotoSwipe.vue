@@ -309,13 +309,18 @@ const open = async (list = [], showIndex = 0, closeCallback_) => {
     }
   })
   lightbox.loadAndOpen(showIndex)
-  if (window.location.hash !== '#photo-swipelightboxopen') {
-    window.history.pushState(
+  if (
+    window.location.hash &&
+    window.location.hash !== '#photo-swipelightboxopen'
+  ) {
+    const urlWithoutHash = window.location.href.split('#')[0]
+    window.history.replaceState(
       window.history.state,
       '',
-      '#photo-swipelightboxopen'
+      urlWithoutHash + '#wmpsvoid'
     )
   }
+  window.history.pushState(window.history.state, '', '#photo-swipelightboxopen')
 }
 
 setPhotoSwipe(open)
