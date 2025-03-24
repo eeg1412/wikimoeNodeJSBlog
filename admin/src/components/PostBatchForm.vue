@@ -137,7 +137,7 @@
               class="post-batch-form-item"
             >
               <el-tag v-if="post.type === 1" effect="plain" type="success"
-                >博客</el-tag
+                >博文</el-tag
               >
               <el-tag v-else-if="post.type === 2" effect="plain">推文</el-tag>
               <el-tag v-else-if="post.type === 3" effect="plain" type="info"

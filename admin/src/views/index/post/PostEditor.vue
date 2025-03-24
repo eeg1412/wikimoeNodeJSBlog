@@ -506,7 +506,7 @@ export default {
     const typeTitle = computed(() => {
       switch (type.value) {
         case 1:
-          return '博客'
+          return '博文'
         case 2:
           return '推文'
         case 3:

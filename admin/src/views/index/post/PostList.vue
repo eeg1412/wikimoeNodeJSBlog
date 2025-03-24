@@ -134,7 +134,7 @@
           <!-- 1blog,2tweet,3page -->
           <template #default="{ row }">
             <el-tag v-if="row.type === 1" effect="plain" type="success"
-              >博客</el-tag
+              >博文</el-tag
             >
             <el-tag v-else-if="row.type === 2" effect="plain">推文</el-tag>
             <el-tag v-else-if="row.type === 3" effect="plain" type="info"
@@ -539,7 +539,7 @@ export default {
       let type
       switch (row.type) {
         case 1:
-          type = '博客'
+          type = '博文'
           break
         case 2:
           type = '推文'
@@ -651,7 +651,7 @@ export default {
     const typeOptions = [
       {
         value: 1,
-        label: '博客',
+        label: '博文',
       },
       {
         value: 2,
