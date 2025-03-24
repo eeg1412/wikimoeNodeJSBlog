@@ -1075,9 +1075,12 @@ ins.adsbygoogle[data-ad-status='unfilled'] {
   width: auto;
   height: auto;
 }
+.header-scroll-margin-top {
+  scroll-margin-top: 10px;
+}
 @media (max-width: 1024px) {
   .header-scroll-margin-top {
-    scroll-margin-top: 70px;
+    scroll-margin-top: 80px;
   }
 }
 .acgn-filter-popover-body {
