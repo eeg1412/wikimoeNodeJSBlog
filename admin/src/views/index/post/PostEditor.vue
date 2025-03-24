@@ -380,13 +380,21 @@
             v-model="form.alias"
             placeholder="请输入文章别名（用于别名访问）"
           ></el-input>
+          <!-- 按时间随机别名 -->
+          <el-button
+            type="primary"
+            size="small"
+            class="mt10"
+            @click="form.alias = nowTimestampToBase36WithRandom()"
+            >按时间随机别名</el-button
+          >
           <!-- 重置别名按钮 -->
           <el-button
             type="primary"
             size="small"
             class="mt10"
             @click="resetRandomAlias"
-            >随机别名</el-button
+            >完全随机别名</el-button
           >
         </el-form-item>
         <!-- 模板选择 -->
@@ -1335,6 +1343,8 @@ export default {
       contentSeriesSortListTurnOnChange,
       seriesSortListTurnOnChange,
       resetRandomAlias,
+      nowTimestampToBase36WithRandom,
+
       rules,
       formRef,
       submit,
