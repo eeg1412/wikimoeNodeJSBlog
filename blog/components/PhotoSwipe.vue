@@ -64,9 +64,16 @@
                 }"
                 @click="goTo(index + groupPage * 9, close)"
               >
+                <!-- 如果is360Panorama为true加上360°的字样 -->
+                <div
+                  v-if="item.is360Panorama"
+                  class="w-full h-full flex items-center justify-center text-white text-2xl font-bold opacity-80"
+                >
+                  360&deg;
+                </div>
                 <!-- 如果类型是视频加上播放按钮 -->
                 <div
-                  v-if="item.mimetype.indexOf('video') > -1"
+                  v-else-if="item.mimetype.indexOf('video') > -1"
                   class="w-full h-full flex items-center justify-center"
                 >
                   <div class="text-white text-4xl opacity-80">
@@ -587,6 +594,7 @@ onUnmounted(() => {
   display: flex;
   align-items: center;
   justify-content: center;
+  filter: drop-shadow(0px 0px 2px #000);
 }
 .photo-swipe-photo-swipe-caption {
   max-width: 1280px;

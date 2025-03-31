@@ -1136,6 +1136,12 @@ ins.adsbygoogle[data-ad-status='unfilled'] {
   align-items: center;
   color: #fff;
 }
+.pswp__icn-shadow {
+  stroke-width: 0px !important;
+}
+.pswp__icn {
+  filter: drop-shadow(0px 0px 2px #000);
+}
 
 /* 富文本 */
 .html-content-body img {
