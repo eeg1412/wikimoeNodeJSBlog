@@ -2,6 +2,8 @@ import { i18nAddResources } from '@wangeditor/editor'
 import { Boot } from '@wangeditor/editor'
 import editorMenuEventSpan from './editorMenu/event'
 import editorMenuImageGroup from './editorMenu/imageGroup'
+// panorama360
+import editorMenuPanorama360 from './editorMenu/panorama360'
 import editorMenuImage from './editorMenu/image'
 
 i18nAddResources('zh-CN', {
@@ -132,5 +134,6 @@ export const initRichEditor = () => {
   Boot.registerElemToHtml(videoToHtmlConf)
   Boot.registerModule(editorMenuEventSpan)
   Boot.registerModule(editorMenuImageGroup)
+  Boot.registerModule(editorMenuPanorama360)
   Boot.registerModule(editorMenuImage)
 }

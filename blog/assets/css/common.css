@@ -1136,6 +1136,195 @@ ins.adsbygoogle[data-ad-status='unfilled'] {
   align-items: center;
 }
 
+/* 富文本 */
+.html-content-body img {
+  @apply cursor-pointer;
+}
+.html-content-body img {
+  max-width: 100% !important;
+  height: auto !important;
+  display: inline;
+}
+.html-content-body iframe {
+  max-width: 100% !important;
+}
+.html-content-body video {
+  max-width: 100% !important;
+}
+.html-content-body h1,
+.html-content-body h2,
+.html-content-body h3,
+.html-content-body h4,
+.html-content-body h5,
+.html-content-body h6 {
+  font-weight: bold;
+}
+.html-content-body a {
+  @apply text-primary-500;
+  word-break: break-all;
+}
+.html-content-body a:hover {
+  @apply text-primary-500;
+}
+.html-content-body ul li {
+  @apply list-disc list-inside;
+}
+.html-content-body ol li {
+  @apply list-decimal list-inside;
+}
+.html-content-body code {
+  @apply px-1 py-0.5 rounded-md bg-gray-800 text-white;
+}
+
+.html-content-body p {
+  line-height: 2;
+}
+.html-content-body pre {
+  @apply my-2 overflow-auto rounded-md bg-gray-800;
+  isolation: isolate;
+  position: relative;
+}
+.html-content-body.is-loading pre {
+  padding-left: 3.5em;
+  padding-top: 2.5rem;
+  padding-bottom: 0.6em;
+  padding-right: 1em;
+  color: #ffffff;
+}
+.html-content-body strong,
+.html-content-body b {
+  font-weight: 700;
+}
+.html-content-body pre code.hljs {
+  position: relative;
+  padding-left: 3.5em;
+  padding-top: 2.5rem;
+  padding-bottom: 0.6em;
+  padding-right: 1em;
+}
+/* blockquote */
+.html-content-body blockquote {
+  @apply border-l-4 border-primary-200 dark:border-primary-400/40 p-2 mt-2 mb-2 text-primary-400 dark:text-primary-400 bg-primary-50 dark:bg-primary-400/20 rounded-md;
+}
+.html-content-body pre code::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+.html-content-body pre code::-webkit-scrollbar-thumb {
+  height: 40px;
+  border-radius: 4px;
+  background-color: rgba(255, 255, 255, 0);
+}
+.html-content-body pre code:hover::-webkit-scrollbar-thumb {
+  height: 40px;
+  border-radius: 4px;
+  background-color: #bbb;
+}
+
+.html-content-body pre code::-webkit-scrollbar-thumb:hover {
+  background-color: #bbb;
+}
+.hljs:before {
+  @apply text-primary-50;
+  content: attr(data-lines);
+  position: absolute;
+  top: 2.5rem;
+  left: 0;
+  width: 3em;
+  padding: 0 0.5em;
+  overflow: hidden;
+  letter-spacing: -1px;
+  text-align: right;
+
+  text-transform: uppercase;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  border-right: 1px solid #ffffff;
+}
+.html-content-body table {
+  @apply table-auto border-collapse;
+}
+
+.html-content-body td,
+.html-content-body th {
+  @apply border p-2;
+}
+.html-content-body span[data-w-e-type='eventspan'] {
+  @apply text-primary-500 cursor-pointer;
+}
+.code-header {
+  @apply text-white text-sm bg-gray-900;
+  padding: 0.2em 0.5em;
+  border-bottom: 1px solid #d1d5db;
+  display: flex;
+  /* 垂直居中 */
+  align-items: center;
+  justify-content: space-between;
+  height: 2rem;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 2;
+}
+.code-header svg {
+  width: 16px;
+  height: 16px;
+  fill: #ffffff;
+}
+.code-copy-btn {
+  margin-right: 0.25rem;
+}
+.code-language {
+  margin-left: 0.25rem;
+  font-size: 0.9rem;
+}
+
+.w-e-image-group {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 2px;
+  width: 100%;
+  border-radius: 0.375rem;
+  isolation: isolate;
+  overflow: hidden;
+}
+
+.w-e-image-group-img-body {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1/1;
+}
+
+.html-content-body .w-e-image-group-img {
+  width: 100%;
+  height: 100% !important;
+  object-fit: cover; /* 确保图片填充整个容器并裁切多余部分 */
+}
+
+/* 奇数图片组的最后一个元素样式 */
+.w-e-image-group-odd .w-e-image-group-img-body:last-child {
+  grid-column: 1 / -1; /* 跨越所有列 */
+  aspect-ratio: 2/1;
+}
+.w-e-panorama360 {
+  position: relative;
+  z-index: 1;
+}
+.w-e-panorama360::after {
+  /* 点击以360°全景查看 */
+  content: '点击可进入360°全景模式';
+  position: absolute;
+  top: 0.5rem;
+  left: 0.5rem;
+  /* 点击穿透 */
+  pointer-events: none;
+  @apply rounded px-1 py-0.5 bg-primary-500 text-white dark:text-gray-900 bg-opacity-80 text-xs flex align-middle justify-center pointer mr-1;
+}
+
 /* 暗模式 */
 :root {
   /* --wikimoe-dark-bg: rgba(20, 20, 20, 1);

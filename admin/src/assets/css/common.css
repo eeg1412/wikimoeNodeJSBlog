@@ -1086,9 +1086,29 @@ input[type='password'] {
   height: 100%;
   object-fit: cover;
 }
+/* panorama360 */
+.w-e-panorama360.w-e-selected {
+  box-shadow: 0 0 0 2px var(--w-e-textarea-selected-border-color);
+}
+.w-e-panorama360 {
+  position: relative;
+}
+.w-e-panorama360::after {
+  /* tag 360°全景 */
+  content: '360°全景';
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  background-color: var(--el-color-primary);
+  color: var(--el-text-color-primary);
+  border-radius: 4px;
+  padding: 2px 4px;
+  font-size: 12px;
+}
 .w-e-bar-item button[data-menu-key='insertImage'],
 .w-e-bar-item button[data-menu-key='uploadImage'],
 .w-e-bar-item button[data-menu-key='imageGroup'],
+.w-e-bar-item button[data-menu-key='panorama360'],
 .w-e-bar-item button[data-menu-key='insertVideo'],
 .w-e-bar-item button[data-menu-key='uploadVideo'] {
   width: 100%;
