@@ -11,6 +11,7 @@ module.exports = async function (req, res, next) {
   const albumid = headers['albumid']
   const noCompress = headers['x-no-compress'] === '1' ? true : false
   const noThumbnail = headers['x-no-thumbnail'] === '1' ? true : false
+  const is360Panorama = headers['x-is-360-panorama'] === '1' ? true : false
 
   let imgSettingCompressMaxSizeHeader = headers['x-compress-max-size']
   // 判断 imgSettingCompressMaxSizeHeader 是否是正整数
@@ -105,6 +106,7 @@ module.exports = async function (req, res, next) {
     thumWidth: 0,
     thumHeight: 0,
     album: albumid,
+    is360Panorama: is360Panorama,
   }
   // 保存到数据库
   const attachmentData = await attachmentsUtils.save(attachment)

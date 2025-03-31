@@ -36,11 +36,16 @@
         <template #reference>
           <el-button
             size="small"
-            :type="options.noCompress ? 'primary' : ''"
-            :plain="!options.noCompress"
+            :type="optionsCount > 0 ? 'primary' : ''"
+            :plain="optionsCount <= 0"
             @click.stop
           >
-            <el-icon><Setting /></el-icon><span class="pl3">设置</span>
+            <el-icon><Setting /></el-icon
+            ><span class="pl3"
+              >设置<template v-if="optionsCount > 0"
+                >（已设置 {{ optionsCount }} 项）</template
+              ></span
+            >
           </el-button>
         </template>
       </el-popover>
@@ -242,6 +247,11 @@ export default {
     const step = ref(1)
     const options = reactive({
       noCompress: false,
+    })
+    const optionsCount = computed(() => {
+      return Object.keys(options).filter((key) => {
+        return options[key] !== null && options[key] !== false
+      }).length
     })
 
     const videoUrl = ref('')
@@ -580,6 +590,7 @@ export default {
       videoLoading,
       step,
       options,
+      optionsCount,
       videoUrl,
       videoRef,
       uploadVideo,

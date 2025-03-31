@@ -170,6 +170,13 @@
                     v-model="options.noThumbnail"
                     label="不生成缩略图"
                   />
+                  <!-- 是360°全景图片 -->
+                  <el-checkbox
+                    @click.stop
+                    size="small"
+                    v-model="options.is360Panorama"
+                    label="是360°全景图片"
+                  />
                   <!-- 设置最长边 -->
                   <div class="accactment-options-filed">
                     <div class="accactment-options-label">最长边:</div>
@@ -189,21 +196,16 @@
                 <template #reference>
                   <el-button
                     size="small"
-                    :type="
-                      options.noCompress ||
-                      options.noThumbnail ||
-                      options.imgSettingCompressMaxSize !== null
-                        ? 'primary'
-                        : ''
-                    "
-                    :plain="
-                      !options.noCompress &&
-                      !options.noThumbnail &&
-                      options.imgSettingCompressMaxSize === null
-                    "
+                    :type="optionsCount > 0 ? 'primary' : ''"
+                    :plain="optionsCount <= 0"
                     @click.stop
                   >
-                    <el-icon><Setting /></el-icon><span class="pl3">设置</span>
+                    <el-icon><Setting /></el-icon
+                    ><span class="pl3"
+                      >设置<template v-if="optionsCount > 0"
+                        >（已设置 {{ optionsCount }} 项）</template
+                      ></span
+                    >
                   </el-button>
                 </template>
               </el-popover>
@@ -430,6 +432,11 @@ export default {
     const open = async () => {
       attachmentList.value = []
       albumId.value = props.albumIdProp
+      if (props.is360Panorama) {
+        options.is360Panorama = true
+      } else {
+        options.is360Panorama = false
+      }
       if (albumId.value) {
         await getAlbumDetail()
       } else {
@@ -525,12 +532,19 @@ export default {
         'x-compress-max-size': options.imgSettingCompressMaxSize
           ? String(options.imgSettingCompressMaxSize)
           : '',
+        'x-is-360-panorama': options.is360Panorama ? '1' : '0',
       }
     }
     const options = reactive({
       noCompress: false,
       noThumbnail: false,
+      is360Panorama: false,
       imgSettingCompressMaxSize: null,
+    })
+    const optionsCount = computed(() => {
+      return Object.keys(options).filter((key) => {
+        return options[key] !== null && options[key] !== false
+      }).length
     })
     watch(
       () => options,
@@ -1003,6 +1017,7 @@ export default {
       headers,
       updateHeaders,
       options,
+      optionsCount,
       handleSuccess,
       handleError,
       preChangeAlbum,
