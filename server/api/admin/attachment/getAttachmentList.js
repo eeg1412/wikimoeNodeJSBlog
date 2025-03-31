@@ -5,7 +5,7 @@ const log4js = require('log4js')
 const adminApiLog = log4js.getLogger('adminApi')
 
 module.exports = async function (req, res, next) {
-  let { page, size, keyword, album, typeList } = req.query
+  let { page, size, keyword, album, typeList, is360Panorama } = req.query
   page = parseInt(page)
   size = parseInt(size)
   // 判断page和size是否为数字
@@ -18,6 +18,9 @@ module.exports = async function (req, res, next) {
     return
   }
   const params = {
+  }
+  if (is360Panorama === 'true') {
+    params.is360Panorama = true
   }
   // 如果keyword存在，就加入查询条件
   if (keyword) {

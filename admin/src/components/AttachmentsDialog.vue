@@ -408,6 +408,10 @@ export default {
         return ['image', 'video']
       },
     },
+    is360Panorama: {
+      type: Boolean,
+      default: false,
+    },
   },
   emits: [
     'success',
@@ -575,6 +579,7 @@ export default {
         params.keyword = ''
       }
       params.typeList = props.typeList
+      params.is360Panorama = props.is360Panorama
       if (resetPage === true && params.page !== 1) {
         params.page = 1
         return

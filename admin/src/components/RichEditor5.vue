@@ -19,6 +19,7 @@
       @selectAttachments="selectAttachments"
       :hasDelete="false"
       :typeList="[insertFnType]"
+      :is360Panorama="insertFnIs360Panorama"
     />
     <RichEditorEventSelectorDialog
       v-model:show="showEventDialog"
@@ -266,6 +267,7 @@ export default {
           console.log(insertFn)
           insertFn_ = insertFn
           insertFnType.value = 'image'
+          insertFnIs360Panorama.value = false
           openAttachmentsDialog()
         },
       }
@@ -276,6 +278,7 @@ export default {
           console.log(insertFn)
           insertFn_ = insertFn
           insertFnType.value = 'video'
+          insertFnIs360Panorama.value = false
           openAttachmentsDialog()
         },
       }
@@ -313,20 +316,26 @@ export default {
 
     let insertFn_ = null
     const insertFnType = ref(null)
+    const insertFnIs360Panorama = ref(false)
     const attachmentsDialogRef = ref(null)
     const openAttachmentsDialogType = ref('')
     const openAttachmentsDialog = (type) => {
+      let insertFnIs360Panorama_ = false
       if (type) {
         openAttachmentsDialogType.value = type
         switch (type) {
           case 'imageGroup':
+            insertFnType.value = 'image'
+            break
           case 'panorama360':
+            insertFnIs360Panorama_ = true
             insertFnType.value = 'image'
             break
           default:
             break
         }
       }
+      insertFnIs360Panorama.value = insertFnIs360Panorama_
       attachmentsDialogRef.value.open()
     }
 
@@ -512,6 +521,7 @@ export default {
       handleCreated,
       // 媒体库
       insertFnType,
+      insertFnIs360Panorama,
       attachmentsDialogRef,
       openAttachmentsDialog,
       selectAttachments,
