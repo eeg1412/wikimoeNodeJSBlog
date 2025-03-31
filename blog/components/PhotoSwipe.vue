@@ -1,118 +1,129 @@
 <template>
-  <ClientOnly>
-    <Teleport :to="`#caption-${componentId}`" v-if="showUI && description">
-      <div
-        class="photo-swipe-photo-swipe-caption bg-primary bg-opacity-80 rounded px-2 py-1 text-white dark:text-gray-900 text-sm whitespace-pre-line"
-        v-show="showDescription"
-      >
-        {{ description }}
-      </div>
-    </Teleport>
-    <Teleport
-      :to="`#photo-swipe-caption-${componentId}`"
-      v-if="showUI && description"
+  <Teleport :to="`#caption-${componentId}`" v-if="showUI && description">
+    <div
+      class="photo-swipe-photo-swipe-caption bg-primary bg-opacity-80 rounded px-2 py-1 text-white dark:text-gray-900 text-sm whitespace-pre-line"
+      v-show="showDescription"
     >
-      <div
-        class="photo-swipe-photo-swipe-btn"
-        @click="showDescription = !showDescription"
-      >
-        <UIcon
-          class="photo-swipe-caption-icon"
-          :name="
-            showDescription
-              ? 'i-heroicons-chat-bubble-bottom-center-text-solid'
-              : 'i-heroicons-chat-bubble-bottom-center-solid'
-          "
-        />
-      </div>
-    </Teleport>
-    <Teleport
-      :to="`#photo-swipe-${componentId}`"
-      v-if="showUI && attachmentList.length > 1"
+      {{ description }}
+    </div>
+  </Teleport>
+  <Teleport
+    :to="`#photo-swipe-caption-${componentId}`"
+    v-if="showUI && description"
+  >
+    <div
+      class="photo-swipe-photo-swipe-btn"
+      @click="showDescription = !showDescription"
     >
-      <UPopover :popper="{ arrow: true, offsetDistance: 0 }">
-        <div class="photo-swipe-photo-swipe-btn">
-          <UIcon name="i-heroicons-photo-solid" />
-        </div>
-        <template #panel="{ close }">
-          <div class="p-4">
-            <!-- 关闭按钮 -->
-            <div class="flex justify-end mb-2">
-              <UButton
-                size="2xs"
-                type="primary"
-                variant="ghost"
-                icon="i-heroicons-x-mark-20-solid"
-                @click="close"
-              />
-            </div>
-            <div class="grid grid-cols-3 grid-rows-3 gap-4">
+      <UIcon
+        class="photo-swipe-caption-icon"
+        :name="
+          showDescription
+            ? 'i-heroicons-chat-bubble-bottom-center-text-solid'
+            : 'i-heroicons-chat-bubble-bottom-center-solid'
+        "
+      />
+    </div>
+  </Teleport>
+  <Teleport
+    :to="`#photo-swipe-${componentId}`"
+    v-if="showUI && attachmentList.length > 1"
+  >
+    <UPopover :popper="{ arrow: true, offsetDistance: 0 }">
+      <div class="photo-swipe-photo-swipe-btn">
+        <UIcon name="i-heroicons-photo-solid" />
+      </div>
+      <template #panel="{ close }">
+        <div class="p-4">
+          <!-- 关闭按钮 -->
+          <div class="flex justify-end mb-2">
+            <UButton
+              size="2xs"
+              type="primary"
+              variant="ghost"
+              icon="i-heroicons-x-mark-20-solid"
+              @click="close"
+            />
+          </div>
+          <div class="grid grid-cols-3 grid-rows-3 gap-4">
+            <div
+              class="w-24 h-24"
+              v-for="(item, index) in currentGroup"
+              :key="item._id"
+            >
               <div
-                class="w-24 h-24"
-                v-for="(item, index) in currentGroup"
-                :key="item._id"
+                class="w-full h-full bg-cover bg-center bg-no-repeat rounded bg-primary-200"
+                :class="{
+                  'border-2 border-solid border-primary-500':
+                    currentAttachmentId === item._id,
+                  'border-2 border-solid border-primary-100':
+                    currentAttachmentId !== item._id,
+                }"
+                :style="{
+                  backgroundImage: `url(${item.thumfor || item.filepath})`,
+                }"
+                @click="goTo(index + groupPage * 9, close)"
               >
+                <!-- 如果类型是视频加上播放按钮 -->
                 <div
-                  class="w-full h-full bg-cover bg-center bg-no-repeat rounded bg-primary-200"
-                  :class="{
-                    'border-2 border-solid border-primary-500':
-                      currentAttachmentId === item._id,
-                    'border-2 border-solid border-primary-100':
-                      currentAttachmentId !== item._id,
-                  }"
-                  :style="{
-                    backgroundImage: `url(${item.thumfor || item.filepath})`,
-                  }"
-                  @click="goTo(index + groupPage * 9, close)"
+                  v-if="item.mimetype.indexOf('video') > -1"
+                  class="w-full h-full flex items-center justify-center"
                 >
-                  <!-- 如果类型是视频加上播放按钮 -->
-                  <div
-                    v-if="item.mimetype.indexOf('video') > -1"
-                    class="w-full h-full flex items-center justify-center"
-                  >
-                    <div class="text-white text-4xl opacity-80">
-                      <UIcon name="i-heroicons-play-solid" size="2xl" />
-                    </div>
+                  <div class="text-white text-4xl opacity-80">
+                    <UIcon name="i-heroicons-play-solid" size="2xl" />
                   </div>
                 </div>
               </div>
             </div>
-            <!-- 分页器 -->
-            <div class="flex justify-center mt-4">
-              <div class="flex items-center">
-                <UButton
-                  :disabled="!hasPrevGroup"
-                  @click="prevGroup"
-                  size="2xs"
-                  type="primary"
-                  icon="i-heroicons-chevron-left"
-                />
-                <div class="mx-2 px-1">
-                  {{ groupPage + 1 }}/{{ groupCount }}
-                </div>
-                <UButton
-                  :disabled="!hasNextGroup"
-                  @click="nextGroup"
-                  size="2xs"
-                  type="primary"
-                  icon="i-heroicons-chevron-right"
-                />
-              </div>
+          </div>
+          <!-- 分页器 -->
+          <div class="flex justify-center mt-4">
+            <div class="flex items-center">
+              <UButton
+                :disabled="!hasPrevGroup"
+                @click="prevGroup"
+                size="2xs"
+                type="primary"
+                icon="i-heroicons-chevron-left"
+              />
+              <div class="mx-2 px-1">{{ groupPage + 1 }}/{{ groupCount }}</div>
+              <UButton
+                :disabled="!hasNextGroup"
+                @click="nextGroup"
+                size="2xs"
+                type="primary"
+                icon="i-heroicons-chevron-right"
+              />
             </div>
           </div>
-        </template>
-      </UPopover>
-    </Teleport>
-    <!-- <Teleport :to="`#photo-swipe-loading-${componentId}`" v-if="showUI">
+        </div>
+      </template>
+    </UPopover>
+  </Teleport>
+  <!-- <Teleport :to="`#photo-swipe-loading-${componentId}`" v-if="showUI">
       <div>
         <DivLoading class="photo-swipe-load-body" :loading="loading" />
       </div>
     </Teleport> -->
-  </ClientOnly>
 </template>
 <script setup>
 import PhotoSwipeLightbox from 'photoswipe/lightbox'
 import { useOptionStore } from '@/store/options'
+import { Viewer } from '@photo-sphere-viewer/core'
+import '@photo-sphere-viewer/core/index.css'
+
+const panoramaListMap = {}
+const clearPanoramaListMap = () => {
+  for (const key in panoramaListMap) {
+    if (panoramaListMap[key]) {
+      panoramaListMap[key].destroy()
+      delete panoramaListMap[key]
+      console.log('destroy', key, panoramaListMap)
+    }
+  }
+}
+
+let isAllPreventDefault = false
 
 const optionStore = useOptionStore()
 const { options } = storeToRefs(optionStore)
@@ -245,6 +256,18 @@ const open = async (list = [], showIndex = 0, closeCallback_) => {
   lightbox.addFilter('numItems', (numItems) => {
     return attachmentList.value.length
   })
+  lightbox.on('pointerDown', (e) => {
+    // console.log(e)
+    const target = e.originalEvent.target
+    // 如果是video元素或者canvas元素，阻止事件冒泡
+    if (
+      target.tagName === 'VIDEO' ||
+      target.tagName === 'CANVAS' ||
+      isAllPreventDefault
+    ) {
+      e.preventDefault()
+    }
+  })
   lightbox.addFilter('contentErrorElement', (contentErrorElement, content) => {
     const el = document.createElement('div')
     el.className = 'pswp__error-msg'
@@ -256,6 +279,7 @@ const open = async (list = [], showIndex = 0, closeCallback_) => {
     let width = attachmentList.value[index].width
     let height = attachmentList.value[index].height
     let src = attachmentList.value[index].filepath
+    const is360Panorama = attachmentList.value[index].is360Panorama
     // thumfor 在这里不需要，上面的相册需要
 
     // 通过正则判断是否携带协议和域名
@@ -268,7 +292,7 @@ const open = async (list = [], showIndex = 0, closeCallback_) => {
       if (mimetype.indexOf('video') > -1) {
         width = 1280
         height = 720
-      } else {
+      } else if (!is360Panorama) {
         const loadFailed = attachmentList.value[index].loadFailed
         return {
           html: `<div class="previewer-img-loading-content" id="loading-content-${componentId}-${index}">${
@@ -300,6 +324,13 @@ const open = async (list = [], showIndex = 0, closeCallback_) => {
                     />
                     </video>
                   </div>`,
+      }
+    }
+    if (is360Panorama && mimetype.indexOf('image') > -1) {
+      return {
+        html: `<div id="lightbox-360panorama-${index}" class="content-360panorama-body">加载中...</div>`,
+        is360Panorama: true,
+        imageSrc: src,
       }
     }
     return {
@@ -357,6 +388,7 @@ const initLightbox = async () => {
   })
   lightbox.init()
   lightbox.on('close', () => {
+    clearPanoramaListMap()
     photoswipeInitialLayoutPromiseResolve = null
     photoswipeInitialLayoutPromise = null
     loadingImageIndexList = []
@@ -378,6 +410,7 @@ const initLightbox = async () => {
   })
   lightbox.on('change', () => {
     console.log('change')
+    isAllPreventDefault = false
     if (refreshSlideContentChange) {
       refreshSlideContentChange = false
       console.log('refreshSlideContentChange')
@@ -392,6 +425,38 @@ const initLightbox = async () => {
     if (data?.shouldLoadImageItem && data?.loadFailed !== true) {
       const imageSrc = data?.imageSrc
       loadNoSizeImage(imageSrc, currIndex)
+    }
+    console.log('data', data)
+    // 360全景图
+    // 遍历panoramaListMap，销毁所有的viewer实例
+    clearPanoramaListMap()
+    let image360PanoramaTimer = null
+    const is360Panorama = data?.is360Panorama
+    if (is360Panorama === true) {
+      isAllPreventDefault = true
+      if (image360PanoramaTimer) {
+        clearTimeout(image360PanoramaTimer)
+        image360PanoramaTimer = null
+      }
+      image360PanoramaTimer = setTimeout(
+        () => {
+          const container = document.querySelector(
+            `#lightbox-360panorama-${currIndex}`
+          )
+          if (!container) {
+            return
+          }
+          // 清空container
+          container.innerHTML = ''
+          const viewer = new Viewer({
+            container: container,
+            panorama: data?.imageSrc,
+            navbar: false,
+          })
+          panoramaListMap[currIndex] = viewer
+        },
+        firstFlag ? 800 : 100
+      )
     }
     // 计算当前Index对应的groupPage页数
     groupPage.value = Math.floor(currIndex / 9)

@@ -108,6 +108,7 @@ const tryOpenHref = async (e) => {
         height: height,
         mimetype: item.mimetype,
         description: item.description,
+        is360Panorama: item.is360Panorama ? true : false,
       }
     })
     const index = props.dataHrefIndex || 0

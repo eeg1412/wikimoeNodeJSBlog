@@ -25,9 +25,12 @@
       @click="toEditName"
       :title="item.name || '未命名'"
     >
-      <span>{{ item.name || '未命名' }}</span>
+      <span
+        >{{ item.is360Panorama ? '【360°全景】' : ''
+        }}{{ item.name || '未命名' }}</span
+      >
       <div class="attachment-filename-edit-icon">
-        <el-icon><EditPen /></el-icon>
+        <el-icon><Tools /></el-icon>
       </div>
     </div>
     <div
@@ -79,6 +82,10 @@
             v-model="formName.name"
             placeholder="请输入媒体名称"
           ></el-input>
+        </el-form-item>
+        <!-- is360Panorama -->
+        <el-form-item label="360°全景" prop="is360Panorama" v-if="isImage">
+          <el-switch v-model="formName.is360Panorama"></el-switch>
         </el-form-item>
         <!-- description -->
         <el-form-item label="描述" prop="description">
@@ -132,6 +139,7 @@ export default {
     const formName = reactive({
       videoCover: '',
       name: '',
+      is360Panorama: false,
       description: '',
     })
     const rulesName = reactive({
@@ -147,6 +155,7 @@ export default {
           name: formName.name,
           videoCover: formName.videoCover,
           description: formName.description,
+          is360Panorama: formName.is360Panorama,
           __v: props.item.__v,
         }
         authApi.updateAttachmentInfo(params).then(() => {
@@ -181,6 +190,9 @@ export default {
     const isVideo = computed(() => {
       return props.item.mimetype.includes('video')
     })
+    const isImage = computed(() => {
+      return props.item.mimetype.includes('image')
+    })
 
     const setVideoCover = (data) => {
       formName.videoCover = data
@@ -199,6 +211,7 @@ export default {
       toEditName,
       openPreviewer,
       isVideo,
+      isImage,
       setVideoCover,
       selectCount,
     }

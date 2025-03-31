@@ -17,6 +17,7 @@
   },
   "dependencies": {
     "@nuxt/ui": "^2.11.1",
+    "@photo-sphere-viewer/core": "^5.12.1",
     "@pinia/nuxt": "^0.5.1",
     "highlight.js": "^11.11.1",
     "moment": "^2.30.1",

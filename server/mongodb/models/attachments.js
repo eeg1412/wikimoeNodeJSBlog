@@ -53,6 +53,11 @@ var attachments = new Schema({
     type: String,
     default: ''
   },
+  // 是否是360度全景图
+  is360Panorama: {
+    type: Boolean,
+    default: false
+  },
   // 0还没压缩，1压缩成功
   status: {
     type: Number,

@@ -79,16 +79,24 @@
         />
 
         <div
-          class="absolute tweet-img-list-body-item-description"
-          v-if="coverImages[0].description"
+          class="absolute tweet-img-list-body-item-description flex"
+          v-if="coverImages[0].description || coverImages[0].is360Panorama"
           v-show="videoPlayId !== coverImages[0]._id"
         >
           <div
-            class="rounded px-1 py-0.5 bg-primary-500 text-white dark:text-gray-900 bg-opacity-80 text-xs flex align-middle justify-center pointer"
+            class="rounded px-1 py-0.5 bg-primary-500 text-white dark:text-gray-900 bg-opacity-80 text-xs flex align-middle justify-center pointer mr-1"
             @click.stop="tryOpenHref(0)"
             :title="coverImages[0].description"
+            v-if="coverImages[0].description"
           >
             描述
+          </div>
+          <div
+            class="rounded px-1 py-0.5 bg-primary-500 text-white dark:text-gray-900 bg-opacity-80 text-xs flex align-middle justify-center pointer mr-1"
+            @click.stop="tryOpenHref(0)"
+            v-if="coverImages[0].is360Panorama"
+          >
+            360°全景
           </div>
         </div>
       </div>
@@ -180,16 +188,24 @@
                 />
 
                 <div
-                  :class="`absolute tweet-img-list-body-item-description index-${indexChild}`"
-                  v-if="img.description"
+                  :class="`absolute tweet-img-list-body-item-description flex index-${indexChild}`"
+                  v-if="img.description || img.is360Panorama"
                   v-show="videoPlayId !== img._id"
                 >
                   <div
-                    class="rounded px-1 py-0.5 bg-primary-500 text-white dark:text-gray-900 bg-opacity-80 text-xs flex align-middle justify-center pointer"
+                    class="rounded px-1 py-0.5 bg-primary-500 text-white dark:text-gray-900 bg-opacity-80 text-xs flex align-middle justify-center pointer mr-1"
                     @click.stop="tryOpenHref(img.dataHrefIndex)"
                     :title="img.description"
+                    v-if="img.description"
                   >
                     描述
+                  </div>
+                  <div
+                    class="rounded px-1 py-0.5 bg-primary-500 text-white dark:text-gray-900 bg-opacity-80 text-xs flex align-middle justify-center pointer mr-1"
+                    @click.stop="tryOpenHref(img.dataHrefIndex)"
+                    v-if="img.is360Panorama"
+                  >
+                    360°全景
                   </div>
                 </div>
               </template>
@@ -265,16 +281,24 @@
                 />
 
                 <div
-                  :class="`absolute tweet-img-list-body-item-description index-${indexChild}`"
-                  v-if="img.description"
+                  :class="`absolute tweet-img-list-body-item-description flex index-${indexChild}`"
+                  v-if="img.description || img.is360Panorama"
                   v-show="videoPlayId !== img._id"
                 >
                   <div
-                    class="rounded px-1 py-0.5 bg-primary-500 text-white dark:text-gray-900 bg-opacity-80 text-xs flex align-middle justify-center pointer"
+                    class="rounded px-1 py-0.5 bg-primary-500 text-white dark:text-gray-900 bg-opacity-80 text-xs flex align-middle justify-center pointer mr-1"
                     @click.stop="tryOpenHref(img.dataHrefIndex)"
                     :title="img.description"
+                    v-if="img.description"
                   >
                     描述
+                  </div>
+                  <div
+                    class="rounded px-1 py-0.5 bg-primary-500 text-white dark:text-gray-900 bg-opacity-80 text-xs flex align-middle justify-center pointer mr-1"
+                    @click.stop="tryOpenHref(img.dataHrefIndex)"
+                    v-if="img.is360Panorama"
+                  >
+                    360°全景
                   </div>
                 </div>
               </template>
@@ -365,6 +389,7 @@ const dataHrefList = computed(() => {
       height: item.height,
       mimetype: item.mimetype,
       description: item.description,
+      is360Panorama: item.is360Panorama ? true : false,
     }
   })
 })
@@ -451,6 +476,7 @@ const tryOpenHref = async (index) => {
       height: height,
       mimetype: item.mimetype,
       description: item.description,
+      is360Panorama: item.is360Panorama ? true : false,
     }
   })
   openPhotoSwipe(dataSource, index)

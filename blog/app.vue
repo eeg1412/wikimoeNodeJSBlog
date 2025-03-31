@@ -3,7 +3,9 @@
     <NuxtLoadingIndicator color="#ef90a7" />
     <NuxtPage></NuxtPage>
     <UNotifications />
-    <PhotoSwipe />
+    <ClientOnly>
+      <PhotoSwipe />
+    </ClientOnly>
   </div>
 </template>
 <script setup>
