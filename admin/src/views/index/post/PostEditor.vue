@@ -1279,6 +1279,7 @@ export default {
       }
     )
 
+    let updateContentSeriesSortListTimer = null
     // 监听相关数组的变化并更新排序列表
     watch(
       [
@@ -1294,7 +1295,12 @@ export default {
       ],
       () => {
         if (form.contentSeriesSortListTurnOn) {
-          updateContentSeriesSortList()
+          if (updateContentSeriesSortListTimer) {
+            clearTimeout(updateContentSeriesSortListTimer)
+          }
+          updateContentSeriesSortListTimer = setTimeout(() => {
+            updateContentSeriesSortList()
+          }, 100)
         }
       },
       { deep: true }
