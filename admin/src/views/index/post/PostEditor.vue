@@ -446,8 +446,21 @@
             <!-- <el-radio :label="99">回收站</el-radio> -->
           </el-radio-group>
         </el-form-item>
+        <!-- 强制提交 -->
+        <el-form-item label="强制提交" prop="force">
+          <el-switch v-model="form.force"></el-switch>
+          <div class="w_10 cGray666">
+            ※强制提交会忽略冲突检查，如果遇到更新失败且确定提交内容没有问题，可以尝试开启此选项
+          </div>
+        </el-form-item>
         <el-form-item>
           <el-button type="primary" @click="submit">提交</el-button>
+          <div class="w_10 cGray666">
+            <!-- autoSaveTimeDate -->
+            <span v-if="autoSaveTimeDate"
+              >{{ $formatDate(autoSaveTimeDate) }} 自动保存</span
+            >
+          </div>
         </el-form-item>
       </el-form>
     </div>
@@ -667,6 +680,9 @@ export default {
                   form[key] = res.data.data[key]
                 }
                 break
+              case 'force':
+                form[key] = false
+                break
 
               default:
                 form[key] = res.data.data[key]
@@ -766,6 +782,7 @@ export default {
       coverImages: [],
       __v: null,
       id: null,
+      force: false,
     })
 
     const updateContentSeriesSortList = () => {
@@ -1140,15 +1157,19 @@ export default {
 
     // auto save
     let autoSaveError = false
+    const autoSaveTimeDate = ref(null)
 
     const autoSave = () => {
       // 如果是草稿状态，就自动保存
       if (form.status === 0 && !autoSaveError) {
+        const newForm = JSON.parse(JSON.stringify(form))
+        newForm.isAutoSave = true
         authApi
-          .updatePost(form, true)
+          .updatePost(newForm, true)
           .then((res) => {
             // 成功消息
             form.__v = form.__v + 1
+            autoSaveTimeDate.value = new Date()
           })
           .catch(() => {
             autoSaveError = true
@@ -1414,6 +1435,8 @@ export default {
       attachmentDrag,
       // template
       templateList,
+
+      autoSaveTimeDate,
       // 升级编辑器版本
       oldPostEditorContent,
       updatePostEditorVersion,

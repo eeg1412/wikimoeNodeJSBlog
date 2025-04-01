@@ -28,7 +28,7 @@ module.exports = async function (req, res, next) {
   // - coverImages  博客时是封面图片字段，页面时是页面图片字段
   // - __v  版本号字段
   const id = req.body.id
-  let { title, date, content, excerpt, alias, sort, tags, top, sortop, status, allowRemark, template, code, coverImages, bangumiList, movieList, gameList, bookList, postList, eventList, voteList, contentBangumiList, contentMovieList, contentGameList, contentBookList, contentPostList, contentEventList, contentVoteList, seriesSortList, contentSeriesSortList, __v } = req.body
+  let { title, date, content, excerpt, alias, sort, tags, top, sortop, status, allowRemark, template, code, coverImages, bangumiList, movieList, gameList, bookList, postList, eventList, voteList, contentBangumiList, contentMovieList, contentGameList, contentBookList, contentPostList, contentEventList, contentVoteList, seriesSortList, contentSeriesSortList, __v, isAutoSave, force } = req.body
   // 校验id是否存在
   if (!id) {
     res.status(400).json({
@@ -39,26 +39,26 @@ module.exports = async function (req, res, next) {
     return
   }
   // 根据id查找文章
-  const post = await postUtils.findOne({ _id: id }).catch((err) => {
-    return null
-  })
-  if (!post) {
-    res.status(404).json({
-      errors: [{
-        message: '文章不存在'
-      }]
-    })
-    return
-  }
+  // const post = await postUtils.findOne({ _id: id }).catch((err) => {
+  //   return null
+  // })
+  // if (!post) {
+  //   res.status(404).json({
+  //     errors: [{
+  //       message: '文章不存在'
+  //     }]
+  //   })
+  //   return
+  // }
   // 校验__v 是否对的上
-  if (__v !== post.__v) {
-    res.status(400).json({
-      errors: [{
-        message: '该文章已被其他用户修改，请刷新后重试'
-      }]
-    })
-    return
-  }
+  // if (__v !== post.__v) {
+  //   res.status(400).json({
+  //     errors: [{
+  //       message: '该文章已被其他用户修改，请刷新后重试'
+  //     }]
+  //   })
+  //   return
+  // }
 
   // 用 validator.isMongoId 校验 bangumiList, movieList,gameList, bookList
   for (let i = 0; i < bangumiList.length; i++) {
@@ -259,7 +259,7 @@ module.exports = async function (req, res, next) {
 
 
   // 1blog,2tweet,3page
-  const type = post.type
+  // const type = post.type
   const params = {
     title: title,
     date: date,
@@ -331,7 +331,7 @@ module.exports = async function (req, res, next) {
   }
   // 校验alias是否存在
   if (alias) {
-    const aliasPost = await postUtils.findOne({
+    const aliasPostCount = await postUtils.count({
       alias: {
         $regex: new RegExp('^' + alias + '$', 'i')
       },
@@ -342,17 +342,10 @@ module.exports = async function (req, res, next) {
     }).catch((err) => {
       return 500
     })
-    if (aliasPost) {
+    if (aliasPostCount > 0) {
       res.status(400).json({
         errors: [{
           message: '别名已存在'
-        }]
-      })
-      return
-    } else if (aliasPost === 500) {
-      res.status(500).json({
-        errors: [{
-          message: '服务器错误'
         }]
       })
       return
@@ -398,7 +391,21 @@ module.exports = async function (req, res, next) {
   params.tags = tagsIdArr
 
   // 更新
-  postUtils.updateOne({ _id: id, __v: __v }, params).then((data) => {
+  const updateFilter = {
+    _id: id,
+    __v: __v
+  }
+  if (isAutoSave) {
+    // 只能是草稿
+    updateFilter['status'] = 0
+  }
+  if (force) {
+    console.log('强制更新')
+    // 强制更新
+    delete updateFilter.__v
+  }
+
+  postUtils.updateOne(updateFilter, params).then((data) => {
     if (data.modifiedCount === 0) {
       res.status(400).json({
         errors: [{
@@ -412,11 +419,12 @@ module.exports = async function (req, res, next) {
     })
     adminApiLog.info(`post update success`)
     // 新旧status不一样，更新缓存
-    if (post.status !== status) {
+    if (!isAutoSave) {
       cacheDataUtils.getPostArchiveList()
+      rssToolUtils.reflushRSS()
+      sitemapToolUtils.reflushSitemap()
     }
-    rssToolUtils.reflushRSS()
-    sitemapToolUtils.reflushSitemap()
+
     // utils.reflushBlogCache()
   }).catch((err) => {
     res.status(400).json({
