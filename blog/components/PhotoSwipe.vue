@@ -129,6 +129,25 @@ const clearPanoramaListMap = () => {
     }
   }
 }
+const panoramaLang = {
+  zoom: '缩放',
+  zoomOut: '缩小',
+  zoomIn: '放大',
+  moveUp: '向上移动',
+  moveDown: '向下移动',
+  moveLeft: '向左移动',
+  moveRight: '向右移动',
+  description: '描述',
+  download: '下载',
+  fullscreen: '全屏',
+  loading: '加载中...',
+  menu: '菜单',
+  close: '关闭',
+  twoFingers: '使用双指导航',
+  ctrlZoom: '使用Ctrl+滚轮缩放图片',
+  loadError: '全景图无法加载',
+  webglError: '您的浏览器似乎不支持WebGL',
+}
 
 let isAllPreventDefault = false
 
@@ -268,9 +287,9 @@ const open = async (list = [], showIndex = 0, closeCallback_) => {
     const target = e.originalEvent.target
     // 如果是video元素或者canvas元素，阻止事件冒泡
     if (
+      isAllPreventDefault ||
       target.tagName === 'VIDEO' ||
-      target.tagName === 'CANVAS' ||
-      isAllPreventDefault
+      target.tagName === 'CANVAS'
     ) {
       e.preventDefault()
     }
@@ -334,8 +353,10 @@ const open = async (list = [], showIndex = 0, closeCallback_) => {
       }
     }
     if (is360Panorama && mimetype.indexOf('image') > -1) {
+      const maxWidth = Math.round(width * 0.8)
+      const maxHeight = Math.round(height * 0.8)
       return {
-        html: `<div id="lightbox-360panorama-${index}" class="content-360panorama-body">加载中...</div>`,
+        html: `<div class="content-360panorama-body"><div class="content-360panorama-content" style="max-width:${maxWidth}px;max-height:${maxHeight}px;" id="lightbox-360panorama-${index}">加载中...</div></div>`,
         is360Panorama: true,
         imageSrc: src,
       }
@@ -440,7 +461,7 @@ const initLightbox = async () => {
     let image360PanoramaTimer = null
     const is360Panorama = data?.is360Panorama
     if (is360Panorama === true) {
-      isAllPreventDefault = true
+      // isAllPreventDefault = true
       if (image360PanoramaTimer) {
         clearTimeout(image360PanoramaTimer)
         image360PanoramaTimer = null
@@ -459,6 +480,8 @@ const initLightbox = async () => {
             container: container,
             panorama: data?.imageSrc,
             navbar: false,
+            defaultZoomLvl: 10,
+            lang: panoramaLang,
           })
           panoramaListMap[currIndex] = viewer
         },

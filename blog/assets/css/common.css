@@ -1136,6 +1136,13 @@ ins.adsbygoogle[data-ad-status='unfilled'] {
   align-items: center;
   color: #fff;
 }
+.content-360panorama-content {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
 .pswp__icn-shadow {
   stroke-width: 0px !important;
 }
