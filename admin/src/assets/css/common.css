@@ -976,14 +976,18 @@ input[type='password'] {
 .max-width-cropper .avatar-uploader .avatar {
   width: auto;
 }
-.attachment-play-icon {
+.attachment-play-icon,
+.attachment-360-icon {
   position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
   font-size: 40px;
-  color: #fff;
+  color: rgba(255, 255, 255, 0.6);
   z-index: 3;
+}
+.attachment-360-icon {
+  font-size: 30px;
 }
 .login-usercover-image-item {
   width: 100px;

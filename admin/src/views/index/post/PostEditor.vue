@@ -135,6 +135,14 @@
                     @click.stop.prevent="openPreviewer(element)"
                     style="width: 100%; height: 100%"
                   />
+                  <!-- 如果is360Panorama,中间显示一个360° -->
+                  <div
+                    class="attachment-360-icon zoom-in"
+                    v-if="element.is360Panorama"
+                    @click.stop.prevent="openPreviewer(element)"
+                  >
+                    360°
+                  </div>
                   <!-- 如果是视频 isVideo 中间显示播放图标 -->
                   <div
                     class="attachment-play-icon zoom-in"
