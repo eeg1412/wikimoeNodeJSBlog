@@ -1104,7 +1104,7 @@ input[type='password'] {
   top: 10px;
   left: 10px;
   background-color: var(--el-color-primary);
-  color: var(--el-text-color-primary);
+  color: var(--el-color-white);
   border-radius: 4px;
   padding: 2px 4px;
   font-size: 12px;
