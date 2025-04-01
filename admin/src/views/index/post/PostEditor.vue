@@ -1219,13 +1219,14 @@ export default {
     })
     const openPreviewer = (item) => {
       const mimetype = item.mimetype
-      const { filepath, width, height } = item
+      const { filepath, width, height, is360Panorama } = item
       loadAndOpenImg(0, [
         {
-          src: `${siteUrl.value}${filepath}`,
+          src: `${filepath}`,
           width,
           height,
           mimetype,
+          is360Panorama,
         },
       ])
     }

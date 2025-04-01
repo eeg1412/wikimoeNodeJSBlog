@@ -1134,6 +1134,30 @@ input[type='password'] {
   background: rgba(255, 255, 255, 0.8);
 }
 
+.content-360panorama-body {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #fff;
+}
+.content-360panorama-content {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.pswp__icn-shadow {
+  stroke-width: 0px !important;
+}
+.pswp__icn {
+  filter: drop-shadow(0px 0px 2px #000);
+}
+
 /* 深色模式适配 */
 html.dark {
   --w-e-textarea-bg-color: #1e1e1e;

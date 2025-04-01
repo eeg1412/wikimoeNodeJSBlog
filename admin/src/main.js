@@ -6,6 +6,7 @@ import ElementPlus from 'element-plus'
 import 'element-plus/dist/index.css'
 import 'element-plus/theme-chalk/dark/css-vars.css'
 import 'cropperjs/dist/cropper.css';
+import '@photo-sphere-viewer/core/index.css'
 import '@/assets/css/common.css'
 import 'photoswipe/style.css'
 import * as ElementPlusIconsVue from '@element-plus/icons-vue'

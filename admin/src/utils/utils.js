@@ -4,12 +4,42 @@ import moment from "moment";
 import { get, set, delMany } from 'idb-keyval'
 import { FFmpeg } from '@ffmpeg/ffmpeg'
 import PhotoSwipeLightbox from 'photoswipe/lightbox'
+import { Viewer } from '@photo-sphere-viewer/core'
 
 let loading = null
 
 let loadingCount = 0;
 let loadingTimer = null;
 
+const panoramaListMap = {}
+const clearPanoramaListMap = () => {
+    for (const key in panoramaListMap) {
+        if (panoramaListMap[key]) {
+            panoramaListMap[key].destroy()
+            delete panoramaListMap[key]
+            console.log('destroy', key, panoramaListMap)
+        }
+    }
+}
+const panoramaLang = {
+    zoom: '缩放',
+    zoomOut: '缩小',
+    zoomIn: '放大',
+    moveUp: '向上移动',
+    moveDown: '向下移动',
+    moveLeft: '向左移动',
+    moveRight: '向右移动',
+    description: '描述',
+    download: '下载',
+    fullscreen: '全屏',
+    loading: '加载中...',
+    menu: '菜单',
+    close: '关闭',
+    twoFingers: '使用双指导航',
+    ctrlZoom: '使用Ctrl+滚轮缩放图片',
+    loadError: '全景图无法加载',
+    webglError: '您的浏览器似乎不支持WebGL',
+}
 
 const lightbox = new PhotoSwipeLightbox({
     pswpModule: () => import('photoswipe'),
@@ -17,10 +47,59 @@ const lightbox = new PhotoSwipeLightbox({
 })
 lightbox.init()
 let videoTimer = null
+lightbox.on('pointerDown', (e) => {
+    // console.log(e)
+    const target = e.originalEvent.target
+    // 如果是video元素或者canvas元素，阻止事件冒泡
+    if (
+        target.tagName === 'VIDEO' ||
+        target.tagName === 'CANVAS'
+    ) {
+        e.preventDefault()
+    }
+})
+lightbox.on('close', () => {
+    clearPanoramaListMap()
+})
 lightbox.on('change', () => {
+    const currSlide = lightbox.pswp.currSlide
+    const data = currSlide?.data
+
     // triggers when slide is switched, and at initialization
     console.log('change', lightbox)
     const currIndex = lightbox.pswp.currIndex
+
+    clearPanoramaListMap()
+    let image360PanoramaTimer = null
+    const is360Panorama = data?.is360Panorama
+    if (is360Panorama === true) {
+        if (image360PanoramaTimer) {
+            clearTimeout(image360PanoramaTimer)
+            image360PanoramaTimer = null
+        }
+        image360PanoramaTimer = setTimeout(
+            () => {
+                const container = document.querySelector(
+                    `#lightbox-360panorama-${currIndex}`
+                )
+                if (!container) {
+                    return
+                }
+                // 清空container
+                container.innerHTML = ''
+                const viewer = new Viewer({
+                    container: container,
+                    panorama: data?.imageSrc,
+                    navbar: false,
+                    defaultZoomLvl: 10,
+                    lang: panoramaLang,
+                })
+                panoramaListMap[currIndex] = viewer
+            },
+            800
+        )
+    }
+
     videoTimer && clearTimeout(videoTimer)
     videoTimer = setTimeout(() => {
         // 所有.previewer-video-body的video都暂停
@@ -31,7 +110,7 @@ lightbox.on('change', () => {
         // 当前video播放
         const video = document.querySelector(`#lightbox-video-${currIndex}`)
         video && video.play()
-    }, 100)
+    }, 800)
 })
 lightbox.on('bindEvents', () => {
     console.log('bindEvents');
@@ -59,8 +138,16 @@ export function loadAndOpenImg (index, DataSource, isFromCache) {
         // 需要格式化数据
         newDataSource.forEach((item, index) => {
             const mimetype = item.mimetype
-            const { src, width, height } = item
-            if (mimetype && mimetype.indexOf('video') > -1) {
+            const { src, width, height, is360Panorama } = item
+            if (is360Panorama) {
+                const maxWidth = Math.round(width * 0.8)
+                const maxHeight = Math.round(height * 0.8)
+                newDataSource[index] = {
+                    html: `<div class="content-360panorama-body"><div class="content-360panorama-content" style="max-width:${maxWidth}px;max-height:${maxHeight}px;" id="lightbox-360panorama-${index}">加载中...</div></div>`,
+                    is360Panorama: true,
+                    imageSrc: src,
+                }
+            } else if (mimetype && mimetype.indexOf('video') > -1) {
                 newDataSource[index] = {
                     html: `<div class="previewer-video-body">
                     <video 
