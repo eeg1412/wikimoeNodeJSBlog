@@ -1124,7 +1124,7 @@ ins.adsbygoogle[data-ad-status='unfilled'] {
   margin-right: 12px;
   font-size: 16px;
   display: inline-block;
-  @apply text-primary-500;
+  @apply text-primary-500 hover:underline;
 }
 .content-360panorama-body {
   width: 100%;
