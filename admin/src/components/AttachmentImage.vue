@@ -12,6 +12,14 @@
         class="zoom-in"
       />
     </div>
+    <!-- 如果is360Panorama -->
+    <div
+      class="attachment-360-icon zoom-in"
+      v-if="item.is360Panorama"
+      @click="openPreviewer(item)"
+    >
+      360°
+    </div>
     <!-- 如果是视频 isVideo 中间显示播放图标 -->
     <div
       class="attachment-play-icon zoom-in"
@@ -177,13 +185,14 @@ export default {
 
     const openPreviewer = (item) => {
       const mimetype = item.mimetype
-      const { filepath, width, height } = item
+      const { filepath, width, height, is360Panorama } = item
       loadAndOpenImg(0, [
         {
-          src: `${siteUrl.value}${filepath}`,
+          src: `${filepath}`,
           width,
           height,
           mimetype,
+          is360Panorama,
         },
       ])
     }
