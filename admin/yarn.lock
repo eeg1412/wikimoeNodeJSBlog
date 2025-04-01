@@ -1153,6 +1153,13 @@
     "@nodelib/fs.scandir" "2.1.5"
     fastq "^1.6.0"
 
+"@photo-sphere-viewer/core@^5.12.1":
+  version "5.12.1"
+  resolved "https://registry.yarnpkg.com/@photo-sphere-viewer/core/-/core-5.12.1.tgz#62bffa90726b3280bbb5cdfcea4bf193b4e04487"
+  integrity sha512-aK+SueXdKOr5FQAMwjxswHaa2OZcpWi4tx5P4fjq1vWEDa8PtdaoSdQaAp3Csmthvd9DlfNDUb6c21fTudzM/w==
+  dependencies:
+    three "^0.173.0"
+
 "@polka/url@^1.0.0-next.20":
   version "1.0.0-next.23"
   resolved "https://registry.yarnpkg.com/@polka/url/-/url-1.0.0-next.23.tgz#498e41218ab3b6a1419c735e5c6ae2c5ed609b6c"
@@ -5933,6 +5940,11 @@ thread-loader@^3.0.0:
     loader-utils "^2.0.0"
     neo-async "^2.6.2"
     schema-utils "^3.0.0"
+
+three@^0.173.0:
+  version "0.173.0"
+  resolved "https://registry.yarnpkg.com/three/-/three-0.173.0.tgz#e82989961cd2db05768540458c81b29f565be921"
+  integrity sha512-AUwVmViIEUgBwxJJ7stnF0NkPpZxx1aZ6WiAbQ/Qq61h6I9UR4grXtZDmO8mnlaNORhHnIBlXJ1uBxILEKuVyw==
 
 thunky@^1.0.2:
   version "1.1.0"
