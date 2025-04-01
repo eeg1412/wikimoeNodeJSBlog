@@ -992,7 +992,7 @@ input[type='password'] {
 .login-usercover-image-item {
   width: 100px;
   height: 100px;
-  border: 1px solid #ccc;
+  border: 1px solid var(--el-border-color);
   color: #ccc;
   margin-right: 3px;
   margin-bottom: 3px;

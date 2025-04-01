@@ -191,7 +191,7 @@ export default {
 .avatar-uploader-click-tips {
   font-size: 12px;
   text-align: center;
-  border: 1px dashed #d9d9d9;
+  border: 1px dashed var(--el-border-color);
   cursor: pointer;
   line-height: 16px;
   padding: 10px 0;
