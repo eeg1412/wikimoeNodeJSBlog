@@ -412,7 +412,7 @@ export default {
     },
     is360Panorama: {
       type: Boolean,
-      default: false,
+      default: undefined,
     },
   },
   emits: [
