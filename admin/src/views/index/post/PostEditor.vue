@@ -61,6 +61,7 @@
                 />
                 <RichEditor5
                   v-model:content="form.content"
+                  :isPost="true"
                   v-else-if="postEditorVersion === 5"
                 />
               </el-tab-pane>

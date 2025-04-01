@@ -1105,6 +1105,10 @@ input[type='password'] {
   padding: 2px 4px;
   font-size: 12px;
 }
+.w-e-panorama360-img {
+  width: 100%;
+  height: auto;
+}
 .w-e-bar-item button[data-menu-key='insertImage'],
 .w-e-bar-item button[data-menu-key='uploadImage'],
 .w-e-bar-item button[data-menu-key='imageGroup'],

@@ -51,6 +51,10 @@ export default {
       type: String,
       default: '',
     },
+    isPost: {
+      type: Boolean,
+      default: false,
+    },
   },
   components: {
     Editor,
@@ -127,7 +131,11 @@ export default {
           title: '图片',
           iconSvg:
             '<svg viewBox="0 0 1024 1024"><path d="M959.877 128l0.123 0.123v767.775l-0.123 0.122H64.102l-0.122-0.122V128.123l0.122-0.123h895.775zM960 64H64C28.795 64 0 92.795 0 128v768c0 35.205 28.795 64 64 64h896c35.205 0 64-28.795 64-64V128c0-35.205-28.795-64-64-64zM832 288.01c0 53.023-42.988 96.01-96.01 96.01s-96.01-42.987-96.01-96.01S682.967 192 735.99 192 832 234.988 832 288.01zM896 832H128V704l224.01-384 256 320h64l224.01-192z"></path></svg>',
-          menuKeys: ['insertImage', 'uploadImage', 'imageGroup', 'panorama360'],
+          menuKeys: [
+            'insertImage',
+            'uploadImage',
+            ...(props.isPost ? ['imageGroup', 'panorama360'] : []),
+          ],
         },
         {
           key: 'group-video',
@@ -142,8 +150,7 @@ export default {
         '|',
         'undo',
         'redo',
-        '|',
-        'eventspan',
+        ...(props.isPost ? ['|', 'eventspan'] : []),
         '|',
         'fullScreen',
       ],
@@ -188,9 +195,13 @@ export default {
         video: {
           menuKeys: ['enter', 'editVideoSize'],
         },
-        eventspan: {
-          menuKeys: ['uneventspan', 'editeventspan'],
-        },
+        ...(props.isPost
+          ? {
+              eventspan: {
+                menuKeys: ['uneventspan', 'editeventspan'],
+              },
+            }
+          : {}),
       },
     }
 
@@ -385,10 +396,10 @@ export default {
         const editor = editorRef.value
         editor.restoreSelection()
         setTimeout(() => {
-          // 只取第一张图片
+          // 处理所有选中的图片
           if (attachments.length > 0) {
-            const item = attachments[0]
-            const panorama360Elem = {
+            // 创建每个全景图片的元素数组
+            const panoramaElems = attachments.map((item) => ({
               type: 'panorama360',
               src: item.thumfor
                 ? `${siteUrl.value + item.thumfor}?t=${getTime()}`
@@ -402,8 +413,20 @@ export default {
               dataHrefHeight: item.height || '',
               alt: item.description || item.filename || '360°全景图片',
               children: [{ text: '' }],
+            }))
+
+            // 插入所有全景图片元素，并在每个元素之间插入换行（除了最后一个元素）
+            for (let i = 0; i < panoramaElems.length; i++) {
+              SlateTransforms.insertNodes(editor, panoramaElems[i])
+
+              // 如果不是最后一个元素，插入换行
+              if (i < panoramaElems.length - 1) {
+                SlateTransforms.insertNodes(editor, {
+                  type: 'paragraph',
+                  children: [{ text: '' }],
+                })
+              }
             }
-            SlateTransforms.insertNodes(editor, [panorama360Elem])
           }
         }, 100)
       } else {
