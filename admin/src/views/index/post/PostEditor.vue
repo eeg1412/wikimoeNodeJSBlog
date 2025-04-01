@@ -1419,7 +1419,7 @@ export default {
 .post-cover-image-item {
   width: 100px;
   height: 100px;
-  border: 1px solid #ccc;
+  border: 1px solid var(--el-border-color);
   color: #ccc;
   margin-right: 3px;
   margin-bottom: 3px;
@@ -1463,7 +1463,7 @@ export default {
   z-index: 2;
 }
 .post-cover-image-item.type-add {
-  border: 1px dashed #ccc;
+  border: 1px dashed var(--el-border-color);
 }
 .old-content-body {
   border: 1px solid #dcdfe6;
