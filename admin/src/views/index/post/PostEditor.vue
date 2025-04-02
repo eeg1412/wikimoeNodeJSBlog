@@ -456,10 +456,12 @@
         <el-form-item>
           <el-button type="primary" @click="submit">提交</el-button>
           <div class="w_10 cGray666">
+            <!-- autoSaveError -->
+            <div v-if="autoSaveError" class="cRed">自动保存发生错误</div>
             <!-- autoSaveTimeDate -->
-            <span v-if="autoSaveTimeDate"
-              >{{ $formatDate(autoSaveTimeDate) }} 自动保存</span
-            >
+            <div v-else-if="autoSaveTimeDate">
+              {{ $formatDate(autoSaveTimeDate) }} 自动保存
+            </div>
           </div>
         </el-form-item>
       </el-form>
@@ -693,6 +695,10 @@ export default {
           // 旧文章采用v4富文本编辑器，新文章采用v5富文本编辑器
           postEditorVersion.value = res.data.data.editorVersion || 5
           form.id = res.data.data._id
+          // status 为0时 启动setAutoSaveTimer()
+          if (res.data.data.status === 0) {
+            setAutoSaveTimer()
+          }
         })
         .catch((err) => {
           console.error(err)
@@ -1156,12 +1162,12 @@ export default {
     ])
 
     // auto save
-    let autoSaveError = false
+    let autoSaveError = ref(false)
     const autoSaveTimeDate = ref(null)
 
     const autoSave = () => {
       // 如果是草稿状态，就自动保存
-      if (form.status === 0 && !autoSaveError) {
+      if (form.status === 0 && !autoSaveError.value) {
         const newForm = JSON.parse(JSON.stringify(form))
         newForm.isAutoSave = true
         authApi
@@ -1172,7 +1178,7 @@ export default {
             autoSaveTimeDate.value = new Date()
           })
           .catch(() => {
-            autoSaveError = true
+            autoSaveError.value = true
           })
       }
     }
@@ -1359,7 +1365,6 @@ export default {
     onMounted(() => {
       getPostDetail()
       getSortList()
-      setAutoSaveTimer()
       window.addEventListener('beforeunload', beforeUnloadEvent)
     })
     onUnmounted(() => {
@@ -1437,6 +1442,7 @@ export default {
       templateList,
 
       autoSaveTimeDate,
+      autoSaveError,
       // 升级编辑器版本
       oldPostEditorContent,
       updatePostEditorVersion,
