@@ -38,6 +38,15 @@ module.exports = async function (req, res, next) {
     })
     return
   }
+  // 如果isAutoSave为true，status只能为0
+  if (isAutoSave && status !== 0) {
+    res.status(400).json({
+      errors: [{
+        message: '只有草稿才能自动保存'
+      }]
+    })
+    return
+  }
   // 根据id查找文章
   // const post = await postUtils.findOne({ _id: id }).catch((err) => {
   //   return null
