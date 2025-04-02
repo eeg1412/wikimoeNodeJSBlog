@@ -427,7 +427,6 @@ module.exports = async function (req, res, next) {
       data: data
     })
     adminApiLog.info(`post update success`)
-    // 新旧status不一样，更新缓存
     if (!isAutoSave) {
       cacheDataUtils.getPostArchiveList()
       rssToolUtils.reflushRSS()
