@@ -104,6 +104,20 @@
             placeholder="请输入描述"
           ></el-input>
         </el-form-item>
+        <!-- 尺寸展示 -->
+        <el-form-item label="媒体尺寸">
+          <div class="attachment-image-size">
+            <!-- width x height -->
+            <span>{{ item.width }}px × {{ item.height }}px</span>
+          </div>
+        </el-form-item>
+        <!-- 文件大小 -->
+        <el-form-item label="文件大小">
+          <div class="attachment-image-size">
+            <!-- size -->
+            <span>{{ formatSize(item.filesize) }}</span>
+          </div>
+        </el-form-item>
       </el-form>
     </div>
     <template #footer>
@@ -176,6 +190,7 @@ export default {
       formName.name = props.item.name || ''
       formName.videoCover = props.item.thumfor || ''
       formName.description = props.item.description || ''
+      formName.is360Panorama = props.item.is360Panorama ? true : false
       showNameDialog.value = true
     }
 
@@ -210,6 +225,23 @@ export default {
     const selectCount = computed(() => {
       return props.selectIndex + 1
     })
+
+    const formatSize = (bytes) => {
+      if (!bytes || isNaN(bytes)) return '0 KB'
+
+      if (bytes < 1024) {
+        return bytes + ' B'
+      } else if (bytes < 1048576) {
+        // 1MB = 1024 * 1024
+        return (bytes / 1024).toFixed(3) + ' KB'
+      } else if (bytes < 1073741824) {
+        // 1GB = 1024 * 1024 * 1024
+        return (bytes / 1048576).toFixed(3) + ' MB'
+      } else {
+        return (bytes / 1073741824).toFixed(3) + ' GB'
+      }
+    }
+
     return {
       onSelectorClick,
       showNameDialog,
@@ -223,6 +255,7 @@ export default {
       isImage,
       setVideoCover,
       selectCount,
+      formatSize,
     }
   },
 }
