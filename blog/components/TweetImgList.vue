@@ -82,10 +82,10 @@
           class="absolute tweet-img-list-body-item-description flex"
           v-if="coverImages[0].description || coverImages[0].is360Panorama"
           v-show="videoPlayId !== coverImages[0]._id"
+          @click.stop="tryOpenHref(0)"
         >
           <div
             class="rounded px-1 py-0.5 bg-primary-500 text-white dark:text-gray-900 bg-opacity-80 text-xs flex align-middle justify-center pointer"
-            @click.stop="tryOpenHref(0)"
             :title="coverImages[0].description"
             v-if="coverImages[0].description"
           >
@@ -93,7 +93,6 @@
           </div>
           <div
             class="rounded px-1 py-0.5 bg-primary-500 text-white dark:text-gray-900 bg-opacity-80 text-xs flex align-middle justify-center pointer"
-            @click.stop="tryOpenHref(0)"
             v-if="coverImages[0].is360Panorama"
           >
             360°全景
@@ -191,10 +190,10 @@
                   :class="`absolute tweet-img-list-body-item-description flex index-${indexChild}`"
                   v-if="img.description || img.is360Panorama"
                   v-show="videoPlayId !== img._id"
+                  @click.stop="tryOpenHref(img.dataHrefIndex)"
                 >
                   <div
                     class="rounded px-1 py-0.5 bg-primary-500 text-white dark:text-gray-900 bg-opacity-80 text-xs flex align-middle justify-center pointer"
-                    @click.stop="tryOpenHref(img.dataHrefIndex)"
                     :title="img.description"
                     v-if="img.description"
                   >
@@ -202,7 +201,6 @@
                   </div>
                   <div
                     class="rounded px-1 py-0.5 bg-primary-500 text-white dark:text-gray-900 bg-opacity-80 text-xs flex align-middle justify-center pointer"
-                    @click.stop="tryOpenHref(img.dataHrefIndex)"
                     v-if="img.is360Panorama"
                   >
                     360°全景
@@ -284,10 +282,10 @@
                   :class="`absolute tweet-img-list-body-item-description flex index-${indexChild}`"
                   v-if="img.description || img.is360Panorama"
                   v-show="videoPlayId !== img._id"
+                  @click.stop="tryOpenHref(img.dataHrefIndex)"
                 >
                   <div
                     class="rounded px-1 py-0.5 bg-primary-500 text-white dark:text-gray-900 bg-opacity-80 text-xs flex align-middle justify-center pointer"
-                    @click.stop="tryOpenHref(img.dataHrefIndex)"
                     :title="img.description"
                     v-if="img.description"
                   >
@@ -295,7 +293,6 @@
                   </div>
                   <div
                     class="rounded px-1 py-0.5 bg-primary-500 text-white dark:text-gray-900 bg-opacity-80 text-xs flex align-middle justify-center pointer"
-                    @click.stop="tryOpenHref(img.dataHrefIndex)"
                     v-if="img.is360Panorama"
                   >
                     360°全景
