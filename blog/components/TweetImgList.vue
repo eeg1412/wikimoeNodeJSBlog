@@ -84,7 +84,7 @@
           v-show="videoPlayId !== coverImages[0]._id"
         >
           <div
-            class="rounded px-1 py-0.5 bg-primary-500 text-white dark:text-gray-900 bg-opacity-80 text-xs flex align-middle justify-center pointer mr-1"
+            class="rounded px-1 py-0.5 bg-primary-500 text-white dark:text-gray-900 bg-opacity-80 text-xs flex align-middle justify-center pointer"
             @click.stop="tryOpenHref(0)"
             :title="coverImages[0].description"
             v-if="coverImages[0].description"
@@ -92,7 +92,7 @@
             描述
           </div>
           <div
-            class="rounded px-1 py-0.5 bg-primary-500 text-white dark:text-gray-900 bg-opacity-80 text-xs flex align-middle justify-center pointer mr-1"
+            class="rounded px-1 py-0.5 bg-primary-500 text-white dark:text-gray-900 bg-opacity-80 text-xs flex align-middle justify-center pointer"
             @click.stop="tryOpenHref(0)"
             v-if="coverImages[0].is360Panorama"
           >
@@ -193,7 +193,7 @@
                   v-show="videoPlayId !== img._id"
                 >
                   <div
-                    class="rounded px-1 py-0.5 bg-primary-500 text-white dark:text-gray-900 bg-opacity-80 text-xs flex align-middle justify-center pointer mr-1"
+                    class="rounded px-1 py-0.5 bg-primary-500 text-white dark:text-gray-900 bg-opacity-80 text-xs flex align-middle justify-center pointer"
                     @click.stop="tryOpenHref(img.dataHrefIndex)"
                     :title="img.description"
                     v-if="img.description"
@@ -201,7 +201,7 @@
                     描述
                   </div>
                   <div
-                    class="rounded px-1 py-0.5 bg-primary-500 text-white dark:text-gray-900 bg-opacity-80 text-xs flex align-middle justify-center pointer mr-1"
+                    class="rounded px-1 py-0.5 bg-primary-500 text-white dark:text-gray-900 bg-opacity-80 text-xs flex align-middle justify-center pointer"
                     @click.stop="tryOpenHref(img.dataHrefIndex)"
                     v-if="img.is360Panorama"
                   >
@@ -286,7 +286,7 @@
                   v-show="videoPlayId !== img._id"
                 >
                   <div
-                    class="rounded px-1 py-0.5 bg-primary-500 text-white dark:text-gray-900 bg-opacity-80 text-xs flex align-middle justify-center pointer mr-1"
+                    class="rounded px-1 py-0.5 bg-primary-500 text-white dark:text-gray-900 bg-opacity-80 text-xs flex align-middle justify-center pointer"
                     @click.stop="tryOpenHref(img.dataHrefIndex)"
                     :title="img.description"
                     v-if="img.description"
@@ -294,7 +294,7 @@
                     描述
                   </div>
                   <div
-                    class="rounded px-1 py-0.5 bg-primary-500 text-white dark:text-gray-900 bg-opacity-80 text-xs flex align-middle justify-center pointer mr-1"
+                    class="rounded px-1 py-0.5 bg-primary-500 text-white dark:text-gray-900 bg-opacity-80 text-xs flex align-middle justify-center pointer"
                     @click.stop="tryOpenHref(img.dataHrefIndex)"
                     v-if="img.is360Panorama"
                   >
@@ -549,6 +549,9 @@ onUnmounted(() => {})
   z-index: 11;
   left: 13px;
   top: 10px;
+  max-width: calc(100% - 248px);
+  flex-wrap: wrap;
+  gap: 0.25rem;
 }
 .blog-tweet-img-list-body.cover-count-1-1 {
   /* 宽高跟着内容走 */
