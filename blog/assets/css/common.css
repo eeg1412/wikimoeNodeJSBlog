@@ -929,6 +929,37 @@ ins.adsbygoogle[data-ad-status='unfilled'] {
 .photo-swipe-photo-swipe .pswp__button--arrow--prev {
   z-index: 9 !important;
 }
+.photo-swipe-photo-swipe .pswp__button--arrow {
+  width: 46px;
+  height: 46px;
+  margin-top: -23px;
+}
+.photo-swipe-photo-swipe .pswp__button--arrow .pswp__icn {
+  width: 46px;
+}
+.photo-swipe-photo-swipe .pswp__button--arrow--next {
+  right: 0px;
+}
+.photo-swipe-photo-swipe .pswp__button--arrow--next .pswp__icn {
+  right: 10px;
+}
+.photo-swipe-photo-swipe .pswp__button--arrow--prev .pswp__icn {
+  left: 10px;
+}
+.photo-swipe-photo-swipe .pswp__button--arrow--prev {
+  left: 0px;
+}
+.photo-swipe-photo-swipe.pswp--touch .pswp__button--arrow {
+  visibility: visible;
+}
+.photo-swipe-photo-swipe.pswp--touch .pswp__button--arrow {
+  opacity: 0.85;
+  transition: none;
+}
+.photo-swipe-photo-swipe.pswp--touch .pswp__button--arrow:hover {
+  opacity: 1;
+}
+
 .content-h-139 {
   height: 139px;
 }
