@@ -549,6 +549,7 @@ onUnmounted(() => {})
   max-width: calc(100% - 248px);
   flex-wrap: wrap;
   gap: 0.25rem;
+  cursor: zoom-in;
 }
 .blog-tweet-img-list-body.cover-count-1-1 {
   /* 宽高跟着内容走 */
@@ -692,6 +693,8 @@ onUnmounted(() => {})
   padding: 2px 10px !important;
   border-radius: 22px !important;
   font-size: 12px !important;
+  /* 穿透 */
+  pointer-events: none;
 }
 .blog-tweet-img-list-body .blog-tweet-1img-list-body {
   width: 100%;
