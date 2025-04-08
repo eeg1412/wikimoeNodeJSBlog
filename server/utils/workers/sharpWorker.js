@@ -6,6 +6,7 @@ sharp.cache(false)
 const action = {
   imageCompress: async (toExtname, fileData, animated = false, newWidth, newHeight, imgSettingCompressQuality, filePath) => {
     let imageData = sharp(fileData, {
+      failOn: 'error',
       animated,
     }).rotate()
     if (newWidth && newHeight) {
