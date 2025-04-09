@@ -1039,7 +1039,6 @@ export default {
       toAlbumId,
       changeAttachmentsAlbum,
       toChangeAttachmentsAlbum,
-      clearSelectedImageList,
       selectAttachmentsOk,
       handlePaste,
       onDialogClosed,
