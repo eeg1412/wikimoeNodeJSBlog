@@ -431,6 +431,12 @@ export default {
     const albumId = ref('')
     const open = async () => {
       attachmentList.value = []
+
+      // 重置options
+      options.noCompress = false
+      options.noThumbnail = false
+      options.imgSettingCompressMaxSize = null
+
       albumId.value = props.albumIdProp
       if (props.is360Panorama) {
         options.is360Panorama = true
