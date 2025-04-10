@@ -38,6 +38,7 @@ import {
   onMounted,
   computed,
   watch,
+  nextTick,
 } from 'vue'
 import { Editor, Toolbar } from '@wangeditor/editor-for-vue'
 import AttachmentsDialog from '@/components/AttachmentsDialog'
@@ -347,7 +348,9 @@ export default {
         }
       }
       insertFnIs360Panorama.value = insertFnIs360Panorama_
-      attachmentsDialogRef.value.open()
+      nextTick(() => {
+        attachmentsDialogRef.value.open()
+      })
     }
 
     const siteUrl = computed(() => {
