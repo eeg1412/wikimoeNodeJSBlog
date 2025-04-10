@@ -652,6 +652,7 @@ const initLightbox = async () => {
             defaultZoomLvl: 40,
             maxFov: 130,
             lang: panoramaLang,
+            moveSpeed: 2,
             // 设置鱼眼默认为0
             fisheye: 0,
           })
