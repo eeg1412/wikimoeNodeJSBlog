@@ -672,7 +672,13 @@ const initLightbox = async () => {
           viewer.addEventListener(
             'ready',
             () => {
-              is360PanoramaActive.value = true
+              const currIndexNow = lightbox?.pswp?.currIndex
+              if (currIndexNow === currIndex) {
+                is360PanoramaActive.value = true
+              } else {
+                console.log('currIndexNow not both', currIndexNow, currIndex)
+                clearPanoramaListMap()
+              }
             },
             { once: true }
           )
