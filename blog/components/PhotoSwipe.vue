@@ -304,8 +304,19 @@ const toggleFisheye = () => {
   const viewer = panoramaListMap[currIndex]
 
   if (viewer) {
+    console.log(viewer.getZoomLevel())
     fisheyeMode.value = !fisheyeMode.value
-    viewer.setOption('fisheye', fisheyeMode.value ? 2 : 0)
+    viewer.setOptions({
+      fisheye: fisheyeMode.value ? 2 : 0,
+      maxFov: fisheyeMode.value ? 130 : 100,
+    })
+    // 如果fisheyeMode为false，且视角大于100，重置视角为100
+    if (!fisheyeMode.value) {
+      const currentFov = viewer.getZoomLevel()
+      if (currentFov <= 0) {
+        viewer.zoom(10)
+      }
+    }
   }
 }
 
@@ -649,8 +660,8 @@ const initLightbox = async () => {
             container: container,
             panorama: data?.imageSrc,
             navbar: false,
-            defaultZoomLvl: 40,
-            maxFov: 130,
+            defaultZoomLvl: 10,
+            maxFov: 100,
             lang: panoramaLang,
             moveSpeed: 2,
             // 设置鱼眼默认为0
