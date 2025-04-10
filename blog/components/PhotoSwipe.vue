@@ -30,7 +30,7 @@
     v-if="showUI && attachmentList.length > 1"
   >
     <UPopover :popper="{ arrow: true, offsetDistance: 0 }">
-      <div class="photo-swipe-photo-swipe-btn">
+      <div class="photo-swipe-photo-swipe-btn" title="浏览所有媒体">
         <UIcon name="i-heroicons-photo-solid" />
       </div>
       <template #panel="{ close }">
@@ -107,6 +107,101 @@
       </template>
     </UPopover>
   </Teleport>
+
+  <!-- 360全景截图按钮 -->
+  <Teleport
+    :to="`#photo-swipe-screenshot-${componentId}`"
+    v-if="showUI && is360PanoramaActive"
+  >
+    <div class="photo-swipe-photo-swipe-btn" @click="takeScreenshot">
+      <UIcon name="i-heroicons-camera-solid" />
+    </div>
+  </Teleport>
+
+  <!-- 360全景鱼眼切换按钮 -->
+  <Teleport
+    :to="`#photo-swipe-fisheye-${componentId}`"
+    v-if="showUI && is360PanoramaActive"
+  >
+    <div class="photo-swipe-photo-swipe-btn" @click="toggleFisheye">
+      <div v-if="fisheyeMode" class="fisheye-icon fisheye-on">
+        <svg
+          width="24"
+          height="24"
+          viewBox="0 0 24 24"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <!-- 外圈 -->
+          <circle
+            cx="12"
+            cy="12"
+            r="10.5"
+            stroke="currentColor"
+            stroke-width="2"
+            fill="none"
+          />
+          <!-- 使用mask实现高光效果 -->
+          <mask id="lensMask">
+            <rect width="24" height="24" fill="white" />
+            <circle cx="14" cy="9.5" r="1.8" fill="black" />
+          </mask>
+          <!-- 实心圆形镜头（右上方单个高光） -->
+          <circle
+            cx="12"
+            cy="12"
+            r="7"
+            fill="currentColor"
+            mask="url(#lensMask)"
+          />
+        </svg>
+      </div>
+      <div v-else class="fisheye-icon fisheye-off">
+        <svg
+          width="24"
+          height="24"
+          viewBox="0 0 24 24"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <!-- 外圈(胖方形带圆角) -->
+          <rect
+            x="1.5"
+            y="1.5"
+            width="21"
+            height="21"
+            rx="6"
+            ry="6"
+            stroke="currentColor"
+            stroke-width="2"
+            fill="none"
+          />
+          <!-- 使用mask实现方形镜头高光效果 -->
+          <mask id="squareLensMask">
+            <rect width="24" height="24" fill="white" />
+            <circle cx="14" cy="9.5" r="1.8" fill="black" />
+          </mask>
+          <!-- 实心圆角方形镜头(不贴边，右上方单个高光) -->
+          <path
+            d="M6,8.5 
+            a2.5,2.5 0 0,1 2.5,-2.5
+            h7
+            a2.5,2.5 0 0,1 2.5,2.5
+            v7
+            a2.5,2.5 0 0,1 -2.5,2.5
+            h-7
+            a2.5,2.5 0 0,1 -2.5,-2.5
+            z"
+            fill="currentColor"
+            fill-rule="evenodd"
+            clip-rule="evenodd"
+            mask="url(#squareLensMask)"
+          />
+        </svg>
+      </div>
+    </div>
+  </Teleport>
+
   <!-- <Teleport :to="`#photo-swipe-loading-${componentId}`" v-if="showUI">
       <div>
         <DivLoading class="photo-swipe-load-body" :loading="loading" />
@@ -147,6 +242,71 @@ const panoramaLang = {
   ctrlZoom: '使用Ctrl+滚轮缩放图片',
   loadError: '全景图无法加载',
   webglError: '您的浏览器似乎不支持WebGL',
+}
+
+const is360PanoramaActive = ref(false)
+// watch is360PanoramaActive
+watch(is360PanoramaActive, () => {
+  check360Btn()
+})
+const check360Btn = () => {
+  const btnFishEyeEl = document.querySelector(
+    `.pswp__button--photo-swipe-fisheye-button-${componentId}`
+  )
+  const btnScreenshotEl = document.querySelector(
+    `.pswp__button--photo-swipe-screenshot-button-${componentId}`
+  )
+  if (is360PanoramaActive.value) {
+    if (btnFishEyeEl) {
+      btnFishEyeEl.style.display = 'block'
+    }
+    if (btnScreenshotEl) {
+      btnScreenshotEl.style.display = 'block'
+    }
+  } else {
+    if (btnFishEyeEl) {
+      btnFishEyeEl.style.display = 'none'
+    }
+    if (btnScreenshotEl) {
+      btnScreenshotEl.style.display = 'none'
+    }
+  }
+}
+const fisheyeMode = ref(false)
+
+// 截图功能
+const takeScreenshot = () => {
+  const currIndex = lightbox.pswp.currIndex
+  const viewer = panoramaListMap[currIndex]
+
+  if (viewer) {
+    try {
+      viewer.addEventListener(
+        'render',
+        () => {
+          const link = document.createElement('a')
+          link.download = 'screenshot.png'
+          link.href = viewer.renderer.renderer.domElement.toDataURL()
+          link.click()
+        },
+        { once: true }
+      )
+      viewer.needsUpdate()
+    } catch (error) {
+      console.error('截图失败:', error)
+    }
+  }
+}
+
+// 切换鱼眼模式
+const toggleFisheye = () => {
+  const currIndex = lightbox.pswp.currIndex
+  const viewer = panoramaListMap[currIndex]
+
+  if (viewer) {
+    fisheyeMode.value = !fisheyeMode.value
+    viewer.setOption('fisheye', fisheyeMode.value ? 2 : 0)
+  }
 }
 
 let isAllPreventDefault = false
@@ -353,8 +513,8 @@ const open = async (list = [], showIndex = 0, closeCallback_) => {
       }
     }
     if (is360Panorama && mimetype.indexOf('image') > -1) {
-      const maxWidth = Math.round(width * 0.8)
-      const maxHeight = Math.round(height * 0.8)
+      const maxWidth = Math.round(width * 0.6)
+      const maxHeight = Math.round(height * 0.6)
       return {
         html: `<div class="content-360panorama-body"><div class="content-360panorama-content" style="max-width:${maxWidth}px;max-height:${maxHeight}px;" id="lightbox-360panorama-${index}">加载中...</div></div>`,
         is360Panorama: true,
@@ -413,6 +573,10 @@ const initLightbox = async () => {
     padding: { top: 65, bottom: 30, left: 0, right: 0 },
     secondaryZoomLevel: 1,
     returnFocus: false,
+    closeTitle: '关闭', // TODO strings from text properties
+    zoomTitle: '缩放',
+    arrowPrevTitle: '上一张',
+    arrowNextTitle: '下一张',
   })
   lightbox.init()
   lightbox.on('close', () => {
@@ -458,8 +622,13 @@ const initLightbox = async () => {
     // 360全景图
     // 遍历panoramaListMap，销毁所有的viewer实例
     clearPanoramaListMap()
+
+    // 重置鱼眼模式
+    fisheyeMode.value = false
+
     let image360PanoramaTimer = null
     const is360Panorama = data?.is360Panorama
+    is360PanoramaActive.value = false
     if (is360Panorama === true) {
       // isAllPreventDefault = true
       if (image360PanoramaTimer) {
@@ -480,10 +649,21 @@ const initLightbox = async () => {
             container: container,
             panorama: data?.imageSrc,
             navbar: false,
-            defaultZoomLvl: 10,
+            defaultZoomLvl: 40,
+            maxFov: 130,
             lang: panoramaLang,
+            // 设置鱼眼默认为0
+            fisheye: 0,
           })
           panoramaListMap[currIndex] = viewer
+          // 更新是否为360全景的状态
+          viewer.addEventListener(
+            'ready',
+            () => {
+              is360PanoramaActive.value = true
+            },
+            { once: true }
+          )
         },
         firstFlag ? 800 : 100
       )
@@ -517,6 +697,7 @@ const initLightbox = async () => {
     // photoswipe measures size of various elements
     // if you need to read getBoundingClientRect of something - do it here
     showUI.value = true
+    check360Btn()
     photoswipeInitialLayoutPromiseResolve()
     console.log(lightbox.pswp.on)
   })
@@ -532,8 +713,26 @@ const initLightbox = async () => {
         console.log(el)
       },
     })
+    // 注册360度全景截图按钮
+    lightbox.pswp.ui.registerElement({
+      name: `photo-swipe-screenshot-button-${componentId}`,
+      title: '截图',
+      order: 9,
+      isButton: true,
+      html: `<div id="photo-swipe-screenshot-${componentId}"></div>`,
+    })
+
+    // 注册360度全景鱼眼切换按钮
+    lightbox.pswp.ui.registerElement({
+      name: `photo-swipe-fisheye-button-${componentId}`,
+      title: '切换镜头模式',
+      order: 9,
+      isButton: true,
+      html: `<div id="photo-swipe-fisheye-${componentId}"></div>`,
+    })
     lightbox.pswp.ui.registerElement({
       name: `photo-swipe-caption-button-${componentId}`,
+      title: '描述开关',
       order: 9,
       isButton: true,
       html: `<div id="photo-swipe-caption-${componentId}"></div>`,
