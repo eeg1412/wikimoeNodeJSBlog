@@ -296,7 +296,9 @@ const takeScreenshot = () => {
         'render',
         () => {
           const link = document.createElement('a')
-          link.download = 'screenshot.png'
+          const now = new Date()
+          const yyyymmddhhmmss = formatDate(now, 'YYYYMMDDHHmmss')
+          link.download = `screenshot-${yyyymmddhhmmss}.png`
           link.href = viewer.renderer.renderer.domElement.toDataURL()
           link.click()
         },
