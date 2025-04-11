@@ -131,7 +131,7 @@ module.exports = async function (req, res, next) {
     if (logData > 0) {
       res.status(400).json({
         errors: [{
-          message: '已经投过票，请勿重复投票'
+          message: '已经投过票或者同IP已经投过票，无法重复投票'
         }]
       })
       return
