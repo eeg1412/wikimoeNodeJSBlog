@@ -126,77 +126,77 @@
     <div class="photo-swipe-photo-swipe-btn" @click="toggleFisheye">
       <div v-if="fisheyeMode" class="fisheye-icon fisheye-on">
         <svg
-          width="24"
-          height="24"
-          viewBox="0 0 24 24"
+          width="23"
+          height="23"
+          viewBox="0 0 23 23"
           fill="none"
           xmlns="http://www.w3.org/2000/svg"
         >
           <!-- 外圈 -->
           <circle
-            cx="12"
-            cy="12"
-            r="10.5"
+            cx="11.5"
+            cy="11.5"
+            r="10"
             stroke="currentColor"
             stroke-width="2"
             fill="none"
           />
           <!-- 使用mask实现高光效果 -->
-          <mask id="lensMask">
-            <rect width="24" height="24" fill="white" />
+          <mask :id="`lensMask-${componentId}`">
+            <rect width="23" height="23" fill="white" />
             <circle cx="14" cy="9.5" r="1.8" fill="black" />
           </mask>
           <!-- 实心圆形镜头（右上方单个高光） -->
           <circle
-            cx="12"
-            cy="12"
-            r="7"
+            cx="11.5"
+            cy="11.5"
+            r="7.5"
             fill="currentColor"
-            mask="url(#lensMask)"
+            :mask="`url(#lensMask-${componentId})`"
           />
         </svg>
       </div>
       <div v-else class="fisheye-icon fisheye-off">
         <svg
-          width="24"
-          height="24"
-          viewBox="0 0 24 24"
+          width="23"
+          height="23"
+          viewBox="0 0 23 23"
           fill="none"
           xmlns="http://www.w3.org/2000/svg"
         >
-          <!-- 外圈(胖方形带圆角) -->
-          <rect
-            x="1.5"
-            y="1.5"
-            width="21"
-            height="21"
-            rx="6"
-            ry="6"
+          <path
+            d="M1.5,7.5 
+              Q1,3.5 5.5,3.5
+              H17.5
+              Q22,3.5 21.5,7.5
+              V15.5
+              Q22,19.5 17.5,19.5
+              H5.5
+              Q1,19.5 1.5,15.5
+              Z"
             stroke="currentColor"
             stroke-width="2"
             fill="none"
-          />
-          <!-- 使用mask实现方形镜头高光效果 -->
-          <mask id="squareLensMask">
-            <rect width="24" height="24" fill="white" />
-            <circle cx="14" cy="9.5" r="1.8" fill="black" />
+          ></path>
+          <mask :id="`squareLensMask-${componentId}`">
+            <rect width="23" height="23" fill="white"></rect>
+            <circle cx="14" cy="9.5" r="1.8" fill="black"></circle>
           </mask>
-          <!-- 实心圆角方形镜头(不贴边，右上方单个高光) -->
           <path
-            d="M6,8.5 
-            a2.5,2.5 0 0,1 2.5,-2.5
-            h7
-            a2.5,2.5 0 0,1 2.5,2.5
-            v7
-            a2.5,2.5 0 0,1 -2.5,2.5
-            h-7
-            a2.5,2.5 0 0,1 -2.5,-2.5
-            z"
+            d="M4.0,8.0 
+              Q4.0,6.0 6.0,6.0
+              H17.0
+              Q19.0,6.0 19.0,8.0
+              V15.0
+              Q19.0,17.0 17.0,17.0
+              H6.0
+              Q4.0,17.0 4.0,15.0
+              Z"
             fill="currentColor"
             fill-rule="evenodd"
             clip-rule="evenodd"
-            mask="url(#squareLensMask)"
-          />
+            :mask="`url(#squareLensMask-${componentId})`"
+          ></path>
         </svg>
       </div>
     </div>
