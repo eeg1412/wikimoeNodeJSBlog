@@ -224,6 +224,15 @@ const clearPanoramaListMap = () => {
     }
   }
 }
+const clearPanoramaListMapByKey = (key) => {
+  if (panoramaListMap[key]) {
+    panoramaListMap[key].destroy()
+    delete panoramaListMap[key]
+    console.log('destroy', key, panoramaListMap)
+  } else {
+    console.warn('not found', key, panoramaListMap)
+  }
+}
 const panoramaLang = {
   zoom: '缩放',
   zoomOut: '缩小',
@@ -677,7 +686,7 @@ const initLightbox = async () => {
                 is360PanoramaActive.value = true
               } else {
                 console.log('currIndexNow not both', currIndexNow, currIndex)
-                clearPanoramaListMap()
+                clearPanoramaListMapByKey(currIndex)
               }
             },
             { once: true }
