@@ -1181,6 +1181,10 @@ ins.adsbygoogle[data-ad-status='unfilled'] {
   filter: drop-shadow(0px 0px 2px #000);
 }
 
+.psv-overlay-image svg {
+  display: inline-block;
+}
+
 /* 富文本 */
 .html-content-body img {
   @apply cursor-pointer;
