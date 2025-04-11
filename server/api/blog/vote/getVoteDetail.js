@@ -51,7 +51,22 @@ module.exports = async function (req, res, next) {
       { ip },
     ],
   }
-  const logData = await votelogUtils.findOne(logParams, '_id options uuid ip', { lean: true })
+  const logDataList = await votelogUtils.findPage(logParams, {
+    _id: -1,
+  }, 1, 5, '_id options uuid ip', { lean: true })
+
+  let logData = null;
+
+  if (logDataList.list && logDataList.list.length > 0) {
+    // 按优先级查找匹配记录
+    const uuidMatch = logDataList.list.find(item => item.uuid === uuid);
+    if (uuidMatch) {
+      logData = uuidMatch;
+    } else {
+      logData = logDataList.list[0];
+    }
+  }
+
   const showResultAfter = voteData.showResultAfter
   const endTime = voteData.endTime
   // 是否过期
