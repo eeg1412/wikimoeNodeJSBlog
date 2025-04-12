@@ -17,10 +17,17 @@
 ![image](https://github.com/user-attachments/assets/78cc341f-4a69-4a79-8318-66153415818b)
 ![image](https://github.com/user-attachments/assets/78e604ac-d6b7-4a8c-9a2c-010328f759a0)
 ![image](https://github.com/user-attachments/assets/3b1a311b-69a9-4c76-bd0c-28a4530ed86e)
+![image](https://github.com/user-attachments/assets/06d6f36d-2e44-455b-8e8b-4cc9e53f37fa)
 
 ### 管理与分享自己的日程
 
 ![image](https://github.com/user-attachments/assets/701ed64f-4e96-44b0-a0b7-57475f52501c)
+
+### 深色主题
+![image](https://github.com/user-attachments/assets/b29f821a-1446-4380-8913-23c0e879a4c5)
+
+### 360°全景
+![image](https://github.com/user-attachments/assets/bbb6a001-8e80-4f21-b194-d66575ecab27)
 
 ## 当前已知问题
 
