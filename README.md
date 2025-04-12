@@ -23,10 +23,10 @@
 
 ![image](https://github.com/user-attachments/assets/701ed64f-4e96-44b0-a0b7-57475f52501c)
 
-### 深色主题
+### 支持深色主题切换
 ![image](https://github.com/user-attachments/assets/b29f821a-1446-4380-8913-23c0e879a4c5)
 
-### 360°全景
+### 支持360°全景照片
 ![image](https://github.com/user-attachments/assets/bbb6a001-8e80-4f21-b194-d66575ecab27)
 
 ## 当前已知问题
