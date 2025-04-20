@@ -952,11 +952,12 @@ ins.adsbygoogle[data-ad-status='unfilled'] {
 .photo-swipe-photo-swipe.pswp--touch .pswp__button--arrow {
   visibility: visible;
 }
-.photo-swipe-photo-swipe .pswp__button.pswp__button--arrow {
+.photo-swipe-photo-swipe.pswp--ui-visible .pswp__button.pswp__button--arrow {
   opacity: 0.85;
   transition: none;
 }
-.photo-swipe-photo-swipe .pswp__button.pswp__button--arrow:hover {
+.photo-swipe-photo-swipe.pswp--ui-visible
+  .pswp__button.pswp__button--arrow:hover {
   opacity: 1;
 }
 
