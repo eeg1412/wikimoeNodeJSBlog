@@ -961,6 +961,9 @@ ins.adsbygoogle[data-ad-status='unfilled'] {
   opacity: 1;
 }
 
+.pswp:not(.pswp--ui-visible) .pswp__button {
+  opacity: 0 !important;
+}
 .content-h-139 {
   height: 139px;
 }

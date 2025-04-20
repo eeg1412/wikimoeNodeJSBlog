@@ -466,16 +466,46 @@ const open = async (list = [], showIndex = 0, closeCallback_) => {
   lightbox.addFilter('numItems', (numItems) => {
     return attachmentList.value.length
   })
-  lightbox.on('pointerDown', (e) => {
-    // console.log(e)
-    const target = e.originalEvent.target
-    // 如果是video元素或者canvas元素，阻止事件冒泡
-    if (
+
+  let moveFlag = false
+  const shouldPreventDefault = (target) => {
+    return (
       isAllPreventDefault ||
       target.tagName === 'VIDEO' ||
       target.tagName === 'CANVAS'
-    ) {
+    )
+  }
+  lightbox.on('pointerDown', (e) => {
+    const target = e.originalEvent.target
+    moveFlag = false
+    if (shouldPreventDefault(target)) {
+      console.log('pointerDown')
+    }
+  })
+
+  lightbox.on('pointerMove', (e) => {
+    const target = e.originalEvent.target
+    moveFlag = true
+    if (shouldPreventDefault(target)) {
+      console.log('pointerMove')
       e.preventDefault()
+    }
+  })
+
+  lightbox.on('pointerUp', (e) => {
+    const target = e.originalEvent.target
+    if (shouldPreventDefault(target)) {
+      console.log('pointerUp')
+      e.preventDefault()
+      if (lightbox && lightbox.pswp && !moveFlag) {
+        const pswpElement = lightbox.pswp.element
+
+        if (pswpElement.classList.contains('pswp--ui-visible')) {
+          pswpElement.classList.remove('pswp--ui-visible')
+        } else {
+          pswpElement.classList.add('pswp--ui-visible')
+        }
+      }
     }
   })
   lightbox.addFilter('contentErrorElement', (contentErrorElement, content) => {
@@ -603,6 +633,7 @@ const initLightbox = async () => {
     arrowNextTitle: '下一张',
   })
   lightbox.init()
+  // window.lightbox = lightbox
   lightbox.on('close', () => {
     clearPanoramaListMap()
     photoswipeInitialLayoutPromiseResolve = null
