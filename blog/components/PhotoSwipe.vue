@@ -467,7 +467,6 @@ const open = async (list = [], showIndex = 0, closeCallback_) => {
     return attachmentList.value.length
   })
 
-  let moveFlag = false
   const shouldPreventDefault = (target) => {
     return (
       isAllPreventDefault ||
@@ -476,38 +475,14 @@ const open = async (list = [], showIndex = 0, closeCallback_) => {
     )
   }
   lightbox.on('pointerDown', (e) => {
+    // console.log(e)
     const target = e.originalEvent.target
-    moveFlag = false
+    // 如果是video元素或者canvas元素，阻止事件冒泡
     if (shouldPreventDefault(target)) {
-      console.log('pointerDown')
-    }
-  })
-
-  lightbox.on('pointerMove', (e) => {
-    const target = e.originalEvent.target
-    moveFlag = true
-    if (shouldPreventDefault(target)) {
-      console.log('pointerMove')
       e.preventDefault()
     }
   })
 
-  lightbox.on('pointerUp', (e) => {
-    const target = e.originalEvent.target
-    if (shouldPreventDefault(target)) {
-      console.log('pointerUp')
-      e.preventDefault()
-      if (lightbox && lightbox.pswp && !moveFlag) {
-        const pswpElement = lightbox.pswp.element
-
-        if (pswpElement.classList.contains('pswp--ui-visible')) {
-          pswpElement.classList.remove('pswp--ui-visible')
-        } else {
-          pswpElement.classList.add('pswp--ui-visible')
-        }
-      }
-    }
-  })
   lightbox.addFilter('contentErrorElement', (contentErrorElement, content) => {
     const el = document.createElement('div')
     el.className = 'pswp__error-msg'
@@ -657,6 +632,13 @@ const initLightbox = async () => {
   })
   lightbox.on('change', () => {
     console.log('change')
+    if (lightbox && lightbox.pswp) {
+      const pswpElement = lightbox.pswp.element
+
+      if (!pswpElement.classList.contains('pswp--ui-visible')) {
+        pswpElement.classList.add('pswp--ui-visible')
+      }
+    }
     isAllPreventDefault = false
     if (refreshSlideContentChange) {
       refreshSlideContentChange = false
