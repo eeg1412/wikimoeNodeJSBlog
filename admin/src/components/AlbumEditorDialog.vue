@@ -18,6 +18,12 @@
         <el-form-item label="相册名称" prop="name">
           <el-input v-model="form.name" placeholder="请输入相册名称"></el-input>
         </el-form-item>
+        <el-form-item>
+          <!-- 这里插入功能性按钮 -->
+          <el-button @click="fillCurrentDate" type="primary" size="small"
+            >填入当前日期</el-button
+          >
+        </el-form-item>
       </el-form>
     </div>
     <template #footer>
@@ -60,6 +66,16 @@ export default {
       name: [{ required: true, message: '请输入相册名称', trigger: 'blur' }],
     })
     const formRef = ref(null)
+
+    // 填入当前日期的方法
+    const fillCurrentDate = () => {
+      const today = new Date()
+      const year = today.getFullYear()
+      const month = String(today.getMonth() + 1).padStart(2, '0')
+      const day = String(today.getDate()).padStart(2, '0')
+      form.name = `${year}-${month}-${day}`
+    }
+
     const submit = () => {
       formRef.value.validate(async (valid) => {
         if (!valid) {
@@ -126,6 +142,7 @@ export default {
       formRef,
       submit,
       resetData,
+      fillCurrentDate,
     }
   },
 }
