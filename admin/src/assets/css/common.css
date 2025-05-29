@@ -1158,6 +1158,16 @@ input[type='password'] {
   filter: drop-shadow(0px 0px 2px #000);
 }
 
+.show-data-area {
+  background-color: #f8f8f8;
+  width: 100%;
+  height: 200px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 10px;
+}
+
 /* 深色模式适配 */
 html.dark {
   --w-e-textarea-bg-color: #1e1e1e;
@@ -1208,6 +1218,9 @@ html.dark .w-e-text-container pre > code {
 }
 html.config-border-item {
   border: 1px solid var(--el-border-color);
+}
+html.dark .show-data-area {
+  background-color: #1d1d1d;
 }
 @media (max-width: 767px) {
   html.dark .common-aside {

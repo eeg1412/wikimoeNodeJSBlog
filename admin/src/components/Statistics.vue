@@ -23,6 +23,10 @@
         />
       </div>
     </div>
+    <!-- showData 按钮展示 -->
+    <div class="show-data-area" v-if="!showData">
+      <el-button type="primary" @click="tryShowData" text> 显示数据 </el-button>
+    </div>
     <el-row v-if="rankData">
       <!-- 文章阅读 rankData.readPostViewData -->
       <el-col :span="8" :xs="24" class="p10">
@@ -369,6 +373,7 @@ export default {
             readPostListKeywordPagination.currentPage = 1
           }
           rankData.value = res.data
+          showData.value = true
         })
     }
 
@@ -510,8 +515,13 @@ export default {
       return []
     })
 
-    onMounted(() => {
+    const showData = ref(false)
+    const tryShowData = () => {
       getStatistics()
+    }
+
+    onMounted(() => {
+      // getStatistics()
       const queryClass = `.${pickerClass.value} .el-picker-panel__icon-btn.arrow-left`
       const arrowLeft = document.querySelector(queryClass)
       if (arrowLeft) {
@@ -542,6 +552,9 @@ export default {
       readPostListTagData,
       readPostListKeywordPagination,
       readPostListKeywordData,
+
+      showData,
+      tryShowData,
     }
   },
 }

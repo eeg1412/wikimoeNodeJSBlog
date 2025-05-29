@@ -24,6 +24,11 @@
         />
       </div>
     </div>
+    <!-- showData 按钮展示 -->
+    <div class="show-data-area" v-if="!showData">
+      <el-button type="primary" @click="tryShowData" text> 显示数据 </el-button>
+    </div>
+
     <el-row v-if="visitorData">
       <!-- PV -->
       <el-col :span="24" class="mb10">
@@ -209,6 +214,7 @@ export default {
         })
         .then((res) => {
           visitorData.value = res.data
+          showData.value = true
         })
     }
 
@@ -346,8 +352,13 @@ export default {
       },
     }
 
-    onMounted(() => {
+    const showData = ref(false)
+    const tryShowData = () => {
       getDashboardVisitor()
+    }
+
+    onMounted(() => {
+      // getDashboardVisitor()
       const queryClass = `.${pickerClass.value} .el-picker-panel__icon-btn.arrow-left`
       const arrowLeft = document.querySelector(queryClass)
       if (arrowLeft) {
@@ -365,6 +376,8 @@ export default {
       uniqueIPTimeLineData,
       robotAccessData,
       chartOptions,
+      showData,
+      tryShowData,
     }
   },
 }
