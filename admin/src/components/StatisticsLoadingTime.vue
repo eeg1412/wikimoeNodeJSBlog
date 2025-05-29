@@ -369,4 +369,15 @@ export default {
 }
 </script>
 
-<style scoped></style>
+<style scoped>
+.statistics-title {
+  height: 20px;
+  line-height: 20px;
+}
+.statistics-panel {
+  border: 1px solid var(--el-border-color);
+  height: 515px;
+  box-sizing: border-box;
+  padding-bottom: 10px;
+}
+</style>

@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="el-descriptions__header">
-      <div class="el-descriptions__title">排名统计</div>
+      <div class="el-descriptions__title">统计排名</div>
       <div class="el-descriptions__extra">
         <el-date-picker
           v-model="timeRange"
@@ -29,7 +29,7 @@
     </div>
     <el-row v-if="rankData">
       <!-- 文章阅读 rankData.readPostViewData -->
-      <el-col :span="8" :xs="24" class="p10">
+      <el-col :span="12" :xs="24" class="p10">
         <div class="mb10 fb statistics-title">文章阅读</div>
         <div class="mb10 statistics-panel">
           <el-table
@@ -76,7 +76,7 @@
         </div>
       </el-col>
       <!-- 文章点赞统计 rankData.readPostLikeData -->
-      <el-col :span="8" :xs="24" class="p10">
+      <el-col :span="12" :xs="24" class="p10">
         <div class="mb10 fb statistics-title">文章点赞</div>
         <div class="mb10 statistics-panel">
           <el-table
@@ -123,7 +123,7 @@
         </div>
       </el-col>
       <!-- 来源 rankData.readReferrerData -->
-      <el-col :span="8" :xs="24" class="p10">
+      <el-col :span="12" :xs="24" class="p10">
         <div class="mb10 fb statistics-title">来源</div>
         <div class="mb10 statistics-panel">
           <el-table
@@ -152,7 +152,7 @@
         </div>
       </el-col>
       <!-- 分类 rankData.readPostListSortData -->
-      <el-col :span="8" :xs="24" class="p10">
+      <el-col :span="12" :xs="24" class="p10">
         <div class="mb10 fb statistics-title">分类</div>
         <div class="mb10 statistics-panel">
           <el-table
@@ -181,7 +181,7 @@
         </div>
       </el-col>
       <!-- tag rankData.readPostListTagData -->
-      <el-col :span="8" :xs="24" class="p10">
+      <el-col :span="12" :xs="24" class="p10">
         <div class="mb10 fb statistics-title">标签</div>
         <div class="mb10 statistics-panel">
           <el-table
@@ -210,7 +210,7 @@
         </div>
       </el-col>
       <!-- 站内关键词 rankData.readPostListKeywordData -->
-      <el-col :span="8" :xs="24" class="p10">
+      <el-col :span="12" :xs="24" class="p10">
         <div class="mb10 fb statistics-title">站内关键词</div>
         <div class="mb10 statistics-panel">
           <el-table
@@ -234,6 +234,141 @@
               small
               v-model:current-page="readPostListKeywordPagination.currentPage"
               v-model:page-size="readPostListKeywordPagination.pageSize"
+            />
+          </div>
+        </div>
+      </el-col>
+
+      <!-- 浏览器统计 rankData.browserStats -->
+      <el-col :span="12" :xs="24" class="p10">
+        <div class="mb10 fb statistics-title">操作系统统计</div>
+        <div class="mb10 statistics-panel">
+          <el-table
+            :data="osStatsData"
+            row-key="_id"
+            style="width: 100%"
+            height="440px"
+            default-expand-all
+          >
+            <el-table-column min-width="200px" label="操作系统/版本号">
+              <!-- 如果存在version显示version 否则显示 _id -->
+              <template #default="{ row }">
+                <span>
+                  {{ row.version ? row.version : row._id }}
+                </span>
+              </template>
+            </el-table-column>
+            <el-table-column
+              prop="count"
+              label="数量"
+              width="80px"
+            ></el-table-column>
+          </el-table>
+          <div class="dflex flexCenter mt10">
+            <el-pagination
+              layout="prev, pager, next"
+              :total="rankData.osStats?.length || 0"
+              :pager-count="5"
+              small
+              v-model:current-page="osStatsPagination.currentPage"
+              v-model:page-size="osStatsPagination.pageSize"
+            />
+          </div>
+        </div>
+      </el-col>
+      <el-col :span="12" :xs="24" class="p10">
+        <div class="mb10 fb statistics-title">浏览器统计</div>
+        <div class="mb10 statistics-panel">
+          <el-table
+            :data="browserStatsData"
+            row-key="_id"
+            style="width: 100%"
+            height="440px"
+            default-expand-all
+          >
+            <el-table-column min-width="200px" label="浏览器/版本号">
+              <!-- 如果存在version显示version 否则显示 _id -->
+              <template #default="{ row }">
+                <span>
+                  {{ row.version ? row.version : row._id }}
+                </span>
+              </template>
+            </el-table-column>
+            <el-table-column
+              prop="count"
+              label="数量"
+              width="80px"
+            ></el-table-column>
+          </el-table>
+          <div class="dflex flexCenter mt10">
+            <el-pagination
+              layout="prev, pager, next"
+              :total="rankData.browserStats?.length || 0"
+              :pager-count="5"
+              small
+              v-model:current-page="browserStatsPagination.currentPage"
+              v-model:page-size="browserStatsPagination.pageSize"
+            />
+          </div>
+        </div>
+      </el-col>
+
+      <!-- 国家统计 rankData.countryStats -->
+      <el-col :span="12" :xs="24" class="p10">
+        <div class="mb10 fb statistics-title">国家/地区统计</div>
+        <div class="mb10 statistics-panel">
+          <el-table
+            :data="countryStatsData"
+            row-key="_id"
+            style="width: 100%"
+            height="440px"
+          >
+            <el-table-column prop="_id" label="国家/地区"> </el-table-column>
+            <el-table-column
+              prop="count"
+              label="数量"
+              width="80px"
+            ></el-table-column>
+          </el-table>
+          <div class="dflex flexCenter mt10">
+            <el-pagination
+              layout="prev, pager, next"
+              :total="rankData.countryStats?.length || 0"
+              :pager-count="5"
+              small
+              v-model:current-page="countryStatsPagination.currentPage"
+              v-model:page-size="countryStatsPagination.pageSize"
+            />
+          </div>
+        </div>
+      </el-col>
+
+      <!-- 地区统计 rankData.regionStats -->
+      <el-col :span="12" :xs="24" class="p10">
+        <div class="mb10 fb statistics-title">行政区划统计</div>
+        <div class="mb10 statistics-panel">
+          <el-table
+            :data="regionStatsData"
+            row-key="location"
+            style="width: 100%"
+            height="440px"
+          >
+            <el-table-column prop="location" label="行政区划">
+            </el-table-column>
+            <el-table-column
+              prop="count"
+              label="数量"
+              width="80px"
+            ></el-table-column>
+          </el-table>
+          <div class="dflex flexCenter mt10">
+            <el-pagination
+              layout="prev, pager, next"
+              :total="rankData.regionStats?.length || 0"
+              :pager-count="5"
+              small
+              v-model:current-page="regionStatsPagination.currentPage"
+              v-model:page-size="regionStatsPagination.pageSize"
             />
           </div>
         </div>
@@ -371,6 +506,10 @@ export default {
             readPostListSortPagination.currentPage = 1
             readPostListTagPagination.currentPage = 1
             readPostListKeywordPagination.currentPage = 1
+            browserStatsPagination.currentPage = 1
+            osStatsPagination.currentPage = 1
+            countryStatsPagination.currentPage = 1
+            regionStatsPagination.currentPage = 1
           }
           rankData.value = res.data
           showData.value = true
@@ -515,6 +654,73 @@ export default {
       return []
     })
 
+    // 浏览器统计分页对象
+    const browserStatsPagination = reactive({
+      currentPage: 1,
+      pageSize: 10,
+    })
+    // 浏览器统计数据计算属性
+    const browserStatsData = computed(() => {
+      if (rankData.value && rankData.value.browserStats) {
+        return rankData.value.browserStats.slice(
+          (browserStatsPagination.currentPage - 1) *
+            browserStatsPagination.pageSize,
+          browserStatsPagination.currentPage * browserStatsPagination.pageSize
+        )
+      }
+      return []
+    })
+
+    // 操作系统统计分页对象
+    const osStatsPagination = reactive({
+      currentPage: 1,
+      pageSize: 10,
+    })
+    // 操作系统统计数据计算属性
+    const osStatsData = computed(() => {
+      if (rankData.value && rankData.value.osStats) {
+        return rankData.value.osStats.slice(
+          (osStatsPagination.currentPage - 1) * osStatsPagination.pageSize,
+          osStatsPagination.currentPage * osStatsPagination.pageSize
+        )
+      }
+      return []
+    })
+
+    // 国家统计分页对象
+    const countryStatsPagination = reactive({
+      currentPage: 1,
+      pageSize: 10,
+    })
+    // 国家统计数据计算属性
+    const countryStatsData = computed(() => {
+      if (rankData.value && rankData.value.countryStats) {
+        return rankData.value.countryStats.slice(
+          (countryStatsPagination.currentPage - 1) *
+            countryStatsPagination.pageSize,
+          countryStatsPagination.currentPage * countryStatsPagination.pageSize
+        )
+      }
+      return []
+    })
+
+    // 地区统计分页对象
+    const regionStatsPagination = reactive({
+      currentPage: 1,
+      pageSize: 10,
+    })
+    // 地区统计数据计算属性
+    const regionStatsData = computed(() => {
+      if (rankData.value && rankData.value.regionStats) {
+        return rankData.value.regionStats.slice(
+          (regionStatsPagination.currentPage - 1) *
+            regionStatsPagination.pageSize,
+          regionStatsPagination.currentPage * regionStatsPagination.pageSize
+        )
+      }
+      return []
+    })
+
     const showData = ref(false)
     const tryShowData = () => {
       getStatistics()
@@ -553,6 +759,16 @@ export default {
       readPostListKeywordPagination,
       readPostListKeywordData,
 
+      // 新增统计数据相关
+      browserStatsPagination,
+      browserStatsData,
+      osStatsPagination,
+      osStatsData,
+      countryStatsPagination,
+      countryStatsData,
+      regionStatsPagination,
+      regionStatsData,
+
       showData,
       tryShowData,
     }
@@ -569,5 +785,8 @@ export default {
   height: 485px;
   box-sizing: border-box;
   padding-bottom: 10px;
+}
+.statistics-panel.type-small {
+  height: 222.5px;
 }
 </style>

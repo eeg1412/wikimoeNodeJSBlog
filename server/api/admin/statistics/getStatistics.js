@@ -341,9 +341,311 @@ module.exports = async function (req, res, next) {
     return false
   })
 
-
   promiseArray.push(readPostListKeywordData)
 
+  // 设备和地理位置统计 - 合并在一个聚合查询中以减少查询次数
+  const deviceAndLocationPipeline = [
+    {
+      $match: {
+        createdAt: { $gte: startDate.toDate(), $lte: endDate.toDate() },
+        action: 'open',
+        isBot: false,
+      }
+    },
+    {
+      // 只保留需要的字段，减少后续处理的数据量
+      $project: {
+        deviceInfo: 1,
+        ipInfo: 1
+      }
+    },
+    {
+      $facet: {
+        // 浏览器统计，包含版本信息
+        browserStats: [
+          {
+            $match: {
+              "deviceInfo.browser.name": { $exists: true, $ne: null }
+            }
+          },
+          // 预处理：规范化版本号
+          {
+            $project: {
+              browserName: "$deviceInfo.browser.name",
+              browserVersion: {
+                $cond: {
+                  if: {
+                    $and: [
+                      { $ne: ["$deviceInfo.browser.version", null] },
+                      { $ne: ["$deviceInfo.browser.version", ""] }
+                    ]
+                  },
+                  then: "$deviceInfo.browser.version",
+                  else: "未知版本"
+                }
+              }
+            }
+          },
+          // 直接按浏览器名称+版本分组，避免中间步骤
+          {
+            $group: {
+              _id: {
+                name: "$browserName",
+                version: "$browserVersion"
+              },
+              count: { $sum: 1 }
+            }
+          },
+          // 按浏览器名称重新分组
+          {
+            $group: {
+              _id: "$_id.name",
+              count: { $sum: "$count" },
+              versions: {
+                $push: {
+                  version: "$_id.version",
+                  count: "$count"
+                }
+              }
+            }
+          },
+          // 对版本数组排序
+          {
+            $project: {
+              _id: 1,
+              count: 1,
+              sortedVersions: {
+                $sortArray: {
+                  input: "$versions",
+                  sortBy: { count: -1 }
+                }
+              }
+            }
+          },
+          // 分离前10个和剩余的版本
+          {
+            $project: {
+              _id: 1,
+              count: 1,
+              top10: { $slice: ["$sortedVersions", 0, 10] },
+              remainingCount: {
+                $cond: {
+                  if: { $gt: [{ $size: "$sortedVersions" }, 10] },
+                  then: {
+                    $sum: {
+                      $map: {
+                        input: { $slice: ["$sortedVersions", 10, { $subtract: [{ $size: "$sortedVersions" }, 10] }] },
+                        as: "item",
+                        in: "$$item.count"
+                      }
+                    }
+                  },
+                  else: 0
+                }
+              }
+            }
+          },
+          // 添加"其他"项
+          {
+            $project: {
+              _id: 1,
+              count: 1,
+              children: {
+                $cond: {
+                  if: { $gt: ["$remainingCount", 0] },
+                  then: {
+                    $concatArrays: [
+                      "$top10",
+                      [{ version: "其他", count: "$remainingCount" }]
+                    ]
+                  },
+                  else: "$top10"
+                }
+              }
+            }
+          },
+          // 按总数量排序
+          {
+            $sort: { count: -1 }
+          },
+          {
+            $limit: limit
+          }
+        ],
+        // 操作系统统计，包含版本信息
+        osStats: [
+          {
+            $match: {
+              "deviceInfo.os.name": { $exists: true, $ne: null }
+            }
+          },
+          // 预处理：规范化版本号
+          {
+            $project: {
+              osName: "$deviceInfo.os.name",
+              osVersion: {
+                $cond: {
+                  if: {
+                    $and: [
+                      { $ne: ["$deviceInfo.os.version", null] },
+                      { $ne: ["$deviceInfo.os.version", ""] }
+                    ]
+                  },
+                  then: "$deviceInfo.os.version",
+                  else: "未知版本"
+                }
+              }
+            }
+          },
+          // 直接按操作系统名称+版本分组
+          {
+            $group: {
+              _id: {
+                name: "$osName",
+                version: "$osVersion"
+              },
+              count: { $sum: 1 }
+            }
+          },
+          // 按操作系统名称重新分组
+          {
+            $group: {
+              _id: "$_id.name",
+              count: { $sum: "$count" },
+              versions: {
+                $push: {
+                  version: "$_id.version",
+                  count: "$count"
+                }
+              }
+            }
+          },
+          // 对版本数组排序
+          {
+            $project: {
+              _id: 1,
+              count: 1,
+              sortedVersions: {
+                $sortArray: {
+                  input: "$versions",
+                  sortBy: { count: -1 }
+                }
+              }
+            }
+          },
+          // 分离前10个和剩余的版本
+          {
+            $project: {
+              _id: 1,
+              count: 1,
+              top10: { $slice: ["$sortedVersions", 0, 10] },
+              remainingCount: {
+                $cond: {
+                  if: { $gt: [{ $size: "$sortedVersions" }, 10] },
+                  then: {
+                    $sum: {
+                      $map: {
+                        input: { $slice: ["$sortedVersions", 10, { $subtract: [{ $size: "$sortedVersions" }, 10] }] },
+                        as: "item",
+                        in: "$$item.count"
+                      }
+                    }
+                  },
+                  else: 0
+                }
+              }
+            }
+          },
+          // 添加"其他"项
+          {
+            $project: {
+              _id: 1,
+              count: 1,
+              children: {
+                $cond: {
+                  if: { $gt: ["$remainingCount", 0] },
+                  then: {
+                    $concatArrays: [
+                      "$top10",
+                      [{ version: "其他", count: "$remainingCount" }]
+                    ]
+                  },
+                  else: "$top10"
+                }
+              }
+            }
+          },
+          // 按总数量排序
+          {
+            $sort: { count: -1 }
+          },
+          {
+            $limit: limit
+          }
+        ],
+        // 国家统计
+        countryStats: [
+          {
+            $match: {
+              "ipInfo.countryLong": { $exists: true, $ne: null, $ne: "-" }
+            }
+          },
+          {
+            $group: {
+              _id: "$ipInfo.countryLong",
+              count: { $sum: 1 }
+            }
+          },
+          {
+            $sort: { count: -1 }
+          },
+          {
+            $limit: limit
+          }
+        ],
+        // 国家+地区统计
+        regionStats: [
+          {
+            $match: {
+              "ipInfo.countryLong": { $exists: true, $ne: null, $ne: "-" },
+              "ipInfo.region": { $exists: true, $ne: null, $ne: "-" }
+            }
+          },
+          {
+            $group: {
+              _id: { country: "$ipInfo.countryLong", region: "$ipInfo.region" },
+              count: { $sum: 1 }
+            }
+          },
+          {
+            $project: {
+              _id: 0,
+              location: {
+                $cond: {
+                  if: { $eq: ["$_id.country", "$_id.region"] },
+                  then: "$_id.country", // 如果国家和地区相同，只显示一次
+                  else: { $concat: ["$_id.country", " ", "$_id.region"] } // 否则显示国家+空格+地区
+                }
+              },
+              count: 1
+            }
+          },
+          {
+            $sort: { count: -1 }
+          },
+          {
+            $limit: limit
+          }
+        ]
+      }
+    }
+  ]
+
+  const deviceAndLocationData = readerlogUtils.aggregate(deviceAndLocationPipeline).catch(err => {
+    adminApiLog.error(err)
+    return false
+  })
+  promiseArray.push(deviceAndLocationData)
 
   try {
     const [
@@ -352,10 +654,11 @@ module.exports = async function (req, res, next) {
       readPostLikeData,
       readPostListSortData,
       readPostListTagData,
-      readPostListKeywordData
+      readPostListKeywordData,
+      deviceAndLocationData
     ] = await Promise.all(promiseArray);
 
-    if (!readReferrerData || !readPostViewData || !readPostLikeData || !readPostListSortData || !readPostListTagData || !readPostListKeywordData) {
+    if (!readReferrerData || !readPostViewData || !readPostLikeData || !readPostListSortData || !readPostListTagData || !readPostListKeywordData || !deviceAndLocationData) {
       res.status(500).json({
         errors: [{
           message: '数据库查询错误'
@@ -370,7 +673,12 @@ module.exports = async function (req, res, next) {
       readPostLikeData: readPostLikeData,
       readPostListSortData: readPostListSortData,
       readPostListTagData: readPostListTagData,
-      readPostListKeywordData: readPostListKeywordData
+      readPostListKeywordData: readPostListKeywordData,
+      // 新增设备和地理位置统计数据
+      browserStats: deviceAndLocationData[0].browserStats,
+      osStats: deviceAndLocationData[0].osStats,
+      countryStats: deviceAndLocationData[0].countryStats,
+      regionStats: deviceAndLocationData[0].regionStats
     };
 
     // 发送响应
