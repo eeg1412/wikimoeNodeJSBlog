@@ -373,16 +373,16 @@ module.exports = async function (req, res, next) {
             $project: {
               browserName: "$deviceInfo.browser.name",
               browserVersion: {
-                $cond: {
-                  if: {
-                    $and: [
-                      { $ne: ["$deviceInfo.browser.version", null] },
-                      { $ne: ["$deviceInfo.browser.version", ""] }
+                $ifNull: [  // 先处理字段不存在的情况
+                  {
+                    $cond: [  // 再处理空字符串
+                      { $eq: ["$deviceInfo.browser.version", ""] },
+                      "未知版本",
+                      "$deviceInfo.browser.version"
                     ]
                   },
-                  then: "$deviceInfo.browser.version",
-                  else: "未知版本"
-                }
+                  "未知版本"  // 字段不存在时返回"未知版本"
+                ]
               }
             }
           },
@@ -484,16 +484,16 @@ module.exports = async function (req, res, next) {
             $project: {
               osName: "$deviceInfo.os.name",
               osVersion: {
-                $cond: {
-                  if: {
-                    $and: [
-                      { $ne: ["$deviceInfo.os.version", null] },
-                      { $ne: ["$deviceInfo.os.version", ""] }
+                $ifNull: [  // 先处理字段不存在的情况
+                  {
+                    $cond: [  // 再处理空字符串
+                      { $eq: ["$deviceInfo.os.version", ""] },
+                      "未知版本",
+                      "$deviceInfo.os.version"
                     ]
                   },
-                  then: "$deviceInfo.os.version",
-                  else: "未知版本"
-                }
+                  "未知版本"  // 字段不存在时返回"未知版本"
+                ]
               }
             }
           },
