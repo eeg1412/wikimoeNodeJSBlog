@@ -34,7 +34,7 @@
       <el-col :span="8" :xs="8" class="mb15">
         <el-statistic
           title="最快加载时间"
-          :value="formatDuration(loadingTimeData.stats.minDuration)"
+          :value="loadingTimeData.stats.minDuration / 1000"
           :precision="2"
         >
           <template #suffix>秒</template>
@@ -43,7 +43,7 @@
       <el-col :span="8" :xs="8" class="mb15">
         <el-statistic
           title="平均加载时间"
-          :value="formatDuration(loadingTimeData.stats.avgDuration)"
+          :value="loadingTimeData.stats.avgDuration / 1000"
           :precision="2"
         >
           <template #suffix>秒</template>
@@ -52,7 +52,7 @@
       <el-col :span="8" :xs="8" class="mb15">
         <el-statistic
           title="最慢加载时间"
-          :value="formatDuration(loadingTimeData.stats.maxDuration)"
+          :value="loadingTimeData.stats.maxDuration / 1000"
           :precision="2"
         >
           <template #suffix>秒</template>
