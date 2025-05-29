@@ -54,6 +54,7 @@ module.exports = async function (req, res, next) {
       {
         $match: {
           createdAt: { $gte: startDate.toDate(), $lte: endDate.toDate() },
+          isBot: false,  // 排除机器人访问
           action: 'open',
           'data.performanceNavigationTiming': { $ne: null },
           'data.performanceNavigationTiming.duration': { $ne: null },
