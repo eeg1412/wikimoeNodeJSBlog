@@ -897,6 +897,15 @@ const adminRouteSetting = [
     roleType: null,
     role: null
   },
+  // getLoadingTime
+  {
+    path: '/statistics/loadingtime',
+    method: 'get',
+    middleware: [checkAuth],
+    controller: require('../api/admin/statistics/getLoadingTime'),
+    roleType: null,
+    role: null
+  },
   // createGamePlatform
   {
     path: '/gameplatform/create',

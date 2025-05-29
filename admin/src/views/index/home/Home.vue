@@ -49,6 +49,7 @@
         <el-divider />
       </div>
     </template>
+    <StatisticsLoadingTime />
     <StatisticsReader />
     <Statistics />
     <el-divider />
@@ -106,11 +107,13 @@ import { authApi } from '@/api'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import Statistics from '@/components/Statistics.vue'
 import StatisticsReader from '@/components/StatisticsReader.vue'
+import StatisticsLoadingTime from '@/components/StatisticsLoadingTime.vue'
 
 export default {
   components: {
     Statistics,
     StatisticsReader,
+    StatisticsLoadingTime,
   },
   setup() {
     const route = useRoute()

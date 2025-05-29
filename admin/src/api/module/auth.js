@@ -577,6 +577,13 @@ export default function (api) {
         shouldAdminJWT: true
       })
     },
+    // get /statistics/loadingtime
+    getLoadingTime (data) {
+      return api.get('/statistics/loadingtime', {
+        params: data,
+        shouldAdminJWT: true
+      })
+    },
     // post /gameplatform/create
     createGamePlatform (data) {
       return api.post('/gameplatform/create', data, {

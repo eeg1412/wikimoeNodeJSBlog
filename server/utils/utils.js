@@ -253,6 +253,17 @@ exports.checkForm = function (form, ruleArr) {
   })
   return result
 }
+// 随机生成IPv4地址
+exports.generateRandomIPv4 = function () {
+  // 生成4个0-255之间的随机整数
+  const octet1 = Math.floor(Math.random() * 256);
+  const octet2 = Math.floor(Math.random() * 256);
+  const octet3 = Math.floor(Math.random() * 256);
+  const octet4 = Math.floor(Math.random() * 256);
+
+  // 将这些整数用点连接起来形成IP地址字符串
+  return `${octet1}.${octet2}.${octet3}.${octet4}`;
+};
 
 exports.getUserIp = function (req) {
   let ip = (req.headers['x-forwarded-for'] || '').split(',')[0] ||
@@ -262,6 +273,7 @@ exports.getUserIp = function (req) {
   if (ip.slice(0, 7).toLowerCase() === "::ffff:") {
     ip = ip.slice(7);
   }
+  // ip = this.generateRandomIPv4()
   return ip;
 };
 
