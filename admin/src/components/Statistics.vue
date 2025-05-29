@@ -245,8 +245,8 @@
         <div class="mb10 statistics-panel">
           <el-table
             :data="osStatsData"
-            row-key="_id"
             style="width: 100%"
+            row-key="_id"
             height="440px"
             default-expand-all
           >
@@ -281,8 +281,8 @@
         <div class="mb10 statistics-panel">
           <el-table
             :data="browserStatsData"
-            row-key="_id"
             style="width: 100%"
+            row-key="_id"
             height="440px"
             default-expand-all
           >
@@ -317,12 +317,7 @@
       <el-col :span="12" :xs="24" class="p10">
         <div class="mb10 fb statistics-title">国家/地区统计</div>
         <div class="mb10 statistics-panel">
-          <el-table
-            :data="countryStatsData"
-            row-key="_id"
-            style="width: 100%"
-            height="440px"
-          >
+          <el-table :data="countryStatsData" style="width: 100%" height="440px">
             <el-table-column prop="_id" label="国家/地区"> </el-table-column>
             <el-table-column
               prop="count"
@@ -347,12 +342,7 @@
       <el-col :span="12" :xs="24" class="p10">
         <div class="mb10 fb statistics-title">行政区划统计</div>
         <div class="mb10 statistics-panel">
-          <el-table
-            :data="regionStatsData"
-            row-key="location"
-            style="width: 100%"
-            height="440px"
-          >
+          <el-table :data="regionStatsData" style="width: 100%" height="440px">
             <el-table-column prop="location" label="行政区划">
             </el-table-column>
             <el-table-column
@@ -511,6 +501,26 @@ export default {
             countryStatsPagination.currentPage = 1
             regionStatsPagination.currentPage = 1
           }
+          // 遍历browserStats 和 osStats 的children 并定义一个 _id + version 的新_id
+          res.data.browserStats.forEach((item) => {
+            if (item.children && item.children.length) {
+              item.children.forEach((child) => {
+                child._id = `${item._id}-${
+                  child.version || ''
+                }-${generateRandomAlphabetString(6)}`
+              })
+            }
+          })
+          res.data.osStats.forEach((item) => {
+            if (item.children && item.children.length) {
+              item.children.forEach((child) => {
+                child._id = `${item._id}-${
+                  child.version || ''
+                }-${generateRandomAlphabetString(6)}`
+              })
+            }
+          })
+          console.log('获取统计数据', res.data)
           rankData.value = res.data
           showData.value = true
         })
