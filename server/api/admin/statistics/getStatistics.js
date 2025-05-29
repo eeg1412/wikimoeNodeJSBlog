@@ -647,6 +647,36 @@ module.exports = async function (req, res, next) {
   })
   promiseArray.push(deviceAndLocationData)
 
+  // 新增：搜索引擎爬虫统计
+  const botStatsPipeline = [
+    {
+      $match: {
+        createdAt: { $gte: startDate.toDate(), $lte: endDate.toDate() },
+        action: 'open',
+        isBot: true,
+        botName: { $exists: true, $ne: null, $ne: "" }
+      }
+    },
+    {
+      $group: {
+        _id: "$botName",
+        count: { $sum: 1 }
+      }
+    },
+    {
+      $sort: { count: -1 }
+    },
+    {
+      $limit: limit
+    }
+  ]
+
+  const botStatsData = readerlogUtils.aggregate(botStatsPipeline).catch(err => {
+    adminApiLog.error(err)
+    return false
+  })
+  promiseArray.push(botStatsData)
+
   try {
     const [
       readReferrerData,
@@ -655,10 +685,12 @@ module.exports = async function (req, res, next) {
       readPostListSortData,
       readPostListTagData,
       readPostListKeywordData,
-      deviceAndLocationData
+      deviceAndLocationData,
+      botStatsData  // 新增的爬虫统计数据
     ] = await Promise.all(promiseArray);
 
-    if (!readReferrerData || !readPostViewData || !readPostLikeData || !readPostListSortData || !readPostListTagData || !readPostListKeywordData || !deviceAndLocationData) {
+    if (!readReferrerData || !readPostViewData || !readPostLikeData || !readPostListSortData ||
+      !readPostListTagData || !readPostListKeywordData || !deviceAndLocationData || !botStatsData) {
       res.status(500).json({
         errors: [{
           message: '数据库查询错误'
@@ -674,11 +706,13 @@ module.exports = async function (req, res, next) {
       readPostListSortData: readPostListSortData,
       readPostListTagData: readPostListTagData,
       readPostListKeywordData: readPostListKeywordData,
-      // 新增设备和地理位置统计数据
+      // 设备和地理位置统计数据
       browserStats: deviceAndLocationData[0].browserStats,
       osStats: deviceAndLocationData[0].osStats,
       countryStats: deviceAndLocationData[0].countryStats,
-      regionStats: deviceAndLocationData[0].regionStats
+      regionStats: deviceAndLocationData[0].regionStats,
+      // 新增爬虫统计数据
+      botStats: botStatsData
     };
 
     // 发送响应

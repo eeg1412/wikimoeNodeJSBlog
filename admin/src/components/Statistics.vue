@@ -241,7 +241,7 @@
 
       <!-- 浏览器统计 rankData.browserStats -->
       <el-col :span="12" :xs="24" class="p10">
-        <div class="mb10 fb statistics-title">操作系统统计</div>
+        <div class="mb10 fb statistics-title">操作系统</div>
         <div class="mb10 statistics-panel">
           <el-table
             :data="osStatsData"
@@ -277,7 +277,7 @@
         </div>
       </el-col>
       <el-col :span="12" :xs="24" class="p10">
-        <div class="mb10 fb statistics-title">浏览器统计</div>
+        <div class="mb10 fb statistics-title">浏览器</div>
         <div class="mb10 statistics-panel">
           <el-table
             :data="browserStatsData"
@@ -315,7 +315,7 @@
 
       <!-- 国家统计 rankData.countryStats -->
       <el-col :span="12" :xs="24" class="p10">
-        <div class="mb10 fb statistics-title">国家/地区统计</div>
+        <div class="mb10 fb statistics-title">国家/地区</div>
         <div class="mb10 statistics-panel">
           <el-table :data="countryStatsData" style="width: 100%" height="440px">
             <el-table-column prop="_id" label="国家/地区"> </el-table-column>
@@ -340,7 +340,7 @@
 
       <!-- 地区统计 rankData.regionStats -->
       <el-col :span="12" :xs="24" class="p10">
-        <div class="mb10 fb statistics-title">行政区划统计</div>
+        <div class="mb10 fb statistics-title">行政区划</div>
         <div class="mb10 statistics-panel">
           <el-table :data="regionStatsData" style="width: 100%" height="440px">
             <el-table-column prop="location" label="行政区划">
@@ -359,6 +359,31 @@
               small
               v-model:current-page="regionStatsPagination.currentPage"
               v-model:page-size="regionStatsPagination.pageSize"
+            />
+          </div>
+        </div>
+      </el-col>
+
+      <!-- 新增: 爬虫统计 rankData.botStats -->
+      <el-col :span="24" :xs="24" class="p10">
+        <div class="mb10 fb statistics-title">爬虫</div>
+        <div class="mb10 statistics-panel">
+          <el-table :data="botStatsData" style="width: 100%" height="440px">
+            <el-table-column prop="_id" label="爬虫名称"></el-table-column>
+            <el-table-column
+              prop="count"
+              label="访问量"
+              width="80px"
+            ></el-table-column>
+          </el-table>
+          <div class="dflex flexCenter mt10">
+            <el-pagination
+              layout="prev, pager, next"
+              :total="rankData.botStats?.length || 0"
+              :pager-count="5"
+              small
+              v-model:current-page="botStatsPagination.currentPage"
+              v-model:page-size="botStatsPagination.pageSize"
             />
           </div>
         </div>
@@ -500,6 +525,7 @@ export default {
             osStatsPagination.currentPage = 1
             countryStatsPagination.currentPage = 1
             regionStatsPagination.currentPage = 1
+            botStatsPagination.currentPage = 1 // 新增: 重置爬虫统计分页
           }
           // 遍历browserStats 和 osStats 的children 并定义一个 _id + version 的新_id
           res.data.browserStats.forEach((item) => {
@@ -731,6 +757,22 @@ export default {
       return []
     })
 
+    // 新增: 爬虫统计分页对象
+    const botStatsPagination = reactive({
+      currentPage: 1,
+      pageSize: 10,
+    })
+    // 新增: 爬虫统计数据计算属性
+    const botStatsData = computed(() => {
+      if (rankData.value && rankData.value.botStats) {
+        return rankData.value.botStats.slice(
+          (botStatsPagination.currentPage - 1) * botStatsPagination.pageSize,
+          botStatsPagination.currentPage * botStatsPagination.pageSize
+        )
+      }
+      return []
+    })
+
     const showData = ref(false)
     const tryShowData = () => {
       getStatistics()
@@ -769,7 +811,6 @@ export default {
       readPostListKeywordPagination,
       readPostListKeywordData,
 
-      // 新增统计数据相关
       browserStatsPagination,
       browserStatsData,
       osStatsPagination,
@@ -778,6 +819,10 @@ export default {
       countryStatsData,
       regionStatsPagination,
       regionStatsData,
+
+      // 新增: 爬虫统计相关变量
+      botStatsPagination,
+      botStatsData,
 
       showData,
       tryShowData,
