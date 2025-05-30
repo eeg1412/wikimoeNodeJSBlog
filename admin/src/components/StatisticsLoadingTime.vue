@@ -34,7 +34,7 @@
       <el-col :span="8" :xs="8" class="mb15">
         <el-statistic
           title="最快加载时间"
-          :value="loadingTimeData.stats.minDuration / 1000"
+          :value="roundDuration(loadingTimeData.stats.minDuration)"
           :precision="2"
         >
           <template #suffix>秒</template>
@@ -43,7 +43,7 @@
       <el-col :span="8" :xs="8" class="mb15">
         <el-statistic
           title="平均加载时间"
-          :value="loadingTimeData.stats.avgDuration / 1000"
+          :value="roundDuration(loadingTimeData.stats.avgDuration)"
           :precision="2"
         >
           <template #suffix>秒</template>
@@ -52,11 +52,24 @@
       <el-col :span="8" :xs="8" class="mb15">
         <el-statistic
           title="最慢加载时间"
-          :value="loadingTimeData.stats.maxDuration / 1000"
+          :value="roundDuration(loadingTimeData.stats.maxDuration)"
           :precision="2"
         >
           <template #suffix>秒</template>
         </el-statistic>
+      </el-col>
+    </el-row>
+
+    <!-- 显示时间推移图表 -->
+    <el-row v-if="loadingTimeData && showData">
+      <el-col :span="24" class="mb10">
+        <div
+          class="home-chart-body"
+          v-if="timeSeriesChartData.labels.length > 0"
+        >
+          <Line :data="timeSeriesChartData" :options="chartOptions" />
+        </div>
+        <div>※图表显示了不同时间段内的平均加载时间（秒）。</div>
       </el-col>
     </el-row>
 
@@ -349,10 +362,30 @@ import { generateRandomAlphabetString } from '@/utils/utils'
 import { authApi } from '@/api'
 import moment from 'moment'
 import IpInfoDisplay from '@/components/IpInfoDisplay.vue'
+import {
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  Title,
+  Tooltip,
+} from 'chart.js'
+import { Line } from 'vue-chartjs'
+
+ChartJS.register(
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  Title,
+  Tooltip
+)
 
 export default {
   components: {
     IpInfoDisplay,
+    Line,
   },
   setup() {
     const pickerClass = ref(generateRandomAlphabetString(12))
@@ -490,6 +523,77 @@ export default {
       return []
     })
 
+    // 时间序列数据图表
+    const timeSeriesChartData = computed(() => {
+      if (loadingTimeData.value && loadingTimeData.value.timeSeriesData) {
+        let data = loadingTimeData.value.timeSeriesData
+        data = data.sort((a, b) => {
+          return a.time > b.time ? 1 : -1
+        })
+        const labels = []
+        const avgDurations = []
+        const isOverDays = loadingTimeData.value.isOverDays
+
+        data.forEach((item) => {
+          let f = moment(item.time).format(
+            `YYYY/MM/DD dddd${isOverDays ? '' : ' HH:mm'}`
+          )
+          // 空格换行
+          f = f.split(' ')
+          labels.push(f)
+          // 将毫秒转换为秒，并保留两位小数
+          avgDurations.push(
+            item.avgDuration !== null
+              ? (item.avgDuration / 1000).toFixed(2)
+              : null
+          )
+        })
+
+        return {
+          labels,
+          datasets: [
+            {
+              label: '平均加载时间(秒)',
+              data: avgDurations,
+              borderColor: '#409EFF',
+              yAxisID: 'y',
+            },
+          ],
+        }
+      }
+      return { labels: [], datasets: [] }
+    })
+
+    // 图表配置
+    const chartOptions = {
+      responsive: true,
+      maintainAspectRatio: false,
+      interaction: {
+        mode: 'index',
+        intersect: false,
+      },
+      scales: {
+        y: {
+          grid: {
+            color: 'rgba(155, 155, 155, 0.2)', // X轴网格线颜色
+          },
+          ticks: {
+            beginAtZero: true,
+            precision: 0,
+            stepSize: 1,
+          },
+        },
+        x: {
+          grid: {
+            color: 'rgba(155, 155, 155, 0.2)',
+          },
+          ticks: {
+            maxRotation: 0,
+          },
+        },
+      },
+    }
+
     const getLoadingTimeData = (resetPage) => {
       const startTime = new Date(timeRange.value[0])
       const endTime = new Date(timeRange.value[1])
@@ -497,10 +601,12 @@ export default {
       if (moment(endTime).isSame(moment(), 'day')) {
         endTime.setHours(new Date().getHours(), new Date().getMinutes())
       }
+      const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone
       authApi
         .getLoadingTime({
           startTime: startTime,
           endTime: endTime,
+          timeZone: timeZone,
         })
         .then((res) => {
           if (resetPage) {
@@ -528,6 +634,11 @@ export default {
       return moment(dateStr).format('YYYY-MM-DD HH:mm:ss')
     }
 
+    const roundDuration = (duration) => {
+      if (duration === null || duration === undefined) return 0
+      return Math.round((duration / 1000) * 100) / 100
+    }
+
     onMounted(() => {
       const queryClass = `.${pickerClass.value} .el-picker-panel__icon-btn.arrow-left`
       const arrowLeft = document.querySelector(queryClass)
@@ -551,6 +662,9 @@ export default {
       slowestPagination,
       fastestDataPaginated,
       slowestDataPaginated,
+      timeSeriesChartData,
+      chartOptions,
+      roundDuration,
     }
   },
 }
@@ -575,5 +689,10 @@ export default {
   word-break: break-all;
   white-space: normal;
   max-width: 380px;
+}
+.home-chart-body {
+  width: 100%;
+  height: 300px;
+  margin-bottom: 10px;
 }
 </style>

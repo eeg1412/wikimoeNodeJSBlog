@@ -7,6 +7,18 @@ const readerlogUtils = require('../../../mongodb/utils/readerlogs')
 module.exports = async function (req, res, next) {
   const startTime = req.query.startTime
   const endTime = req.query.endTime
+  const timeZone = req.query.timeZone || 'Asia/Shanghai' // 默认使用中国时区
+
+  // 校验 timeZone 是否合法
+  const validTimeZones = moment.tz.names();
+  if (!validTimeZones.includes(timeZone)) {
+    res.status(400).json({
+      errors: [{
+        message: '时区不合法'
+      }]
+    })
+    return
+  }
 
   const limit = 100
 
@@ -46,6 +58,36 @@ module.exports = async function (req, res, next) {
 
   const startDate = moment(startTime)
   const endDate = moment(endTime)
+
+  // 数据是否超过一定小时数
+  let diffHours = endDate.diff(startDate, 'hours');
+  let isOverDays = false;
+  if (diffHours > 72) {
+    isOverDays = true;
+  }
+
+  let offset = null
+  let $addFields = {
+    "formatDate": {
+      $dateToString: {
+        format: `%Y-%m-%dT%H:00:00.000Z`,
+        date: "$createdAt",
+      }
+    }
+  }
+  // 如果超过一定天数，就按天数来统计
+  if (isOverDays) {
+    offset = moment.tz(timeZone).format('Z')
+    $addFields = {
+      "formatDate": {
+        $dateToString: {
+          format: `%Y-%m-%dT00:00:00.000${offset}`,
+          date: "$createdAt",
+          timezone: timeZone
+        }
+      }
+    }
+  }
 
   try {
     // 使用单条聚合查询完成所有需求
@@ -101,6 +143,15 @@ module.exports = async function (req, res, next) {
                 avgDuration: { $avg: "$performanceNavigationTiming.duration" },
                 count: { $sum: 1 }
               }
+            },
+            {
+              $project: {
+                _id: 0,
+                maxDuration: 1,
+                minDuration: 1,
+                avgDuration: { $round: ["$avgDuration", 0] },
+                count: 1
+              }
             }
           ],
           // 最慢的数据
@@ -151,7 +202,66 @@ module.exports = async function (req, res, next) {
       }
     ];
 
-    const result = await readerlogUtils.aggregate(pipeline);
+    // 新增聚合查询，按时间统计平均加载时间
+    const timeSeriesPipeline = [
+      // 1. 首先匹配符合条件的文档
+      {
+        $match: {
+          createdAt: { $gte: startDate.toDate(), $lte: endDate.toDate() },
+          isBot: false,  // 排除机器人访问
+          action: 'open',
+          'data.performanceNavigationTiming': { $ne: null },
+          'data.performanceNavigationTiming.duration': { $ne: null },
+          'data.performanceNavigationTiming.duration': { $gt: 0 }  // 剔除duration小于等于0的记录
+        }
+      },
+      // 2. 添加格式化的日期字段
+      {
+        $addFields
+      },
+      // 3. 按时间单位和IP分组，取每组中duration最大的记录
+      {
+        $sort: {
+          'data.performanceNavigationTiming.duration': -1,
+          createdAt: 1
+        }
+      },
+      {
+        $group: {
+          _id: {
+            formatDate: "$formatDate",
+            ip: "$ip"
+          },
+          duration: { $first: "$data.performanceNavigationTiming.duration" }
+        }
+      },
+      // 4. 按时间单位分组，计算平均加载时间
+      {
+        $group: {
+          _id: "$_id.formatDate",
+          avgDuration: { $avg: "$duration" },
+        }
+      },
+      // 使用$project和$round对avgDuration进行四舍五入处理
+      {
+        $project: {
+          _id: 1,
+          avgDuration: { $round: ["$avgDuration", 0] }
+        }
+      },
+      // 5. 按时间排序
+      {
+        $sort: {
+          _id: 1
+        }
+      }
+    ];
+
+    // 使用Promise.all并行执行两个聚合查询
+    const [result, timeSeriesResult] = await Promise.all([
+      readerlogUtils.aggregate(pipeline),
+      readerlogUtils.aggregate(timeSeriesPipeline)
+    ]);
 
     if (!result || result.length === 0) {
       res.status(500).json({
@@ -166,8 +276,38 @@ module.exports = async function (req, res, next) {
     const sendData = {
       stats: result[0].stats.length > 0 ? result[0].stats[0] : { maxDuration: 0, minDuration: 0, avgDuration: 0, count: 0 },
       slowestData: result[0].slowestData,
-      fastestData: result[0].fastestData
+      fastestData: result[0].fastestData,
+      isOverDays
     };
+
+    // 生成完整的时间序列，缺失的数据填充null
+    let timeSeriesData = [];
+    if (!isOverDays) {
+      // 按小时统计
+      const hoursDifference = endDate.diff(startDate, 'hours');
+      for (let i = 0; i <= hoursDifference; i++) {
+        const time = startDate.clone().tz(timeZone).add(i, 'hours').utc().format('YYYY-MM-DDTHH:00:00.000[Z]');
+        const found = timeSeriesResult.find(item => item._id === time);
+        timeSeriesData.push({
+          time,
+          avgDuration: found ? found.avgDuration : null,
+        });
+      }
+    } else {
+      // 按天统计
+      const daysOfYear = endDate.diff(startDate, 'days');
+      for (let i = 0; i <= daysOfYear; i++) {
+        const time = startDate.clone().tz(timeZone).add(i, 'days').format(`YYYY-MM-DDT00:00:00.000${offset}`);
+        const found = timeSeriesResult.find(item => item._id === time);
+        timeSeriesData.push({
+          time,
+          avgDuration: found ? found.avgDuration : null,
+        });
+      }
+    }
+
+    // 添加时间序列数据到返回结果
+    sendData.timeSeriesData = timeSeriesData;
 
     // 发送响应
     res.send(sendData);
