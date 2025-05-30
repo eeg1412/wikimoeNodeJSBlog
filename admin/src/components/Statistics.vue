@@ -260,7 +260,7 @@
             </el-table-column>
             <el-table-column
               prop="count"
-              label="数量"
+              label="访问量"
               width="80px"
             ></el-table-column>
           </el-table>
@@ -296,7 +296,7 @@
             </el-table-column>
             <el-table-column
               prop="count"
-              label="数量"
+              label="访问量"
               width="80px"
             ></el-table-column>
           </el-table>
@@ -321,7 +321,7 @@
             <el-table-column prop="_id" label="国家/地区"> </el-table-column>
             <el-table-column
               prop="count"
-              label="数量"
+              label="访问量"
               width="80px"
             ></el-table-column>
           </el-table>
@@ -347,7 +347,7 @@
             </el-table-column>
             <el-table-column
               prop="count"
-              label="数量"
+              label="访问量"
               width="80px"
             ></el-table-column>
           </el-table>
