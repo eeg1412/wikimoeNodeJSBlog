@@ -63,6 +63,7 @@
     <!-- 显示时间推移图表 -->
     <el-row v-if="loadingTimeData && showData">
       <el-col :span="24" class="mb10">
+        <div class="mb10 fb statistics-title">平均加载时间推移图表</div>
         <div
           class="home-chart-body"
           v-if="timeSeriesChartData.labels.length > 0"
