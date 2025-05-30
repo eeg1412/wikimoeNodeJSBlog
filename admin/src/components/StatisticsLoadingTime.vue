@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="el-descriptions__header">
-      <div class="el-descriptions__title">速度统计</div>
+      <div class="el-descriptions__title">加载时间</div>
       <div class="el-descriptions__extra">
         <el-date-picker
           v-model="timeRange"
@@ -60,10 +60,149 @@
       </el-col>
     </el-row>
 
-    <!-- 中部表格 - 最快加载时间 -->
+    <!-- 最慢加载时间 -->
     <el-row v-if="loadingTimeData && showData">
       <el-col :span="24" class="p10">
-        <div class="mb10 fb statistics-title">最快加载时间记录 (前100条)</div>
+        <div class="mb10 fb statistics-title">最慢加载时间记录</div>
+        <div class="mb10 statistics-panel">
+          <el-table
+            :data="slowestDataPaginated"
+            style="width: 100%"
+            height="466px"
+          >
+            <el-table-column label="加载时间" width="120">
+              <template #default="{ row }">
+                {{ formatDuration(row.performanceNavigationTiming.duration) }}
+                秒
+              </template>
+            </el-table-column>
+            <el-table-column
+              prop="ip"
+              label="IP"
+              min-width="200"
+            ></el-table-column>
+            <el-table-column label="IP信息" min-width="300">
+              <template #default="{ row }">
+                <IpInfoDisplay :ipInfo="row.ipInfo" />
+              </template>
+            </el-table-column>
+            <el-table-column label="UA信息" width="100" align="center">
+              <template #default="{ row }">
+                <el-tooltip
+                  effect="dark"
+                  placement="top"
+                  :show-after="200"
+                  max-width="400"
+                >
+                  <template #content>
+                    <div class="tooltip-content">
+                      <div>系统：{{ row.deviceInfo?.os?.name }}</div>
+                      <div>系统版本号：{{ row.deviceInfo?.os?.version }}</div>
+                      <div>浏览器：{{ row.deviceInfo?.browser?.name }}</div>
+                      <div>
+                        浏览器版本号： {{ row.deviceInfo?.browser?.version }}
+                      </div>
+                      <div v-if="row.deviceInfo?.ua" class="word-break">
+                        UA：{{ row.deviceInfo?.ua }}
+                      </div>
+                    </div>
+                  </template>
+                  <el-button size="small" type="primary" text>显示</el-button>
+                </el-tooltip>
+              </template>
+            </el-table-column>
+
+            <el-table-column label="性能统计" width="100" align="center">
+              <template #default="{ row }">
+                <el-tooltip
+                  effect="dark"
+                  placement="top"
+                  :show-after="200"
+                  max-width="400"
+                >
+                  <template #content>
+                    <div class="tooltip-content">
+                      <div>
+                        重定向计数：{{
+                          row.performanceNavigationTiming.redirectCount
+                        }}
+                      </div>
+                      <div>
+                        DNS查询耗时：{{
+                          formatDuration(
+                            row.performanceNavigationTiming.domainLookupDuration
+                          )
+                        }}
+                      </div>
+                      <div>
+                        TCP握手耗时：{{
+                          formatDuration(
+                            row.performanceNavigationTiming.connectDuration
+                          )
+                        }}
+                      </div>
+                      <div>
+                        DOM解析完成耗时：{{
+                          formatDuration(
+                            row.performanceNavigationTiming.domInteractive
+                          )
+                        }}
+                      </div>
+                      <div>
+                        DOM完全加载耗时：{{
+                          formatDuration(
+                            row.performanceNavigationTiming.domComplete
+                          )
+                        }}
+                      </div>
+                      <div>
+                        加载事件处理耗时：{{
+                          formatDuration(
+                            row.performanceNavigationTiming.loadEventDuration
+                          )
+                        }}
+                      </div>
+                      <div>
+                        条目类型：{{
+                          row.performanceNavigationTiming.entryType
+                        }}
+                      </div>
+                      <div class="word-break">
+                        URL：{{ row.performanceNavigationTiming.name }}
+                      </div>
+                      <div>
+                        类型：{{ row.performanceNavigationTiming.type }}
+                      </div>
+                    </div>
+                  </template>
+                  <el-button size="small" type="primary" text>显示</el-button>
+                </el-tooltip>
+              </template>
+            </el-table-column>
+            <el-table-column label="时间" min-width="180">
+              <template #default="{ row }">
+                {{ formatDateTime(row.createdAt) }}
+              </template>
+            </el-table-column>
+          </el-table>
+          <div class="dflex flexCenter mt10">
+            <el-pagination
+              layout="prev, pager, next"
+              :total="loadingTimeData.slowestData.length"
+              :pager-count="5"
+              small
+              v-model:current-page="slowestPagination.currentPage"
+              v-model:page-size="slowestPagination.pageSize"
+            />
+          </div>
+        </div>
+      </el-col>
+    </el-row>
+
+    <!-- 最快加载时间 -->
+    <el-row v-if="loadingTimeData && showData">
+      <el-col :span="24" class="p10">
+        <div class="mb10 fb statistics-title">最快加载时间记录</div>
         <div class="mb10 statistics-panel">
           <el-table
             :data="fastestDataPaginated"
@@ -87,6 +226,99 @@
               </template>
             </el-table-column>
 
+            <el-table-column label="UA信息" width="100" align="center">
+              <template #default="{ row }">
+                <el-tooltip
+                  effect="dark"
+                  placement="top"
+                  :show-after="200"
+                  max-width="400"
+                >
+                  <template #content>
+                    <div class="tooltip-content">
+                      <div>系统：{{ row.deviceInfo?.os?.name }}</div>
+                      <div>系统版本号：{{ row.deviceInfo?.os?.version }}</div>
+                      <div>浏览器：{{ row.deviceInfo?.browser?.name }}</div>
+                      <div>
+                        浏览器版本号： {{ row.deviceInfo?.browser?.version }}
+                      </div>
+                      <div v-if="row.deviceInfo?.ua" class="word-break">
+                        UA：{{ row.deviceInfo?.ua }}
+                      </div>
+                    </div>
+                  </template>
+                  <el-button size="small" type="primary" text>显示</el-button>
+                </el-tooltip>
+              </template>
+            </el-table-column>
+
+            <el-table-column label="性能统计" width="100" align="center">
+              <template #default="{ row }">
+                <el-tooltip
+                  effect="dark"
+                  placement="top"
+                  :show-after="200"
+                  max-width="400"
+                >
+                  <template #content>
+                    <div class="tooltip-content">
+                      <div>
+                        重定向计数：{{
+                          row.performanceNavigationTiming.redirectCount
+                        }}
+                      </div>
+                      <div>
+                        DNS查询耗时：{{
+                          formatDuration(
+                            row.performanceNavigationTiming.domainLookupDuration
+                          )
+                        }}
+                      </div>
+                      <div>
+                        TCP握手耗时：{{
+                          formatDuration(
+                            row.performanceNavigationTiming.connectDuration
+                          )
+                        }}
+                      </div>
+                      <div>
+                        DOM解析完成耗时：{{
+                          formatDuration(
+                            row.performanceNavigationTiming.domInteractive
+                          )
+                        }}
+                      </div>
+                      <div>
+                        DOM完全加载耗时：{{
+                          formatDuration(
+                            row.performanceNavigationTiming.domComplete
+                          )
+                        }}
+                      </div>
+                      <div>
+                        加载事件处理耗时：{{
+                          formatDuration(
+                            row.performanceNavigationTiming.loadEventDuration
+                          )
+                        }}
+                      </div>
+                      <div>
+                        条目类型：{{
+                          row.performanceNavigationTiming.entryType
+                        }}
+                      </div>
+                      <div class="word-break">
+                        URL：{{ row.performanceNavigationTiming.name }}
+                      </div>
+                      <div>
+                        类型：{{ row.performanceNavigationTiming.type }}
+                      </div>
+                    </div>
+                  </template>
+                  <el-button size="small" type="primary" text>显示</el-button>
+                </el-tooltip>
+              </template>
+            </el-table-column>
             <el-table-column label="时间" min-width="180">
               <template #default="{ row }">
                 {{ formatDateTime(row.createdAt) }}
@@ -107,52 +339,6 @@
       </el-col>
     </el-row>
 
-    <!-- 底部表格 - 最慢加载时间 -->
-    <el-row v-if="loadingTimeData && showData">
-      <el-col :span="24" class="p10">
-        <div class="mb10 fb statistics-title">最慢加载时间记录 (前100条)</div>
-        <div class="mb10 statistics-panel">
-          <el-table
-            :data="slowestDataPaginated"
-            style="width: 100%"
-            height="466px"
-          >
-            <el-table-column label="加载时间" width="120">
-              <template #default="{ row }">
-                {{ formatDuration(row.performanceNavigationTiming.duration) }}
-                秒
-              </template>
-            </el-table-column>
-            <el-table-column
-              prop="ip"
-              label="IP"
-              min-width="200"
-            ></el-table-column>
-            <el-table-column label="IP信息" min-width="300">
-              <template #default="{ row }">
-                <IpInfoDisplay :ipInfo="row.ipInfo" />
-              </template>
-            </el-table-column>
-
-            <el-table-column label="时间" min-width="180">
-              <template #default="{ row }">
-                {{ formatDateTime(row.createdAt) }}
-              </template>
-            </el-table-column>
-          </el-table>
-          <div class="dflex flexCenter mt10">
-            <el-pagination
-              layout="prev, pager, next"
-              :total="loadingTimeData.slowestData.length"
-              :pager-count="5"
-              small
-              v-model:current-page="slowestPagination.currentPage"
-              v-model:page-size="slowestPagination.pageSize"
-            />
-          </div>
-        </div>
-      </el-col>
-    </el-row>
     <el-divider />
   </div>
 </template>
@@ -380,5 +566,14 @@ export default {
   height: 515px;
   box-sizing: border-box;
   padding-bottom: 10px;
+}
+.tooltip-content {
+  text-align: left;
+  max-width: 400px;
+}
+.word-break {
+  word-break: break-all;
+  white-space: normal;
+  max-width: 380px;
 }
 </style>

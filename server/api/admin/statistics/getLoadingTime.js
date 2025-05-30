@@ -66,6 +66,7 @@ module.exports = async function (req, res, next) {
         $project: {
           ip: 1,
           ipInfo: 1,
+          deviceInfo: 1,
           createdAt: 1,
           'data.performanceNavigationTiming': 1
         }
@@ -82,6 +83,7 @@ module.exports = async function (req, res, next) {
           _id: "$ip",
           ip: { $first: "$ip" },
           ipInfo: { $first: "$ipInfo" },
+          deviceInfo: { $first: "$deviceInfo" },
           performanceNavigationTiming: { $first: "$data.performanceNavigationTiming" },
           createdAt: { $first: "$createdAt" }
         }
@@ -117,6 +119,7 @@ module.exports = async function (req, res, next) {
                 _id: 0,
                 ip: 1,
                 ipInfo: 1,
+                deviceInfo: 1,
                 performanceNavigationTiming: 1,
                 createdAt: 1
               }
@@ -138,6 +141,7 @@ module.exports = async function (req, res, next) {
                 _id: 0,
                 ip: 1,
                 ipInfo: 1,
+                deviceInfo: 1,
                 performanceNavigationTiming: 1,
                 createdAt: 1
               }
