@@ -119,20 +119,51 @@ export const uuid = (): string => {
     return v.toString(16)
   })
 }
+
 // 检查uuid是否格式是否合法
 export const checkUuidFormat = (uuid: string): boolean => {
   return /^[0-9A-F]{8}-[0-9A-F]{4}-4[0-9A-F]{3}-[89AB][0-9A-F]{3}-[0-9A-F]{12}$/i.test(
     uuid
   )
 }
+// 从cookie中获取指定名称的值
+export const getCookie = (name: string): string | null => {
+  const match = document.cookie.match(new RegExp('(^| )' + name + '=([^;]+)'))
+  return match ? match[2] : null
+}
+
+// 设置cookie
+export const setCookie = (
+  name: string,
+  value: string,
+  days: number = 30
+): void => {
+  const date = new Date()
+  date.setTime(date.getTime() + days * 24 * 60 * 60 * 1000)
+  const expires = '; expires=' + date.toUTCString()
+  document.cookie = name + '=' + value + expires + '; path=/'
+}
 // 检查本地是否存在uuid，没有则生成
 export const checkUuid = () => {
   let storedUuid = localStorage.getItem('uuid')
-  if (!storedUuid || !checkUuidFormat(storedUuid)) {
-    storedUuid = uuid()
-    localStorage.setItem('uuid', storedUuid)
+  // 获取cookie中的uuid
+  let cookieUuid = getCookie('wmbuuid')
+  // 兼容旧版本，storage中可能存在旧的uuid
+  if (storedUuid && checkUuidFormat(storedUuid)) {
+    // 设置cookie中的uuid为本地存储的uuid
+    setCookie('wmbuuid', storedUuid, 365 * 10)
+    cookieUuid = storedUuid
+    // 删除本地存储中的uuid
+    localStorage.removeItem('uuid')
+  } else if (!cookieUuid || !checkUuidFormat(cookieUuid)) {
+    cookieUuid = uuid()
+    // 如果cookie中没有uuid，生成一个新的uuid
+    setCookie('wmbuuid', cookieUuid, 365 * 10)
+  } else {
+    // 更新cookie的过期时间
+    setCookie('wmbuuid', cookieUuid, 365 * 10)
   }
-  return storedUuid
+  return cookieUuid
 }
 
 export const isObjectId = (value: string) => {

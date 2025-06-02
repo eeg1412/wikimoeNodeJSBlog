@@ -1,6 +1,6 @@
 
 const postUtils = require('../../../mongodb/utils/posts')
-const sortUtils = require('../../../mongodb/utils/sorts')
+const postLikeLogUtils = require('../../../mongodb/utils/postLikeLogs')
 const tagsUtils = require('../../../mongodb/utils/tags')
 const utils = require('../../../utils/utils')
 const log4js = require('log4js')
@@ -11,6 +11,12 @@ module.exports = async function (req, res, next) {
   let { page, keyword, type, sorttype, sortid, tags, pageType, year,
     month, } = req.query
   page = parseInt(page)
+  let uuid = req.headers['wmb-request-id']
+  // 判断uuid是否符合格式
+  if (!utils.isUUID(uuid)) {
+    uuid = null
+    return
+  }
   const size = global.$globalConfig?.siteSettings?.sitePageSize || 1
   // 判断page和size是否为数字
   if (!utils.isNumber(page)) {
@@ -271,12 +277,33 @@ module.exports = async function (req, res, next) {
   const filter = '-voteList -content -bangumiList -movieList -bookList -eventList -gameList -postList -seriesSortList -code -editorVersion'
   postUtils.findPage(params, postSorting, page, size, filter, {
     voteFliter: '_id endTime maxSelect showResultAfter title options.title options._id'
-  }).then((data) => {
+  }).then(async (data) => {
+
+    let likeList = []
+    if (uuid) {
+      // 获取用户点赞的文章
+      const postIdList = data.list.map(item => item._id)
+      const params = {
+        post: {
+          $in: postIdList
+        },
+        uuid,
+      }
+      const sort = {
+        _id: -1
+      }
+      try {
+        likeList = await postLikeLogUtils.find(params, sort, '_id post like __v')
+      } catch (error) {
+        userApiLog.error(`postLikeLog list get fail, ${JSON.stringify(error)}`)
+      }
+    }
 
     // 返回格式list,total
     res.send({
       list: data.list,
       total: data.total,
+      likeList: likeList,
       size: size,
     })
 

@@ -93,20 +93,56 @@ class HttpRequest {
 
   // 封装常用方法
 
-  get<T = any>(url: string, params?: any, options?: UseFetchOptions<T>) {
-    return this.request(url, 'GET', params, options)
+  get<T = any>(
+    url: string,
+    params?: any,
+    options?: UseFetchOptions<T>,
+    withCookie: boolean = true
+  ) {
+    const newOptions: UseFetchOptions<T> = {
+      ...options,
+      ...(withCookie ? { credentials: 'include' } : {}),
+    }
+    return this.request(url, 'GET', params, newOptions)
   }
 
-  post<T = any>(url: string, data: any, options?: UseFetchOptions<T>) {
-    return this.request(url, 'POST', data, options)
+  post<T = any>(
+    url: string,
+    data: any,
+    options?: UseFetchOptions<T>,
+    withCookie: boolean = true
+  ) {
+    const newOptions: UseFetchOptions<T> = {
+      ...options,
+      ...(withCookie ? { credentials: 'include' } : {}),
+    }
+    return this.request(url, 'POST', data, newOptions)
   }
 
-  put<T = any>(url: string, data: any, options?: UseFetchOptions<T>) {
-    return this.request(url, 'PUT', data, options)
+  put<T = any>(
+    url: string,
+    data: any,
+    options?: UseFetchOptions<T>,
+    withCookie: boolean = true
+  ) {
+    const newOptions: UseFetchOptions<T> = {
+      ...options,
+      ...(withCookie ? { credentials: 'include' } : {}),
+    }
+    return this.request(url, 'PUT', data, newOptions)
   }
 
-  delete<T = any>(url: string, params: any, options?: UseFetchOptions<T>) {
-    return this.request(url, 'DELETE', params, options)
+  delete<T = any>(
+    url: string,
+    params: any,
+    options?: UseFetchOptions<T>,
+    withCookie: boolean = true
+  ) {
+    const newOptions: UseFetchOptions<T> = {
+      ...options,
+      ...(withCookie ? { credentials: 'include' } : {}),
+    }
+    return this.request(url, 'DELETE', params, newOptions)
   }
 
   // requestFetch

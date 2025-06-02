@@ -1,5 +1,6 @@
 
 const postUtils = require('../../../mongodb/utils/posts')
+const postLikeLogUtils = require('../../../mongodb/utils/postLikeLogs')
 const utils = require('../../../utils/utils')
 const log4js = require('log4js')
 const userApiLog = log4js.getLogger('userApi')
@@ -14,6 +15,12 @@ module.exports = async function (req, res, next) {
         message: 'id不能为空'
       }]
     })
+    return
+  }
+  let uuid = req.headers['wmb-request-id']
+  // 判断uuid是否符合格式
+  if (!utils.isUUID(uuid)) {
+    uuid = null
     return
   }
   const params = {
@@ -173,8 +180,24 @@ module.exports = async function (req, res, next) {
       }
 
     }
+
+
+    let likeData = null
+    if (uuid) {
+      const params = {
+        post: jsonData._id,
+        uuid,
+      }
+      try {
+        likeData = await postLikeLogUtils.findOne(params, '_id post like __v')
+      } catch (error) {
+        userApiLog.error(`postLikeLog list get fail, ${JSON.stringify(error)}`)
+      }
+    }
+
     res.send({
-      data: jsonData
+      data: jsonData,
+      likeData: likeData,
     })
   }).catch((err) => {
     res.status(400).json({

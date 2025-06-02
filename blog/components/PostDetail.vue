@@ -161,7 +161,7 @@
     </div>
 
     <!-- 点赞按钮 -->
-    <div class="post-detail-like-body" v-if="likeListInited">
+    <div class="post-detail-like-body">
       <UButton
         icon="i-heroicons-heart-solid"
         size="md"
@@ -169,7 +169,7 @@
         :variant="colorMode.value === 'dark' ? 'soft' : 'solid'"
         :label="`${formatNumber(postData.data.likes)}点赞`"
         :trailing="false"
-        :loading="likeListLoading || likePostIsLoading"
+        :loading="likePostIsLoading"
         v-if="postData.data.isLike"
         @click="likePost"
       />
@@ -180,13 +180,10 @@
         variant="outline"
         :label="`${formatNumber(postData.data.likes)}点赞`"
         :trailing="false"
-        :loading="likeListLoading || likePostIsLoading"
+        :loading="likePostIsLoading"
         v-else
         @click="likePost"
       />
-    </div>
-    <div class="post-detail-like-body dflex flexCenter" v-else>
-      <USkeleton class="h-9 w-[90px]" />
     </div>
     <!-- 文章通用底部内容 -->
     <PostCommonFooter
@@ -552,12 +549,7 @@
   </div>
 </template>
 <script setup>
-import {
-  getDetailApi,
-  putViewCountApi,
-  postLikeLogListApi,
-  postLikeLogApi,
-} from '@/api/post'
+import { getDetailApi, putViewCountApi, postLikeLogApi } from '@/api/post'
 import {
   getCommentListApi,
   postCommentLikeLogApi,
@@ -784,21 +776,10 @@ const putViewCount = () => {
 }
 
 // post like
-const likeListInited = ref(false)
-const likeListLoading = ref(false)
 const likeList = ref([])
 const postLikeLogList = () => {
-  const postIdList = [postid]
-  likeListLoading.value = true
-  postLikeLogListApi({ postIdList })
-    .then((res) => {
-      likeList.value = res.list
-      checkIsLike()
-    })
-    .finally(() => {
-      likeListInited.value = true
-      likeListLoading.value = false
-    })
+  likeList.value = postData.value.likeData ? [postData.value.likeData] : []
+  checkIsLike()
 }
 const checkIsLike = () => {
   const likeData = likeList.value.find((item) => item.post === postid)

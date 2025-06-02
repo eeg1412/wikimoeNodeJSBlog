@@ -158,7 +158,6 @@
               :class="item.isLike ? 'text-primary-500' : 'cGray94'"
               @click.stop="likePost(item._id)"
               @click.middle.stop
-              v-if="likeListInited"
             >
               <!-- 加载 -->
               <UIcon
@@ -176,9 +175,6 @@
               <UIcon class="mr5 f15" name="i-heroicons-heart" v-else />
 
               <span>{{ formatNumber(item.likes) }} 点赞</span>
-            </div>
-            <div class="dflex flexCenter" v-else>
-              <USkeleton class="h-2 w-[50px]" />
             </div>
           </div>
         </div>
@@ -291,7 +287,7 @@
 </template>
 <script setup>
 import { useRoute } from 'vue-router'
-import { getPostsApi, postLikeLogListApi, postLikeLogApi } from '@/api/post'
+import { getPostsApi, postLikeLogApi } from '@/api/post'
 import { useOptionStore } from '@/store/options'
 import { storeToRefs } from 'pinia'
 
@@ -411,6 +407,25 @@ const [postsDataResponse] = await Promise.all([
 ])
 
 const { data: postsData } = postsDataResponse
+
+const likeList = ref([])
+const checkLikeLogList = () => {
+  likeList.value = postsData.value.likeList
+  postsData.value.list.forEach((item, index) => {
+    const likeData = likeList.value.find(
+      (likeItem) => likeItem.post === item._id
+    )
+    if (likeData && likeData.like) {
+      if (item.likes === 0) {
+        // 延迟补偿
+        postsData.value.list[index].likes = 1
+      }
+      postsData.value.list[index].isLike = likeData.like
+    }
+  })
+}
+checkLikeLogList()
+
 const showTopIcon = (item) => {
   switch (routeName.value) {
     case 'postList':
@@ -484,32 +499,6 @@ const preventDefaultMiddleClick = (e) => {
   }
 }
 
-// console.log(postsData)
-const likeListInited = ref(false)
-const likeListLoading = ref(false)
-const likeList = ref([])
-const postLikeLogList = () => {
-  const postIdList = postsData.value.list.map((item) => item._id)
-  likeListLoading.value = true
-  postLikeLogListApi({ postIdList })
-    .then((res) => {
-      likeList.value = res.list
-      postsData.value.list.forEach((item, index) => {
-        const likeData = res.list.find((likeItem) => likeItem.post === item._id)
-        if (likeData && likeData.like) {
-          if (item.likes === 0) {
-            // 延迟补偿
-            postsData.value.list[index].likes = 1
-          }
-          postsData.value.list[index].isLike = likeData.like
-        }
-      })
-    })
-    .finally(() => {
-      likeListInited.value = true
-      likeListLoading.value = false
-    })
-}
 const checkIsLike = (postId) => {
   const likeData = likeList.value.find((item) => item.post === postId)
   if (likeData) {
@@ -611,7 +600,6 @@ const switchPostType = (type) => {
 const isHydrated = ref(false)
 
 onMounted(() => {
-  postLikeLogList()
   isHydrated.value = true
 })
 onUnmounted(() => {
