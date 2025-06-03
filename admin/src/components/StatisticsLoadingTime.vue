@@ -370,7 +370,7 @@
               label="国家/地区"
               min-width="150"
             ></el-table-column>
-            <el-table-column label="平均加载时间" min-width="120">
+            <el-table-column label="平均加载时间" width="120">
               <template #default="{ row }">
                 {{ formatDuration(row.avgDuration) }} 秒
               </template>
@@ -378,7 +378,7 @@
             <el-table-column
               prop="count"
               label="样本数量"
-              min-width="100"
+              width="100"
             ></el-table-column>
           </el-table>
           <div class="dflex flexCenter mt10">
@@ -409,7 +409,7 @@
               label="国家/地区"
               min-width="150"
             ></el-table-column>
-            <el-table-column label="平均加载时间" min-width="120">
+            <el-table-column label="平均加载时间" width="120">
               <template #default="{ row }">
                 {{ formatDuration(row.avgDuration) }} 秒
               </template>
@@ -417,7 +417,7 @@
             <el-table-column
               prop="count"
               label="样本数量"
-              min-width="100"
+              width="100"
             ></el-table-column>
           </el-table>
           <div class="dflex flexCenter mt10">
@@ -451,7 +451,7 @@
               label="行政区划"
               min-width="150"
             ></el-table-column>
-            <el-table-column label="平均加载时间" min-width="120">
+            <el-table-column label="平均加载时间" width="120">
               <template #default="{ row }">
                 {{ formatDuration(row.avgDuration) }} 秒
               </template>
@@ -459,7 +459,7 @@
             <el-table-column
               prop="count"
               label="样本数量"
-              min-width="100"
+              width="100"
             ></el-table-column>
           </el-table>
           <div class="dflex flexCenter mt10">
@@ -490,7 +490,7 @@
               label="行政区划"
               min-width="150"
             ></el-table-column>
-            <el-table-column label="平均加载时间" min-width="120">
+            <el-table-column label="平均加载时间" width="120">
               <template #default="{ row }">
                 {{ formatDuration(row.avgDuration) }} 秒
               </template>
@@ -498,7 +498,7 @@
             <el-table-column
               prop="count"
               label="样本数量"
-              min-width="100"
+              width="100"
             ></el-table-column>
           </el-table>
           <div class="dflex flexCenter mt10">
