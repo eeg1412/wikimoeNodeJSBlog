@@ -362,7 +362,7 @@
           <el-table
             :data="countrySlowStatsPaginated"
             style="width: 100%"
-            height="300px"
+            height="440px"
             empty-text="暂无数据"
           >
             <el-table-column
@@ -401,7 +401,7 @@
           <el-table
             :data="countryFastStatsPaginated"
             style="width: 100%"
-            height="300px"
+            height="440px"
             empty-text="暂无数据"
           >
             <el-table-column
@@ -443,7 +443,7 @@
           <el-table
             :data="regionSlowStatsPaginated"
             style="width: 100%"
-            height="300px"
+            height="440px"
             empty-text="暂无数据"
           >
             <el-table-column
@@ -482,7 +482,7 @@
           <el-table
             :data="regionFastStatsPaginated"
             style="width: 100%"
-            height="300px"
+            height="440px"
             empty-text="暂无数据"
           >
             <el-table-column
@@ -956,7 +956,7 @@ export default {
 }
 .statistics-panel {
   border: 1px solid var(--el-border-color);
-  height: 350px;
+  height: 485px;
   box-sizing: border-box;
   padding-bottom: 10px;
 }
