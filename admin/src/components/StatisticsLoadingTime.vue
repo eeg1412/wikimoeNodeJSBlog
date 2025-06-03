@@ -70,15 +70,15 @@
         >
           <Line :data="timeSeriesChartData" :options="chartOptions" />
         </div>
-        <div>※图表显示了不同时间段内的平均加载时间（秒）。</div>
+        <div>※图表显示了不同时间段内的平均加载时间。</div>
       </el-col>
     </el-row>
 
     <!-- 最慢加载时间 -->
     <el-row v-if="loadingTimeData && showData">
       <el-col :span="24" class="p10">
-        <div class="mb10 fb statistics-title">最慢加载时间记录</div>
-        <div class="mb10 statistics-panel">
+        <div class="mb10 fb statistics-title">整体最慢加载时间记录</div>
+        <div class="mb10 statistics-panel type-2">
           <el-table
             :data="slowestDataPaginated"
             style="width: 100%"
@@ -216,8 +216,8 @@
     <!-- 最快加载时间 -->
     <el-row v-if="loadingTimeData && showData">
       <el-col :span="24" class="p10">
-        <div class="mb10 fb statistics-title">最快加载时间记录</div>
-        <div class="mb10 statistics-panel">
+        <div class="mb10 fb statistics-title">整体最快加载时间记录</div>
+        <div class="mb10 statistics-panel type-2">
           <el-table
             :data="fastestDataPaginated"
             style="width: 100%"
@@ -347,6 +347,168 @@
               small
               v-model:current-page="fastestPagination.currentPage"
               v-model:page-size="fastestPagination.pageSize"
+            />
+          </div>
+        </div>
+      </el-col>
+    </el-row>
+
+    <!-- 国家级统计 -->
+    <el-row v-if="loadingTimeData && showData">
+      <!-- 国家最慢加载时间 -->
+      <el-col :span="12" :xs="24" class="p10">
+        <div class="mb10 fb statistics-title">国家/地区最慢平均加载时间</div>
+        <div class="mb10 statistics-panel">
+          <el-table
+            :data="countrySlowStatsPaginated"
+            style="width: 100%"
+            height="300px"
+            empty-text="暂无数据"
+          >
+            <el-table-column
+              prop="country"
+              label="国家/地区"
+              min-width="150"
+            ></el-table-column>
+            <el-table-column label="平均加载时间" min-width="120">
+              <template #default="{ row }">
+                {{ formatDuration(row.avgDuration) }} 秒
+              </template>
+            </el-table-column>
+            <el-table-column
+              prop="count"
+              label="样本数量"
+              min-width="100"
+            ></el-table-column>
+          </el-table>
+          <div class="dflex flexCenter mt10">
+            <el-pagination
+              layout="prev, pager, next"
+              :total="loadingTimeData.countrySlowStats?.length || 0"
+              :pager-count="5"
+              small
+              v-model:current-page="countrySlowPagination.currentPage"
+              v-model:page-size="countrySlowPagination.pageSize"
+            />
+          </div>
+        </div>
+      </el-col>
+
+      <!-- 国家最快加载时间 -->
+      <el-col :span="12" :xs="24" class="p10">
+        <div class="mb10 fb statistics-title">国家/地区最快平均加载时间</div>
+        <div class="mb10 statistics-panel">
+          <el-table
+            :data="countryFastStatsPaginated"
+            style="width: 100%"
+            height="300px"
+            empty-text="暂无数据"
+          >
+            <el-table-column
+              prop="country"
+              label="国家/地区"
+              min-width="150"
+            ></el-table-column>
+            <el-table-column label="平均加载时间" min-width="120">
+              <template #default="{ row }">
+                {{ formatDuration(row.avgDuration) }} 秒
+              </template>
+            </el-table-column>
+            <el-table-column
+              prop="count"
+              label="样本数量"
+              min-width="100"
+            ></el-table-column>
+          </el-table>
+          <div class="dflex flexCenter mt10">
+            <el-pagination
+              layout="prev, pager, next"
+              :total="loadingTimeData.countryFastStats?.length || 0"
+              :pager-count="5"
+              small
+              v-model:current-page="countryFastPagination.currentPage"
+              v-model:page-size="countryFastPagination.pageSize"
+            />
+          </div>
+        </div>
+      </el-col>
+    </el-row>
+
+    <!-- 地区级统计 -->
+    <el-row v-if="loadingTimeData && showData">
+      <!-- 地区最慢加载时间 -->
+      <el-col :span="12" :xs="24" class="p10">
+        <div class="mb10 fb statistics-title">行政区划最慢平均加载时间</div>
+        <div class="mb10 statistics-panel">
+          <el-table
+            :data="regionSlowStatsPaginated"
+            style="width: 100%"
+            height="300px"
+            empty-text="暂无数据"
+          >
+            <el-table-column
+              prop="location"
+              label="行政区划"
+              min-width="150"
+            ></el-table-column>
+            <el-table-column label="平均加载时间" min-width="120">
+              <template #default="{ row }">
+                {{ formatDuration(row.avgDuration) }} 秒
+              </template>
+            </el-table-column>
+            <el-table-column
+              prop="count"
+              label="样本数量"
+              min-width="100"
+            ></el-table-column>
+          </el-table>
+          <div class="dflex flexCenter mt10">
+            <el-pagination
+              layout="prev, pager, next"
+              :total="loadingTimeData.regionSlowStats?.length || 0"
+              :pager-count="5"
+              small
+              v-model:current-page="regionSlowPagination.currentPage"
+              v-model:page-size="regionSlowPagination.pageSize"
+            />
+          </div>
+        </div>
+      </el-col>
+
+      <!-- 地区最快加载时间 -->
+      <el-col :span="12" :xs="24" class="p10">
+        <div class="mb10 fb statistics-title">行政区划最快平均加载时间</div>
+        <div class="mb10 statistics-panel">
+          <el-table
+            :data="regionFastStatsPaginated"
+            style="width: 100%"
+            height="300px"
+            empty-text="暂无数据"
+          >
+            <el-table-column
+              prop="location"
+              label="行政区划"
+              min-width="150"
+            ></el-table-column>
+            <el-table-column label="平均加载时间" min-width="120">
+              <template #default="{ row }">
+                {{ formatDuration(row.avgDuration) }} 秒
+              </template>
+            </el-table-column>
+            <el-table-column
+              prop="count"
+              label="样本数量"
+              min-width="100"
+            ></el-table-column>
+          </el-table>
+          <div class="dflex flexCenter mt10">
+            <el-pagination
+              layout="prev, pager, next"
+              :total="loadingTimeData.regionFastStats?.length || 0"
+              :pager-count="5"
+              small
+              v-model:current-page="regionFastPagination.currentPage"
+              v-model:page-size="regionFastPagination.pageSize"
             />
           </div>
         </div>
@@ -503,6 +665,27 @@ export default {
       pageSize: 10,
     })
 
+    // 新增国家和地区统计分页配置
+    const countrySlowPagination = reactive({
+      currentPage: 1,
+      pageSize: 10,
+    })
+
+    const countryFastPagination = reactive({
+      currentPage: 1,
+      pageSize: 10,
+    })
+
+    const regionSlowPagination = reactive({
+      currentPage: 1,
+      pageSize: 10,
+    })
+
+    const regionFastPagination = reactive({
+      currentPage: 1,
+      pageSize: 10,
+    })
+
     // 计算属性 - 分页后的数据
     const fastestDataPaginated = computed(() => {
       if (loadingTimeData.value && loadingTimeData.value.fastestData) {
@@ -524,6 +707,51 @@ export default {
       return []
     })
 
+    // 新增国家和地区统计分页计算属性
+    const countrySlowStatsPaginated = computed(() => {
+      if (loadingTimeData.value && loadingTimeData.value.countrySlowStats) {
+        return loadingTimeData.value.countrySlowStats.slice(
+          (countrySlowPagination.currentPage - 1) *
+            countrySlowPagination.pageSize,
+          countrySlowPagination.currentPage * countrySlowPagination.pageSize
+        )
+      }
+      return []
+    })
+
+    const countryFastStatsPaginated = computed(() => {
+      if (loadingTimeData.value && loadingTimeData.value.countryFastStats) {
+        return loadingTimeData.value.countryFastStats.slice(
+          (countryFastPagination.currentPage - 1) *
+            countryFastPagination.pageSize,
+          countryFastPagination.currentPage * countryFastPagination.pageSize
+        )
+      }
+      return []
+    })
+
+    const regionSlowStatsPaginated = computed(() => {
+      if (loadingTimeData.value && loadingTimeData.value.regionSlowStats) {
+        return loadingTimeData.value.regionSlowStats.slice(
+          (regionSlowPagination.currentPage - 1) *
+            regionSlowPagination.pageSize,
+          regionSlowPagination.currentPage * regionSlowPagination.pageSize
+        )
+      }
+      return []
+    })
+
+    const regionFastStatsPaginated = computed(() => {
+      if (loadingTimeData.value && loadingTimeData.value.regionFastStats) {
+        return loadingTimeData.value.regionFastStats.slice(
+          (regionFastPagination.currentPage - 1) *
+            regionFastPagination.pageSize,
+          regionFastPagination.currentPage * regionFastPagination.pageSize
+        )
+      }
+      return []
+    })
+
     // 时间序列数据图表
     const timeSeriesChartData = computed(() => {
       if (loadingTimeData.value && loadingTimeData.value.timeSeriesData) {
@@ -533,6 +761,7 @@ export default {
         })
         const labels = []
         const avgDurations = []
+        const counts = []
         const isOverDays = loadingTimeData.value.isOverDays
 
         data.forEach((item) => {
@@ -548,6 +777,8 @@ export default {
               ? (item.avgDuration / 1000).toFixed(2)
               : null
           )
+          // 添加请求数量数据
+          counts.push(item.count || null)
         })
 
         return {
@@ -557,7 +788,19 @@ export default {
               label: '平均加载时间(秒)',
               data: avgDurations,
               borderColor: '#409EFF',
-              yAxisID: 'y',
+              backgroundColor: 'rgba(64, 158, 255, 0.2)',
+              yAxisID: 'y-duration',
+              tension: 0.2,
+              borderWidth: 2,
+            },
+            {
+              label: '样本数量',
+              data: counts,
+              borderColor: '#67C23A',
+              backgroundColor: 'rgba(103, 194, 58, 0.2)',
+              yAxisID: 'y-count',
+              tension: 0.2,
+              borderWidth: 2,
             },
           ],
         }
@@ -565,7 +808,7 @@ export default {
       return { labels: [], datasets: [] }
     })
 
-    // 图表配置
+    // 修改图表配置，添加双Y轴
     const chartOptions = {
       responsive: true,
       maintainAspectRatio: false,
@@ -574,14 +817,36 @@ export default {
         intersect: false,
       },
       scales: {
-        y: {
+        'y-duration': {
+          type: 'linear',
+          display: true,
+          position: 'left',
+          title: {
+            display: true,
+            text: '加载时间(秒)',
+          },
           grid: {
-            color: 'rgba(155, 155, 155, 0.2)', // X轴网格线颜色
+            color: 'rgba(155, 155, 155, 0.2)',
+          },
+          ticks: {
+            beginAtZero: true,
+            precision: 2,
+          },
+        },
+        'y-count': {
+          type: 'linear',
+          display: true,
+          position: 'right',
+          title: {
+            display: true,
+            text: '样本数量',
+          },
+          grid: {
+            drawOnChartArea: false, // 只显示左侧Y轴的网格线
           },
           ticks: {
             beginAtZero: true,
             precision: 0,
-            stepSize: 1,
           },
         },
         x: {
@@ -613,6 +878,10 @@ export default {
           if (resetPage) {
             fastestPagination.currentPage = 1
             slowestPagination.currentPage = 1
+            countrySlowPagination.currentPage = 1
+            countryFastPagination.currentPage = 1
+            regionSlowPagination.currentPage = 1
+            regionFastPagination.currentPage = 1
           }
           loadingTimeData.value = res.data
           showData.value = true
@@ -666,6 +935,15 @@ export default {
       timeSeriesChartData,
       chartOptions,
       roundDuration,
+      // 新增返回国家和地区统计分页
+      countrySlowPagination,
+      countryFastPagination,
+      regionSlowPagination,
+      regionFastPagination,
+      countrySlowStatsPaginated,
+      countryFastStatsPaginated,
+      regionSlowStatsPaginated,
+      regionFastStatsPaginated,
     }
   },
 }
@@ -678,7 +956,7 @@ export default {
 }
 .statistics-panel {
   border: 1px solid var(--el-border-color);
-  height: 515px;
+  height: 350px;
   box-sizing: border-box;
   padding-bottom: 10px;
 }
@@ -695,5 +973,9 @@ export default {
   width: 100%;
   height: 300px;
   margin-bottom: 10px;
+}
+/* 最慢/最快加载时间记录的统计面板保持原高度 */
+.type-2.statistics-panel {
+  height: 515px;
 }
 </style>

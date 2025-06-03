@@ -197,6 +197,156 @@ module.exports = async function (req, res, next) {
                 createdAt: 1
               }
             }
+          ],
+          // 按国家统计最慢平均用时
+          "countrySlowStats": [
+            {
+              $match: {
+                "ipInfo.countryLong": { $exists: true, $ne: null, $ne: "-" }
+              }
+            },
+            {
+              $group: {
+                _id: "$ipInfo.countryLong",
+                avgDuration: { $avg: "$performanceNavigationTiming.duration" },
+                count: { $sum: 1 }
+              }
+            },
+            {
+              $match: {
+                count: { $gte: 5 }  // 只包括至少有5个样本的国家，避免偶然性
+              }
+            },
+            {
+              $project: {
+                _id: 0,
+                country: "$_id",
+                avgDuration: { $round: ["$avgDuration", 0] },
+                count: 1
+              }
+            },
+            {
+              $sort: { avgDuration: -1 }  // 从慢到快排序
+            },
+            {
+              $limit: limit
+            }
+          ],
+          // 按国家统计最快平均用时
+          "countryFastStats": [
+            {
+              $match: {
+                "ipInfo.countryLong": { $exists: true, $ne: null, $ne: "-" }
+              }
+            },
+            {
+              $group: {
+                _id: "$ipInfo.countryLong",
+                avgDuration: { $avg: "$performanceNavigationTiming.duration" },
+                count: { $sum: 1 }
+              }
+            },
+            {
+              $match: {
+                count: { $gte: 5 }  // 只包括至少有5个样本的国家，避免偶然性
+              }
+            },
+            {
+              $project: {
+                _id: 0,
+                country: "$_id",
+                avgDuration: { $round: ["$avgDuration", 0] },
+                count: 1
+              }
+            },
+            {
+              $sort: { avgDuration: 1 }  // 从快到慢排序
+            },
+            {
+              $limit: limit
+            }
+          ],
+          // 按国家+地区统计最慢平均用时
+          "regionSlowStats": [
+            {
+              $match: {
+                "ipInfo.countryLong": { $exists: true, $ne: null, $ne: "-" },
+                "ipInfo.region": { $exists: true, $ne: null, $ne: "-" }
+              }
+            },
+            {
+              $group: {
+                _id: { country: "$ipInfo.countryLong", region: "$ipInfo.region" },
+                avgDuration: { $avg: "$performanceNavigationTiming.duration" },
+                count: { $sum: 1 }
+              }
+            },
+            {
+              $match: {
+                count: { $gte: 3 }  // 只包括至少有3个样本的地区，避免偶然性
+              }
+            },
+            {
+              $project: {
+                _id: 0,
+                location: {
+                  $cond: {
+                    if: { $eq: ["$_id.country", "$_id.region"] },
+                    then: "$_id.country", // 如果国家和地区相同，只显示一次
+                    else: { $concat: ["$_id.country", " ", "$_id.region"] } // 否则显示国家+空格+地区
+                  }
+                },
+                avgDuration: { $round: ["$avgDuration", 0] },
+                count: 1
+              }
+            },
+            {
+              $sort: { avgDuration: -1 }  // 从慢到快排序
+            },
+            {
+              $limit: limit
+            }
+          ],
+          // 按国家+地区统计最快平均用时
+          "regionFastStats": [
+            {
+              $match: {
+                "ipInfo.countryLong": { $exists: true, $ne: null, $ne: "-" },
+                "ipInfo.region": { $exists: true, $ne: null, $ne: "-" }
+              }
+            },
+            {
+              $group: {
+                _id: { country: "$ipInfo.countryLong", region: "$ipInfo.region" },
+                avgDuration: { $avg: "$performanceNavigationTiming.duration" },
+                count: { $sum: 1 }
+              }
+            },
+            {
+              $match: {
+                count: { $gte: 3 }  // 只包括至少有3个样本的地区，避免偶然性
+              }
+            },
+            {
+              $project: {
+                _id: 0,
+                location: {
+                  $cond: {
+                    if: { $eq: ["$_id.country", "$_id.region"] },
+                    then: "$_id.country", // 如果国家和地区相同，只显示一次
+                    else: { $concat: ["$_id.country", " ", "$_id.region"] } // 否则显示国家+空格+地区
+                  }
+                },
+                avgDuration: { $round: ["$avgDuration", 0] },
+                count: 1
+              }
+            },
+            {
+              $sort: { avgDuration: 1 }  // 从快到慢排序
+            },
+            {
+              $limit: limit
+            }
           ]
         }
       }
@@ -232,7 +382,7 @@ module.exports = async function (req, res, next) {
             formatDate: "$formatDate",
             ip: "$ip"
           },
-          duration: { $first: "$data.performanceNavigationTiming.duration" }
+          duration: { $first: "$data.performanceNavigationTiming.duration" },
         }
       },
       // 4. 按时间单位分组，计算平均加载时间
@@ -240,13 +390,15 @@ module.exports = async function (req, res, next) {
         $group: {
           _id: "$_id.formatDate",
           avgDuration: { $avg: "$duration" },
+          count: { $sum: 1 }
         }
       },
       // 使用$project和$round对avgDuration进行四舍五入处理
       {
         $project: {
           _id: 1,
-          avgDuration: { $round: ["$avgDuration", 0] }
+          avgDuration: { $round: ["$avgDuration", 0] },
+          count: 1
         }
       },
       // 5. 按时间排序
@@ -277,6 +429,11 @@ module.exports = async function (req, res, next) {
       stats: result[0].stats.length > 0 ? result[0].stats[0] : { maxDuration: 0, minDuration: 0, avgDuration: 0, count: 0 },
       slowestData: result[0].slowestData,
       fastestData: result[0].fastestData,
+      countrySlowStats: result[0].countrySlowStats,
+      countryFastStats: result[0].countryFastStats,
+      regionSlowStats: result[0].regionSlowStats,
+      regionFastStats: result[0].regionFastStats,
+      timeSeriesData: [],
       isOverDays
     };
 
@@ -291,6 +448,7 @@ module.exports = async function (req, res, next) {
         timeSeriesData.push({
           time,
           avgDuration: found ? found.avgDuration : null,
+          count: found ? found.count : null
         });
       }
     } else {
@@ -302,6 +460,7 @@ module.exports = async function (req, res, next) {
         timeSeriesData.push({
           time,
           avgDuration: found ? found.avgDuration : null,
+          count: found ? found.count : null
         });
       }
     }
