@@ -213,11 +213,6 @@ module.exports = async function (req, res, next) {
               }
             },
             {
-              $match: {
-                count: { $gte: 5 }  // 只包括至少有5个样本的国家，避免偶然性
-              }
-            },
-            {
               $project: {
                 _id: 0,
                 country: "$_id",
@@ -244,11 +239,6 @@ module.exports = async function (req, res, next) {
                 _id: "$ipInfo.countryLong",
                 avgDuration: { $avg: "$performanceNavigationTiming.duration" },
                 count: { $sum: 1 }
-              }
-            },
-            {
-              $match: {
-                count: { $gte: 5 }  // 只包括至少有5个样本的国家，避免偶然性
               }
             },
             {
@@ -279,11 +269,6 @@ module.exports = async function (req, res, next) {
                 _id: { country: "$ipInfo.countryLong", region: "$ipInfo.region" },
                 avgDuration: { $avg: "$performanceNavigationTiming.duration" },
                 count: { $sum: 1 }
-              }
-            },
-            {
-              $match: {
-                count: { $gte: 3 }  // 只包括至少有3个样本的地区，避免偶然性
               }
             },
             {
@@ -320,11 +305,6 @@ module.exports = async function (req, res, next) {
                 _id: { country: "$ipInfo.countryLong", region: "$ipInfo.region" },
                 avgDuration: { $avg: "$performanceNavigationTiming.duration" },
                 count: { $sum: 1 }
-              }
-            },
-            {
-              $match: {
-                count: { $gte: 3 }  // 只包括至少有3个样本的地区，避免偶然性
               }
             },
             {
