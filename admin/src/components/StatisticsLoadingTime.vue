@@ -513,8 +513,10 @@
           </div>
         </div>
       </el-col>
+      <el-col :span="24">
+        <div>※国家/地区/行政区划仅统计样本数量大于3的数据。</div>
+      </el-col>
     </el-row>
-    <div>※国家/地区/行政区划仅统计样本数量大于3的数据。</div>
     <el-divider />
   </div>
 </template>
