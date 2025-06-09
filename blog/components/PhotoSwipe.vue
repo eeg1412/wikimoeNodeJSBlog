@@ -498,9 +498,9 @@ const open = async (list = [], showIndex = 0, closeCallback_) => {
     // thumfor 在这里不需要，上面的相册需要
 
     // 通过正则判断是否携带协议和域名
-    if (!/^https?:\/\//.test(src)) {
-      src = options.value.siteUrl + src
-    }
+    // if (!/^https?:\/\//.test(src)) {
+    //   src = options.value.siteUrl + src
+    // }
     // 如果width或者height不存在需要重新计算
     if (!width || !height) {
       // 如果是视频，默认宽高，1280x720
