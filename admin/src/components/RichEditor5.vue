@@ -333,8 +333,8 @@ export default {
     const openAttachmentsDialogType = ref('')
     const openAttachmentsDialog = (type) => {
       let insertFnIs360Panorama_ = false
+      openAttachmentsDialogType.value = type || ''
       if (type) {
-        openAttachmentsDialogType.value = type
         switch (type) {
           case 'imageGroup':
             insertFnType.value = 'image'
