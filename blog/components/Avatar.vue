@@ -9,6 +9,7 @@
         class="blog-avatar"
         :src="src"
         :alt="alt"
+        loading="lazy"
         @load="imgLoad"
         @error="imgError"
       />
