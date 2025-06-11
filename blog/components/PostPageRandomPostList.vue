@@ -24,12 +24,11 @@
         <div
           class="flex-1 min-w-0 pr-4 pl-3 py-2 random-post-item-left transition duration-500"
         >
-          <div
+          <img
+            loading="lazy"
             class="random-post-item-left-image"
-            :style="{
-              backgroundImage: getBackgroundImage(item),
-            }"
-          ></div>
+            :src="getBackgroundImage(item)"
+          />
           <div
             class="text-sm text-gray-500 dark:text-gray-300 mb-1 flex items-center"
           >
@@ -131,7 +130,7 @@ const getRandomPostCategory = (item) => {
   return category
 }
 const getBackgroundImage = (item) => {
-  let backgroundImage = options.value.siteUrl + options.value.siteDefaultCover
+  let backgroundImage = options.value.siteDefaultCover
   const detail = item
   if (detail.coverImage) {
     const mimetype = detail.coverImage.mimetype
@@ -141,7 +140,7 @@ const getBackgroundImage = (item) => {
       backgroundImage = detail.coverImage.filepath
     }
   }
-  return `url(${backgroundImage})`
+  return `${backgroundImage}`
 }
 </script>
 <style scoped>
@@ -185,14 +184,13 @@ const getBackgroundImage = (item) => {
 }
 .random-post-item-left-image {
   position: absolute;
+  display: block;
   top: 0;
   right: 0;
   width: 100%;
   height: 100%;
   z-index: -1;
-  background-size: cover;
-  background-position: center center;
-  background-repeat: no-repeat;
+  object-fit: cover;
   opacity: 0.1;
   @apply bg-primary-100;
 }

@@ -12,12 +12,11 @@
       <div
         class="flex-1 min-w-0 pr-4 pl-3 py-2 trend-item-left border-r border-solid transition duration-500"
       >
-        <div
+        <img
           class="trend-item-left-image"
-          :style="{
-            backgroundImage: getBackgroundImage(item),
-          }"
-        ></div>
+          loading="lazy"
+          :src="getBackgroundImage(item)"
+        />
         <div
           class="text-sm text-gray-500 dark:text-gray-300 mb-1 flex items-center"
         >
@@ -146,7 +145,7 @@ const getTrendCategory = (item) => {
   return category
 }
 const getBackgroundImage = (item) => {
-  let backgroundImage = options.value.siteUrl + options.value.siteDefaultCover
+  let backgroundImage = options.value.siteDefaultCover
   const target = item.target
   const detail = getTrendDetail(item, target)
   if (detail.coverImage) {
@@ -157,7 +156,7 @@ const getBackgroundImage = (item) => {
       backgroundImage = detail.coverImage.filepath
     }
   }
-  return `url(${backgroundImage})`
+  return `${backgroundImage}`
 }
 </script>
 <style scoped>
@@ -172,15 +171,14 @@ const getBackgroundImage = (item) => {
 }
 .trend-item-left-image {
   position: absolute;
+  display: block;
   top: 0;
   right: 0;
   width: 100%;
   height: 100%;
   z-index: -1;
-  background-size: cover;
-  background-position: center center;
-  background-repeat: no-repeat;
   opacity: 0.1;
+  object-fit: cover;
   @apply bg-primary-100;
 }
 .trend-item-body:hover,
