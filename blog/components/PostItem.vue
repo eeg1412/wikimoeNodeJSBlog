@@ -7,6 +7,7 @@
         :alt="post.coverImages[0].filename"
         :width="post.coverImages[0].thumWidth || post.coverImages[0].width"
         :height="post.coverImages[0].thumHeight || post.coverImages[0].height"
+        loading="lazy"
         v-if="post.coverImages[0]"
       />
       <!-- 默认封面图 defaultCover -->
@@ -16,6 +17,7 @@
         :alt="post.title"
         :width="1344"
         :height="648"
+        loading="lazy"
         v-else
       />
     </div>
