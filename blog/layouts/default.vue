@@ -17,11 +17,13 @@
           <nuxt-link to="/">
             <img
               class="blog-top-bar-sitelogo light"
+              loading="lazy"
               :src="options.siteLogo"
               :alt="options.siteTitle"
             />
             <img
               class="blog-top-bar-sitelogo dark"
+              loading="lazy"
               :src="options.siteDarkLogo"
               :alt="options.siteTitle"
             />
