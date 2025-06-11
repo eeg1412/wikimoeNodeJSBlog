@@ -85,14 +85,14 @@
           @click.stop="tryOpenHref(0)"
         >
           <div
-            class="rounded px-1 py-0.5 bg-primary-500 text-white dark:text-gray-900 bg-opacity-80 text-xs flex align-middle justify-center pointer"
+            class="rounded px-1 py-0.5 bg-primary-500 text-white dark:text-gray-900 bg-opacity-80 text-xs flex align-middle justify-center pointer whitespace-nowrap"
             :title="coverImages[0].description"
             v-if="coverImages[0].description"
           >
             描述
           </div>
           <div
-            class="rounded px-1 py-0.5 bg-primary-500 text-white dark:text-gray-900 bg-opacity-80 text-xs flex align-middle justify-center pointer"
+            class="rounded px-1 py-0.5 bg-primary-500 text-white dark:text-gray-900 bg-opacity-80 text-xs flex align-middle justify-center pointer whitespace-nowrap"
             v-if="coverImages[0].is360Panorama"
           >
             360°全景
@@ -193,14 +193,14 @@
                   @click.stop="tryOpenHref(img.dataHrefIndex)"
                 >
                   <div
-                    class="rounded px-1 py-0.5 bg-primary-500 text-white dark:text-gray-900 bg-opacity-80 text-xs flex align-middle justify-center pointer"
+                    class="rounded px-1 py-0.5 bg-primary-500 text-white dark:text-gray-900 bg-opacity-80 text-xs flex align-middle justify-center pointer whitespace-nowrap"
                     :title="img.description"
                     v-if="img.description"
                   >
                     描述
                   </div>
                   <div
-                    class="rounded px-1 py-0.5 bg-primary-500 text-white dark:text-gray-900 bg-opacity-80 text-xs flex align-middle justify-center pointer"
+                    class="rounded px-1 py-0.5 bg-primary-500 text-white dark:text-gray-900 bg-opacity-80 text-xs flex align-middle justify-center pointer whitespace-nowrap"
                     v-if="img.is360Panorama"
                   >
                     360°全景
@@ -285,14 +285,14 @@
                   @click.stop="tryOpenHref(img.dataHrefIndex)"
                 >
                   <div
-                    class="rounded px-1 py-0.5 bg-primary-500 text-white dark:text-gray-900 bg-opacity-80 text-xs flex align-middle justify-center pointer"
+                    class="rounded px-1 py-0.5 bg-primary-500 text-white dark:text-gray-900 bg-opacity-80 text-xs flex align-middle justify-center pointer whitespace-nowrap"
                     :title="img.description"
                     v-if="img.description"
                   >
                     描述
                   </div>
                   <div
-                    class="rounded px-1 py-0.5 bg-primary-500 text-white dark:text-gray-900 bg-opacity-80 text-xs flex align-middle justify-center pointer"
+                    class="rounded px-1 py-0.5 bg-primary-500 text-white dark:text-gray-900 bg-opacity-80 text-xs flex align-middle justify-center pointer whitespace-nowrap"
                     v-if="img.is360Panorama"
                   >
                     360°全景

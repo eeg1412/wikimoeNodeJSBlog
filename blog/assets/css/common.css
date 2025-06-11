@@ -1375,7 +1375,7 @@ ins.adsbygoogle[data-ad-status='unfilled'] {
   left: 0.5rem;
   /* 点击穿透 */
   pointer-events: none;
-  @apply rounded px-1 py-0.5 bg-primary-500 text-white dark:text-gray-900 bg-opacity-80 text-xs flex align-middle justify-center pointer mr-1;
+  @apply rounded px-1 py-0.5 bg-primary-500 text-white dark:text-gray-900 bg-opacity-80 text-xs flex align-middle justify-center pointer mr-1 whitespace-nowrap;
 }
 
 /* 暗模式 */
