@@ -27,7 +27,7 @@
 ![image](https://github.com/user-attachments/assets/b29f821a-1446-4380-8913-23c0e879a4c5)
 
 ### 支持360°全景照片
-![image](https://github.com/user-attachments/assets/bbb6a001-8e80-4f21-b194-d66575ecab27)
+![image](https://github.com/user-attachments/assets/acd45951-6dad-464b-a9c4-92a73b32e4ae)  
 
 ## 当前已知问题
 
