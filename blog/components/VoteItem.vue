@@ -27,10 +27,11 @@
     <div>
       <div class="mb-3" v-for="option in itemCom.options" :key="option._id">
         <div
-          class="flex justify-between items-center rounded-md border border-solid border-gray-300 dark:border-gray-600 hover:border-primary/80 dark:hover:border-primary/80 transition-colors cursor-pointer vote-item-option"
+          class="flex justify-between items-center rounded-md border border-solid border-gray-300 dark:border-gray-600 transition-all cursor-pointer vote-item-option"
           :class="{
             disabled: btnDisabled,
             active: optionIdList.includes(option._id),
+            'max-vote': maxVoteIdList.includes(option._id),
           }"
           @click="handleSelect(option)"
         >
@@ -119,6 +120,28 @@ const itemCom = computed(() => {
     ...props.item,
     ...itemRes.value,
   }
+})
+
+// 投票最多的选项list
+const maxVoteIdList = computed(() => {
+  if (!itemCom.value?.options || itemCom.value.options.length === 0) {
+    return []
+  }
+  if (!itemCom.value?.votes || itemCom.value.votes <= 0) {
+    return []
+  }
+  let maxVoteCount = -1
+  let ids = []
+  for (const option of itemCom.value.options) {
+    const votes = option.votes || 0
+    if (votes > maxVoteCount) {
+      maxVoteCount = votes
+      ids = [option._id]
+    } else if (votes === maxVoteCount) {
+      ids.push(option._id)
+    }
+  }
+  return ids
 })
 
 const voted = ref(false)
@@ -274,14 +297,29 @@ onUnmounted(() => {
   line-height: 1.25rem;
   padding: 0.4rem 0.5rem;
 }
+.vote-item-option:not(.disabled):hover {
+  @apply border-primary-400 dark:border-primary-400;
+}
+:deep(.vote-item-option:not(.disabled):hover input[type='checkbox']) {
+  @apply border-primary-400 dark:border-primary-400;
+}
 .vote-item-option.active {
-  @apply border-primary-400 text-primary-500 dark:text-primary-400;
+  @apply text-primary-500 dark:text-primary-400;
 }
 .vote-item-option.disabled {
-  @apply cursor-default hover:border-gray-300 dark:hover:border-gray-600;
+  @apply cursor-default;
 }
-.vote-item-option.active.disabled {
+.vote-item-option.disabled:hover {
+  @apply border-gray-300 dark:border-gray-600;
+}
+/* .vote-item-option.active.disabled {
   @apply hover:border-primary-400 dark:hover:border-primary-400;
+} */
+.vote-item-option.max-vote {
+  @apply border-primary-400 text-primary-500 dark:text-primary-400;
+}
+.vote-item-option.max-vote.disabled {
+  @apply border-primary-400 dark:border-primary-400 text-primary-500 dark:text-primary-400;
 }
 .vote-item-option-votes {
   font-size: 0.75rem;
@@ -289,9 +327,9 @@ onUnmounted(() => {
   min-width: 6.2rem;
   text-align: right;
 }
-.vote-item-option.active .vote-item-option-votes {
+/* .vote-item-option.active .vote-item-option-votes {
   @apply text-primary-500 dark:text-primary-400;
-}
+} */
 .vote-item-option-votes {
   text-align: right;
 }
@@ -314,7 +352,10 @@ onUnmounted(() => {
   border-radius: 0.1rem;
   transition: width 0.3s;
 }
-.vote-item-option.active .vote-item-option-bar-inner {
+/* .vote-item-option.active .vote-item-option-bar-inner {
+  @apply bg-primary-400/20;
+} */
+.vote-item-option.max-vote .vote-item-option-bar-inner {
   @apply bg-primary-400/20;
 }
 .vote-item-option-title,
