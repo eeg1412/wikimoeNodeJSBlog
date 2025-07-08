@@ -84,7 +84,7 @@
               </div>
             </template>
             <template v-else-if="item.type === 2">
-              <TweetContent
+              <LazyTweetContent
                 :content="item.excerpt"
                 :tags="item.tags"
                 :contentEventList="item.contentEventList"
@@ -98,7 +98,7 @@
                 :contentSeriesSortList="item.contentSeriesSortList"
                 :postId="item._id"
               >
-              </TweetContent>
+              </LazyTweetContent>
             </template>
           </div>
           <!-- 图片 -->
@@ -111,7 +111,7 @@
                 params: { id: item.alias || item._id },
               }"
             >
-              <PostItem :post="item" />
+              <LazyPostItem :post="item" />
             </NuxtLink>
           </template>
           <!-- 统计信息左边阅读数 右边点赞数 -->
@@ -232,7 +232,7 @@
     </div>
     <ClientOnly>
       <Teleport to="#rightToolBar">
-        <PostListFilterBtn @btnClick="switchFilterMenu" />
+        <LazyPostListFilterBtn @btnClick="switchFilterMenu" />
       </Teleport>
       <Teleport to="#rightToolBarMenu">
         <transition name="fade">

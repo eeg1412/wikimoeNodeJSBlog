@@ -52,7 +52,7 @@
         />
       </template>
       <template v-else-if="item === 'event'">
-        <PostAboutEvent
+        <LazyPostAboutEvent
           :eventList="contentEventList"
           :showTitle="false"
           :postId="postId"
@@ -61,7 +61,7 @@
         />
       </template>
       <template v-else-if="item === 'vote'">
-        <PostVote
+        <LazyPostVote
           :voteList="contentVoteList"
           :showTitle="false"
           :postId="postId"
@@ -70,7 +70,7 @@
         />
       </template>
       <template v-else-if="item === 'post'">
-        <PostAbout
+        <LazyPostAbout
           :postList="contentPostList"
           :showTitle="false"
           :postId="postId"
@@ -79,7 +79,7 @@
         />
       </template>
       <template v-else-if="item === 'acgn'">
-        <PostACG
+        <LazyPostACG
           :bangumiList="contentBangumiList"
           :gameList="contentGameList"
           :bookList="contentBookList"

@@ -1,6 +1,6 @@
 <template>
   <div>
-    <Banner />
+    <LazyBanner />
     <NuxtPage></NuxtPage>
   </div>
 </template>

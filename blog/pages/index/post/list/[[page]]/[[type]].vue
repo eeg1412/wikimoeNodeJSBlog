@@ -1,6 +1,6 @@
 <template>
   <div>
-    <PostList />
+    <LazyPostList />
   </div>
 </template>
 <script setup>

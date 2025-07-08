@@ -46,46 +46,46 @@
       <template v-if="pageTemplate === 'almanac'">
         <div>
           <h2 class="post-title mb-3">{{ postData.data.title }}</h2>
-          <PageAlmanac />
+          <LazyPageAlmanac />
           <div class="mb-5"></div>
-          <PageSeeking />
+          <LazyPageSeeking />
         </div>
       </template>
       <template v-else-if="pageTemplate === 'link'">
         <div>
           <h2 class="post-title mb-3">{{ postData.data.title }}</h2>
-          <PageLink />
+          <LazyPageLink />
         </div>
       </template>
       <template v-else-if="pageTemplate === 'about'">
-        <PageAbout :author="postData.data.author" />
+        <LazyPageAbout :author="postData.data.author" />
       </template>
       <!-- bangumi -->
       <template v-else-if="pageTemplate === 'bangumi'">
         <div>
           <h2 class="post-title mb-3">{{ postData.data.title }}</h2>
-          <PageBangumi />
+          <LazyPageBangumi />
         </div>
       </template>
       <!-- movieList -->
       <template v-else-if="pageTemplate === 'movieList'">
         <div>
           <h2 class="post-title mb-3">{{ postData.data.title }}</h2>
-          <PageMovieList />
+          <LazyPageMovieList />
         </div>
       </template>
       <!-- gameList -->
       <template v-else-if="pageTemplate === 'gameList'">
         <div>
           <h2 class="post-title mb-3">{{ postData.data.title }}</h2>
-          <PageGameList />
+          <LazyPageGameList />
         </div>
       </template>
       <!-- bookList -->
       <template v-else-if="pageTemplate === 'bookList'">
         <div>
           <h2 class="post-title mb-3">{{ postData.data.title }}</h2>
-          <PageBookList />
+          <LazyPageBookList />
         </div>
       </template>
       <!-- event -->
@@ -93,7 +93,7 @@
         <div>
           <h2 class="post-title mb-3">{{ postData.data.title }}</h2>
           <ClientOnly>
-            <PageEvent />
+            <LazyPageEvent />
           </ClientOnly>
         </div>
       </template>
@@ -109,7 +109,7 @@
       v-if="postData.data.type === 1 || postData.data.type === 3"
       id="postHtmlContent"
     >
-      <HtmlContent :content="postData.data.content" />
+      <LazyHtmlContent :content="postData.data.content" />
       <!-- tags -->
       <div class="mt-1 mb-1" v-if="postData.data.tags.length > 0">
         <template v-for="(tag, index) in postData.data.tags" :key="index">
@@ -130,7 +130,7 @@
       class="post-tweet-detail-content-body"
     >
       <div class="post-tweet-detail-content">
-        <TweetContent
+        <LazyTweetContent
           :content="postData.data.excerpt"
           :tags="postData.data.tags"
           :contentEventList="postData.data.contentEventList"
@@ -144,7 +144,7 @@
           :contentSeriesSortList="postData.data.contentSeriesSortList"
           :postId="postData.data._id"
         >
-        </TweetContent>
+        </LazyTweetContent>
       </div>
     </div>
 
@@ -189,35 +189,35 @@
       <USkeleton class="h-9 w-[90px]" />
     </div>
     <!-- 文章通用底部内容 -->
-    <PostCommonFooter
+    <LazyPostCommonFooter
       :post="postData.data"
       v-if="showPostCommonFooter && postData.data"
     />
     <!-- 循环seriesSortListCom -->
     <template v-for="(item, index) in seriesSortListCom" :key="index">
       <template v-if="item === 'event'">
-        <PostAboutEvent
+        <LazyPostAboutEvent
           :eventList="postData.data.eventList"
           :postId="postData.data._id"
           v-if="postData.data.eventList.length > 0"
         />
       </template>
       <template v-else-if="item === 'vote'">
-        <PostVote
+        <LazyPostVote
           :voteList="postData.data.voteList"
           :postId="postData.data._id"
           v-if="postData.data.voteList.length > 0"
         />
       </template>
       <template v-else-if="item === 'post'">
-        <PostAbout
+        <LazyPostAbout
           :postList="postData.data.postList"
           :postId="postData.data._id"
           v-if="postData.data.postList.length > 0"
         />
       </template>
       <template v-else-if="item === 'acgn'">
-        <PostACG
+        <LazyPostACG
           :bangumiList="postData.data.bangumiList"
           :gameList="postData.data.gameList"
           :bookList="postData.data.bookList"
@@ -233,7 +233,7 @@
       </template>
     </template>
     <!-- randomPostList -->
-    <PostPageRandomPostList
+    <LazyPostPageRandomPostList
       v-if="
         postData.data.randomPostList && postData.data.randomPostList.length > 0
       "
@@ -244,14 +244,14 @@
       class="google-ad-post-detail mt-4"
       v-if="options.googleAdEnabled && options.googleAdPostBottomEnabled"
     >
-      <AdsbygoogleHave :ad="options.googleAdPostBottomParams" />
+      <LazyAdsbygoogleHave :ad="options.googleAdPostBottomParams" />
     </div>
     <!-- 评论 -->
     <!-- 评论列表 commentList -->
     <ClientOnly>
       <div class="comment-list-body">
         <!-- 评论form -->
-        <CommentForm
+        <LazyCommentForm
           :postid="postid"
           :allowRemark="postData.data.allowRemark"
           @refresh="refreshCommentList"
@@ -532,7 +532,7 @@
                 </button>
               </div>
               <div class="custom-scroll common-right-tool-menu">
-                <PostHeaderItem
+                <LazyPostHeaderItem
                   :list="headerList"
                   :activeHeaderDom="activeHeaderDom"
                   @goToHeader="showHeaderListMenu = false"
@@ -543,7 +543,7 @@
         </transition>
       </Teleport>
       <Teleport to="#rightToolBar">
-        <PostShowHeaderListBtn
+        <LazyPostShowHeaderListBtn
           @btnClick="switchShowHeaderListMenu"
           v-if="headerList.length > 0"
         />

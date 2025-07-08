@@ -1,5 +1,5 @@
 <template>
-  <PostDetail />
+  <LazyPostDetail />
 </template>
 <script setup>
 definePageMeta({
