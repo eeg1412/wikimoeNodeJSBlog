@@ -446,7 +446,7 @@
                   </div>
                   <div class="mt-5" v-if="commentid === item._id">
                     <!-- 回复表单 -->
-                    <CommentForm
+                    <LazyCommentForm
                       :id="`${item._id}-reply`"
                       :postid="postid"
                       :commentid="commentid"
