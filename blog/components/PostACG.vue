@@ -19,7 +19,7 @@
         :id="`ent-title-${idPrefix}-${bangumi._id}-${postId}`"
         @click.stop
       >
-        <BangumiItem :bangumi="bangumi" showType />
+        <LazyBangumiItem :bangumi="bangumi" showType />
       </div>
       <div
         v-for="movie in movieList"
@@ -28,7 +28,7 @@
         :id="`ent-title-${idPrefix}-${movie._id}-${postId}`"
         @click.stop
       >
-        <MovieItem :movie="movie" showType />
+        <LazyMovieItem :movie="movie" showType />
       </div>
       <div
         v-for="book in bookList"
@@ -37,7 +37,7 @@
         :id="`ent-title-${idPrefix}-${book._id}-${postId}`"
         @click.stop
       >
-        <BookItem :book="book" />
+        <LazyBookItem :book="book" />
       </div>
       <div
         v-for="game in gameList"
@@ -46,7 +46,7 @@
         :id="`ent-title-${idPrefix}-${game._id}-${postId}`"
         @click.stop
       >
-        <GameItem :game="game" />
+        <LazyGameItem :game="game" />
       </div>
     </div>
   </div>

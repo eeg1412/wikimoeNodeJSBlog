@@ -151,22 +151,22 @@
               {{ item.title }}
             </div>
             <template v-if="item.type === 1">
-              <HtmlContent :content="item.content" />
+              <LazyHtmlContent :content="item.content" />
             </template>
             <template v-else-if="item.type === 3">
-              <CommentLatest />
+              <LazyCommentLatest />
             </template>
             <template v-else-if="item.type === 4">
-              <RandomTagList />
+              <LazyRandomTagList />
             </template>
             <template v-else-if="item.type === 8">
-              <Sort />
+              <LazySort />
             </template>
             <template v-else-if="item.type === 9">
-              <Archive />
+              <LazyArchive />
             </template>
             <template v-else-if="item.type === 10">
-              <AdsbygoogleHave :ad="item.content" />
+              <LazyAdsbygoogleHave :ad="item.content" />
             </template>
             <template v-else-if="item.type === 11">
               <div
@@ -176,16 +176,16 @@
             </template>
             <!-- 12 TrendPostList -->
             <template v-else-if="item.type === 12">
-              <TrendPostList />
+              <LazyTrendPostList />
             </template>
             <template v-else-if="item.type === 13">
-              <BangumiSeasonList />
+              <LazyBangumiSeasonList />
             </template>
             <template v-else-if="item.type === 14">
-              <PlayingGameList />
+              <LazyPlayingGameList />
             </template>
             <template v-else-if="item.type === 15">
-              <ReadingBookList />
+              <LazyReadingBookList />
             </template>
           </div>
         </div>
