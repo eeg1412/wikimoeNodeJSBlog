@@ -263,76 +263,9 @@ const htmlContent = ref(null)
 const codeCopyListeners = []
 let hljs = null
 const loadhljs = async () => {
+  if (hljs) return // 如果 hljs 已经加载过了，就不再加载
   // 动态加载 highlight.js 及所需语言
-  hljs = (await import('highlight.js/lib/core')).default
-  const [
-    css,
-    xml,
-    javascript,
-    typescript,
-    go,
-    php,
-    python,
-    java,
-    c,
-    cpp,
-    csharp,
-    vbnet,
-    sql,
-    ruby,
-    swift,
-    lua,
-    groovy,
-    markdown,
-    json,
-    bash,
-    shell,
-  ] = await Promise.all([
-    import('highlight.js/lib/languages/css').then((m) => m.default),
-    import('highlight.js/lib/languages/xml').then((m) => m.default),
-    import('highlight.js/lib/languages/javascript').then((m) => m.default),
-    import('highlight.js/lib/languages/typescript').then((m) => m.default),
-    import('highlight.js/lib/languages/go').then((m) => m.default),
-    import('highlight.js/lib/languages/php').then((m) => m.default),
-    import('highlight.js/lib/languages/python').then((m) => m.default),
-    import('highlight.js/lib/languages/java').then((m) => m.default),
-    import('highlight.js/lib/languages/c').then((m) => m.default),
-    import('highlight.js/lib/languages/cpp').then((m) => m.default),
-    import('highlight.js/lib/languages/csharp').then((m) => m.default),
-    import('highlight.js/lib/languages/vbnet').then((m) => m.default),
-    import('highlight.js/lib/languages/sql').then((m) => m.default),
-    import('highlight.js/lib/languages/ruby').then((m) => m.default),
-    import('highlight.js/lib/languages/swift').then((m) => m.default),
-    import('highlight.js/lib/languages/lua').then((m) => m.default),
-    import('highlight.js/lib/languages/groovy').then((m) => m.default),
-    import('highlight.js/lib/languages/markdown').then((m) => m.default),
-    import('highlight.js/lib/languages/json').then((m) => m.default),
-    import('highlight.js/lib/languages/bash').then((m) => m.default),
-    import('highlight.js/lib/languages/shell').then((m) => m.default),
-  ])
-  hljs.registerLanguage('css', css)
-  hljs.registerLanguage('html', xml)
-  hljs.registerLanguage('xml', xml)
-  hljs.registerLanguage('javascript', javascript)
-  hljs.registerLanguage('typescript', typescript)
-  hljs.registerLanguage('jsx', javascript)
-  hljs.registerLanguage('go', go)
-  hljs.registerLanguage('php', php)
-  hljs.registerLanguage('python', python)
-  hljs.registerLanguage('java', java)
-  hljs.registerLanguage('c', c)
-  hljs.registerLanguage('cpp', cpp)
-  hljs.registerLanguage('csharp', csharp)
-  hljs.registerLanguage('visual-basic', vbnet)
-  hljs.registerLanguage('sql', sql)
-  hljs.registerLanguage('ruby', ruby)
-  hljs.registerLanguage('swift', swift)
-  hljs.registerLanguage('lua', lua)
-  hljs.registerLanguage('groovy', groovy)
-  hljs.registerLanguage('markdown', markdown)
-  hljs.registerLanguage('json', json)
-  hljs.registerLanguage('bash', bash)
-  hljs.registerLanguage('sh', shell)
+  hljs = (await import('@/utils/highlight-bundle')).default
 }
 const initHljs = async () => {
   const preList = htmlContent.value.querySelectorAll('pre')
