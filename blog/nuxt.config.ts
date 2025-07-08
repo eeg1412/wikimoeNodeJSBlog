@@ -153,7 +153,6 @@ export default defineNuxtConfig({
       },
     },
   },
-
   vite: {
     esbuild: {
       drop: ['debugger'],

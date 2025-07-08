@@ -211,10 +211,17 @@
     </Teleport> -->
 </template>
 <script setup>
-import PhotoSwipeLightbox from 'photoswipe/lightbox'
 import { useOptionStore } from '@/store/options'
-import { Viewer } from '@photo-sphere-viewer/core'
 import '@photo-sphere-viewer/core/index.css'
+
+let Viewer = null
+const loadViewer = async () => {
+  if (!Viewer) {
+    const module = await import('@photo-sphere-viewer/core')
+    Viewer = module.Viewer
+  }
+  return Viewer
+}
 
 const panoramaListMap = {}
 const clearPanoramaListMap = () => {
@@ -448,6 +455,9 @@ const loadNoSizeImage = (src, index) => {
     })
 }
 const open = async (list = [], showIndex = 0, closeCallback_) => {
+  if (!lightbox) {
+    await initLightbox()
+  }
   closeCallback = closeCallback_ || null
   await loadImageDimensions(list)
   photoswipeInitialLayoutPromise = new Promise((resolve) => {
@@ -590,11 +600,8 @@ let firstFlag = true
 let photoswipeInitialLayoutPromiseResolve = null
 let photoswipeInitialLayoutPromise = null
 const initLightbox = async () => {
-  const lightboxopen = window.location.hash === '#photo-swipelightboxopen'
-  if (lightboxopen) {
-    const urlWithoutHash = window.location.href.split('#')[0]
-    window.history.replaceState(window.history.state, '', urlWithoutHash)
-  }
+  const module = await import('photoswipe/lightbox')
+  const PhotoSwipeLightbox = module.default
   lightbox = new PhotoSwipeLightbox({
     pswpModule: () => import('photoswipe'),
     preload: [1, 2],
@@ -630,7 +637,7 @@ const initLightbox = async () => {
     showUI.value = false
     attachmentList.value = []
   })
-  lightbox.on('change', () => {
+  lightbox.on('change', async () => {
     console.log('change')
     if (lightbox && lightbox.pswp) {
       const pswpElement = lightbox.pswp.element
@@ -667,6 +674,9 @@ const initLightbox = async () => {
     const is360Panorama = data?.is360Panorama
     is360PanoramaActive.value = false
     if (is360Panorama === true) {
+      if (!Viewer) {
+        Viewer = await loadViewer()
+      }
       // isAllPreventDefault = true
       if (image360PanoramaTimer) {
         clearTimeout(image360PanoramaTimer)
@@ -841,8 +851,16 @@ const goTo = (index, close) => {
   lightbox.pswp.goTo(index)
   close()
 }
+
+const checkHash = () => {
+  const lightboxopen = window.location.hash === '#photo-swipelightboxopen'
+  if (lightboxopen) {
+    const urlWithoutHash = window.location.href.split('#')[0]
+    window.history.replaceState(window.history.state, '', urlWithoutHash)
+  }
+}
 onMounted(() => {
-  initLightbox()
+  checkHash()
   window.addEventListener('hashchange', onHashchange)
 })
 onUnmounted(() => {
