@@ -259,6 +259,8 @@ const getEventDetail = async (e) => {
 }
 
 const htmlContent = ref(null)
+// 记录所有动态添加的事件监听器
+const codeCopyListeners = []
 let hljs = null
 const loadhljs = async () => {
   // 动态加载 highlight.js 及所需语言
@@ -371,14 +373,15 @@ const initHljs = async () => {
     )
     // 添加显示代码语言的功能
     const div = document.createElement('div')
-    // class
     div.classList.add('code-header')
     // 复制按钮
     const copyBtn = document.createElement('button')
     copyBtn.innerHTML =
-      '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--!Font Awesome Free 6.5.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.--><path d="M384 336H192c-8.8 0-16-7.2-16-16V64c0-8.8 7.2-16 16-16l140.1 0L400 115.9V320c0 8.8-7.2 16-16 16zM192 384H384c35.3 0 64-28.7 64-64V115.9c0-12.7-5.1-24.9-14.1-33.9L366.1 14.1c-9-9-21.2-14.1-33.9-14.1H192c-35.3 0-64 28.7-64 64V320c0 35.3 28.7 64 64 64zM64 128c-35.3 0-64 28.7-64 64V448c0 35.3 28.7 64 64 64H256c35.3 0 64-28.7 64-64V416H272v32c0 8.8-7.2 16-16 16H64c-8.8 0-16-7.2-16-16V192c0-8.8 7.2-16 16-16H96V128H64z"/></svg>'
+      '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path d="M384 336H192c-8.8 0-16-7.2-16-16V64c0-8.8 7.2-16 16-16l140.1 0L400 115.9V320c0 8.8-7.2 16-16 16zM192 384H384c35.3 0 64-28.7 64-64V115.9c0-12.7-5.1-24.9-14.1-33.9L366.1 14.1c-9-9-21.2-14.1-33.9-14.1H192c-35.3 0-64 28.7-64 64V320c0 35.3 28.7 64 64 64zM64 128c-35.3 0-64 28.7-64 64V448c0 35.3 28.7 64 64 64H256c35.3 0 64-28.7 64-64V416H272v32c0 8.8-7.2 16-16 16H64c-8.8 0-16-7.2-16-16V192c0-8.8 7.2-16 16-16H96V128H64z"/></svg>'
     copyBtn.classList.add('code-copy-btn')
-    copyBtn.addEventListener('click', async () => {
+
+    // 事件监听函数
+    const copyHandler = async () => {
       try {
         await navigator.clipboard.writeText(codeBlock.textContent)
         toast.add({
@@ -393,14 +396,16 @@ const initHljs = async () => {
           color: 'red',
         })
       }
-    })
+    }
+    copyBtn.addEventListener('click', copyHandler)
+    // 记录监听器和元素
+    codeCopyListeners.push({ btn: copyBtn, handler: copyHandler })
+
     // 代码语言
     const languageSpan = document.createElement('span')
     languageSpan.textContent = language
-    // css
     languageSpan.classList.add('code-language')
     div.appendChild(languageSpan)
-
     div.appendChild(copyBtn)
     pre.prepend(div)
   })
@@ -437,8 +442,26 @@ watch(
   }
 )
 
+// 清理所有事件监听和动态 DOM
+const cleanup = () => {
+  // 移除所有 code-copy-btn 的事件监听
+  codeCopyListeners.forEach(({ btn, handler }) => {
+    console.log('移除事件监听:', btn)
+    btn.removeEventListener('click', handler)
+  })
+  codeCopyListeners.length = 0
+}
+
 onMounted(() => {
   init()
+})
+
+// 组件卸载时清理
+onUnmounted(() => {
+  cleanup()
+  if (hljs) {
+    hljs = null // 清理 highlight.js 的引用
+  }
 })
 </script>
 <style scoped>
