@@ -609,7 +609,7 @@ onUnmounted(() => {})
   .blog-tweet-img-list-body-item:nth-child(1) {
   grid-row: span 2;
 }
-.blog-tweet-img-list-body-item {
+.blog-tweet-img-list-wrap .blog-tweet-img-list-body-item {
   height: 100%;
 }
 .blog-tweet-img-list-body.cover-count-4 {
