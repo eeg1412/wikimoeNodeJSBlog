@@ -4,7 +4,6 @@ const log4js = require('log4js')
 const adminApiLog = log4js.getLogger('adminApi')
 const cacheDataUtils = require('../../../config/cacheData')
 
-
 module.exports = async function (req, res, next) {
   // naviname: {
   //   type: String,
@@ -52,7 +51,7 @@ module.exports = async function (req, res, next) {
     parent,
     isdefault,
     deepmatch,
-    query
+    query,
   } = req.body
   // 校验格式
   const params = {
@@ -64,7 +63,7 @@ module.exports = async function (req, res, next) {
     parent: parent || null,
     isdefault: isdefault ? true : false,
     deepmatch: deepmatch ? true : false,
-    query: query || ''
+    query: query || '',
   }
   const rule = [
     {
@@ -72,7 +71,7 @@ module.exports = async function (req, res, next) {
       label: '导航名称',
       type: null,
       required: true,
-    }
+    },
   ]
   const errors = utils.checkForm(params, rule)
   if (errors.length > 0) {
@@ -80,20 +79,24 @@ module.exports = async function (req, res, next) {
     return
   }
   // save
-  naviUtils.save(params).then((data) => {
-    res.send({
-      data: data
+  naviUtils
+    .save(params)
+    .then((data) => {
+      res.send({
+        data: data,
+      })
+      adminApiLog.info(`navi create success`)
+      cacheDataUtils.getNaviList()
+      // utils.reflushBlogCache()
     })
-    adminApiLog.info(`navi create success`)
-    cacheDataUtils.getNaviList()
-    // utils.reflushBlogCache()
-  }).catch((err) => {
-    res.status(400).json({
-      errors: [{
-        message: '导航创建失败'
-      }]
+    .catch((err) => {
+      res.status(400).json({
+        errors: [
+          {
+            message: '导航创建失败',
+          },
+        ],
+      })
+      adminApiLog.error(`navi create fail, ${logErrorToText(err)}`)
     })
-    adminApiLog.error(`navi create fail, ${logErrorToText(err)}`)
-  })
-
 }

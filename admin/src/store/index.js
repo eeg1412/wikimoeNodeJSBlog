@@ -1,13 +1,13 @@
 import { createStore } from 'vuex'
-import { authApi } from "@/api";
+import { authApi } from '@/api'
 import { ElMessage } from 'element-plus'
 
 export default createStore({
   state: {
-    adminToken: localStorage.getItem("adminToken") || "",
+    adminToken: localStorage.getItem('adminToken') || '',
     adminInfo: null,
     loadingShow: false,
-    siteUrl: ''
+    siteUrl: '',
   },
   getters: {
     adminToken: (state) => state.adminToken,
@@ -17,22 +17,25 @@ export default createStore({
     siteUrl: (state) => state.siteUrl,
   },
   mutations: {
-    setLoading (state, data) {
-      state.loadingShow = data;
+    setLoading(state, data) {
+      state.loadingShow = data
     },
 
-    setAdminToken (state, data) {
-      state.adminToken = data;
+    setAdminToken(state, data) {
+      state.adminToken = data
     },
     // setAdminInfo
-    setAdminInfo (state, adminInfo) {
-      authApi.loginuserinfo().then((res) => {
-        state.adminInfo = res.data.data
-      }).catch(() => {
-        state.adminInfo = null
-      })
+    setAdminInfo(state, adminInfo) {
+      authApi
+        .loginuserinfo()
+        .then((res) => {
+          state.adminInfo = res.data.data
+        })
+        .catch(() => {
+          state.adminInfo = null
+        })
     },
-    setOptions (state, data) {
+    setOptions(state, data) {
       authApi.getOptionList({ nameList: ['siteUrl'] }).then((res) => {
         const list = res.data.data
         // 查找name为siteUrl的数据
@@ -44,24 +47,24 @@ export default createStore({
           ElMessage.error('请先设置站点信息！')
         }
       })
-    }
+    },
   },
   actions: {
-    setLoading ({ commit }, data) {
-      commit("setLoading", data);
+    setLoading({ commit }, data) {
+      commit('setLoading', data)
     },
 
-    setAdminToken ({ commit }, data) {
+    setAdminToken({ commit }, data) {
       localStorage.setItem('adminToken', data)
-      commit("setAdminToken", data);
+      commit('setAdminToken', data)
     },
 
     // setAdminInfo
-    setAdminInfo ({ commit }) {
+    setAdminInfo({ commit }) {
       commit('setAdminInfo')
     },
-    setOptions ({ commit }) {
+    setOptions({ commit }) {
       commit('setOptions')
-    }
+    },
   },
 })

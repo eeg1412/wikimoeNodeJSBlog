@@ -1,21 +1,27 @@
-
 const postUtils = require('../../../mongodb/utils/posts')
 const readerlogUtils = require('../../../mongodb/utils/readerlogs')
 const utils = require('../../../utils/utils')
 const log4js = require('log4js')
 const userApiLog = log4js.getLogger('userApi')
-const mongoose = require('mongoose');
+const mongoose = require('mongoose')
 
 module.exports = async function (req, res, next) {
-  const logId = new mongoose.Types.ObjectId();
+  const logId = new mongoose.Types.ObjectId()
   res.send({
-    id: logId
+    id: logId,
   })
   const uuid = req.headers['wmb-request-id']
   const referrer = utils.setReferrer(req.body.referrer)
   const ip = utils.getUserIp(req)
   const action = req.body.action
-  const actionList = ['open', 'postList', 'postListArchive', 'postListKeyword', 'postListSort', 'postListTag']
+  const actionList = [
+    'open',
+    'postList',
+    'postListArchive',
+    'postListKeyword',
+    'postListSort',
+    'postListTag',
+  ]
   let id = null
   let target = null
   let content = ''
@@ -33,55 +39,73 @@ module.exports = async function (req, res, next) {
   const readerlogCount = await readerlogUtils.count({
     $or: [
       {
-        uuid: uuid
+        uuid: uuid,
       },
       {
-        ip: ip
-      }
+        ip: ip,
+      },
     ],
     createdAt: {
       $gte: utils.getTodayStartTime(),
-      $lte: utils.getTodayEndTime()
-    }
+      $lte: utils.getTodayEndTime(),
+    },
   })
   if (readerlogCount >= 1000) {
     return
   }
 
-
   const searchEngineData = utils.isSearchEngine(req)
   switch (action) {
     case 'open':
-      const performanceNavigationTimingData = req.body.performanceNavigationTiming || null;
-      if (!searchEngineData.isBot && performanceNavigationTimingData && typeof performanceNavigationTimingData === 'object' && performanceNavigationTimingData?.duration > 0) {
-        performanceNavigationTiming = {};
+      const performanceNavigationTimingData =
+        req.body.performanceNavigationTiming || null
+      if (
+        !searchEngineData.isBot &&
+        performanceNavigationTimingData &&
+        typeof performanceNavigationTimingData === 'object' &&
+        performanceNavigationTimingData?.duration > 0
+      ) {
+        performanceNavigationTiming = {}
 
-        const keys = ['connectDuration', 'domComplete', 'domInteractive', 'domainLookupDuration', 'duration', 'loadEventDuration', 'redirectCount'];
-        const stringKeys = ['entryType', 'name', 'type'];
+        const keys = [
+          'connectDuration',
+          'domComplete',
+          'domInteractive',
+          'domainLookupDuration',
+          'duration',
+          'loadEventDuration',
+          'redirectCount',
+        ]
+        const stringKeys = ['entryType', 'name', 'type']
 
-        keys.forEach(key => {
+        keys.forEach((key) => {
           if (performanceNavigationTimingData.hasOwnProperty(key)) {
-            const value = performanceNavigationTimingData[key];
-            if (typeof value === 'number' && !isNaN(value) && value < 999999 && value >= 0) {
-              performanceNavigationTiming[key] = value;
+            const value = performanceNavigationTimingData[key]
+            if (
+              typeof value === 'number' &&
+              !isNaN(value) &&
+              value < 999999 &&
+              value >= 0
+            ) {
+              performanceNavigationTiming[key] = value
             } else {
-              performanceNavigationTiming[key] = null;
+              performanceNavigationTiming[key] = null
             }
           }
-        });
+        })
 
-        stringKeys.forEach(key => {
+        stringKeys.forEach((key) => {
           if (performanceNavigationTimingData.hasOwnProperty(key)) {
-            const value = performanceNavigationTimingData[key];
+            const value = performanceNavigationTimingData[key]
             if (typeof value === 'string' && value.length < 200) {
-              performanceNavigationTiming[key] = value;
+              performanceNavigationTiming[key] = value
             } else {
-              performanceNavigationTiming[key] = null;
+              performanceNavigationTiming[key] = null
             }
           }
-        });
+        })
       }
-      break;
+      break
     case 'postListArchive':
       const title = req.body.title
       // title 必须
@@ -90,7 +114,7 @@ module.exports = async function (req, res, next) {
       }
       target = 'archive'
       content = title
-      break;
+      break
     case 'postListKeyword':
       const keyword = req.body.keyword
       // keyword 必须
@@ -98,7 +122,7 @@ module.exports = async function (req, res, next) {
         return
       }
       content = keyword
-      break;
+      break
     case 'postListSort':
       id = req.body.sortid
       const sortname = req.body.sortname
@@ -108,7 +132,7 @@ module.exports = async function (req, res, next) {
       }
       content = sortname
       target = 'sort'
-      break;
+      break
     case 'postListTag':
       id = req.body.tagid
       const tagname = req.body.tagname
@@ -118,10 +142,10 @@ module.exports = async function (req, res, next) {
       }
       content = tagname
       target = 'tag'
-      break;
+      break
 
     default:
-      break;
+      break
   }
   if (id) {
     // 判断id是否符合格式
@@ -141,18 +165,20 @@ module.exports = async function (req, res, next) {
       target: target,
       targetId: id,
       content: content,
-      performanceNavigationTiming: performanceNavigationTiming
+      performanceNavigationTiming: performanceNavigationTiming,
     },
     ...searchEngineData,
     referrer: referrer,
     deviceInfo: utils.deviceUAInfoUtils(req),
     ipInfo: await utils.IP2LocationUtils(ip, null, null, false),
-    ip: ip
+    ip: ip,
   }
-  readerlogUtils.save(readerlogParams).then((data) => {
-    userApiLog.info(`post view log create success`)
-  }).catch((err) => {
-    userApiLog.error(`post view log create fail, ${logErrorToText(err)}`)
-  })
-
+  readerlogUtils
+    .save(readerlogParams)
+    .then((data) => {
+      userApiLog.info(`post view log create success`)
+    })
+    .catch((err) => {
+      userApiLog.error(`post view log create fail, ${logErrorToText(err)}`)
+    })
 }

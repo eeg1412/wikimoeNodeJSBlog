@@ -7,9 +7,11 @@ module.exports = async function (req, res, next) {
   // id不能为空
   if (!id) {
     res.status(400).json({
-      errors: [{
-        message: 'id不能为空'
-      }]
+      errors: [
+        {
+          message: 'id不能为空',
+        },
+      ],
     })
     return
   }
@@ -17,18 +19,22 @@ module.exports = async function (req, res, next) {
   if (global.$cacheData?.sortList) {
     list = global.$cacheData.sortList
   } else {
-    await cacheDataUtils.getSortList().then((data) => {
-      list = data
-    }).catch((err) => {
-      userApiLog.error(`sort list get fail, ${JSON.stringify(err)
-        }`)
-    })
+    await cacheDataUtils
+      .getSortList()
+      .then((data) => {
+        list = data
+      })
+      .catch((err) => {
+        userApiLog.error(`sort list get fail, ${JSON.stringify(err)}`)
+      })
   }
   if (list.lenth === 0) {
     res.status(404).json({
-      errors: [{
-        message: '分类列表获取失败'
-      }]
+      errors: [
+        {
+          message: '分类列表获取失败',
+        },
+      ],
     })
     return
   }
@@ -48,9 +54,11 @@ module.exports = async function (req, res, next) {
   findSort(list)
   if (!sort) {
     res.status(404).json({
-      errors: [{
-        message: '分类不存在'
-      }]
+      errors: [
+        {
+          message: '分类不存在',
+        },
+      ],
     })
     return
   }

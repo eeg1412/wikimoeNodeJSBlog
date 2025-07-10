@@ -7,15 +7,17 @@ module.exports = async function (req, res, next) {
     const JWTSecretBlog = utils.ensureJWTSecretBlog(true)
     global.$secret.JWTSecretBlog = JWTSecretBlog
     res.send({
-      message: '刷新成功'
+      message: '刷新成功',
     })
     adminApiLog.info(`JWTSecretBlog reflush success`)
   } catch (error) {
     adminApiLog.error(`JWTSecretBlog reflush failed: ${logErrorToText(error)}`)
     res.status(400).json({
-      errors: [{
-        message: '刷新失败'
-      }]
+      errors: [
+        {
+          message: '刷新失败',
+        },
+      ],
     })
   }
 }

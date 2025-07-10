@@ -1,4 +1,3 @@
-
 const postUtils = require('../../../mongodb/utils/posts')
 const utils = require('../../../utils/utils')
 const log4js = require('log4js')
@@ -15,18 +14,22 @@ module.exports = async function (req, res, next) {
   // 校验id是否存在
   if (!id) {
     res.status(400).json({
-      errors: [{
-        message: 'id不能为空'
-      }]
+      errors: [
+        {
+          message: 'id不能为空',
+        },
+      ],
     })
     return
   }
   // __v 可以为零，但不能为空/null/undefined
   if (__v === undefined || __v === null) {
     res.status(400).json({
-      errors: [{
-        message: '__v不能为空'
-      }]
+      errors: [
+        {
+          message: '__v不能为空',
+        },
+      ],
     })
     return
   }
@@ -35,33 +38,39 @@ module.exports = async function (req, res, next) {
     editorVersion: 5,
     content: '',
     status: 0,
-    lastChangDate: new Date()
+    lastChangDate: new Date(),
   }
   // 更新
-  postUtils.updateOne({ _id: id, __v: __v }, params).then((data) => {
-    if (data.modifiedCount === 0) {
-      res.status(400).json({
-        errors: [{
-          message: '更新失败'
-        }]
+  postUtils
+    .updateOne({ _id: id, __v: __v }, params)
+    .then((data) => {
+      if (data.modifiedCount === 0) {
+        res.status(400).json({
+          errors: [
+            {
+              message: '更新失败',
+            },
+          ],
+        })
+        return
+      }
+      res.send({
+        data: data,
       })
-      return
-    }
-    res.send({
-      data: data
+      adminApiLog.info(`post update success`)
+      // 新旧status不一样，更新缓存
+      cacheDataUtils.getPostArchiveList()
+      rssToolUtils.reflushRSS()
+      sitemapToolUtils.reflushSitemap()
     })
-    adminApiLog.info(`post update success`)
-    // 新旧status不一样，更新缓存
-    cacheDataUtils.getPostArchiveList()
-    rssToolUtils.reflushRSS()
-    sitemapToolUtils.reflushSitemap()
-  }).catch((err) => {
-    res.status(400).json({
-      errors: [{
-        message: '更新文章失败'
-      }]
+    .catch((err) => {
+      res.status(400).json({
+        errors: [
+          {
+            message: '更新文章失败',
+          },
+        ],
+      })
+      adminApiLog.error(`post update fail, ${logErrorToText(err)}`)
     })
-    adminApiLog.error(`post update fail, ${logErrorToText(err)}`)
-  })
-
 }

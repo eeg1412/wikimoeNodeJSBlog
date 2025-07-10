@@ -8,25 +8,29 @@ module.exports = async function (req, res, next) {
   const { name, color, id, __v } = req.body
   if (!id) {
     res.status(400).json({
-      errors: [{
-        message: 'id不能为空'
-      }]
+      errors: [
+        {
+          message: 'id不能为空',
+        },
+      ],
     })
     return
   }
   // __v 可以为零，但不能为空/null/undefined
   if (__v === undefined || __v === null) {
     res.status(400).json({
-      errors: [{
-        message: '__v不能为空'
-      }]
+      errors: [
+        {
+          message: '__v不能为空',
+        },
+      ],
     })
     return
   }
   // 校验格式
   const params = {
     name: name,
-    color: color
+    color: color,
   }
   const rule = [
     {
@@ -40,7 +44,7 @@ module.exports = async function (req, res, next) {
       label: '颜色',
       type: null,
       required: true,
-    }
+    },
   ]
   const errors = utils.checkForm(params, rule)
   if (errors.length > 0) {
@@ -48,25 +52,32 @@ module.exports = async function (req, res, next) {
     return
   }
   // updateOne
-  gamePlatformUtils.updateOne({ _id: id, __v }, params).then((data) => {
-    if (data.modifiedCount === 0) {
-      res.status(400).json({
-        errors: [{
-          message: '更新失败'
-        }]
+  gamePlatformUtils
+    .updateOne({ _id: id, __v }, params)
+    .then((data) => {
+      if (data.modifiedCount === 0) {
+        res.status(400).json({
+          errors: [
+            {
+              message: '更新失败',
+            },
+          ],
+        })
+        return
+      }
+      res.send({
+        data: data,
       })
-      return
-    }
-    res.send({
-      data: data
+      adminApiLog.info(`gamePlatform update success`)
     })
-    adminApiLog.info(`gamePlatform update success`)
-  }).catch((err) => {
-    res.status(400).json({
-      errors: [{
-        message: '游戏平台更新失败'
-      }]
+    .catch((err) => {
+      res.status(400).json({
+        errors: [
+          {
+            message: '游戏平台更新失败',
+          },
+        ],
+      })
+      adminApiLog.error(`gamePlatform update fail, ${logErrorToText(err)}`)
     })
-    adminApiLog.error(`gamePlatform update fail, ${logErrorToText(err)}`)
-  })
 }

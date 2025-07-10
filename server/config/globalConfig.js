@@ -1,8 +1,7 @@
-const fs = require('fs');
-var path = require('path');
+const fs = require('fs')
+var path = require('path')
 const optionUtils = require('../mongodb/utils/options')
 const { Mint } = require('mint-filter')
-
 
 const initGlobalConfig = async () => {
   // 默认配置
@@ -173,7 +172,6 @@ const initGlobalConfig = async () => {
     AdAdsTxt: '',
   }
 
-
   // 写一个函数，先判断原始类型，再将字符串转换为对应的类型
   const formatResToForm = (form, obj) => {
     Object.keys(form).forEach((key) => {
@@ -193,41 +191,44 @@ const initGlobalConfig = async () => {
   }
 
   // 从数据库获取配置
-  await optionUtils.find({}).then((data) => {
-    // 返回格式list,total
-    const config = {
-      imgSettings: imgSettingConfig,
-      siteSettings: siteSettingsConfig,
-      commentSettings: commentSettingsConfig,
-      rssSettings: rssSettingsConfig,
-      emailSettings: emailSettingsConfig,
-      otherSettings: otherSettingsConfig,
-      sitePostSettings: sitePostSettingsConfig,
-      adSettings: adSettingsConfig,
-    }
-    // 将data转换为object
-    const obj = {}
-    data.forEach((item) => {
-      obj[item.name] = item.value
+  await optionUtils
+    .find({})
+    .then((data) => {
+      // 返回格式list,total
+      const config = {
+        imgSettings: imgSettingConfig,
+        siteSettings: siteSettingsConfig,
+        commentSettings: commentSettingsConfig,
+        rssSettings: rssSettingsConfig,
+        emailSettings: emailSettingsConfig,
+        otherSettings: otherSettingsConfig,
+        sitePostSettings: sitePostSettingsConfig,
+        adSettings: adSettingsConfig,
+      }
+      // 将data转换为object
+      const obj = {}
+      data.forEach((item) => {
+        obj[item.name] = item.value
+      })
+      // 将obj转换为config
+      formatResToForm(config.imgSettings, obj)
+      formatResToForm(config.siteSettings, obj)
+      formatResToForm(config.commentSettings, obj)
+      formatResToForm(config.rssSettings, obj)
+      formatResToForm(config.emailSettings, obj)
+      formatResToForm(config.otherSettings, obj)
+      formatResToForm(config.sitePostSettings, obj)
+      formatResToForm(config.adSettings, obj)
+      // 将配置挂载到global上
+      global.$globalConfig = config
+      global.$Mint = new Mint(config.otherSettings.siteBannedKeywordList)
+      const showConfig = JSON.parse(JSON.stringify(config))
+      // 将emailSettings.emailPassword设置为****
+      showConfig.emailSettings.emailPassword = '****'
+      console.info('globalConfig更新完成,配置如下:', showConfig)
     })
-    // 将obj转换为config
-    formatResToForm(config.imgSettings, obj)
-    formatResToForm(config.siteSettings, obj)
-    formatResToForm(config.commentSettings, obj)
-    formatResToForm(config.rssSettings, obj)
-    formatResToForm(config.emailSettings, obj)
-    formatResToForm(config.otherSettings, obj)
-    formatResToForm(config.sitePostSettings, obj)
-    formatResToForm(config.adSettings, obj)
-    // 将配置挂载到global上
-    global.$globalConfig = config;
-    global.$Mint = new Mint(config.otherSettings.siteBannedKeywordList)
-    const showConfig = JSON.parse(JSON.stringify(config));
-    // 将emailSettings.emailPassword设置为****
-    showConfig.emailSettings.emailPassword = '****';
-    console.info('globalConfig更新完成,配置如下:', showConfig);
-  }).catch((err) => {
-    console.error('globalConfig更新失败', err);
-  })
+    .catch((err) => {
+      console.error('globalConfig更新失败', err)
+    })
 }
-exports.initGlobalConfig = initGlobalConfig;
+exports.initGlobalConfig = initGlobalConfig

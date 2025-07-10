@@ -1,4 +1,3 @@
-
 const sortUtils = require('../../../mongodb/utils/sorts')
 const utils = require('../../../utils/utils')
 const log4js = require('log4js')
@@ -15,27 +14,33 @@ module.exports = async function (req, res, next) {
   const parent = req.body.parent || null
   if (!id) {
     res.status(400).json({
-      errors: [{
-        message: 'id不能为空'
-      }]
+      errors: [
+        {
+          message: 'id不能为空',
+        },
+      ],
     })
     return
   }
   // __v 可以为零，但不能为空/null/undefined
   if (__v === undefined || __v === null) {
     res.status(400).json({
-      errors: [{
-        message: '__v不能为空'
-      }]
+      errors: [
+        {
+          message: '__v不能为空',
+        },
+      ],
     })
     return
   }
   // parent 不能和 id 相同
   if (parent === id) {
     res.status(400).json({
-      errors: [{
-        message: '父级不能和自己相同'
-      }]
+      errors: [
+        {
+          message: '父级不能和自己相同',
+        },
+      ],
     })
     return
   }
@@ -64,45 +69,54 @@ module.exports = async function (req, res, next) {
     // 查询alias是否存在，查询条件时大小写不敏感的
     const query = {
       alias: {
-        $regex: new RegExp('^' + alias + '$', 'i')
+        $regex: new RegExp('^' + alias + '$', 'i'),
       },
       // 排除自己
       _id: {
-        $ne: id
-      }
+        $ne: id,
+      },
     }
     const result = await sortUtils.findOne(query)
     if (result) {
       res.status(400).json({
-        errors: [{
-          message: '分类别名已存在'
-        }]
+        errors: [
+          {
+            message: '分类别名已存在',
+          },
+        ],
       })
       return
     }
   }
   // updateOne
-  sortUtils.updateOne({ _id: id, __v }, params).then((data) => {
-    if (data.modifiedCount === 0) {
-      res.status(400).json({
-        errors: [{
-          message: '更新失败'
-        }]
+  sortUtils
+    .updateOne({ _id: id, __v }, params)
+    .then((data) => {
+      if (data.modifiedCount === 0) {
+        res.status(400).json({
+          errors: [
+            {
+              message: '更新失败',
+            },
+          ],
+        })
+        return
+      }
+      res.send({
+        data: data,
       })
-      return
-    }
-    res.send({
-      data: data
+      adminApiLog.info(`sort:${sortname} update success`)
+      cacheDataUtils.getSortList()
+      // utils.reflushBlogCache()
     })
-    adminApiLog.info(`sort:${sortname} update success`)
-    cacheDataUtils.getSortList()
-    // utils.reflushBlogCache()
-  }).catch((err) => {
-    res.status(400).json({
-      errors: [{
-        message: '分类更新失败'
-      }]
+    .catch((err) => {
+      res.status(400).json({
+        errors: [
+          {
+            message: '分类更新失败',
+          },
+        ],
+      })
+      adminApiLog.error(`sort:${sortname} update fail, ${logErrorToText(err)}`)
     })
-    adminApiLog.error(`sort:${sortname} update fail, ${logErrorToText(err)}`)
-  })
 }

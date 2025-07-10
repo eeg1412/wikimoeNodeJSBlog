@@ -4,7 +4,6 @@ const log4js = require('log4js')
 const adminApiLog = log4js.getLogger('adminApi')
 const cacheDataUtils = require('../../../config/cacheData')
 
-
 module.exports = async function (req, res, next) {
   const { id, __v } = req.body
   const {
@@ -16,31 +15,37 @@ module.exports = async function (req, res, next) {
     parent,
     isdefault,
     deepmatch,
-    query
+    query,
   } = req.body
   if (!id) {
     res.status(400).json({
-      errors: [{
-        message: 'id不能为空'
-      }]
+      errors: [
+        {
+          message: 'id不能为空',
+        },
+      ],
     })
     return
   }
   // __v 可以为零，但不能为空/null/undefined
   if (__v === undefined || __v === null) {
     res.status(400).json({
-      errors: [{
-        message: '__v不能为空'
-      }]
+      errors: [
+        {
+          message: '__v不能为空',
+        },
+      ],
     })
     return
   }
   // parent 不能和 id 相同
   if (parent === id) {
     res.status(400).json({
-      errors: [{
-        message: '父级不能和自己相同'
-      }]
+      errors: [
+        {
+          message: '父级不能和自己相同',
+        },
+      ],
     })
     return
   }
@@ -54,7 +59,7 @@ module.exports = async function (req, res, next) {
     parent: parent || null,
     isdefault: isdefault ? true : false,
     deepmatch: deepmatch ? true : false,
-    query: query || ''
+    query: query || '',
   }
   const rule = [
     {
@@ -70,27 +75,34 @@ module.exports = async function (req, res, next) {
     return
   }
   // updateOne
-  naviUtils.updateOne({ _id: id, __v }, params).then((data) => {
-    if (data.modifiedCount === 0) {
-      res.status(400).json({
-        errors: [{
-          message: '更新失败'
-        }]
+  naviUtils
+    .updateOne({ _id: id, __v }, params)
+    .then((data) => {
+      if (data.modifiedCount === 0) {
+        res.status(400).json({
+          errors: [
+            {
+              message: '更新失败',
+            },
+          ],
+        })
+        return
+      }
+      res.send({
+        data: data,
       })
-      return
-    }
-    res.send({
-      data: data
+      adminApiLog.info(`navi update success`)
+      cacheDataUtils.getNaviList()
+      // utils.reflushBlogCache()
     })
-    adminApiLog.info(`navi update success`)
-    cacheDataUtils.getNaviList()
-    // utils.reflushBlogCache()
-  }).catch((err) => {
-    res.status(400).json({
-      errors: [{
-        message: '导航更新失败'
-      }]
+    .catch((err) => {
+      res.status(400).json({
+        errors: [
+          {
+            message: '导航更新失败',
+          },
+        ],
+      })
+      adminApiLog.error(`navi update fail, ${logErrorToText(err)}`)
     })
-    adminApiLog.error(`navi update fail, ${logErrorToText(err)}`)
-  })
 }

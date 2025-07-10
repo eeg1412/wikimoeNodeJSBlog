@@ -41,29 +41,36 @@ module.exports = async function (req, res, next) {
   // 校验结束时间是否在开始时间之后
   if (new Date(endTime) < new Date(startTime)) {
     res.status(400).json({
-      errors: [{
-        message: '结束时间不能在开始时间之前'
-      }]
+      errors: [
+        {
+          message: '结束时间不能在开始时间之前',
+        },
+      ],
     })
     return
   }
   // 删除开始结束时间之间的数据
-  readerlogUtils.deleteMany({
-    createdAt: {
-      $gte: new Date(startTime),
-      $lte: new Date(endTime),
-    }
-  }).then((data) => {
-    res.send({
-      data: data
+  readerlogUtils
+    .deleteMany({
+      createdAt: {
+        $gte: new Date(startTime),
+        $lte: new Date(endTime),
+      },
     })
-    adminApiLog.info(`readerlog delete success`)
-  }).catch((err) => {
-    res.status(400).json({
-      errors: [{
-        message: '读者操作日志删除失败'
-      }]
+    .then((data) => {
+      res.send({
+        data: data,
+      })
+      adminApiLog.info(`readerlog delete success`)
     })
-    adminApiLog.error(`readerlog delete fail, ${logErrorToText(err)}`)
-  })
+    .catch((err) => {
+      res.status(400).json({
+        errors: [
+          {
+            message: '读者操作日志删除失败',
+          },
+        ],
+      })
+      adminApiLog.error(`readerlog delete fail, ${logErrorToText(err)}`)
+    })
 }

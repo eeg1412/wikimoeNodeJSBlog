@@ -10,14 +10,15 @@ module.exports = async function (req, res, next) {
   // 判断page和size是否为数字
   if (!utils.isNumber(page) || !utils.isNumber(size)) {
     res.status(400).json({
-      errors: [{
-        message: '参数错误'
-      }]
+      errors: [
+        {
+          message: '参数错误',
+        },
+      ],
     })
     return
   }
-  const params = {
-  }
+  const params = {}
   if (playStatus) {
     const playStatusList = [99, 1, 2, 3]
     const playStatusNumber = Number(playStatus)
@@ -26,30 +27,29 @@ module.exports = async function (req, res, next) {
       switch (playStatusNumber) {
         case 99:
           params.giveUp = true
-          break;
+          break
         case 1:
           // 未开始：startTime和endTime都为空
           params.giveUp = { $ne: true }
           params.startTime = { $eq: null }
           params.endTime = { $eq: null }
-          break;
+          break
         case 2:
           // 进行中：startTime有值，endTime为空
           params.giveUp = { $ne: true }
           params.startTime = { $ne: null }
           params.endTime = { $eq: null }
-          break;
+          break
         case 3:
           // 已完成：startTime和endTime都有值
           params.giveUp = { $ne: true }
           params.startTime = { $ne: null }
           params.endTime = { $ne: null }
-          break;
+          break
 
         default:
-          break;
+          break
       }
-
     }
   }
 
@@ -57,20 +57,20 @@ module.exports = async function (req, res, next) {
     keyword = String(keyword)
     // keyword去掉前后空格
     keyword = keyword?.trim()
-    const keywordArray = keyword.split(' ');
-    const regexArray = keywordArray.map(keyword => {
-      const escapedKeyword = utils.escapeSpecialChars(keyword);
-      const regex = new RegExp(escapedKeyword, 'i');
-      return regex;
-    });
+    const keywordArray = keyword.split(' ')
+    const regexArray = keywordArray.map((keyword) => {
+      const escapedKeyword = utils.escapeSpecialChars(keyword)
+      const regex = new RegExp(escapedKeyword, 'i')
+      return regex
+    })
     // 检索title和excerpt
     params.$or = [
       {
-        title: { $in: regexArray }
+        title: { $in: regexArray },
       },
       {
-        label: { $in: regexArray }
-      }
+        label: { $in: regexArray },
+      },
     ]
   }
   // 如果gamePlatform存在，就加入查询条件
@@ -84,22 +84,25 @@ module.exports = async function (req, res, next) {
   }
 
   const sort = {
-    _id: -1
+    _id: -1,
   }
-  gameUtils.findPage(params, sort, page, size).then((data) => {
-    // 返回格式list,total
-    res.send({
-      list: data.list,
-      total: data.total
+  gameUtils
+    .findPage(params, sort, page, size)
+    .then((data) => {
+      // 返回格式list,total
+      res.send({
+        list: data.list,
+        total: data.total,
+      })
     })
-
-  }).catch((err) => {
-    res.status(400).json({
-      errors: [{
-        message: '游戏列表获取失败'
-      }]
+    .catch((err) => {
+      res.status(400).json({
+        errors: [
+          {
+            message: '游戏列表获取失败',
+          },
+        ],
+      })
+      adminApiLog.error(`game list get fail, ${JSON.stringify(err)}`)
     })
-    adminApiLog.error(`game list get fail, ${JSON.stringify(err)
-      }`)
-  })
 }

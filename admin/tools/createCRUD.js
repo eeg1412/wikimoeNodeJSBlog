@@ -1,11 +1,11 @@
 const fs = require('fs')
-const path = require('path');
+const path = require('path')
 
 // 获取node run creatCRUD 时的参数
-const args = process.argv.slice(2);
+const args = process.argv.slice(2)
 // 0是表名，1是中文名
-const tableName = args[0];
-const chineseName = args[1];
+const tableName = args[0]
+const chineseName = args[1]
 
 const viewPath = path.join('./src/views/index')
 
@@ -15,7 +15,10 @@ if (!fs.existsSync(tableNamePath)) {
   fs.mkdirSync(tableNamePath)
 }
 // 将tableName首字母替换为大写
-const tableNameFirstLetter = tableName.replace(tableName[0], tableName[0].toUpperCase())
+const tableNameFirstLetter = tableName.replace(
+  tableName[0],
+  tableName[0].toUpperCase(),
+)
 
 const listTemplate = (tableName, chineseName) => {
   const template = `<template>

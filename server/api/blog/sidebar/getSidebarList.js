@@ -6,16 +6,20 @@ module.exports = async function (req, res, next) {
   if (global.$cacheData?.sidebarList) {
     res.send(global.$cacheData.sidebarList)
   } else {
-    cacheDataUtils.getSidebarList().then((data) => {
-      res.send(data)
-    }).catch((err) => {
-      res.status(400).json({
-        errors: [{
-          message: 'sidebar列表获取失败'
-        }]
+    cacheDataUtils
+      .getSidebarList()
+      .then((data) => {
+        res.send(data)
       })
-      userApiLog.error(`sidebar list get fail, ${JSON.stringify(err)
-        }`)
-    })
+      .catch((err) => {
+        res.status(400).json({
+          errors: [
+            {
+              message: 'sidebar列表获取失败',
+            },
+          ],
+        })
+        userApiLog.error(`sidebar list get fail, ${JSON.stringify(err)}`)
+      })
   }
 }

@@ -8,32 +8,44 @@ module.exports = async function (req, res, next) {
   // check token
   if (!id) {
     res.status(400).json({
-      errors: [{
-        message: 'id不能为空'
-      }]
+      errors: [
+        {
+          message: 'id不能为空',
+        },
+      ],
     })
     return
   }
   // findOne
-  backupUtils.findOne({ _id: id }).then((data) => {
-    if (!data) {
-      res.status(400).json({
-        errors: [{
-          message: '备份不存在'
-        }]
+  backupUtils
+    .findOne({ _id: id })
+    .then((data) => {
+      if (!data) {
+        res.status(400).json({
+          errors: [
+            {
+              message: '备份不存在',
+            },
+          ],
+        })
+        return
+      }
+      const token = utils.creatJWT(
+        { id: id, tokenType: 'downloadBackup' },
+        '2m',
+      )
+      res.send({
+        token: token,
       })
-      return
-    }
-    const token = utils.creatJWT({ id: id, tokenType: 'downloadBackup' }, '2m')
-    res.send({
-      token: token
     })
-  }).catch((err) => {
-    res.status(400).json({
-      errors: [{
-        message: '备份详情获取失败'
-      }]
+    .catch((err) => {
+      res.status(400).json({
+        errors: [
+          {
+            message: '备份详情获取失败',
+          },
+        ],
+      })
+      adminApiLog.error(`backup detail get fail, ${logErrorToText(err)}`)
     })
-    adminApiLog.error(`backup detail get fail, ${logErrorToText(err)}`)
-  })
 }

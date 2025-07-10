@@ -320,8 +320,12 @@ const blogRouteSetting = [
   },
 ]
 
-blogRouteSetting.forEach(item => {
-  const middleware = [checkIsReady, referrerRecordMiddleware, ...item.middleware]
+blogRouteSetting.forEach((item) => {
+  const middleware = [
+    checkIsReady,
+    referrerRecordMiddleware,
+    ...item.middleware,
+  ]
   router[item.method](item.path, ...middleware, item.controller)
 })
 

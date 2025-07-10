@@ -2,7 +2,7 @@ require('dotenv').config()
 const fs = require('fs')
 const path = require('path')
 const db = require('./mongodb')
-const sharp = require('sharp');
+const sharp = require('sharp')
 
 // 各种mongodb表
 const albumUtils = require('../mongodb/utils/albums')
@@ -15,7 +15,7 @@ const userUtils = require('../mongodb/utils/users')
 
 const init = async () => {
   let data = {}
-  const filePath = path.join(__dirname, 'backupFromEmlogJson', 'emlog.json');
+  const filePath = path.join(__dirname, 'backupFromEmlogJson', 'emlog.json')
   data = JSON.parse(fs.readFileSync(filePath, 'utf8'))
   // 设定表前缀由运行参数中获取
   const tablePrefix = process.argv[2] || 'emlog_'
@@ -31,7 +31,7 @@ const init = async () => {
   const sortList = []
   const sortEmlogList = data[tablePrefix + 'sort']
   // 遍历sortEmlogList,转换格式
-  sortEmlogList.forEach(sortEmlog => {
+  sortEmlogList.forEach((sortEmlog) => {
     const sort = {
       sortname: sortEmlog.sortname,
       alias: sortEmlog.alias,
@@ -47,7 +47,7 @@ const init = async () => {
   // 将sortList拆分成两组，一组是有parent的，一组是没有parent的
   const sortListWithParent = []
   const sortListWithoutParent = []
-  sortList.forEach(sort => {
+  sortList.forEach((sort) => {
     if (sort.pid !== '0') {
       sortListWithParent.push(sort)
     } else {
@@ -87,7 +87,7 @@ const init = async () => {
   const tagEmlogList = data[tablePrefix + 'tag']
   const tagGIDMap = {} // key: emlog的gid, value: mongodb的_id
   // 遍历tagEmlogList,转换格式
-  tagEmlogList.forEach(tagEmlog => {
+  tagEmlogList.forEach((tagEmlog) => {
     // gid的格式是,1,2,3,
     // 如果存在gid的话需要去掉前后的逗号
     if (tagEmlog.gid) {
@@ -110,15 +110,13 @@ const init = async () => {
     const tag = tagList[i]
     const promise = tagUtils.save(tag).then((tagData) => {
       // gid是数组
-      tag.gid.forEach(gid => {
+      tag.gid.forEach((gid) => {
         const GIDList = tagGIDMap[gid] || []
         GIDList.push(tagData._id)
         tagGIDMap[gid] = GIDList
       })
-
     })
     tagPromiseList.push(promise)
-
   }
   await Promise.all(tagPromiseList)
   console.log('标签写入完毕')
@@ -135,7 +133,7 @@ const init = async () => {
   const attachmentEmlogList = data[tablePrefix + 'attachment']
   // attachmentEmlogList 遍历出 所有 thumfor 的数组
   const thumforList = []
-  attachmentEmlogList.forEach(attachmentEmlog => {
+  attachmentEmlogList.forEach((attachmentEmlog) => {
     if (attachmentEmlog.thumfor !== '0') {
       thumforList.push(attachmentEmlog.thumfor)
     }
@@ -143,7 +141,7 @@ const init = async () => {
   // aid 如果在 thumforList 中，则说明是缩略图，做成一个map，key是thumfor，value是数据，如果不在，则说明是附件，是要添加到数据库的
   const attachmentListIsThumforMap = {}
   const attachmentListNotIsThumfor = []
-  attachmentEmlogList.forEach(attachmentEmlog => {
+  attachmentEmlogList.forEach((attachmentEmlog) => {
     if (attachmentEmlog.thumfor === '0') {
       attachmentListNotIsThumfor.push(attachmentEmlog)
     } else {
@@ -151,9 +149,8 @@ const init = async () => {
     }
   })
 
-
   // 遍历attachmentListWithThumfor,转换格式
-  attachmentListNotIsThumfor.forEach(attachmentEmlog => {
+  attachmentListNotIsThumfor.forEach((attachmentEmlog) => {
     // emlog的filepath前面多了..，thumfor指向附件的id，而不是缩略图的路径
     const newPath = attachmentEmlog.filepath.replace(/^../, '')
     const thumfor = attachmentListIsThumforMap[attachmentEmlog.aid] || null
@@ -193,7 +190,8 @@ const init = async () => {
   for (let i = 0; i < attachmentList.length; i++) {
     const attachment = attachmentList[i]
     const promise = attachmentsUtils.save(attachment).then((attachmentData) => {
-      attachmentFilepathMap[attachment.filepath.replace(/^\//, '')] = attachmentData._id
+      attachmentFilepathMap[attachment.filepath.replace(/^\//, '')] =
+        attachmentData._id
       albumAttachmentCount++
     })
     attachmentPromiseList.push(promise)
@@ -209,7 +207,7 @@ const init = async () => {
   // 查询用户
   const userData = await userUtils.findOne({})
   // 遍历postEmlogList,转换格式
-  postEmlogList.forEach(postEmlog => {
+  postEmlogList.forEach((postEmlog) => {
     const date = new Date(postEmlog.date * 1000)
     const alias = postEmlog.alias || postEmlog.gid
     const excerpt = postEmlog.excerpt || ''
@@ -218,7 +216,10 @@ const init = async () => {
     let excerptAttachmentId = null
     const coverImages = []
     if (excerptSrc) {
-      const excerptSrcPath = excerptSrc[1].replace(/^https:\/\/www.wikimoe.com\//, '')
+      const excerptSrcPath = excerptSrc[1].replace(
+        /^https:\/\/www.wikimoe.com\//,
+        '',
+      )
       excerptAttachmentId = attachmentFilepathMap[excerptSrcPath]
       if (excerptAttachmentId) {
         coverImages.push(excerptAttachmentId)
@@ -266,47 +267,47 @@ const init = async () => {
   const twitterList = []
   const twitterEmlogList = data[tablePrefix + 'twitter']
   const twitterEmojiMap = {
-    "耶": "🙌",
-    "呵呵": "😄",
-    "悲伤": "😢",
-    "抓狂": "😖",
-    "衰": "😞",
-    "花心": "😍",
-    "哼": "😤",
-    "泪": "😭",
-    "害羞": "😳",
-    "酷": "😎",
-    "晕": "😵",
-    "挤眼": "😉",
-    "鬼脸": "😜",
-    "汗": "😓",
-    "吃惊": "😱",
-    "发呆": "😐",
-    "闭嘴": "🤐",
-    "撇嘴": "😒",
-    "疑问": "❓",
-    "睡觉": "😴",
-    "NO": "🚫",
-    "大哭": "😭",
-    "爱你": "😘",
-    "嘻嘻": "😁",
-    "生病": "🤒",
-    "偷笑": "😏",
-    "思考": "🤔",
-    "玫瑰": "🌹",
-    "心": "❤️",
-    "伤心": "💔",
-    "咖啡": "☕",
-    "音乐": "🎵",
-    "下雨": "🌧️",
-    "晴天": "☀️",
-    "星星": "⭐",
-    "月亮": "🌙"
-  };
-  const updatedEmojiMap = {};
-  Object.keys(twitterEmojiMap).forEach(key => {
-    updatedEmojiMap[`[${key}]`] = twitterEmojiMap[key];
-  });
+    耶: '🙌',
+    呵呵: '😄',
+    悲伤: '😢',
+    抓狂: '😖',
+    衰: '😞',
+    花心: '😍',
+    哼: '😤',
+    泪: '😭',
+    害羞: '😳',
+    酷: '😎',
+    晕: '😵',
+    挤眼: '😉',
+    鬼脸: '😜',
+    汗: '😓',
+    吃惊: '😱',
+    发呆: '😐',
+    闭嘴: '🤐',
+    撇嘴: '😒',
+    疑问: '❓',
+    睡觉: '😴',
+    NO: '🚫',
+    大哭: '😭',
+    爱你: '😘',
+    嘻嘻: '😁',
+    生病: '🤒',
+    偷笑: '😏',
+    思考: '🤔',
+    玫瑰: '🌹',
+    心: '❤️',
+    伤心: '💔',
+    咖啡: '☕',
+    音乐: '🎵',
+    下雨: '🌧️',
+    晴天: '☀️',
+    星星: '⭐',
+    月亮: '🌙',
+  }
+  const updatedEmojiMap = {}
+  Object.keys(twitterEmojiMap).forEach((key) => {
+    updatedEmojiMap[`[${key}]`] = twitterEmojiMap[key]
+  })
   // 遍历twitterEmlogList,转换格式
   const twitterAttachPromiseList = []
   for (let i = 0; i < twitterEmlogList.length; i++) {
@@ -323,7 +324,7 @@ const init = async () => {
       const imageThumFile = sharp(path.join('./', 'public', '/' + imgThum))
       const imageThumInfo = await imageThumFile.metadata()
       // 根据路径获取文件名，通过正则获取
-      const imgName = img.match(/\/([^\/]+)$/)[1];
+      const imgName = img.match(/\/([^\/]+)$/)[1]
       const imgParam = {
         name: imgName,
         filename: imgName,
@@ -346,9 +347,12 @@ const init = async () => {
     }
     await Promise.all(twitterAttachPromiseList)
     // 更改 twitterEmlog.content 中的表情
-    const twitterContent = twitterEmlog.content?.replace(/\[(.*?)\]/g, (match, p1) => {
-      return updatedEmojiMap[match] || match;
-    });
+    const twitterContent = twitterEmlog.content?.replace(
+      /\[(.*?)\]/g,
+      (match, p1) => {
+        return updatedEmojiMap[match] || match
+      },
+    )
     const twitter = {
       tid: twitterEmlog.id,
       excerpt: twitterContent,
@@ -379,54 +383,57 @@ const init = async () => {
   const commentEmlogList = data[tablePrefix + 'comment']
   const commentMap = {} // key: emlog的cid, value: mongodb的_id
   const commentEmojiMap = {
-    "@(墨镜)": "😎",
-    "@(瞌睡)": "😴",
-    "@(怜悯)": "😢",
-    "@(绝望)": "😱",
-    "@(面无表情)": "😐",
-    "@(坏掉啦)": "🤯",
-    "@(嫌弃)": "😒",
-    "@(醉了)": "🥴",
-    "@(卖萌)": "😊",
-    "@(呕吐)": "🤮",
-    "@(鼓掌)": "👏",
-    "@(喔)": "😮",
-    "@(哭笑)": "😂",
-    "@(高兴)": "😃",
-    "@(抛媚眼)": "😉",
-    "@(自信)": "😏",
-    "@(汗)": "😓",
-    "@(惊讶)": "😲",
-    "@(调皮)": "😜",
-    "@(囧)": "😖",
-    "@(迷上)": "😍",
-    "@(昏厥)": "😵",
-    "@(难过)": "😔",
-    "@(晕)": "😵‍💫",
-    "@(笑)": "😄",
-    "@(触手)": "🐙",
-    "@(大哭)": "😭",
-    "@(摇头)": "🙅‍♂️",
-    "@(剪刀)": "✂️",
-    "@(石头)": "🪨",
-    "@(布)": "📃",
-    "@(剪刀手)": "✌️",
-    "@(顶)": "👍",
-    "@(踩)": "👎",
-    "@(OK哒)": "👌",
-    "@(恶魔)": "😈",
-    "@(天使)": "👼",
-    "@(礼花)": "🎉"
-  };
+    '@(墨镜)': '😎',
+    '@(瞌睡)': '😴',
+    '@(怜悯)': '😢',
+    '@(绝望)': '😱',
+    '@(面无表情)': '😐',
+    '@(坏掉啦)': '🤯',
+    '@(嫌弃)': '😒',
+    '@(醉了)': '🥴',
+    '@(卖萌)': '😊',
+    '@(呕吐)': '🤮',
+    '@(鼓掌)': '👏',
+    '@(喔)': '😮',
+    '@(哭笑)': '😂',
+    '@(高兴)': '😃',
+    '@(抛媚眼)': '😉',
+    '@(自信)': '😏',
+    '@(汗)': '😓',
+    '@(惊讶)': '😲',
+    '@(调皮)': '😜',
+    '@(囧)': '😖',
+    '@(迷上)': '😍',
+    '@(昏厥)': '😵',
+    '@(难过)': '😔',
+    '@(晕)': '😵‍💫',
+    '@(笑)': '😄',
+    '@(触手)': '🐙',
+    '@(大哭)': '😭',
+    '@(摇头)': '🙅‍♂️',
+    '@(剪刀)': '✂️',
+    '@(石头)': '🪨',
+    '@(布)': '📃',
+    '@(剪刀手)': '✌️',
+    '@(顶)': '👍',
+    '@(踩)': '👎',
+    '@(OK哒)': '👌',
+    '@(恶魔)': '😈',
+    '@(天使)': '👼',
+    '@(礼花)': '🎉',
+  }
   // 遍历commentEmlogList,转换格式
-  commentEmlogList.forEach(commentEmlog => {
+  commentEmlogList.forEach((commentEmlog) => {
     const date = new Date(commentEmlog.date * 1000)
-    const commentContent = commentEmlog.comment?.replace(/@\((.*?)\)/g, (match, p1) => {
-      return commentEmojiMap[match] || match;
-    });
+    const commentContent = commentEmlog.comment?.replace(
+      /@\((.*?)\)/g,
+      (match, p1) => {
+        return commentEmojiMap[match] || match
+      },
+    )
     const comment = {
       post: postIdMap[commentEmlog.gid],
-      parent: null,//暂时不处理
+      parent: null, //暂时不处理
       pid: commentEmlog.pid,
       cid: commentEmlog.cid,
       date: date,
@@ -439,7 +446,10 @@ const init = async () => {
       status: commentEmlog.hide === 'y' ? 0 : 1,
     }
     // 如果email和userData的email相同，则是管理员
-    if (userData.email === comment.email || userData.nickname === comment.nickname) {
+    if (
+      userData.email === comment.email ||
+      userData.nickname === comment.nickname
+    ) {
       comment.user = userData._id
       // 清空email和url和nickname
       comment.email = ''
@@ -467,7 +477,10 @@ const init = async () => {
     const commentData = comment.commentData
     const pid = comment.pid
     if (pid !== '0' && commentMap[pid]) {
-      const promise = commentUtils.updateOne({ _id: commentData._id }, { parent: commentMap[pid] })
+      const promise = commentUtils.updateOne(
+        { _id: commentData._id },
+        { parent: commentMap[pid] },
+      )
       commentUpdatePromiseList.push(promise)
     }
   }
@@ -478,11 +491,11 @@ const init = async () => {
   const replyList = []
   const replyEmlogList = data[tablePrefix + 'reply']
   // 遍历replyEmlogList,转换格式
-  replyEmlogList.forEach(replyEmlog => {
+  replyEmlogList.forEach((replyEmlog) => {
     const date = new Date(replyEmlog.date * 1000)
     const reply = {
       post: twitterIdMap[replyEmlog.tid],
-      parent: null,//暂时不处理
+      parent: null, //暂时不处理
       date: date,
       content: replyEmlog.content,
       top: false,
@@ -509,8 +522,6 @@ const init = async () => {
   // 退出
   process.exit(0)
 }
-
-
 
 db.once('open', () => {
   init()

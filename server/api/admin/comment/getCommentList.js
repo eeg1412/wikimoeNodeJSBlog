@@ -10,21 +10,22 @@ module.exports = async function (req, res, next) {
   // 判断page和size是否为数字
   if (!utils.isNumber(page) || !utils.isNumber(size)) {
     res.status(400).json({
-      errors: [{
-        message: '参数错误'
-      }]
+      errors: [
+        {
+          message: '参数错误',
+        },
+      ],
     })
     return
   }
-  const params = {
-  }
+  const params = {}
   if (keyword) {
     keyword = utils.escapeSpecialChars(keyword)
     params.$or = [
       { content: new RegExp(keyword, 'i') },
       { nickname: new RegExp(keyword, 'i') },
       { email: new RegExp(keyword, 'i') },
-      { url: new RegExp(keyword, 'i') }
+      { url: new RegExp(keyword, 'i') },
     ]
   }
   if (ip) {
@@ -40,26 +41,30 @@ module.exports = async function (req, res, next) {
     params.status = Number(status)
   }
   const sort = {
-    date: -1
+    date: -1,
   }
-  commentUtils.findPage(params, sort, page, size).then((data) => {
-    // 返回格式list,total
-    const list = data.list.map(item => {
-      const newItem = item.toJSON()
-      newItem.parentId = item.populated('parent')
-      return newItem
-    });
-    res.send({
-      list: list,
-      total: data.total
+  commentUtils
+    .findPage(params, sort, page, size)
+    .then((data) => {
+      // 返回格式list,total
+      const list = data.list.map((item) => {
+        const newItem = item.toJSON()
+        newItem.parentId = item.populated('parent')
+        return newItem
+      })
+      res.send({
+        list: list,
+        total: data.total,
+      })
     })
-
-  }).catch((err) => {
-    res.status(400).json({
-      errors: [{
-        message: '评论列表获取失败'
-      }]
+    .catch((err) => {
+      res.status(400).json({
+        errors: [
+          {
+            message: '评论列表获取失败',
+          },
+        ],
+      })
+      adminApiLog.error(`comment list get fail, ${logErrorToText(err)}`)
     })
-    adminApiLog.error(`comment list get fail, ${logErrorToText(err)}`)
-  })
 }

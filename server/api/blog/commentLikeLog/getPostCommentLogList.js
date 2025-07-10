@@ -11,35 +11,41 @@ module.exports = async function (req, res, next) {
   // 判断uuid是否符合格式
   if (!utils.isUUID(uuid)) {
     res.status(400).json({
-      errors: [{
-        message: '参数错误'
-      }]
+      errors: [
+        {
+          message: '参数错误',
+        },
+      ],
     })
     return
   }
 
   const params = {
     comment: {
-      $in: commentIdList
+      $in: commentIdList,
     },
     // 判断uuid
     uuid,
   }
 
   const sort = {
-    _id: -1
+    _id: -1,
   }
-  commentLikeLogUtils.find(params, sort, '_id comment like __v').then((data) => {
-    res.send({
-      list: data
+  commentLikeLogUtils
+    .find(params, sort, '_id comment like __v')
+    .then((data) => {
+      res.send({
+        list: data,
+      })
     })
-  }).catch((err) => {
-    res.status(400).json({
-      errors: [{
-        message: '文章点赞记录列表获取失败'
-      }]
+    .catch((err) => {
+      res.status(400).json({
+        errors: [
+          {
+            message: '文章点赞记录列表获取失败',
+          },
+        ],
+      })
+      userApiLog.error(`commentLikeLog list get fail, ${JSON.stringify(err)}`)
     })
-    userApiLog.error(`commentLikeLog list get fail, ${JSON.stringify(err)
-      }`)
-  })
 }

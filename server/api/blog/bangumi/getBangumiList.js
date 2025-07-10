@@ -10,9 +10,11 @@ module.exports = async function (req, res, next) {
   // 判断page和size是否为数字
   if (!utils.isNumber(page)) {
     res.status(400).json({
-      errors: [{
-        message: '参数错误'
-      }]
+      errors: [
+        {
+          message: '参数错误',
+        },
+      ],
     })
     return
   }
@@ -33,12 +35,11 @@ module.exports = async function (req, res, next) {
       switch (statusNumber) {
         case 99:
           params.giveUp = true
-          break;
+          break
 
         default:
-          break;
+          break
       }
-
     }
   }
 
@@ -48,22 +49,22 @@ module.exports = async function (req, res, next) {
     keyword = keyword?.trim()
     // 如果keyword超过20个字符，就截取前20个字符
     if (keyword.length > 20) {
-      keyword = Array.from(keyword).slice(0, 20).join('');
+      keyword = Array.from(keyword).slice(0, 20).join('')
     }
-    const keywordArray = keyword.split(' ');
-    const regexArray = keywordArray.map(keyword => {
-      const escapedKeyword = utils.escapeSpecialChars(keyword);
-      const regex = new RegExp(escapedKeyword, 'i');
-      return regex;
-    });
+    const keywordArray = keyword.split(' ')
+    const regexArray = keywordArray.map((keyword) => {
+      const escapedKeyword = utils.escapeSpecialChars(keyword)
+      const regex = new RegExp(escapedKeyword, 'i')
+      return regex
+    })
     // 检索title和excerpt
     params.$or = [
       {
-        title: { $in: regexArray }
+        title: { $in: regexArray },
       },
       {
-        label: { $in: regexArray }
-      }
+        label: { $in: regexArray },
+      },
     ]
   }
 
@@ -81,17 +82,15 @@ module.exports = async function (req, res, next) {
       required: false,
       options: {
         min: 1,
-        max: 4
-      }
-    }
+        max: 4,
+      },
+    },
   ]
   const errors = utils.checkForm(params, rule)
   if (errors.length > 0) {
     res.status(400).json({ errors })
     return
   }
-
-
 
   let sort = {
     year: -1,
@@ -108,19 +107,28 @@ module.exports = async function (req, res, next) {
     }
   }
 
-  bangumiUtils.findPage(params, sort, page, size, '_id cover label rating season status summary title year giveUp urlList').then((data) => {
-    // 返回格式list,total
-    res.send({
-      data: data,
+  bangumiUtils
+    .findPage(
+      params,
+      sort,
+      page,
+      size,
+      '_id cover label rating season status summary title year giveUp urlList',
+    )
+    .then((data) => {
+      // 返回格式list,total
+      res.send({
+        data: data,
+      })
     })
-
-  }).catch((err) => {
-    res.status(400).json({
-      errors: [{
-        message: '番剧列表获取失败'
-      }]
+    .catch((err) => {
+      res.status(400).json({
+        errors: [
+          {
+            message: '番剧列表获取失败',
+          },
+        ],
+      })
+      userApiLog.error(`bangumi list get fail, ${JSON.stringify(err)}`)
     })
-    userApiLog.error(`bangumi list get fail, ${JSON.stringify(err)
-      }`)
-  })
 }

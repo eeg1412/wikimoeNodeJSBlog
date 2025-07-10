@@ -10,14 +10,15 @@ module.exports = async function (req, res, next) {
   // 判断page和size是否为数字
   if (!utils.isNumber(page) || !utils.isNumber(size)) {
     res.status(400).json({
-      errors: [{
-        message: '参数错误'
-      }]
+      errors: [
+        {
+          message: '参数错误',
+        },
+      ],
     })
     return
   }
-  const params = {
-  }
+  const params = {}
   // 如果keyword存在，就加入查询条件
   if (keyword) {
     keyword = utils.escapeSpecialChars(keyword)
@@ -29,9 +30,11 @@ module.exports = async function (req, res, next) {
     const referrerTypes = ['assets', 'adminApi', 'blogApi']
     if (!referrerTypes.includes(referrerType)) {
       res.status(400).json({
-        errors: [{
-          message: '参数错误'
-        }]
+        errors: [
+          {
+            message: '参数错误',
+          },
+        ],
       })
       return
     }
@@ -39,22 +42,25 @@ module.exports = async function (req, res, next) {
   }
 
   const sort = {
-    _id: -1
+    _id: -1,
   }
-  referrerUtils.findPage(params, sort, page, size).then((data) => {
-    // 返回格式list,total
-    res.send({
-      list: data.list,
-      total: data.total
+  referrerUtils
+    .findPage(params, sort, page, size)
+    .then((data) => {
+      // 返回格式list,total
+      res.send({
+        list: data.list,
+        total: data.total,
+      })
     })
-
-  }).catch((err) => {
-    res.status(400).json({
-      errors: [{
-        message: '引用记录列表获取失败'
-      }]
+    .catch((err) => {
+      res.status(400).json({
+        errors: [
+          {
+            message: '引用记录列表获取失败',
+          },
+        ],
+      })
+      adminApiLog.error(`referrer list get fail, ${JSON.stringify(err)}`)
     })
-    adminApiLog.error(`referrer list get fail, ${JSON.stringify(err)
-      }`)
-  })
 }

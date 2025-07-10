@@ -2,7 +2,7 @@ const utils = require('../../../utils/utils')
 const fs = require('fs')
 const log4js = require('log4js')
 const adminApiLog = log4js.getLogger('adminApi')
-const path = require('path');
+const path = require('path')
 
 module.exports = async function (req, res, next) {
   // // 开启图片压缩
@@ -19,7 +19,15 @@ module.exports = async function (req, res, next) {
   // imgSettingThumbnailQuality: 40,
   // // 图片缩略图最长边
   // imgSettingThumbnailMaxSize: 680,
-  let { imgSettingEnableImgCompress, imgSettingEnableImgCompressWebp, imgSettingCompressQuality, imgSettingCompressMaxSize, imgSettingEnableImgThumbnail, imgSettingThumbnailQuality, imgSettingThumbnailMaxSize } = req.body
+  let {
+    imgSettingEnableImgCompress,
+    imgSettingEnableImgCompressWebp,
+    imgSettingCompressQuality,
+    imgSettingCompressMaxSize,
+    imgSettingEnableImgThumbnail,
+    imgSettingThumbnailQuality,
+    imgSettingThumbnailMaxSize,
+  } = req.body
   // 校验格式
   const params = {
     imgSettingEnableImgCompress: imgSettingEnableImgCompress,
@@ -78,7 +86,7 @@ module.exports = async function (req, res, next) {
   }
   // 写入配置文件
   // 判断globalConfig.json文件是否存在,如果不存在就创建,如果存在就覆盖
-  const globalConfigPath = path.join('./config/globalConfig.json');
+  const globalConfigPath = path.join('./config/globalConfig.json')
   fs.writeFileSync(globalConfigPath, JSON.stringify(params))
   // 和现有的global.$globalConfig合并
   Object.assign(global.$globalConfig, params)
@@ -86,7 +94,6 @@ module.exports = async function (req, res, next) {
   adminApiLog.info(`更新全局配置:${JSON.stringify(params)}`)
   console.info(`当前全局配置:`, global.$globalConfig)
   res.send({
-    data: global.$globalConfig
+    data: global.$globalConfig,
   })
-
 }

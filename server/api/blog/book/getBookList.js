@@ -10,19 +10,19 @@ module.exports = async function (req, res, next) {
   // 判断page和size是否为数字
   if (!utils.isNumber(page)) {
     res.status(400).json({
-      errors: [{
-        message: '参数错误'
-      }]
+      errors: [
+        {
+          message: '参数错误',
+        },
+      ],
     })
     return
   }
   const params = {
-    status: 1
+    status: 1,
   }
 
-  const sort = {
-
-  }
+  const sort = {}
   if (sortType === 'rating') {
     sort.rating = -1
     sort._id = -1
@@ -34,7 +34,6 @@ module.exports = async function (req, res, next) {
     params.booktype = booktypeId
   }
 
-
   if (status) {
     const statusList = [99, 1, 2, 3]
     const statusNumber = Number(status)
@@ -43,30 +42,29 @@ module.exports = async function (req, res, next) {
       switch (statusNumber) {
         case 99:
           params.giveUp = true
-          break;
+          break
         case 1:
           // 未开始：startTime和endTime都为空
           params.giveUp = { $ne: true }
           params.startTime = { $eq: null }
           params.endTime = { $eq: null }
-          break;
+          break
         case 2:
           // 进行中：startTime有值，endTime为空
           params.giveUp = { $ne: true }
           params.startTime = { $ne: null }
           params.endTime = { $eq: null }
-          break;
+          break
         case 3:
           // 已完成：startTime和endTime都有值
           params.giveUp = { $ne: true }
           params.startTime = { $ne: null }
           params.endTime = { $ne: null }
-          break;
+          break
 
         default:
-          break;
+          break
       }
-
     }
   }
 
@@ -76,39 +74,48 @@ module.exports = async function (req, res, next) {
     keyword = keyword?.trim()
     // 如果keyword超过20个字符，就截取前20个字符
     if (keyword.length > 20) {
-      keyword = Array.from(keyword).slice(0, 20).join('');
+      keyword = Array.from(keyword).slice(0, 20).join('')
     }
-    const keywordArray = keyword.split(' ');
-    const regexArray = keywordArray.map(keyword => {
-      const escapedKeyword = utils.escapeSpecialChars(keyword);
-      const regex = new RegExp(escapedKeyword, 'i');
-      return regex;
-    });
+    const keywordArray = keyword.split(' ')
+    const regexArray = keywordArray.map((keyword) => {
+      const escapedKeyword = utils.escapeSpecialChars(keyword)
+      const regex = new RegExp(escapedKeyword, 'i')
+      return regex
+    })
     // 检索title和excerpt
     params.$or = [
       {
-        title: { $in: regexArray }
+        title: { $in: regexArray },
       },
       {
-        label: { $in: regexArray }
-      }
+        label: { $in: regexArray },
+      },
     ]
   }
 
-  bookUtils.findPage(params, sort, page, size, '_id cover endTime booktype label rating startTime status summary title urlList giveUp').then((data) => {
-    // 返回格式list,total
-    res.send({
-      list: data.list,
-      total: data.total
+  bookUtils
+    .findPage(
+      params,
+      sort,
+      page,
+      size,
+      '_id cover endTime booktype label rating startTime status summary title urlList giveUp',
+    )
+    .then((data) => {
+      // 返回格式list,total
+      res.send({
+        list: data.list,
+        total: data.total,
+      })
     })
-
-  }).catch((err) => {
-    res.status(400).json({
-      errors: [{
-        message: '书籍列表获取失败'
-      }]
+    .catch((err) => {
+      res.status(400).json({
+        errors: [
+          {
+            message: '书籍列表获取失败',
+          },
+        ],
+      })
+      userApiLog.error(`book list get fail, ${JSON.stringify(err)}`)
     })
-    userApiLog.error(`book list get fail, ${JSON.stringify(err)
-      }`)
-  })
 }

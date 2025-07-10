@@ -6,7 +6,6 @@ const commentUtils = require('../../../mongodb/utils/comments')
 const postUtils = require('../../../mongodb/utils/posts')
 const os = require('os')
 
-
 module.exports = async function (req, res, next) {
   // 1. 获取评论总数
   const commentCount = await commentUtils.count({})
@@ -16,33 +15,33 @@ module.exports = async function (req, res, next) {
     {
       $group: {
         _id: null,
-        totalViews: { $sum: "$views" },
-        totalLikes: { $sum: "$likes" },
+        totalViews: { $sum: '$views' },
+        totalLikes: { $sum: '$likes' },
         blogCount: {
           $sum: {
-            $cond: [{ $eq: ["$type", 1] }, 1, 0]
-          }
+            $cond: [{ $eq: ['$type', 1] }, 1, 0],
+          },
         },
         tweetCount: {
           $sum: {
-            $cond: [{ $eq: ["$type", 2] }, 1, 0]
-          }
+            $cond: [{ $eq: ['$type', 2] }, 1, 0],
+          },
         },
         pageCount: {
           $sum: {
-            $cond: [{ $eq: ["$type", 3] }, 1, 0]
-          }
-        }
-      }
-    }
-  ];
+            $cond: [{ $eq: ['$type', 3] }, 1, 0],
+          },
+        },
+      },
+    },
+  ]
 
   let postCount = {
     totalViews: 0,
     totalLikes: 0,
     blogCount: 0,
     tweetCount: 0,
-    pageCount: 0
+    pageCount: 0,
   }
   const postCountRes = await postUtils.aggregate(pipeline)
   if (postCountRes.length > 0) {
@@ -67,7 +66,6 @@ module.exports = async function (req, res, next) {
   const arch = os.arch()
   const uptime = os.uptime()
 
-
   // send
   res.send({
     data: {
@@ -84,7 +82,7 @@ module.exports = async function (req, res, next) {
       memory,
       arch,
       uptime,
-      version: process.env.npm_package_version
-    }
+      version: process.env.npm_package_version,
+    },
   })
 }

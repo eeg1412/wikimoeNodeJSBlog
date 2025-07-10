@@ -2,7 +2,7 @@ const linkUtils = require('../../../mongodb/utils/links')
 const utils = require('../../../utils/utils')
 const log4js = require('log4js')
 const adminApiLog = log4js.getLogger('adminApi')
-const mongoose = require('mongoose');
+const mongoose = require('mongoose')
 
 module.exports = async function (req, res, next) {
   // // sitename 网站名称字段
@@ -39,15 +39,7 @@ module.exports = async function (req, res, next) {
   //   type: String,
   //   default: '',
   // },
-  const {
-    icon,
-    sitename,
-    siteurl,
-    description,
-    taxis,
-    status,
-    rss
-  } = req.body
+  const { icon, sitename, siteurl, description, taxis, status, rss } = req.body
   // 校验格式
   const params = {
     sitename,
@@ -55,7 +47,7 @@ module.exports = async function (req, res, next) {
     description: description || '',
     taxis: taxis || 0,
     status: status || 0,
-    rss: rss || ''
+    rss: rss || '',
   }
   const rule = [
     {
@@ -70,7 +62,6 @@ module.exports = async function (req, res, next) {
       type: null,
       required: true,
     },
-
   ]
   const errors = utils.checkForm(params, rule)
   if (errors.length > 0) {
@@ -87,33 +78,41 @@ module.exports = async function (req, res, next) {
     const path = './public/upload/linkicon/'
     const fileName = params['_id']
     try {
-      const imgRes = utils.base64ToFile(icon, path, fileName, { createDir: true })
+      const imgRes = utils.base64ToFile(icon, path, fileName, {
+        createDir: true,
+      })
       params['icon'] = `/upload/linkicon/${imgRes.fileNameAll}?v=${Date.now()}`
       params['iconPath'] = imgRes.filepath
     } catch (error) {
       res.status(400).json({
-        errors: [{
-          message: '照片上传失败'
-        }]
+        errors: [
+          {
+            message: '照片上传失败',
+          },
+        ],
       })
       throw new Error(error)
     }
   }
 
   // save
-  linkUtils.save(params).then((data) => {
-    res.send({
-      data: data
+  linkUtils
+    .save(params)
+    .then((data) => {
+      res.send({
+        data: data,
+      })
+      // utils.reflushBlogCache()
+      adminApiLog.info(`link create success`)
     })
-    // utils.reflushBlogCache()
-    adminApiLog.info(`link create success`)
-  }).catch((err) => {
-    res.status(400).json({
-      errors: [{
-        message: '友链创建失败'
-      }]
+    .catch((err) => {
+      res.status(400).json({
+        errors: [
+          {
+            message: '友链创建失败',
+          },
+        ],
+      })
+      adminApiLog.error(`link create fail, ${logErrorToText(err)}`)
     })
-    adminApiLog.error(`link create fail, ${logErrorToText(err)}`)
-  })
-
 }

@@ -1,4 +1,3 @@
-
 const postUtils = require('../../../mongodb/utils/posts')
 const readerlogUtils = require('../../../mongodb/utils/readerlogs')
 const utils = require('../../../utils/utils')
@@ -6,8 +5,7 @@ const log4js = require('log4js')
 const userApiLog = log4js.getLogger('userApi')
 
 module.exports = async function (req, res, next) {
-  res.send({
-  })
+  res.send({})
   const { isExceedMaxSize } = await utils.getReaderlogsSize()
   if (isExceedMaxSize) {
     throw new Error('readerlogs超出最大存储容量')
@@ -45,18 +43,18 @@ module.exports = async function (req, res, next) {
   const readerlogCount = await readerlogUtils.count({
     $or: [
       {
-        uuid: uuid
+        uuid: uuid,
       },
       {
-        ip: ip
-      }
+        ip: ip,
+      },
     ],
     // action字段 postView
     action: 'postView',
     createdAt: {
       $gte: utils.getTodayStartTime(),
-      $lte: utils.getTodayEndTime()
-    }
+      $lte: utils.getTodayEndTime(),
+    },
   })
   if (readerlogCount >= 1000) {
     return
@@ -65,10 +63,9 @@ module.exports = async function (req, res, next) {
   const params = {
     // views + 1
     $inc: {
-      views: 1
-    }
+      views: 1,
+    },
   }
-
 
   const data = await postUtils.findOne({ _id: id })
   if (!data) {
@@ -94,7 +91,7 @@ module.exports = async function (req, res, next) {
     default:
       break
   }
-  const isSearchEngineResult = utils.isSearchEngine(req);
+  const isSearchEngineResult = utils.isSearchEngine(req)
   const readerlogParams = {
     uuid: uuid,
     action: 'postView',
@@ -106,13 +103,16 @@ module.exports = async function (req, res, next) {
     ...isSearchEngineResult,
     deviceInfo: utils.deviceUAInfoUtils(req),
     ipInfo: await utils.IP2LocationUtils(ip, null, null, false),
-    ip: ip
+    ip: ip,
   }
-  readerlogUtils.save(readerlogParams).then((data) => {
-    userApiLog.info(`post view log create success`)
-  }).catch((err) => {
-    userApiLog.error(`post view log create fail, ${logErrorToText(err)}`)
-  })
+  readerlogUtils
+    .save(readerlogParams)
+    .then((data) => {
+      userApiLog.info(`post view log create success`)
+    })
+    .catch((err) => {
+      userApiLog.error(`post view log create fail, ${logErrorToText(err)}`)
+    })
 
   // 查询post的views是否超过20亿，如果超过20亿，不再增加
   if (data.views + 1 >= 2000000000) {
@@ -120,11 +120,11 @@ module.exports = async function (req, res, next) {
     return
   }
 
-  const siteSpiderPostVisitEnabled = global.$globalConfig?.otherSettings?.siteSpiderPostVisitEnabled;
+  const siteSpiderPostVisitEnabled =
+    global.$globalConfig?.otherSettings?.siteSpiderPostVisitEnabled
 
   if (siteSpiderPostVisitEnabled || !isSearchEngineResult.isBot) {
     // 更新post的views
-    postUtils.updateOne({ _id: id }, params, true);
+    postUtils.updateOne({ _id: id }, params, true)
   }
-
 }

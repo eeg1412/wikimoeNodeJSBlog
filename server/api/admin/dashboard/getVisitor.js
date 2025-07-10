@@ -1,9 +1,8 @@
 const utils = require('../../../utils/utils')
 const log4js = require('log4js')
 const adminApiLog = log4js.getLogger('adminApi')
-const moment = require('moment-timezone');
+const moment = require('moment-timezone')
 const readerlogUtils = require('../../../mongodb/utils/readerlogs')
-
 
 module.exports = async function (req, res, next) {
   const startTime = req.query.startTime
@@ -11,12 +10,14 @@ module.exports = async function (req, res, next) {
   const timeZone = req.query.timeZone
 
   // 校验 timeZone 是否合法
-  const validTimeZones = moment.tz.names();
+  const validTimeZones = moment.tz.names()
   if (!validTimeZones.includes(timeZone)) {
     res.status(400).json({
-      errors: [{
-        message: '时区不合法'
-      }]
+      errors: [
+        {
+          message: '时区不合法',
+        },
+      ],
     })
     return
   }
@@ -46,50 +47,60 @@ module.exports = async function (req, res, next) {
     },
   ]
 
-  const errors = utils.checkForm({
-    startTime, endTime
-  }, rule)
+  const errors = utils.checkForm(
+    {
+      startTime,
+      endTime,
+    },
+    rule,
+  )
   if (errors.length > 0) {
     res.status(400).json({ errors })
     return
   }
 
-
-  const vistorActionList = ['postList', 'postListArchive', 'postListKeyword', 'postListSort', 'postListTag', 'postView']
+  const vistorActionList = [
+    'postList',
+    'postListArchive',
+    'postListKeyword',
+    'postListSort',
+    'postListTag',
+    'postView',
+  ]
   // 根据 timeRangeType 计算开始日期和结束日期
   const startDate = moment(startTime)
   const endDate = moment(endTime)
 
   // 数据是否超过一定小时数
-  let diffHours = endDate.diff(startDate, 'hours');
+  let diffHours = endDate.diff(startDate, 'hours')
 
-  let isOverDays = false;
+  let isOverDays = false
   if (diffHours > 72) {
-    isOverDays = true;
+    isOverDays = true
   }
 
   let offset = null
 
   // 打印开始日期和结束日期
   let $addFields = {
-    "formatDate": {
+    formatDate: {
       $dateToString: {
         format: `%Y-%m-%dT%H:00:00.000Z`,
-        date: "$createdAt",
-      }
-    }
+        date: '$createdAt',
+      },
+    },
   }
   // 如果超过一定天数，就按天数来统计
   if (isOverDays) {
     offset = moment.tz(timeZone).format('Z')
     $addFields = {
-      "formatDate": {
+      formatDate: {
         $dateToString: {
           format: `%Y-%m-%dT00:00:00.000${offset}`,
-          date: "$createdAt",
-          timezone: timeZone
-        }
-      }
+          date: '$createdAt',
+          timezone: timeZone,
+        },
+      },
     }
   }
 
@@ -98,91 +109,92 @@ module.exports = async function (req, res, next) {
       $match: {
         createdAt: { $gte: startDate.toDate(), $lte: endDate.toDate() },
         action: { $in: vistorActionList },
-      }
+      },
     },
     // 按时间和id排序
     {
       $sort: {
         createdAt: 1,
-        _id: 1
-      }
+        _id: 1,
+      },
     },
     {
       $addFields,
     },
     {
       $facet: {
-        "pv": [
+        pv: [
           { $match: { isBot: false } },
           {
             $group: {
-              _id: "$formatDate",
-              count: { $sum: 1 }
-            }
-          }
+              _id: '$formatDate',
+              count: { $sum: 1 },
+            },
+          },
         ],
-        "pvCount": [
+        pvCount: [
           { $match: { isBot: false } },
           {
-            $count: "count"
-          }
+            $count: 'count',
+          },
         ],
-        "robotAccess": [
+        robotAccess: [
           { $match: { isBot: true } },
           {
             $group: {
-              _id: "$formatDate",
-              count: { $sum: 1 }
-            }
-          }
+              _id: '$formatDate',
+              count: { $sum: 1 },
+            },
+          },
         ],
-        "robotAccessCount": [
+        robotAccessCount: [
           { $match: { isBot: true } },
           {
-            $count: "count"
-          }
+            $count: 'count',
+          },
         ],
-        "uniqueIPTimeLine": [
+        uniqueIPTimeLine: [
           { $match: { isBot: false } },
           {
             $group: {
-              _id: { hour: "$formatDate", ip: "$ip" }
-            }
+              _id: { hour: '$formatDate', ip: '$ip' },
+            },
           },
           {
             $group: {
-              _id: "$_id.hour",
-              count: { $sum: 1 }
-            }
-          }
+              _id: '$_id.hour',
+              count: { $sum: 1 },
+            },
+          },
         ],
-        "uniqueIPCount": [
+        uniqueIPCount: [
           { $match: { isBot: false } },
           {
             $group: {
-              _id: "$ip"
-            }
+              _id: '$ip',
+            },
           },
           {
-            $count: "count"
-          }
-        ]
-      }
-    }
+            $count: 'count',
+          },
+        ],
+      },
+    },
   ]
-  const readData = await readerlogUtils.aggregate(pipeline).catch(err => {
+  const readData = await readerlogUtils.aggregate(pipeline).catch((err) => {
     adminApiLog.error(err)
     return false
   })
   if (!readData) {
     res.status(500).json({
-      errors: [{
-        message: '数据库查询错误'
-      }]
+      errors: [
+        {
+          message: '数据库查询错误',
+        },
+      ],
     })
     return
   }
-
 
   let sendData = {
     pv: [],
@@ -191,26 +203,35 @@ module.exports = async function (req, res, next) {
     robotAccessCount: 0,
     uniqueIPTimeLine: [],
     uniqueIPCount: 0,
-    isOverDays
+    isOverDays,
   }
   // 初始化pv，robotAccess，uniqueIPTimeLine
   if (!isOverDays) {
     // 按小时统计
-    const hoursDifference = endDate.diff(startDate, 'hours');
+    const hoursDifference = endDate.diff(startDate, 'hours')
     for (let i = 0; i <= hoursDifference; i++) {
-      const time = startDate.clone().tz(timeZone).add(i, 'hours').utc().format('YYYY-MM-DDTHH:00:00.000[Z]');
-      sendData.pv.push({ _id: time, count: 0 });
-      sendData.robotAccess.push({ _id: time, count: 0 });
-      sendData.uniqueIPTimeLine.push({ _id: time, count: 0 });
+      const time = startDate
+        .clone()
+        .tz(timeZone)
+        .add(i, 'hours')
+        .utc()
+        .format('YYYY-MM-DDTHH:00:00.000[Z]')
+      sendData.pv.push({ _id: time, count: 0 })
+      sendData.robotAccess.push({ _id: time, count: 0 })
+      sendData.uniqueIPTimeLine.push({ _id: time, count: 0 })
     }
   } else {
     // 按天统计
-    const daysOfYear = endDate.diff(startDate, 'days');
+    const daysOfYear = endDate.diff(startDate, 'days')
     for (let i = 0; i <= daysOfYear; i++) {
-      const time = startDate.clone().tz(timeZone).add(i, 'days').format(`YYYY-MM-DDT00:00:00.000${offset}`);
-      sendData.pv.push({ _id: time, count: 0 });
-      sendData.robotAccess.push({ _id: time, count: 0 });
-      sendData.uniqueIPTimeLine.push({ _id: time, count: 0 });
+      const time = startDate
+        .clone()
+        .tz(timeZone)
+        .add(i, 'days')
+        .format(`YYYY-MM-DDT00:00:00.000${offset}`)
+      sendData.pv.push({ _id: time, count: 0 })
+      sendData.robotAccess.push({ _id: time, count: 0 })
+      sendData.uniqueIPTimeLine.push({ _id: time, count: 0 })
     }
   }
   if (readData.length > 0) {
@@ -218,8 +239,8 @@ module.exports = async function (req, res, next) {
     if (pv.length <= 0) {
       sendData.pv = []
     } else {
-      pv.forEach(item => {
-        const index = sendData.pv.findIndex(i => i._id === item._id)
+      pv.forEach((item) => {
+        const index = sendData.pv.findIndex((i) => i._id === item._id)
         if (index !== -1) {
           sendData.pv[index].count = item.count
         }
@@ -231,8 +252,8 @@ module.exports = async function (req, res, next) {
     if (robotAccess.length <= 0) {
       sendData.robotAccess = []
     } else {
-      robotAccess.forEach(item => {
-        const index = sendData.robotAccess.findIndex(i => i._id === item._id)
+      robotAccess.forEach((item) => {
+        const index = sendData.robotAccess.findIndex((i) => i._id === item._id)
         if (index !== -1) {
           sendData.robotAccess[index].count = item.count
         }
@@ -243,8 +264,10 @@ module.exports = async function (req, res, next) {
     if (uniqueIPTimeLine.length <= 0) {
       sendData.uniqueIPTimeLine = []
     } else {
-      uniqueIPTimeLine.forEach(item => {
-        const index = sendData.uniqueIPTimeLine.findIndex(i => i._id === item._id)
+      uniqueIPTimeLine.forEach((item) => {
+        const index = sendData.uniqueIPTimeLine.findIndex(
+          (i) => i._id === item._id,
+        )
         if (index !== -1) {
           sendData.uniqueIPTimeLine[index].count = item.count
         }
@@ -257,5 +280,5 @@ module.exports = async function (req, res, next) {
   // sendData.raw = readData
 
   // 发送响应
-  res.send(sendData);
+  res.send(sendData)
 }

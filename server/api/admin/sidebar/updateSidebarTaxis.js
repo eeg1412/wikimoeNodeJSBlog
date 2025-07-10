@@ -9,10 +9,7 @@ module.exports = async function (req, res, next) {
   // 循环sidebarList
   const promises = []
   sidebarList.forEach((item) => {
-    const {
-      _id,
-      taxis,
-    } = item
+    const { _id, taxis } = item
     if (!_id) {
       return
     }
@@ -34,36 +31,42 @@ module.exports = async function (req, res, next) {
     }
     // updateOne
     const updatePromise = new Promise((resolve, reject) => {
-      sidebarUtils.updateOne({ _id: _id }, params).then((data) => {
-        // 判断是否更新成功
-        if (data.modifiedCount === 0) {
-          reject({
-            message: '更新失败'
-          })
-          return
-        }
-        resolve(data)
-      }).catch((err) => {
-        reject(err)
-      })
+      sidebarUtils
+        .updateOne({ _id: _id }, params)
+        .then((data) => {
+          // 判断是否更新成功
+          if (data.modifiedCount === 0) {
+            reject({
+              message: '更新失败',
+            })
+            return
+          }
+          resolve(data)
+        })
+        .catch((err) => {
+          reject(err)
+        })
     })
     promises.push(updatePromise)
   })
-  Promise.all(promises).then((data) => {
-    res.send({
-      data: data,
-      successCount: data.length
+  Promise.all(promises)
+    .then((data) => {
+      res.send({
+        data: data,
+        successCount: data.length,
+      })
+      adminApiLog.info(`sidebar update success`)
+      cacheDataUtils.getSidebarList()
+      // utils.reflushBlogCache()
     })
-    adminApiLog.info(`sidebar update success`)
-    cacheDataUtils.getSidebarList()
-    // utils.reflushBlogCache()
-  }).catch((err) => {
-    res.status(400).json({
-      errors: [{
-        message: '侧边栏更新失败'
-      }]
+    .catch((err) => {
+      res.status(400).json({
+        errors: [
+          {
+            message: '侧边栏更新失败',
+          },
+        ],
+      })
+      adminApiLog.error(`sidebar update fail, ${logErrorToText(err)}`)
     })
-    adminApiLog.error(`sidebar update fail, ${logErrorToText(err)}`)
-  })
-
 }

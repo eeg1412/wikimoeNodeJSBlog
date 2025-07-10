@@ -10,14 +10,15 @@ module.exports = async function (req, res, next) {
   // 判断page和size是否为数字
   if (!utils.isNumber(page) || !utils.isNumber(size)) {
     res.status(400).json({
-      errors: [{
-        message: '参数错误'
-      }]
+      errors: [
+        {
+          message: '参数错误',
+        },
+      ],
     })
     return
   }
-  const params = {
-  }
+  const params = {}
 
   if (ip) {
     ip = utils.escapeSpecialChars(ip)
@@ -32,22 +33,25 @@ module.exports = async function (req, res, next) {
   }
 
   const sort = {
-    _id: -1
+    _id: -1,
   }
-  rsslogUtils.findPage(params, sort, page, size).then((data) => {
-    // 返回格式list,total
-    res.send({
-      list: data.list,
-      total: data.total
+  rsslogUtils
+    .findPage(params, sort, page, size)
+    .then((data) => {
+      // 返回格式list,total
+      res.send({
+        list: data.list,
+        total: data.total,
+      })
     })
-
-  }).catch((err) => {
-    res.status(400).json({
-      errors: [{
-        message: 'RSS访问记录列表获取失败'
-      }]
+    .catch((err) => {
+      res.status(400).json({
+        errors: [
+          {
+            message: 'RSS访问记录列表获取失败',
+          },
+        ],
+      })
+      adminApiLog.error(`rsslog list get fail, ${JSON.stringify(err)}`)
     })
-    adminApiLog.error(`rsslog list get fail, ${JSON.stringify(err)
-      }`)
-  })
 }

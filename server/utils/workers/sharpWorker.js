@@ -1,10 +1,18 @@
-const sharp = require('sharp');
-const { parentPort } = require('worker_threads');
+const sharp = require('sharp')
+const { parentPort } = require('worker_threads')
 
 sharp.cache(false)
 
 const action = {
-  imageCompress: async (toExtname, fileData, animated = false, newWidth, newHeight, imgSettingCompressQuality, filePath) => {
+  imageCompress: async (
+    toExtname,
+    fileData,
+    animated = false,
+    newWidth,
+    newHeight,
+    imgSettingCompressQuality,
+    filePath,
+  ) => {
     let imageData = sharp(fileData, {
       failOn: 'error',
       animated,
@@ -14,18 +22,24 @@ const action = {
     }
     switch (toExtname) {
       case '.webp':
-        await imageData.webp({ quality: imgSettingCompressQuality }).toFile(filePath)
-        break;
+        await imageData
+          .webp({ quality: imgSettingCompressQuality })
+          .toFile(filePath)
+        break
       case '.jpg':
       case '.jpeg':
-        await imageData.jpeg({ quality: imgSettingCompressQuality }).toFile(filePath)
-        break;
+        await imageData
+          .jpeg({ quality: imgSettingCompressQuality })
+          .toFile(filePath)
+        break
       case '.png':
-        await imageData.png({ quality: imgSettingCompressQuality }).toFile(filePath)
-        break;
+        await imageData
+          .png({ quality: imgSettingCompressQuality })
+          .toFile(filePath)
+        break
       default:
         await imageData.toFile(filePath)
-        break;
+        break
     }
     // 释放内存
     imageData = null
@@ -34,8 +48,7 @@ const action = {
     const image = sharp(fileData)
     const imageInfo = await image.metadata()
     return imageInfo
-  }
-
+  },
 }
 
 parentPort.on('message', async (params) => {
@@ -44,6 +57,6 @@ parentPort.on('message', async (params) => {
   if (action[params.action]) {
     res = await action[params.action](...params.data)
   }
-  parentPort.postMessage({ status: 'success', data: res });
-  parentPort.close();
-});
+  parentPort.postMessage({ status: 'success', data: res })
+  parentPort.close()
+})

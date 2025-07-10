@@ -10,9 +10,11 @@ module.exports = async function (req, res, next) {
   // 判断page和size是否为数字
   if (!utils.isNumber(page)) {
     res.status(400).json({
-      errors: [{
-        message: '参数错误'
-      }]
+      errors: [
+        {
+          message: '参数错误',
+        },
+      ],
     })
     return
   }
@@ -24,10 +26,12 @@ module.exports = async function (req, res, next) {
     year = parseInt(year)
     if (!utils.validateDate(year, 12, 31)) {
       res.status(400).json({
-        errors: [{
-          message: '日期格式不正确'
-        }]
-      });
+        errors: [
+          {
+            message: '日期格式不正确',
+          },
+        ],
+      })
       return
     }
     params.year = year
@@ -39,34 +43,31 @@ module.exports = async function (req, res, next) {
     keyword = keyword?.trim()
     // 如果keyword超过20个字符，就截取前20个字符
     if (keyword.length > 20) {
-      keyword = Array.from(keyword).slice(0, 20).join('');
+      keyword = Array.from(keyword).slice(0, 20).join('')
     }
-    const keywordArray = keyword.split(' ');
-    const regexArray = keywordArray.map(keyword => {
-      const escapedKeyword = utils.escapeSpecialChars(keyword);
-      const regex = new RegExp(escapedKeyword, 'i');
-      return regex;
-    });
+    const keywordArray = keyword.split(' ')
+    const regexArray = keywordArray.map((keyword) => {
+      const escapedKeyword = utils.escapeSpecialChars(keyword)
+      const regex = new RegExp(escapedKeyword, 'i')
+      return regex
+    })
     // 检索title和excerpt
     params.$or = [
       {
-        title: { $in: regexArray }
+        title: { $in: regexArray },
       },
       {
-        label: { $in: regexArray }
-      }
+        label: { $in: regexArray },
+      },
     ]
   }
 
-  const rule = [
-  ]
+  const rule = []
   const errors = utils.checkForm(params, rule)
   if (errors.length > 0) {
     res.status(400).json({ errors })
     return
   }
-
-
 
   let sort = {
     year: -1,
@@ -85,20 +86,29 @@ module.exports = async function (req, res, next) {
     }
   }
 
-  movieUtils.findPage(params, sort, page, size, '_id cover label rating status summary title year month day urlList').then((data) => {
-    // 返回格式list,total
-    res.send({
-      list: data.list,
-      total: data.total
+  movieUtils
+    .findPage(
+      params,
+      sort,
+      page,
+      size,
+      '_id cover label rating status summary title year month day urlList',
+    )
+    .then((data) => {
+      // 返回格式list,total
+      res.send({
+        list: data.list,
+        total: data.total,
+      })
     })
-
-  }).catch((err) => {
-    res.status(400).json({
-      errors: [{
-        message: '电影列表获取失败'
-      }]
+    .catch((err) => {
+      res.status(400).json({
+        errors: [
+          {
+            message: '电影列表获取失败',
+          },
+        ],
+      })
+      userApiLog.error(`movie list get fail, ${JSON.stringify(err)}`)
     })
-    userApiLog.error(`movie list get fail, ${JSON.stringify(err)
-      }`)
-  })
 }

@@ -1,4 +1,4 @@
-const Feed = require('feed').Feed;
+const Feed = require('feed').Feed
 const postUtils = require('../mongodb/utils/posts')
 const utils = require('./utils')
 const fs = require('fs')
@@ -11,7 +11,8 @@ exports.updateRSS = async (type) => {
     const config = global.$globalConfig?.rssSettings || {}
     const { siteEnableRss, siteRssMaxCount } = config
     const siteSettings = global.$globalConfig?.siteSettings || {}
-    const { siteTitle, siteUrl, siteDescription, siteLogo, siteFavicon } = siteSettings
+    const { siteTitle, siteUrl, siteDescription, siteLogo, siteFavicon } =
+      siteSettings
     if (siteEnableRss !== true) {
       console.info(`rss:${type} not enabled`)
       return resolve(null)
@@ -21,8 +22,8 @@ exports.updateRSS = async (type) => {
       status: 1,
       // type是1或者2
       type: {
-        $in: [1, 2]
-      }
+        $in: [1, 2],
+      },
     }
     if (type === 'blog') {
       params.type = 1
@@ -32,16 +33,24 @@ exports.updateRSS = async (type) => {
     }
     const sort = {
       date: -1,
-      _id: -1
+      _id: -1,
     }
     const size = parseInt(siteRssMaxCount) || 1
-    const filter = '-voteList -bangumiList -movieList -bookList -eventList -gameList -postList -seriesSortList -code -editorVersion'
-    const data = await postUtils.findPage(params, sort, 1, size, filter, { authorFilter: 'nickname', voteFliter: '_id endTime maxSelect showResultAfter title options.title options._id' }).then((res) => {
-      return res
-    }).catch(err => {
-      console.error(err)
-      return null
-    })
+    const filter =
+      '-voteList -bangumiList -movieList -bookList -eventList -gameList -postList -seriesSortList -code -editorVersion'
+    const data = await postUtils
+      .findPage(params, sort, 1, size, filter, {
+        authorFilter: 'nickname',
+        voteFliter:
+          '_id endTime maxSelect showResultAfter title options.title options._id',
+      })
+      .then((res) => {
+        return res
+      })
+      .catch((err) => {
+        console.error(err)
+        return null
+      })
     if (!data) {
       return reject('no data')
     }
@@ -64,7 +73,7 @@ exports.updateRSS = async (type) => {
       feedLinks: {
         rss: feedLinksRss,
       },
-    });
+    })
     list.forEach((item) => {
       const { title, excerpt, content, _id, author, type, date, alias } = item
       const link = `${siteUrl}/post/${alias || _id}`
@@ -81,7 +90,7 @@ exports.updateRSS = async (type) => {
         // 将excerpt去掉换行符设定为newTitle，最大长度为50，超过50的部分用...代替
         newTitle = excerpt.replace(/\n/g, '')
         if (newTitle.length > 50) {
-          newTitle = Array.from(newTitle).slice(0, 50).join('') + '...';
+          newTitle = Array.from(newTitle).slice(0, 50).join('') + '...'
         }
         newContent = `<p>${excerpt}</p>`
         // 换行符替换为br标签
@@ -106,8 +115,6 @@ exports.updateRSS = async (type) => {
               }
             })
           } else if (typeName === 'event') {
-
-
             // 遍历contentEventList，以链接形式展示
             const contentEventList = item.contentEventList || []
             contentEventList.forEach((event) => {
@@ -147,7 +154,6 @@ exports.updateRSS = async (type) => {
               newContent += `<p><a href="${link}#ent-title-content-${game._id}-${item._id}" target="_blank">游戏：${game.title}</a></p>`
             })
           }
-
         })
       }
       feed.addItem({
@@ -156,12 +162,12 @@ exports.updateRSS = async (type) => {
         link: link,
         description: newContent,
         date: new Date(item.date),
-      });
+      })
     })
     const rssXML = feed.rss2()
     // 写入文件
     const rssPath = path.join(rssCacheFolder, `${type}.xml`)
-    await fs.promises.writeFile(rssPath, rssXML);
+    await fs.promises.writeFile(rssPath, rssXML)
     resolve(rssXML)
     console.info('rss created:' + type)
   })
@@ -173,47 +179,50 @@ exports.reflushRSS = async () => {
   const { siteEnableRss } = config
   await utils.executeInLock('reflushRSS', async () => {
     if (siteEnableRss !== true) {
-      console.info('rss not enabled delete rss files');
+      console.info('rss not enabled delete rss files')
       // 删除rss文件夹里的所有文件，除了 README.md
-      const files = await fs.promises.readdir(rssCacheFolder);
+      const files = await fs.promises.readdir(rssCacheFolder)
       for (const file of files) {
-        if (file !== 'README.md') { // 如果文件名不是 README.md，则删除
-          const filePath = path.join(rssCacheFolder, file);
-          await fs.promises.unlink(filePath);
+        if (file !== 'README.md') {
+          // 如果文件名不是 README.md，则删除
+          const filePath = path.join(rssCacheFolder, file)
+          await fs.promises.unlink(filePath)
         }
       }
-      console.info('rss files deleted');
-      return null;
+      console.info('rss files deleted')
+      return null
     }
     const promiseArray = [
       this.updateRSS('all'),
       this.updateRSS('blog'),
-      this.updateRSS('tweet')
+      this.updateRSS('tweet'),
     ]
-    await Promise.all(promiseArray).then((res) => {
-      return res
-    }).catch(err => {
-      console.error(err)
-      return null
-    })
+    await Promise.all(promiseArray)
+      .then((res) => {
+        return res
+      })
+      .catch((err) => {
+        console.error(err)
+        return null
+      })
   })
 }
 
 exports.getRSS = (type, res) => {
   // 校验type只能是all、blog、tweet
   if (!['all', 'blog', 'tweet'].includes(type)) {
-    res.status(404).send('Not found');
-    return;
+    res.status(404).send('Not found')
+    return
   }
-  const filePath = `${rssCacheFolder}/${type}.xml`;
+  const filePath = `${rssCacheFolder}/${type}.xml`
   fs.access(filePath, fs.constants.F_OK, (err) => {
     if (err) {
-      res.status(404).send('File not found');
-      return;
+      res.status(404).send('File not found')
+      return
     }
     // 设置正确的Content-Type
-    res.setHeader('Content-Type', 'application/rss+xml; charset=utf-8');
-    const readStream = fs.createReadStream(filePath);
-    readStream.pipe(res);
-  });
+    res.setHeader('Content-Type', 'application/rss+xml; charset=utf-8')
+    const readStream = fs.createReadStream(filePath)
+    readStream.pipe(res)
+  })
 }

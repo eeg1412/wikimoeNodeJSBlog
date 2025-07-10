@@ -1,9 +1,9 @@
-const path = require('path');
+const path = require('path')
 const fs = require('fs')
 const utils = require('../../../utils/utils')
 const albumUtils = require('../../../mongodb/utils/albums')
 const attachmentsUtils = require('../../../mongodb/utils/attachments')
-const mongoose = require('mongoose');
+const mongoose = require('mongoose')
 
 module.exports = async function (req, res, next) {
   let { width, height, albumid, filename, filesize } = req.body
@@ -16,26 +16,32 @@ module.exports = async function (req, res, next) {
 
   if (!video) {
     res.status(400).json({
-      errors: [{
-        message: '请上传视频'
-      }]
+      errors: [
+        {
+          message: '请上传视频',
+        },
+      ],
     })
     return
   }
   if (!cover) {
     res.status(400).json({
-      errors: [{
-        message: '封面图缺失'
-      }]
+      errors: [
+        {
+          message: '封面图缺失',
+        },
+      ],
     })
     return
   }
   // 宽高必须存在
   if (!width || !height) {
     res.status(400).json({
-      errors: [{
-        message: '请指定视频宽高'
-      }]
+      errors: [
+        {
+          message: '请指定视频宽高',
+        },
+      ],
     })
     return
   }
@@ -43,29 +49,32 @@ module.exports = async function (req, res, next) {
   width = Number(width)
   height = Number(height)
 
-
   //  查询相册是否存在
   if (!albumid) {
     res.status(400).json({
-      errors: [{
-        message: '请指定相册'
-      }]
+      errors: [
+        {
+          message: '请指定相册',
+        },
+      ],
     })
     return
   }
   const album = await albumUtils.findOne({ _id: albumid })
   if (!album) {
     res.status(400).json({
-      errors: [{
-        message: '相册不存在'
-      }]
+      errors: [
+        {
+          message: '相册不存在',
+        },
+      ],
     })
     return
   }
 
   // 写入文件
   // 生成ObjectId
-  const videoId = new mongoose.Types.ObjectId();
+  const videoId = new mongoose.Types.ObjectId()
   const attachment = {
     _id: videoId,
     name: filename || '',
@@ -99,7 +108,6 @@ module.exports = async function (req, res, next) {
     fs.mkdirSync(yearMonthPath, { recursive: true })
   }
 
-
   // 将video保存到
   const videoPath = path.join(yearMonthPath, `${videoId}.mp4`)
   fs.writeFileSync(videoPath, video.buffer)
@@ -110,20 +118,24 @@ module.exports = async function (req, res, next) {
   attachment.thumfor = `/content/uploadfile/${yearMonth}/thum-${videoId}.webp`
 
   // 保存到数据库
-  attachmentsUtils.save(attachment).then((data) => {
-    res.send(data)
-  }).catch((err) => {
-    console.error(err)
-    res.status(400).json({
-      errors: [{
-        message: '文件上传失败'
-      }]
+  attachmentsUtils
+    .save(attachment)
+    .then((data) => {
+      res.send(data)
     })
-  })
+    .catch((err) => {
+      console.error(err)
+      res.status(400).json({
+        errors: [
+          {
+            message: '文件上传失败',
+          },
+        ],
+      })
+    })
   // album的count+1
   albumUtils.updateOne({ _id: album._id }, { $inc: { count: 1 } })
   // 释放内存
   video = null
   cover = null
-
 }

@@ -4,15 +4,16 @@ const log4js = require('log4js')
 const adminApiLog = log4js.getLogger('adminApi')
 const cacheDataUtils = require('../../../config/cacheData')
 
-
 module.exports = async function (req, res, next) {
   // bannername	String	是	否	无	横幅名称
   const { img, _id } = req.body
   if (!_id) {
     res.status(400).json({
-      errors: [{
-        message: 'id不能为空'
-      }]
+      errors: [
+        {
+          message: 'id不能为空',
+        },
+      ],
     })
     return
   }
@@ -38,9 +39,11 @@ module.exports = async function (req, res, next) {
   const base64Reg = /^data:image\/\w+;base64,/
   if (!base64Reg.test(img)) {
     res.status(400).json({
-      errors: [{
-        message: '图片格式不正确'
-      }]
+      errors: [
+        {
+          message: '图片格式不正确',
+        },
+      ],
     })
     return
   }
@@ -53,37 +56,46 @@ module.exports = async function (req, res, next) {
     params['imgPath'] = imgRes.filepath
   } catch (error) {
     res.status(400).json({
-      errors: [{
-        message: '照片上传失败'
-      }]
+      errors: [
+        {
+          message: '照片上传失败',
+        },
+      ],
     })
     throw new Error(error)
   }
 
   // updateOne
-  bannerUtils.updateOne({ _id: _id }, params).then((data) => {
-    if (data.modifiedCount === 0) {
-      res.status(400).json({
-        errors: [{
-          message: '更新失败'
-        }]
-      })
-      return
-    }
-    res.send({
-      data: {
-        img: params.img
+  bannerUtils
+    .updateOne({ _id: _id }, params)
+    .then((data) => {
+      if (data.modifiedCount === 0) {
+        res.status(400).json({
+          errors: [
+            {
+              message: '更新失败',
+            },
+          ],
+        })
+        return
       }
+      res.send({
+        data: {
+          img: params.img,
+        },
+      })
+      adminApiLog.info(`banner update success`)
+      cacheDataUtils.getBannerList()
+      // utils.reflushBlogCache()
     })
-    adminApiLog.info(`banner update success`)
-    cacheDataUtils.getBannerList()
-    // utils.reflushBlogCache()
-  }).catch((err) => {
-    res.status(400).json({
-      errors: [{
-        message: '横幅更新失败'
-      }]
+    .catch((err) => {
+      res.status(400).json({
+        errors: [
+          {
+            message: '横幅更新失败',
+          },
+        ],
+      })
+      adminApiLog.error(`banner update fail, ${logErrorToText(err)}`)
     })
-    adminApiLog.error(`banner update fail, ${logErrorToText(err)}`)
-  })
 }

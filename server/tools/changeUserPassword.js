@@ -6,7 +6,8 @@ if (!username || !newPassword) {
   console.log(chalk.red('用户名或新密码不能为空'))
   return
 }
-const passwordReg = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*])[a-zA-Z\d!@#$%^&*]{4,}$/
+const passwordReg =
+  /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*])[a-zA-Z\d!@#$%^&*]{4,}$/
 if (!passwordReg.test(newPassword)) {
   console.log(chalk.red('密码必须4位以上且包含大小写、数字和符号（!@#$%^&*）'))
   return
@@ -30,7 +31,10 @@ const checkAdmin = async () => {
 
 const changePassword = async () => {
   const password = utils.creatBcryptStr(newPassword)
-  const res = await userUtils.updateOne({ username: username }, { password: password, $inc: { pwversion: 1 } })
+  const res = await userUtils.updateOne(
+    { username: username },
+    { password: password, $inc: { pwversion: 1 } },
+  )
   if (res.modifiedCount > 0) {
     console.log(chalk.green('密码修改成功'))
   } else {
@@ -44,7 +48,6 @@ const init = async () => {
   await checkAdmin()
   await changePassword()
 }
-
 
 db.once('open', () => {
   init()

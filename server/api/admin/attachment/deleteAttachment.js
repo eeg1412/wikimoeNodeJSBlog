@@ -11,9 +11,11 @@ module.exports = async function (req, res, next) {
   const id = req.query.id
   if (!id) {
     res.status(400).json({
-      errors: [{
-        message: 'id不能为空'
-      }]
+      errors: [
+        {
+          message: 'id不能为空',
+        },
+      ],
     })
     return
   }
@@ -21,99 +23,133 @@ module.exports = async function (req, res, next) {
   const attachmentData = await attachmentUtils.findOne({ _id: id })
   if (!attachmentData) {
     res.status(400).json({
-      errors: [{
-        message: '媒体不存在'
-      }]
+      errors: [
+        {
+          message: '媒体不存在',
+        },
+      ],
     })
     return
   }
 
   //  删除媒体
-  attachmentUtils.deleteOne({ _id: id }).then((data) => {
-    if (data.deletedCount === 0) {
-      res.status(400).json({
-        errors: [{
-          message: '删除失败'
-        }]
-      })
-      return
-    }
-    // album.count - 1
-    albumUtils.updateOne({ _id: attachmentData.album }, {
-      $inc: {
-        count: -1
-      }
-    }).then((data) => {
-      if (data.modifiedCount === 0) {
-        adminApiLog.error(`album:${attachmentData.album} count - 1 fail`)
+  attachmentUtils
+    .deleteOne({ _id: id })
+    .then((data) => {
+      if (data.deletedCount === 0) {
         res.status(400).json({
-          errors: [{
-            message: '删除失败'
-          }]
+          errors: [
+            {
+              message: '删除失败',
+            },
+          ],
         })
         return
       }
-      // 删除文件
-      const dir = path.join('./public', attachmentData.filepath)
-      const thumforDir = path.join('./public', attachmentData.thumfor)
-      try {
-        fs.unlinkSync(dir)
-        if (attachmentData.thumfor) {
-          fs.unlinkSync(thumforDir)
-        }
-      } catch (error) {
-        res.status(400).json({
-          errors: [{
-            message: '删除文件失败'
-          }]
-        })
-        adminApiLog.error(`attachment delete file fail, ${JSON.stringify(error)}`)
-        throw error
-      }
-
-      // 删除文章中的引用
-      const postPromise = postUtils.updateMany({ 'coverImages': id }, {
-        $pull: {
-          coverImages: id
-        }
-      })
-      const userPromise = userUtils.updateMany({ 'cover': id }, {
-        $set: {
-          cover: null
-        }
-      })
-
-
-      Promise.all([postPromise, userPromise]).then(() => {
-        res.send({
-          data: {
-            message: '删除成功'
+      // album.count - 1
+      albumUtils
+        .updateOne(
+          { _id: attachmentData.album },
+          {
+            $inc: {
+              count: -1,
+            },
+          },
+        )
+        .then((data) => {
+          if (data.modifiedCount === 0) {
+            adminApiLog.error(`album:${attachmentData.album} count - 1 fail`)
+            res.status(400).json({
+              errors: [
+                {
+                  message: '删除失败',
+                },
+              ],
+            })
+            return
           }
-        })
-      }).catch((err) => {
-        res.status(400).json({
-          errors: [{
-            message: '删除失败'
-          }]
-        })
-        adminApiLog.error(`attachment delete reference fail, ${logErrorToText(err)}`)
-      })
+          // 删除文件
+          const dir = path.join('./public', attachmentData.filepath)
+          const thumforDir = path.join('./public', attachmentData.thumfor)
+          try {
+            fs.unlinkSync(dir)
+            if (attachmentData.thumfor) {
+              fs.unlinkSync(thumforDir)
+            }
+          } catch (error) {
+            res.status(400).json({
+              errors: [
+                {
+                  message: '删除文件失败',
+                },
+              ],
+            })
+            adminApiLog.error(
+              `attachment delete file fail, ${JSON.stringify(error)}`,
+            )
+            throw error
+          }
 
+          // 删除文章中的引用
+          const postPromise = postUtils.updateMany(
+            { coverImages: id },
+            {
+              $pull: {
+                coverImages: id,
+              },
+            },
+          )
+          const userPromise = userUtils.updateMany(
+            { cover: id },
+            {
+              $set: {
+                cover: null,
+              },
+            },
+          )
 
-    }).catch((err) => {
+          Promise.all([postPromise, userPromise])
+            .then(() => {
+              res.send({
+                data: {
+                  message: '删除成功',
+                },
+              })
+            })
+            .catch((err) => {
+              res.status(400).json({
+                errors: [
+                  {
+                    message: '删除失败',
+                  },
+                ],
+              })
+              adminApiLog.error(
+                `attachment delete reference fail, ${logErrorToText(err)}`,
+              )
+            })
+        })
+        .catch((err) => {
+          res.status(400).json({
+            errors: [
+              {
+                message: '删除失败',
+              },
+            ],
+          })
+          adminApiLog.error(
+            `album:${attachmentData.album} count - 1 fail, ${logErrorToText(err)}`,
+          )
+        })
+    })
+    .catch((err) => {
       res.status(400).json({
-        errors: [{
-          message: '删除失败'
-        }]
+        errors: [
+          {
+            message: '删除失败',
+          },
+        ],
       })
-      adminApiLog.error(`album:${attachmentData.album} count - 1 fail, ${logErrorToText(err)}`)
+      adminApiLog.error(`attachment delete fail, ${logErrorToText(err)}`)
     })
-  }).catch((err) => {
-    res.status(400).json({
-      errors: [{
-        message: '删除失败'
-      }]
-    })
-    adminApiLog.error(`attachment delete fail, ${logErrorToText(err)}`)
-  })
 }

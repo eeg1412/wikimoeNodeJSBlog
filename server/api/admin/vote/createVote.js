@@ -4,23 +4,27 @@ const log4js = require('log4js')
 const adminApiLog = log4js.getLogger('adminApi')
 
 module.exports = async function (req, res, next) {
-
-  const { title, maxSelect, showResultAfter, status, options, endTime } = req.body
+  const { title, maxSelect, showResultAfter, status, options, endTime } =
+    req.body
   // options 不是数组则报错
   if (!Array.isArray(options)) {
     res.status(400).json({
-      errors: [{
-        message: '选项格式不正确'
-      }]
+      errors: [
+        {
+          message: '选项格式不正确',
+        },
+      ],
     })
     return
   }
   const statusArr = [0, 1]
   if (statusArr.indexOf(status) === -1) {
     res.status(400).json({
-      errors: [{
-        message: '状态值不正确'
-      }]
+      errors: [
+        {
+          message: '状态值不正确',
+        },
+      ],
     })
     return
   }
@@ -45,8 +49,8 @@ module.exports = async function (req, res, next) {
       type: 'isInt',
       options: {
         min: 1,
-        max: options.length
-      }
+        max: options.length,
+      },
     },
     {
       key: 'endTime',
@@ -70,7 +74,7 @@ module.exports = async function (req, res, next) {
     const option = options[i]
     const optionParams = {
       title: option.title,
-      sort: Number(option.sort)
+      sort: Number(option.sort),
     }
     const optionRule = [
       {
@@ -85,9 +89,9 @@ module.exports = async function (req, res, next) {
         type: 'isInt',
         options: {
           min: 0,
-          max: 999999999
-        }
-      }
+          max: 999999999,
+        },
+      },
     ]
     const optionErrors = utils.checkForm(optionParams, optionRule)
     if (optionErrors.length > 0) {
@@ -98,26 +102,32 @@ module.exports = async function (req, res, next) {
   }
   if (checkedOptions.length < 2) {
     res.status(400).json({
-      errors: [{
-        message: '选项数不能少于2个'
-      }]
+      errors: [
+        {
+          message: '选项数不能少于2个',
+        },
+      ],
     })
     return
   }
   params.options = checkedOptions
   // save
-  voteUtils.save(params).then((data) => {
-    res.send({
-      data: data
+  voteUtils
+    .save(params)
+    .then((data) => {
+      res.send({
+        data: data,
+      })
+      adminApiLog.info(`vote create success`)
     })
-    adminApiLog.info(`vote create success`)
-  }).catch((err) => {
-    res.status(400).json({
-      errors: [{
-        message: '投票创建失败'
-      }]
+    .catch((err) => {
+      res.status(400).json({
+        errors: [
+          {
+            message: '投票创建失败',
+          },
+        ],
+      })
+      adminApiLog.error(`vote create fail, ${logErrorToText(err)}`)
     })
-    adminApiLog.error(`vote create fail, ${logErrorToText(err)}`)
-  })
-
 }

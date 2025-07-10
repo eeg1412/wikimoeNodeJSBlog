@@ -1,4 +1,3 @@
-
 const postUtils = require('../../../mongodb/utils/posts')
 const utils = require('../../../utils/utils')
 const log4js = require('log4js')
@@ -35,7 +34,6 @@ module.exports = async function (req, res, next) {
   // tagIdList 标签id列表
   // status 状态
 
-
   const idList = req.body.idList
   const action = req.body.action
   let sortId = req.body.sortId || null
@@ -44,18 +42,22 @@ module.exports = async function (req, res, next) {
 
   if (!idList || !Array.isArray(idList) || idList.length === 0) {
     res.status(400).json({
-      errors: [{
-        message: 'idList不能为空'
-      }]
+      errors: [
+        {
+          message: 'idList不能为空',
+        },
+      ],
     })
     return false
   }
   // 检验是否存在action
   if (!action) {
     res.status(400).json({
-      errors: [{
-        message: 'action不能为空'
-      }]
+      errors: [
+        {
+          message: 'action不能为空',
+        },
+      ],
     })
     return false
   }
@@ -64,11 +66,13 @@ module.exports = async function (req, res, next) {
   for (const id of idList) {
     if (!validator.isMongoId(id)) {
       res.status(400).json({
-        errors: [{
-          message: 'id参数有误'
-        }]
-      });
-      return;
+        errors: [
+          {
+            message: 'id参数有误',
+          },
+        ],
+      })
+      return
     }
   }
 
@@ -77,23 +81,27 @@ module.exports = async function (req, res, next) {
     for (const id of tagIdList) {
       if (!id) {
         res.status(400).json({
-          errors: [{
-            message: 'tagId参数有误'
-          }]
-        });
-        return;
+          errors: [
+            {
+              message: 'tagId参数有误',
+            },
+          ],
+        })
+        return
       }
     }
 
     // 检查重复
-    const uniqueTagIds = new Set(tagIdList);
+    const uniqueTagIds = new Set(tagIdList)
     if (uniqueTagIds.size !== tagIdList.length) {
       res.status(400).json({
-        errors: [{
-          message: 'tagId不能重复'
-        }]
-      });
-      return;
+        errors: [
+          {
+            message: 'tagId不能重复',
+          },
+        ],
+      })
+      return
     }
   }
 
@@ -103,9 +111,11 @@ module.exports = async function (req, res, next) {
     if (sortId) {
       if (!validator.isMongoId(sortId)) {
         res.status(400).json({
-          errors: [{
-            message: 'sortId参数有误'
-          }]
+          errors: [
+            {
+              message: 'sortId参数有误',
+            },
+          ],
         })
         return false
       }
@@ -115,11 +125,11 @@ module.exports = async function (req, res, next) {
     // 更改分类
     const query = {
       _id: {
-        $in: idList
-      }
+        $in: idList,
+      },
     }
     const parmas = {
-      sort: sortId
+      sort: sortId,
     }
     try {
       const result = await postUtils.updateMany(query, parmas)
@@ -127,9 +137,11 @@ module.exports = async function (req, res, next) {
     } catch (err) {
       adminApiLog.error(err)
       res.status(500).json({
-        errors: [{
-          message: '更改分类失败'
-        }]
+        errors: [
+          {
+            message: '更改分类失败',
+          },
+        ],
       })
       return false
     }
@@ -148,11 +160,13 @@ module.exports = async function (req, res, next) {
           return null
         })
         if (!tag) {
-          tag = await tagUtils.save({
-            tagname: tagname
-          }).catch((err) => {
-            return false
-          })
+          tag = await tagUtils
+            .save({
+              tagname: tagname,
+            })
+            .catch((err) => {
+              return false
+            })
         }
 
         if (tag) {
@@ -164,23 +178,25 @@ module.exports = async function (req, res, next) {
     }
 
     // tagsIdArr 去重
-    tagsIdArr = tagsIdArr.filter((elem, index, self) => self.indexOf(elem) === index)
+    tagsIdArr = tagsIdArr.filter(
+      (elem, index, self) => self.indexOf(elem) === index,
+    )
 
     const resultList = []
     // 遍历tagsIdArr
     for await (const tagId of tagsIdArr) {
       const query = {
         _id: {
-          $in: idList
+          $in: idList,
         },
         tags: {
-          $ne: tagId
-        }
+          $ne: tagId,
+        },
       }
       const parmas = {
         $addToSet: {
-          tags: tagId
-        }
+          tags: tagId,
+        },
       }
       try {
         const result = await postUtils.updateMany(query, parmas)
@@ -188,15 +204,16 @@ module.exports = async function (req, res, next) {
       } catch (err) {
         adminApiLog.error(err)
         res.status(500).json({
-          errors: [{
-            message: '增加标签失败'
-          }]
+          errors: [
+            {
+              message: '增加标签失败',
+            },
+          ],
         })
         return false
       }
     }
     return resultList
-
   }
 
   // 批量操作--设置标签
@@ -212,11 +229,13 @@ module.exports = async function (req, res, next) {
           return null
         })
         if (!tag) {
-          tag = await tagUtils.save({
-            tagname: tagname
-          }).catch((err) => {
-            return false
-          })
+          tag = await tagUtils
+            .save({
+              tagname: tagname,
+            })
+            .catch((err) => {
+              return false
+            })
         }
 
         if (tag) {
@@ -228,15 +247,17 @@ module.exports = async function (req, res, next) {
     }
 
     // tagsIdArr 去重
-    tagsIdArr = tagsIdArr.filter((elem, index, self) => self.indexOf(elem) === index)
+    tagsIdArr = tagsIdArr.filter(
+      (elem, index, self) => self.indexOf(elem) === index,
+    )
 
     const query = {
       _id: {
-        $in: idList
-      }
+        $in: idList,
+      },
     }
     const parmas = {
-      tags: tagsIdArr
+      tags: tagsIdArr,
     }
     try {
       const result = await postUtils.updateMany(query, parmas)
@@ -244,9 +265,11 @@ module.exports = async function (req, res, next) {
     } catch (err) {
       adminApiLog.error(err)
       res.status(500).json({
-        errors: [{
-          message: '增加标签失败'
-        }]
+        errors: [
+          {
+            message: '增加标签失败',
+          },
+        ],
       })
       return false
     }
@@ -255,27 +278,29 @@ module.exports = async function (req, res, next) {
   // 批量操作--删除标签
   const removeTag = async function () {
     // 校验tagIdList的每个id是否合法
-    tagIdList.forEach(id => {
+    tagIdList.forEach((id) => {
       if (!validator.isMongoId(id)) {
         res.status(400).json({
-          errors: [{
-            message: 'tagId参数有误'
-          }]
+          errors: [
+            {
+              message: 'tagId参数有误',
+            },
+          ],
         })
         return false
       }
     })
     const query = {
       _id: {
-        $in: idList
-      }
+        $in: idList,
+      },
     }
     const parmas = {
       $pull: {
         tags: {
-          $in: tagIdList
-        }
-      }
+          $in: tagIdList,
+        },
+      },
     }
     try {
       const result = await postUtils.updateMany(query, parmas)
@@ -283,9 +308,11 @@ module.exports = async function (req, res, next) {
     } catch (err) {
       adminApiLog.error(err)
       res.status(500).json({
-        errors: [{
-          message: '删除标签失败'
-        }]
+        errors: [
+          {
+            message: '删除标签失败',
+          },
+        ],
       })
       return false
     }
@@ -297,20 +324,22 @@ module.exports = async function (req, res, next) {
     // 检验status是否合法
     if (![0, 1].includes(status)) {
       res.status(400).json({
-        errors: [{
-          message: 'status参数有误'
-        }]
+        errors: [
+          {
+            message: 'status参数有误',
+          },
+        ],
       })
       return false
     }
     // 更改状态
     const query = {
       _id: {
-        $in: idList
-      }
+        $in: idList,
+      },
     }
     const parmas = {
-      status: status
+      status: status,
     }
     try {
       const result = await postUtils.updateMany(query, parmas)
@@ -318,9 +347,11 @@ module.exports = async function (req, res, next) {
     } catch (err) {
       adminApiLog.error(err)
       res.status(500).json({
-        errors: [{
-          message: '更改状态失败'
-        }]
+        errors: [
+          {
+            message: '更改状态失败',
+          },
+        ],
       })
       return false
     }
@@ -330,27 +361,24 @@ module.exports = async function (req, res, next) {
   const deletePost = async function () {
     const query = {
       _id: {
-        $in: idList
-      }
+        $in: idList,
+      },
     }
     try {
       const result = await postUtils.deleteMany(query)
       return result
-    }
-    catch (err) {
+    } catch (err) {
       adminApiLog.error(err)
       res.status(500).json({
-        errors: [{
-          message: '删除文章失败'
-        }]
+        errors: [
+          {
+            message: '删除文章失败',
+          },
+        ],
       })
       return false
     }
   }
-
-
-
-
 
   try {
     let result = null
@@ -375,9 +403,11 @@ module.exports = async function (req, res, next) {
         break
       default:
         res.status(400).json({
-          errors: [{
-            message: 'action参数有误'
-          }]
+          errors: [
+            {
+              message: 'action参数有误',
+            },
+          ],
         })
         result = false
         return
@@ -385,7 +415,7 @@ module.exports = async function (req, res, next) {
 
     if (result) {
       res.send({
-        data: result
+        data: result,
       })
       adminApiLog.info(`post batch update success`)
       cacheDataUtils.getPostArchiveList()
@@ -394,13 +424,12 @@ module.exports = async function (req, res, next) {
     }
   } catch (error) {
     res.status(400).json({
-      errors: [{
-        message: '批量更改文章失败'
-      }]
+      errors: [
+        {
+          message: '批量更改文章失败',
+        },
+      ],
     })
     adminApiLog.error(`post batch update fail, ${logErrorToText(err)}`)
   }
-
-
-
 }

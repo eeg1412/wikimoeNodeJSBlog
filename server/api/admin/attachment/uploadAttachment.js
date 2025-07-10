@@ -1,5 +1,5 @@
-const sharp = require('sharp');
-const path = require('path');
+const sharp = require('sharp')
+const path = require('path')
 const fs = require('fs')
 const utils = require('../../../utils/utils')
 const albumUtils = require('../../../mongodb/utils/albums')
@@ -15,7 +15,10 @@ module.exports = async function (req, res, next) {
 
   let imgSettingCompressMaxSizeHeader = headers['x-compress-max-size']
   // 判断 imgSettingCompressMaxSizeHeader 是否是正整数
-  if (imgSettingCompressMaxSizeHeader && !/^[1-9]\d*$/.test(imgSettingCompressMaxSizeHeader)) {
+  if (
+    imgSettingCompressMaxSizeHeader &&
+    !/^[1-9]\d*$/.test(imgSettingCompressMaxSizeHeader)
+  ) {
     // 如果不是正整数，就设置为默认值null
     imgSettingCompressMaxSizeHeader = null
   } else {
@@ -23,20 +26,25 @@ module.exports = async function (req, res, next) {
   }
 
   // imgSettingCompressMaxSizeHeader 最小 为 1
-  if (imgSettingCompressMaxSizeHeader !== null && imgSettingCompressMaxSizeHeader < 1) {
+  if (
+    imgSettingCompressMaxSizeHeader !== null &&
+    imgSettingCompressMaxSizeHeader < 1
+  ) {
     imgSettingCompressMaxSizeHeader = null
   }
   if (!global.$globalConfig) {
     // 报错500
     res.status(500).json({
-      errors: [{
-        message: '配置项未初始化'
-      }]
+      errors: [
+        {
+          message: '配置项未初始化',
+        },
+      ],
     })
     return
   }
   // 读取全局配置
-  const config = JSON.parse(JSON.stringify(global.$globalConfig.imgSettings));
+  const config = JSON.parse(JSON.stringify(global.$globalConfig.imgSettings))
   if (imgSettingCompressMaxSizeHeader) {
     config.imgSettingCompressMaxSize = imgSettingCompressMaxSizeHeader
   }
@@ -54,7 +62,6 @@ module.exports = async function (req, res, next) {
   // imgSettingThumbnailQuality: 40,
   // // 图片缩略图最长边
   // imgSettingThumbnailMaxSize: 680,
-
 
   /*
    file 的内容如下:
@@ -74,25 +81,29 @@ module.exports = async function (req, res, next) {
   //  查询相册是否存在
   if (!albumid) {
     res.status(400).json({
-      errors: [{
-        message: '请指定相册'
-      }]
+      errors: [
+        {
+          message: '请指定相册',
+        },
+      ],
     })
     return
   }
   const album = await albumUtils.findOne({ _id: albumid })
   if (!album) {
     res.status(400).json({
-      errors: [{
-        message: '相册不存在'
-      }]
+      errors: [
+        {
+          message: '相册不存在',
+        },
+      ],
     })
     return
   }
 
   const originalname = Buffer.from(file.originalname, 'latin1').toString('utf8')
   // name去掉后缀名
-  const name = originalname.replace(/\.[^/.]+$/, "")
+  const name = originalname.replace(/\.[^/.]+$/, '')
   // 数据库添加信息
   const attachment = {
     name: name,
@@ -115,7 +126,6 @@ module.exports = async function (req, res, next) {
   //  赋值buffer
   let fileData = file.buffer
 
-
   let filePath = ''
   // 获取后缀名
   let extname = path.extname(file.originalname)
@@ -127,9 +137,6 @@ module.exports = async function (req, res, next) {
     thumfor: '',
     status: 1,
   }
-
-
-
 
   try {
     if (!file.mimetype.startsWith('image')) {
@@ -168,7 +175,13 @@ module.exports = async function (req, res, next) {
     updateAttachment.height = height
     const animated = imageInfo.pages > 1
     // 配置
-    const { imgSettingCompressQuality, imgSettingCompressMaxSize, imgSettingEnableImgCompressWebp, imgSettingThumbnailQuality, imgSettingEnableImgCompress } = config
+    const {
+      imgSettingCompressQuality,
+      imgSettingCompressMaxSize,
+      imgSettingEnableImgCompressWebp,
+      imgSettingThumbnailQuality,
+      imgSettingEnableImgCompress,
+    } = config
     // 如果开启了图片缩略图
     if (config.imgSettingEnableImgThumbnail && !noThumbnail) {
       // 开启缩略图
@@ -176,7 +189,10 @@ module.exports = async function (req, res, next) {
       // 如果图片尺寸大于最长边
 
       const max = Math.max(width, height)
-      if (max > imgSettingThumbnailMaxSize && imgSettingThumbnailMaxSize < imgSettingCompressMaxSize) {
+      if (
+        max > imgSettingThumbnailMaxSize &&
+        imgSettingThumbnailMaxSize < imgSettingCompressMaxSize
+      ) {
         // 计算压缩比例
         const scale = imgSettingThumbnailMaxSize / max
         // 计算压缩后的宽高
@@ -187,8 +203,19 @@ module.exports = async function (req, res, next) {
         updateAttachment.thumHeight = newHeight
 
         // 压缩图片为webp 保存到 filePath 路径下
-        const thumbnailPath = path.join(yearMonthPath, 'thum-' + attachmentId + '.webp')
-        await utils.imageCompress('.webp', fileData, animated, newWidth, newHeight, imgSettingThumbnailQuality, thumbnailPath)
+        const thumbnailPath = path.join(
+          yearMonthPath,
+          'thum-' + attachmentId + '.webp',
+        )
+        await utils.imageCompress(
+          '.webp',
+          fileData,
+          animated,
+          newWidth,
+          newHeight,
+          imgSettingThumbnailQuality,
+          thumbnailPath,
+        )
         updateAttachment.thumfor = thumbnailPath
       }
     }
@@ -214,12 +241,26 @@ module.exports = async function (req, res, next) {
         updateAttachment.width = newWidth
         updateAttachment.height = newHeight
         // 压缩图片为webp 保存到 filePath 路径下
-        await utils.imageCompress(imgSettingEnableImgCompressWebp ? '.webp' : extname, fileData, animated, newWidth, newHeight, imgSettingCompressQuality, filePath)
-
-
+        await utils.imageCompress(
+          imgSettingEnableImgCompressWebp ? '.webp' : extname,
+          fileData,
+          animated,
+          newWidth,
+          newHeight,
+          imgSettingCompressQuality,
+          filePath,
+        )
       } else {
         // 原尺寸压缩
-        await utils.imageCompress(imgSettingEnableImgCompressWebp ? '.webp' : extname, fileData, animated, null, null, imgSettingCompressQuality, filePath)
+        await utils.imageCompress(
+          imgSettingEnableImgCompressWebp ? '.webp' : extname,
+          fileData,
+          animated,
+          null,
+          null,
+          imgSettingCompressQuality,
+          filePath,
+        )
       }
       updateAttachment.filepath = filePath
     } else {
@@ -234,16 +275,25 @@ module.exports = async function (req, res, next) {
     updateAttachment.filesize = stats.size
 
     // 将updateAttachment的filepath和thumfor前面的public去掉，并将\替换为/
-    updateAttachment.filepath = updateAttachment.filepath.replace('public', '').replace(/\\/g, '/')
-    updateAttachment.thumfor = updateAttachment.thumfor.replace('public', '').replace(/\\/g, '/')
+    updateAttachment.filepath = updateAttachment.filepath
+      .replace('public', '')
+      .replace(/\\/g, '/')
+    updateAttachment.thumfor = updateAttachment.thumfor
+      .replace('public', '')
+      .replace(/\\/g, '/')
     updateAttachment.mimetype = attachment.mimetype
 
-    const updateRes = await attachmentsUtils.updateOne({ _id: attachmentId }, updateAttachment)
+    const updateRes = await attachmentsUtils.updateOne(
+      { _id: attachmentId },
+      updateAttachment,
+    )
     if (updateRes.modifiedCount === 0) {
       res.status(400).json({
-        errors: [{
-          message: '更新失败'
-        }]
+        errors: [
+          {
+            message: '更新失败',
+          },
+        ],
       })
       return
     }
@@ -264,9 +314,11 @@ module.exports = async function (req, res, next) {
 
     // 删除缓存文件
     res.status(400).json({
-      errors: [{
-        message: '文件上传失败'
-      }]
+      errors: [
+        {
+          message: '文件上传失败',
+        },
+      ],
     })
   } finally {
     // 无论是否发生异常，都释放内存

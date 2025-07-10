@@ -4,7 +4,7 @@
 
 import { h } from 'snabbdom'
 
-function renderEventspan (elem, children, editor, info) {
+function renderEventspan(elem, children, editor, info) {
   // 当前节点是否选中
   console.log(elem)
   const vnode = h(
@@ -15,7 +15,7 @@ function renderEventspan (elem, children, editor, info) {
         color: 'var(--el-color-primary)',
       },
     },
-    [{ text: elem.textContent }]
+    [{ text: elem.textContent }],
   )
 
   return vnode

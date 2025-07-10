@@ -3,36 +3,55 @@ const utils = require('../../../utils/utils')
 const log4js = require('log4js')
 const adminApiLog = log4js.getLogger('adminApi')
 const cacheDataUtils = require('../../../config/cacheData')
-const fs = require('fs');
+const fs = require('fs')
 const nodePath = require('path')
 
 module.exports = async function (req, res, next) {
   // moviename	String	是	否	无	电影名称
-  const { title, cover, summary, rating, year, month, day, label, status, id, urlList, __v } = req.body
+  const {
+    title,
+    cover,
+    summary,
+    rating,
+    year,
+    month,
+    day,
+    label,
+    status,
+    id,
+    urlList,
+    __v,
+  } = req.body
   if (!id) {
     res.status(400).json({
-      errors: [{
-        message: 'id不能为空'
-      }]
+      errors: [
+        {
+          message: 'id不能为空',
+        },
+      ],
     })
     return
   }
   // __v 可以为零，但不能为空/null/undefined
   if (__v === undefined || __v === null) {
     res.status(400).json({
-      errors: [{
-        message: '__v不能为空'
-      }]
+      errors: [
+        {
+          message: '__v不能为空',
+        },
+      ],
     })
     return
   }
   if (year || month || day) {
     if (!utils.validateDate(year, month, day)) {
       res.status(400).json({
-        errors: [{
-          message: '日期格式不正确'
-        }]
-      });
+        errors: [
+          {
+            message: '日期格式不正确',
+          },
+        ],
+      })
       return
     }
   }
@@ -46,15 +65,17 @@ module.exports = async function (req, res, next) {
     day,
     label,
     urlList,
-    status
+    status,
   }
 
   const oldData = await movieUtils.findOne({ _id: id, __v })
   if (!oldData) {
     res.status(400).json({
-      errors: [{
-        message: '该数据不存在或已被更新'
-      }]
+      errors: [
+        {
+          message: '该数据不存在或已被更新',
+        },
+      ],
     })
     return
   }
@@ -67,7 +88,9 @@ module.exports = async function (req, res, next) {
     }
     const fileName = id
     try {
-      const imgRes = utils.base64ToFile(cover, path, fileName, { createDir: true })
+      const imgRes = utils.base64ToFile(cover, path, fileName, {
+        createDir: true,
+      })
       let baseCover = '/upload/movie/'
       // 拼接文件夹
       baseCover = baseCover + coverFolder + '/'
@@ -75,9 +98,11 @@ module.exports = async function (req, res, next) {
       params['coverFileName'] = imgRes.fileNameAll
     } catch (error) {
       res.status(400).json({
-        errors: [{
-          message: '照片上传失败'
-        }]
+        errors: [
+          {
+            message: '照片上传失败',
+          },
+        ],
       })
       throw new Error(error)
     }
@@ -92,9 +117,11 @@ module.exports = async function (req, res, next) {
     } catch (error) {
       adminApiLog.error(`movie update cover fail, ${JSON.stringify(error)}`)
       res.status(400).json({
-        errors: [{
-          message: '旧图片删除失败'
-        }]
+        errors: [
+          {
+            message: '旧图片删除失败',
+          },
+        ],
       })
       return
     }
@@ -103,27 +130,34 @@ module.exports = async function (req, res, next) {
   }
 
   // updateOne
-  movieUtils.updateOne({ _id: id, __v }, params).then((data) => {
-    if (data.modifiedCount === 0) {
-      res.status(400).json({
-        errors: [{
-          message: '更新失败'
-        }]
+  movieUtils
+    .updateOne({ _id: id, __v }, params)
+    .then((data) => {
+      if (data.modifiedCount === 0) {
+        res.status(400).json({
+          errors: [
+            {
+              message: '更新失败',
+            },
+          ],
+        })
+        return
+      }
+      res.send({
+        data: data,
       })
-      return
-    }
-    res.send({
-      data: data
+      adminApiLog.info(`movie update success`)
+      cacheDataUtils.getMovieYearList()
+      // utils.reflushBlogCache()
     })
-    adminApiLog.info(`movie update success`)
-    cacheDataUtils.getMovieYearList()
-    // utils.reflushBlogCache()
-  }).catch((err) => {
-    res.status(400).json({
-      errors: [{
-        message: '电影更新失败'
-      }]
+    .catch((err) => {
+      res.status(400).json({
+        errors: [
+          {
+            message: '电影更新失败',
+          },
+        ],
+      })
+      adminApiLog.error(`movie update fail, ${logErrorToText(err)}`)
     })
-    adminApiLog.error(`movie update fail, ${logErrorToText(err)}`)
-  })
 }

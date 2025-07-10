@@ -2,7 +2,7 @@ import { h, render } from 'vue'
 import CheckDialog from '@/components/CheckDialog.vue'
 
 class CheckDialogService {
-  static open (props) {
+  static open(props) {
     return new Promise((resolve, reject) => {
       let container = document.createElement('div')
       document.body.appendChild(container)
@@ -32,7 +32,7 @@ class CheckDialogService {
             reject()
           }
         },
-        onClosed: destroy
+        onClosed: destroy,
       })
 
       render(vNode, container)

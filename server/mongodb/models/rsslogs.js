@@ -1,26 +1,29 @@
-var mongoose = require('mongoose');
-var Schema = mongoose.Schema;
+var mongoose = require('mongoose')
+var Schema = mongoose.Schema
 // Schema
-var rsslogs = new Schema({
-  ip: {
-    type: String,
+var rsslogs = new Schema(
+  {
+    ip: {
+      type: String,
+    },
+    ipInfo: {
+      type: Object,
+      default: {},
+    },
+    deviceInfo: {
+      type: Object,
+      default: {},
+    },
+    rssPath: {
+      type: String,
+      default: '',
+    },
+    reader: {
+      type: String,
+      default: '',
+    },
   },
-  ipInfo: {
-    type: Object,
-    default: {}
-  },
-  deviceInfo: {
-    type: Object,
-    default: {}
-  },
-  rssPath: {
-    type: String,
-    default: ''
-  },
-  reader: {
-    type: String,
-    default: ''
-  },
-}, { capped: 15728640, timestamps: true });
+  { capped: 15728640, timestamps: true },
+)
 
-module.exports = mongoose.model('rsslogs', rsslogs);
+module.exports = mongoose.model('rsslogs', rsslogs)

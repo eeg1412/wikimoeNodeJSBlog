@@ -2,7 +2,6 @@
  * @description imageGroup module entry
  */
 
-
 import withImageGroup from './plugin'
 import renderElemConf from './render-elem'
 import elemToHtmlConf from './elem-to-html'

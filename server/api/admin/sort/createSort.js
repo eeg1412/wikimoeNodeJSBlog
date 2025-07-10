@@ -1,4 +1,3 @@
-
 const sortUtils = require('../../../mongodb/utils/sorts')
 const utils = require('../../../utils/utils')
 const log4js = require('log4js')
@@ -38,36 +37,41 @@ module.exports = async function (req, res, next) {
     // 查询alias是否存在，查询条件时大小写不敏感的
     const query = {
       alias: {
-        $regex: new RegExp('^' + alias + '$', 'i')
-      }
+        $regex: new RegExp('^' + alias + '$', 'i'),
+      },
     }
     const result = await sortUtils.findOne(query)
     if (result) {
       res.status(400).json({
-        errors: [{
-          message: '分类别名已存在'
-        }]
+        errors: [
+          {
+            message: '分类别名已存在',
+          },
+        ],
       })
       return
     }
   }
 
-
   // save
-  sortUtils.save(params).then((data) => {
-    res.send({
-      data: data
+  sortUtils
+    .save(params)
+    .then((data) => {
+      res.send({
+        data: data,
+      })
+      adminApiLog.info(`sort:${sortname} create success`)
+      cacheDataUtils.getSortList()
+      // utils.reflushBlogCache()
     })
-    adminApiLog.info(`sort:${sortname} create success`)
-    cacheDataUtils.getSortList()
-    // utils.reflushBlogCache()
-  }).catch((err) => {
-    res.status(400).json({
-      errors: [{
-        message: '分类创建失败'
-      }]
+    .catch((err) => {
+      res.status(400).json({
+        errors: [
+          {
+            message: '分类创建失败',
+          },
+        ],
+      })
+      adminApiLog.error(`sort:${sortname} create fail, ${logErrorToText(err)}`)
     })
-    adminApiLog.error(`sort:${sortname} create fail, ${logErrorToText(err)}`)
-  })
-
 }

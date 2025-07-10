@@ -6,15 +6,20 @@ module.exports = async function (req, res, next) {
   if (global.$cacheData?.getReadingBookList) {
     res.send(global.$cacheData.getReadingBookList)
   } else {
-    cacheDataUtils.getReadingBookList().then((data) => {
-      res.send(data)
-    }).catch((err) => {
-      res.status(400).json({
-        errors: [{
-          message: 'getReadingBookList 列表获取失败'
-        }]
+    cacheDataUtils
+      .getReadingBookList()
+      .then((data) => {
+        res.send(data)
       })
-      userApiLog.error(`getReadingBookList fail, ${JSON.stringify(err)}`)
-    })
+      .catch((err) => {
+        res.status(400).json({
+          errors: [
+            {
+              message: 'getReadingBookList 列表获取失败',
+            },
+          ],
+        })
+        userApiLog.error(`getReadingBookList fail, ${JSON.stringify(err)}`)
+      })
   }
 }

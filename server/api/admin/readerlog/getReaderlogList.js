@@ -10,29 +10,45 @@ module.exports = async function (req, res, next) {
   // 判断page和size是否为数字
   if (!utils.isNumber(page) || !utils.isNumber(size)) {
     res.status(400).json({
-      errors: [{
-        message: '参数错误'
-      }]
+      errors: [
+        {
+          message: '参数错误',
+        },
+      ],
     })
     return
   }
-  const params = {
-  }
+  const params = {}
 
   if (actionList) {
     // 判断action是否合法
-    const validActions = ['open', 'postList', 'postListArchive', 'postListSort', 'postListTag', 'postListKeyword', 'postView', 'postLike', 'postDislike', 'commentLike', 'commentDislike', 'commentRetract']
-    const isValid = actionList.every(action => validActions.includes(action))
+    const validActions = [
+      'open',
+      'postList',
+      'postListArchive',
+      'postListSort',
+      'postListTag',
+      'postListKeyword',
+      'postView',
+      'postLike',
+      'postDislike',
+      'commentLike',
+      'commentDislike',
+      'commentRetract',
+    ]
+    const isValid = actionList.every((action) => validActions.includes(action))
     if (!isValid) {
       res.status(400).json({
-        errors: [{
-          message: 'action参数错误'
-        }]
+        errors: [
+          {
+            message: 'action参数错误',
+          },
+        ],
       })
       return
     }
     params.action = {
-      $in: actionList
+      $in: actionList,
     }
   }
 
@@ -48,24 +64,26 @@ module.exports = async function (req, res, next) {
     params.isBot = isBot === '1' ? true : false
   }
 
-
   const sort = {
-    _id: -1
+    _id: -1,
   }
-  readerlogUtils.findPage(params, sort, page, size).then((data) => {
-    // 返回格式list,total
-    res.send({
-      list: data.list,
-      total: data.total
+  readerlogUtils
+    .findPage(params, sort, page, size)
+    .then((data) => {
+      // 返回格式list,total
+      res.send({
+        list: data.list,
+        total: data.total,
+      })
     })
-
-  }).catch((err) => {
-    res.status(400).json({
-      errors: [{
-        message: '读者操作日志列表获取失败'
-      }]
+    .catch((err) => {
+      res.status(400).json({
+        errors: [
+          {
+            message: '读者操作日志列表获取失败',
+          },
+        ],
+      })
+      adminApiLog.error(`readerlog list get fail, ${JSON.stringify(err)}`)
     })
-    adminApiLog.error(`readerlog list get fail, ${JSON.stringify(err)
-      }`)
-  })
 }

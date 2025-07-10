@@ -3,10 +3,10 @@
  */
 import { Text } from 'slate'
 
-function parseHtml (elem, children, editor) {
+function parseHtml(elem, children, editor) {
   const childrens = []
   // 遍历子节点的img标签
-  elem.children.forEach(divChild => {
+  elem.children.forEach((divChild) => {
     if (divChild.tagName.toLowerCase() === 'div') {
       const child = divChild.children[0]
       const src = child.getAttribute('src')

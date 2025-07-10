@@ -11,25 +11,32 @@ module.exports = async function (req, res, next) {
     lastusetime: lastusetime,
   }
   // updateOne
-  tagUtils.updateOne({ _id: id }, params).then((data) => {
-    if (data.modifiedCount === 0) {
-      res.status(400).json({
-        errors: [{
-          message: '更新失败'
-        }]
+  tagUtils
+    .updateOne({ _id: id }, params)
+    .then((data) => {
+      if (data.modifiedCount === 0) {
+        res.status(400).json({
+          errors: [
+            {
+              message: '更新失败',
+            },
+          ],
+        })
+        return
+      }
+      res.send({
+        data: data,
       })
-      return
-    }
-    res.send({
-      data: data
+      adminApiLog.info(`tag update usetime success`)
     })
-    adminApiLog.info(`tag update usetime success`)
-  }).catch((err) => {
-    res.status(400).json({
-      errors: [{
-        message: '标签更新失败'
-      }]
+    .catch((err) => {
+      res.status(400).json({
+        errors: [
+          {
+            message: '标签更新失败',
+          },
+        ],
+      })
+      adminApiLog.error(`tag update usetime fail, ${logErrorToText(err)}`)
     })
-    adminApiLog.error(`tag update usetime fail, ${logErrorToText(err)}`)
-  })
 }

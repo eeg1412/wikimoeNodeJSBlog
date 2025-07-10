@@ -8,52 +8,69 @@ module.exports = async function (req, res, next) {
   const id = req.query.id
   if (!id) {
     res.status(400).json({
-      errors: [{
-        message: 'id不能为空'
-      }]
+      errors: [
+        {
+          message: 'id不能为空',
+        },
+      ],
     })
     return
   }
   //  删除投票
-  voteUtils.deleteOne({ _id: id }).then((data) => {
-    if (data.deletedCount === 0) {
+  voteUtils
+    .deleteOne({ _id: id })
+    .then((data) => {
+      if (data.deletedCount === 0) {
+        res.status(400).json({
+          errors: [
+            {
+              message: '删除失败',
+            },
+          ],
+        })
+        return
+      }
+      postUtils
+        .updateMany(
+          {
+            $or: [
+              {
+                voteList: id,
+              },
+              {
+                contentVoteList: id,
+              },
+            ],
+          },
+          { $pull: { voteList: id, contentVoteList: id } },
+        )
+        .then((data) => {
+          // console.log('data', data)
+          res.send({
+            data: {
+              message: '删除成功',
+            },
+          })
+        })
+        .catch((err) => {
+          res.status(400).json({
+            errors: [
+              {
+                message: '删除失败',
+              },
+            ],
+          })
+          adminApiLog.error(`vote delete fail, ${logErrorToText(err)}`)
+        })
+    })
+    .catch((err) => {
       res.status(400).json({
-        errors: [{
-          message: '删除失败'
-        }]
-      })
-      return
-    }
-    postUtils.updateMany({
-      $or: [
-        {
-          voteList: id,
-        },
-        {
-          contentVoteList: id
-        }
-      ]
-    }, { $pull: { voteList: id, contentVoteList: id } }).then((data) => {
-      // console.log('data', data)
-      res.send({
-        data: {
-          message: '删除成功'
-        }
-      })
-    }).catch((err) => {
-      res.status(400).json({
-        errors: [{
-          message: '删除失败'
-        }]
+        errors: [
+          {
+            message: '删除失败',
+          },
+        ],
       })
       adminApiLog.error(`vote delete fail, ${logErrorToText(err)}`)
     })
-  }).catch((err) => {
-    res.status(400).json({
-      errors: [{
-        message: '删除失败'
-      }]
-    })
-    adminApiLog.error(`vote delete fail, ${logErrorToText(err)}`)
-  })
 }

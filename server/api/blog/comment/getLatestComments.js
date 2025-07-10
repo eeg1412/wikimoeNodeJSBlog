@@ -6,16 +6,20 @@ module.exports = async function (req, res, next) {
   if (global.$cacheData?.commentList) {
     res.send(global.$cacheData.commentList)
   } else {
-    cacheDataUtils.getCommentList().then((data) => {
-      res.send(data)
-    }).catch((err) => {
-      res.status(400).json({
-        errors: [{
-          message: 'comment列表获取失败'
-        }]
+    cacheDataUtils
+      .getCommentList()
+      .then((data) => {
+        res.send(data)
       })
-      userApiLog.error(`comment list get fail, ${JSON.stringify(err)
-        }`)
-    })
+      .catch((err) => {
+        res.status(400).json({
+          errors: [
+            {
+              message: 'comment列表获取失败',
+            },
+          ],
+        })
+        userApiLog.error(`comment list get fail, ${JSON.stringify(err)}`)
+      })
   }
 }

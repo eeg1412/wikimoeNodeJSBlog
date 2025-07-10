@@ -1,23 +1,24 @@
-
 const postUtils = require('../../../mongodb/utils/posts')
 const sortUtils = require('../../../mongodb/utils/sorts')
 const tagsUtils = require('../../../mongodb/utils/tags')
 const utils = require('../../../utils/utils')
 const log4js = require('log4js')
 const userApiLog = log4js.getLogger('userApi')
-const moment = require('moment-timezone');
+const moment = require('moment-timezone')
 
 module.exports = async function (req, res, next) {
-  let { page, keyword, type, sorttype, sortid, tags, pageType, year,
-    month, } = req.query
+  let { page, keyword, type, sorttype, sortid, tags, pageType, year, month } =
+    req.query
   page = parseInt(page)
   const size = global.$globalConfig?.siteSettings?.sitePageSize || 1
   // 判断page和size是否为数字
   if (!utils.isNumber(page)) {
     res.status(400).json({
-      errors: [{
-        message: '参数错误'
-      }]
+      errors: [
+        {
+          message: '参数错误',
+        },
+      ],
     })
     return
   }
@@ -26,8 +27,8 @@ module.exports = async function (req, res, next) {
     status: 1,
     // 默认type为blog和tweet
     type: {
-      $in: [1, 2]
-    }
+      $in: [1, 2],
+    },
   }
   // 如果keyword存在，就加入查询条件
   if (keyword) {
@@ -36,57 +37,62 @@ module.exports = async function (req, res, next) {
     keyword = keyword?.trim()
     // 如果keyword超过20个字符，就截取前20个字符
     if (keyword.length > 20) {
-      keyword = Array.from(keyword).slice(0, 20).join('');
+      keyword = Array.from(keyword).slice(0, 20).join('')
     }
-    const keywordArray = keyword.split(' ');
-    const regexArray = keywordArray.map(keyword => {
-      const escapedKeyword = utils.escapeSpecialChars(keyword);
-      const regex = new RegExp(escapedKeyword, 'i');
-      return regex;
-    });
+    const keywordArray = keyword.split(' ')
+    const regexArray = keywordArray.map((keyword) => {
+      const escapedKeyword = utils.escapeSpecialChars(keyword)
+      const regex = new RegExp(escapedKeyword, 'i')
+      return regex
+    })
     // 检索title和excerpt
     params.$or = [
       {
-        title: { $in: regexArray }
+        title: { $in: regexArray },
       },
       {
-        excerpt: { $in: regexArray }
-      }
+        excerpt: { $in: regexArray },
+      },
     ]
     // 检索tags
-    const tags = await tagsUtils.findLimit({ tagname: { $in: regexArray } }, undefined, 100).catch((err) => {
-      return []
-    })
+    const tags = await tagsUtils
+      .findLimit({ tagname: { $in: regexArray } }, undefined, 100)
+      .catch((err) => {
+        return []
+      })
     if (tags.length > 0) {
       params.$or.push({
         tags: {
-          $in: tags.map(tag => tag._id)
-        }
+          $in: tags.map((tag) => tag._id),
+        },
       })
     }
   }
   // 如果type存在，就加入查询条件
   if (Array.isArray(type)) {
     // 校验type是否是数组，且只能是1和2
-    if (type.some(item => ![1, 2].includes(parseInt(item)))) {
+    if (type.some((item) => ![1, 2].includes(parseInt(item)))) {
       res.status(400).json({
-        errors: [{
-          message: 'type参数错误'
-        }]
+        errors: [
+          {
+            message: 'type参数错误',
+          },
+        ],
       })
       return
     }
-    params.type =
-    {
-      $in: type
+    params.type = {
+      $in: type,
     }
   } else if (type) {
     // 校验type是否是1和2
     if (![1, 2].includes(parseInt(type))) {
       res.status(400).json({
-        errors: [{
-          message: 'type参数错误'
-        }]
+        errors: [
+          {
+            message: 'type参数错误',
+          },
+        ],
       })
       return
     }
@@ -96,48 +102,52 @@ module.exports = async function (req, res, next) {
   // 如果sort存在，就加入查询条件
   if (sortid) {
     const sortList = global.$cacheData?.sortList || []
-    function findInSortList (sortList, sortid, isObjectId) {
+    function findInSortList(sortList, sortid, isObjectId) {
       for (let item of sortList) {
-        if ((isObjectId && item._id.toString() === sortid) || (!isObjectId && item.alias.toLowerCase() === sortid.toLowerCase())) {
-          return item;
+        if (
+          (isObjectId && item._id.toString() === sortid) ||
+          (!isObjectId && item.alias.toLowerCase() === sortid.toLowerCase())
+        ) {
+          return item
         }
 
         if (item.children) {
-          let result = findInSortList(item.children, sortid, isObjectId);
+          let result = findInSortList(item.children, sortid, isObjectId)
           if (result) {
-            return result;
+            return result
           }
         }
       }
 
-      return null;
+      return null
     }
 
-
-    let isObjectId = utils.isObjectId(sortid);
-    let sort = findInSortList(sortList, sortid, isObjectId);
-    let childrenIds = [];
+    let isObjectId = utils.isObjectId(sortid)
+    let sort = findInSortList(sortList, sortid, isObjectId)
+    let childrenIds = []
 
     if (sort && sort.children) {
-      childrenIds = sort.children.map(child => child._id);
+      childrenIds = sort.children.map((child) => child._id)
     }
     if (!sort) {
       res.status(404).json({
-        errors: [{
-          message: '分类不存在'
-        }]
+        errors: [
+          {
+            message: '分类不存在',
+          },
+        ],
       })
       return
     }
     params.sort = {
-      $in: [sort._id, ...childrenIds]
+      $in: [sort._id, ...childrenIds],
     }
   }
   // 如果tags存在，就加入查询条件
   if (tags) {
     // tags是数组
     params.tags = {
-      $in: tags
+      $in: tags,
     }
   }
 
@@ -149,9 +159,11 @@ module.exports = async function (req, res, next) {
     // 判断year和month是否是NaN
     if (isNaN(year) || isNaN(month)) {
       res.status(400).json({
-        errors: [{
-          message: '参数错误'
-        }]
+        errors: [
+          {
+            message: '参数错误',
+          },
+        ],
       })
       return
     }
@@ -159,46 +171,53 @@ module.exports = async function (req, res, next) {
     // 判断month是否在0-11之间
     if (month < 0 || month > 11) {
       res.status(400).json({
-        errors: [{
-          message: '月份错误'
-        }]
+        errors: [
+          {
+            message: '月份错误',
+          },
+        ],
       })
       return
     }
     // 时区
-    const siteTimeZone = global.$globalConfig.siteSettings.siteTimeZone || 'Asia/Shanghai'
+    const siteTimeZone =
+      global.$globalConfig.siteSettings.siteTimeZone || 'Asia/Shanghai'
     // 根据年月和时区查询整月的开始时间和结束时间
-    const startDate = moment.tz([year, month], siteTimeZone).startOf('month').toDate();
-    const endDate = moment.tz([year, month], siteTimeZone).add(1, 'month').startOf('month').toDate();
+    const startDate = moment
+      .tz([year, month], siteTimeZone)
+      .startOf('month')
+      .toDate()
+    const endDate = moment
+      .tz([year, month], siteTimeZone)
+      .add(1, 'month')
+      .startOf('month')
+      .toDate()
     // 查询条件
     params.date = {
       $gte: startDate,
-      $lt: endDate
+      $lt: endDate,
     }
   }
 
-
   // date越新越靠前，_id越新越靠前
-  let postSorting = {
-
-  }
+  let postSorting = {}
   switch (pageType) {
     case 'post':
       // 将top放到第一位,top是布尔
       postSorting['top'] = -1
-      break;
+      break
     case 'sort':
       // 将sort放到第一位
       postSorting['sortop'] = -1
-      break;
+      break
 
     default:
-      break;
+      break
   }
   postSorting = {
     ...postSorting,
     date: -1,
-    _id: -1
+    _id: -1,
   }
 
   if (sorttype) {
@@ -206,86 +225,91 @@ module.exports = async function (req, res, next) {
       // 1: 按照创建时间date升序
       case 'date_ascending':
         postSorting = {
-          date: 1
+          date: 1,
         }
-        break;
+        break
       // 2: 按照创建时间date降序
       case 'date_descending':
         postSorting = {
-          date: -1
+          date: -1,
         }
-        break;
+        break
       // 按照点击数views升序
       case 'views_ascending':
         postSorting = {
-          views: 1
+          views: 1,
         }
-        break;
+        break
       // 按照点击数views降序
       case 'views_descending':
         postSorting = {
-          views: -1
+          views: -1,
         }
-        break;
+        break
       // 按照评论数comnum升序
       case 'comnum_ascending':
         postSorting = {
-          comnum: 1
+          comnum: 1,
         }
-        break;
+        break
       // 按照评论数comnum降序
       case 'comnum_descending':
         postSorting = {
-          comnum: -1
+          comnum: -1,
         }
-        break;
+        break
       // 按照点赞数likes升序
       case 'likes_ascending':
         postSorting = {
-          likes: 1
+          likes: 1,
         }
-        break;
+        break
       // 按照点赞数likes降序
       case 'likes_descending':
         postSorting = {
-          likes: -1
+          likes: -1,
         }
-        break;
+        break
       // 按照更新时间updatedAt升序
       case 'updatedAt_ascending':
         postSorting = {
-          updatedAt: 1
+          updatedAt: 1,
         }
-        break;
+        break
       // 按照更新时间updatedAt降序
       case 'updatedAt_descending':
         postSorting = {
-          updatedAt: -1
+          updatedAt: -1,
         }
-        break;
+        break
 
       default:
-        break;
+        break
     }
   }
-  const filter = '-voteList -content -bangumiList -movieList -bookList -eventList -gameList -postList -seriesSortList -code -editorVersion'
-  postUtils.findPage(params, postSorting, page, size, filter, {
-    voteFliter: '_id endTime maxSelect showResultAfter title options.title options._id'
-  }).then((data) => {
-
-    // 返回格式list,total
-    res.send({
-      list: data.list,
-      total: data.total,
-      size: size,
+  const filter =
+    '-voteList -content -bangumiList -movieList -bookList -eventList -gameList -postList -seriesSortList -code -editorVersion'
+  postUtils
+    .findPage(params, postSorting, page, size, filter, {
+      voteFliter:
+        '_id endTime maxSelect showResultAfter title options.title options._id',
     })
-
-  }).catch((err) => {
-    res.status(400).json({
-      errors: [{
-        message: '文章列表获取失败'
-      }]
+    .then((data) => {
+      // 返回格式list,total
+      res.send({
+        list: data.list,
+        total: data.total,
+        size: size,
+      })
     })
-    userApiLog.error(`post list get fail, ${logErrorToText(err)}`)
-  })
+    .catch((err) => {
+      res.status(400).json({
+        errors: [
+          {
+            message: '文章列表获取失败',
+          },
+        ],
+      })
+      userApiLog.error(`post list get fail, ${logErrorToText(err)}`)
+    })
 }

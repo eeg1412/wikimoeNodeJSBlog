@@ -2,25 +2,29 @@ const attachmentUtils = require('../../../mongodb/utils/attachments')
 const utils = require('../../../utils/utils')
 const log4js = require('log4js')
 const adminApiLog = log4js.getLogger('adminApi')
-const pathModule = require('path');
+const pathModule = require('path')
 
 module.exports = async function (req, res, next) {
   // name	String	是	否	无	媒体名称
   const { name, description, is360Panorama, id, __v, videoCover } = req.body
   if (!id) {
     res.status(400).json({
-      errors: [{
-        message: 'id不能为空'
-      }]
+      errors: [
+        {
+          message: 'id不能为空',
+        },
+      ],
     })
     return
   }
   // __v 可以为零，但不能为空/null/undefined
   if (__v === undefined || __v === null) {
     res.status(400).json({
-      errors: [{
-        message: '__v不能为空'
-      }]
+      errors: [
+        {
+          message: '__v不能为空',
+        },
+      ],
     })
     return
   }
@@ -47,9 +51,11 @@ module.exports = async function (req, res, next) {
   const oldData = await attachmentUtils.findOne({ _id: id })
   if (!oldData) {
     res.status(400).json({
-      errors: [{
-        message: '媒体不存在'
-      }]
+      errors: [
+        {
+          message: '媒体不存在',
+        },
+      ],
     })
     return
   }
@@ -62,34 +68,42 @@ module.exports = async function (req, res, next) {
       // 保存新的封面
       const oldFullpath = './public' + oldData.thumfor
       // path会携带路径和文件名，拆分成path和fileName
-      const path = pathModule.dirname(oldFullpath);  // '/user/local'
-      const ext = pathModule.extname(oldFullpath);
-      const fileName = pathModule.basename(oldFullpath, ext);
+      const path = pathModule.dirname(oldFullpath) // '/user/local'
+      const ext = pathModule.extname(oldFullpath)
+      const fileName = pathModule.basename(oldFullpath, ext)
       utils.base64ToFile(videoCover, path, fileName, { createDir: true })
     }
   }
 
-
   // updateOne
-  attachmentUtils.updateOne({ _id: id, __v }, params).then((data) => {
-    if (data.modifiedCount === 0) {
-      res.status(400).json({
-        errors: [{
-          message: '更新失败'
-        }]
+  attachmentUtils
+    .updateOne({ _id: id, __v }, params)
+    .then((data) => {
+      if (data.modifiedCount === 0) {
+        res.status(400).json({
+          errors: [
+            {
+              message: '更新失败',
+            },
+          ],
+        })
+        return
+      }
+      res.send({
+        data: data,
       })
-      return
-    }
-    res.send({
-      data: data
+      adminApiLog.info(`attachment:${name} update success`)
     })
-    adminApiLog.info(`attachment:${name} update success`)
-  }).catch((err) => {
-    res.status(400).json({
-      errors: [{
-        message: '媒体更新失败'
-      }]
+    .catch((err) => {
+      res.status(400).json({
+        errors: [
+          {
+            message: '媒体更新失败',
+          },
+        ],
+      })
+      adminApiLog.error(
+        `attachment:${name} update fail, ${logErrorToText(err)}`,
+      )
     })
-    adminApiLog.error(`attachment:${name} update fail, ${logErrorToText(err)}`)
-  })
 }

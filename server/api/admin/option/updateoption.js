@@ -28,32 +28,39 @@ module.exports = async function (req, res, next) {
           const path = './public/upload/siteImg/'
           const fileName = name
           try {
-            const imgRes = utils.base64ToFile(value, path, fileName, { createDir: true })
+            const imgRes = utils.base64ToFile(value, path, fileName, {
+              createDir: true,
+            })
             value = `/upload/siteImg/${imgRes.fileNameAll}?v=${Date.now()}`
           } catch (error) {
             res.status(400).json({
-              errors: [{
-                message: '照片上传失败'
-              }]
+              errors: [
+                {
+                  message: '照片上传失败',
+                },
+              ],
             })
             // 写入日志
             adminApiLog.error(`logo update fail, ${JSON.stringify(error)}`)
             throw new Error(error)
           }
         }
-        break;
+        break
 
       default:
-        break;
+        break
     }
     // findoneAndUpdate
-    const dbOptions = { upsert: true, new: true };
-    await optionUtils.findOneAndUpdate({ name }, { value }, dbOptions).then((data) => {
-      resList.push(data.toJSON())
-      adminApiLog.info(`option update success , ${JSON.stringify(data)}`)
-    }).catch((err) => {
-      adminApiLog.error(`option update fail, ${logErrorToText(err)}`)
-    })
+    const dbOptions = { upsert: true, new: true }
+    await optionUtils
+      .findOneAndUpdate({ name }, { value }, dbOptions)
+      .then((data) => {
+        resList.push(data.toJSON())
+        adminApiLog.info(`option update success , ${JSON.stringify(data)}`)
+      })
+      .catch((err) => {
+        adminApiLog.error(`option update fail, ${logErrorToText(err)}`)
+      })
   }
   await globalConfigUtils.initGlobalConfig()
   cacheDataUtils.getPostArchiveList()
@@ -62,7 +69,6 @@ module.exports = async function (req, res, next) {
   // utils.reflushBlogCache()
   // 返回结果
   res.send({
-    data: resList
+    data: resList,
   })
-
 }

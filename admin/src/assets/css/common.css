@@ -632,9 +632,18 @@ summary {
 html,
 body {
   font-size: 14px;
-  font-family: 'Noto Sans SC', 'PingFang SC', 'Source Han Sans SC',
-    'Microsoft YaHei', sans-serif, system-ui, -apple-system, BlinkMacSystemFont,
-    'Segoe UI Emoji', 'Noto Color Emoji', emoji;
+  font-family:
+    'Noto Sans SC',
+    'PingFang SC',
+    'Source Han Sans SC',
+    'Microsoft YaHei',
+    sans-serif,
+    system-ui,
+    -apple-system,
+    BlinkMacSystemFont,
+    'Segoe UI Emoji',
+    'Noto Color Emoji',
+    emoji;
   width: 100%;
   height: 100%;
 }
@@ -658,8 +667,15 @@ body {
 }
 /*-- 按钮 --*/
 input {
-  font-family: -apple-system, BlinkMacSystemFont, Helvetica Neue, PingFang SC,
-    Microsoft YaHei, Source Han Sans SC, Noto Sans CJK SC, WenQuanYi Micro Hei,
+  font-family:
+    -apple-system,
+    BlinkMacSystemFont,
+    Helvetica Neue,
+    PingFang SC,
+    Microsoft YaHei,
+    Source Han Sans SC,
+    Noto Sans CJK SC,
+    WenQuanYi Micro Hei,
     sans-serif;
 }
 input[type='button'],

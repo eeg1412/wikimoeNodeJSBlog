@@ -3,7 +3,7 @@
  */
 import { Text } from 'slate'
 
-function parseHtml (elem, children, editor) {
+function parseHtml(elem, children, editor) {
   // children = children.filter(child => {
   //   if (Text.isText(child)) return true
   //   if (editor.isInline(child)) return true

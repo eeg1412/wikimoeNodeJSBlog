@@ -33,14 +33,17 @@ const imageToHtmlConf = {
     let styleStr = ''
     if (styWidth) styleStr += `width: ${styWidth};`
     if (styHeight) styleStr += `height: ${styHeight};`
-    return `<img src="${src}" alt="${alt}"${href ? ` data-href="${href}"` : ''
-      }${width ? ` width="${width}"` : ''}${height ? ` height="${height}"` : ''}${hrefWidth ? ` data-href-width="${hrefWidth}"` : ''
-      }${hrefHeight ? ` data-href-height="${hrefHeight}"` : ''
-      } style="${styleStr}">`
+    return `<img src="${src}" alt="${alt}"${
+      href ? ` data-href="${href}"` : ''
+    }${width ? ` width="${width}"` : ''}${height ? ` height="${height}"` : ''}${
+      hrefWidth ? ` data-href-width="${hrefWidth}"` : ''
+    }${
+      hrefHeight ? ` data-href-height="${hrefHeight}"` : ''
+    } style="${styleStr}">`
   },
 }
 
-function genSizeStyledIframeHtml (iframeHtml, width = '', height = '') {
+function genSizeStyledIframeHtml(iframeHtml, width = '', height = '') {
   const parser = new DOMParser()
   const doc = parser.parseFromString(iframeHtml, 'text/html')
   const iframe = doc.querySelector('iframe')
@@ -52,7 +55,7 @@ function genSizeStyledIframeHtml (iframeHtml, width = '', height = '') {
       // 设置style aspect-ratio
       iframe.setAttribute(
         'style',
-        `width: 100%; height: auto; aspect-ratio: ${width} / ${height};`
+        `width: 100%; height: auto; aspect-ratio: ${width} / ${height};`,
       )
     }
     return iframe.outerHTML
@@ -72,9 +75,11 @@ const videoToHtmlConf = {
       res += iframeHtml
     } else {
       // 其他，mp4 等 url 格式
-      res += `<video poster="${poster}" playsinline="true" preload="none" muted="muted" loop="loop" controls="true"${width && width !== 'auto' ? ` width="${width}"` : ''
-        }${height && height !== 'auto' ? ` height="${height}"` : ''
-        }><source src="${src}" type="video/mp4"/></video>`
+      res += `<video poster="${poster}" playsinline="true" preload="none" muted="muted" loop="loop" controls="true"${
+        width && width !== 'auto' ? ` width="${width}"` : ''
+      }${
+        height && height !== 'auto' ? ` height="${height}"` : ''
+      }><source src="${src}" type="video/mp4"/></video>`
     }
     res += '\n</div>'
 
@@ -82,7 +87,7 @@ const videoToHtmlConf = {
   },
 }
 
-function getStyleValue ($elem, styleKey) {
+function getStyleValue($elem, styleKey) {
   let res = ''
 
   const styleStr = $elem.getAttribute('style') || '' // 如 'line-height: 2.5; color: red;'
@@ -101,7 +106,7 @@ function getStyleValue ($elem, styleKey) {
   return res
 }
 
-function parseImgHtml (elem, children, editor) {
+function parseImgHtml(elem, children, editor) {
   const $elem = elem
   let href = $elem.getAttribute('data-href') || ''
   href = decodeURIComponent(href) // 兼容 V4

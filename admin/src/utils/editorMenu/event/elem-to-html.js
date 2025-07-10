@@ -3,7 +3,7 @@
  */
 
 // 生成 html 的函数
-function eventspanToHtml (elem, childrenHtml) {
+function eventspanToHtml(elem, childrenHtml) {
   const { id = '', textContent = '' } = elem
   return `<span data-w-e-type="eventspan" data-w-e-is-void data-w-e-is-inline data-id="${id}">${textContent}</span>`
 }

@@ -1,400 +1,408 @@
 export default function (api) {
   return {
-    login (data) {
+    login(data) {
       return api.post('/login', data)
     },
     // get,loginuserinfo
-    loginuserinfo () {
+    loginuserinfo() {
       return api.get('/loginuserinfo', {
-        shouldAdminJWT: true
+        shouldAdminJWT: true,
       })
     },
     // put,loginuserinfo
-    updateLoginUserInfo (data) {
+    updateLoginUserInfo(data) {
       return api.put('/loginuserinfo', data, {
-        shouldAdminJWT: true
+        shouldAdminJWT: true,
       })
     },
     // post sort/create
-    createSort (data) {
+    createSort(data) {
       return api.post('/sort/create', data, {
-        shouldAdminJWT: true
+        shouldAdminJWT: true,
       })
     },
     // get sort/list
-    getSortList (data) {
+    getSortList(data) {
       return api.get('/sort/list', {
         params: data,
-        shouldAdminJWT: true
+        shouldAdminJWT: true,
       })
     },
     // get sort/detail
-    getSortDetail (data) {
+    getSortDetail(data) {
       return api.get('/sort/detail', {
         params: data,
-        shouldAdminJWT: true
+        shouldAdminJWT: true,
       })
     },
     // put sort/update
-    updateSort (data) {
+    updateSort(data) {
       return api.put('/sort/update', data, {
-        shouldAdminJWT: true
+        shouldAdminJWT: true,
       })
     },
     // delete sort/delete
-    deleteSort (data) {
+    deleteSort(data) {
       return api.delete('/sort/delete', {
         params: data,
-        shouldAdminJWT: true
+        shouldAdminJWT: true,
       })
     },
     // get tag/list
-    getTagList (data, noLoading = false) {
+    getTagList(data, noLoading = false) {
       return api.get('/tag/list', {
         params: data,
         shouldAdminJWT: true,
-        noLoading
+        noLoading,
       })
     },
     // get tag/detail
-    getTagDetail (data) {
+    getTagDetail(data) {
       return api.get('/tag/detail', {
         params: data,
-        shouldAdminJWT: true
+        shouldAdminJWT: true,
       })
     },
     // post tag/create
-    createTag (data) {
+    createTag(data) {
       return api.post('/tag/create', data, {
-        shouldAdminJWT: true
+        shouldAdminJWT: true,
       })
     },
     // put tag/update
-    updateTag (data) {
+    updateTag(data) {
       return api.put('/tag/update', data, {
-        shouldAdminJWT: true
+        shouldAdminJWT: true,
       })
     },
     // put /tag/update/lastusetime
-    updateTagLastUseTime (data) {
+    updateTagLastUseTime(data) {
       return api.put('/tag/update/lastusetime', data, {
         shouldAdminJWT: true,
-        noLoading: true
+        noLoading: true,
       })
     },
     // delete tag/delete
-    deleteTag (data) {
+    deleteTag(data) {
       return api.delete('/tag/delete', {
         params: data,
-        shouldAdminJWT: true
+        shouldAdminJWT: true,
       })
     },
     // get album/list
-    getAlbumList (data, options = {}) {
+    getAlbumList(data, options = {}) {
       return api.get('/album/list', {
         params: data,
         shouldAdminJWT: true,
-        ...options
+        ...options,
       })
     },
     // get album/detail
-    getAlbumDetail (data) {
+    getAlbumDetail(data) {
       return api.get('/album/detail', {
         params: data,
-        shouldAdminJWT: true
+        shouldAdminJWT: true,
       })
     },
     // post album/create
-    createAlbum (data) {
+    createAlbum(data) {
       return api.post('/album/create', data, {
-        shouldAdminJWT: true
+        shouldAdminJWT: true,
       })
     },
     // put album/update
-    updateAlbum (data) {
+    updateAlbum(data) {
       return api.put('/album/update', data, {
-        shouldAdminJWT: true
+        shouldAdminJWT: true,
       })
     },
     // delete album/delete
-    deleteAlbum (data) {
+    deleteAlbum(data) {
       return api.delete('/album/delete', {
         params: data,
-        shouldAdminJWT: true
+        shouldAdminJWT: true,
       })
     },
     // get /attachment/list
-    getAttachmentList (data) {
+    getAttachmentList(data) {
       return api.get('/attachment/list', {
         params: data,
-        shouldAdminJWT: true
+        shouldAdminJWT: true,
       })
     },
     // delete /attachment/delete
-    deleteAttachment (data) {
+    deleteAttachment(data) {
       return api.delete('/attachment/delete', {
         params: data,
-        shouldAdminJWT: true
+        shouldAdminJWT: true,
       })
     },
     // put /attachment/update/name
-    updateAttachmentInfo (data) {
+    updateAttachmentInfo(data) {
       return api.put('/attachment/update/info', data, {
-        shouldAdminJWT: true
+        shouldAdminJWT: true,
       })
     },
     // put /attachment/update/album
-    updateAttachmentAlbum (data) {
+    updateAttachmentAlbum(data) {
       return api.put('/attachment/update/album', data, {
-        shouldAdminJWT: true
+        shouldAdminJWT: true,
       })
     },
     // post /attachment/upload/video
-    uploadAttachmentVideo (data) {
+    uploadAttachmentVideo(data) {
       return api.post('/attachment/upload/video', data, {
-        shouldAdminJWT: true
+        shouldAdminJWT: true,
       })
     },
     // post /post/create
-    createPost (data) {
+    createPost(data) {
       return api.post('/post/create', data, {
-        shouldAdminJWT: true
+        shouldAdminJWT: true,
       })
     },
     // get /post/list
-    getPostList (data, noLoading = false) {
+    getPostList(data, noLoading = false) {
       return api.get('/post/list', {
         params: data,
         shouldAdminJWT: true,
-        noLoading
+        noLoading,
       })
     },
     // get /post/detail
-    getPostDetail (data) {
+    getPostDetail(data) {
       return api.get('/post/detail', {
         params: data,
-        shouldAdminJWT: true
+        shouldAdminJWT: true,
       })
     },
     // put /post/update
-    updatePost (data, noLoading = false) {
+    updatePost(data, noLoading = false) {
       return api.put('/post/update', data, {
         shouldAdminJWT: true,
-        noLoading
+        noLoading,
       })
     },
     // delete /post/delete
-    deletePost (data) {
+    deletePost(data) {
       return api.delete('/post/delete', {
         params: data,
-        shouldAdminJWT: true
+        shouldAdminJWT: true,
       })
     },
     // put /post/batch
-    putBatchPost (data) {
+    putBatchPost(data) {
       return api.put('/post/batch', data, {
-        shouldAdminJWT: true
+        shouldAdminJWT: true,
       })
     },
     // post /comment/create
-    createComment (data) {
+    createComment(data) {
       return api.post('/comment/create', data, {
-        shouldAdminJWT: true
+        shouldAdminJWT: true,
       })
     },
     // get /comment/list
-    getCommentList (data) {
+    getCommentList(data) {
       return api.get('/comment/list', {
         params: data,
-        shouldAdminJWT: true
+        shouldAdminJWT: true,
       })
     },
     // get /comment/detail
-    getCommentDetail (data) {
+    getCommentDetail(data) {
       return api.get('/comment/detail', {
         params: data,
-        shouldAdminJWT: true
+        shouldAdminJWT: true,
       })
     },
     // put /comment/update
-    updateComment (data) {
+    updateComment(data) {
       return api.put('/comment/update', data, {
-        shouldAdminJWT: true
+        shouldAdminJWT: true,
       })
     },
     // delete /comment/delete
-    deleteComment (data) {
+    deleteComment(data) {
       return api.delete('/comment/delete', {
         params: data,
-        shouldAdminJWT: true
+        shouldAdminJWT: true,
       })
     },
     // put /comment/apply
-    applyComment (data) {
+    applyComment(data) {
       return api.put('/comment/apply', data, {
-        shouldAdminJWT: true
+        shouldAdminJWT: true,
       })
     },
     // get /link/list
-    getLinkList (data) {
+    getLinkList(data) {
       return api.get('/link/list', {
         params: data,
-        shouldAdminJWT: true
+        shouldAdminJWT: true,
       })
     },
     // get /link/detail
-    getLinkDetail (data) {
+    getLinkDetail(data) {
       return api.get('/link/detail', {
         params: data,
-        shouldAdminJWT: true
+        shouldAdminJWT: true,
       })
     },
     // post /link/create
-    createLink (data) {
+    createLink(data) {
       return api.post('/link/create', data, {
-        shouldAdminJWT: true
+        shouldAdminJWT: true,
       })
     },
     // put /link/update
-    updateLink (data) {
+    updateLink(data) {
       return api.put('/link/update', data, {
-        shouldAdminJWT: true
+        shouldAdminJWT: true,
       })
     },
     // delete /link/delete
-    deleteLink (data) {
+    deleteLink(data) {
       return api.delete('/link/delete', {
         params: data,
-        shouldAdminJWT: true
+        shouldAdminJWT: true,
       })
     },
     // get /navi/list
-    getNaviList (data) {
+    getNaviList(data) {
       return api.get('/navi/list', {
         params: data,
-        shouldAdminJWT: true
+        shouldAdminJWT: true,
       })
     },
     // get /navi/detail
-    getNaviDetail (data) {
+    getNaviDetail(data) {
       return api.get('/navi/detail', {
         params: data,
-        shouldAdminJWT: true
+        shouldAdminJWT: true,
       })
     },
     // post /navi/create
-    createNavi (data) {
+    createNavi(data) {
       return api.post('/navi/create', data, {
-        shouldAdminJWT: true
+        shouldAdminJWT: true,
       })
     },
     // put /navi/update
-    updateNavi (data) {
+    updateNavi(data) {
       return api.put('/navi/update', data, {
-        shouldAdminJWT: true
+        shouldAdminJWT: true,
       })
     },
     // delete /navi/delete
-    deleteNavi (data) {
+    deleteNavi(data) {
       return api.delete('/navi/delete', {
         params: data,
-        shouldAdminJWT: true
+        shouldAdminJWT: true,
       })
     },
     // put /option/update
-    updateOption (data) {
+    updateOption(data) {
       return api.put('/option/update', data, {
-        shouldAdminJWT: true
+        shouldAdminJWT: true,
       })
     },
     // get /option/list
-    getOptionList (data) {
+    getOptionList(data) {
       return api.get('/option/list', {
         params: data,
-        shouldAdminJWT: true
+        shouldAdminJWT: true,
       })
     },
     // put /option/flushjwtsecretadmin
-    flushJWTSecretAdmin () {
-      return api.put('/option/flushjwtsecretadmin', {}, {
-        shouldAdminJWT: true
-      })
+    flushJWTSecretAdmin() {
+      return api.put(
+        '/option/flushjwtsecretadmin',
+        {},
+        {
+          shouldAdminJWT: true,
+        },
+      )
     },
     // put /option/flushjwtsecretblog
-    flushJWTSecretBlog () {
-      return api.put('/option/flushjwtsecretblog', {}, {
-        shouldAdminJWT: true
-      })
+    flushJWTSecretBlog() {
+      return api.put(
+        '/option/flushjwtsecretblog',
+        {},
+        {
+          shouldAdminJWT: true,
+        },
+      )
     },
     // get dashboard
-    getDashboard () {
+    getDashboard() {
       return api.get('/dashboard', {
-        shouldAdminJWT: true
+        shouldAdminJWT: true,
       })
     },
     // get /dashboard/visitor
-    getDashboardVisitor (data) {
+    getDashboardVisitor(data) {
       return api.get('/dashboard/visitor', {
         params: data,
-        shouldAdminJWT: true
+        shouldAdminJWT: true,
       })
     },
     // get /sidebar/list
-    getSidebarList (data) {
+    getSidebarList(data) {
       return api.get('/sidebar/list', {
         params: data,
-        shouldAdminJWT: true
+        shouldAdminJWT: true,
       })
     },
     // post /sidebar/create
-    createSidebar (data) {
+    createSidebar(data) {
       return api.post('/sidebar/create', data, {
-        shouldAdminJWT: true
+        shouldAdminJWT: true,
       })
     },
     // put /sidebar/update
-    updateSidebar (data) {
+    updateSidebar(data) {
       return api.put('/sidebar/update', data, {
-        shouldAdminJWT: true
+        shouldAdminJWT: true,
       })
     },
     // put /sidebar/update/taxis
-    updateSidebarTaxis (data) {
+    updateSidebarTaxis(data) {
       return api.put('/sidebar/update/taxis', data, {
-        shouldAdminJWT: true
+        shouldAdminJWT: true,
       })
     },
     // delete /sidebar/delete
-    deleteSidebar (data) {
+    deleteSidebar(data) {
       return api.delete('/sidebar/delete', {
         params: data,
-        shouldAdminJWT: true
+        shouldAdminJWT: true,
       })
     },
     // get /banner/list
-    getBannerList (data) {
+    getBannerList(data) {
       return api.get('/banner/list', {
         params: data,
-        shouldAdminJWT: true
+        shouldAdminJWT: true,
       })
     },
     // post /banner/create
-    createBanner (data) {
+    createBanner(data) {
       return api.post('/banner/create', data, {
-        shouldAdminJWT: true
+        shouldAdminJWT: true,
       })
     },
     // put /banner/update
-    updateBanner (data) {
+    updateBanner(data) {
       return api.put('/banner/update', data, {
-        shouldAdminJWT: true
+        shouldAdminJWT: true,
       })
     },
     // delete /banner/delete
-    deleteBanner (data) {
+    deleteBanner(data) {
       return api.delete('/banner/delete', {
         params: data,
-        shouldAdminJWT: true
+        shouldAdminJWT: true,
       })
     },
     // put /banner/update/img
@@ -404,548 +412,548 @@ export default function (api) {
     //   })
     // },
     // put /banner/update/taxis
-    updateBannerTaxis (data) {
+    updateBannerTaxis(data) {
       return api.put('/banner/update/taxis', data, {
-        shouldAdminJWT: true
+        shouldAdminJWT: true,
       })
     },
     // put '/post/update/editorversion'
-    updatePostEditorVersion (data) {
+    updatePostEditorVersion(data) {
       return api.put('/post/update/editorversion', data, {
-        shouldAdminJWT: true
+        shouldAdminJWT: true,
       })
     },
     // get /readerlog/list
-    getReaderlogList (data) {
+    getReaderlogList(data) {
       return api.get('/readerlog/list', {
         params: data,
-        shouldAdminJWT: true
+        shouldAdminJWT: true,
       })
     },
     // get /readerlog/stats
-    getReaderlogStats () {
+    getReaderlogStats() {
       return api.get('/readerlog/stats', {
-        shouldAdminJWT: true
+        shouldAdminJWT: true,
       })
     },
     // delete /readerlog/delete
-    deleteReaderlog (data) {
+    deleteReaderlog(data) {
       return api.delete('/readerlog/delete', {
         params: data,
-        shouldAdminJWT: true
+        shouldAdminJWT: true,
       })
     },
     // get '/postlikelog/list'
-    getPostLikeLogList (data) {
+    getPostLikeLogList(data) {
       return api.get('/postlikelog/list', {
         params: data,
-        shouldAdminJWT: true
+        shouldAdminJWT: true,
       })
     },
     // get '/postlikelog/stats'
-    getPostLikeLogStats () {
+    getPostLikeLogStats() {
       return api.get('/postlikelog/stats', {
-        shouldAdminJWT: true
+        shouldAdminJWT: true,
       })
     },
     // delete /postlikelog/delete
-    deletePostLikeLog (data) {
+    deletePostLikeLog(data) {
       return api.delete('/postlikelog/delete', {
         params: data,
-        shouldAdminJWT: true
+        shouldAdminJWT: true,
       })
     },
     // get '/commentlikelog/list'
-    getCommentLikeLogList (data) {
+    getCommentLikeLogList(data) {
       return api.get('/commentlikelog/list', {
         params: data,
-        shouldAdminJWT: true
+        shouldAdminJWT: true,
       })
     },
     // get /commentlikelog/stats
-    getCommentLikeLogStats () {
+    getCommentLikeLogStats() {
       return api.get('/commentlikelog/stats', {
-        shouldAdminJWT: true
+        shouldAdminJWT: true,
       })
     },
     // delete /commentlikelog/delete
-    deleteCommentLikeLog (data) {
+    deleteCommentLikeLog(data) {
       return api.delete('/commentlikelog/delete', {
         params: data,
-        shouldAdminJWT: true
+        shouldAdminJWT: true,
       })
     },
     // /bangumi/create
-    createBangumi (data) {
+    createBangumi(data) {
       return api.post('/bangumi/create', data, {
-        shouldAdminJWT: true
+        shouldAdminJWT: true,
       })
     },
     // delete /bangumi/delete
-    deleteBangumi (data) {
+    deleteBangumi(data) {
       return api.delete('/bangumi/delete', {
         params: data,
-        shouldAdminJWT: true
+        shouldAdminJWT: true,
       })
     },
     // get /bangumi/list
-    getBangumiList (data, noLoading = false) {
+    getBangumiList(data, noLoading = false) {
       return api.get('/bangumi/list', {
         params: data,
         shouldAdminJWT: true,
-        noLoading
+        noLoading,
       })
     },
     // get /bangumi/detail
-    getBangumiDetail (data) {
+    getBangumiDetail(data) {
       return api.get('/bangumi/detail', {
         params: data,
-        shouldAdminJWT: true
+        shouldAdminJWT: true,
       })
     },
     // put /bangumi/update
-    updateBangumi (data) {
+    updateBangumi(data) {
       return api.put('/bangumi/update', data, {
-        shouldAdminJWT: true
+        shouldAdminJWT: true,
       })
     },
     // post /movie/create
-    createMovie (data) {
+    createMovie(data) {
       return api.post('/movie/create', data, {
-        shouldAdminJWT: true
+        shouldAdminJWT: true,
       })
     },
     // delete /movie/delete
-    deleteMovie (data) {
+    deleteMovie(data) {
       return api.delete('/movie/delete', {
         params: data,
-        shouldAdminJWT: true
+        shouldAdminJWT: true,
       })
     },
     // get /movie/list
-    getMovieList (data, noLoading = false) {
+    getMovieList(data, noLoading = false) {
       return api.get('/movie/list', {
         params: data,
         shouldAdminJWT: true,
-        noLoading
+        noLoading,
       })
     },
     // get /movie/detail
-    getMovieDetail (data) {
+    getMovieDetail(data) {
       return api.get('/movie/detail', {
         params: data,
-        shouldAdminJWT: true
+        shouldAdminJWT: true,
       })
     },
     // put /movie/update
-    updateMovie (data) {
+    updateMovie(data) {
       return api.put('/movie/update', data, {
-        shouldAdminJWT: true
+        shouldAdminJWT: true,
       })
     },
     // get /emailsendhistory/list
-    getEmailSendHistoryList (data) {
+    getEmailSendHistoryList(data) {
       return api.get('/emailsendhistory/list', {
         params: data,
-        shouldAdminJWT: true
+        shouldAdminJWT: true,
       })
     },
     // post /emailsendhistory/resend
-    resendEmailSendHistory (data) {
+    resendEmailSendHistory(data) {
       return api.post('/emailsendhistory/resend', data, {
-        shouldAdminJWT: true
+        shouldAdminJWT: true,
       })
     },
     // get '/referrer/list'
-    getReferrerList (data) {
+    getReferrerList(data) {
       return api.get('/referrer/list', {
         params: data,
-        shouldAdminJWT: true
+        shouldAdminJWT: true,
       })
     },
     // get /rsslog/list
-    getRsslogList (data) {
+    getRsslogList(data) {
       return api.get('/rsslog/list', {
         params: data,
-        shouldAdminJWT: true
+        shouldAdminJWT: true,
       })
     },
     // get /statistics
-    getStatistics (data) {
+    getStatistics(data) {
       return api.get('/statistics', {
         params: data,
-        shouldAdminJWT: true
+        shouldAdminJWT: true,
       })
     },
     // get /statistics/loadingtime
-    getLoadingTime (data) {
+    getLoadingTime(data) {
       return api.get('/statistics/loadingtime', {
         params: data,
-        shouldAdminJWT: true
+        shouldAdminJWT: true,
       })
     },
     // post /gameplatform/create
-    createGamePlatform (data) {
+    createGamePlatform(data) {
       return api.post('/gameplatform/create', data, {
-        shouldAdminJWT: true
+        shouldAdminJWT: true,
       })
     },
     // get /gameplatform/list
-    getGamePlatformList (data, options = {}) {
+    getGamePlatformList(data, options = {}) {
       return api.get('/gameplatform/list', {
         params: data,
         shouldAdminJWT: true,
-        ...options
+        ...options,
       })
     },
     // put /gameplatform/update
-    updateGamePlatform (data) {
+    updateGamePlatform(data) {
       return api.put('/gameplatform/update', data, {
-        shouldAdminJWT: true
+        shouldAdminJWT: true,
       })
     },
     // delete /gameplatform/delete
-    deleteGamePlatform (data) {
+    deleteGamePlatform(data) {
       return api.delete('/gameplatform/delete', {
         params: data,
-        shouldAdminJWT: true
+        shouldAdminJWT: true,
       })
     },
     // get /gameplatform/detail
-    getGamePlatformDetail (data) {
+    getGamePlatformDetail(data) {
       return api.get('/gameplatform/detail', {
         params: data,
-        shouldAdminJWT: true
+        shouldAdminJWT: true,
       })
     },
     // post /game/create
-    createGame (data) {
+    createGame(data) {
       return api.post('/game/create', data, {
-        shouldAdminJWT: true
+        shouldAdminJWT: true,
       })
     },
     // get /game/list
-    getGameList (data, noLoading = false) {
+    getGameList(data, noLoading = false) {
       return api.get('/game/list', {
         params: data,
         shouldAdminJWT: true,
-        noLoading
+        noLoading,
       })
     },
     // get /game/detail
-    getGameDetail (data) {
+    getGameDetail(data) {
       return api.get('/game/detail', {
         params: data,
-        shouldAdminJWT: true
+        shouldAdminJWT: true,
       })
     },
     // put /game/update
-    updateGame (data) {
+    updateGame(data) {
       return api.put('/game/update', data, {
-        shouldAdminJWT: true
+        shouldAdminJWT: true,
       })
     },
     // delete /game/delete
-    deleteGame (data) {
+    deleteGame(data) {
       return api.delete('/game/delete', {
         params: data,
-        shouldAdminJWT: true
+        shouldAdminJWT: true,
       })
     },
     // get /eventtype/list
-    getEventtypeList (data, noLoading = false) {
+    getEventtypeList(data, noLoading = false) {
       return api.get('/eventtype/list', {
         params: data,
         shouldAdminJWT: true,
-        noLoading
+        noLoading,
       })
     },
     // get /eventtype/detail
-    getEventtypeDetail (data) {
+    getEventtypeDetail(data) {
       return api.get('/eventtype/detail', {
         params: data,
-        shouldAdminJWT: true
+        shouldAdminJWT: true,
       })
     },
     // post /eventtype/create
-    createEventtype (data) {
+    createEventtype(data) {
       return api.post('/eventtype/create', data, {
-        shouldAdminJWT: true
+        shouldAdminJWT: true,
       })
     },
     // put /eventtype/update
-    updateEventtype (data) {
+    updateEventtype(data) {
       return api.put('/eventtype/update', data, {
-        shouldAdminJWT: true
+        shouldAdminJWT: true,
       })
     },
     // delete /eventtype/delete
-    deleteEventtype (data) {
+    deleteEventtype(data) {
       return api.delete('/eventtype/delete', {
         params: data,
-        shouldAdminJWT: true
+        shouldAdminJWT: true,
       })
     },
     // get /event/list
-    getEventList (data, noLoading = false) {
+    getEventList(data, noLoading = false) {
       return api.get('/event/list', {
         params: data,
         shouldAdminJWT: true,
-        noLoading
+        noLoading,
       })
     },
     // post /event/create
-    createEvent (data) {
+    createEvent(data) {
       return api.post('/event/create', data, {
-        shouldAdminJWT: true
+        shouldAdminJWT: true,
       })
     },
     // put /event/update
-    updateEvent (data) {
+    updateEvent(data) {
       return api.put('/event/update', data, {
-        shouldAdminJWT: true
+        shouldAdminJWT: true,
       })
     },
     // delete /event/delete
-    deleteEvent (data) {
+    deleteEvent(data) {
       return api.delete('/event/delete', {
         params: data,
-        shouldAdminJWT: true
+        shouldAdminJWT: true,
       })
     },
     // get /event/detail
-    getEventDetail (data) {
+    getEventDetail(data) {
       return api.get('/event/detail', {
         params: data,
-        shouldAdminJWT: true
+        shouldAdminJWT: true,
       })
     },
     // post /booktype/create
-    createBooktype (data) {
+    createBooktype(data) {
       return api.post('/booktype/create', data, {
-        shouldAdminJWT: true
+        shouldAdminJWT: true,
       })
     },
     // get /booktype/list
-    getBooktypeList (data, noLoading = false) {
+    getBooktypeList(data, noLoading = false) {
       return api.get('/booktype/list', {
         params: data,
         shouldAdminJWT: true,
-        noLoading
+        noLoading,
       })
     },
     // get /booktype/detail
-    getBooktypeDetail (data) {
+    getBooktypeDetail(data) {
       return api.get('/booktype/detail', {
         params: data,
-        shouldAdminJWT: true
+        shouldAdminJWT: true,
       })
     },
     // put /booktype/update
-    updateBooktype (data) {
+    updateBooktype(data) {
       return api.put('/booktype/update', data, {
-        shouldAdminJWT: true
+        shouldAdminJWT: true,
       })
     },
     // delete /booktype/delete
-    deleteBooktype (data) {
+    deleteBooktype(data) {
       return api.delete('/booktype/delete', {
         params: data,
-        shouldAdminJWT: true
+        shouldAdminJWT: true,
       })
     },
     // post /book/create
-    createBook (data) {
+    createBook(data) {
       return api.post('/book/create', data, {
-        shouldAdminJWT: true
+        shouldAdminJWT: true,
       })
     },
     // get /book/list
-    getBookList (data, noLoading = false) {
+    getBookList(data, noLoading = false) {
       return api.get('/book/list', {
         params: data,
         shouldAdminJWT: true,
-        noLoading
+        noLoading,
       })
     },
     // get /book/detail
-    getBookDetail (data) {
+    getBookDetail(data) {
       return api.get('/book/detail', {
         params: data,
-        shouldAdminJWT: true
+        shouldAdminJWT: true,
       })
     },
     // put /book/update
-    updateBook (data) {
+    updateBook(data) {
       return api.put('/book/update', data, {
-        shouldAdminJWT: true
+        shouldAdminJWT: true,
       })
     },
     // delete /book/delete
-    deleteBook (data) {
+    deleteBook(data) {
       return api.delete('/book/delete', {
         params: data,
-        shouldAdminJWT: true
+        shouldAdminJWT: true,
       })
     },
     // /backup/create
-    createBackup (data) {
+    createBackup(data) {
       return api.post('/backup/create', data, {
-        shouldAdminJWT: true
+        shouldAdminJWT: true,
       })
     },
     // /backup/list
-    getBackupList (data) {
+    getBackupList(data) {
       return api.get('/backup/list', {
         params: data,
-        shouldAdminJWT: true
+        shouldAdminJWT: true,
       })
     },
     // /backup/delete
-    deleteBackup (data) {
+    deleteBackup(data) {
       return api.delete('/backup/delete', {
         params: data,
-        shouldAdminJWT: true
+        shouldAdminJWT: true,
       })
     },
     // /backup/detail
-    getBackupDetail (data) {
+    getBackupDetail(data) {
       return api.get('/backup/detail', {
         params: data,
-        shouldAdminJWT: true
+        shouldAdminJWT: true,
       })
     },
     // /backup/update
-    updateBackup (data) {
+    updateBackup(data) {
       return api.put('/backup/update', data, {
-        shouldAdminJWT: true
+        shouldAdminJWT: true,
       })
     },
     // /backup/download/token
-    getDownloadBackupToken (data) {
+    getDownloadBackupToken(data) {
       return api.get('/backup/download/token', {
         params: data,
-        shouldAdminJWT: true
+        shouldAdminJWT: true,
       })
     },
     // post /backup/restore
-    restoreBackup (data) {
+    restoreBackup(data) {
       return api.post('/backup/restore', data, {
-        shouldAdminJWT: true
+        shouldAdminJWT: true,
       })
     },
     // post /backup/upload/create
-    createBackupUpload (data) {
+    createBackupUpload(data) {
       return api.post('/backup/upload/create', data, {
-        shouldAdminJWT: true
+        shouldAdminJWT: true,
       })
     },
     // get /backup/upload/chunk/list
-    getBackupUploadChunkList (data) {
+    getBackupUploadChunkList(data) {
       return api.get('/backup/upload/chunk/list', {
         params: data,
-        shouldAdminJWT: true
+        shouldAdminJWT: true,
       })
     },
     // post /backup/upload/chunk/:id/:chunkindex
-    uploadBackupUploadChunk (id, chunkindex, data) {
+    uploadBackupUploadChunk(id, chunkindex, data) {
       return api.post(`/backup/upload/chunk/${id}/${chunkindex}`, data, {
         shouldAdminJWT: true,
-        noLoading: true
+        noLoading: true,
       })
     },
     // put /backup/upload/merge
-    mergeUploadBackupFile (data) {
+    mergeUploadBackupFile(data) {
       return api.put('/backup/upload/merge', data, {
-        shouldAdminJWT: true
+        shouldAdminJWT: true,
       })
     },
     // get /user/list
-    getUserList (data, noLoading = false) {
+    getUserList(data, noLoading = false) {
       return api.get('/user/list', {
         params: data,
         shouldAdminJWT: true,
-        noLoading
+        noLoading,
       })
     },
     // get /user/update
-    getUserDetail (data) {
+    getUserDetail(data) {
       return api.get('/user/detail', {
         params: data,
-        shouldAdminJWT: true
+        shouldAdminJWT: true,
       })
     },
     // put /user/update
-    updateUser (data) {
+    updateUser(data) {
       return api.put('/user/update', data, {
-        shouldAdminJWT: true
+        shouldAdminJWT: true,
       })
     },
     // delete /user/delete
-    deleteUser (data) {
+    deleteUser(data) {
       return api.delete('/user/delete', {
         params: data,
-        shouldAdminJWT: true
+        shouldAdminJWT: true,
       })
     },
     // post /user/create
-    createUser (data) {
+    createUser(data) {
       return api.post('/user/create', data, {
-        shouldAdminJWT: true
+        shouldAdminJWT: true,
       })
     },
     // post /vote/create
-    createVote (data) {
+    createVote(data) {
       return api.post('/vote/create', data, {
-        shouldAdminJWT: true
+        shouldAdminJWT: true,
       })
     },
     // get /vote/list
-    getVoteList (data, noLoading = false) {
+    getVoteList(data, noLoading = false) {
       return api.get('/vote/list', {
         params: data,
         shouldAdminJWT: true,
-        noLoading
+        noLoading,
       })
     },
     // get /vote/detail
-    getVoteDetail (data) {
+    getVoteDetail(data) {
       return api.get('/vote/detail', {
         params: data,
-        shouldAdminJWT: true
+        shouldAdminJWT: true,
       })
     },
     // put /vote/update
-    updateVote (data) {
+    updateVote(data) {
       return api.put('/vote/update', data, {
-        shouldAdminJWT: true
+        shouldAdminJWT: true,
       })
     },
     // delete /vote/delete
-    deleteVote (data) {
+    deleteVote(data) {
       return api.delete('/vote/delete', {
         params: data,
-        shouldAdminJWT: true
+        shouldAdminJWT: true,
       })
     },
     // delete /votelog/delete
-    deleteVoteLog (data) {
+    deleteVoteLog(data) {
       return api.delete('/votelog/delete', {
         params: data,
-        shouldAdminJWT: true
+        shouldAdminJWT: true,
       })
     },
     // get /votelog/list
-    getVoteLogList (data) {
+    getVoteLogList(data) {
       return api.get('/votelog/list', {
         params: data,
-        shouldAdminJWT: true
+        shouldAdminJWT: true,
       })
     },
     // get /votelog/stats
-    getVoteLogStats () {
+    getVoteLogStats() {
       return api.get('/votelog/stats', {
-        shouldAdminJWT: true
+        shouldAdminJWT: true,
       })
     },
   }

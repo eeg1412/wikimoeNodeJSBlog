@@ -4,7 +4,6 @@ const log4js = require('log4js')
 const adminApiLog = log4js.getLogger('adminApi')
 
 module.exports = async function (req, res, next) {
-
   const { tagname } = req.body
   // 校验格式
   const params = {
@@ -24,19 +23,23 @@ module.exports = async function (req, res, next) {
     return
   }
   // save
-  tagUtils.save(params).then((data) => {
-    res.send({
-      data: data
+  tagUtils
+    .save(params)
+    .then((data) => {
+      res.send({
+        data: data,
+      })
+      // utils.reflushBlogCache()
+      adminApiLog.info(`tag:${tagname} create success`)
     })
-    // utils.reflushBlogCache()
-    adminApiLog.info(`tag:${tagname} create success`)
-  }).catch((err) => {
-    res.status(400).json({
-      errors: [{
-        message: '标签创建失败'
-      }]
+    .catch((err) => {
+      res.status(400).json({
+        errors: [
+          {
+            message: '标签创建失败',
+          },
+        ],
+      })
+      adminApiLog.error(`tag:${tagname} create fail, ${logErrorToText(err)}`)
     })
-    adminApiLog.error(`tag:${tagname} create fail, ${logErrorToText(err)}`)
-  })
-
 }

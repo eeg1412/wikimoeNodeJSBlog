@@ -24,7 +24,10 @@ const checkAdmin = async () => {
 
 const setBan = async () => {
   const isBan = process.argv[3] === '1' ? true : false
-  const res = await userUtils.updateOne({ username: username }, { disabled: isBan })
+  const res = await userUtils.updateOne(
+    { username: username },
+    { disabled: isBan },
+  )
   if (res.modifiedCount > 0) {
     const text = isBan ? '禁用' : '解禁'
     console.log(chalk.green(`${username}${text}成功`))

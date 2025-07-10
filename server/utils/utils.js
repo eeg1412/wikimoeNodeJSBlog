@@ -4,24 +4,27 @@ const jwt = require('jsonwebtoken')
 const validator = require('validator')
 const fs = require('fs')
 const fsExtra = require('fs-extra')
-const path = require('path');
-const { IP2Location } = require("ip2location-nodejs");
-const parser = require('ua-parser-js');
+const path = require('path')
+const { IP2Location } = require('ip2location-nodejs')
+const parser = require('ua-parser-js')
 const nodemailer = require('nodemailer')
 const emailSendHistoryUtils = require('../mongodb/utils/emailSendHistorys')
 const postUtils = require('../mongodb/utils/posts')
 const commentUtils = require('../mongodb/utils/comments')
 const referrerUtils = require('../mongodb/utils/referrers')
-const AsyncLock = require('async-lock');
-const lock = new AsyncLock({ timeout: 60000 });
+const AsyncLock = require('async-lock')
+const lock = new AsyncLock({ timeout: 60000 })
 const crawlerUserAgents = require('./crawler-user-agents.json')
-const { Worker } = require('worker_threads');
+const { Worker } = require('worker_threads')
 
 const botUserAgentList = []
 crawlerUserAgents.forEach((item) => {
   const obj = {
     pattern: new RegExp(item.pattern),
-    name: item.pattern.replace(/[^\w]/gi, '-').replace(/-+/g, '-').replace(/^-+|-+$/g, '')
+    name: item.pattern
+      .replace(/[^\w]/gi, '-')
+      .replace(/-+/g, '-')
+      .replace(/^-+|-+$/g, ''),
   }
   botUserAgentList.push(obj)
 })
@@ -47,14 +50,14 @@ exports.checkBcryptStr = function (str, hash) {
 exports.generateJwtSecret = function (byteLength = 256) {
   try {
     // 生成随机字节
-    const randomBytes = crypto.randomBytes(byteLength);
+    const randomBytes = crypto.randomBytes(byteLength)
     // 转换为 base64 字符串
-    const jwtSecret = randomBytes.toString('base64');
+    const jwtSecret = randomBytes.toString('base64')
 
-    return jwtSecret;
+    return jwtSecret
   } catch (error) {
-    console.error('生成 JWT SECRET 失败:', error);
-    throw error;
+    console.error('生成 JWT SECRET 失败:', error)
+    throw error
   }
 }
 exports.ensureJWTSecretAdmin = function (reflush = false) {
@@ -80,7 +83,6 @@ exports.ensureJWTSecretAdmin = function (reflush = false) {
     // 读取密钥
     const secret = fsExtra.readFileSync(keyPath, 'utf8')
     return secret
-
   } catch (error) {
     console.error('JWT密钥文件操作失败:', error)
     throw error
@@ -109,7 +111,6 @@ exports.ensureJWTSecretBlog = function (reflush = false) {
     // 读取密钥
     const secret = fsExtra.readFileSync(keyPath, 'utf8')
     return secret
-
   } catch (error) {
     console.error('JWT密钥文件操作失败:', error)
     throw error
@@ -190,7 +191,6 @@ exports.checkJWTBlog = function (token) {
   }
 }
 
-
 const md5hex = (str /*: string */) => {
   const md5 = crypto.createHash('md5')
   return md5.update(str, 'utf8').digest('hex').toLowerCase()
@@ -213,7 +213,6 @@ exports.parseBase64 = (base64) => {
   }
 }
 
-
 exports.checkForm = function (form, ruleArr) {
   const requiredCheck = function (required, value) {
     return required && checkVauleIsNone(value)
@@ -228,7 +227,7 @@ exports.checkForm = function (form, ruleArr) {
     if (requiredCheck(required, value)) {
       result.push({
         key,
-        message: `${label || key} 是必须项`
+        message: `${label || key} 是必须项`,
       })
     }
     if (type && !checkVauleIsNone(value)) {
@@ -236,7 +235,7 @@ exports.checkForm = function (form, ruleArr) {
         if (!reg.test(value)) {
           result.push({
             key,
-            message: errorMessage || `${label || key} 内容有误`
+            message: errorMessage || `${label || key} 内容有误`,
           })
         }
       } else {
@@ -244,11 +243,10 @@ exports.checkForm = function (form, ruleArr) {
         if (!check && check !== 0) {
           result.push({
             key,
-            message: errorMessage || `${label || key} 内容有误`
+            message: errorMessage || `${label || key} 内容有误`,
           })
         }
       }
-
     }
   })
   return result
@@ -256,32 +254,32 @@ exports.checkForm = function (form, ruleArr) {
 // 随机生成IPv4地址
 exports.generateRandomIPv4 = function () {
   // 生成4个0-255之间的随机整数
-  const octet1 = Math.floor(Math.random() * 256);
-  const octet2 = Math.floor(Math.random() * 256);
-  const octet3 = Math.floor(Math.random() * 256);
-  const octet4 = Math.floor(Math.random() * 256);
+  const octet1 = Math.floor(Math.random() * 256)
+  const octet2 = Math.floor(Math.random() * 256)
+  const octet3 = Math.floor(Math.random() * 256)
+  const octet4 = Math.floor(Math.random() * 256)
 
   // 将这些整数用点连接起来形成IP地址字符串
-  return `${octet1}.${octet2}.${octet3}.${octet4}`;
-};
+  return `${octet1}.${octet2}.${octet3}.${octet4}`
+}
 
 exports.getUserIp = function (req) {
-  let ip = (req.headers['x-forwarded-for'] || '').split(',')[0] ||
+  let ip =
+    (req.headers['x-forwarded-for'] || '').split(',')[0] ||
     req.connection.remoteAddress ||
     req.socket.remoteAddress ||
-    req.connection.socket.remoteAddress || '';
-  if (ip.slice(0, 7).toLowerCase() === "::ffff:") {
-    ip = ip.slice(7);
+    req.connection.socket.remoteAddress ||
+    ''
+  if (ip.slice(0, 7).toLowerCase() === '::ffff:') {
+    ip = ip.slice(7)
   }
   // ip = this.generateRandomIPv4()
-  return ip;
-};
+  return ip
+}
 
 // checkEnv
 exports.checkEnv = function () {
-  const envArr = [
-    'DB_HOST'
-  ]
+  const envArr = ['DB_HOST']
   const result = []
   envArr.forEach((env) => {
     if (!process.env[env]) {
@@ -290,7 +288,10 @@ exports.checkEnv = function () {
   })
   // 如果有缺失的env直接关闭程序
   if (result.length > 0) {
-    console.error('请在根目录下创建.env文件，并添加以下环境变量：', result.join(','))
+    console.error(
+      '请在根目录下创建.env文件，并添加以下环境变量：',
+      result.join(','),
+    )
     process.exit(1)
   }
 }
@@ -306,7 +307,7 @@ exports.base64ToFile = function (base64, destpath, fileName, options = {}) {
     // 判断文件夹是否存在，不存在则创建
     const destpathToPath = path.join(destpath)
     if (!fs.existsSync(destpathToPath)) {
-      fs.mkdirSync(destpathToPath, { recursive: true });
+      fs.mkdirSync(destpathToPath, { recursive: true })
     }
   }
 
@@ -314,7 +315,7 @@ exports.base64ToFile = function (base64, destpath, fileName, options = {}) {
   fs.writeFileSync(filepath, dataBuffer)
   return {
     filepath,
-    fileNameAll
+    fileNameAll,
   }
 }
 
@@ -328,7 +329,7 @@ exports.generateTreeData = function (data, parentKey = 'parent') {
   data.forEach((item) => {
     const parent = map[item[parentKey]]
     if (parent) {
-      (parent.children || (parent.children = [])).push(item)
+      ;(parent.children || (parent.children = [])).push(item)
     } else {
       treeData.push(item)
     }
@@ -336,15 +337,19 @@ exports.generateTreeData = function (data, parentKey = 'parent') {
   return treeData
 }
 
-
 exports.initIp2location = function () {
-  const binFilePath = path.join('./utils/ip2location/', process.env.IP2LOCATION_FILE_NAME || 'IP2LOCATION.BIN')
+  const binFilePath = path.join(
+    './utils/ip2location/',
+    process.env.IP2LOCATION_FILE_NAME || 'IP2LOCATION.BIN',
+  )
   if (!fs.existsSync(binFilePath)) {
-    console.warn(('ip2location文件不存在,如果需要IP解析请先从：https://lite.ip2location.com 下载BIN文件，然后放到utils/ip2location目录下'))
+    console.warn(
+      'ip2location文件不存在,如果需要IP解析请先从：https://lite.ip2location.com 下载BIN文件，然后放到utils/ip2location目录下',
+    )
     return
   }
-  ip2location = new IP2Location();
-  ip2location.open(binFilePath);
+  ip2location = new IP2Location()
+  ip2location.open(binFilePath)
   console.info('ip2location初始化成功')
 }
 let ip2location = null
@@ -366,7 +371,7 @@ exports.IP2LocationUtils = function (ip, id, modelUtils, updateMongodb = true) {
           resolve(null)
           return
         }
-        const ipInfoAll = ip2location.getAll(String(ip).trim());
+        const ipInfoAll = ip2location.getAll(String(ip).trim())
         // 遍历ipInfoAll，如果包含字符串This method is 就删除该属性
         Object.keys(ipInfoAll).forEach((key) => {
           if (ipInfoAll[key].includes('This method is not')) {
@@ -376,9 +381,12 @@ exports.IP2LocationUtils = function (ip, id, modelUtils, updateMongodb = true) {
 
         console.timeEnd('ip2location')
         if (updateMongodb) {
-          modelUtils.updateOne({ _id: id }, {
-            ipInfo: ipInfoAll
-          })
+          modelUtils.updateOne(
+            { _id: id },
+            {
+              ipInfo: ipInfoAll,
+            },
+          )
         }
         resolve(ipInfoAll)
       } catch (err) {
@@ -391,7 +399,6 @@ exports.IP2LocationUtils = function (ip, id, modelUtils, updateMongodb = true) {
   return new Promise((resolve) => {
     resolve(null)
   })
-
 }
 exports.deviceUAInfoUtils = function (req) {
   const ua = req.get('user-agent')
@@ -403,9 +410,12 @@ exports.deviceUAInfoUtils = function (req) {
 }
 exports.deviceUtils = function (req, id, modelUtils) {
   const ua = this.deviceUAInfoUtils(req)
-  const result = modelUtils.updateOne({ _id: id }, {
-    deviceInfo: ua
-  })
+  const result = modelUtils.updateOne(
+    { _id: id },
+    {
+      deviceInfo: ua,
+    },
+  )
   return result
 }
 // isNumber
@@ -414,8 +424,8 @@ exports.isNumber = function (value) {
 }
 
 exports.isObjectId = function (value) {
-  const str = String(value);
-  return /^[0-9a-fA-F]{24}$/.test(str);
+  const str = String(value)
+  return /^[0-9a-fA-F]{24}$/.test(str)
 }
 // isUUID
 exports.isUUID = function (value, version = 4) {
@@ -448,7 +458,13 @@ exports.sendEmail = function (to, content, subject) {
     console.error('请在后台设置邮箱')
     return
   }
-  const { emailSmtpHost, emailSmtpPort, emailSmtpSecure, emailSender, emailPassword } = emailSettings
+  const {
+    emailSmtpHost,
+    emailSmtpPort,
+    emailSmtpSecure,
+    emailSender,
+    emailPassword,
+  } = emailSettings
   // 以上参数缺一不可
   if (!emailSmtpHost || !emailSmtpPort || !emailSender || !emailPassword) {
     console.error('请在后台设置邮箱')
@@ -465,14 +481,14 @@ exports.sendEmail = function (to, content, subject) {
     secure: emailSmtpSecure || false, // true for 465, false for other ports
     auth: {
       user: emailSender,
-      pass: emailPassword
-    }
+      pass: emailPassword,
+    },
   })
   const mailOptions = {
     from: emailSender,
     to,
     subject,
-    html: content
+    html: content,
   }
   const promise = new Promise((resolve, reject) => {
     transporter.sendMail(mailOptions, (error, info) => {
@@ -485,42 +501,49 @@ exports.sendEmail = function (to, content, subject) {
       resolve(info)
     })
   })
-  promise.then((info) => {
-    const emailSendHistory = {
-      to,
-      subject,
-      content,
-      status: 1
-    }
-    emailSendHistoryUtils.save(emailSendHistory)
-  }).catch((err) => {
-    let errInfo = ''
-    const errorType = typeof err
-    if (errorType === 'string') {
-      errInfo = err
-    }
-    if (errorType === 'object') {
-      errInfo = JSON.stringify(err)
-      if (err instanceof Error && errInfo === '{}') {
-        errInfo = err.message
+  promise
+    .then((info) => {
+      const emailSendHistory = {
+        to,
+        subject,
+        content,
+        status: 1,
       }
-    }
-    const emailSendHistory = {
-      to,
-      content,
-      subject,
-      status: 0,
-      errInfo: errInfo
-    }
-    emailSendHistoryUtils.save(emailSendHistory)
-  })
+      emailSendHistoryUtils.save(emailSendHistory)
+    })
+    .catch((err) => {
+      let errInfo = ''
+      const errorType = typeof err
+      if (errorType === 'string') {
+        errInfo = err
+      }
+      if (errorType === 'object') {
+        errInfo = JSON.stringify(err)
+        if (err instanceof Error && errInfo === '{}') {
+          errInfo = err.message
+        }
+      }
+      const emailSendHistory = {
+        to,
+        content,
+        subject,
+        status: 0,
+        errInfo: errInfo,
+      }
+      emailSendHistoryUtils.save(emailSendHistory)
+    })
   return promise
 }
 // 发送评论添加通知，参数是文章信息post，评论信息comment
 exports.sendCommentAddNotice = function (post, comment) {
   const siteSettings = global.$globalConfig.siteSettings
   const emailSettings = global.$globalConfig.emailSettings
-  const { emailSendToMeTemplate, emailEnable, emailSendOptions, emailReceiver } = emailSettings
+  const {
+    emailSendToMeTemplate,
+    emailEnable,
+    emailSendOptions,
+    emailReceiver,
+  } = emailSettings
 
   // 如果没有设置emailSendToMeTemplate，就不发送邮件
   if (!emailSendToMeTemplate) {
@@ -554,17 +577,27 @@ exports.sendCommentAddNotice = function (post, comment) {
     // 开始替换
     contentHtml = contentHtml.replace(/\${comment}/g, content)
     contentHtml = contentHtml.replace(/\${nickname}/g, nickname)
-    contentHtml = contentHtml.replace(/\${title}/g, `<a href="${this.getPostPagePath(post)}" target="_blank">${linkTitle}</a>`)
-    contentHtml = contentHtml.replace(/\${siteTitle}/g, `<a href="${siteUrl}" target="_blank">${siteTitle}</a>`)
+    contentHtml = contentHtml.replace(
+      /\${title}/g,
+      `<a href="${this.getPostPagePath(post)}" target="_blank">${linkTitle}</a>`,
+    )
+    contentHtml = contentHtml.replace(
+      /\${siteTitle}/g,
+      `<a href="${siteUrl}" target="_blank">${siteTitle}</a>`,
+    )
     this.sendEmail(to, contentHtml, subject)
   }
-
 }
 // 评论撤回通知，参数是文章信息post，评论信息comment
 exports.sendRetractCommentNotice = function (post, comment) {
   const siteSettings = global.$globalConfig.siteSettings
   const emailSettings = global.$globalConfig.emailSettings
-  const { emailRetractCommentTemplate, emailEnable, emailSendOptions, emailReceiver } = emailSettings
+  const {
+    emailRetractCommentTemplate,
+    emailEnable,
+    emailSendOptions,
+    emailReceiver,
+  } = emailSettings
 
   // 如果没有设置emailRetractCommentTemplate，就不发送邮件
   if (!emailRetractCommentTemplate) {
@@ -592,8 +625,14 @@ exports.sendRetractCommentNotice = function (post, comment) {
     // 替换模板中的变量
     contentHtml = contentHtml.replace(/\${comment}/g, `${content}`)
     contentHtml = contentHtml.replace(/\${nickname}/g, nickname)
-    contentHtml = contentHtml.replace(/\${title}/g, `<a href="${this.getPostPagePath(post)}" target="_blank">${linkTitle}</a>`)
-    contentHtml = contentHtml.replace(/\${siteTitle}/g, `<a href="${siteUrl}" target="_blank">${siteTitle}</a>`)
+    contentHtml = contentHtml.replace(
+      /\${title}/g,
+      `<a href="${this.getPostPagePath(post)}" target="_blank">${linkTitle}</a>`,
+    )
+    contentHtml = contentHtml.replace(
+      /\${siteTitle}/g,
+      `<a href="${siteUrl}" target="_blank">${siteTitle}</a>`,
+    )
     this.sendEmail(to, contentHtml, subject)
   }
 }
@@ -602,7 +641,9 @@ exports.sendRetractCommentNotice = function (post, comment) {
 exports.sendReplyCommentNotice = async function (post, comment) {
   if (typeof comment === 'string') {
     // 如果comment是字符串，说明是评论id，需要查询评论信息
-    comment = await commentUtils.findOne({ _id: comment }, '', { userFilter: 'nickname _id email' })
+    comment = await commentUtils.findOne({ _id: comment }, '', {
+      userFilter: 'nickname _id email',
+    })
   }
   if (!comment) {
     console.error('comment为必须参数')
@@ -618,8 +659,9 @@ exports.sendReplyCommentNotice = async function (post, comment) {
     }
   }
 
-
-  let parentComment = await commentUtils.findOne({ _id: comment.parent }, '', { userFilter: 'nickname _id email' })
+  let parentComment = await commentUtils.findOne({ _id: comment.parent }, '', {
+    userFilter: 'nickname _id email',
+  })
   if (!parentComment) {
     console.error('parentComment不存在')
     return
@@ -651,7 +693,8 @@ exports.sendReplyCommentNotice = async function (post, comment) {
   }
   const siteSettings = global.$globalConfig.siteSettings
   const emailSettings = global.$globalConfig.emailSettings
-  const { emailSendToCommenterTemplate, emailEnable, emailSendOptions } = emailSettings
+  const { emailSendToCommenterTemplate, emailEnable, emailSendOptions } =
+    emailSettings
 
   // 如果没有设置emailSendToCommenterTemplate，就不发送邮件
   if (!emailSendToCommenterTemplate) {
@@ -693,8 +736,14 @@ exports.sendReplyCommentNotice = async function (post, comment) {
     // 开始替换
     contentHtml = contentHtml.replace(/\${comment}/g, content)
     contentHtml = contentHtml.replace(/\${nickname}/g, nickname)
-    contentHtml = contentHtml.replace(/\${title}/g, `<a href="${this.getPostPagePath(post)}/#comment-${comment._id}" target="_blank">${linkTitle}</a>`)
-    contentHtml = contentHtml.replace(/\${siteTitle}/g, `<a href="${siteUrl}" target="_blank">${siteTitle}</a>`)
+    contentHtml = contentHtml.replace(
+      /\${title}/g,
+      `<a href="${this.getPostPagePath(post)}/#comment-${comment._id}" target="_blank">${linkTitle}</a>`,
+    )
+    contentHtml = contentHtml.replace(
+      /\${siteTitle}/g,
+      `<a href="${siteUrl}" target="_blank">${siteTitle}</a>`,
+    )
     contentHtml = contentHtml.replace(/\${parentComment}/g, parentContent)
     contentHtml = contentHtml.replace(/\${parentNickname}/g, parentNickname)
     this.sendEmail(to, contentHtml, subject)
@@ -740,7 +789,8 @@ exports.referrerRecord = function (referrer, referrerType) {
   // }
   if (referrer) {
     // 获取otherSettings siteReferrerWhiteList
-    const referrerDomainWhitelist = global.$globalConfig?.otherSettings?.siteReferrerWhiteList || []
+    const referrerDomainWhitelist =
+      global.$globalConfig?.otherSettings?.siteReferrerWhiteList || []
     const isReady = global.$isReady
     if (!isReady) {
       console.warn('未完全启动，不记录referrer')
@@ -768,25 +818,27 @@ exports.referrerRecord = function (referrer, referrerType) {
         return
       }
       // 设置计时器
-      referrerRecordTimerMap[md5Id] = setTimeout(() => {
-        // 如果计时器到期，就保存referrer
-        const params = {
-          referrer,
-          referrerType
-        }
-        console.log('referrer记录', params)
-        referrerUtils.save(params)
-        // 删除计时器
-        delete referrerRecordTimerMap[md5Id]
-      }, 1000 * 60 * 60)
+      referrerRecordTimerMap[md5Id] = setTimeout(
+        () => {
+          // 如果计时器到期，就保存referrer
+          const params = {
+            referrer,
+            referrerType,
+          }
+          console.log('referrer记录', params)
+          referrerUtils.save(params)
+          // 删除计时器
+          delete referrerRecordTimerMap[md5Id]
+        },
+        1000 * 60 * 60,
+      )
     }
   }
-
 }
 
 exports.escapeSpecialChars = function (keyword) {
   // 匹配正则表达式中的特殊字符
-  return keyword.replace(/[-[\]{}()*+!<=:?.\/\\^$|#\s,]/g, '\\$&');
+  return keyword.replace(/[-[\]{}()*+!<=:?.\/\\^$|#\s,]/g, '\\$&')
 }
 // 转义html
 exports.escapeHtml = function (unsafe) {
@@ -794,9 +846,9 @@ exports.escapeHtml = function (unsafe) {
     return ''
   }
   return unsafe
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
     .replace(/\$/g, '&#36;')
     .replace(/{/g, '&#123;')
     .replace(/}/g, '&#125;')
@@ -819,28 +871,36 @@ exports.isSearchEngine = function (req) {
   const res = {
     isBot: false,
     botName: '',
-  };
+  }
   if (!ua) {
-    res.isBot = true;
-    res.botName = 'unknown-no-ua';
+    res.isBot = true
+    res.botName = 'unknown-no-ua'
   } else if (ua.length > 1000) {
-    res.isBot = true;
-    res.botName = 'unknown-ua-too-long';
+    res.isBot = true
+    res.botName = 'unknown-ua-too-long'
   } else {
     botUserAgentList.some((item) => {
       if (item.pattern.test(ua)) {
-        res.isBot = true;
-        res.botName = item.name;
-        return true;
+        res.isBot = true
+        res.botName = item.name
+        return true
       }
-      return false;
-    });
+      return false
+    })
   }
 
-  return res;
+  return res
 }
 
-exports.imageCompress = async (toExtname, fileData, animated = false, newWidth, newHeight, imgSettingCompressQuality, filePath) => {
+exports.imageCompress = async (
+  toExtname,
+  fileData,
+  animated = false,
+  newWidth,
+  newHeight,
+  imgSettingCompressQuality,
+  filePath,
+) => {
   const shrpWorker = new Worker('./utils/workers/sharpWorker.js')
   const promise = new Promise((resolve, reject) => {
     shrpWorker.on('message', (data) => {
@@ -855,7 +915,15 @@ exports.imageCompress = async (toExtname, fileData, animated = false, newWidth, 
     })
     shrpWorker.postMessage({
       action: 'imageCompress',
-      data: [toExtname, fileData, animated, newWidth, newHeight, imgSettingCompressQuality, filePath]
+      data: [
+        toExtname,
+        fileData,
+        animated,
+        newWidth,
+        newHeight,
+        imgSettingCompressQuality,
+        filePath,
+      ],
     })
   })
   return promise
@@ -876,7 +944,7 @@ exports.imageMetadata = async (fileData) => {
     })
     shrpWorker.postMessage({
       action: 'imageMetadata',
-      data: [fileData]
+      data: [fileData],
     })
   })
   return promise
@@ -897,46 +965,48 @@ exports.logErrorToText = (error) => {
 global.logErrorToText = this.logErrorToText
 
 exports.handleRangeRequest = (req, res, next, folder) => {
-  const range = req.headers.range;
-  const unsafePath = path.join(folder, req.path);
-  const safePath = path.resolve(path.normalize(unsafePath));
+  const range = req.headers.range
+  const unsafePath = path.join(folder, req.path)
+  const safePath = path.resolve(path.normalize(unsafePath))
   if (!safePath.startsWith(path.resolve(folder))) {
-    return res.status(400).send('Invalid path');
+    return res.status(400).send('Invalid path')
   }
 
   if (!range) {
-    next();
-    return;
+    next()
+    return
   }
 
   if (!fs.existsSync(safePath)) {
-    next();
+    next()
     return
   }
-  const stat = fs.statSync(safePath);
-  const parts = range.replace(/bytes=/, "").split("-");
-  const start = parseInt(parts[0], 10);
-  const end = parts[1] ? parseInt(parts[1], 10) : stat.size - 1;
+  const stat = fs.statSync(safePath)
+  const parts = range.replace(/bytes=/, '').split('-')
+  const start = parseInt(parts[0], 10)
+  const end = parts[1] ? parseInt(parts[1], 10) : stat.size - 1
 
   if (start >= stat.size) {
-    res.status(416).send('Requested range not satisfiable\n' + start + ' >= ' + stat.size);
-    return;
+    res
+      .status(416)
+      .send('Requested range not satisfiable\n' + start + ' >= ' + stat.size)
+    return
   }
 
-  const chunksize = (end - start) + 1;
-  const file = fs.createReadStream(safePath, { start, end });
+  const chunksize = end - start + 1
+  const file = fs.createReadStream(safePath, { start, end })
   const head = {
     'Content-Range': `bytes ${start}-${end}/${stat.size}`,
     'Accept-Ranges': 'bytes',
     'Content-Length': chunksize,
     'Content-Type': 'video/mp4',
-  };
+  }
 
-  res.writeHead(206, head);
-  file.pipe(res);
+  res.writeHead(206, head)
+  file.pipe(res)
   res.on('close', () => {
-    file.destroy();
-  });
+    file.destroy()
+  })
 }
 
 // async-lock
@@ -952,7 +1022,9 @@ exports.getReaderlogsSize = async () => {
   const stats = await db.stats()
   const size = stats.size
   // 从环境变量获取最大大小,默认1GB
-  const maxReaderlogsSize = process.env.MAX_HISTORYLOGS_SIZE ? Number(process.env.MAX_HISTORYLOGS_SIZE) : 1073741824
+  const maxReaderlogsSize = process.env.MAX_HISTORYLOGS_SIZE
+    ? Number(process.env.MAX_HISTORYLOGS_SIZE)
+    : 1073741824
   // 是否超过最大大小
   const isExceedMaxSize = size > maxReaderlogsSize
   return {
@@ -969,7 +1041,9 @@ exports.getPostLikeLogsSize = async () => {
   const stats = await db.stats()
   const size = stats.size
   // 从环境变量获取最大大小,默认1GB
-  const maxPostLikeLogsSize = process.env.MAX_HISTORYLOGS_SIZE ? Number(process.env.MAX_HISTORYLOGS_SIZE) : 1073741824
+  const maxPostLikeLogsSize = process.env.MAX_HISTORYLOGS_SIZE
+    ? Number(process.env.MAX_HISTORYLOGS_SIZE)
+    : 1073741824
   // 是否超过最大大小
   const isExceedMaxSize = size > maxPostLikeLogsSize
   return {
@@ -986,7 +1060,9 @@ exports.getCommentLikeLogsSize = async () => {
   const stats = await db.stats()
   const size = stats.size
   // 从环境变量获取最大大小,默认1GB
-  const maxCommentLikeLogsSize = process.env.MAX_HISTORYLOGS_SIZE ? Number(process.env.MAX_HISTORYLOGS_SIZE) : 1073741824
+  const maxCommentLikeLogsSize = process.env.MAX_HISTORYLOGS_SIZE
+    ? Number(process.env.MAX_HISTORYLOGS_SIZE)
+    : 1073741824
   // 是否超过最大大小
   const isExceedMaxSize = size > maxCommentLikeLogsSize
   return {
@@ -1003,7 +1079,9 @@ exports.getVoteLogsSize = async () => {
   const stats = await db.stats()
   const size = stats.size
   // 从环境变量获取最大大小,默认1GB
-  const maxVoteLogsSize = process.env.MAX_HISTORYLOGS_SIZE ? Number(process.env.MAX_HISTORYLOGS_SIZE) : 1073741824
+  const maxVoteLogsSize = process.env.MAX_HISTORYLOGS_SIZE
+    ? Number(process.env.MAX_HISTORYLOGS_SIZE)
+    : 1073741824
   // 是否超过最大大小
   const isExceedMaxSize = size > maxVoteLogsSize
   return {
@@ -1015,7 +1093,7 @@ exports.getVoteLogsSize = async () => {
 
 // 文字中的空格和全角空格替换为下划线
 exports.replaceSpacesWithUnderscores = (str) => {
-  return str.replace(/[\s\u3000]/g, '-');
+  return str.replace(/[\s\u3000]/g, '-')
 }
 
 exports.getYearSeason = () => {
@@ -1023,11 +1101,11 @@ exports.getYearSeason = () => {
   const year = now.getFullYear()
   const month = now.getMonth() + 1
   // 根据当前月份计算季度
-  const seasonMap = [1, 1, 1, 2, 2, 2, 3, 3, 3, 4, 4, 4];
-  const season = seasonMap[month - 1]; // 月份从1开始，数组从0开始
+  const seasonMap = [1, 1, 1, 2, 2, 2, 3, 3, 3, 4, 4, 4]
+  const season = seasonMap[month - 1] // 月份从1开始，数组从0开始
   return {
     year,
-    season
+    season,
   }
 }
 
@@ -1035,36 +1113,36 @@ exports.getYearSeason = () => {
 exports.validateDate = (year, month, day) => {
   // 检查是否为数字
   if (isNaN(Number(year)) || isNaN(Number(month)) || isNaN(Number(day))) {
-    return false;
+    return false
   }
 
   // 转换为数字类型
-  const y = Number(year);
-  const m = Number(month);
-  const d = Number(day);
+  const y = Number(year)
+  const m = Number(month)
+  const d = Number(day)
 
-  const now = new Date();
+  const now = new Date()
   // 当前年份的100年后是年份的最大值
-  const maxYear = now.getFullYear() + 100;
+  const maxYear = now.getFullYear() + 100
 
   // 检查年份是否合理
   if (y < 1900 || y > maxYear) {
-    return false;
+    return false
   }
 
   // 检查月份 (1-12)
   if (m < 1 || m > 12) {
-    return false;
+    return false
   }
 
   // 检查日期
   // 获取指定年月的最大天数
-  const maxDay = new Date(y, m, 0).getDate();
+  const maxDay = new Date(y, m, 0).getDate()
   if (d < 1 || d > maxDay) {
-    return false;
+    return false
   }
 
-  return true;
+  return true
 }
 
 // let reflushBlogCacheTimer = null

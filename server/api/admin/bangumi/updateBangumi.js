@@ -3,26 +3,43 @@ const utils = require('../../../utils/utils')
 const log4js = require('log4js')
 const adminApiLog = log4js.getLogger('adminApi')
 const cacheDataUtils = require('../../../config/cacheData')
-const fs = require('fs');
+const fs = require('fs')
 const nodePath = require('path')
 
 module.exports = async function (req, res, next) {
   // banguminame	String	是	否	无	番剧名称
-  const { title, cover, summary, rating, year, season, label, status, id, urlList, giveUp, __v } = req.body
+  const {
+    title,
+    cover,
+    summary,
+    rating,
+    year,
+    season,
+    label,
+    status,
+    id,
+    urlList,
+    giveUp,
+    __v,
+  } = req.body
   if (!id) {
     res.status(400).json({
-      errors: [{
-        message: 'id不能为空'
-      }]
+      errors: [
+        {
+          message: 'id不能为空',
+        },
+      ],
     })
     return
   }
   // __v 可以为零，但不能为空/null/undefined
   if (__v === undefined || __v === null) {
     res.status(400).json({
-      errors: [{
-        message: '__v不能为空'
-      }]
+      errors: [
+        {
+          message: '__v不能为空',
+        },
+      ],
     })
     return
   }
@@ -36,15 +53,17 @@ module.exports = async function (req, res, next) {
     label,
     urlList,
     giveUp,
-    status
+    status,
   }
 
   const oldData = await bangumiUtils.findOne({ _id: id, __v })
   if (!oldData) {
     res.status(400).json({
-      errors: [{
-        message: '该数据不存在或已被更新'
-      }]
+      errors: [
+        {
+          message: '该数据不存在或已被更新',
+        },
+      ],
     })
     return
   }
@@ -57,7 +76,9 @@ module.exports = async function (req, res, next) {
     }
     const fileName = id
     try {
-      const imgRes = utils.base64ToFile(cover, path, fileName, { createDir: true })
+      const imgRes = utils.base64ToFile(cover, path, fileName, {
+        createDir: true,
+      })
       let baseCover = '/upload/bangumi/'
       // 拼接文件夹
       baseCover = baseCover + coverFolder + '/'
@@ -65,9 +86,11 @@ module.exports = async function (req, res, next) {
       params['coverFileName'] = imgRes.fileNameAll
     } catch (error) {
       res.status(400).json({
-        errors: [{
-          message: '照片上传失败'
-        }]
+        errors: [
+          {
+            message: '照片上传失败',
+          },
+        ],
       })
       throw new Error(error)
     }
@@ -82,9 +105,11 @@ module.exports = async function (req, res, next) {
     } catch (error) {
       adminApiLog.error(`bangumi update cover fail, ${JSON.stringify(error)}`)
       res.status(400).json({
-        errors: [{
-          message: '旧图片删除失败'
-        }]
+        errors: [
+          {
+            message: '旧图片删除失败',
+          },
+        ],
       })
       return
     }
@@ -93,28 +118,35 @@ module.exports = async function (req, res, next) {
   }
 
   // updateOne
-  bangumiUtils.updateOne({ _id: id, __v }, params).then((data) => {
-    if (data.modifiedCount === 0) {
-      res.status(400).json({
-        errors: [{
-          message: '更新失败'
-        }]
+  bangumiUtils
+    .updateOne({ _id: id, __v }, params)
+    .then((data) => {
+      if (data.modifiedCount === 0) {
+        res.status(400).json({
+          errors: [
+            {
+              message: '更新失败',
+            },
+          ],
+        })
+        return
+      }
+      res.send({
+        data: data,
       })
-      return
-    }
-    res.send({
-      data: data
+      adminApiLog.info(`bangumi update success`)
+      cacheDataUtils.getBangumiYearList()
+      cacheDataUtils.getBangumiSeasonList()
+      // utils.reflushBlogCache()
     })
-    adminApiLog.info(`bangumi update success`)
-    cacheDataUtils.getBangumiYearList()
-    cacheDataUtils.getBangumiSeasonList()
-    // utils.reflushBlogCache()
-  }).catch((err) => {
-    res.status(400).json({
-      errors: [{
-        message: '番剧更新失败'
-      }]
+    .catch((err) => {
+      res.status(400).json({
+        errors: [
+          {
+            message: '番剧更新失败',
+          },
+        ],
+      })
+      adminApiLog.error(`bangumi update fail, ${logErrorToText(err)}`)
     })
-    adminApiLog.error(`bangumi update fail, ${logErrorToText(err)}`)
-  })
 }

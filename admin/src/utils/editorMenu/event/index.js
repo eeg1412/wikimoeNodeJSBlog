@@ -2,7 +2,6 @@
  * @description eventspan module entry
  */
 
-
 import withEventspan from './plugin'
 import renderElemConf from './render-elem'
 import elemToHtmlConf from './elem-to-html'

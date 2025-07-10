@@ -3,7 +3,7 @@
  */
 
 // 生成 html 的函数
-function imageGroupToHtml (elem, childrenHtml) {
+function imageGroupToHtml(elem, childrenHtml) {
   const { childrenList } = elem
   let className = 'w-e-image-group'
 

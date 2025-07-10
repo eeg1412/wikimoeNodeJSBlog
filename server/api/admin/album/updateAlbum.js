@@ -1,4 +1,3 @@
-
 const albumUtils = require('../../../mongodb/utils/albums')
 const utils = require('../../../utils/utils')
 const log4js = require('log4js')
@@ -9,18 +8,22 @@ module.exports = async function (req, res, next) {
   const { name, id, __v } = req.body
   if (!id) {
     res.status(400).json({
-      errors: [{
-        message: 'id不能为空'
-      }]
+      errors: [
+        {
+          message: 'id不能为空',
+        },
+      ],
     })
     return
   }
   // __v 可以为零，但不能为空/null/undefined
   if (__v === undefined || __v === null) {
     res.status(400).json({
-      errors: [{
-        message: '__v不能为空'
-      }]
+      errors: [
+        {
+          message: '__v不能为空',
+        },
+      ],
     })
     return
   }
@@ -45,32 +48,41 @@ module.exports = async function (req, res, next) {
   const album = await albumUtils.findOne({ name })
   if (album) {
     res.status(400).json({
-      errors: [{
-        message: '相册名称已存在'
-      }]
+      errors: [
+        {
+          message: '相册名称已存在',
+        },
+      ],
     })
     return
   }
   // updateOne
-  albumUtils.updateOne({ _id: id, __v }, params).then((data) => {
-    if (data.modifiedCount === 0) {
-      res.status(400).json({
-        errors: [{
-          message: '更新失败'
-        }]
+  albumUtils
+    .updateOne({ _id: id, __v }, params)
+    .then((data) => {
+      if (data.modifiedCount === 0) {
+        res.status(400).json({
+          errors: [
+            {
+              message: '更新失败',
+            },
+          ],
+        })
+        return
+      }
+      res.send({
+        data: data,
       })
-      return
-    }
-    res.send({
-      data: data
+      adminApiLog.info(`album:${name} update success`)
     })
-    adminApiLog.info(`album:${name} update success`)
-  }).catch((err) => {
-    res.status(400).json({
-      errors: [{
-        message: '相册更新失败'
-      }]
+    .catch((err) => {
+      res.status(400).json({
+        errors: [
+          {
+            message: '相册更新失败',
+          },
+        ],
+      })
+      adminApiLog.error(`album:${name} update fail, ${logErrorToText(err)}`)
     })
-    adminApiLog.error(`album:${name} update fail, ${logErrorToText(err)}`)
-  })
 }

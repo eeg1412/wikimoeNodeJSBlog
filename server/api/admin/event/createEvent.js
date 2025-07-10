@@ -4,11 +4,26 @@ const log4js = require('log4js')
 const adminApiLog = log4js.getLogger('adminApi')
 
 module.exports = async function (req, res, next) {
-
-  const { eventtype, title, color, urlList, content, startTime, endTime, status } = req.body
+  const {
+    eventtype,
+    title,
+    color,
+    urlList,
+    content,
+    startTime,
+    endTime,
+    status,
+  } = req.body
   // 校验格式
   const params = {
-    eventtype, title, color, urlList, content, startTime, endTime, status
+    eventtype,
+    title,
+    color,
+    urlList,
+    content,
+    startTime,
+    endTime,
+    status,
   }
   const rule = [
     // eventtype
@@ -16,13 +31,13 @@ module.exports = async function (req, res, next) {
       key: 'eventtype',
       label: '活动类型',
       type: 'isMongoId',
-      required: true
+      required: true,
     },
     {
       key: 'title',
       label: '活动名称',
       type: null,
-      required: true
+      required: true,
     },
     // startTime
     {
@@ -55,25 +70,31 @@ module.exports = async function (req, res, next) {
   // 校验结束时间是否在开始时间之后
   if (new Date(endTime) < new Date(startTime)) {
     res.status(400).json({
-      errors: [{
-        message: '结束时间不能在开始时间之前'
-      }]
+      errors: [
+        {
+          message: '结束时间不能在开始时间之前',
+        },
+      ],
     })
     return
   }
   // save
-  eventUtils.save(params).then((data) => {
-    res.send({
-      data: data
+  eventUtils
+    .save(params)
+    .then((data) => {
+      res.send({
+        data: data,
+      })
+      adminApiLog.info(`event create success`)
     })
-    adminApiLog.info(`event create success`)
-  }).catch((err) => {
-    res.status(400).json({
-      errors: [{
-        message: '活动创建失败'
-      }]
+    .catch((err) => {
+      res.status(400).json({
+        errors: [
+          {
+            message: '活动创建失败',
+          },
+        ],
+      })
+      adminApiLog.error(`event create fail, ${logErrorToText(err)}`)
     })
-    adminApiLog.error(`event create fail, ${logErrorToText(err)}`)
-  })
-
 }

@@ -5,7 +5,7 @@
 import { h } from 'snabbdom'
 import { DomEditor } from '@wangeditor/core'
 
-function renderPanorama360 (elem, children, editor, info) {
+function renderPanorama360(elem, children, editor, info) {
   // 当前节点是否选中
   const selected = DomEditor.isNodeSelected(editor, elem)
   let className = 'w-e-panorama360'
@@ -18,9 +18,8 @@ function renderPanorama360 (elem, children, editor, info) {
     {
       className: className,
     },
-    [h(
-      'img',
-      {
+    [
+      h('img', {
         className: 'w-e-panorama360-img',
         src: elem.src,
         width: elem.width || '100%',
@@ -30,8 +29,8 @@ function renderPanorama360 (elem, children, editor, info) {
         'data-href-height': elem.dataHrefHeight || '',
         alt: elem.alt || '360°全景图片',
         'data-type': 'panorama360',
-      }
-    )]
+      }),
+    ],
   )
 
   return vnode

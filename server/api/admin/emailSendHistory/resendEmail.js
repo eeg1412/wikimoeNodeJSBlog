@@ -8,9 +8,11 @@ module.exports = async function (req, res, next) {
   // 查询id是否存在
   if (!id) {
     res.status(400).json({
-      errors: [{
-        message: '参数错误'
-      }]
+      errors: [
+        {
+          message: '参数错误',
+        },
+      ],
     })
     return
   }
@@ -18,9 +20,11 @@ module.exports = async function (req, res, next) {
   const emailData = await emailSendHistoryUtils.findOne({ _id: id })
   if (!emailData) {
     res.status(400).json({
-      errors: [{
-        message: '邮件发送记录不存在'
-      }]
+      errors: [
+        {
+          message: '邮件发送记录不存在',
+        },
+      ],
     })
     return
   }
@@ -28,12 +32,12 @@ module.exports = async function (req, res, next) {
   const email = {
     to: emailData.to,
     subject: emailData.subject,
-    content: emailData.content
+    content: emailData.content,
   }
   // 发送邮件
   utils.sendEmail(email.to, email.content, email.subject)
   // 返回成功
   res.send({
-    message: '已重新发送邮件'
+    message: '已重新发送邮件',
   })
 }

@@ -10,25 +10,26 @@ module.exports = async function (req, res, next) {
   // 判断page和size是否为数字
   if (!utils.isNumber(page) || !utils.isNumber(size)) {
     res.status(400).json({
-      errors: [{
-        message: '参数错误'
-      }]
+      errors: [
+        {
+          message: '参数错误',
+        },
+      ],
     })
     return
   }
-  const params = {
-  }
+  const params = {}
   // 如果keyword存在，就加入查询条件
   if (keyword) {
     keyword = utils.escapeSpecialChars(keyword)
     // 查询 username 和 nickname 字段
     params.$or = [
       {
-        username: new RegExp(keyword, 'i')
+        username: new RegExp(keyword, 'i'),
       },
       {
-        nickname: new RegExp(keyword, 'i')
-      }
+        nickname: new RegExp(keyword, 'i'),
+      },
     ]
   }
   if (idList) {
@@ -36,22 +37,25 @@ module.exports = async function (req, res, next) {
   }
 
   const sort = {
-    _id: -1
+    _id: -1,
   }
-  userUtils.findPage(params, sort, page, size, '-password').then((data) => {
-    // 返回格式list,total
-    res.send({
-      list: data.list,
-      total: data.total
+  userUtils
+    .findPage(params, sort, page, size, '-password')
+    .then((data) => {
+      // 返回格式list,total
+      res.send({
+        list: data.list,
+        total: data.total,
+      })
     })
-
-  }).catch((err) => {
-    res.status(400).json({
-      errors: [{
-        message: '管理员列表获取失败'
-      }]
+    .catch((err) => {
+      res.status(400).json({
+        errors: [
+          {
+            message: '管理员列表获取失败',
+          },
+        ],
+      })
+      adminApiLog.error(`admin list get fail, ${JSON.stringify(err)}`)
     })
-    adminApiLog.error(`admin list get fail, ${JSON.stringify(err)
-      }`)
-  })
 }

@@ -1,4 +1,3 @@
-
 const userUtils = require('../../mongodb/utils/users')
 const utils = require('../../utils/utils')
 const log4js = require('log4js')
@@ -14,7 +13,7 @@ module.exports = async function (req, res, next) {
   // 校验格式
   const params = {
     username: username,
-    password: password
+    password: password,
   }
   const rule = [
     {
@@ -28,7 +27,7 @@ module.exports = async function (req, res, next) {
       label: '密码',
       type: null,
       required: true,
-    }
+    },
   ]
   const errors = utils.checkForm(params, rule)
   if (errors.length > 0) {
@@ -40,18 +39,22 @@ module.exports = async function (req, res, next) {
   if (!admin) {
     adminApiLog.warn(`admin:${username} try login but not found account`)
     res.status(400).json({
-      errors: [{
-        message: '用户名或密码不正确'
-      }]
+      errors: [
+        {
+          message: '用户名或密码不正确',
+        },
+      ],
     })
     return
   }
   if (!utils.checkBcryptStr(password, admin.password)) {
     adminApiLog.warn(`admin:${username} password is not correct`)
     res.status(400).json({
-      errors: [{
-        message: '用户名或密码不正确'
-      }]
+      errors: [
+        {
+          message: '用户名或密码不正确',
+        },
+      ],
     })
     return
   }
@@ -59,29 +62,35 @@ module.exports = async function (req, res, next) {
   if (admin.disabled) {
     adminApiLog.warn(`admin:${username} is disabled`)
     res.status(400).json({
-      errors: [{
-        message: '该账号已被禁用'
-      }]
+      errors: [
+        {
+          message: '该账号已被禁用',
+        },
+      ],
     })
     return
   }
   // 校验通过写入IP
-  const updateRes = await userUtils.updateOne({ _id: admin._id, __v: admin.__v }, { IP, ipInfo: await utils.IP2LocationUtils(IP, null, null, false) })
+  const updateRes = await userUtils.updateOne(
+    { _id: admin._id, __v: admin.__v },
+    { IP, ipInfo: await utils.IP2LocationUtils(IP, null, null, false) },
+  )
   if (updateRes?.modifiedCount === 0) {
     return res.status(400).json({ errors: [{ message: '登录发生错误' }] })
   } else {
     // 登录成功
-    const jwt = utils.creatJWT({
-      id: admin._id,
-      username: admin.username,
-      pwversion: admin.pwversion,
-      version: 1
-    }, remember ? '365d' : '1h')
+    const jwt = utils.creatJWT(
+      {
+        id: admin._id,
+        username: admin.username,
+        pwversion: admin.pwversion,
+        version: 1,
+      },
+      remember ? '365d' : '1h',
+    )
     adminApiLog.info(`admin:${username} login,IP:${IP}`)
     res.send({
-      token: jwt
+      token: jwt,
     })
   }
-
-
 }

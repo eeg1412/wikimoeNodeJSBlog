@@ -1,168 +1,187 @@
-const postsModel = require('../models/posts');
+const postsModel = require('../models/posts')
 
 exports.save = async function (parmas) {
   // document作成
-  const posts = new postsModel(parmas);
+  const posts = new postsModel(parmas)
   // document保存
   return await posts.save()
 }
 
-
 exports.findOne = async function (parmas, projection, options = {}) {
-  const isAdmin = options.isAdmin || false;
-  let matchStatus = 1;
+  const isAdmin = options.isAdmin || false
+  let matchStatus = 1
   if (isAdmin) {
     matchStatus = { $in: [0, 1] }
   }
   // document查询
-  return await postsModel.findOne(parmas, projection).populate({
-    path: 'author',
-    select: options.authorFilter || 'nickname _id photo cover',
-    populate: {
-      path: 'cover',
-      select: '_id filepath height mimetype width'
-    }
-  }).populate('sort').populate('tags').populate('coverImages')
-    .populate(
-      {
-        path: 'bangumiList',
-        match: { status: matchStatus },
-        select: '-coverFileName -coverFolder -createdAt -updatedAt',
-      }
-    ).populate({
+  return await postsModel
+    .findOne(parmas, projection)
+    .populate({
+      path: 'author',
+      select: options.authorFilter || 'nickname _id photo cover',
+      populate: {
+        path: 'cover',
+        select: '_id filepath height mimetype width',
+      },
+    })
+    .populate('sort')
+    .populate('tags')
+    .populate('coverImages')
+    .populate({
+      path: 'bangumiList',
+      match: { status: matchStatus },
+      select: '-coverFileName -coverFolder -createdAt -updatedAt',
+    })
+    .populate({
       path: 'movieList',
       match: { status: matchStatus },
       select: '-coverFileName -coverFolder -createdAt -updatedAt',
-    }).populate({
+    })
+    .populate({
       path: 'gameList',
       match: { status: matchStatus },
       select: '-coverFileName -coverFolder -createdAt -updatedAt',
       populate: [
         {
           path: 'gamePlatform',
-          select: '_id name color'
+          select: '_id name color',
         },
         // screenshotAlbum
         {
           path: 'screenshotAlbum',
-          select: '_id name'
-        }
-      ]
-    }).populate({
+          select: '_id name',
+        },
+      ],
+    })
+    .populate({
       path: 'bookList',
       match: { status: matchStatus },
       select: '-coverFileName -coverFolder -createdAt -updatedAt',
       populate: {
         path: 'booktype',
-        select: '_id name color'
-      }
-    }).populate({
+        select: '_id name color',
+      },
+    })
+    .populate({
       path: 'postList',
       match: { status: matchStatus, type: 1 },
       select: 'title _id coverImages alias date status',
       populate: {
         path: 'coverImages',
-      }
-    }).populate({
+      },
+    })
+    .populate({
       path: 'eventList',
       match: { status: matchStatus },
       select: '_id title eventtype startTime status',
       populate: {
         path: 'eventtype',
-        select: '_id name color'
-      }
-    }).populate({
+        select: '_id name color',
+      },
+    })
+    .populate({
       path: 'voteList',
       match: { status: matchStatus },
       select: options.voteFliter || undefined,
     })
-    .populate(
-      {
-        path: 'contentBangumiList',
-        match: { status: matchStatus },
-        select: '-coverFileName -coverFolder -createdAt -updatedAt',
-      }
-    ).populate({
+    .populate({
+      path: 'contentBangumiList',
+      match: { status: matchStatus },
+      select: '-coverFileName -coverFolder -createdAt -updatedAt',
+    })
+    .populate({
       path: 'contentMovieList',
       match: { status: matchStatus },
       select: '-coverFileName -coverFolder -createdAt -updatedAt',
-    }).populate({
+    })
+    .populate({
       path: 'contentGameList',
       match: { status: matchStatus },
       select: '-coverFileName -coverFolder -createdAt -updatedAt',
       populate: [
         {
           path: 'gamePlatform',
-          select: '_id name color'
+          select: '_id name color',
         },
         // screenshotAlbum
         {
           path: 'screenshotAlbum',
-          select: '_id name'
-        }
-      ]
-    }).populate({
+          select: '_id name',
+        },
+      ],
+    })
+    .populate({
       path: 'contentBookList',
       match: { status: matchStatus },
       select: '-coverFileName -coverFolder -createdAt -updatedAt',
       populate: {
         path: 'booktype',
-        select: '_id name color'
-      }
-    }).populate({
+        select: '_id name color',
+      },
+    })
+    .populate({
       path: 'contentPostList',
       match: { status: matchStatus, type: 1 },
       select: 'title _id coverImages alias date status',
       populate: {
         path: 'coverImages',
-      }
-    }).populate({
+      },
+    })
+    .populate({
       path: 'contentEventList',
       match: { status: matchStatus },
       select: '_id title eventtype startTime status',
       populate: {
         path: 'eventtype',
-        select: '_id name color'
-      }
-    }).populate({
+        select: '_id name color',
+      },
+    })
+    .populate({
       path: 'contentVoteList',
       match: { status: matchStatus },
       select: options.voteFliter || undefined,
     })
-    ;
 }
 
 // 查找所有
 exports.find = async function (parmas, sort, projection) {
   // document查询
-  return await postsModel.find(parmas, projection).sort(sort);
+  return await postsModel.find(parmas, projection).sort(sort)
 }
 // 查询Cursor
 exports.findCursor = function (parmas, sort, projection) {
   // document查询
-  return postsModel.find(parmas, projection).sort(sort).cursor();
+  return postsModel.find(parmas, projection).sort(sort).cursor()
 }
 
 // 分页查询
-exports.findPage = async function (parmas, sort, page, limit, projection, options = {}) {
-  const isAdmin = options.isAdmin || false;
-  let matchStatus = 1;
+exports.findPage = async function (
+  parmas,
+  sort,
+  page,
+  limit,
+  projection,
+  options = {},
+) {
+  const isAdmin = options.isAdmin || false
+  let matchStatus = 1
   if (isAdmin) {
     matchStatus = { $in: [0, 1] }
   }
   // document查询
-  let query = postsModel.find(parmas, projection)
+  let query = postsModel
+    .find(parmas, projection)
     .populate('author', options.authorFilter || 'nickname _id photo')
     .populate('sort')
     .populate('tags')
-    .populate('coverImages');
+    .populate('coverImages')
 
   if (projection && !projection.includes('-bangumiList')) {
     query = query.populate({
       path: 'bangumiList',
       match: { status: matchStatus },
       select: '_id title year season status',
-    });
+    })
   }
 
   if (projection && !projection.includes('-movieList')) {
@@ -173,7 +192,6 @@ exports.findPage = async function (parmas, sort, page, limit, projection, option
     })
   }
 
-
   if (projection && !projection.includes('-gameList')) {
     query = query.populate({
       path: 'gameList',
@@ -181,9 +199,9 @@ exports.findPage = async function (parmas, sort, page, limit, projection, option
       select: '_id title gamePlatform status',
       populate: {
         path: 'gamePlatform',
-        select: '_id name color'
-      }
-    });
+        select: '_id name color',
+      },
+    })
   }
 
   if (projection && !projection.includes('-bookList')) {
@@ -193,9 +211,9 @@ exports.findPage = async function (parmas, sort, page, limit, projection, option
       select: '_id title booktype status',
       populate: {
         path: 'booktype',
-        select: '_id name color'
-      }
-    });
+        select: '_id name color',
+      },
+    })
   }
 
   if (projection && !projection.includes('-postList')) {
@@ -203,7 +221,7 @@ exports.findPage = async function (parmas, sort, page, limit, projection, option
       path: 'postList',
       match: { status: matchStatus, type: 1 },
       select: 'title _id alias date status',
-    });
+    })
   }
 
   if (projection && !projection.includes('-eventList')) {
@@ -211,7 +229,7 @@ exports.findPage = async function (parmas, sort, page, limit, projection, option
       path: 'eventList',
       match: { status: matchStatus },
       select: '_id title startTime status',
-    });
+    })
   }
 
   if (projection && !projection.includes('-voteList')) {
@@ -222,14 +240,12 @@ exports.findPage = async function (parmas, sort, page, limit, projection, option
     })
   }
 
-
-
   if (projection && !projection.includes('-contentBangumiList')) {
     query = query.populate({
       path: 'contentBangumiList',
       match: { status: matchStatus },
       select: '-coverFileName -coverFolder -createdAt -updatedAt',
-    });
+    })
   }
 
   if (projection && !projection.includes('-contentMovieList')) {
@@ -240,7 +256,6 @@ exports.findPage = async function (parmas, sort, page, limit, projection, option
     })
   }
 
-
   if (projection && !projection.includes('-contentGameList')) {
     query = query.populate({
       path: 'contentGameList',
@@ -249,15 +264,15 @@ exports.findPage = async function (parmas, sort, page, limit, projection, option
       populate: [
         {
           path: 'gamePlatform',
-          select: '_id name color'
+          select: '_id name color',
         },
         // screenshotAlbum
         {
           path: 'screenshotAlbum',
-          select: '_id name'
-        }
-      ]
-    });
+          select: '_id name',
+        },
+      ],
+    })
   }
 
   if (projection && !projection.includes('-contentBookList')) {
@@ -267,9 +282,9 @@ exports.findPage = async function (parmas, sort, page, limit, projection, option
       select: '-coverFileName -coverFolder -createdAt -updatedAt',
       populate: {
         path: 'booktype',
-        select: '_id name color'
-      }
-    });
+        select: '_id name color',
+      },
+    })
   }
 
   if (projection && !projection.includes('-contentPostList')) {
@@ -279,8 +294,8 @@ exports.findPage = async function (parmas, sort, page, limit, projection, option
       select: 'title _id coverImages alias date status',
       populate: {
         path: 'coverImages',
-      }
-    });
+      },
+    })
   }
 
   if (projection && !projection.includes('-contentEventList')) {
@@ -290,9 +305,9 @@ exports.findPage = async function (parmas, sort, page, limit, projection, option
       select: '_id title eventtype startTime status',
       populate: {
         path: 'eventtype',
-        select: '_id name color'
-      }
-    });
+        select: '_id name color',
+      },
+    })
   }
 
   if (projection && !projection.includes('-contentVoteList')) {
@@ -303,16 +318,18 @@ exports.findPage = async function (parmas, sort, page, limit, projection, option
     })
   }
 
-
-  const list = await query.sort(sort).skip((page - 1) * limit).limit(limit);
-  const total = await postsModel.countDocuments(parmas);
+  const list = await query
+    .sort(sort)
+    .skip((page - 1) * limit)
+    .limit(limit)
+  const total = await postsModel.countDocuments(parmas)
   // 查询失败
   if (!list || total === undefined) {
     throw new Error('查询失败')
   }
   return {
     list,
-    total
+    total,
   }
 }
 
@@ -323,44 +340,44 @@ exports.updateOne = async function (filters, parmas, isClient = false) {
   } else {
     parmas.$inc = { __v: 1, ...parmas.$inc }
   }
-  return await postsModel.updateOne(filters, parmas);
+  return await postsModel.updateOne(filters, parmas)
 }
 // updateMany
 exports.updateMany = async function (filters, parmas) {
   parmas.$inc = { __v: 1, ...parmas.$inc }
   // document查询
-  return await postsModel.updateMany(filters, parmas);
+  return await postsModel.updateMany(filters, parmas)
 }
 // 删除
 exports.deleteOne = async function (filters) {
   // document查询
-  return await postsModel.deleteOne(filters);
+  return await postsModel.deleteOne(filters)
 }
 // deleteMany
 exports.deleteMany = async function (filters) {
   // document查询
-  return await postsModel.deleteMany(filters);
+  return await postsModel.deleteMany(filters)
 }
 
 // 查询总数
 exports.count = async function (parmas) {
   // document查询
-  return await postsModel.countDocuments(parmas);
+  return await postsModel.countDocuments(parmas)
 }
 
 // 聚合
 exports.aggregate = async function (parmas) {
   // document查询
-  return await postsModel.aggregate(parmas);
+  return await postsModel.aggregate(parmas)
 }
 // findOneAndUpdate
 exports.findOneAndUpdate = async function (filters, parmas, options) {
   // document查询
-  return await postsModel.findOneAndUpdate(filters, parmas, options);
+  return await postsModel.findOneAndUpdate(filters, parmas, options)
 }
 
 // deleteMany
 exports.deleteMany = async function (filters) {
   // document查询
-  return await postsModel.deleteMany(filters);
+  return await postsModel.deleteMany(filters)
 }

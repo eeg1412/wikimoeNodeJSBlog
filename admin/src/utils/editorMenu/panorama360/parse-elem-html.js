@@ -2,7 +2,7 @@
  * @description parse elem html
  */
 
-function parseHtml (domElem, children, editor) {
+function parseHtml(domElem, children, editor) {
   const imgElem = domElem.querySelector('img.w-e-panorama360-img')
   if (imgElem == null) return
 
@@ -27,10 +27,10 @@ function parseHtml (domElem, children, editor) {
   }
 }
 
-function parsePanorama360HtmlConf () {
+function parsePanorama360HtmlConf() {
   return {
     selector: 'div.w-e-panorama360',
-    parseElemHtml: parseHtml
+    parseElemHtml: parseHtml,
   }
 }
 

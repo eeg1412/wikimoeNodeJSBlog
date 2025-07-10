@@ -6,13 +6,15 @@ const userApiLog = log4js.getLogger('userApi')
 module.exports = async function (req, res, next) {
   let { page, id, sorttype } = req.query
   page = parseInt(page)
-  const { siteCommentPageSize: size, } = global.$globalConfig.commentSettings
+  const { siteCommentPageSize: size } = global.$globalConfig.commentSettings
   // 判断page和size是否为数字
   if (!utils.isNumber(page) || !utils.isNumber(size)) {
     res.status(400).json({
-      errors: [{
-        message: '参数错误'
-      }]
+      errors: [
+        {
+          message: '参数错误',
+        },
+      ],
     })
     return
   }
@@ -22,76 +24,93 @@ module.exports = async function (req, res, next) {
     post: id,
     $or: [
       { status: 1 }, // 正常状态的评论
-    ]
+    ],
   }
   if (uuid) {
     params.$or.push({
       status: 0,
-      uuid: uuid
+      uuid: uuid,
     })
   }
   let sort = {
     // top置顶
     top: -1,
     date: -1,
-    _id: -1
+    _id: -1,
   }
   if (sorttype === 'like') {
     sort = {
       top: -1,
       likes: -1,
-      _id: -1
+      _id: -1,
     }
   }
-  commentUtils.findPage(params, sort, page, size, '-post').then((data) => {
-    const keys = ['_id', 'avatar', 'content', 'date', 'nickname', 'url', 'likes', 'isAdmin', 'parent', 'parentId', 'top', 'status'];
+  commentUtils
+    .findPage(params, sort, page, size, '-post')
+    .then((data) => {
+      const keys = [
+        '_id',
+        'avatar',
+        'content',
+        'date',
+        'nickname',
+        'url',
+        'likes',
+        'isAdmin',
+        'parent',
+        'parentId',
+        'top',
+        'status',
+      ]
 
-    const list = data.list.map((item, index) => {
-      const jsonItem = item.toJSON();
+      const list = data.list.map((item, index) => {
+        const jsonItem = item.toJSON()
 
-      // 设置parentId
-      jsonItem.parentId = item.populated('parent');
+        // 设置parentId
+        jsonItem.parentId = item.populated('parent')
 
-      // 处理头像和用户信息
-      if (jsonItem.email) {
-        jsonItem.avatar = utils.md5hex(jsonItem.email);
-      }
-      if (jsonItem.user) {
-        jsonItem.avatar = jsonItem.user.photo;
-        jsonItem.nickname = jsonItem.user.nickname;
-        jsonItem.isAdmin = true;
-      } else {
-        jsonItem.isAdmin = false;
-      }
-
-      // 处理父评论
-      if (jsonItem.parent) {
-        if (jsonItem.parent.status !== 1) {
-          jsonItem.parent = null;
+        // 处理头像和用户信息
+        if (jsonItem.email) {
+          jsonItem.avatar = utils.md5hex(jsonItem.email)
         }
-        if (jsonItem.parent?.user) {
-          jsonItem.parent.nickname = jsonItem.parent.user.nickname;
+        if (jsonItem.user) {
+          jsonItem.avatar = jsonItem.user.photo
+          jsonItem.nickname = jsonItem.user.nickname
+          jsonItem.isAdmin = true
+        } else {
+          jsonItem.isAdmin = false
         }
-        delete jsonItem.parent.user;
-      }
 
-      // 只保留需要的key
-      return Object.fromEntries(
-        Object.entries(jsonItem).filter(([key]) => keys.includes(key))
-      );
-    });
-    res.send({
-      list: list,
-      total: data.total,
-      size: size,
-    })
+        // 处理父评论
+        if (jsonItem.parent) {
+          if (jsonItem.parent.status !== 1) {
+            jsonItem.parent = null
+          }
+          if (jsonItem.parent?.user) {
+            jsonItem.parent.nickname = jsonItem.parent.user.nickname
+          }
+          delete jsonItem.parent.user
+        }
 
-  }).catch((err) => {
-    res.status(400).json({
-      errors: [{
-        message: '评论列表获取失败'
-      }]
+        // 只保留需要的key
+        return Object.fromEntries(
+          Object.entries(jsonItem).filter(([key]) => keys.includes(key)),
+        )
+      })
+      res.send({
+        list: list,
+        total: data.total,
+        size: size,
+      })
     })
-    userApiLog.error(`comment list get fail, ${logErrorToText(err)}`)
-  })
+    .catch((err) => {
+      res.status(400).json({
+        errors: [
+          {
+            message: '评论列表获取失败',
+          },
+        ],
+      })
+      userApiLog.error(`comment list get fail, ${logErrorToText(err)}`)
+    })
 }

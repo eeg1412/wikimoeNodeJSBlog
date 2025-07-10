@@ -1,4 +1,3 @@
-
 const postUtils = require('../../../mongodb/utils/posts')
 const utils = require('../../../utils/utils')
 const log4js = require('log4js')
@@ -28,22 +27,60 @@ module.exports = async function (req, res, next) {
   // - coverImages  博客时是封面图片字段，页面时是页面图片字段
   // - __v  版本号字段
   const id = req.body.id
-  let { title, date, content, excerpt, alias, sort, tags, top, sortop, status, allowRemark, template, code, coverImages, bangumiList, movieList, gameList, bookList, postList, eventList, voteList, contentBangumiList, contentMovieList, contentGameList, contentBookList, contentPostList, contentEventList, contentVoteList, seriesSortList, contentSeriesSortList, __v, isAutoSave, force } = req.body
+  let {
+    title,
+    date,
+    content,
+    excerpt,
+    alias,
+    sort,
+    tags,
+    top,
+    sortop,
+    status,
+    allowRemark,
+    template,
+    code,
+    coverImages,
+    bangumiList,
+    movieList,
+    gameList,
+    bookList,
+    postList,
+    eventList,
+    voteList,
+    contentBangumiList,
+    contentMovieList,
+    contentGameList,
+    contentBookList,
+    contentPostList,
+    contentEventList,
+    contentVoteList,
+    seriesSortList,
+    contentSeriesSortList,
+    __v,
+    isAutoSave,
+    force,
+  } = req.body
   // 校验id是否存在
   if (!id) {
     res.status(400).json({
-      errors: [{
-        message: 'id不能为空'
-      }]
+      errors: [
+        {
+          message: 'id不能为空',
+        },
+      ],
     })
     return
   }
   // 如果isAutoSave为true，status只能为0
   if (isAutoSave && status !== 0) {
     res.status(400).json({
-      errors: [{
-        message: '只有草稿才能自动保存'
-      }]
+      errors: [
+        {
+          message: '只有草稿才能自动保存',
+        },
+      ],
     })
     return
   }
@@ -73,9 +110,11 @@ module.exports = async function (req, res, next) {
   for (let i = 0; i < bangumiList.length; i++) {
     if (!validator.isMongoId(bangumiList[i])) {
       res.status(400).json({
-        errors: [{
-          message: 'bangumiList格式错误'
-        }]
+        errors: [
+          {
+            message: 'bangumiList格式错误',
+          },
+        ],
       })
       return
     }
@@ -83,9 +122,11 @@ module.exports = async function (req, res, next) {
   for (let i = 0; i < movieList.length; i++) {
     if (!validator.isMongoId(movieList[i])) {
       res.status(400).json({
-        errors: [{
-          message: 'movieList格式错误'
-        }]
+        errors: [
+          {
+            message: 'movieList格式错误',
+          },
+        ],
       })
       return
     }
@@ -93,9 +134,11 @@ module.exports = async function (req, res, next) {
   for (let i = 0; i < gameList.length; i++) {
     if (!validator.isMongoId(gameList[i])) {
       res.status(400).json({
-        errors: [{
-          message: 'gameList格式错误'
-        }]
+        errors: [
+          {
+            message: 'gameList格式错误',
+          },
+        ],
       })
       return
     }
@@ -103,9 +146,11 @@ module.exports = async function (req, res, next) {
   for (let i = 0; i < bookList.length; i++) {
     if (!validator.isMongoId(bookList[i])) {
       res.status(400).json({
-        errors: [{
-          message: 'bookList格式错误'
-        }]
+        errors: [
+          {
+            message: 'bookList格式错误',
+          },
+        ],
       })
       return
     }
@@ -113,9 +158,11 @@ module.exports = async function (req, res, next) {
   for (let i = 0; i < postList.length; i++) {
     if (!validator.isMongoId(postList[i])) {
       res.status(400).json({
-        errors: [{
-          message: 'postList格式错误'
-        }]
+        errors: [
+          {
+            message: 'postList格式错误',
+          },
+        ],
       })
       return
     }
@@ -123,9 +170,11 @@ module.exports = async function (req, res, next) {
   for (let i = 0; i < eventList.length; i++) {
     if (!validator.isMongoId(eventList[i])) {
       res.status(400).json({
-        errors: [{
-          message: 'eventList格式错误'
-        }]
+        errors: [
+          {
+            message: 'eventList格式错误',
+          },
+        ],
       })
       return
     }
@@ -133,9 +182,11 @@ module.exports = async function (req, res, next) {
   for (let i = 0; i < voteList.length; i++) {
     if (!validator.isMongoId(voteList[i])) {
       res.status(400).json({
-        errors: [{
-          message: 'voteList格式错误'
-        }]
+        errors: [
+          {
+            message: 'voteList格式错误',
+          },
+        ],
       })
       return
     }
@@ -145,9 +196,11 @@ module.exports = async function (req, res, next) {
   for (let i = 0; i < contentBangumiList.length; i++) {
     if (!validator.isMongoId(contentBangumiList[i])) {
       res.status(400).json({
-        errors: [{
-          message: 'contentBangumiList格式错误'
-        }]
+        errors: [
+          {
+            message: 'contentBangumiList格式错误',
+          },
+        ],
       })
       return
     }
@@ -155,9 +208,11 @@ module.exports = async function (req, res, next) {
   for (let i = 0; i < contentMovieList.length; i++) {
     if (!validator.isMongoId(contentMovieList[i])) {
       res.status(400).json({
-        errors: [{
-          message: 'contentMovieList格式错误'
-        }]
+        errors: [
+          {
+            message: 'contentMovieList格式错误',
+          },
+        ],
       })
       return
     }
@@ -165,9 +220,11 @@ module.exports = async function (req, res, next) {
   for (let i = 0; i < contentGameList.length; i++) {
     if (!validator.isMongoId(contentGameList[i])) {
       res.status(400).json({
-        errors: [{
-          message: 'contentGameList格式错误'
-        }]
+        errors: [
+          {
+            message: 'contentGameList格式错误',
+          },
+        ],
       })
       return
     }
@@ -175,9 +232,11 @@ module.exports = async function (req, res, next) {
   for (let i = 0; i < contentBookList.length; i++) {
     if (!validator.isMongoId(contentBookList[i])) {
       res.status(400).json({
-        errors: [{
-          message: 'contentBookList格式错误'
-        }]
+        errors: [
+          {
+            message: 'contentBookList格式错误',
+          },
+        ],
       })
       return
     }
@@ -185,9 +244,11 @@ module.exports = async function (req, res, next) {
   for (let i = 0; i < contentPostList.length; i++) {
     if (!validator.isMongoId(contentPostList[i])) {
       res.status(400).json({
-        errors: [{
-          message: 'contentPostList格式错误'
-        }]
+        errors: [
+          {
+            message: 'contentPostList格式错误',
+          },
+        ],
       })
       return
     }
@@ -195,9 +256,11 @@ module.exports = async function (req, res, next) {
   for (let i = 0; i < contentEventList.length; i++) {
     if (!validator.isMongoId(contentEventList[i])) {
       res.status(400).json({
-        errors: [{
-          message: 'contentEventList格式错误'
-        }]
+        errors: [
+          {
+            message: 'contentEventList格式错误',
+          },
+        ],
       })
       return
     }
@@ -205,21 +268,24 @@ module.exports = async function (req, res, next) {
   for (let i = 0; i < contentVoteList.length; i++) {
     if (!validator.isMongoId(contentVoteList[i])) {
       res.status(400).json({
-        errors: [{
-          message: 'contentVoteList格式错误'
-        }]
+        errors: [
+          {
+            message: 'contentVoteList格式错误',
+          },
+        ],
       })
       return
     }
   }
 
-
-  // 校验tags 
+  // 校验tags
   if (!Array.isArray(tags)) {
     res.status(400).json({
-      errors: [{
-        message: 'tags必须是数组'
-      }]
+      errors: [
+        {
+          message: 'tags必须是数组',
+        },
+      ],
     })
     return
   }
@@ -228,9 +294,11 @@ module.exports = async function (req, res, next) {
   for (let i = 0; i < tags.length; i++) {
     if (!tags[i]) {
       res.status(400).json({
-        errors: [{
-          message: 'tags格式错误'
-        }]
+        errors: [
+          {
+            message: 'tags格式错误',
+          },
+        ],
       })
       return
     }
@@ -240,32 +308,43 @@ module.exports = async function (req, res, next) {
   const uniqueTags = new Set(tags)
   if (uniqueTags.size !== tags.length) {
     res.status(400).json({
-      errors: [{
-        message: 'tags不能重复'
-      }]
+      errors: [
+        {
+          message: 'tags不能重复',
+        },
+      ],
     })
     return
   }
 
   const listSortList = ['media', 'event', 'vote', 'post', 'acgn']
   // seriesSortList 和 contentSeriesSortList 必须为数组且只能包含listSortList里面的值
-  if (!Array.isArray(seriesSortList) || seriesSortList.some(item => !listSortList.includes(item))) {
+  if (
+    !Array.isArray(seriesSortList) ||
+    seriesSortList.some((item) => !listSortList.includes(item))
+  ) {
     res.status(400).json({
-      errors: [{
-        message: 'seriesSortList格式错误'
-      }]
+      errors: [
+        {
+          message: 'seriesSortList格式错误',
+        },
+      ],
     })
     return
   }
-  if (!Array.isArray(contentSeriesSortList) || contentSeriesSortList.some(item => !listSortList.includes(item))) {
+  if (
+    !Array.isArray(contentSeriesSortList) ||
+    contentSeriesSortList.some((item) => !listSortList.includes(item))
+  ) {
     res.status(400).json({
-      errors: [{
-        message: 'contentSeriesSortList格式错误'
-      }]
+      errors: [
+        {
+          message: 'contentSeriesSortList格式错误',
+        },
+      ],
     })
     return
   }
-
 
   // 1blog,2tweet,3page
   // const type = post.type
@@ -300,14 +379,14 @@ module.exports = async function (req, res, next) {
     contentEventList: contentEventList,
     contentVoteList: contentVoteList,
     contentSeriesSortList: contentSeriesSortList,
-    lastChangDate: new Date()
+    lastChangDate: new Date(),
   }
   const rules = [
     {
       key: 'date',
       label: '发布日期',
       type: 'isISO8601',
-    }
+    },
   ]
   if (sort) {
     rules.push({
@@ -319,7 +398,7 @@ module.exports = async function (req, res, next) {
   const errors = utils.checkForm(params, rules)
   if (errors.length > 0) {
     res.status(400).json({
-      errors: errors
+      errors: errors,
     })
     return
   }
@@ -327,12 +406,14 @@ module.exports = async function (req, res, next) {
   const coverImages_ = coverImages || []
   const coverImagesIdArr = []
   for (let i = 0; i < coverImages_.length; i++) {
-    const coverImageId = coverImages_[i];
+    const coverImageId = coverImages_[i]
     if (!validator.isMongoId(coverImageId)) {
       res.status(400).json({
-        errors: [{
-          message: 'coverImages格式错误'
-        }]
+        errors: [
+          {
+            message: 'coverImages格式错误',
+          },
+        ],
       })
       return
     }
@@ -340,22 +421,26 @@ module.exports = async function (req, res, next) {
   }
   // 校验alias是否存在
   if (alias) {
-    const aliasPostCount = await postUtils.count({
-      alias: {
-        $regex: new RegExp('^' + alias + '$', 'i')
-      },
-      // 排除自己
-      _id: {
-        $ne: id
-      }
-    }).catch((err) => {
-      return 500
-    })
+    const aliasPostCount = await postUtils
+      .count({
+        alias: {
+          $regex: new RegExp('^' + alias + '$', 'i'),
+        },
+        // 排除自己
+        _id: {
+          $ne: id,
+        },
+      })
+      .catch((err) => {
+        return 500
+      })
     if (aliasPostCount > 0) {
       res.status(400).json({
-        errors: [{
-          message: '别名已存在'
-        }]
+        errors: [
+          {
+            message: '别名已存在',
+          },
+        ],
       })
       return
     }
@@ -381,11 +466,13 @@ module.exports = async function (req, res, next) {
         return null
       })
       if (!tag) {
-        tag = await tagUtils.save({
-          tagname: tagname
-        }).catch((err) => {
-          return false
-        })
+        tag = await tagUtils
+          .save({
+            tagname: tagname,
+          })
+          .catch((err) => {
+            return false
+          })
       }
 
       if (tag) {
@@ -396,13 +483,15 @@ module.exports = async function (req, res, next) {
     }
   }
   // tagsIdArr 去重
-  tagsIdArr = tagsIdArr.filter((elem, index, self) => self.indexOf(elem) === index)
+  tagsIdArr = tagsIdArr.filter(
+    (elem, index, self) => self.indexOf(elem) === index,
+  )
   params.tags = tagsIdArr
 
   // 更新
   const updateFilter = {
     _id: id,
-    __v: __v
+    __v: __v,
   }
   if (isAutoSave) {
     // 只能是草稿
@@ -414,33 +503,39 @@ module.exports = async function (req, res, next) {
     delete updateFilter.__v
   }
 
-  postUtils.updateOne(updateFilter, params).then((data) => {
-    if (data.modifiedCount === 0) {
-      res.status(400).json({
-        errors: [{
-          message: '更新失败'
-        }]
+  postUtils
+    .updateOne(updateFilter, params)
+    .then((data) => {
+      if (data.modifiedCount === 0) {
+        res.status(400).json({
+          errors: [
+            {
+              message: '更新失败',
+            },
+          ],
+        })
+        return
+      }
+      res.send({
+        data: data,
       })
-      return
-    }
-    res.send({
-      data: data
-    })
-    adminApiLog.info(`post update success`)
-    if (!isAutoSave) {
-      cacheDataUtils.getPostArchiveList()
-      rssToolUtils.reflushRSS()
-      sitemapToolUtils.reflushSitemap()
-    }
+      adminApiLog.info(`post update success`)
+      if (!isAutoSave) {
+        cacheDataUtils.getPostArchiveList()
+        rssToolUtils.reflushRSS()
+        sitemapToolUtils.reflushSitemap()
+      }
 
-    // utils.reflushBlogCache()
-  }).catch((err) => {
-    res.status(400).json({
-      errors: [{
-        message: '更新文章失败'
-      }]
+      // utils.reflushBlogCache()
     })
-    adminApiLog.error(`post update fail, ${logErrorToText(err)}`)
-  })
-
+    .catch((err) => {
+      res.status(400).json({
+        errors: [
+          {
+            message: '更新文章失败',
+          },
+        ],
+      })
+      adminApiLog.error(`post update fail, ${logErrorToText(err)}`)
+    })
 }

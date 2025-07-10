@@ -4,7 +4,6 @@ const log4js = require('log4js')
 const adminApiLog = log4js.getLogger('adminApi')
 const cacheDataUtils = require('../../../config/cacheData')
 
-
 module.exports = async function (req, res, next) {
   /*
   // 侧边栏名称
@@ -20,14 +19,7 @@ module.exports = async function (req, res, next) {
   // 0:不可见 1:可见
   status: { type: Number, default: 0 },
   */
-  const {
-    title,
-    content,
-    count,
-    type,
-    taxis,
-    status
-  } = req.body
+  const { title, content, count, type, taxis, status } = req.body
   // 校验格式
   const params = {
     title: title || '',
@@ -35,7 +27,7 @@ module.exports = async function (req, res, next) {
     count: count || 1,
     type: type || 1,
     taxis: taxis || 0,
-    status: status || 0
+    status: status || 0,
   }
   const rule = [
     {
@@ -57,28 +49,34 @@ module.exports = async function (req, res, next) {
     const sidebar = await sidebarUtils.findOne({ type: params.type })
     if (sidebar) {
       res.status(400).json({
-        errors: [{
-          message: '该侧边栏已存在'
-        }]
+        errors: [
+          {
+            message: '该侧边栏已存在',
+          },
+        ],
       })
       return
     }
   }
   // save
-  sidebarUtils.save(params).then((data) => {
-    res.send({
-      data: data
+  sidebarUtils
+    .save(params)
+    .then((data) => {
+      res.send({
+        data: data,
+      })
+      adminApiLog.info(`sidebar create success`)
+      cacheDataUtils.getSidebarList()
+      // utils.reflushBlogCache()
     })
-    adminApiLog.info(`sidebar create success`)
-    cacheDataUtils.getSidebarList()
-    // utils.reflushBlogCache()
-  }).catch((err) => {
-    res.status(400).json({
-      errors: [{
-        message: '侧边栏创建失败'
-      }]
+    .catch((err) => {
+      res.status(400).json({
+        errors: [
+          {
+            message: '侧边栏创建失败',
+          },
+        ],
+      })
+      adminApiLog.error(`sidebar create fail, ${logErrorToText(err)}`)
     })
-    adminApiLog.error(`sidebar create fail, ${logErrorToText(err)}`)
-  })
-
 }

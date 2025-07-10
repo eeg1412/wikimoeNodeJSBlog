@@ -21,22 +21,26 @@ module.exports = async function (req, res, next) {
     status,
     giveUp,
     id,
-    __v
+    __v,
   } = req.body
   if (!id) {
     res.status(400).json({
-      errors: [{
-        message: 'id不能为空'
-      }]
+      errors: [
+        {
+          message: 'id不能为空',
+        },
+      ],
     })
     return
   }
   // __v 可以为零，但不能为空/null/undefined
   if (__v === undefined || __v === null) {
     res.status(400).json({
-      errors: [{
-        message: '__v不能为空'
-      }]
+      errors: [
+        {
+          message: '__v不能为空',
+        },
+      ],
     })
     return
   }
@@ -51,7 +55,7 @@ module.exports = async function (req, res, next) {
     startTime: startTime,
     endTime: endTime,
     status: status,
-    giveUp: giveUp
+    giveUp: giveUp,
   }
   const rule = [
     {
@@ -64,8 +68,8 @@ module.exports = async function (req, res, next) {
       key: 'booktype',
       label: '书籍类型',
       type: 'isMongoId',
-      required: true
-    }
+      required: true,
+    },
   ]
   const errors = utils.checkForm(params, rule)
   if (errors.length > 0) {
@@ -76,9 +80,11 @@ module.exports = async function (req, res, next) {
   const oldData = await bookUtils.findOne({ _id: id, __v })
   if (!oldData) {
     res.status(400).json({
-      errors: [{
-        message: '该数据不存在或已被更新'
-      }]
+      errors: [
+        {
+          message: '该数据不存在或已被更新',
+        },
+      ],
     })
     return
   }
@@ -91,7 +97,9 @@ module.exports = async function (req, res, next) {
     }
     const fileName = id
     try {
-      const imgRes = utils.base64ToFile(cover, path, fileName, { createDir: true })
+      const imgRes = utils.base64ToFile(cover, path, fileName, {
+        createDir: true,
+      })
       let baseCover = '/upload/bookCover/'
       // 拼接文件夹
       baseCover = baseCover + coverFolder + '/'
@@ -99,9 +107,11 @@ module.exports = async function (req, res, next) {
       params['coverFileName'] = imgRes.fileNameAll
     } catch (error) {
       res.status(400).json({
-        errors: [{
-          message: '照片上传失败'
-        }]
+        errors: [
+          {
+            message: '照片上传失败',
+          },
+        ],
       })
       throw new Error(error)
     }
@@ -116,9 +126,11 @@ module.exports = async function (req, res, next) {
     } catch (error) {
       adminApiLog.error(`bookCover update cover fail, ${JSON.stringify(error)}`)
       res.status(400).json({
-        errors: [{
-          message: '旧图片删除失败'
-        }]
+        errors: [
+          {
+            message: '旧图片删除失败',
+          },
+        ],
       })
       return
     }
@@ -126,26 +138,33 @@ module.exports = async function (req, res, next) {
     params['coverFileName'] = null
   }
   // updateOne
-  bookUtils.updateOne({ _id: id, __v }, params).then((data) => {
-    if (data.modifiedCount === 0) {
-      res.status(400).json({
-        errors: [{
-          message: '更新失败'
-        }]
+  bookUtils
+    .updateOne({ _id: id, __v }, params)
+    .then((data) => {
+      if (data.modifiedCount === 0) {
+        res.status(400).json({
+          errors: [
+            {
+              message: '更新失败',
+            },
+          ],
+        })
+        return
+      }
+      res.send({
+        data: data,
       })
-      return
-    }
-    res.send({
-      data: data
+      adminApiLog.info(`book update success`)
+      cacheDataUtils.getReadingBookList()
     })
-    adminApiLog.info(`book update success`)
-    cacheDataUtils.getReadingBookList()
-  }).catch((err) => {
-    res.status(400).json({
-      errors: [{
-        message: '书籍更新失败'
-      }]
+    .catch((err) => {
+      res.status(400).json({
+        errors: [
+          {
+            message: '书籍更新失败',
+          },
+        ],
+      })
+      adminApiLog.error(`book update fail, ${logErrorToText(err)}`)
     })
-    adminApiLog.error(`book update fail, ${logErrorToText(err)}`)
-  })
 }

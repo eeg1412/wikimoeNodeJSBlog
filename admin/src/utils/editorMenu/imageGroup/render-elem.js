@@ -5,20 +5,19 @@
 import { h } from 'snabbdom'
 import { IDomEditor, DomEditor } from '@wangeditor/core'
 
-function renderImageGroup (elem, children, editor, info) {
+function renderImageGroup(elem, children, editor, info) {
   // 当前节点是否选中
   console.log(elem)
   const childrens = []
   // 遍历子节点的img标签
-  elem.childrenList.forEach(child => {
+  elem.childrenList.forEach((child) => {
     const item = h(
       'div',
       {
         className: 'w-e-image-group-img-body',
       },
-      [h(
-        'img',
-        {
+      [
+        h('img', {
           className: 'w-e-image-group-img',
           src: child.src,
           width: child.width,
@@ -28,8 +27,8 @@ function renderImageGroup (elem, children, editor, info) {
           'data-href-height': child.dataHrefHeight,
           alt: child.alt,
           text: '',
-        }
-      )]
+        }),
+      ],
     )
     childrens.push(item)
   })
@@ -51,7 +50,7 @@ function renderImageGroup (elem, children, editor, info) {
     {
       className: className,
     },
-    childrens
+    childrens,
   )
 
   return vnode

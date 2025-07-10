@@ -1,16 +1,16 @@
 import { DomEditor } from '@wangeditor/editor'
 import { Editor, Node, Transforms } from 'slate'
-function withEventspan (editor) {
+function withEventspan(editor) {
   const { isInline, isVoid, normalizeNode } = editor
   const newEditor = editor
 
-  newEditor.isInline = elem => {
+  newEditor.isInline = (elem) => {
     const type = DomEditor.getNodeType(elem)
     if (type === 'eventspan') return true // 针对 type: eventspan ，设置为 inline
     return isInline(elem)
   }
 
-  newEditor.isVoid = elem => {
+  newEditor.isVoid = (elem) => {
     const type = DomEditor.getNodeType(elem)
     if (type === 'eventspan') return true // 针对 type: eventspan ，设置为 void
     return isVoid(elem)

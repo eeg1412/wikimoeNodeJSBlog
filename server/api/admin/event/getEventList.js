@@ -10,20 +10,21 @@ module.exports = async function (req, res, next) {
   // 判断page和size是否为数字
   if (!utils.isNumber(page) || !utils.isNumber(size)) {
     res.status(400).json({
-      errors: [{
-        message: '参数错误'
-      }]
+      errors: [
+        {
+          message: '参数错误',
+        },
+      ],
     })
     return
   }
-  const params = {
-  }
+  const params = {}
   // 如果keyword存在，就加入查询条件
   if (keyword) {
     keyword = utils.escapeSpecialChars(keyword)
     params.$or = [
       { title: new RegExp(keyword, 'i') },
-      { content: new RegExp(keyword, 'i') }
+      { content: new RegExp(keyword, 'i') },
     ]
   }
   // 如果eventtype存在，就加入查询条件
@@ -39,20 +40,23 @@ module.exports = async function (req, res, next) {
     startTime: -1,
     _id: -1,
   }
-  eventUtils.findPage(params, sort, page, size, '-content').then((data) => {
-    // 返回格式list,total
-    res.send({
-      list: data.list,
-      total: data.total
+  eventUtils
+    .findPage(params, sort, page, size, '-content')
+    .then((data) => {
+      // 返回格式list,total
+      res.send({
+        list: data.list,
+        total: data.total,
+      })
     })
-
-  }).catch((err) => {
-    res.status(400).json({
-      errors: [{
-        message: '活动列表获取失败'
-      }]
+    .catch((err) => {
+      res.status(400).json({
+        errors: [
+          {
+            message: '活动列表获取失败',
+          },
+        ],
+      })
+      adminApiLog.error(`event list get fail, ${JSON.stringify(err)}`)
     })
-    adminApiLog.error(`event list get fail, ${JSON.stringify(err)
-      }`)
-  })
 }
