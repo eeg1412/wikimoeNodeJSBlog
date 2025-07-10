@@ -752,6 +752,20 @@ exports.sendReplyCommentNotice = async function (post, comment) {
   }
 }
 
+exports.getPostTypeName = postData => {
+  // 根据postData.type返回对应的名称
+  const typeMap = {
+    1: '博文',
+    2: '推文',
+    3: '页面'
+  }
+  if (postData?.type && typeMap[postData.type]) {
+    return typeMap[postData.type]
+  } else {
+    throw new Error('postData.type类型错误')
+  }
+}
+
 exports.getPostPagePath = postData => {
   // 先判断type是1，2还是3，1和2跳转到/post/id，3跳转到/page/id
   // 如果有别名，就跳转到别名，没有别名就跳转到id
