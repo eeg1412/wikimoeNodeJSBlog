@@ -566,7 +566,7 @@ exports.sendCommentAddNotice = function (post, comment) {
     }
     nickname = this.escapeHtml(nickname)
     const to = emailReceiver
-    const subject = `【${siteTitle}】的文章/推文有了新的评论`
+    const subject = `【${siteTitle}】的博文/推文有了新的评论`
     let contentHtml = emailSendToMeTemplate
     // 替换模板中的变量
     // ${comment}为评论内容
@@ -738,7 +738,9 @@ exports.sendReplyCommentNotice = async function (post, comment) {
     contentHtml = contentHtml.replace(/\${nickname}/g, nickname)
     contentHtml = contentHtml.replace(
       /\${title}/g,
-      `<a href="${this.getPostPagePath(post)}/#comment-${comment._id}" target="_blank">${linkTitle}</a>`
+      `<a href="${this.getPostPagePath(post)}/#comment-${
+        comment._id
+      }" target="_blank">${linkTitle}</a>`
     )
     contentHtml = contentHtml.replace(
       /\${siteTitle}/g,
@@ -818,20 +820,17 @@ exports.referrerRecord = function (referrer, referrerType) {
         return
       }
       // 设置计时器
-      referrerRecordTimerMap[md5Id] = setTimeout(
-        () => {
-          // 如果计时器到期，就保存referrer
-          const params = {
-            referrer,
-            referrerType
-          }
-          console.log('referrer记录', params)
-          referrerUtils.save(params)
-          // 删除计时器
-          delete referrerRecordTimerMap[md5Id]
-        },
-        1000 * 60 * 60
-      )
+      referrerRecordTimerMap[md5Id] = setTimeout(() => {
+        // 如果计时器到期，就保存referrer
+        const params = {
+          referrer,
+          referrerType
+        }
+        console.log('referrer记录', params)
+        referrerUtils.save(params)
+        // 删除计时器
+        delete referrerRecordTimerMap[md5Id]
+      }, 1000 * 60 * 60)
     }
   }
 }
