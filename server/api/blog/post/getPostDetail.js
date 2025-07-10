@@ -3,6 +3,7 @@ const postUtils = require('../../../mongodb/utils/posts')
 const utils = require('../../../utils/utils')
 const log4js = require('log4js')
 const userApiLog = log4js.getLogger('userApi')
+const { ObjectId } = require('mongodb')
 
 module.exports = async function (req, res, next) {
   const id = req.query.id
@@ -91,13 +92,31 @@ module.exports = async function (req, res, next) {
       }
       // 如果sortList或tagList有数据，则进入随机查询
       if (sortList.length > 0 || tagList.length > 0) {
+        const idSet = new Set();
         const nePostIdList = [jsonData._id]
+        idSet.add(jsonData._id.toString());
         // 如果存在postList，则将postList的id加入nePostIdList
         if (jsonData.postList && jsonData.postList.length > 0) {
           jsonData.postList.forEach(post => {
+            const strId = post._id.toString();
+            if (!idSet.has(strId)) {
+              idSet.add(strId);
             nePostIdList.push(post._id)
+            }
           })
         }
+        // 如果存在contentPostList，则将contentPostList的id加入nePostIdList
+        if (jsonData.contentPostList && jsonData.contentPostList.length > 0)
+        {
+          jsonData.contentPostList.forEach(post => {
+            const strId = post._id.toString();
+            if (!idSet.has(strId)) {
+              idSet.add(strId);
+              nePostIdList.push(post._id)
+            }
+          })
+        }
+
         // 开始聚合查询
         const randomPostList = await postUtils.aggregate([
           {
