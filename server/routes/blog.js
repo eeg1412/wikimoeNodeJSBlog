@@ -317,6 +317,13 @@ const blogRouteSetting = [
     method: 'post',
     middleware: [],
     controller: require('../api/blog/vote/postVote')
+  },
+  // get manifest.json
+  {
+    path: '/pwa/manifest.json',
+    method: 'get',
+    middleware: [],
+    controller: require('../api/blog/pwa/manifest')
   }
 ]
 

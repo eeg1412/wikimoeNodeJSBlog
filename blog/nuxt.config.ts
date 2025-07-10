@@ -87,7 +87,8 @@ export default defineNuxtConfig({
     head: {
       charset: 'utf-8',
       viewport:
-        'width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0'
+        'width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0',
+      link: [{ rel: 'manifest', href: '/api/blog/pwa/manifest.json' }]
     }
     // 因为nuxt的页面动画有BUG导致两次运行onmounted，所以关闭
     // pageTransition: { name: 'page', mode: 'out-in' },
@@ -95,12 +96,43 @@ export default defineNuxtConfig({
 
   devtools: { enabled: true },
 
+  pwa: {
+    registerType: 'autoUpdate', // 自动更新 Service Worker
+    manifest: false, // 禁用默认 manifest
+    manifestFilename: 'manifest.json', // 保持文件名一致
+    // manifest: {
+    //   name: '你的应用名称',
+    //   short_name: '应用简称',
+    //   start_url: '/',
+    //   display: 'standalone',
+    //   background_color: '#ffffff',
+    //   theme_color: '#ef90a7',
+    //   icons: [
+    //     {
+    //       src: '/icon-192x192.png',
+    //       sizes: '192x192',
+    //       type: 'image/png'
+    //     },
+    //     {
+    //       src: '/icon-512x512.png',
+    //       sizes: '512x512',
+    //       type: 'image/png'
+    //     }
+    //   ]
+    // },
+    workbox: {
+      cleanupOutdatedCaches: true, // 清理旧缓存
+      skipWaiting: true, // 安装后立即激活新 Service Worker
+      clientsClaim: true // 新 Service Worker 控制所有页面
+    }
+  },
+
   devServer: {
     // host: '0.0.0.0',
     port: 8078
   },
 
-  modules: ['@pinia/nuxt', '@nuxt/ui', 'nuxt-swiper'],
+  modules: ['@pinia/nuxt', '@nuxt/ui', 'nuxt-swiper', '@vite-pwa/nuxt'],
 
   swiper: {
     // Swiper options
