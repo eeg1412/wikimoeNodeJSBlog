@@ -6,14 +6,14 @@ var options = new Schema(
     name: {
       type: String,
       required: true,
-      index: true,
+      index: true
     },
     // value
     value: {
-      type: String,
-    },
+      type: String
+    }
   },
-  { timestamps: true },
+  { timestamps: true }
 )
 
 module.exports = mongoose.model('options', options)

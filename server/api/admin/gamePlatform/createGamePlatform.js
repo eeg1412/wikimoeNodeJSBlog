@@ -8,21 +8,21 @@ module.exports = async function (req, res, next) {
   // 校验格式
   const params = {
     name,
-    color,
+    color
   }
   const rule = [
     {
       key: 'name',
       label: '游戏平台名称',
       type: null,
-      required: true,
+      required: true
     },
     {
       key: 'color',
       label: '颜色',
       type: null,
-      required: true,
-    },
+      required: true
+    }
   ]
   const errors = utils.checkForm(params, rule)
   if (errors.length > 0) {
@@ -32,19 +32,19 @@ module.exports = async function (req, res, next) {
   // save
   gamePlatformUtils
     .save(params)
-    .then((data) => {
+    .then(data => {
       res.send({
-        data: data,
+        data: data
       })
       adminApiLog.info(`gamePlatform create success`)
     })
-    .catch((err) => {
+    .catch(err => {
       res.status(400).json({
         errors: [
           {
-            message: '游戏平台创建失败',
-          },
-        ],
+            message: '游戏平台创建失败'
+          }
+        ]
       })
       adminApiLog.error(`gamePlatform create fail, ${logErrorToText(err)}`)
     })

@@ -70,7 +70,7 @@ const modelUtilMap = {
   tags: tagsUtil,
   users: usersUtil,
   votes: votesUtil,
-  votelogs: votelogsUtil,
+  votelogs: votelogsUtil
 }
 
 const noDropCollections = ['backups']
@@ -94,7 +94,7 @@ exports.dumpCollections = async (pathname, id) => {
     const cursor = mongoose.connection.db.collection(collection.name).find()
     // 创建写入流，用于将数据写入到文件中
     const writeStream = fs.createWriteStream(
-      path.join(dir, `${collection.name}.bson`),
+      path.join(dir, `${collection.name}.bson`)
     )
 
     // 遍历每个文档
@@ -117,13 +117,13 @@ exports.dumpCollections = async (pathname, id) => {
   // 将备份信息写入到文件中
   fs.writeFileSync(
     path.join(`./cache/${pathname}`, 'backupInfo.bson'),
-    BackupInfoBSONData,
+    BackupInfoBSONData
   )
   console.log(`backup info ${JSON.stringify(BackupInfo)} dumped successfully`)
 }
 
 // 将备份文件压缩为 zip 格式
-exports.backupToZip = async (pathname) => {
+exports.backupToZip = async pathname => {
   // 定义备份目录
   const dir = `./cache/${pathname}`
 
@@ -136,7 +136,7 @@ exports.backupToZip = async (pathname) => {
   const output = fs.createWriteStream(`./backups/${pathname}.zip`)
   // 创建 archiver 对象，用于压缩文件
   const archive = archiver('zip', {
-    zlib: { level: 2 },
+    zlib: { level: 2 }
   })
 
   console.log('backup to zip start')
@@ -154,7 +154,7 @@ exports.backupToZip = async (pathname) => {
 }
 
 // 获取备份文件的大小
-exports.getBackupFileSize = (pathname) => {
+exports.getBackupFileSize = pathname => {
   const fullPath = `./backups/${pathname}.zip`
   if (!fs.existsSync(fullPath)) {
     throw new Error('backup file not exists')
@@ -164,7 +164,7 @@ exports.getBackupFileSize = (pathname) => {
 }
 
 // 清除备份缓存
-exports.clearBackupCache = async (pathname) => {
+exports.clearBackupCache = async pathname => {
   // 定义备份目录
   const dir = `./cache/${pathname}`
   if (!fs.existsSync(dir)) {
@@ -176,7 +176,7 @@ exports.clearBackupCache = async (pathname) => {
 }
 
 // 还原备份
-exports.unzipBackup = (fullPath) => {
+exports.unzipBackup = fullPath => {
   console.log('unzip backup start')
   return new Promise((resolve, reject) => {
     // 在./cache 目录下创建一个文件夹，用于存放解压后的文件
@@ -228,7 +228,7 @@ exports.clearCollections = async () => {
 }
 
 // 解析mongodb文件夹内的bson文件
-exports.restoreCollections = async (fullPath) => {
+exports.restoreCollections = async fullPath => {
   const dir = `./cache/${path.basename(fullPath, '.zip')}/mongodb`
   // 获取目录下的所有文件
   const files = fs.readdirSync(dir)
@@ -290,11 +290,11 @@ exports.restoreCollections = async (fullPath) => {
           // 如果promiseArray已经大于100，那么等待所有的promise执行完毕
           if (promiseArray.length >= 100) {
             console.log(
-              `Collection ${collectionName} restored 100 documents try to save`,
+              `Collection ${collectionName} restored 100 documents try to save`
             )
             await Promise.all(promiseArray)
             console.log(
-              `Collection ${collectionName} restored 100 documents saved`,
+              `Collection ${collectionName} restored 100 documents saved`
             )
             // 清空promiseArray
             promiseArray.length = 0
@@ -304,11 +304,11 @@ exports.restoreCollections = async (fullPath) => {
 
       if (promiseArray.length > 0) {
         console.log(
-          `Collection ${collectionName} restored ${promiseArray.length} documents try to save`,
+          `Collection ${collectionName} restored ${promiseArray.length} documents try to save`
         )
         await Promise.all(promiseArray)
         console.log(
-          `Collection ${collectionName} restored ${promiseArray.length} documents saved`,
+          `Collection ${collectionName} restored ${promiseArray.length} documents saved`
         )
       }
 
@@ -335,7 +335,7 @@ exports.removePublicContents = async () => {
 }
 
 // 还原./public目录
-exports.restorePublic = async (fullPath) => {
+exports.restorePublic = async fullPath => {
   const sourceDir = `./cache/${path.basename(fullPath, '.zip')}/public`
   const targetDir = './public'
   // 判断sourceDir是否存在
@@ -355,7 +355,7 @@ exports.restorePublic = async (fullPath) => {
 }
 
 // 清空cache
-exports.clearRestoreCache = async (fullPath) => {
+exports.clearRestoreCache = async fullPath => {
   const dir = `./cache/${path.basename(fullPath, '.zip')}`
   if (!fs.existsSync(dir)) {
     throw new Error('restore cache not exists')

@@ -22,7 +22,7 @@ router.get('/:type?', async function (req, res, next) {
     ip: ip,
     ipInfo: await utils.IP2LocationUtils(ip, null, null, false),
     deviceInfo: utils.deviceUAInfoUtils(req),
-    rssPath: req.path,
+    rssPath: req.path
   }
   let uaStr = req.headers['user-agent'] || ''
   // 最多1000个字符

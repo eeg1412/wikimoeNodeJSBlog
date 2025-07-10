@@ -8,34 +8,34 @@ module.exports = async function (req, res, next) {
   const id = req.body.id
   const lastusetime = new Date()
   const params = {
-    lastusetime: lastusetime,
+    lastusetime: lastusetime
   }
   // updateOne
   tagUtils
     .updateOne({ _id: id }, params)
-    .then((data) => {
+    .then(data => {
       if (data.modifiedCount === 0) {
         res.status(400).json({
           errors: [
             {
-              message: '更新失败',
-            },
-          ],
+              message: '更新失败'
+            }
+          ]
         })
         return
       }
       res.send({
-        data: data,
+        data: data
       })
       adminApiLog.info(`tag update usetime success`)
     })
-    .catch((err) => {
+    .catch(err => {
       res.status(400).json({
         errors: [
           {
-            message: '标签更新失败',
-          },
-        ],
+            message: '标签更新失败'
+          }
+        ]
       })
       adminApiLog.error(`tag update usetime fail, ${logErrorToText(err)}`)
     })

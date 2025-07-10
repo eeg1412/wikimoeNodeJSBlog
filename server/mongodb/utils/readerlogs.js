@@ -43,7 +43,7 @@ exports.findPage = async function (parmas, sort, page, limit, projection) {
   }
   return {
     list,
-    total,
+    total
   }
 }
 

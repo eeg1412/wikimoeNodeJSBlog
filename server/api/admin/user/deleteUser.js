@@ -19,9 +19,9 @@ module.exports = async function (req, res, next) {
     res.status(400).json({
       errors: [
         {
-          message: 'changeType不正确',
-        },
-      ],
+          message: 'changeType不正确'
+        }
+      ]
     })
     return
   }
@@ -31,9 +31,9 @@ module.exports = async function (req, res, next) {
       res.status(400).json({
         errors: [
           {
-            message: 'toUserId不正确',
-          },
-        ],
+            message: 'toUserId不正确'
+          }
+        ]
       })
       return
     }
@@ -42,9 +42,9 @@ module.exports = async function (req, res, next) {
       res.status(400).json({
         errors: [
           {
-            message: '不能转让给自己',
-          },
-        ],
+            message: '不能转让给自己'
+          }
+        ]
       })
       return
     }
@@ -54,9 +54,9 @@ module.exports = async function (req, res, next) {
       res.status(400).json({
         errors: [
           {
-            message: '转让管理员不存在',
-          },
-        ],
+            message: '转让管理员不存在'
+          }
+        ]
       })
       return
     }
@@ -65,9 +65,9 @@ module.exports = async function (req, res, next) {
     res.status(400).json({
       errors: [
         {
-          message: 'id不正确',
-        },
-      ],
+          message: 'id不正确'
+        }
+      ]
     })
     return
   }
@@ -77,9 +77,9 @@ module.exports = async function (req, res, next) {
     res.status(400).json({
       errors: [
         {
-          message: '不能删除自己',
-        },
-      ],
+          message: '不能删除自己'
+        }
+      ]
     })
     return
   }
@@ -88,23 +88,23 @@ module.exports = async function (req, res, next) {
     res.status(400).json({
       errors: [
         {
-          message: '管理员不存在',
-        },
-      ],
+          message: '管理员不存在'
+        }
+      ]
     })
     return
   }
   //  删除管理员
   userUtils
     .deleteOne({ _id: id })
-    .then((data) => {
+    .then(data => {
       if (data.deletedCount === 0) {
         res.status(400).json({
           errors: [
             {
-              message: '删除失败',
-            },
-          ],
+              message: '删除失败'
+            }
+          ]
         })
         return
       }
@@ -112,11 +112,11 @@ module.exports = async function (req, res, next) {
       if (changeType === '1') {
         // 转让文章
         promiseArr.push(
-          postUtils.updateMany({ author: id }, { author: toUserId }),
+          postUtils.updateMany({ author: id }, { author: toUserId })
         )
         // 转让评论
         promiseArr.push(
-          commentUtils.updateMany({ user: id }, { user: toUserId }),
+          commentUtils.updateMany({ user: id }, { user: toUserId })
         )
       } else if (changeType === '0') {
         // 删除文章
@@ -135,50 +135,50 @@ module.exports = async function (req, res, next) {
               fs.unlinkSync(fullPath)
               res.send({
                 data: {
-                  message: '删除成功',
-                },
+                  message: '删除成功'
+                }
               })
             } catch (err) {
               res.status(400).json({
                 errors: [
                   {
-                    message: '管理员删除成功，但删除头像失败',
-                  },
-                ],
+                    message: '管理员删除成功，但删除头像失败'
+                  }
+                ]
               })
               adminApiLog.error(
-                `delete user photo fail, ${logErrorToText(err)}`,
+                `delete user photo fail, ${logErrorToText(err)}`
               )
             }
           } else {
             res.send({
               data: {
-                message: '删除成功',
-              },
+                message: '删除成功'
+              }
             })
           }
           cacheDataUtils.getCommentList()
         })
-        .catch((err) => {
+        .catch(err => {
           res.status(400).json({
             errors: [
               {
-                message: '管理员删除成功，文章或评论处理失败',
-              },
-            ],
+                message: '管理员删除成功，文章或评论处理失败'
+              }
+            ]
           })
           adminApiLog.error(
-            `admin delete success but post or comment fail, ${logErrorToText(err)}`,
+            `admin delete success but post or comment fail, ${logErrorToText(err)}`
           )
         })
     })
-    .catch((err) => {
+    .catch(err => {
       res.status(400).json({
         errors: [
           {
-            message: '删除失败',
-          },
-        ],
+            message: '删除失败'
+          }
+        ]
       })
       adminApiLog.error(`admin delete fail, ${logErrorToText(err)}`)
     })

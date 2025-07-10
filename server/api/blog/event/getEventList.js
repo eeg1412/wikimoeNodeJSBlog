@@ -9,7 +9,7 @@ module.exports = async function (req, res, next) {
 
   const params = {
     startTime,
-    endTime,
+    endTime
   }
 
   // 校验开始结束时间是否是 2024-03-20T15:00:00.000Z 格式
@@ -21,8 +21,8 @@ module.exports = async function (req, res, next) {
       required: true,
       options: {
         strict: true,
-        strictSeparator: true,
-      },
+        strictSeparator: true
+      }
     },
     {
       key: 'endTime',
@@ -31,9 +31,9 @@ module.exports = async function (req, res, next) {
       required: true,
       options: {
         strict: true,
-        strictSeparator: true,
-      },
-    },
+        strictSeparator: true
+      }
+    }
   ]
   const errors = utils.checkForm(params, rule)
   if (errors.length > 0) {
@@ -45,9 +45,9 @@ module.exports = async function (req, res, next) {
     res.status(400).json({
       errors: [
         {
-          message: '时间信息有误',
-        },
-      ],
+          message: '时间信息有误'
+        }
+      ]
     })
     return
   }
@@ -56,9 +56,9 @@ module.exports = async function (req, res, next) {
     res.status(400).json({
       errors: [
         {
-          message: '时间信息有误',
-        },
-      ],
+          message: '时间信息有误'
+        }
+      ]
     })
     return
   }
@@ -83,16 +83,16 @@ module.exports = async function (req, res, next) {
     res.status(400).json({
       errors: [
         {
-          message: '时间信息有误',
-        },
-      ],
+          message: '时间信息有误'
+        }
+      ]
     })
     return
   }
 
   const sort = {
     startTime: -1,
-    _id: -1,
+    _id: -1
   }
   eventUtils
     .find(
@@ -100,28 +100,28 @@ module.exports = async function (req, res, next) {
         $or: [
           {
             startTime: {
-              $lte: new Date(endTime),
+              $lte: new Date(endTime)
             },
             endTime: {
-              $gte: new Date(startTime),
-            },
-          },
-        ],
+              $gte: new Date(startTime)
+            }
+          }
+        ]
       },
-      sort,
+      sort
     )
-    .then((data) => {
+    .then(data => {
       res.send({
-        list: data,
+        list: data
       })
     })
-    .catch((err) => {
+    .catch(err => {
       res.status(400).json({
         errors: [
           {
-            message: '活动列表获取失败',
-          },
-        ],
+            message: '活动列表获取失败'
+          }
+        ]
       })
       userApiLog.error(`event list get fail, ${JSON.stringify(err)}`)
     })

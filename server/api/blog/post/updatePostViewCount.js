@@ -43,18 +43,18 @@ module.exports = async function (req, res, next) {
   const readerlogCount = await readerlogUtils.count({
     $or: [
       {
-        uuid: uuid,
+        uuid: uuid
       },
       {
-        ip: ip,
-      },
+        ip: ip
+      }
     ],
     // action字段 postView
     action: 'postView',
     createdAt: {
       $gte: utils.getTodayStartTime(),
-      $lte: utils.getTodayEndTime(),
-    },
+      $lte: utils.getTodayEndTime()
+    }
   })
   if (readerlogCount >= 1000) {
     return
@@ -63,8 +63,8 @@ module.exports = async function (req, res, next) {
   const params = {
     // views + 1
     $inc: {
-      views: 1,
-    },
+      views: 1
+    }
   }
 
   const data = await postUtils.findOne({ _id: id })
@@ -98,19 +98,19 @@ module.exports = async function (req, res, next) {
     data: {
       target: target,
       targetId: id,
-      content: content,
+      content: content
     },
     ...isSearchEngineResult,
     deviceInfo: utils.deviceUAInfoUtils(req),
     ipInfo: await utils.IP2LocationUtils(ip, null, null, false),
-    ip: ip,
+    ip: ip
   }
   readerlogUtils
     .save(readerlogParams)
-    .then((data) => {
+    .then(data => {
       userApiLog.info(`post view log create success`)
     })
-    .catch((err) => {
+    .catch(err => {
       userApiLog.error(`post view log create fail, ${logErrorToText(err)}`)
     })
 

@@ -10,14 +10,14 @@ function withPanorama360(editor) {
   const newEditor = editor
 
   // 重写 isInline
-  newEditor.isInline = (elem) => {
+  newEditor.isInline = elem => {
     const type = DomEditor.getNodeType(elem)
     if (type === 'panorama360') return false
     return isInline(elem)
   }
 
   // 重写 isVoid
-  newEditor.isVoid = (elem) => {
+  newEditor.isVoid = elem => {
     const type = DomEditor.getNodeType(elem)
     if (type === 'panorama360') return true
     return isVoid(elem)
@@ -29,7 +29,7 @@ function withPanorama360(editor) {
       const isLast = DomEditor.isLastNode(newEditor, node)
       if (isLast) {
         Transforms.insertNodes(newEditor, DomEditor.genEmptyParagraph(), {
-          at: [path[0] + 1],
+          at: [path[0] + 1]
         })
       }
     }

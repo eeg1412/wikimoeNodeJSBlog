@@ -15,12 +15,12 @@ exports.getNaviList = async function () {
   console.info('naviList get')
   const sort = {
     taxis: 1,
-    _id: -1,
+    _id: -1
   }
   const promise = new Promise((resolve, reject) => {
     naviUtils
       .find({ status: 1 }, sort, undefined, { lean: true })
-      .then((data) => {
+      .then(data => {
         // 根据返回的data，配合parent字段，生成树形结构
         const jsonData = data
         const treeData = utils.generateTreeData(jsonData)
@@ -28,7 +28,7 @@ exports.getNaviList = async function () {
         resolve(treeData)
         console.info('naviList get success')
       })
-      .catch((err) => {
+      .catch(err => {
         global.$cacheData.naviList = null
         reject(err)
         console.error('naviList get fail')
@@ -41,12 +41,12 @@ exports.getSortList = async function () {
   console.info('sortList get')
   const sort = {
     taxis: 1,
-    _id: -1,
+    _id: -1
   }
   const promise = new Promise((resolve, reject) => {
     sortUtils
       .find({}, sort, undefined, { lean: true })
-      .then((data) => {
+      .then(data => {
         // 根据返回的data，配合parent字段，生成树形结构
         const jsonData = data
         const treeData = utils.generateTreeData(jsonData)
@@ -54,7 +54,7 @@ exports.getSortList = async function () {
         resolve(treeData)
         console.info('sortList get success')
       })
-      .catch((err) => {
+      .catch(err => {
         global.$cacheData.sortList = null
         reject(err)
         console.error('sortList get fail')
@@ -67,12 +67,12 @@ exports.getSidebarList = async function () {
   console.info('sidebarList get')
   const sort = {
     taxis: 1,
-    _id: -1,
+    _id: -1
   }
   const promise = await new Promise((resolve, reject) => {
     sidebarUtils
       .find({ status: 1 }, sort, undefined, { lean: true })
-      .then((data) => {
+      .then(data => {
         global.$cacheData.sidebarList = data
         resolve(data)
         // 更新 getCommentList
@@ -88,7 +88,7 @@ exports.getSidebarList = async function () {
         exports.resetCacheDataByType(4, 'randomTagListData')
         console.info('sidebarList get success')
       })
-      .catch((err) => {
+      .catch(err => {
         global.$cacheData.sidebarList = null
         reject(err)
         console.error('sidebarList get fail')
@@ -101,7 +101,7 @@ exports.resetCacheDataByType = (sidebarType, cacheDataName) => {
   // 从全局缓存中获取侧边栏列表
   const sidebarList = global.$cacheData.sidebarList || []
   // 查找指定类型的侧边栏
-  const targetSidebar = sidebarList.find((item) => item.type === sidebarType)
+  const targetSidebar = sidebarList.find(item => item.type === sidebarType)
 
   // 如果不存在指定类型的侧边栏，或者其count属性小于等于0
   if (!targetSidebar || targetSidebar.count <= 0) {
@@ -123,17 +123,17 @@ exports.getBannerList = async function () {
   console.info('bannerList get')
   const sort = {
     taxis: 1,
-    _id: -1,
+    _id: -1
   }
   const promise = new Promise((resolve, reject) => {
     bannerUtils
       .find({ status: 1 }, sort, undefined, { lean: true })
-      .then((data) => {
+      .then(data => {
         global.$cacheData.bannerList = data
         resolve(data)
         console.info('bannerList get success')
       })
-      .catch((err) => {
+      .catch(err => {
         global.$cacheData.bannerList = null
         reject(err)
         console.error('bannerList get fail')
@@ -147,7 +147,7 @@ exports.getCommentList = async function () {
   console.info('commentList get')
   // 查询global.$cacheData.sidebarList里type为3的侧边栏
   const sidebarList = global.$cacheData.sidebarList || []
-  const commentSidebar = sidebarList.find((item) => {
+  const commentSidebar = sidebarList.find(item => {
     return item.type === 3
   })
   // 不存在type为3的侧边栏
@@ -166,15 +166,15 @@ exports.getCommentList = async function () {
   }
   const sort = {
     date: -1,
-    _id: -1,
+    _id: -1
   }
   const promise = new Promise((resolve, reject) => {
     commentUtils
       .findPage({ status: 1 }, sort, 1, count, undefined, {
         postFilter: 'status _id alias type',
-        lean: true,
+        lean: true
       })
-      .then((data) => {
+      .then(data => {
         let list = data.list
         // 需要获取的key数组
         const keys = [
@@ -186,15 +186,15 @@ exports.getCommentList = async function () {
           'url',
           'post',
           'likes',
-          'isAdmin',
+          'isAdmin'
         ]
         // 去掉post.status不为1的list项
-        list = list.filter((item) => {
+        list = list.filter(item => {
           return item.post && item.post.status === 1
         })
 
         // 将list的email字段替换为gravatar头像
-        list.forEach((item) => {
+        list.forEach(item => {
           const email = item.email
           if (email) {
             item.avatar = utils.md5hex(email)
@@ -207,7 +207,7 @@ exports.getCommentList = async function () {
             item.isAdmin = false
           }
           // 只保留需要的key
-          Object.keys(item).forEach((key) => {
+          Object.keys(item).forEach(key => {
             if (!keys.includes(key)) {
               delete item[key]
             }
@@ -217,7 +217,7 @@ exports.getCommentList = async function () {
         resolve(list)
         console.info('commentList get success')
       })
-      .catch((err) => {
+      .catch(err => {
         global.$cacheData.commentList = null
         reject(err)
         console.error('commentList get fail')
@@ -238,31 +238,31 @@ exports.getPostArchiveList = async function () {
           $match: {
             status: 1,
             // type 1 和 2
-            type: { $in: [1, 2] },
-          },
+            type: { $in: [1, 2] }
+          }
         },
         {
           $group: {
             _id: {
               year: { $year: { date: '$date', timezone: siteTimeZone } },
-              month: { $month: { date: '$date', timezone: siteTimeZone } },
+              month: { $month: { date: '$date', timezone: siteTimeZone } }
             },
-            count: { $sum: 1 },
-          },
+            count: { $sum: 1 }
+          }
         },
         {
           $sort: {
             '_id.year': -1,
-            '_id.month': -1,
-          },
-        },
+            '_id.month': -1
+          }
+        }
       ])
-      .then((data) => {
+      .then(data => {
         global.$cacheData.postArchiveList = data
         resolve(data)
         console.info('postArchive get success')
       })
-      .catch((err) => {
+      .catch(err => {
         global.$cacheData.postArchiveList = null
         reject(err)
         console.error('postArchive get fail')
@@ -278,8 +278,8 @@ exports.getBangumiYearList = async function () {
       .aggregate([
         {
           $match: {
-            status: 1,
-          },
+            status: 1
+          }
         },
         {
           $facet: {
@@ -292,29 +292,29 @@ exports.getBangumiYearList = async function () {
               {
                 $group: {
                   _id: '$year',
-                  seasons: { $addToSet: '$season' },
-                },
+                  seasons: { $addToSet: '$season' }
+                }
               },
               {
                 $project: {
                   _id: 0,
                   year: '$_id',
-                  seasonList: '$seasons',
-                },
+                  seasonList: '$seasons'
+                }
               },
               {
                 $sort: {
-                  year: -1,
-                },
-              },
-            ],
-          },
-        },
+                  year: -1
+                }
+              }
+            ]
+          }
+        }
       ])
-      .then((data) => {
+      .then(data => {
         let base = {
           // total: 0,
-          list: [],
+          list: []
         }
         const data_ = data[0]
         if (data_) {
@@ -330,7 +330,7 @@ exports.getBangumiYearList = async function () {
         resolve(data)
         console.info('bangumiYearList get success')
       })
-      .catch((err) => {
+      .catch(err => {
         global.$cacheData.bangumiYearList = null
         reject(err)
         console.error('bangumiYearList get fail')
@@ -344,7 +344,7 @@ exports.getBangumiSeasonList = async function () {
   console.info('bangumiSeasonList get')
   // 查询global.$cacheData.sidebarList里type为13的侧边栏
   const sidebarList = global.$cacheData.sidebarList || []
-  const bangumiSeasonSidebar = sidebarList.find((item) => {
+  const bangumiSeasonSidebar = sidebarList.find(item => {
     return item.type === 13
   })
   // 不存在type为13的侧边栏
@@ -363,7 +363,7 @@ exports.getBangumiSeasonList = async function () {
   }
   const sort = {
     rating: -1,
-    _id: -1,
+    _id: -1
   }
   const yearSeason = utils.getYearSeason()
   const promise = new Promise((resolve, reject) => {
@@ -374,18 +374,18 @@ exports.getBangumiSeasonList = async function () {
         1,
         count,
         '_id cover label rating season status summary title year giveUp urlList',
-        { lean: true },
+        { lean: true }
       )
-      .then((data) => {
+      .then(data => {
         global.$cacheData.bangumiSeasonObj = {
           year: yearSeason.year,
           season: yearSeason.season,
-          list: data.list,
+          list: data.list
         }
         resolve(global.$cacheData.bangumiSeasonObj)
         console.info('bangumiSeasonList get success')
       })
-      .catch((err) => {
+      .catch(err => {
         global.$cacheData.bangumiSeasonObj = null
         reject(err)
         console.error('bangumiSeasonList get fail')
@@ -405,8 +405,8 @@ exports.getMovieYearList = async function () {
             // 有year month day
             year: { $ne: null },
             month: { $ne: null },
-            day: { $ne: null },
-          },
+            day: { $ne: null }
+          }
         },
         {
           $facet: {
@@ -414,28 +414,28 @@ exports.getMovieYearList = async function () {
               {
                 $group: {
                   _id: '$year',
-                  count: { $sum: 1 },
-                },
+                  count: { $sum: 1 }
+                }
               },
               {
                 $project: {
                   _id: 0,
                   year: '$_id',
-                  count: 1,
-                },
+                  count: 1
+                }
               },
               {
                 $sort: {
-                  year: -1,
-                },
-              },
-            ],
-          },
-        },
+                  year: -1
+                }
+              }
+            ]
+          }
+        }
       ])
-      .then((data) => {
+      .then(data => {
         let base = {
-          list: [],
+          list: []
         }
         const data_ = data[0]
         if (data_) {
@@ -447,7 +447,7 @@ exports.getMovieYearList = async function () {
         resolve(data)
         console.info('movieYearList get success')
       })
-      .catch((err) => {
+      .catch(err => {
         global.$cacheData.movieYearList = null
         reject(err)
         console.error('movieYearList get fail')
@@ -475,7 +475,7 @@ exports.checkBangumiSeasonList = async function () {
 exports.getPlayingGameList = async function () {
   console.info('playingGameList get')
   const sidebarList = global.$cacheData.sidebarList || []
-  const playingGameSidebar = sidebarList.find((item) => {
+  const playingGameSidebar = sidebarList.find(item => {
     return item.type === 14
   })
   if (!playingGameSidebar) {
@@ -489,13 +489,13 @@ exports.getPlayingGameList = async function () {
   }
   const sort = {
     rating: -1,
-    _id: -1,
+    _id: -1
   }
   const params = {
     status: 1,
     giveUp: { $ne: true },
     startTime: { $ne: null },
-    endTime: { $eq: null },
+    endTime: { $eq: null }
   }
   const promise = new Promise((resolve, reject) => {
     gameUtils
@@ -505,14 +505,14 @@ exports.getPlayingGameList = async function () {
         1,
         count,
         '_id cover endTime gamePlatform label rating screenshotAlbum startTime status summary title urlList giveUp',
-        { lean: true },
+        { lean: true }
       )
-      .then((data) => {
+      .then(data => {
         global.$cacheData.playingGameList = data.list
         resolve(data.list)
         console.info('playingGameList get success')
       })
-      .catch((err) => {
+      .catch(err => {
         global.$cacheData.playingGameList = null
         reject(err)
         console.error('playingGameList get fail')
@@ -525,7 +525,7 @@ exports.getPlayingGameList = async function () {
 exports.getReadingBookList = async function () {
   console.info('readingBookList get')
   const sidebarList = global.$cacheData.sidebarList || []
-  const readingBookSidebar = sidebarList.find((item) => {
+  const readingBookSidebar = sidebarList.find(item => {
     return item.type === 15
   })
   if (!readingBookSidebar) {
@@ -539,13 +539,13 @@ exports.getReadingBookList = async function () {
   }
   const sort = {
     rating: -1,
-    _id: -1,
+    _id: -1
   }
   const params = {
     status: 1,
     giveUp: { $ne: true },
     startTime: { $ne: null },
-    endTime: { $eq: null },
+    endTime: { $eq: null }
   }
   const promise = new Promise((resolve, reject) => {
     bookUtils
@@ -555,14 +555,14 @@ exports.getReadingBookList = async function () {
         1,
         count,
         '_id cover endTime booktype label rating startTime status summary title urlList giveUp',
-        { lean: true },
+        { lean: true }
       )
-      .then((data) => {
+      .then(data => {
         global.$cacheData.readingBookList = data.list
         resolve(data.list)
         console.info('readingBookList get success')
       })
-      .catch((err) => {
+      .catch(err => {
         global.$cacheData.readingBookList = null
         reject(err)
         console.error('readingBookList get fail')

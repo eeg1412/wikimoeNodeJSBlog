@@ -18,7 +18,7 @@ module.exports = async function (req, res, next) {
     startTime,
     endTime,
     status,
-    giveUp,
+    giveUp
   } = req.body
   // 校验格式
   const params = {
@@ -33,15 +33,15 @@ module.exports = async function (req, res, next) {
     startTime,
     endTime,
     status,
-    giveUp,
+    giveUp
   }
   const rule = [
     {
       key: 'title',
       label: '游戏名称',
       type: null,
-      required: true,
-    },
+      required: true
+    }
   ]
   const errors = utils.checkForm(params, rule)
   if (errors.length > 0) {
@@ -65,7 +65,7 @@ module.exports = async function (req, res, next) {
     path = path + coverYear16 + '/'
     try {
       const imgRes = utils.base64ToFile(cover, path, fileName, {
-        createDir: true,
+        createDir: true
       })
       params['cover'] =
         `/upload/gameCover/${coverYear16}/${imgRes.fileNameAll}?v=${Date.now()}`
@@ -74,9 +74,9 @@ module.exports = async function (req, res, next) {
       res.status(400).json({
         errors: [
           {
-            message: '照片上传失败',
-          },
-        ],
+            message: '照片上传失败'
+          }
+        ]
       })
       throw new Error(error)
     }
@@ -85,20 +85,20 @@ module.exports = async function (req, res, next) {
   // save
   gameUtils
     .save(params)
-    .then((data) => {
+    .then(data => {
       res.send({
-        data: data,
+        data: data
       })
       adminApiLog.info(`game create success`)
       cacheDataUtils.getPlayingGameList()
     })
-    .catch((err) => {
+    .catch(err => {
       res.status(400).json({
         errors: [
           {
-            message: '游戏创建失败',
-          },
-        ],
+            message: '游戏创建失败'
+          }
+        ]
       })
       adminApiLog.error(`game create fail, ${logErrorToText(err)}`)
     })

@@ -11,7 +11,7 @@ function sendRequest() {
   const randomString = crypto.randomBytes(16).toString('hex')
   const timestamp = Date.now()
   console.log(
-    `Sending request with query: ${randomString}, timestamp: ${timestamp}`,
+    `Sending request with query: ${randomString}, timestamp: ${timestamp}`
   )
 
   // 创建一个请求
@@ -19,11 +19,11 @@ function sendRequest() {
     http
       .get(
         `http://localhost:3007/?query=${randomString}&timestamp=${timestamp}`,
-        (res) => {
+        res => {
           let data = ''
-          res.on('data', (chunk) => (data += chunk))
+          res.on('data', chunk => (data += chunk))
           res.on('end', () => resolve(data))
-        },
+        }
       )
       .on('error', reject)
   })
@@ -35,11 +35,11 @@ const intervalId = setInterval(() => {
     clearInterval(intervalId)
   } else {
     sendRequest()
-      .then((response) => {
+      .then(response => {
         // 请求成功
         console.log(`Request was successful.`)
       })
-      .catch((error) => {
+      .catch(error => {
         // 请求失败
         console.error(`Request failed: ${error.message}`)
       })

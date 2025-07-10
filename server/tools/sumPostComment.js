@@ -7,7 +7,7 @@ async function fixCommentCountForPost(post) {
   // 获取 Post 下面 status 为 1 的评论数
   const commentCount = await commentUtils.count({ post: post._id, status: 1 })
   console.log(
-    `Post ${post.title || post.excerpt} has ${commentCount} comments.`,
+    `Post ${post.title || post.excerpt} has ${commentCount} comments.`
   )
 
   // 更新 Post 的 comnum
@@ -33,7 +33,7 @@ db.once('open', () => {
       console.log('Done')
       process.exit(0)
     })
-    .catch((err) => {
+    .catch(err => {
       console.error(err)
       process.exit(1)
     })

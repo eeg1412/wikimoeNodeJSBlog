@@ -6,12 +6,12 @@ const dbPromise = new Promise((resolve, reject) => {
   db.once('open', () => {
     resolve()
   })
-  db.on('error', (err) => {
+  db.on('error', err => {
     reject(err)
   })
 })
 
-parentPort.on('message', async (fullPath) => {
+parentPort.on('message', async fullPath => {
   dbPromise
     .then(async () => {
       console.log('worker start')
@@ -24,7 +24,7 @@ parentPort.on('message', async (fullPath) => {
       parentPort.postMessage({ status: 'success' })
       parentPort.close()
     })
-    .catch((err) => {
+    .catch(err => {
       console.error('Failed to connect to database', err)
       parentPort.postMessage({ status: 'error', error: err })
       parentPort.close()

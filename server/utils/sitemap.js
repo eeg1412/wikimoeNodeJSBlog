@@ -33,17 +33,17 @@ exports.updateSitemap = async () => {
     // 创建SitemapStream实例
     const sitemapStream = new SitemapStream({
       hostname: siteUrl,
-      xslUrl: '/sitemap.xsl',
+      xslUrl: '/sitemap.xsl'
     })
     const writeStream = createWriteStream(
-      path.join(sitemapCacheFolder, 'sitemap.xml'),
+      path.join(sitemapCacheFolder, 'sitemap.xml')
     )
     sitemapStream.pipe(writeStream)
     writeStream.on('finish', () => {
       console.info('Sitemap has been written to sitemap.xml successfully.')
       resolve()
     })
-    writeStream.on('error', (err) => {
+    writeStream.on('error', err => {
       console.error(err)
       reject(err)
     })
@@ -52,21 +52,21 @@ exports.updateSitemap = async () => {
       url: '/',
       changefreq: 'always',
       priority: 1,
-      lastmod: new Date(),
+      lastmod: new Date()
     })
     // 添加页面
     const params = {
       status: 1,
-      type: 3,
+      type: 3
     }
     const sort = {
       date: -1,
-      _id: -1,
+      _id: -1
     }
     const pageCursor = postUtils.findCursor(
       params,
       sort,
-      '_id date alias lastChangDate date',
+      '_id date alias lastChangDate date'
     )
     console.info('creating sitemap type is page')
     for await (const page of pageCursor) {
@@ -74,7 +74,7 @@ exports.updateSitemap = async () => {
         url: `/page/${page.alias || page._id}`,
         changefreq: 'always',
         priority: 0.8,
-        lastmod: page.lastChangDate,
+        lastmod: page.lastChangDate
       })
     }
     console.info('creating sitemap type is page done')
@@ -83,7 +83,7 @@ exports.updateSitemap = async () => {
     const blogCursor = postUtils.findCursor(
       params,
       sort,
-      '_id date alias lastChangDate date',
+      '_id date alias lastChangDate date'
     )
     console.info('creating sitemap type is blog')
     for await (const blog of blogCursor) {
@@ -91,7 +91,7 @@ exports.updateSitemap = async () => {
         url: `/post/${blog.alias || blog._id}`,
         changefreq: 'always',
         priority: 0.5,
-        lastmod: blog.lastChangDate,
+        lastmod: blog.lastChangDate
       })
     }
     console.info('creating sitemap type is blog done')
@@ -100,7 +100,7 @@ exports.updateSitemap = async () => {
     const tweetCursor = postUtils.findCursor(
       params,
       sort,
-      '_id date alias lastChangDate date',
+      '_id date alias lastChangDate date'
     )
     console.info('creating sitemap type is tweet')
     for await (const tweet of tweetCursor) {
@@ -108,7 +108,7 @@ exports.updateSitemap = async () => {
         url: `/post/${tweet.alias || tweet._id}`,
         changefreq: 'always',
         priority: 0.3,
-        lastmod: tweet.lastChangDate,
+        lastmod: tweet.lastChangDate
       })
     }
     console.info('creating sitemap type is tweet done')

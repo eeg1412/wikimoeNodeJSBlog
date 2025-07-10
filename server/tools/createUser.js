@@ -27,18 +27,18 @@ const checkAdmin = async (username, nickname, role) => {
   return res
 }
 
-const saveToDB = async (res) => {
+const saveToDB = async res => {
   const username = res.username.toLowerCase()
   const params = {
     username: username,
     password: utils.creatBcryptStr(res.password),
     nickname: res.nickname,
-    role: hasAdmin ? 990 : 999,
+    role: hasAdmin ? 990 : 999
   }
   await userUtils.save(params)
   console.log(chalk.green(`${username}添加成功`))
 }
-const checkForm = async (value) => {
+const checkForm = async value => {
   console.log(value)
   let { username, password, nickname } = value
   if (!username) {
@@ -78,11 +78,11 @@ const creatAdmin = async () => {
     choices: [
       { name: 'username', message: '用户名' },
       { name: 'nickname', message: '昵称' },
-      { name: 'password', message: '密码' },
+      { name: 'password', message: '密码' }
     ],
-    validate: async (value) => {
+    validate: async value => {
       return await checkForm(value)
-    },
+    }
   })
   const res = await prompt.run()
   await saveToDB(res)
@@ -100,7 +100,7 @@ const init = async () => {
     const value = {
       username: process.argv[2],
       password: process.argv[3],
-      nickname: process.argv[4],
+      nickname: process.argv[4]
     }
     const checkRes = await checkForm(value)
     if (checkRes === true) {

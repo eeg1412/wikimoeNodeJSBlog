@@ -29,16 +29,16 @@ module.exports = async function (req, res, next) {
           const fileName = name
           try {
             const imgRes = utils.base64ToFile(value, path, fileName, {
-              createDir: true,
+              createDir: true
             })
             value = `/upload/siteImg/${imgRes.fileNameAll}?v=${Date.now()}`
           } catch (error) {
             res.status(400).json({
               errors: [
                 {
-                  message: '照片上传失败',
-                },
-              ],
+                  message: '照片上传失败'
+                }
+              ]
             })
             // 写入日志
             adminApiLog.error(`logo update fail, ${JSON.stringify(error)}`)
@@ -54,11 +54,11 @@ module.exports = async function (req, res, next) {
     const dbOptions = { upsert: true, new: true }
     await optionUtils
       .findOneAndUpdate({ name }, { value }, dbOptions)
-      .then((data) => {
+      .then(data => {
         resList.push(data.toJSON())
         adminApiLog.info(`option update success , ${JSON.stringify(data)}`)
       })
-      .catch((err) => {
+      .catch(err => {
         adminApiLog.error(`option update fail, ${logErrorToText(err)}`)
       })
   }
@@ -69,6 +69,6 @@ module.exports = async function (req, res, next) {
   // utils.reflushBlogCache()
   // 返回结果
   res.send({
-    data: resList,
+    data: resList
   })
 }

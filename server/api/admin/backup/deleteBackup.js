@@ -14,9 +14,9 @@ module.exports = async function (req, res, next) {
     res.status(400).json({
       errors: [
         {
-          message: 'id不能为空',
-        },
-      ],
+          message: 'id不能为空'
+        }
+      ]
     })
     return
   }
@@ -25,9 +25,9 @@ module.exports = async function (req, res, next) {
     res.status(400).json({
       errors: [
         {
-          message: '备份不存在',
-        },
-      ],
+          message: '备份不存在'
+        }
+      ]
     })
     return
   }
@@ -36,9 +36,9 @@ module.exports = async function (req, res, next) {
     res.status(400).json({
       errors: [
         {
-          message: '参数错误',
-        },
-      ],
+          message: '参数错误'
+        }
+      ]
     })
     return
   }
@@ -50,9 +50,9 @@ module.exports = async function (req, res, next) {
         res.status(400).json({
           errors: [
             {
-              message: '备份文件不存在',
-            },
-          ],
+              message: '备份文件不存在'
+            }
+          ]
         })
         return
       }
@@ -63,9 +63,9 @@ module.exports = async function (req, res, next) {
         res.status(400).json({
           errors: [
             {
-              message: `删除文件失败, ${logErrorToText(err)}`,
-            },
-          ],
+              message: `删除文件失败, ${logErrorToText(err)}`
+            }
+          ]
         })
         adminApiLog.error(`backup delete file fail, ${logErrorToText(err)}`)
         return
@@ -77,9 +77,9 @@ module.exports = async function (req, res, next) {
           res.status(400).json({
             errors: [
               {
-                message: '删除文件成功, 但更新记录失败',
-              },
-            ],
+                message: '删除文件成功, 但更新记录失败'
+              }
+            ]
           })
           return
         }
@@ -87,12 +87,12 @@ module.exports = async function (req, res, next) {
         res.status(400).json({
           errors: [
             {
-              message: '删除文件成功, 但更新记录失败',
-            },
-          ],
+              message: '删除文件成功, 但更新记录失败'
+            }
+          ]
         })
         adminApiLog.error(
-          `backup delete file success, but update record fail, ${logErrorToText(err)}`,
+          `backup delete file success, but update record fail, ${logErrorToText(err)}`
         )
         return
       }
@@ -100,9 +100,9 @@ module.exports = async function (req, res, next) {
       res.status(400).json({
         errors: [
           {
-            message: '备份不存在',
-          },
-        ],
+            message: '备份不存在'
+          }
+        ]
       })
       return
     }
@@ -118,12 +118,12 @@ module.exports = async function (req, res, next) {
         res.status(400).json({
           errors: [
             {
-              message: '删除缓存文件失败',
-            },
-          ],
+              message: '删除缓存文件失败'
+            }
+          ]
         })
         adminApiLog.error(
-          `backup delete cache file fail, ${logErrorToText(err)}`,
+          `backup delete cache file fail, ${logErrorToText(err)}`
         )
         return
       }
@@ -137,9 +137,9 @@ module.exports = async function (req, res, next) {
         res.status(400).json({
           errors: [
             {
-              message: '删除失败',
-            },
-          ],
+              message: '删除失败'
+            }
+          ]
         })
         return
       }
@@ -147,9 +147,9 @@ module.exports = async function (req, res, next) {
       res.status(400).json({
         errors: [
           {
-            message: '删除失败',
-          },
-        ],
+            message: '删除失败'
+          }
+        ]
       })
       adminApiLog.error(`backup delete fail, ${logErrorToText(err)}`)
       return
@@ -157,7 +157,7 @@ module.exports = async function (req, res, next) {
   }
   res.send({
     data: {
-      message: '删除成功',
-    },
+      message: '删除成功'
+    }
   })
 }

@@ -33,14 +33,14 @@ export function useTheme() {
   }
 
   // 应用主题
-  const applyTheme = (newTheme) => {
+  const applyTheme = newTheme => {
     applyThemeToDom(newTheme)
     localStorage.setItem('theme-preference', newTheme)
     localStorage.setItem('theme-follow-system', followSystem.value)
   }
 
   // 手动设置主题
-  const setTheme = (newTheme) => {
+  const setTheme = newTheme => {
     const validThemes = ['light', 'dark']
     if (!validThemes.includes(newTheme)) return
     theme.value = newTheme
@@ -49,7 +49,7 @@ export function useTheme() {
   }
 
   // 切换是否跟随系统
-  const toggleFollowSystem = (value) => {
+  const toggleFollowSystem = value => {
     followSystem.value = value
     if (value) {
       theme.value = systemTheme.value
@@ -124,7 +124,7 @@ export function useTheme() {
   })
 
   // 监听主题变化
-  watch(theme, (newTheme) => {
+  watch(theme, newTheme => {
     applyTheme(newTheme)
   })
 
@@ -134,6 +134,6 @@ export function useTheme() {
     followSystem,
     systemPreferenceSupported,
     setTheme,
-    toggleFollowSystem,
+    toggleFollowSystem
   }
 }

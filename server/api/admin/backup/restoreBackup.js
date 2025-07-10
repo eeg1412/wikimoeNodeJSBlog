@@ -16,37 +16,37 @@ module.exports = async function (req, res, next) {
     res.status(400).json({
       errors: [
         {
-          message: 'id不能为空',
-        },
-      ],
+          message: 'id不能为空'
+        }
+      ]
     })
     return
   }
   // 查询有没有状态为0的备份
-  const backingData = await backupUtils.findOne({ status: 0 }).catch((err) => {
+  const backingData = await backupUtils.findOne({ status: 0 }).catch(err => {
     return 0
   })
   if (backingData === 0 || backingData) {
     res.status(400).json({
       errors: [
         {
-          message: '有备份正在进行中，请稍后再试',
-        },
-      ],
+          message: '有备份正在进行中，请稍后再试'
+        }
+      ]
     })
     return
   }
   // findOne
   backupUtils
     .findOne({ _id: id })
-    .then((data) => {
+    .then(data => {
       if (!data) {
         res.status(400).json({
           errors: [
             {
-              message: '备份不存在',
-            },
-          ],
+              message: '备份不存在'
+            }
+          ]
         })
         return
       }
@@ -55,9 +55,9 @@ module.exports = async function (req, res, next) {
         res.status(400).json({
           errors: [
             {
-              message: '备份文件状态不正确',
-            },
-          ],
+              message: '备份文件状态不正确'
+            }
+          ]
         })
         return
       }
@@ -67,9 +67,9 @@ module.exports = async function (req, res, next) {
         res.status(400).json({
           errors: [
             {
-              message: '备份文件不存在',
-            },
-          ],
+              message: '备份文件不存在'
+            }
+          ]
         })
         return
       }
@@ -79,14 +79,14 @@ module.exports = async function (req, res, next) {
           name: `【${data.name}】的还原`,
           type: 2,
           fileStatus: 2,
-          remark: `在${moment().format('YYYY-MM-DD HH:mm:ss')}还原了备份【${data.name}】`,
+          remark: `在${moment().format('YYYY-MM-DD HH:mm:ss')}还原了备份【${data.name}】`
         })
-        .then((restoreData) => {
+        .then(restoreData => {
           // 更新备份文件状态
           // 开始还原
           const restoreWorker = new Worker('./utils/workers/restoreWorker.js')
           restoreWorker.postMessage(fullPath)
-          restoreWorker.on('message', async (message) => {
+          restoreWorker.on('message', async message => {
             const _id = restoreData._id
             if (message.status === 'success') {
               // 成功
@@ -94,15 +94,15 @@ module.exports = async function (req, res, next) {
                 .updateOne(
                   { _id },
                   {
-                    status: 1,
-                  },
+                    status: 1
+                  }
                 )
                 .then(() => {
                   adminApiLog.info(`restore backup success`)
                 })
-                .catch((err) => {
+                .catch(err => {
                   adminApiLog.error(
-                    `restore backup success, ${logErrorToText(err)}`,
+                    `restore backup success, ${logErrorToText(err)}`
                   )
                 })
             } else {
@@ -110,25 +110,25 @@ module.exports = async function (req, res, next) {
               backupUtils
                 .updateOne(
                   {
-                    _id,
+                    _id
                   },
                   {
                     status: 2,
-                    reason: message.error,
-                  },
+                    reason: message.error
+                  }
                 )
                 .then(() => {
                   adminApiLog.error(
-                    `restore backup fail, ${logErrorToText(message.error)}`,
+                    `restore backup fail, ${logErrorToText(message.error)}`
                   )
                 })
-                .catch((err) => {
+                .catch(err => {
                   adminApiLog.error(
-                    `restore backup fail, ${logErrorToText(err)}`,
+                    `restore backup fail, ${logErrorToText(err)}`
                   )
                 })
               adminApiLog.error(
-                `restore backup fail, ${logErrorToText(message.error)}`,
+                `restore backup fail, ${logErrorToText(message.error)}`
               )
             }
             // 关闭 worker
@@ -151,24 +151,24 @@ module.exports = async function (req, res, next) {
           res.send({})
           adminApiLog.info(`restore backup`)
         })
-        .catch((err) => {
+        .catch(err => {
           res.status(400).json({
             errors: [
               {
-                message: '备份还原失败',
-              },
-            ],
+                message: '备份还原失败'
+              }
+            ]
           })
           adminApiLog.error(`restore backup fail, ${logErrorToText(err)}`)
         })
     })
-    .catch((err) => {
+    .catch(err => {
       res.status(400).json({
         errors: [
           {
-            message: '备份详情获取失败',
-          },
-        ],
+            message: '备份详情获取失败'
+          }
+        ]
       })
       adminApiLog.error(`backup get fail, ${logErrorToText(err)}`)
     })

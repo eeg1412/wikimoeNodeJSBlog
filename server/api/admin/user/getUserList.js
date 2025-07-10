@@ -12,9 +12,9 @@ module.exports = async function (req, res, next) {
     res.status(400).json({
       errors: [
         {
-          message: '参数错误',
-        },
-      ],
+          message: '参数错误'
+        }
+      ]
     })
     return
   }
@@ -25,11 +25,11 @@ module.exports = async function (req, res, next) {
     // 查询 username 和 nickname 字段
     params.$or = [
       {
-        username: new RegExp(keyword, 'i'),
+        username: new RegExp(keyword, 'i')
       },
       {
-        nickname: new RegExp(keyword, 'i'),
-      },
+        nickname: new RegExp(keyword, 'i')
+      }
     ]
   }
   if (idList) {
@@ -37,24 +37,24 @@ module.exports = async function (req, res, next) {
   }
 
   const sort = {
-    _id: -1,
+    _id: -1
   }
   userUtils
     .findPage(params, sort, page, size, '-password')
-    .then((data) => {
+    .then(data => {
       // 返回格式list,total
       res.send({
         list: data.list,
-        total: data.total,
+        total: data.total
       })
     })
-    .catch((err) => {
+    .catch(err => {
       res.status(400).json({
         errors: [
           {
-            message: '管理员列表获取失败',
-          },
-        ],
+            message: '管理员列表获取失败'
+          }
+        ]
       })
       adminApiLog.error(`admin list get fail, ${JSON.stringify(err)}`)
     })

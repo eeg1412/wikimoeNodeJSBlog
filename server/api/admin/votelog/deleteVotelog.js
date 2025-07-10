@@ -8,7 +8,7 @@ module.exports = async function (req, res, next) {
   const { startTime, endTime } = req.query
   const params = {
     startTime,
-    endTime,
+    endTime
   }
   // 校验开始结束时间是否是 2024-03-20T15:00:00.000Z 格式
   const rule = [
@@ -19,8 +19,8 @@ module.exports = async function (req, res, next) {
       required: true,
       options: {
         strict: true,
-        strictSeparator: true,
-      },
+        strictSeparator: true
+      }
     },
     {
       key: 'endTime',
@@ -29,9 +29,9 @@ module.exports = async function (req, res, next) {
       required: true,
       options: {
         strict: true,
-        strictSeparator: true,
-      },
-    },
+        strictSeparator: true
+      }
+    }
   ]
   const errors = utils.checkForm(params, rule)
   if (errors.length > 0) {
@@ -43,9 +43,9 @@ module.exports = async function (req, res, next) {
     res.status(400).json({
       errors: [
         {
-          message: '结束时间不能在开始时间之前',
-        },
-      ],
+          message: '结束时间不能在开始时间之前'
+        }
+      ]
     })
     return
   }
@@ -54,22 +54,22 @@ module.exports = async function (req, res, next) {
     .deleteMany({
       expireAt: {
         $gte: new Date(startTime),
-        $lte: new Date(endTime),
-      },
+        $lte: new Date(endTime)
+      }
     })
-    .then((data) => {
+    .then(data => {
       res.send({
-        data: data,
+        data: data
       })
       adminApiLog.info(`votelog delete success`)
     })
-    .catch((err) => {
+    .catch(err => {
       res.status(400).json({
         errors: [
           {
-            message: '投票日志删除失败',
-          },
-        ],
+            message: '投票日志删除失败'
+          }
+        ]
       })
       adminApiLog.error(`votelog delete fail, ${logErrorToText(err)}`)
     })

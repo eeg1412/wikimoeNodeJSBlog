@@ -8,16 +8,16 @@ import editorMenuImage from './editorMenu/image'
 
 i18nAddResources('zh-CN', {
   videoModule: {
-    uploadVideo: '从媒体库插入视频',
+    uploadVideo: '从媒体库插入视频'
   },
   uploadImgModule: {
-    uploadImage: '从媒体库插入图片',
-  },
+    uploadImage: '从媒体库插入图片'
+  }
 })
 
 const imageToHtmlConf = {
   type: 'image',
-  elemToHtml: (elemNode) => {
+  elemToHtml: elemNode => {
     const {
       src,
       alt = '',
@@ -26,7 +26,7 @@ const imageToHtmlConf = {
       width,
       height,
       hrefWidth,
-      hrefHeight,
+      hrefHeight
     } = elemNode
     const { width: styWidth = '', height: styHeight = '' } = style
 
@@ -40,7 +40,7 @@ const imageToHtmlConf = {
     }${
       hrefHeight ? ` data-href-height="${hrefHeight}"` : ''
     } style="${styleStr}">`
-  },
+  }
 }
 
 function genSizeStyledIframeHtml(iframeHtml, width = '', height = '') {
@@ -55,7 +55,7 @@ function genSizeStyledIframeHtml(iframeHtml, width = '', height = '') {
       // 设置style aspect-ratio
       iframe.setAttribute(
         'style',
-        `width: 100%; height: auto; aspect-ratio: ${width} / ${height};`,
+        `width: 100%; height: auto; aspect-ratio: ${width} / ${height};`
       )
     }
     return iframe.outerHTML
@@ -65,7 +65,7 @@ function genSizeStyledIframeHtml(iframeHtml, width = '', height = '') {
 }
 const videoToHtmlConf = {
   type: 'video',
-  elemToHtml: (elemNode) => {
+  elemToHtml: elemNode => {
     const { src = '', poster = '', width = '', height = '' } = elemNode
     let res = '<div data-w-e-type="video" data-w-e-is-void>\n'
 
@@ -84,7 +84,7 @@ const videoToHtmlConf = {
     res += '\n</div>'
 
     return res
-  },
+  }
 }
 
 function getStyleValue($elem, styleKey) {
@@ -122,15 +122,15 @@ function parseImgHtml(elem, children, editor) {
     href,
     style: {
       width: getStyleValue($elem, 'width'),
-      height: getStyleValue($elem, 'height'),
+      height: getStyleValue($elem, 'height')
     },
-    children: [{ text: '' }], // void node 有一个空白 text
+    children: [{ text: '' }] // void node 有一个空白 text
   }
 }
 
 const parseImgHtmlConf = {
   selector: 'img:not([data-w-e-type])', // data-w-e-type 属性，留给自定义元素，保证扩展性
-  parseElemHtml: parseImgHtml,
+  parseElemHtml: parseImgHtml
 }
 
 export const initRichEditor = () => {

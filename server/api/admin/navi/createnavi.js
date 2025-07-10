@@ -51,7 +51,7 @@ module.exports = async function (req, res, next) {
     parent,
     isdefault,
     deepmatch,
-    query,
+    query
   } = req.body
   // 校验格式
   const params = {
@@ -63,15 +63,15 @@ module.exports = async function (req, res, next) {
     parent: parent || null,
     isdefault: isdefault ? true : false,
     deepmatch: deepmatch ? true : false,
-    query: query || '',
+    query: query || ''
   }
   const rule = [
     {
       key: 'naviname',
       label: '导航名称',
       type: null,
-      required: true,
-    },
+      required: true
+    }
   ]
   const errors = utils.checkForm(params, rule)
   if (errors.length > 0) {
@@ -81,21 +81,21 @@ module.exports = async function (req, res, next) {
   // save
   naviUtils
     .save(params)
-    .then((data) => {
+    .then(data => {
       res.send({
-        data: data,
+        data: data
       })
       adminApiLog.info(`navi create success`)
       cacheDataUtils.getNaviList()
       // utils.reflushBlogCache()
     })
-    .catch((err) => {
+    .catch(err => {
       res.status(400).json({
         errors: [
           {
-            message: '导航创建失败',
-          },
-        ],
+            message: '导航创建失败'
+          }
+        ]
       })
       adminApiLog.error(`navi create fail, ${logErrorToText(err)}`)
     })

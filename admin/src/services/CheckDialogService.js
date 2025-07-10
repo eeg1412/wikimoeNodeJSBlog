@@ -25,14 +25,14 @@ class CheckDialogService {
           resolve()
           close()
         },
-        'onUpdate:isOpen': (value) => {
+        'onUpdate:isOpen': value => {
           if (!value) {
             console.log(vNode)
             close()
             reject()
           }
         },
-        onClosed: destroy,
+        onClosed: destroy
       })
 
       render(vNode, container)

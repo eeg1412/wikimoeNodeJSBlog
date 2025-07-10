@@ -8,29 +8,29 @@ module.exports = async function (req, res, next) {
   const bannerList = req.body.bannerList
   // 循环sidebarList
   const promises = []
-  bannerList.forEach((item) => {
+  bannerList.forEach(item => {
     const { _id, taxis } = item
     if (!_id) {
       return
     }
     const params = {
-      taxis: taxis || 0,
+      taxis: taxis || 0
     }
     // updateOne
     const updatePromise = new Promise((resolve, reject) => {
       bannerUtils
         .updateOne({ _id: _id }, params)
-        .then((data) => {
+        .then(data => {
           // 判断是否更新成功
           if (data.modifiedCount === 0) {
             reject({
-              message: '更新失败',
+              message: '更新失败'
             })
             return
           }
           resolve(data)
         })
-        .catch((err) => {
+        .catch(err => {
           reject(err)
         })
     })
@@ -38,22 +38,22 @@ module.exports = async function (req, res, next) {
   })
   // Promise.all
   Promise.all(promises)
-    .then((data) => {
+    .then(data => {
       res.send({
         data: data,
-        successCount: data.length,
+        successCount: data.length
       })
       adminApiLog.info(`banner update success`)
       cacheDataUtils.getBannerList()
       // utils.reflushBlogCache()
     })
-    .catch((err) => {
+    .catch(err => {
       res.status(400).json({
         errors: [
           {
-            message: '横幅更新失败',
-          },
-        ],
+            message: '横幅更新失败'
+          }
+        ]
       })
       adminApiLog.error(`banner update fail, ${logErrorToText(err)}`)
     })

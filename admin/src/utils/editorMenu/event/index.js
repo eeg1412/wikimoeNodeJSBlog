@@ -15,7 +15,7 @@ const module = {
   renderElems: [renderElemConf],
   elemsToHtml: [elemToHtmlConf],
   parseElemsHtml: [parseHtmlConf],
-  menus: [menuConf, unEventspanConf, editeventspanConf],
+  menus: [menuConf, unEventspanConf, editeventspanConf]
 }
 
 export default module

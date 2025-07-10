@@ -32,7 +32,7 @@ exports.findPage = async function (
   page,
   limit,
   projection,
-  options = {},
+  options = {}
 ) {
   // document查询
   const q = gamesModel
@@ -53,7 +53,7 @@ exports.findPage = async function (
   }
   return {
     list,
-    total,
+    total
   }
 }
 

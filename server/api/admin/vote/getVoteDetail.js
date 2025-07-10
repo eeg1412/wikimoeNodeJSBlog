@@ -9,37 +9,37 @@ module.exports = async function (req, res, next) {
     res.status(400).json({
       errors: [
         {
-          message: 'id不能为空',
-        },
-      ],
+          message: 'id不能为空'
+        }
+      ]
     })
     return
   }
   // findOne
   voteUtils
     .findOne({ _id: id })
-    .then((data) => {
+    .then(data => {
       if (!data) {
         res.status(400).json({
           errors: [
             {
-              message: '投票不存在',
-            },
-          ],
+              message: '投票不存在'
+            }
+          ]
         })
         return
       }
       res.send({
-        data: data,
+        data: data
       })
     })
-    .catch((err) => {
+    .catch(err => {
       res.status(400).json({
         errors: [
           {
-            message: '投票详情获取失败',
-          },
-        ],
+            message: '投票详情获取失败'
+          }
+        ]
       })
       adminApiLog.error(`vote detail get fail, ${logErrorToText(err)}`)
     })

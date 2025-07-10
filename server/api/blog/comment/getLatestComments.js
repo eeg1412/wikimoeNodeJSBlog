@@ -8,16 +8,16 @@ module.exports = async function (req, res, next) {
   } else {
     cacheDataUtils
       .getCommentList()
-      .then((data) => {
+      .then(data => {
         res.send(data)
       })
-      .catch((err) => {
+      .catch(err => {
         res.status(400).json({
           errors: [
             {
-              message: 'comment列表获取失败',
-            },
-          ],
+              message: 'comment列表获取失败'
+            }
+          ]
         })
         userApiLog.error(`comment list get fail, ${JSON.stringify(err)}`)
       })

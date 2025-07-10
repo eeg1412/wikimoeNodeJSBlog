@@ -9,7 +9,7 @@ async function updateCollectionDefaults(model) {
 
   // 获取schema中所有带default值的字段
   const defaultFields = {}
-  Object.keys(model.schema.paths).forEach((path) => {
+  Object.keys(model.schema.paths).forEach(path => {
     const schemaType = model.schema.paths[path]
     if (schemaType.defaultValue !== undefined && schemaType.path !== '_id') {
       defaultFields[path] = schemaType.defaultValue
@@ -22,19 +22,19 @@ async function updateCollectionDefaults(model) {
   }
 
   // 构建查询条件：找出缺少这些字段的文档
-  const orConditions = Object.keys(defaultFields).map((field) => ({
-    [field]: { $exists: false },
+  const orConditions = Object.keys(defaultFields).map(field => ({
+    [field]: { $exists: false }
   }))
   const fieldSelection = '_id ' + Object.keys(defaultFields).join(' ')
 
   const BATCH_SIZE = 50 // 每批处理50条文档
   const totalCount = await model.collection.countDocuments({
-    $or: orConditions,
+    $or: orConditions
   })
 
   if (totalCount === 0) {
     console.log(
-      chalk.yellow(`在 ${model.collection.name} 中没有需要更新的文档`),
+      chalk.yellow(`在 ${model.collection.name} 中没有需要更新的文档`)
     )
     return
   }
@@ -42,8 +42,8 @@ async function updateCollectionDefaults(model) {
   // 查找需要更新的文档
   console.log(
     chalk.green(
-      `在 ${model.collection.name} 中找到 ${totalCount} 个需要更新的文档`,
-    ),
+      `在 ${model.collection.name} 中找到 ${totalCount} 个需要更新的文档`
+    )
   )
   console.log('需要更新的字段和默认值:', defaultFields)
 
@@ -57,7 +57,7 @@ async function updateCollectionDefaults(model) {
       const doc = await cursor.next()
       processedCount++
 
-      const missingFields = Object.keys(defaultFields).filter((field) => {
+      const missingFields = Object.keys(defaultFields).filter(field => {
         return !(field in doc)
       })
 
@@ -75,8 +75,8 @@ async function updateCollectionDefaults(model) {
         batch.push({
           updateOne: {
             filter: { _id: doc._id },
-            update: { $set: updateValues },
-          },
+            update: { $set: updateValues }
+          }
         })
 
         console.log(`\n[${processedCount}/${totalCount}] 文档 ID: ${doc._id}`)
@@ -98,7 +98,7 @@ async function updateCollectionDefaults(model) {
       // 每处理100条打印一次进度
       if (processedCount % 100 === 0) {
         console.log(
-          chalk.cyan(`\n已处理 ${processedCount}/${totalCount} 个文档...`),
+          chalk.cyan(`\n已处理 ${processedCount}/${totalCount} 个文档...`)
         )
       }
     }
@@ -108,8 +108,8 @@ async function updateCollectionDefaults(model) {
 
   console.log(
     chalk.green(
-      `\n${model.collection.name} 集合处理完成，共处理 ${processedCount} 个文档`,
-    ),
+      `\n${model.collection.name} 集合处理完成，共处理 ${processedCount} 个文档`
+    )
   )
 }
 
@@ -120,7 +120,7 @@ async function main() {
     const files = fs.readdirSync(modelsPath)
 
     // 过滤出.js文件
-    const modelFiles = files.filter((file) => file.endsWith('.js'))
+    const modelFiles = files.filter(file => file.endsWith('.js'))
 
     // 处理每个model文件
     for (const file of modelFiles) {

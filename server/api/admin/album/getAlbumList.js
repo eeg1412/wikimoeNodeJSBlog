@@ -12,9 +12,9 @@ module.exports = async function (req, res, next) {
     res.status(400).json({
       errors: [
         {
-          message: '参数错误',
-        },
-      ],
+          message: '参数错误'
+        }
+      ]
     })
     return
   }
@@ -28,24 +28,24 @@ module.exports = async function (req, res, next) {
   // updatedAt越新越靠前，_id越新越靠前
   const sort = {
     updatedAt: -1,
-    _id: -1,
+    _id: -1
   }
   albumUtils
     .findPage(params, sort, page, size)
-    .then((data) => {
+    .then(data => {
       // 返回格式list,total
       res.send({
         list: data.list,
-        total: data.total,
+        total: data.total
       })
     })
-    .catch((err) => {
+    .catch(err => {
       res.status(400).json({
         errors: [
           {
-            message: '相册列表获取失败',
-          },
-        ],
+            message: '相册列表获取失败'
+          }
+        ]
       })
       adminApiLog.error(`album list get fail, ${logErrorToText(err)}`)
     })

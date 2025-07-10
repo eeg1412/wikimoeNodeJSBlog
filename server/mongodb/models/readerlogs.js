@@ -11,9 +11,9 @@ const PerformanceNavigationTimingSchema = new Schema(
     redirectCount: { type: Number, default: null },
     entryType: { type: String, default: null },
     name: { type: String, default: null },
-    type: { type: String, default: null },
+    type: { type: String, default: null }
   },
-  { _id: false },
+  { _id: false }
 )
 
 // Schema
@@ -23,26 +23,26 @@ var readerlogs = new Schema(
     uuid: {
       type: String,
       required: true,
-      index: true,
+      index: true
     },
     // 操作了什么
     action: {
       type: String,
       required: true,
-      index: true,
+      index: true
     },
     referrer: {
       type: String,
-      default: '',
+      default: ''
     },
     isBot: {
       type: Boolean,
       default: false,
-      index: true,
+      index: true
     },
     botName: {
       type: String,
-      default: '',
+      default: ''
     },
     // data
     data: {
@@ -50,43 +50,43 @@ var readerlogs = new Schema(
       target: {
         type: String,
         default: '',
-        index: true,
+        index: true
       },
       targetId: {
         type: mongoose.Schema.Types.ObjectId,
         default: null,
-        index: true,
+        index: true
       },
       content: {
         type: String,
-        default: '',
+        default: ''
       },
       performanceNavigationTiming: {
         type: PerformanceNavigationTimingSchema,
-        default: null,
-      },
+        default: null
+      }
     },
     // ip
     ip: {
       type: String,
-      index: true,
+      index: true
     },
     ipInfo: {
       type: Object,
-      default: {},
+      default: {}
     },
     deviceInfo: {
       type: Object,
-      default: {},
+      default: {}
     },
     expireAt: {
       type: Date,
       expires: 31968000,
       default: Date.now,
-      index: true,
-    },
+      index: true
+    }
   },
-  { timestamps: true },
+  { timestamps: true }
 )
 // timestamps:
 // createdAt

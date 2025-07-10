@@ -13,60 +13,60 @@ var attachments = new Schema(
     // - thumfor	缩略图标识字段
     // - 相册id	album
     name: {
-      type: String,
+      type: String
     },
     filename: {
       type: String,
-      required: true,
+      required: true
     },
     filesize: {
-      type: Number,
+      type: Number
     },
     filepath: {
-      type: String,
+      type: String
     },
     width: {
-      type: Number,
+      type: Number
     },
     height: {
-      type: Number,
+      type: Number
     },
     mimetype: {
       type: String,
-      index: true,
+      index: true
     },
     thumfor: {
-      type: String,
+      type: String
     },
     thumWidth: {
-      type: Number,
+      type: Number
     },
     thumHeight: {
-      type: Number,
+      type: Number
     },
     album: {
       type: Schema.Types.ObjectId,
       ref: 'albums',
-      index: true,
+      index: true
     },
     // 描述
     description: {
       type: String,
-      default: '',
+      default: ''
     },
     // 是否是360度全景图
     is360Panorama: {
       type: Boolean,
-      default: false,
+      default: false
     },
     // 0还没压缩，1压缩成功
     status: {
       type: Number,
       default: 0,
-      index: true,
-    },
+      index: true
+    }
   },
-  { timestamps: true },
+  { timestamps: true }
 )
 
 module.exports = mongoose.model('attachments', attachments)

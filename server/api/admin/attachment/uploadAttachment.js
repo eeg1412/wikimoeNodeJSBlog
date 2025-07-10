@@ -37,9 +37,9 @@ module.exports = async function (req, res, next) {
     res.status(500).json({
       errors: [
         {
-          message: '配置项未初始化',
-        },
-      ],
+          message: '配置项未初始化'
+        }
+      ]
     })
     return
   }
@@ -83,9 +83,9 @@ module.exports = async function (req, res, next) {
     res.status(400).json({
       errors: [
         {
-          message: '请指定相册',
-        },
-      ],
+          message: '请指定相册'
+        }
+      ]
     })
     return
   }
@@ -94,9 +94,9 @@ module.exports = async function (req, res, next) {
     res.status(400).json({
       errors: [
         {
-          message: '相册不存在',
-        },
-      ],
+          message: '相册不存在'
+        }
+      ]
     })
     return
   }
@@ -117,7 +117,7 @@ module.exports = async function (req, res, next) {
     thumWidth: 0,
     thumHeight: 0,
     album: albumid,
-    is360Panorama: is360Panorama,
+    is360Panorama: is360Panorama
   }
   // 保存到数据库
   const attachmentData = await attachmentsUtils.save(attachment)
@@ -135,7 +135,7 @@ module.exports = async function (req, res, next) {
     width: 0,
     height: 0,
     thumfor: '',
-    status: 1,
+    status: 1
   }
 
   try {
@@ -180,7 +180,7 @@ module.exports = async function (req, res, next) {
       imgSettingCompressMaxSize,
       imgSettingEnableImgCompressWebp,
       imgSettingThumbnailQuality,
-      imgSettingEnableImgCompress,
+      imgSettingEnableImgCompress
     } = config
     // 如果开启了图片缩略图
     if (config.imgSettingEnableImgThumbnail && !noThumbnail) {
@@ -205,7 +205,7 @@ module.exports = async function (req, res, next) {
         // 压缩图片为webp 保存到 filePath 路径下
         const thumbnailPath = path.join(
           yearMonthPath,
-          'thum-' + attachmentId + '.webp',
+          'thum-' + attachmentId + '.webp'
         )
         await utils.imageCompress(
           '.webp',
@@ -214,7 +214,7 @@ module.exports = async function (req, res, next) {
           newWidth,
           newHeight,
           imgSettingThumbnailQuality,
-          thumbnailPath,
+          thumbnailPath
         )
         updateAttachment.thumfor = thumbnailPath
       }
@@ -248,7 +248,7 @@ module.exports = async function (req, res, next) {
           newWidth,
           newHeight,
           imgSettingCompressQuality,
-          filePath,
+          filePath
         )
       } else {
         // 原尺寸压缩
@@ -259,7 +259,7 @@ module.exports = async function (req, res, next) {
           null,
           null,
           imgSettingCompressQuality,
-          filePath,
+          filePath
         )
       }
       updateAttachment.filepath = filePath
@@ -285,15 +285,15 @@ module.exports = async function (req, res, next) {
 
     const updateRes = await attachmentsUtils.updateOne(
       { _id: attachmentId },
-      updateAttachment,
+      updateAttachment
     )
     if (updateRes.modifiedCount === 0) {
       res.status(400).json({
         errors: [
           {
-            message: '更新失败',
-          },
-        ],
+            message: '更新失败'
+          }
+        ]
       })
       return
     }
@@ -316,9 +316,9 @@ module.exports = async function (req, res, next) {
     res.status(400).json({
       errors: [
         {
-          message: '文件上传失败',
-        },
-      ],
+          message: '文件上传失败'
+        }
+      ]
     })
   } finally {
     // 无论是否发生异常，都释放内存

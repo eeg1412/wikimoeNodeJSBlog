@@ -16,9 +16,9 @@ module.exports = async function (req, res, next) {
     res.status(400).json({
       errors: [
         {
-          message: 'id不能为空',
-        },
-      ],
+          message: 'id不能为空'
+        }
+      ]
     })
     return
   }
@@ -27,9 +27,9 @@ module.exports = async function (req, res, next) {
     res.status(400).json({
       errors: [
         {
-          message: '__v不能为空',
-        },
-      ],
+          message: '__v不能为空'
+        }
+      ]
     })
     return
   }
@@ -38,24 +38,24 @@ module.exports = async function (req, res, next) {
     editorVersion: 5,
     content: '',
     status: 0,
-    lastChangDate: new Date(),
+    lastChangDate: new Date()
   }
   // 更新
   postUtils
     .updateOne({ _id: id, __v: __v }, params)
-    .then((data) => {
+    .then(data => {
       if (data.modifiedCount === 0) {
         res.status(400).json({
           errors: [
             {
-              message: '更新失败',
-            },
-          ],
+              message: '更新失败'
+            }
+          ]
         })
         return
       }
       res.send({
-        data: data,
+        data: data
       })
       adminApiLog.info(`post update success`)
       // 新旧status不一样，更新缓存
@@ -63,13 +63,13 @@ module.exports = async function (req, res, next) {
       rssToolUtils.reflushRSS()
       sitemapToolUtils.reflushSitemap()
     })
-    .catch((err) => {
+    .catch(err => {
       res.status(400).json({
         errors: [
           {
-            message: '更新文章失败',
-          },
-        ],
+            message: '更新文章失败'
+          }
+        ]
       })
       adminApiLog.error(`post update fail, ${logErrorToText(err)}`)
     })

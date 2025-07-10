@@ -7,7 +7,7 @@ module.exports = async function (req, res, next) {
     const JWTSecretAdmin = utils.ensureJWTSecretAdmin(true)
     global.$secret.JWTSecretAdmin = JWTSecretAdmin
     res.send({
-      message: '刷新成功',
+      message: '刷新成功'
     })
     adminApiLog.info(`JWTSecretAdmin reflush success`)
   } catch (error) {
@@ -15,9 +15,9 @@ module.exports = async function (req, res, next) {
     res.status(400).json({
       errors: [
         {
-          message: '刷新失败',
-        },
-      ],
+          message: '刷新失败'
+        }
+      ]
     })
   }
 }

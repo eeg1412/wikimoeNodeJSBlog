@@ -12,9 +12,9 @@ module.exports = async function (req, res, next) {
     res.status(400).json({
       errors: [
         {
-          message: '获取配置失败',
-        },
-      ],
+          message: '获取配置失败'
+        }
+      ]
     })
     return
   }
@@ -25,7 +25,7 @@ module.exports = async function (req, res, next) {
       ...global.$globalConfig.commentSettings,
       ...global.$globalConfig.rssSettings,
       ...global.$globalConfig.sitePostSettings,
-      ...global.$globalConfig.adSettings,
-    },
+      ...global.$globalConfig.adSettings
+    }
   })
 }

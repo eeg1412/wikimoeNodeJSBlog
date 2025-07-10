@@ -11,9 +11,9 @@ module.exports = async function (req, res, next) {
     res.status(400).json({
       errors: [
         {
-          message: '备份文件不存在',
-        },
-      ],
+          message: '备份文件不存在'
+        }
+      ]
     })
     return
   }
@@ -21,6 +21,6 @@ module.exports = async function (req, res, next) {
   fs.writeFileSync(chunkPath, file.buffer)
   // 保存成功
   res.status(200).json({
-    message: '上传成功',
+    message: '上传成功'
   })
 }

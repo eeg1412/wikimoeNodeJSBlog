@@ -5,7 +5,7 @@ const fs = require('fs')
 const path = require('path')
 const rssCacheFolder = './seo/rss'
 
-exports.updateRSS = async (type) => {
+exports.updateRSS = async type => {
   const prmise = new Promise(async (resolve, reject) => {
     console.info('creating rss:' + type)
     const config = global.$globalConfig?.rssSettings || {}
@@ -22,8 +22,8 @@ exports.updateRSS = async (type) => {
       status: 1,
       // type是1或者2
       type: {
-        $in: [1, 2],
-      },
+        $in: [1, 2]
+      }
     }
     if (type === 'blog') {
       params.type = 1
@@ -33,7 +33,7 @@ exports.updateRSS = async (type) => {
     }
     const sort = {
       date: -1,
-      _id: -1,
+      _id: -1
     }
     const size = parseInt(siteRssMaxCount) || 1
     const filter =
@@ -42,12 +42,12 @@ exports.updateRSS = async (type) => {
       .findPage(params, sort, 1, size, filter, {
         authorFilter: 'nickname',
         voteFliter:
-          '_id endTime maxSelect showResultAfter title options.title options._id',
+          '_id endTime maxSelect showResultAfter title options.title options._id'
       })
-      .then((res) => {
+      .then(res => {
         return res
       })
-      .catch((err) => {
+      .catch(err => {
         console.error(err)
         return null
       })
@@ -71,10 +71,10 @@ exports.updateRSS = async (type) => {
       favicon: `${siteUrl}${siteFavicon}`,
       generator: 'wikimoeBlog',
       feedLinks: {
-        rss: feedLinksRss,
-      },
+        rss: feedLinksRss
+      }
     })
-    list.forEach((item) => {
+    list.forEach(item => {
       const { title, excerpt, content, _id, author, type, date, alias } = item
       const link = `${siteUrl}/post/${alias || _id}`
       // 注意如果用到作者的话，务必在更改作者的时候更新rss！！！
@@ -101,11 +101,11 @@ exports.updateRSS = async (type) => {
           contentSeriesSortList = ['media', 'event', 'vote', 'post', 'acgn']
         }
 
-        contentSeriesSortList.forEach((typeName) => {
+        contentSeriesSortList.forEach(typeName => {
           if (typeName === 'media') {
             // 遍历coverImages，以图片形式展示
             const coverImages = item.coverImages || []
-            coverImages.forEach((image) => {
+            coverImages.forEach(image => {
               const imageIsVideo = image.mimetype.startsWith('video')
               const createdAt = new Date(image.createdAt).getTime()
               if (imageIsVideo) {
@@ -117,40 +117,40 @@ exports.updateRSS = async (type) => {
           } else if (typeName === 'event') {
             // 遍历contentEventList，以链接形式展示
             const contentEventList = item.contentEventList || []
-            contentEventList.forEach((event) => {
+            contentEventList.forEach(event => {
               newContent += `<p><a href="${link}#event-content-${event._id}-${item._id}" target="_blank">活动：${event.title}</a></p>`
             })
           } else if (typeName === 'vote') {
             // 遍历contentVoteList，以链接形式展示
             const contentVoteList = item.contentVoteList || []
-            contentVoteList.forEach((vote) => {
+            contentVoteList.forEach(vote => {
               newContent += `<p><a href="${link}#vote-item-content-${vote._id}-${item._id}" target="_blank">投票：${vote.title}</a></p>`
             })
           } else if (typeName === 'post') {
             // 遍历contentPostList，以链接形式展示
             const contentPostList = item.contentPostList || []
-            contentPostList.forEach((post) => {
+            contentPostList.forEach(post => {
               newContent += `<p><a href="${siteUrl}/post/${post.alias || post._id}" target="_blank">文章：${post.title}</a></p>`
             })
           } else if (typeName === 'acgn') {
             // 遍历contentBangumiList，以链接形式展示
             const contentBangumiList = item.contentBangumiList || []
-            contentBangumiList.forEach((bangumi) => {
+            contentBangumiList.forEach(bangumi => {
               newContent += `<p><a href="${link}#ent-title-content-${bangumi._id}-${item._id}" target="_blank">番剧：${bangumi.title}</a></p>`
             })
             // 遍历contentMovieList，以链接形式展示
             const contentMovieList = item.contentMovieList || []
-            contentMovieList.forEach((movie) => {
+            contentMovieList.forEach(movie => {
               newContent += `<p><a href="${link}#ent-title-content-${movie._id}-${item._id}" target="_blank">电影：${movie.title}</a></p>`
             })
             // 遍历contentBookList，以链接形式展示
             const contentBookList = item.contentBookList || []
-            contentBookList.forEach((book) => {
+            contentBookList.forEach(book => {
               newContent += `<p><a href="${link}#ent-title-content-${book._id}-${item._id}" target="_blank">书籍：${book.title}</a></p>`
             })
             // 遍历contentGameList，以链接形式展示
             const contentGameList = item.contentGameList || []
-            contentGameList.forEach((game) => {
+            contentGameList.forEach(game => {
               newContent += `<p><a href="${link}#ent-title-content-${game._id}-${item._id}" target="_blank">游戏：${game.title}</a></p>`
             })
           }
@@ -161,7 +161,7 @@ exports.updateRSS = async (type) => {
         id: link,
         link: link,
         description: newContent,
-        date: new Date(item.date),
+        date: new Date(item.date)
       })
     })
     const rssXML = feed.rss2()
@@ -195,13 +195,13 @@ exports.reflushRSS = async () => {
     const promiseArray = [
       this.updateRSS('all'),
       this.updateRSS('blog'),
-      this.updateRSS('tweet'),
+      this.updateRSS('tweet')
     ]
     await Promise.all(promiseArray)
-      .then((res) => {
+      .then(res => {
         return res
       })
-      .catch((err) => {
+      .catch(err => {
         console.error(err)
         return null
       })
@@ -215,7 +215,7 @@ exports.getRSS = (type, res) => {
     return
   }
   const filePath = `${rssCacheFolder}/${type}.xml`
-  fs.access(filePath, fs.constants.F_OK, (err) => {
+  fs.access(filePath, fs.constants.F_OK, err => {
     if (err) {
       res.status(404).send('File not found')
       return

@@ -25,7 +25,7 @@ function imageGroupToHtml(elem, childrenHtml) {
 // 配置
 const conf = {
   type: 'imageGroup', // 节点 type ，重要！！！
-  elemToHtml: imageGroupToHtml,
+  elemToHtml: imageGroupToHtml
 }
 
 export default conf

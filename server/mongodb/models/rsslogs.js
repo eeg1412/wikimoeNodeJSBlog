@@ -4,26 +4,26 @@ var Schema = mongoose.Schema
 var rsslogs = new Schema(
   {
     ip: {
-      type: String,
+      type: String
     },
     ipInfo: {
       type: Object,
-      default: {},
+      default: {}
     },
     deviceInfo: {
       type: Object,
-      default: {},
+      default: {}
     },
     rssPath: {
       type: String,
-      default: '',
+      default: ''
     },
     reader: {
       type: String,
-      default: '',
-    },
+      default: ''
+    }
   },
-  { capped: 15728640, timestamps: true },
+  { capped: 15728640, timestamps: true }
 )
 
 module.exports = mongoose.model('rsslogs', rsslogs)

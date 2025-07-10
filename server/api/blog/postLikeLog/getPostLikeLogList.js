@@ -13,38 +13,38 @@ module.exports = async function (req, res, next) {
     res.status(400).json({
       errors: [
         {
-          message: '参数错误',
-        },
-      ],
+          message: '参数错误'
+        }
+      ]
     })
     return
   }
 
   const params = {
     post: {
-      $in: postIdList,
+      $in: postIdList
     },
     // 判断uuid
-    uuid,
+    uuid
   }
 
   const sort = {
-    _id: -1,
+    _id: -1
   }
   postLikeLogUtils
     .find(params, sort, '_id post like __v')
-    .then((data) => {
+    .then(data => {
       res.send({
-        list: data,
+        list: data
       })
     })
-    .catch((err) => {
+    .catch(err => {
       res.status(400).json({
         errors: [
           {
-            message: '文章点赞记录列表获取失败',
-          },
-        ],
+            message: '文章点赞记录列表获取失败'
+          }
+        ]
       })
       userApiLog.error(`postLikeLog list get fail, ${JSON.stringify(err)}`)
     })

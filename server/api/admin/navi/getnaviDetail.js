@@ -9,37 +9,37 @@ module.exports = async function (req, res, next) {
     res.status(400).json({
       errors: [
         {
-          message: 'id不能为空',
-        },
-      ],
+          message: 'id不能为空'
+        }
+      ]
     })
     return
   }
   // findOne
   naviUtils
     .findOne({ _id: id })
-    .then((data) => {
+    .then(data => {
       if (!data) {
         res.status(400).json({
           errors: [
             {
-              message: '导航不存在',
-            },
-          ],
+              message: '导航不存在'
+            }
+          ]
         })
         return
       }
       res.send({
-        data: data,
+        data: data
       })
     })
-    .catch((err) => {
+    .catch(err => {
       res.status(400).json({
         errors: [
           {
-            message: '导航详情获取失败',
-          },
-        ],
+            message: '导航详情获取失败'
+          }
+        ]
       })
       adminApiLog.error(`navi detail get fail, ${logErrorToText(err)}`)
     })

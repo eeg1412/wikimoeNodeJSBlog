@@ -8,7 +8,7 @@ var OptionSchema = new Schema({
   // 该选项的票数
   votes: { type: Number, default: 0, index: true },
   // 排序
-  sort: { type: Number, default: 0, index: true },
+  sort: { type: Number, default: 0, index: true }
 })
 
 // Schema
@@ -26,7 +26,7 @@ var votes = new Schema(
     showResultAfter: { type: Boolean, default: false },
     endTime: { type: Date, default: null, index: true },
     // 状态 0 不显示 1 显示
-    status: { type: Number, default: 0, index: true },
+    status: { type: Number, default: 0, index: true }
   },
   {
     timestamps: true,
@@ -36,7 +36,7 @@ var votes = new Schema(
           ret.options.sort((a, b) => a.sort - b.sort)
         }
         return ret
-      },
+      }
     },
     toObject: {
       transform: function (doc, ret) {
@@ -44,9 +44,9 @@ var votes = new Schema(
           ret.options.sort((a, b) => a.sort - b.sort)
         }
         return ret
-      },
-    },
-  },
+      }
+    }
+  }
 )
 
 module.exports = mongoose.model('votes', votes)

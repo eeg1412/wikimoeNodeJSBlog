@@ -10,15 +10,15 @@ module.exports = async function (req, res, next) {
   const backup = await backupUtils.findOne({
     _id: id,
     status: 3,
-    fileStatus: 3,
+    fileStatus: 3
   })
   if (!backup) {
     res.status(400).json({
       errors: [
         {
-          message: '备份不存在',
-        },
-      ],
+          message: '备份不存在'
+        }
+      ]
     })
     return
   }
@@ -42,9 +42,9 @@ module.exports = async function (req, res, next) {
     res.status(400).json({
       errors: [
         {
-          message: '文件大小不一致, 合并失败',
-        },
-      ],
+          message: '文件大小不一致, 合并失败'
+        }
+      ]
     })
     return
   }
@@ -56,9 +56,9 @@ module.exports = async function (req, res, next) {
     res.status(400).json({
       errors: [
         {
-          message: '合并文件失败',
-        },
-      ],
+          message: '合并文件失败'
+        }
+      ]
     })
   })
   for await (const file of files) {
@@ -77,12 +77,12 @@ module.exports = async function (req, res, next) {
   // 更新备份记录
   await backupUtils.updateOne(
     { _id: id },
-    { fileStatus: 1, status: 1, filename: fileName },
+    { fileStatus: 1, status: 1, filename: fileName }
   )
   res.status(200).json({
     data: {
-      fileName,
-    },
+      fileName
+    }
   })
   console.log('合并文件完成')
 }

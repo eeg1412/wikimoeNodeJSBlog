@@ -6,9 +6,9 @@ module.exports = async function (req, res, next) {
     photo: req.admin.photo || null,
     email: req.admin.email || null,
     description: req.admin.description || null,
-    cover: req.admin.cover || null,
+    cover: req.admin.cover || null
   }
   res.send({
-    data: adminData,
+    data: adminData
   })
 }

@@ -13,7 +13,7 @@ const module = {
   renderElems: [renderElemConf],
   elemsToHtml: [elemToHtmlConf],
   parseElemsHtml: [parsePanorama360HtmlConf()],
-  menus: [menuConf],
+  menus: [menuConf]
 }
 
 export default module

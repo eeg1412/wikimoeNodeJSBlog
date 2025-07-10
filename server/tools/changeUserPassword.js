@@ -33,7 +33,7 @@ const changePassword = async () => {
   const password = utils.creatBcryptStr(newPassword)
   const res = await userUtils.updateOne(
     { username: username },
-    { password: password, $inc: { pwversion: 1 } },
+    { password: password, $inc: { pwversion: 1 } }
   )
   if (res.modifiedCount > 0) {
     console.log(chalk.green('密码修改成功'))

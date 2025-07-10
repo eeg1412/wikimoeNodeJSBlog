@@ -12,15 +12,15 @@ module.exports = async function (req, res, next) {
     showResultAfter,
     status,
     options,
-    endTime,
+    endTime
   } = req.body
   if (!utils.isObjectId(id || '')) {
     res.status(400).json({
       errors: [
         {
-          message: 'id格式不正确',
-        },
-      ],
+          message: 'id格式不正确'
+        }
+      ]
     })
     return
   }
@@ -29,9 +29,9 @@ module.exports = async function (req, res, next) {
     res.status(400).json({
       errors: [
         {
-          message: '__v不能为空',
-        },
-      ],
+          message: '__v不能为空'
+        }
+      ]
     })
     return
   }
@@ -41,9 +41,9 @@ module.exports = async function (req, res, next) {
     res.status(400).json({
       errors: [
         {
-          message: '选项格式不正确',
-        },
-      ],
+          message: '选项格式不正确'
+        }
+      ]
     })
     return
   }
@@ -53,9 +53,9 @@ module.exports = async function (req, res, next) {
     res.status(400).json({
       errors: [
         {
-          message: '状态值不正确',
-        },
-      ],
+          message: '状态值不正确'
+        }
+      ]
     })
     return
   }
@@ -67,21 +67,19 @@ module.exports = async function (req, res, next) {
         res.status(400).json({
           errors: [
             {
-              message: '更新失败，数据可能不存在或者已被修改',
-            },
-          ],
+              message: '更新失败，数据可能不存在或者已被修改'
+            }
+          ]
         })
         return
       }
 
       const voteOptionsLength = voteData.options.length
       // 查询options里action为add的个数
-      const addLength = options.filter(
-        (option) => option.action === 'add',
-      ).length
+      const addLength = options.filter(option => option.action === 'add').length
       // 查询options里action为delete的个数
       const deleteLength = options.filter(
-        (option) => option.action === 'delete',
+        option => option.action === 'delete'
       ).length
       // 最终options的个数
       const finalOptionsLength = voteOptionsLength + addLength - deleteLength
@@ -89,9 +87,9 @@ module.exports = async function (req, res, next) {
         res.status(400).json({
           errors: [
             {
-              message: '选项数不正确',
-            },
-          ],
+              message: '选项数不正确'
+            }
+          ]
         })
         return
       }
@@ -102,13 +100,13 @@ module.exports = async function (req, res, next) {
         maxSelect: Number(maxSelect),
         showResultAfter: showResultAfter ? true : false,
         endTime: endTime || null,
-        status,
+        status
       }
       const rule = [
         {
           key: 'title',
           label: '投票标题',
-          required: true,
+          required: true
         },
         {
           key: 'maxSelect',
@@ -117,8 +115,8 @@ module.exports = async function (req, res, next) {
           type: 'isInt',
           options: {
             min: 1,
-            max: finalOptionsLength,
-          },
+            max: finalOptionsLength
+          }
         },
         {
           key: 'endTime',
@@ -126,9 +124,9 @@ module.exports = async function (req, res, next) {
           type: 'isISO8601',
           options: {
             strict: true,
-            strictSeparator: true,
-          },
-        },
+            strictSeparator: true
+          }
+        }
       ]
       const errors = utils.checkForm(params, rule)
       if (errors.length > 0) {
@@ -145,9 +143,9 @@ module.exports = async function (req, res, next) {
           res.status(400).json({
             errors: [
               {
-                message: '选项action值不正确',
-              },
-            ],
+                message: '选项action值不正确'
+              }
+            ]
           })
           return
         }
@@ -156,24 +154,24 @@ module.exports = async function (req, res, next) {
             res.status(400).json({
               errors: [
                 {
-                  message: '选项id格式不正确',
-                },
-              ],
+                  message: '选项id格式不正确'
+                }
+              ]
             })
             return
           }
           // 检查voteData里是否有该选项
           const voteOptions = voteData.options
           const optionData = voteOptions.find(
-            (optionData) => optionData._id.toString() === option._id,
+            optionData => optionData._id.toString() === option._id
           )
           if (!optionData) {
             res.status(400).json({
               errors: [
                 {
-                  message: '有不存在的选项',
-                },
-              ],
+                  message: '有不存在的选项'
+                }
+              ]
             })
             return
           }
@@ -186,13 +184,13 @@ module.exports = async function (req, res, next) {
           _id: option._id || undefined,
           title: option.title,
           sort: Number(option.sort),
-          action: option.action,
+          action: option.action
         }
         const optionRule = [
           {
             key: 'title',
             label: '选项标题',
-            required: true,
+            required: true
           },
           {
             key: 'sort',
@@ -201,9 +199,9 @@ module.exports = async function (req, res, next) {
             type: 'isInt',
             options: {
               min: 0,
-              max: 999999999,
-            },
-          },
+              max: 999999999
+            }
+          }
         ]
         const optionErrors = utils.checkForm(optionParams, optionRule)
         if (optionErrors.length > 0) {
@@ -216,21 +214,21 @@ module.exports = async function (req, res, next) {
 
       if (deleteOptionVotes !== 0) {
         params.$inc = {
-          votes: -deleteOptionVotes,
+          votes: -deleteOptionVotes
         }
       }
 
       // updateOne
       voteUtils
         .updateOne({ _id: id, __v }, params)
-        .then((data) => {
+        .then(data => {
           if (data.modifiedCount === 0) {
             res.status(400).json({
               errors: [
                 {
-                  message: '更新失败',
-                },
-              ],
+                  message: '更新失败'
+                }
+              ]
             })
             return
           }
@@ -244,33 +242,33 @@ module.exports = async function (req, res, next) {
                 optionPromises.push(
                   voteUtils.updateOneOptionsPromise(
                     {
-                      _id: id,
+                      _id: id
                     },
                     {
                       $push: {
                         options: {
                           title: option.title,
-                          sort: option.sort,
-                        },
-                      },
-                    },
-                  ),
+                          sort: option.sort
+                        }
+                      }
+                    }
+                  )
                 )
                 break
               case 'delete':
                 optionPromises.push(
                   voteUtils.updateOneOptionsPromise(
                     {
-                      _id: id,
+                      _id: id
                     },
                     {
                       $pull: {
                         options: {
-                          _id: option._id,
-                        },
-                      },
-                    },
-                  ),
+                          _id: option._id
+                        }
+                      }
+                    }
+                  )
                 )
                 break
               case 'update':
@@ -278,15 +276,15 @@ module.exports = async function (req, res, next) {
                   voteUtils.updateOneOptionsPromise(
                     {
                       _id: id,
-                      'options._id': option._id,
+                      'options._id': option._id
                     },
                     {
                       $set: {
                         'options.$.title': option.title,
-                        'options.$.sort': option.sort,
-                      },
-                    },
-                  ),
+                        'options.$.sort': option.sort
+                      }
+                    }
+                  )
                 )
                 break
 
@@ -296,39 +294,39 @@ module.exports = async function (req, res, next) {
           }
           if (optionPromises.length > 0) {
             Promise.all(optionPromises)
-              .then((optionData) => {
+              .then(optionData => {
                 res.send({
                   votedata: data,
-                  optiondata: optionData,
+                  optiondata: optionData
                 })
                 adminApiLog.info(`vote update success`)
               })
-              .catch((err) => {
+              .catch(err => {
                 res.status(400).json({
                   errors: [
                     {
-                      message: '投票选项更新失败',
-                    },
-                  ],
+                      message: '投票选项更新失败'
+                    }
+                  ]
                 })
                 adminApiLog.error(
-                  `vote options update fail, ${logErrorToText(err)}`,
+                  `vote options update fail, ${logErrorToText(err)}`
                 )
               })
           } else {
             res.send({
-              votedata: data,
+              votedata: data
             })
             adminApiLog.info(`vote update success`)
           }
         })
-        .catch((err) => {
+        .catch(err => {
           res.status(400).json({
             errors: [
               {
-                message: '投票更新失败',
-              },
-            ],
+                message: '投票更新失败'
+              }
+            ]
           })
           adminApiLog.error(`vote update fail, ${logErrorToText(err)}`)
         })
@@ -336,7 +334,7 @@ module.exports = async function (req, res, next) {
     .then(() => {
       console.info(`voteupdate-${id} unlock`)
     })
-    .catch((err) => {
+    .catch(err => {
       adminApiLog.error(`voteupdate-${id} unlock error, ${logErrorToText(err)}`)
     })
 }

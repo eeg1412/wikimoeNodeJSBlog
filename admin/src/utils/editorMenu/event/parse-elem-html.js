@@ -20,13 +20,13 @@ function parseHtml(elem, children, editor) {
     type: 'eventspan',
     id: id,
     textContent: textContent,
-    children: [{ text: textContent }], // void node 必须有一个空白 text
+    children: [{ text: textContent }] // void node 必须有一个空白 text
   }
 }
 
 const parseHtmlConf = {
   selector: 'span[data-w-e-type="eventspan"]',
-  parseElemHtml: parseHtml,
+  parseElemHtml: parseHtml
 }
 
 export default parseHtmlConf

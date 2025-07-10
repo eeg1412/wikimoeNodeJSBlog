@@ -16,7 +16,7 @@ function renderPanorama360(elem, children, editor, info) {
   const vnode = h(
     'div',
     {
-      className: className,
+      className: className
     },
     [
       h('img', {
@@ -28,9 +28,9 @@ function renderPanorama360(elem, children, editor, info) {
         'data-href-width': elem.dataHrefWidth || '',
         'data-href-height': elem.dataHrefHeight || '',
         alt: elem.alt || '360°全景图片',
-        'data-type': 'panorama360',
-      }),
-    ],
+        'data-type': 'panorama360'
+      })
+    ]
   )
 
   return vnode
@@ -38,7 +38,7 @@ function renderPanorama360(elem, children, editor, info) {
 
 const conf = {
   type: 'panorama360', // 节点 type ，重要！！！
-  renderElem: renderPanorama360,
+  renderElem: renderPanorama360
 }
 
 export default conf

@@ -47,21 +47,21 @@ module.exports = async function (req, res, next) {
     description: description || '',
     taxis: taxis || 0,
     status: status || 0,
-    rss: rss || '',
+    rss: rss || ''
   }
   const rule = [
     {
       key: 'sitename',
       label: '网站名称',
       type: null,
-      required: true,
+      required: true
     },
     {
       key: 'siteurl',
       label: '网站URL',
       type: null,
-      required: true,
-    },
+      required: true
+    }
   ]
   const errors = utils.checkForm(params, rule)
   if (errors.length > 0) {
@@ -79,7 +79,7 @@ module.exports = async function (req, res, next) {
     const fileName = params['_id']
     try {
       const imgRes = utils.base64ToFile(icon, path, fileName, {
-        createDir: true,
+        createDir: true
       })
       params['icon'] = `/upload/linkicon/${imgRes.fileNameAll}?v=${Date.now()}`
       params['iconPath'] = imgRes.filepath
@@ -87,9 +87,9 @@ module.exports = async function (req, res, next) {
       res.status(400).json({
         errors: [
           {
-            message: '照片上传失败',
-          },
-        ],
+            message: '照片上传失败'
+          }
+        ]
       })
       throw new Error(error)
     }
@@ -98,20 +98,20 @@ module.exports = async function (req, res, next) {
   // save
   linkUtils
     .save(params)
-    .then((data) => {
+    .then(data => {
       res.send({
-        data: data,
+        data: data
       })
       // utils.reflushBlogCache()
       adminApiLog.info(`link create success`)
     })
-    .catch((err) => {
+    .catch(err => {
       res.status(400).json({
         errors: [
           {
-            message: '友链创建失败',
-          },
-        ],
+            message: '友链创建失败'
+          }
+        ]
       })
       adminApiLog.error(`link create fail, ${logErrorToText(err)}`)
     })

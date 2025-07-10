@@ -1,4 +1,4 @@
-export const applyThemeToDom = (newTheme) => {
+export const applyThemeToDom = newTheme => {
   const validThemes = ['light', 'dark']
   if (!validThemes.includes(newTheme)) return
   document.documentElement.setAttribute('data-theme', newTheme)

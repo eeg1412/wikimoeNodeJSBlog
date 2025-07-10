@@ -28,7 +28,7 @@ class imageGroupButtonMenu {
     if (!Range.isCollapsed(selection)) return true // 选区非折叠，禁用
 
     const selectedElems = DomEditor.getSelectedElems(editor)
-    const hasVoidOrPre = selectedElems.some((elem) => {
+    const hasVoidOrPre = selectedElems.some(elem => {
       const type = DomEditor.getNodeType(elem)
       if (type === 'pre') return true
       if (type === 'list-item') return true
@@ -52,7 +52,7 @@ const menuConf = {
   key: 'imageGroup', // 定义 menu key ：要保证唯一、不重复（重要）
   factory() {
     return new imageGroupButtonMenu() // 把 `YourMenuClass` 替换为你菜单的 class
-  },
+  }
 }
 
 export default menuConf

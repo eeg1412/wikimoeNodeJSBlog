@@ -8,21 +8,21 @@ module.exports = async function (req, res, next) {
   // 校验格式
   const params = {
     name,
-    color,
+    color
   }
   const rule = [
     {
       key: 'name',
       label: '书籍类型名称',
       type: null,
-      required: true,
+      required: true
     },
     {
       key: 'color',
       label: '颜色',
       type: null,
-      required: true,
-    },
+      required: true
+    }
   ]
   const errors = utils.checkForm(params, rule)
   if (errors.length > 0) {
@@ -32,19 +32,19 @@ module.exports = async function (req, res, next) {
   // save
   booktypeUtils
     .save(params)
-    .then((data) => {
+    .then(data => {
       res.send({
-        data: data,
+        data: data
       })
       adminApiLog.info(`booktype create success`)
     })
-    .catch((err) => {
+    .catch(err => {
       res.status(400).json({
         errors: [
           {
-            message: '书籍类型创建失败',
-          },
-        ],
+            message: '书籍类型创建失败'
+          }
+        ]
       })
       adminApiLog.error(`booktype create fail, ${logErrorToText(err)}`)
     })

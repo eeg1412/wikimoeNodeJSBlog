@@ -3,7 +3,7 @@ const chalk = require('chalk')
 const log = console.log
 console.log = function () {
   let args = Array.prototype.slice.call(arguments)
-  args = args.map((arg) => {
+  args = args.map(arg => {
     if (typeof arg === 'string') {
       return chalk.white(arg)
     } else {
@@ -15,7 +15,7 @@ console.log = function () {
 // info
 console.info = function () {
   let args = Array.prototype.slice.call(arguments)
-  args = args.map((arg) => {
+  args = args.map(arg => {
     if (typeof arg === 'string') {
       return chalk.green(arg)
     } else {
@@ -27,7 +27,7 @@ console.info = function () {
 // warn
 console.warn = function () {
   let args = Array.prototype.slice.call(arguments)
-  args = args.map((arg) => {
+  args = args.map(arg => {
     if (typeof arg === 'string') {
       return chalk.yellow(arg)
     } else {
@@ -39,7 +39,7 @@ console.warn = function () {
 // error
 console.error = function () {
   let args = Array.prototype.slice.call(arguments)
-  args = args.map((arg) => {
+  args = args.map(arg => {
     if (typeof arg === 'string') {
       return chalk.red(arg)
     } else {

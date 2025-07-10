@@ -4,7 +4,7 @@ const path = require('path')
 module.exports = {
   appenders: {
     consoleLog: {
-      type: 'console',
+      type: 'console'
     },
     systemMainLogFile: {
       type: 'dateFile',
@@ -13,7 +13,7 @@ module.exports = {
       keepFileExt: true,
       alwaysIncludePattern: true,
       numBackups: 30,
-      compress: true,
+      compress: true
     },
     systemMainErrorLogFile: {
       type: 'dateFile',
@@ -22,18 +22,18 @@ module.exports = {
       keepFileExt: true,
       alwaysIncludePattern: true,
       numBackups: 30,
-      compress: true,
+      compress: true
     },
     systemMainLog: {
       type: 'logLevelFilter',
       appender: 'systemMainLogFile',
       level: 'INFO',
-      maxLevel: 'WARN',
+      maxLevel: 'WARN'
     },
     systemMainErrorLog: {
       type: 'logLevelFilter',
       appender: 'systemMainErrorLogFile',
-      level: 'ERROR',
+      level: 'ERROR'
     },
     accessLogFile: {
       type: 'dateFile',
@@ -42,7 +42,7 @@ module.exports = {
       keepFileExt: true,
       alwaysIncludePattern: true,
       numBackups: 30,
-      compress: true,
+      compress: true
     },
     accessErrorLogFile: {
       type: 'dateFile',
@@ -51,18 +51,18 @@ module.exports = {
       keepFileExt: true,
       alwaysIncludePattern: true,
       numBackups: 30,
-      compress: true,
+      compress: true
     },
     accessLog: {
       type: 'logLevelFilter',
       appender: 'accessLogFile',
       level: 'INFO',
-      maxLevel: 'WARN',
+      maxLevel: 'WARN'
     },
     accessErrorLog: {
       type: 'logLevelFilter',
       appender: 'accessErrorLogFile',
-      level: 'ERROR',
+      level: 'ERROR'
     },
     userApiLogFile: {
       type: 'dateFile',
@@ -71,7 +71,7 @@ module.exports = {
       keepFileExt: true,
       alwaysIncludePattern: true,
       numBackups: 30,
-      compress: true,
+      compress: true
     },
     userApiErrorLogFile: {
       type: 'dateFile',
@@ -80,18 +80,18 @@ module.exports = {
       keepFileExt: true,
       alwaysIncludePattern: true,
       numBackups: 30,
-      compress: true,
+      compress: true
     },
     userApiLog: {
       type: 'logLevelFilter',
       appender: 'userApiLogFile',
       level: 'INFO',
-      maxLevel: 'WARN',
+      maxLevel: 'WARN'
     },
     userApiErrorLog: {
       type: 'logLevelFilter',
       level: 'ERROR',
-      appender: 'userApiErrorLogFile',
+      appender: 'userApiErrorLogFile'
     },
     adminApiLogFile: {
       type: 'dateFile',
@@ -100,7 +100,7 @@ module.exports = {
       keepFileExt: true,
       alwaysIncludePattern: true,
       numBackups: 30,
-      compress: true,
+      compress: true
     },
     adminApiErrorLogFile: {
       type: 'dateFile',
@@ -109,40 +109,40 @@ module.exports = {
       keepFileExt: true,
       alwaysIncludePattern: true,
       numBackups: 30,
-      compress: true,
+      compress: true
     },
     adminApiLog: {
       type: 'logLevelFilter',
       appender: 'adminApiLogFile',
       level: 'INFO',
-      maxLevel: 'WARN',
+      maxLevel: 'WARN'
     },
     adminApiErrorLog: {
       type: 'logLevelFilter',
       level: 'ERROR',
-      appender: 'adminApiErrorLogFile',
-    },
+      appender: 'adminApiErrorLogFile'
+    }
   },
   categories: {
     default: {
       appenders: ['consoleLog'],
-      level: 'ALL',
+      level: 'ALL'
     },
     userApi: {
       appenders: ['consoleLog', 'userApiLog', 'userApiErrorLog'],
-      level: 'ALL',
+      level: 'ALL'
     },
     adminApi: {
       appenders: ['consoleLog', 'adminApiLog', 'adminApiErrorLog'],
-      level: 'ALL',
+      level: 'ALL'
     },
     access: {
       appenders: ['consoleLog', 'accessLog', 'accessErrorLog'],
-      level: 'ALL',
+      level: 'ALL'
     },
     systemMain: {
       appenders: ['consoleLog', 'systemMainLog', 'systemMainErrorLog'],
-      level: 'ALL',
-    },
-  },
+      level: 'ALL'
+    }
+  }
 }

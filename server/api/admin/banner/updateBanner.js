@@ -10,9 +10,9 @@ module.exports = async function (req, res, next) {
     res.status(400).json({
       errors: [
         {
-          message: 'id不能为空',
-        },
-      ],
+          message: 'id不能为空'
+        }
+      ]
     })
     return
   }
@@ -21,16 +21,16 @@ module.exports = async function (req, res, next) {
     status: status || 0,
     link: link || '',
     isdefault: isdefault ? true : false,
-    newtab: newtab ? true : false,
+    newtab: newtab ? true : false
   }
   // 如果状态为1，img必填
   if (status === 1 && !img) {
     res.status(400).json({
       errors: [
         {
-          message: '图片不能为空',
-        },
-      ],
+          message: '图片不能为空'
+        }
+      ]
     })
     return
   }
@@ -41,7 +41,7 @@ module.exports = async function (req, res, next) {
     const fileName = _id
     try {
       const imgRes = utils.base64ToFile(img, path, fileName, {
-        createDir: true,
+        createDir: true
       })
       params['img'] = `/upload/banner/${imgRes.fileNameAll}?v=${Date.now()}`
       params['imgPath'] = imgRes.filepath
@@ -49,9 +49,9 @@ module.exports = async function (req, res, next) {
       res.status(400).json({
         errors: [
           {
-            message: '照片上传失败',
-          },
-        ],
+            message: '照片上传失败'
+          }
+        ]
       })
       throw new Error(error)
     }
@@ -59,33 +59,33 @@ module.exports = async function (req, res, next) {
   // updateOne
   bannerUtils
     .updateOne({ _id: _id }, params)
-    .then((data) => {
+    .then(data => {
       // 判断是否更新成功
       if (data.modifiedCount === 0) {
         // 记录
         res.status(400).json({
           errors: [
             {
-              message: '更新失败',
-            },
-          ],
+              message: '更新失败'
+            }
+          ]
         })
         return
       }
       res.send({
-        data: data,
+        data: data
       })
       adminApiLog.info(`banner update success`)
       cacheDataUtils.getBannerList()
       // utils.reflushBlogCache()
     })
-    .catch((err) => {
+    .catch(err => {
       res.status(400).json({
         errors: [
           {
-            message: '更新失败',
-          },
-        ],
+            message: '更新失败'
+          }
+        ]
       })
       adminApiLog.error(`banner update fail, ${logErrorToText(err)}`)
     })

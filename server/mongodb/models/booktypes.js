@@ -4,9 +4,9 @@ var Schema = mongoose.Schema
 var booktypes = new Schema(
   {
     name: { type: String, required: true },
-    color: { type: String, required: true },
+    color: { type: String, required: true }
   },
-  { timestamps: true },
+  { timestamps: true }
 )
 
 module.exports = mongoose.model('booktypes', booktypes)

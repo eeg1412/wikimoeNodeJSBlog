@@ -17,8 +17,8 @@ exports.findOne = async function (parmas, projection, options = {}) {
       select: 'content _id status user nickname date',
       populate: {
         path: 'user',
-        select: '_id nickname',
-      },
+        select: '_id nickname'
+      }
     })
     .populate('post', 'title _id excerpt')
     .populate('user', options.userFilter || 'nickname _id photo')
@@ -38,7 +38,7 @@ exports.findPage = async function (
   page,
   limit,
   projection,
-  options = {},
+  options = {}
 ) {
   // document查询
   const q = commentsModel
@@ -49,8 +49,8 @@ exports.findPage = async function (
       select: 'content _id status user nickname date',
       populate: {
         path: 'user',
-        select: '_id nickname',
-      },
+        select: '_id nickname'
+      }
     })
     .populate('post', options.postFilter || 'title _id excerpt alias type')
     .populate('user', options.userFilter || 'nickname _id photo')
@@ -68,7 +68,7 @@ exports.findPage = async function (
   }
   return {
     list,
-    total,
+    total
   }
 }
 

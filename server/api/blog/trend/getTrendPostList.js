@@ -9,13 +9,13 @@ module.exports = async function (req, res, next) {
   utils
     .executeInLock('getTrendPostList', async () => {
       const sidebarList = global.$cacheData.sidebarList || []
-      const trendSidebar = sidebarList.find((item) => {
+      const trendSidebar = sidebarList.find(item => {
         return item.type === 12
       })
       // 不存在type为12的侧边栏
       if (!trendSidebar) {
         res.send({
-          list: [],
+          list: []
         })
         // reject
         return
@@ -25,7 +25,7 @@ module.exports = async function (req, res, next) {
       // 如果count小于等于0，不获取最新评论列表
       if (limit <= 0) {
         res.send({
-          list: [],
+          list: []
         })
         // reject
         return
@@ -37,7 +37,7 @@ module.exports = async function (req, res, next) {
       let shouldUpdate = true
       if (trendPostListData) {
         res.send({
-          list: trendPostListData.list,
+          list: trendPostListData.list
         })
         // 确保trendPostListData.date也在相同的时区
         const trendPostListDate = trendPostListData.date
@@ -63,8 +63,8 @@ module.exports = async function (req, res, next) {
             $match: {
               createdAt: { $gte: twentyFourHoursAgo.toDate() },
               action: { $in: ['postView', 'postLike', 'postDislike'] },
-              isBot: false,
-            },
+              isBot: false
+            }
           },
           {
             $group: {
@@ -75,13 +75,13 @@ module.exports = async function (req, res, next) {
                   $switch: {
                     branches: [
                       { case: { $eq: ['$action', 'postDislike'] }, then: -51 },
-                      { case: { $eq: ['$action', 'postLike'] }, then: 51 },
+                      { case: { $eq: ['$action', 'postLike'] }, then: 51 }
                     ],
-                    default: 13, // 其他情况下
-                  },
-                },
-              },
-            },
+                    default: 13 // 其他情况下
+                  }
+                }
+              }
+            }
           },
           {
             $lookup: {
@@ -93,43 +93,43 @@ module.exports = async function (req, res, next) {
                   $match: {
                     date: { $gte: twentyFourHoursAgo.toDate() },
                     status: 1,
-                    $or: [{ user: null }, { user: { $exists: false } }],
-                  },
+                    $or: [{ user: null }, { user: { $exists: false } }]
+                  }
                 },
                 {
                   $project: {
-                    _id: 1,
-                  },
-                },
+                    _id: 1
+                  }
+                }
               ],
-              as: 'comments',
-            },
+              as: 'comments'
+            }
           },
           {
             $addFields: {
               hot: {
-                $add: ['$hot', { $multiply: [{ $size: '$comments' }, 91] }],
-              },
-            },
+                $add: ['$hot', { $multiply: [{ $size: '$comments' }, 91] }]
+              }
+            }
           },
           {
             $project: {
-              comments: 0, // 不包含comments字段
-            },
+              comments: 0 // 不包含comments字段
+            }
           },
           {
             $match: {
-              hot: { $gt: 0 },
-            },
+              hot: { $gt: 0 }
+            }
           },
           {
             $sort: {
               hot: -1,
-              _id: -1,
-            },
+              _id: -1
+            }
           },
           {
-            $limit: limit,
+            $limit: limit
           },
           {
             $lookup: {
@@ -140,9 +140,9 @@ module.exports = async function (req, res, next) {
                 {
                   $match: {
                     $expr: {
-                      $and: [{ $eq: ['$status', 1] }],
-                    },
-                  },
+                      $and: [{ $eq: ['$status', 1] }]
+                    }
+                  }
                 },
                 {
                   $addFields: {
@@ -150,10 +150,10 @@ module.exports = async function (req, res, next) {
                       $cond: {
                         if: { $eq: [{ $size: '$coverImages' }, 0] },
                         then: [],
-                        else: [{ $arrayElemAt: ['$coverImages', 0] }],
-                      },
-                    },
-                  },
+                        else: [{ $arrayElemAt: ['$coverImages', 0] }]
+                      }
+                    }
+                  }
                 },
                 {
                   $lookup: {
@@ -166,18 +166,18 @@ module.exports = async function (req, res, next) {
                           _id: 1,
                           filepath: 1,
                           mimetype: 1,
-                          thumfor: 1,
-                        },
-                      },
+                          thumfor: 1
+                        }
+                      }
                     ],
-                    as: 'coverImage',
-                  },
+                    as: 'coverImage'
+                  }
                 },
                 {
                   $unwind: {
                     path: '$coverImage',
-                    preserveNullAndEmptyArrays: true,
-                  },
+                    preserveNullAndEmptyArrays: true
+                  }
                 },
 
                 {
@@ -186,42 +186,42 @@ module.exports = async function (req, res, next) {
                     title: 1,
                     alias: 1,
                     excerpt: 1,
-                    coverImage: 1,
-                  },
-                },
+                    coverImage: 1
+                  }
+                }
               ],
-              as: 'postDetail',
-            },
+              as: 'postDetail'
+            }
           },
           {
             $unwind: {
               path: '$postDetail',
-              preserveNullAndEmptyArrays: true,
-            },
+              preserveNullAndEmptyArrays: true
+            }
           },
           {
             $match: {
-              $or: [{ postDetail: { $exists: true, $ne: null } }],
-            },
-          },
+              $or: [{ postDetail: { $exists: true, $ne: null } }]
+            }
+          }
         ]
         await readerlogUtils
           .aggregate(pipe)
-          .then((data) => {
+          .then(data => {
             // 写入缓存
             global.$cacheData.trendPostListData = {
               date: moment().toDate(),
               list: data,
-              limit: limit,
+              limit: limit
             }
             if (!trendPostListData) {
               console.info('getTrendPostList should send new data')
               res.send({
-                list: data,
+                list: data
               })
             }
           })
-          .catch((err) => {
+          .catch(err => {
             userApiLog.error(`getTrendPostList error, ${logErrorToText(err)}`)
           })
       }
@@ -230,7 +230,7 @@ module.exports = async function (req, res, next) {
       // 释放锁
       console.info('getTrendPostList unlock')
     })
-    .catch((err) => {
+    .catch(err => {
       // 释放锁
       userApiLog.error(`getTrendPostList unlock error, ${logErrorToText(err)}`)
     })

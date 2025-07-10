@@ -7,15 +7,15 @@ module.exports = async function (req, res, next) {
   const { tagname } = req.body
   // 校验格式
   const params = {
-    tagname: utils.replaceSpacesWithUnderscores(tagname || ''),
+    tagname: utils.replaceSpacesWithUnderscores(tagname || '')
   }
   const rule = [
     {
       key: 'tagname',
       label: '标签名称',
       type: null,
-      required: true,
-    },
+      required: true
+    }
   ]
   const errors = utils.checkForm(params, rule)
   if (errors.length > 0) {
@@ -25,20 +25,20 @@ module.exports = async function (req, res, next) {
   // save
   tagUtils
     .save(params)
-    .then((data) => {
+    .then(data => {
       res.send({
-        data: data,
+        data: data
       })
       // utils.reflushBlogCache()
       adminApiLog.info(`tag:${tagname} create success`)
     })
-    .catch((err) => {
+    .catch(err => {
       res.status(400).json({
         errors: [
           {
-            message: '标签创建失败',
-          },
-        ],
+            message: '标签创建失败'
+          }
+        ]
       })
       adminApiLog.error(`tag:${tagname} create fail, ${logErrorToText(err)}`)
     })

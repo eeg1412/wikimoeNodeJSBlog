@@ -11,7 +11,7 @@ function eventspanToHtml(elem, childrenHtml) {
 // 配置
 const conf = {
   type: 'eventspan', // 节点 type ，重要！！！
-  elemToHtml: eventspanToHtml,
+  elemToHtml: eventspanToHtml
 }
 
 export default conf

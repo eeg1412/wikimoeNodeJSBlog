@@ -24,16 +24,16 @@ module.exports = async function (req, res, next) {
       const ip = utils.getUserIp(req)
       const filter = {
         post: id,
-        uuid,
+        uuid
       }
       // 判断id是否符合格式
       if (!utils.isObjectId(id)) {
         res.status(400).json({
           errors: [
             {
-              message: '更新失败，id格式错误',
-            },
-          ],
+              message: '更新失败，id格式错误'
+            }
+          ]
         })
         return
       }
@@ -43,7 +43,7 @@ module.exports = async function (req, res, next) {
         uuid,
         ip: ip,
         deviceInfo: utils.deviceUAInfoUtils(req),
-        date: new Date(),
+        date: new Date()
       }
       const rule = [
         // uuid
@@ -52,8 +52,8 @@ module.exports = async function (req, res, next) {
           label: '内容参数',
           type: 'isUUID',
           options: 4,
-          required: true,
-        },
+          required: true
+        }
       ]
       const errors = utils.checkForm(params, rule)
       if (errors.length > 0) {
@@ -64,34 +64,34 @@ module.exports = async function (req, res, next) {
       const readerlogCount = await readerlogUtils.count({
         $or: [
           {
-            uuid: uuid,
+            uuid: uuid
           },
           {
-            ip: ip,
-          },
+            ip: ip
+          }
         ],
         // action字段 postLike 或 postDislike
         action: {
-          $in: ['postLike', 'postDislike'],
+          $in: ['postLike', 'postDislike']
         },
         createdAt: {
           $gte: utils.getTodayStartTime(),
-          $lte: utils.getTodayEndTime(),
-        },
+          $lte: utils.getTodayEndTime()
+        }
       })
       if (readerlogCount >= 1000) {
         res.status(400).json({
           errors: [
             {
-              message: '到达今日点赞上限',
-            },
-          ],
+              message: '到达今日点赞上限'
+            }
+          ]
         })
         return
       }
       const oldData = await postLikeLogUtils.findOne(
         filter,
-        '_id post like __v',
+        '_id post like __v'
       )
       let oldLike = null
       if (oldData) {
@@ -99,9 +99,9 @@ module.exports = async function (req, res, next) {
           res.status(400).json({
             errors: [
               {
-                message: '更新失败',
-              },
-            ],
+                message: '更新失败'
+              }
+            ]
           })
           return
         }
@@ -109,7 +109,7 @@ module.exports = async function (req, res, next) {
         // 如果oldLike和like相等，则不需要更新
         if (oldLike === like) {
           res.send({
-            data: oldData,
+            data: oldData
           })
           return
         }
@@ -119,9 +119,9 @@ module.exports = async function (req, res, next) {
         res.status(400).json({
           errors: [
             {
-              message: '取消点赞失败',
-            },
-          ],
+              message: '取消点赞失败'
+            }
+          ]
         })
         return
       }
@@ -130,15 +130,15 @@ module.exports = async function (req, res, next) {
       // 查询post
       const post = await postUtils.findOne(
         { _id: id },
-        'title excerpt type likes',
+        'title excerpt type likes'
       )
       if (!post) {
         res.status(400).json({
           errors: [
             {
-              message: '更新失败',
-            },
-          ],
+              message: '更新失败'
+            }
+          ]
         })
         return
       }
@@ -147,9 +147,9 @@ module.exports = async function (req, res, next) {
         res.status(400).json({
           errors: [
             {
-              message: '已超过最大点赞数',
-            },
-          ],
+              message: '已超过最大点赞数'
+            }
+          ]
         })
         return
       }
@@ -159,16 +159,16 @@ module.exports = async function (req, res, next) {
         // 加上__v
         const newFilter = {
           ...filter,
-          __v,
+          __v
         }
         const updateRes = await postLikeLogUtils.updateOne(newFilter, params)
         if (!updateRes || updateRes.modifiedCount === 0) {
           res.status(400).json({
             errors: [
               {
-                message: '更新失败',
-              },
-            ],
+                message: '更新失败'
+              }
+            ]
           })
           return
         }
@@ -178,15 +178,15 @@ module.exports = async function (req, res, next) {
         const newParams = {
           ...params,
           post: id,
-          uuid,
+          uuid
         }
-        data = await postLikeLogUtils.save(newParams).catch((err) => {
+        data = await postLikeLogUtils.save(newParams).catch(err => {
           res.status(400).json({
             errors: [
               {
-                message: '更新失败',
-              },
-            ],
+                message: '更新失败'
+              }
+            ]
           })
           userApiLog.error(`postLikeLog create fail, ${logErrorToText(err)}`)
           return
@@ -196,9 +196,9 @@ module.exports = async function (req, res, next) {
         res.status(400).json({
           errors: [
             {
-              message: '更新失败',
-            },
-          ],
+              message: '更新失败'
+            }
+          ]
         })
         return
       }
@@ -210,7 +210,7 @@ module.exports = async function (req, res, next) {
       sendData.like = data.like
       sendData.__v = data.__v
       res.send({
-        data: sendData,
+        data: sendData
       })
       userApiLog.info(`postLikeLog create success`)
       // 异步更新文章点赞数
@@ -249,27 +249,27 @@ module.exports = async function (req, res, next) {
         data: {
           target: target,
           targetId: id,
-          content: content,
+          content: content
         },
         ...utils.isSearchEngine(req),
         deviceInfo: params.deviceInfo,
         ipInfo: params.ipInfo,
-        ip: ip,
+        ip: ip
       }
       readerlogUtils
         .save(readerlogParams)
-        .then((data) => {
+        .then(data => {
           // utils.reflushBlogCache()
           userApiLog.info(`post like log create success`)
         })
-        .catch((err) => {
+        .catch(err => {
           userApiLog.error(`post like log create fail, ${logErrorToText(err)}`)
         })
     })
     .then(() => {
       console.info('postLikeLog unlock')
     })
-    .catch((err) => {
+    .catch(err => {
       userApiLog.error(`postLikeLog unlock error, ${logErrorToText(err)}`)
     })
 }

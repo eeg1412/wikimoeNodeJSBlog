@@ -5,66 +5,66 @@ var movies = new Schema(
   {
     // 标题
     title: {
-      type: String,
+      type: String
     },
     // 封面
     cover: {
-      type: String,
+      type: String
     },
     coverFolder: {
       type: String,
-      default: null,
+      default: null
     },
     coverFileName: {
       type: String,
-      default: null,
+      default: null
     },
     // 简评
     summary: {
-      type: String,
+      type: String
     },
     // 评分，神作，佳作，良作，劣作，烂作，迷
     rating: {
       type: Number,
-      index: true,
+      index: true
     },
     // 年份
     year: {
       type: Number,
-      index: true,
+      index: true
     },
     // 月份
     month: {
       type: Number,
-      index: true,
+      index: true
     },
     // 日期
     day: {
       type: Number,
-      index: true,
+      index: true
     },
     urlList: {
       type: [
         {
           text: String,
-          url: String,
-        },
+          url: String
+        }
       ],
-      default: [],
+      default: []
     },
     // label 字符串数组
     label: {
       type: [String],
-      default: [],
+      default: []
     },
     // 状态 0: 不显示 1: 显示
     status: {
       type: Number,
       default: 0,
-      index: true,
-    },
+      index: true
+    }
   },
-  { timestamps: true },
+  { timestamps: true }
 )
 
 module.exports = mongoose.model('movies', movies)

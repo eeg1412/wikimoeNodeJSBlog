@@ -6,37 +6,37 @@ module.exports = async function (req, res, next) {
   if (global.$cacheData?.bangumiSeasonObj) {
     cacheDataUtils
       .checkBangumiSeasonList()
-      .then((data) => {
+      .then(data => {
         res.send(data.list)
       })
-      .catch((err) => {
+      .catch(err => {
         res.status(400).json({
           errors: [
             {
-              message: '当季追番列表获取失败',
-            },
-          ],
+              message: '当季追番列表获取失败'
+            }
+          ]
         })
         userApiLog.error(
-          `checkBangumiSeasonList get fail, ${JSON.stringify(err)}`,
+          `checkBangumiSeasonList get fail, ${JSON.stringify(err)}`
         )
       })
   } else {
     cacheDataUtils
       .getBangumiSeasonList()
-      .then((data) => {
+      .then(data => {
         res.send(data.list)
       })
-      .catch((err) => {
+      .catch(err => {
         res.status(400).json({
           errors: [
             {
-              message: '当季追番列表获取失败',
-            },
-          ],
+              message: '当季追番列表获取失败'
+            }
+          ]
         })
         userApiLog.error(
-          `getBangumiSeasonList get fail, ${JSON.stringify(err)}`,
+          `getBangumiSeasonList get fail, ${JSON.stringify(err)}`
         )
       })
   }

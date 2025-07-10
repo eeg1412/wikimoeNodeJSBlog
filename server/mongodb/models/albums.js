@@ -7,16 +7,16 @@ var albums = new Schema(
       type: String,
       required: true,
       // 唯一
-      unique: true,
+      unique: true
     },
     // 相册下的文件数量
     count: {
       type: Number,
       default: 0,
-      index: true,
-    },
+      index: true
+    }
   },
-  { timestamps: true },
+  { timestamps: true }
 )
 
 module.exports = mongoose.model('albums', albums)

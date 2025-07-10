@@ -14,9 +14,9 @@ module.exports = async function (req, res, next) {
         res.status(400).json({
           errors: [
             {
-              message: '评论内容不能超过500个字符',
-            },
-          ],
+              message: '评论内容不能超过500个字符'
+            }
+          ]
         })
         return
       }
@@ -25,9 +25,9 @@ module.exports = async function (req, res, next) {
         res.status(400).json({
           errors: [
             {
-              message: '昵称不能超过20个字符',
-            },
-          ],
+              message: '昵称不能超过20个字符'
+            }
+          ]
         })
         return
       }
@@ -36,9 +36,9 @@ module.exports = async function (req, res, next) {
         res.status(400).json({
           errors: [
             {
-              message: 'url不能超过200个字符',
-            },
-          ],
+              message: 'url不能超过200个字符'
+            }
+          ]
         })
         return
       }
@@ -47,9 +47,9 @@ module.exports = async function (req, res, next) {
         res.status(400).json({
           errors: [
             {
-              message: '邮箱地址不能超过100个字符',
-            },
-          ],
+              message: '邮箱地址不能超过100个字符'
+            }
+          ]
         })
         return
       }
@@ -58,16 +58,16 @@ module.exports = async function (req, res, next) {
         siteEnableComment,
         siteCommentInterval,
         siteEnableCommentReview,
-        siteMaxCommentReview,
+        siteMaxCommentReview
       } = global.$globalConfig.commentSettings
       // 如果siteEnableComment为false，则不允许评论
       if (!siteEnableComment) {
         res.status(400).json({
           errors: [
             {
-              message: '评论功能已关闭',
-            },
-          ],
+              message: '评论功能已关闭'
+            }
+          ]
         })
         return
       }
@@ -78,9 +78,9 @@ module.exports = async function (req, res, next) {
         res.status(400).json({
           errors: [
             {
-              message: '评论发送失败',
-            },
-          ],
+              message: '评论发送失败'
+            }
+          ]
         })
         return
       }
@@ -91,9 +91,9 @@ module.exports = async function (req, res, next) {
         res.status(400).json({
           errors: [
             {
-              message: '评论内容中有不恰当的词汇，请修改后再试',
-            },
-          ],
+              message: '评论内容中有不恰当的词汇，请修改后再试'
+            }
+          ]
         })
         return
       }
@@ -109,7 +109,7 @@ module.exports = async function (req, res, next) {
         uuid,
         ip: ip,
         deviceInfo: utils.deviceUAInfoUtils(req),
-        ipInfo: await utils.IP2LocationUtils(ip, null, null, false),
+        ipInfo: await utils.IP2LocationUtils(ip, null, null, false)
       }
       if (email) {
         params.email = email
@@ -122,25 +122,25 @@ module.exports = async function (req, res, next) {
           key: 'post',
           label: '评论文章',
           type: null,
-          required: true,
+          required: true
         },
         {
           key: 'content',
           label: '评论内容',
           type: null,
-          required: true,
+          required: true
         },
         {
           key: 'nickname',
           label: '昵称',
           type: null,
-          required: true,
+          required: true
         },
         {
           key: 'email',
           label: '邮箱地址',
           type: 'isEmail',
-          required: false,
+          required: false
         },
         // url
         {
@@ -165,8 +165,8 @@ module.exports = async function (req, res, next) {
             require_tld: true,
             require_port: false,
             allow_protocol_relative_urls: false,
-            validate_length: false,
-          },
+            validate_length: false
+          }
         },
         // uuid
         {
@@ -174,8 +174,8 @@ module.exports = async function (req, res, next) {
           label: '内容参数',
           type: 'isUUID',
           options: 4,
-          required: true,
-        },
+          required: true
+        }
       ]
       const errors = utils.checkForm(params, rule)
       if (errors.length > 0) {
@@ -188,9 +188,9 @@ module.exports = async function (req, res, next) {
         res.status(400).json({
           errors: [
             {
-              message: '文章不存在',
-            },
-          ],
+              message: '文章不存在'
+            }
+          ]
         })
         return
       }
@@ -201,9 +201,9 @@ module.exports = async function (req, res, next) {
         res.status(400).json({
           errors: [
             {
-              message: '文章不允许评论',
-            },
-          ],
+              message: '文章不允许评论'
+            }
+          ]
         })
         return
       }
@@ -213,9 +213,9 @@ module.exports = async function (req, res, next) {
         res.status(400).json({
           errors: [
             {
-              message: '评论间隔未设置',
-            },
-          ],
+              message: '评论间隔未设置'
+            }
+          ]
         })
         return
       }
@@ -227,17 +227,17 @@ module.exports = async function (req, res, next) {
         const params = {
           $or: [{ uuid: uuid }, { ip: ip }],
           date: {
-            $gt: lastTime,
-          },
+            $gt: lastTime
+          }
         }
         const lastComment = await commentUtils.findOne(params)
         if (lastComment) {
           res.status(400).json({
             errors: [
               {
-                message: '发送的评论过于频繁，请稍后再试',
-              },
-            ],
+                message: '发送的评论过于频繁，请稍后再试'
+              }
+            ]
           })
           return
         }
@@ -252,9 +252,9 @@ module.exports = async function (req, res, next) {
           res.status(400).json({
             errors: [
               {
-                message: '审核中的评论数已达上限，请稍后再试',
-              },
-            ],
+                message: '审核中的评论数已达上限，请稍后再试'
+              }
+            ]
           })
           return
         }
@@ -268,24 +268,24 @@ module.exports = async function (req, res, next) {
           res.status(400).json({
             errors: [
               {
-                message: '回复评论的对象不存在或已删除',
-              },
-            ],
+                message: '回复评论的对象不存在或已删除'
+              }
+            ]
           })
           return
         }
         // 校验parent是否存在
         const parentComment = await commentUtils.findOne({
           _id: parent,
-          status: 1,
+          status: 1
         })
         if (!parentComment) {
           res.status(400).json({
             errors: [
               {
-                message: '回复评论的对象不存在或已删除',
-              },
-            ],
+                message: '回复评论的对象不存在或已删除'
+              }
+            ]
           })
           return
         }
@@ -311,10 +311,10 @@ module.exports = async function (req, res, next) {
       // save
       commentUtils
         .save(params)
-        .then((data) => {
+        .then(data => {
           const jwtBody = {
             version: 1,
-            commentList: [],
+            commentList: []
           }
           const commentRetractAuthDecode = req['commentRetractAuthDecode']
           if (commentRetractAuthDecode?.commentList) {
@@ -322,7 +322,7 @@ module.exports = async function (req, res, next) {
             const now = new Date()
             const fiveMinutesAgo = new Date(now - 5 * 60 * 1000)
             const canAddCommentList =
-              commentRetractAuthDecode.commentList.filter((item) => {
+              commentRetractAuthDecode.commentList.filter(item => {
                 const date = new Date(item.date)
                 return date > fiveMinutesAgo
               })
@@ -330,12 +330,12 @@ module.exports = async function (req, res, next) {
           }
           jwtBody.commentList.push({
             id: data._id,
-            date: data.date,
+            date: data.date
           })
           const commentRetractJWT = utils.creatJWTBlog(jwtBody, '5m')
           res.send({
             status: params.status,
-            commentRetractJWT: commentRetractJWT,
+            commentRetractJWT: commentRetractJWT
           })
           userApiLog.info(`comment:${content} create success`)
           if (params.status === 1) {
@@ -351,17 +351,17 @@ module.exports = async function (req, res, next) {
             utils.sendReplyCommentNotice(postInfo, data)
           }
         })
-        .catch((err) => {
+        .catch(err => {
           console.error(err)
           res.status(400).json({
             errors: [
               {
-                message: '评论创建失败',
-              },
-            ],
+                message: '评论创建失败'
+              }
+            ]
           })
           userApiLog.error(
-            `comment:${content} create fail, ${logErrorToText(err)}`,
+            `comment:${content} create fail, ${logErrorToText(err)}`
           )
         })
     })
@@ -369,7 +369,7 @@ module.exports = async function (req, res, next) {
       // 释放锁
       console.info('createComment unlock')
     })
-    .catch((err) => {
+    .catch(err => {
       // 释放锁
       userApiLog.error(`createComment unlock error, ${logErrorToText(err)}`)
     })

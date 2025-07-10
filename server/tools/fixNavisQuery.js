@@ -8,11 +8,11 @@ const init = async () => {
   // 查找所有 query 字段为对象类型的文档
   const docs = await navisUtils.find(
     {
-      query: { $type: 'object' },
+      query: { $type: 'object' }
     },
     undefined,
     undefined,
-    { lean: true },
+    { lean: true }
   )
   console.log(`找到 ${docs.length} 个需要更新的文档`)
 
@@ -28,8 +28,8 @@ const init = async () => {
         { $set: { query: queryString } },
         {
           strict: false, // 忽略架构验证
-          new: true, // 返回更新后的文档
-        },
+          new: true // 返回更新后的文档
+        }
       )
     }
   }

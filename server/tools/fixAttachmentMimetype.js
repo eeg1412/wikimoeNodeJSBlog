@@ -5,13 +5,13 @@ const attachmentsUtils = require('../mongodb/utils/attachments')
 
 async function fixMimeTypes() {
   const attachments = await attachmentsUtils.find()
-  const promiseAll = attachments.map(async (attachment) => {
+  const promiseAll = attachments.map(async attachment => {
     const ext = path.extname(attachment.filepath)
     const mimeType = getMimeType(ext)
     if (mimeType && mimeType !== attachment.mimetype) {
       await attachmentsUtils.updateOne(
         { _id: attachment._id },
-        { mimetype: mimeType },
+        { mimetype: mimeType }
       )
       console.log(`Attachment ${attachment._id} updated.`)
     }
@@ -42,7 +42,7 @@ db.once('open', () => {
       console.log('Done')
       process.exit(0)
     })
-    .catch((err) => {
+    .catch(err => {
       console.error(err)
       process.exit(1)
     })

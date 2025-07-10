@@ -10,9 +10,9 @@ module.exports = async function (req, res, next) {
     res.status(400).json({
       errors: [
         {
-          message: 'id不能为空',
-        },
-      ],
+          message: 'id不能为空'
+        }
+      ]
     })
     return
   }
@@ -21,24 +21,24 @@ module.exports = async function (req, res, next) {
     res.status(400).json({
       errors: [
         {
-          message: '__v不能为空',
-        },
-      ],
+          message: '__v不能为空'
+        }
+      ]
     })
     return
   }
   // 校验格式
   const params = {
     name: name,
-    remark: remark,
+    remark: remark
   }
   const rule = [
     {
       key: 'name',
       label: '备份名称',
       type: null,
-      required: true,
-    },
+      required: true
+    }
   ]
   const errors = utils.checkForm(params, rule)
   if (errors.length > 0) {
@@ -48,29 +48,29 @@ module.exports = async function (req, res, next) {
   // updateOne
   backupUtils
     .updateOne({ _id: id, __v }, params)
-    .then((data) => {
+    .then(data => {
       if (data.modifiedCount === 0) {
         res.status(400).json({
           errors: [
             {
-              message: '更新失败',
-            },
-          ],
+              message: '更新失败'
+            }
+          ]
         })
         return
       }
       res.send({
-        data: data,
+        data: data
       })
       adminApiLog.info(`backup update success`)
     })
-    .catch((err) => {
+    .catch(err => {
       res.status(400).json({
         errors: [
           {
-            message: '备份更新失败',
-          },
-        ],
+            message: '备份更新失败'
+          }
+        ]
       })
       adminApiLog.error(`backup update fail, ${logErrorToText(err)}`)
     })

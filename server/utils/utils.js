@@ -18,13 +18,13 @@ const crawlerUserAgents = require('./crawler-user-agents.json')
 const { Worker } = require('worker_threads')
 
 const botUserAgentList = []
-crawlerUserAgents.forEach((item) => {
+crawlerUserAgents.forEach(item => {
   const obj = {
     pattern: new RegExp(item.pattern),
     name: item.pattern
       .replace(/[^\w]/gi, '-')
       .replace(/-+/g, '-')
-      .replace(/^-+|-+$/g, ''),
+      .replace(/^-+|-+$/g, '')
   }
   botUserAgentList.push(obj)
 })
@@ -151,7 +151,7 @@ exports.checkJWT = function (token) {
     const decoded = jwt.verify(token, secret)
     result = {
       isError: false,
-      data: decoded,
+      data: decoded
     }
     // console.timeEnd('checkJWT')
     return result
@@ -160,7 +160,7 @@ exports.checkJWT = function (token) {
     // {"name":"JsonWebTokenError","message":"invalid token"}
     result = {
       isError: true,
-      errorData: { ...err },
+      errorData: { ...err }
     }
     return result
   }
@@ -176,7 +176,7 @@ exports.checkJWTBlog = function (token) {
     const decoded = jwt.verify(token, secret)
     result = {
       isError: false,
-      data: decoded,
+      data: decoded
     }
     // console.timeEnd('checkJWT')
     return result
@@ -185,7 +185,7 @@ exports.checkJWTBlog = function (token) {
     // {"name":"JsonWebTokenError","message":"invalid token"}
     result = {
       isError: true,
-      errorData: { ...err },
+      errorData: { ...err }
     }
     return result
   }
@@ -198,7 +198,7 @@ const md5hex = (str /*: string */) => {
 
 exports.md5hex = md5hex
 
-exports.parseBase64 = (base64) => {
+exports.parseBase64 = base64 => {
   if (!base64) {
     return null
   }
@@ -209,7 +209,7 @@ exports.parseBase64 = (base64) => {
   return {
     type: matches[1],
     data: matches[2],
-    extension: matches[1].split('/')[1] || 'jpg',
+    extension: matches[1].split('/')[1] || 'jpg'
   }
 }
 
@@ -221,13 +221,13 @@ exports.checkForm = function (form, ruleArr) {
     return value === null || value === undefined || value === ''
   }
   const result = []
-  ruleArr.forEach((rule) => {
+  ruleArr.forEach(rule => {
     const { key, label, type, required, options, errorMessage, reg } = rule
     const value = form[key]
     if (requiredCheck(required, value)) {
       result.push({
         key,
-        message: `${label || key} 是必须项`,
+        message: `${label || key} 是必须项`
       })
     }
     if (type && !checkVauleIsNone(value)) {
@@ -235,7 +235,7 @@ exports.checkForm = function (form, ruleArr) {
         if (!reg.test(value)) {
           result.push({
             key,
-            message: errorMessage || `${label || key} 内容有误`,
+            message: errorMessage || `${label || key} 内容有误`
           })
         }
       } else {
@@ -243,7 +243,7 @@ exports.checkForm = function (form, ruleArr) {
         if (!check && check !== 0) {
           result.push({
             key,
-            message: errorMessage || `${label || key} 内容有误`,
+            message: errorMessage || `${label || key} 内容有误`
           })
         }
       }
@@ -281,7 +281,7 @@ exports.getUserIp = function (req) {
 exports.checkEnv = function () {
   const envArr = ['DB_HOST']
   const result = []
-  envArr.forEach((env) => {
+  envArr.forEach(env => {
     if (!process.env[env]) {
       result.push(env)
     }
@@ -290,7 +290,7 @@ exports.checkEnv = function () {
   if (result.length > 0) {
     console.error(
       '请在根目录下创建.env文件，并添加以下环境变量：',
-      result.join(','),
+      result.join(',')
     )
     process.exit(1)
   }
@@ -315,7 +315,7 @@ exports.base64ToFile = function (base64, destpath, fileName, options = {}) {
   fs.writeFileSync(filepath, dataBuffer)
   return {
     filepath,
-    fileNameAll,
+    fileNameAll
   }
 }
 
@@ -323,10 +323,10 @@ exports.base64ToFile = function (base64, destpath, fileName, options = {}) {
 exports.generateTreeData = function (data, parentKey = 'parent') {
   const treeData = []
   const map = {}
-  data.forEach((item) => {
+  data.forEach(item => {
     map[item._id] = item
   })
-  data.forEach((item) => {
+  data.forEach(item => {
     const parent = map[item[parentKey]]
     if (parent) {
       ;(parent.children || (parent.children = [])).push(item)
@@ -340,11 +340,11 @@ exports.generateTreeData = function (data, parentKey = 'parent') {
 exports.initIp2location = function () {
   const binFilePath = path.join(
     './utils/ip2location/',
-    process.env.IP2LOCATION_FILE_NAME || 'IP2LOCATION.BIN',
+    process.env.IP2LOCATION_FILE_NAME || 'IP2LOCATION.BIN'
   )
   if (!fs.existsSync(binFilePath)) {
     console.warn(
-      'ip2location文件不存在,如果需要IP解析请先从：https://lite.ip2location.com 下载BIN文件，然后放到utils/ip2location目录下',
+      'ip2location文件不存在,如果需要IP解析请先从：https://lite.ip2location.com 下载BIN文件，然后放到utils/ip2location目录下'
     )
     return
   }
@@ -373,7 +373,7 @@ exports.IP2LocationUtils = function (ip, id, modelUtils, updateMongodb = true) {
         }
         const ipInfoAll = ip2location.getAll(String(ip).trim())
         // 遍历ipInfoAll，如果包含字符串This method is 就删除该属性
-        Object.keys(ipInfoAll).forEach((key) => {
+        Object.keys(ipInfoAll).forEach(key => {
           if (ipInfoAll[key].includes('This method is not')) {
             delete ipInfoAll[key]
           }
@@ -384,8 +384,8 @@ exports.IP2LocationUtils = function (ip, id, modelUtils, updateMongodb = true) {
           modelUtils.updateOne(
             { _id: id },
             {
-              ipInfo: ipInfoAll,
-            },
+              ipInfo: ipInfoAll
+            }
           )
         }
         resolve(ipInfoAll)
@@ -396,7 +396,7 @@ exports.IP2LocationUtils = function (ip, id, modelUtils, updateMongodb = true) {
     })
     return promise
   }
-  return new Promise((resolve) => {
+  return new Promise(resolve => {
     resolve(null)
   })
 }
@@ -413,8 +413,8 @@ exports.deviceUtils = function (req, id, modelUtils) {
   const result = modelUtils.updateOne(
     { _id: id },
     {
-      deviceInfo: ua,
-    },
+      deviceInfo: ua
+    }
   )
   return result
 }
@@ -463,7 +463,7 @@ exports.sendEmail = function (to, content, subject) {
     emailSmtpPort,
     emailSmtpSecure,
     emailSender,
-    emailPassword,
+    emailPassword
   } = emailSettings
   // 以上参数缺一不可
   if (!emailSmtpHost || !emailSmtpPort || !emailSender || !emailPassword) {
@@ -481,14 +481,14 @@ exports.sendEmail = function (to, content, subject) {
     secure: emailSmtpSecure || false, // true for 465, false for other ports
     auth: {
       user: emailSender,
-      pass: emailPassword,
-    },
+      pass: emailPassword
+    }
   })
   const mailOptions = {
     from: emailSender,
     to,
     subject,
-    html: content,
+    html: content
   }
   const promise = new Promise((resolve, reject) => {
     transporter.sendMail(mailOptions, (error, info) => {
@@ -502,16 +502,16 @@ exports.sendEmail = function (to, content, subject) {
     })
   })
   promise
-    .then((info) => {
+    .then(info => {
       const emailSendHistory = {
         to,
         subject,
         content,
-        status: 1,
+        status: 1
       }
       emailSendHistoryUtils.save(emailSendHistory)
     })
-    .catch((err) => {
+    .catch(err => {
       let errInfo = ''
       const errorType = typeof err
       if (errorType === 'string') {
@@ -528,7 +528,7 @@ exports.sendEmail = function (to, content, subject) {
         content,
         subject,
         status: 0,
-        errInfo: errInfo,
+        errInfo: errInfo
       }
       emailSendHistoryUtils.save(emailSendHistory)
     })
@@ -542,7 +542,7 @@ exports.sendCommentAddNotice = function (post, comment) {
     emailSendToMeTemplate,
     emailEnable,
     emailSendOptions,
-    emailReceiver,
+    emailReceiver
   } = emailSettings
 
   // 如果没有设置emailSendToMeTemplate，就不发送邮件
@@ -579,11 +579,11 @@ exports.sendCommentAddNotice = function (post, comment) {
     contentHtml = contentHtml.replace(/\${nickname}/g, nickname)
     contentHtml = contentHtml.replace(
       /\${title}/g,
-      `<a href="${this.getPostPagePath(post)}" target="_blank">${linkTitle}</a>`,
+      `<a href="${this.getPostPagePath(post)}" target="_blank">${linkTitle}</a>`
     )
     contentHtml = contentHtml.replace(
       /\${siteTitle}/g,
-      `<a href="${siteUrl}" target="_blank">${siteTitle}</a>`,
+      `<a href="${siteUrl}" target="_blank">${siteTitle}</a>`
     )
     this.sendEmail(to, contentHtml, subject)
   }
@@ -596,7 +596,7 @@ exports.sendRetractCommentNotice = function (post, comment) {
     emailRetractCommentTemplate,
     emailEnable,
     emailSendOptions,
-    emailReceiver,
+    emailReceiver
   } = emailSettings
 
   // 如果没有设置emailRetractCommentTemplate，就不发送邮件
@@ -627,11 +627,11 @@ exports.sendRetractCommentNotice = function (post, comment) {
     contentHtml = contentHtml.replace(/\${nickname}/g, nickname)
     contentHtml = contentHtml.replace(
       /\${title}/g,
-      `<a href="${this.getPostPagePath(post)}" target="_blank">${linkTitle}</a>`,
+      `<a href="${this.getPostPagePath(post)}" target="_blank">${linkTitle}</a>`
     )
     contentHtml = contentHtml.replace(
       /\${siteTitle}/g,
-      `<a href="${siteUrl}" target="_blank">${siteTitle}</a>`,
+      `<a href="${siteUrl}" target="_blank">${siteTitle}</a>`
     )
     this.sendEmail(to, contentHtml, subject)
   }
@@ -642,7 +642,7 @@ exports.sendReplyCommentNotice = async function (post, comment) {
   if (typeof comment === 'string') {
     // 如果comment是字符串，说明是评论id，需要查询评论信息
     comment = await commentUtils.findOne({ _id: comment }, '', {
-      userFilter: 'nickname _id email',
+      userFilter: 'nickname _id email'
     })
   }
   if (!comment) {
@@ -660,7 +660,7 @@ exports.sendReplyCommentNotice = async function (post, comment) {
   }
 
   let parentComment = await commentUtils.findOne({ _id: comment.parent }, '', {
-    userFilter: 'nickname _id email',
+    userFilter: 'nickname _id email'
   })
   if (!parentComment) {
     console.error('parentComment不存在')
@@ -738,11 +738,11 @@ exports.sendReplyCommentNotice = async function (post, comment) {
     contentHtml = contentHtml.replace(/\${nickname}/g, nickname)
     contentHtml = contentHtml.replace(
       /\${title}/g,
-      `<a href="${this.getPostPagePath(post)}/#comment-${comment._id}" target="_blank">${linkTitle}</a>`,
+      `<a href="${this.getPostPagePath(post)}/#comment-${comment._id}" target="_blank">${linkTitle}</a>`
     )
     contentHtml = contentHtml.replace(
       /\${siteTitle}/g,
-      `<a href="${siteUrl}" target="_blank">${siteTitle}</a>`,
+      `<a href="${siteUrl}" target="_blank">${siteTitle}</a>`
     )
     contentHtml = contentHtml.replace(/\${parentComment}/g, parentContent)
     contentHtml = contentHtml.replace(/\${parentNickname}/g, parentNickname)
@@ -750,7 +750,7 @@ exports.sendReplyCommentNotice = async function (post, comment) {
   }
 }
 
-exports.getPostPagePath = (postData) => {
+exports.getPostPagePath = postData => {
   // 先判断type是1，2还是3，1和2跳转到/post/id，3跳转到/page/id
   // 如果有别名，就跳转到别名，没有别名就跳转到id
   const siteSettings = global.$globalConfig.siteSettings
@@ -805,7 +805,7 @@ exports.referrerRecord = function (referrer, referrerType) {
       referrer = referrer.substring(0, 300)
     }
     // 如果referrer存在，就判断referrer是否在referrerDomainWhitelist中
-    const isReferrerDomainWhitelist = referrerDomainWhitelist.some((item) => {
+    const isReferrerDomainWhitelist = referrerDomainWhitelist.some(item => {
       // list中仅包含域名，不包含协议和路径
       return referrer.includes(item)
     })
@@ -823,14 +823,14 @@ exports.referrerRecord = function (referrer, referrerType) {
           // 如果计时器到期，就保存referrer
           const params = {
             referrer,
-            referrerType,
+            referrerType
           }
           console.log('referrer记录', params)
           referrerUtils.save(params)
           // 删除计时器
           delete referrerRecordTimerMap[md5Id]
         },
-        1000 * 60 * 60,
+        1000 * 60 * 60
       )
     }
   }
@@ -870,7 +870,7 @@ exports.isSearchEngine = function (req) {
   const ua = req.get('user-agent')
   const res = {
     isBot: false,
-    botName: '',
+    botName: ''
   }
   if (!ua) {
     res.isBot = true
@@ -879,7 +879,7 @@ exports.isSearchEngine = function (req) {
     res.isBot = true
     res.botName = 'unknown-ua-too-long'
   } else {
-    botUserAgentList.some((item) => {
+    botUserAgentList.some(item => {
       if (item.pattern.test(ua)) {
         res.isBot = true
         res.botName = item.name
@@ -899,18 +899,18 @@ exports.imageCompress = async (
   newWidth,
   newHeight,
   imgSettingCompressQuality,
-  filePath,
+  filePath
 ) => {
   const shrpWorker = new Worker('./utils/workers/sharpWorker.js')
   const promise = new Promise((resolve, reject) => {
-    shrpWorker.on('message', (data) => {
+    shrpWorker.on('message', data => {
       if (data.status === 'success') {
         resolve(data.data)
       } else {
         reject(data)
       }
     })
-    shrpWorker.on('error', (err) => {
+    shrpWorker.on('error', err => {
       reject(err)
     })
     shrpWorker.postMessage({
@@ -922,35 +922,35 @@ exports.imageCompress = async (
         newWidth,
         newHeight,
         imgSettingCompressQuality,
-        filePath,
-      ],
+        filePath
+      ]
     })
   })
   return promise
 }
 
-exports.imageMetadata = async (fileData) => {
+exports.imageMetadata = async fileData => {
   const shrpWorker = new Worker('./utils/workers/sharpWorker.js')
   const promise = new Promise((resolve, reject) => {
-    shrpWorker.on('message', (data) => {
+    shrpWorker.on('message', data => {
       if (data.status === 'success') {
         resolve(data.data)
       } else {
         reject(data)
       }
     })
-    shrpWorker.on('error', (err) => {
+    shrpWorker.on('error', err => {
       reject(err)
     })
     shrpWorker.postMessage({
       action: 'imageMetadata',
-      data: [fileData],
+      data: [fileData]
     })
   })
   return promise
 }
 
-exports.logErrorToText = (error) => {
+exports.logErrorToText = error => {
   const errorType = typeof error
   if (errorType === 'string') {
     return error
@@ -999,7 +999,7 @@ exports.handleRangeRequest = (req, res, next, folder) => {
     'Content-Range': `bytes ${start}-${end}/${stat.size}`,
     'Accept-Ranges': 'bytes',
     'Content-Length': chunksize,
-    'Content-Type': 'video/mp4',
+    'Content-Type': 'video/mp4'
   }
 
   res.writeHead(206, head)
@@ -1030,7 +1030,7 @@ exports.getReaderlogsSize = async () => {
   return {
     size,
     maxReaderlogsSize,
-    isExceedMaxSize,
+    isExceedMaxSize
   }
 }
 
@@ -1049,7 +1049,7 @@ exports.getPostLikeLogsSize = async () => {
   return {
     size,
     maxPostLikeLogsSize,
-    isExceedMaxSize,
+    isExceedMaxSize
   }
 }
 
@@ -1068,7 +1068,7 @@ exports.getCommentLikeLogsSize = async () => {
   return {
     size,
     maxCommentLikeLogsSize,
-    isExceedMaxSize,
+    isExceedMaxSize
   }
 }
 
@@ -1087,12 +1087,12 @@ exports.getVoteLogsSize = async () => {
   return {
     size,
     maxVoteLogsSize,
-    isExceedMaxSize,
+    isExceedMaxSize
   }
 }
 
 // 文字中的空格和全角空格替换为下划线
-exports.replaceSpacesWithUnderscores = (str) => {
+exports.replaceSpacesWithUnderscores = str => {
   return str.replace(/[\s\u3000]/g, '-')
 }
 
@@ -1105,7 +1105,7 @@ exports.getYearSeason = () => {
   const season = seasonMap[month - 1] // 月份从1开始，数组从0开始
   return {
     year,
-    season,
+    season
   }
 }
 

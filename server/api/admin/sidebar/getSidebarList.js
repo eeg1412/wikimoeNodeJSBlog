@@ -8,23 +8,23 @@ module.exports = async function (req, res, next) {
     // 排序
     taxis: 1,
     // id
-    _id: -1,
+    _id: -1
   }
   sidebarUtils
     .find({}, sort)
-    .then((data) => {
+    .then(data => {
       // 返回格式list,total
       res.send({
-        list: data,
+        list: data
       })
     })
-    .catch((err) => {
+    .catch(err => {
       res.status(400).json({
         errors: [
           {
-            message: '侧边栏列表获取失败',
-          },
-        ],
+            message: '侧边栏列表获取失败'
+          }
+        ]
       })
       adminApiLog.error(`sidebar list get fail, ${JSON.stringify(err)}`)
     })

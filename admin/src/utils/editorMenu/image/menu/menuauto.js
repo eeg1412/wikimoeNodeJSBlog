@@ -49,12 +49,12 @@ class imageWidthAutoButtonMenu {
       style: {
         ...style,
         width: '', // 清空 width
-        height: '', // 清空 height
-      },
+        height: '' // 清空 height
+      }
     }
 
     Transforms.setNodes(editor, props, {
-      match: (n) => DomEditor.checkNodeType(n, 'image'),
+      match: n => DomEditor.checkNodeType(n, 'image')
     })
   }
 }
@@ -63,7 +63,7 @@ const imageWidthAutoConf = {
   key: 'imageWidthauto', // 定义 menu key ：要保证唯一、不重复（重要）
   factory() {
     return new imageWidthAutoButtonMenu() // 把 `YourMenuClass` 替换为你菜单的 class
-  },
+  }
 }
 
 export default imageWidthAutoConf

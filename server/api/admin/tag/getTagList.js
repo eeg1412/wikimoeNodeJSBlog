@@ -13,9 +13,9 @@ module.exports = async function (req, res, next) {
     res.status(400).json({
       errors: [
         {
-          message: '参数错误',
-        },
-      ],
+          message: '参数错误'
+        }
+      ]
     })
     return
   }
@@ -32,9 +32,9 @@ module.exports = async function (req, res, next) {
         res.status(400).json({
           errors: [
             {
-              message: '参数错误',
-            },
-          ],
+              message: '参数错误'
+            }
+          ]
         })
         return
       }
@@ -46,14 +46,14 @@ module.exports = async function (req, res, next) {
 
   const sort = {
     lastusetime: -1,
-    _id: -1,
+    _id: -1
   }
   // 构建聚合管道
   const pipeline = [
     // 条件过滤
     {
-      $match: params,
-    },
+      $match: params
+    }
   ]
 
   if (shouldCount === '1') {
@@ -63,8 +63,8 @@ module.exports = async function (req, res, next) {
           from: 'posts',
           localField: '_id',
           foreignField: 'tags',
-          as: 'posts',
-        },
+          as: 'posts'
+        }
       },
       // 添加文章数量字段
       {
@@ -75,33 +75,33 @@ module.exports = async function (req, res, next) {
               $filter: {
                 input: '$posts',
                 as: 'post',
-                cond: { $eq: ['$$post.status', 1] },
-              },
-            },
-          },
-        },
+                cond: { $eq: ['$$post.status', 1] }
+              }
+            }
+          }
+        }
       },
       // 移除posts字段
       {
         $project: {
-          posts: 0,
-        },
-      },
+          posts: 0
+        }
+      }
     )
   }
 
   pipeline.push(
     // 排序
     {
-      $sort: sort,
+      $sort: sort
     },
     // 分页
     {
-      $skip: (page - 1) * size,
+      $skip: (page - 1) * size
     },
     {
-      $limit: size,
-    },
+      $limit: size
+    }
   )
 
   // 使用facet实现分页
@@ -113,32 +113,32 @@ module.exports = async function (req, res, next) {
         // 获取总数
         total: [
           {
-            $match: params,
+            $match: params
           },
           {
-            $count: 'count',
-          },
-        ],
-      },
-    },
+            $count: 'count'
+          }
+        ]
+      }
+    }
   ]
 
   tagUtils
     .aggregate(aggregatePipeline)
-    .then((result) => {
+    .then(result => {
       const data = {
         list: result[0].list,
-        total: result[0].total[0]?.count || 0,
+        total: result[0].total[0]?.count || 0
       }
       res.send(data)
     })
-    .catch((err) => {
+    .catch(err => {
       res.status(400).json({
         errors: [
           {
-            message: '标签列表获取失败',
-          },
-        ],
+            message: '标签列表获取失败'
+          }
+        ]
       })
       adminApiLog.error(`tag list get fail, ${logErrorToText(err)}`)
     })

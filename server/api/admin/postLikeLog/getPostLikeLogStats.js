@@ -6,6 +6,6 @@ const adminApiLog = log4js.getLogger('adminApi')
 module.exports = async function (req, res, next) {
   const stats = await utils.getPostLikeLogsSize()
   res.send({
-    stats,
+    stats
   })
 }

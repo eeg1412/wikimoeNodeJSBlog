@@ -7,89 +7,89 @@ var comments = new Schema(
     post: {
       type: Schema.Types.ObjectId,
       ref: 'posts',
-      index: true,
+      index: true
     },
     // 父评论id
     parent: {
       type: Schema.Types.ObjectId,
       ref: 'comments',
-      index: true,
+      index: true
     },
     // 评论日期
     date: {
       type: Date,
       default: Date.now,
-      index: true,
+      index: true
     },
     // 评论内容,对应emlog的comment
     content: {
       type: String,
-      default: '',
+      default: ''
     },
     // user
     user: {
       type: Schema.Types.ObjectId,
-      ref: 'users',
+      ref: 'users'
     },
     // 是否置顶
     top: {
       type: Boolean,
       default: false,
-      index: true,
+      index: true
     },
     // 评论者昵称,对应emlog的poster
     nickname: {
       type: String,
-      default: '',
+      default: ''
     },
     // 评论者邮箱
     email: {
       type: String,
-      default: '',
+      default: ''
     },
     // 评论者网址
     url: {
       type: String,
-      default: '',
+      default: ''
     },
     likes: {
       type: Number,
       default: 0,
-      index: true,
+      index: true
     },
     uuid: {
       type: String,
       default: '',
-      index: true,
+      index: true
     },
     // 评论者ip
     ip: {
       type: String,
       default: '',
-      index: true,
+      index: true
     },
     ipInfo: {
       type: Object,
-      default: {},
+      default: {}
     },
     deviceInfo: {
       type: Object,
-      default: {},
+      default: {}
     },
     // 需要通知父级评论的用户的Flag
     needSendMailToParent: {
       type: Boolean,
       default: false,
-      index: true,
+      index: true
     },
     // 评论状态,0待审核,1审核通过,2未通过,查询评论时注意父级评论的状态
     status: {
       type: Number,
       default: 0,
-      index: true,
-    },
+      index: true
+    }
   },
-  { timestamps: true },
+  { timestamps: true }
 )
 
 module.exports = mongoose.model('comments', comments)

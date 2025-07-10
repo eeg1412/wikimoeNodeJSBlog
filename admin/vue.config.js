@@ -9,7 +9,7 @@ module.exports = defineConfig({
   productionSourceMap: process.env.NODE_ENV === 'production' ? false : true,
   devServer: {
     client: {
-      overlay: false,
+      overlay: false
     },
     https: false,
     port: 8079,
@@ -18,39 +18,39 @@ module.exports = defineConfig({
         target: 'http://127.0.0.1:3006/api',
         changeOrigin: true,
         pathRewrite: {
-          '/api': '',
-        },
+          '/api': ''
+        }
       },
       // content
       '/content/uploadfile': {
         target: 'http://127.0.0.1:3006/content/uploadfile',
         changeOrigin: true,
         pathRewrite: {
-          '/content/uploadfile': '',
-        },
+          '/content/uploadfile': ''
+        }
       },
       // upload
       '/upload': {
         target: 'http://127.0.0.1:3006/upload',
         changeOrigin: true,
         pathRewrite: {
-          '/upload': '',
-        },
-      },
-    },
+          '/upload': ''
+        }
+      }
+    }
   },
   // 不生成console
-  chainWebpack: (config) => {
-    config.plugin('define').tap((args) => {
+  chainWebpack: config => {
+    config.plugin('define').tap(args => {
       args[0]['process.env'].VUE_APP_VERSION = JSON.stringify(
-        process.env.npm_package_version,
+        process.env.npm_package_version
       )
       return args
     })
-    config.optimization.minimizer('terser').tap((args) => {
+    config.optimization.minimizer('terser').tap(args => {
       const compress = args[0].terserOptions.compress
       compress.drop_console = true
       return args
     })
-  },
+  }
 })

@@ -16,9 +16,9 @@ module.exports = async function (req, res, next) {
     res.status(400).json({
       errors: [
         {
-          message: 'id不能为空',
-        },
-      ],
+          message: 'id不能为空'
+        }
+      ]
     })
     return
   }
@@ -27,9 +27,9 @@ module.exports = async function (req, res, next) {
     res.status(400).json({
       errors: [
         {
-          message: '__v不能为空',
-        },
-      ],
+          message: '__v不能为空'
+        }
+      ]
     })
     return
   }
@@ -38,9 +38,9 @@ module.exports = async function (req, res, next) {
     res.status(400).json({
       errors: [
         {
-          message: '父级不能和自己相同',
-        },
-      ],
+          message: '父级不能和自己相同'
+        }
+      ]
     })
     return
   }
@@ -50,15 +50,15 @@ module.exports = async function (req, res, next) {
     alias: alias,
     taxis: taxis,
     parent: parent,
-    description: description,
+    description: description
   }
   const rule = [
     {
       key: 'sortname',
       label: '分类名称',
       type: null,
-      required: true,
-    },
+      required: true
+    }
   ]
   const errors = utils.checkForm(params, rule)
   if (errors.length > 0) {
@@ -69,21 +69,21 @@ module.exports = async function (req, res, next) {
     // 查询alias是否存在，查询条件时大小写不敏感的
     const query = {
       alias: {
-        $regex: new RegExp('^' + alias + '$', 'i'),
+        $regex: new RegExp('^' + alias + '$', 'i')
       },
       // 排除自己
       _id: {
-        $ne: id,
-      },
+        $ne: id
+      }
     }
     const result = await sortUtils.findOne(query)
     if (result) {
       res.status(400).json({
         errors: [
           {
-            message: '分类别名已存在',
-          },
-        ],
+            message: '分类别名已存在'
+          }
+        ]
       })
       return
     }
@@ -91,31 +91,31 @@ module.exports = async function (req, res, next) {
   // updateOne
   sortUtils
     .updateOne({ _id: id, __v }, params)
-    .then((data) => {
+    .then(data => {
       if (data.modifiedCount === 0) {
         res.status(400).json({
           errors: [
             {
-              message: '更新失败',
-            },
-          ],
+              message: '更新失败'
+            }
+          ]
         })
         return
       }
       res.send({
-        data: data,
+        data: data
       })
       adminApiLog.info(`sort:${sortname} update success`)
       cacheDataUtils.getSortList()
       // utils.reflushBlogCache()
     })
-    .catch((err) => {
+    .catch(err => {
       res.status(400).json({
         errors: [
           {
-            message: '分类更新失败',
-          },
-        ],
+            message: '分类更新失败'
+          }
+        ]
       })
       adminApiLog.error(`sort:${sortname} update fail, ${logErrorToText(err)}`)
     })

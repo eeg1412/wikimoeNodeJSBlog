@@ -8,7 +8,7 @@ module.exports = async function (req, res, next) {
 
   const params = {
     _id: id,
-    status: 1,
+    status: 1
   }
 
   const rule = [
@@ -16,8 +16,8 @@ module.exports = async function (req, res, next) {
       key: '_id',
       label: 'ID',
       type: 'isMongoId',
-      required: true,
-    },
+      required: true
+    }
   ]
   const errors = utils.checkForm(params, rule)
   if (errors.length > 0) {
@@ -27,28 +27,28 @@ module.exports = async function (req, res, next) {
 
   eventUtils
     .findOne(params)
-    .then((data) => {
+    .then(data => {
       if (!data) {
         res.status(404).json({
           errors: [
             {
-              message: '活动不存在',
-            },
-          ],
+              message: '活动不存在'
+            }
+          ]
         })
         return
       }
       res.send({
-        data: data,
+        data: data
       })
     })
-    .catch((err) => {
+    .catch(err => {
       res.status(400).json({
         errors: [
           {
-            message: '活动详情获取失败',
-          },
-        ],
+            message: '活动详情获取失败'
+          }
+        ]
       })
       userApiLog.error(`event get fail, ${JSON.stringify(err)}`)
     })

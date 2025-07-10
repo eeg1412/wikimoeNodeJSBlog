@@ -9,12 +9,12 @@ const dbPromise = new Promise((resolve, reject) => {
   db.once('open', () => {
     resolve()
   })
-  db.on('error', (err) => {
+  db.on('error', err => {
     reject(err)
   })
 })
 
-parentPort.on('message', async (_id) => {
+parentPort.on('message', async _id => {
   dbPromise
     .then(async () => {
       console.log('worker start')
@@ -28,7 +28,7 @@ parentPort.on('message', async (_id) => {
         const fileSize = backupTools.getBackupFileSize(pathname)
         parentPort.postMessage({
           status: 'success',
-          data: { pathname, fileSize },
+          data: { pathname, fileSize }
         })
         parentPort.close()
       } catch (err) {
@@ -36,7 +36,7 @@ parentPort.on('message', async (_id) => {
         parentPort.close()
       }
     })
-    .catch((err) => {
+    .catch(err => {
       console.error('Failed to connect to database', err)
       parentPort.postMessage({ status: 'error', error: err })
       parentPort.close()

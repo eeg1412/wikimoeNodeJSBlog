@@ -11,9 +11,9 @@ module.exports = async function (req, res, next) {
     res.status(400).json({
       errors: [
         {
-          message: '选项格式不正确',
-        },
-      ],
+          message: '选项格式不正确'
+        }
+      ]
     })
     return
   }
@@ -22,9 +22,9 @@ module.exports = async function (req, res, next) {
     res.status(400).json({
       errors: [
         {
-          message: '状态值不正确',
-        },
-      ],
+          message: '状态值不正确'
+        }
+      ]
     })
     return
   }
@@ -34,13 +34,13 @@ module.exports = async function (req, res, next) {
     maxSelect: Number(maxSelect),
     showResultAfter: showResultAfter ? true : false,
     endTime: endTime || null,
-    status,
+    status
   }
   const rule = [
     {
       key: 'title',
       label: '投票标题',
-      required: true,
+      required: true
     },
     {
       key: 'maxSelect',
@@ -49,8 +49,8 @@ module.exports = async function (req, res, next) {
       type: 'isInt',
       options: {
         min: 1,
-        max: options.length,
-      },
+        max: options.length
+      }
     },
     {
       key: 'endTime',
@@ -58,9 +58,9 @@ module.exports = async function (req, res, next) {
       type: 'isISO8601',
       options: {
         strict: true,
-        strictSeparator: true,
-      },
-    },
+        strictSeparator: true
+      }
+    }
   ]
   const errors = utils.checkForm(params, rule)
   if (errors.length > 0) {
@@ -74,13 +74,13 @@ module.exports = async function (req, res, next) {
     const option = options[i]
     const optionParams = {
       title: option.title,
-      sort: Number(option.sort),
+      sort: Number(option.sort)
     }
     const optionRule = [
       {
         key: 'title',
         label: '选项标题',
-        required: true,
+        required: true
       },
       {
         key: 'sort',
@@ -89,9 +89,9 @@ module.exports = async function (req, res, next) {
         type: 'isInt',
         options: {
           min: 0,
-          max: 999999999,
-        },
-      },
+          max: 999999999
+        }
+      }
     ]
     const optionErrors = utils.checkForm(optionParams, optionRule)
     if (optionErrors.length > 0) {
@@ -104,9 +104,9 @@ module.exports = async function (req, res, next) {
     res.status(400).json({
       errors: [
         {
-          message: '选项数不能少于2个',
-        },
-      ],
+          message: '选项数不能少于2个'
+        }
+      ]
     })
     return
   }
@@ -114,19 +114,19 @@ module.exports = async function (req, res, next) {
   // save
   voteUtils
     .save(params)
-    .then((data) => {
+    .then(data => {
       res.send({
-        data: data,
+        data: data
       })
       adminApiLog.info(`vote create success`)
     })
-    .catch((err) => {
+    .catch(err => {
       res.status(400).json({
         errors: [
           {
-            message: '投票创建失败',
-          },
-        ],
+            message: '投票创建失败'
+          }
+        ]
       })
       adminApiLog.error(`vote create fail, ${logErrorToText(err)}`)
     })

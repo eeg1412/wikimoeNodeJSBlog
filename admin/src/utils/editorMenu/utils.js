@@ -7,7 +7,7 @@ export function isInsertSpanDisabled(editor) {
   // if (!Range.isCollapsed(selection)) return true // 选区非折叠，禁用
 
   const [match] = Editor.nodes(editor, {
-    match: (n) => {
+    match: n => {
       const type = DomEditor.getNodeType(n)
 
       if (type === 'code') return true // 代码块
@@ -21,7 +21,7 @@ export function isInsertSpanDisabled(editor) {
 
       return false
     },
-    universal: true,
+    universal: true
   })
 
   if (match) return true

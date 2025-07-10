@@ -30,7 +30,7 @@ exports.findPage = async function (
   page,
   limit,
   projection,
-  options = {},
+  options = {}
 ) {
   // document查询
   const q = booksModel
@@ -50,7 +50,7 @@ exports.findPage = async function (
   }
   return {
     list,
-    total,
+    total
   }
 }
 

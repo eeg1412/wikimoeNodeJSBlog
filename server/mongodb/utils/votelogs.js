@@ -33,7 +33,7 @@ exports.findPage = async function (
   page,
   limit,
   projection,
-  options = {},
+  options = {}
 ) {
   // document查询
   const q = votelogsModel
@@ -54,7 +54,7 @@ exports.findPage = async function (
   }
   return {
     list,
-    total,
+    total
   }
 }
 

@@ -8,16 +8,16 @@ module.exports = async function (req, res, next) {
   } else {
     cacheDataUtils
       .getReadingBookList()
-      .then((data) => {
+      .then(data => {
         res.send(data)
       })
-      .catch((err) => {
+      .catch(err => {
         res.status(400).json({
           errors: [
             {
-              message: 'getReadingBookList 列表获取失败',
-            },
-          ],
+              message: 'getReadingBookList 列表获取失败'
+            }
+          ]
         })
         userApiLog.error(`getReadingBookList fail, ${JSON.stringify(err)}`)
       })

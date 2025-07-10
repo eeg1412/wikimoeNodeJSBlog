@@ -7,14 +7,14 @@ export default createStore({
     adminToken: localStorage.getItem('adminToken') || '',
     adminInfo: null,
     loadingShow: false,
-    siteUrl: '',
+    siteUrl: ''
   },
   getters: {
-    adminToken: (state) => state.adminToken,
-    loadingShow: (state) => state.loadingShow,
+    adminToken: state => state.adminToken,
+    loadingShow: state => state.loadingShow,
     // getAdminInfo
-    adminInfo: (state) => state.adminInfo,
-    siteUrl: (state) => state.siteUrl,
+    adminInfo: state => state.adminInfo,
+    siteUrl: state => state.siteUrl
   },
   mutations: {
     setLoading(state, data) {
@@ -28,7 +28,7 @@ export default createStore({
     setAdminInfo(state, adminInfo) {
       authApi
         .loginuserinfo()
-        .then((res) => {
+        .then(res => {
           state.adminInfo = res.data.data
         })
         .catch(() => {
@@ -36,10 +36,10 @@ export default createStore({
         })
     },
     setOptions(state, data) {
-      authApi.getOptionList({ nameList: ['siteUrl'] }).then((res) => {
+      authApi.getOptionList({ nameList: ['siteUrl'] }).then(res => {
         const list = res.data.data
         // 查找name为siteUrl的数据
-        const siteUrlData = list.find((item) => item.name === 'siteUrl')
+        const siteUrlData = list.find(item => item.name === 'siteUrl')
         if (siteUrlData) {
           state.siteUrl = siteUrlData.value
         } else {
@@ -47,7 +47,7 @@ export default createStore({
           ElMessage.error('请先设置站点信息！')
         }
       })
-    },
+    }
   },
   actions: {
     setLoading({ commit }, data) {
@@ -65,6 +65,6 @@ export default createStore({
     },
     setOptions({ commit }) {
       commit('setOptions')
-    },
-  },
+    }
+  }
 })

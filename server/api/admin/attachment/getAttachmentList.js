@@ -12,9 +12,9 @@ module.exports = async function (req, res, next) {
     res.status(400).json({
       errors: [
         {
-          message: '参数错误',
-        },
-      ],
+          message: '参数错误'
+        }
+      ]
     })
     return
   }
@@ -33,35 +33,35 @@ module.exports = async function (req, res, next) {
   // 如果typeList是数组，就加入查询条件
   if (typeList && Array.isArray(typeList)) {
     // 针对mimetype进行查询,注意数据库中存储的是image/jpeg这种格式,但是typeList是image,video
-    const typeListReg = typeList.map((item) => {
+    const typeListReg = typeList.map(item => {
       return new RegExp(item, 'i')
     })
     params.mimetype = {
-      $in: typeListReg,
+      $in: typeListReg
     }
   }
 
   // updatedAt越新越靠前，_id越新越靠前
   const sort = {
     updatedAt: -1,
-    _id: -1,
+    _id: -1
   }
   attachmentUtils
     .findPage(params, sort, page, size)
-    .then((data) => {
+    .then(data => {
       // 返回格式list,total
       res.send({
         list: data.list,
-        total: data.total,
+        total: data.total
       })
     })
-    .catch((err) => {
+    .catch(err => {
       res.status(400).json({
         errors: [
           {
-            message: '媒体列表获取失败',
-          },
-        ],
+            message: '媒体列表获取失败'
+          }
+        ]
       })
       adminApiLog.error(`attachment list get fail, ${logErrorToText(err)}`)
     })

@@ -23,14 +23,14 @@ function parseHtml(domElem, children, editor) {
     dataHrefWidth,
     dataHrefHeight,
     alt,
-    children: [{ text: '' }],
+    children: [{ text: '' }]
   }
 }
 
 function parsePanorama360HtmlConf() {
   return {
     selector: 'div.w-e-panorama360',
-    parseElemHtml: parseHtml,
+    parseElemHtml: parseHtml
   }
 }
 

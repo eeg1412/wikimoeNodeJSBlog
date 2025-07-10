@@ -17,7 +17,7 @@ module.exports = async function (req, res, next) {
     label,
     urlList,
     giveUp,
-    status,
+    status
   } = req.body
   // 校验格式
   const params = {
@@ -30,7 +30,7 @@ module.exports = async function (req, res, next) {
     label,
     urlList,
     giveUp,
-    status,
+    status
   }
   // 根据当前年份生成16进制文件夹
   const coverNow = new Date()
@@ -48,7 +48,7 @@ module.exports = async function (req, res, next) {
     path = path + coverYear16 + '/'
     try {
       const imgRes = utils.base64ToFile(cover, path, fileName, {
-        createDir: true,
+        createDir: true
       })
       params['cover'] =
         `/upload/bangumi/${coverYear16}/${imgRes.fileNameAll}?v=${Date.now()}`
@@ -57,9 +57,9 @@ module.exports = async function (req, res, next) {
       res.status(400).json({
         errors: [
           {
-            message: '照片上传失败',
-          },
-        ],
+            message: '照片上传失败'
+          }
+        ]
       })
       throw new Error(error)
     }
@@ -68,22 +68,22 @@ module.exports = async function (req, res, next) {
   // save
   bangumiUtils
     .save(params)
-    .then((data) => {
+    .then(data => {
       res.send({
-        data: data,
+        data: data
       })
       adminApiLog.info(`bangumi create success`)
       cacheDataUtils.getBangumiYearList()
       cacheDataUtils.getBangumiSeasonList()
       // utils.reflushBlogCache()
     })
-    .catch((err) => {
+    .catch(err => {
       res.status(400).json({
         errors: [
           {
-            message: '番剧创建失败',
-          },
-        ],
+            message: '番剧创建失败'
+          }
+        ]
       })
       adminApiLog.error(`bangumi create fail, ${logErrorToText(err)}`)
     })

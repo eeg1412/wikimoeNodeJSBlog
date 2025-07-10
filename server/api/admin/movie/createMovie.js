@@ -16,7 +16,7 @@ module.exports = async function (req, res, next) {
     day,
     label,
     urlList,
-    status,
+    status
   } = req.body
   // 校验格式
   const params = {
@@ -29,7 +29,7 @@ module.exports = async function (req, res, next) {
     day,
     label,
     urlList,
-    status,
+    status
   }
 
   if (year || month || day) {
@@ -37,9 +37,9 @@ module.exports = async function (req, res, next) {
       res.status(400).json({
         errors: [
           {
-            message: '日期格式不正确',
-          },
-        ],
+            message: '日期格式不正确'
+          }
+        ]
       })
       return
     }
@@ -60,7 +60,7 @@ module.exports = async function (req, res, next) {
     path = path + coverYear16 + '/'
     try {
       const imgRes = utils.base64ToFile(cover, path, fileName, {
-        createDir: true,
+        createDir: true
       })
       params['cover'] =
         `/upload/movie/${coverYear16}/${imgRes.fileNameAll}?v=${Date.now()}`
@@ -69,9 +69,9 @@ module.exports = async function (req, res, next) {
       res.status(400).json({
         errors: [
           {
-            message: '照片上传失败',
-          },
-        ],
+            message: '照片上传失败'
+          }
+        ]
       })
       throw new Error(error)
     }
@@ -80,20 +80,20 @@ module.exports = async function (req, res, next) {
   // save
   movieUtils
     .save(params)
-    .then((data) => {
+    .then(data => {
       res.send({
-        data: data,
+        data: data
       })
       cacheDataUtils.getMovieYearList()
       adminApiLog.info(`movie create success`)
     })
-    .catch((err) => {
+    .catch(err => {
       res.status(400).json({
         errors: [
           {
-            message: '电影创建失败',
-          },
-        ],
+            message: '电影创建失败'
+          }
+        ]
       })
       adminApiLog.error(`movie create fail, ${logErrorToText(err)}`)
     })

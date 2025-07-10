@@ -13,9 +13,9 @@ module.exports = async function (req, res, next) {
     res.status(400).json({
       errors: [
         {
-          message: '参数错误',
-        },
-      ],
+          message: '参数错误'
+        }
+      ]
     })
     return
   }
@@ -25,27 +25,27 @@ module.exports = async function (req, res, next) {
     res.status(400).json({
       errors: [
         {
-          message: '参数错误',
-        },
-      ],
+          message: '参数错误'
+        }
+      ]
     })
     return
   }
 
   const voteParams = {
     _id: id,
-    status: 1,
+    status: 1
   }
   const voteData = await voteUtils.findOne(voteParams, undefined, {
-    lean: true,
+    lean: true
   })
   if (!voteData) {
     res.status(400).json({
       errors: [
         {
-          message: '投票不存在',
-        },
-      ],
+          message: '投票不存在'
+        }
+      ]
     })
     return
   }
@@ -53,24 +53,24 @@ module.exports = async function (req, res, next) {
   const ip = utils.getUserIp(req)
   const logParams = {
     vote: id,
-    $or: [{ uuid }, { ip }],
+    $or: [{ uuid }, { ip }]
   }
   const logDataList = await votelogUtils.findPage(
     logParams,
     {
-      _id: -1,
+      _id: -1
     },
     1,
     5,
     '_id options uuid ip',
-    { lean: true },
+    { lean: true }
   )
 
   let logData = null
 
   if (logDataList.list && logDataList.list.length > 0) {
     // 按优先级查找匹配记录
-    const uuidMatch = logDataList.list.find((item) => item.uuid === uuid)
+    const uuidMatch = logDataList.list.find(item => item.uuid === uuid)
     if (uuidMatch) {
       logData = uuidMatch
     } else {
@@ -91,7 +91,7 @@ module.exports = async function (req, res, next) {
     if (!logData) {
       // 需要将votes和options.votes数隐藏
       voteData.votes = null
-      voteData.options.forEach((option) => {
+      voteData.options.forEach(option => {
         option.votes = null
       })
     }
@@ -115,6 +115,6 @@ module.exports = async function (req, res, next) {
     options: userOptions,
     isExpired,
     bothIP,
-    bothUUID,
+    bothUUID
   })
 }

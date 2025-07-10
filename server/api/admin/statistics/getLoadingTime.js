@@ -15,9 +15,9 @@ module.exports = async function (req, res, next) {
     res.status(400).json({
       errors: [
         {
-          message: '时区不合法',
-        },
-      ],
+          message: '时区不合法'
+        }
+      ]
     })
     return
   }
@@ -34,8 +34,8 @@ module.exports = async function (req, res, next) {
       required: true,
       options: {
         strict: true,
-        strictSeparator: true,
-      },
+        strictSeparator: true
+      }
     },
     // endTime
     {
@@ -45,17 +45,17 @@ module.exports = async function (req, res, next) {
       required: true,
       options: {
         strict: true,
-        strictSeparator: true,
-      },
-    },
+        strictSeparator: true
+      }
+    }
   ]
 
   const errors = utils.checkForm(
     {
       startTime,
-      endTime,
+      endTime
     },
-    rule,
+    rule
   )
   if (errors.length > 0) {
     res.status(400).json({ errors })
@@ -77,9 +77,9 @@ module.exports = async function (req, res, next) {
     formatDate: {
       $dateToString: {
         format: `%Y-%m-%dT%H:00:00.000Z`,
-        date: '$createdAt',
-      },
-    },
+        date: '$createdAt'
+      }
+    }
   }
   // 如果超过一定天数，就按天数来统计
   if (isOverDays) {
@@ -89,9 +89,9 @@ module.exports = async function (req, res, next) {
         $dateToString: {
           format: `%Y-%m-%dT00:00:00.000${offset}`,
           date: '$createdAt',
-          timezone: timeZone,
-        },
-      },
+          timezone: timeZone
+        }
+      }
     }
   }
 
@@ -106,8 +106,8 @@ module.exports = async function (req, res, next) {
           action: 'open',
           'data.performanceNavigationTiming': { $ne: null },
           'data.performanceNavigationTiming.duration': { $ne: null },
-          'data.performanceNavigationTiming.duration': { $gt: 0 }, // 剔除duration小于等于0的记录
-        },
+          'data.performanceNavigationTiming.duration': { $gt: 0 } // 剔除duration小于等于0的记录
+        }
       },
       // 2. 只保留需要的字段，减少内存使用
       {
@@ -116,15 +116,15 @@ module.exports = async function (req, res, next) {
           ipInfo: 1,
           deviceInfo: 1,
           createdAt: 1,
-          'data.performanceNavigationTiming': 1,
-        },
+          'data.performanceNavigationTiming': 1
+        }
       },
       // 3. 根据IP分组，取每组中duration最大的记录（如果相同则取最早时间的）
       {
         $sort: {
           'data.performanceNavigationTiming.duration': -1,
-          createdAt: 1,
-        },
+          createdAt: 1
+        }
       },
       {
         $group: {
@@ -133,10 +133,10 @@ module.exports = async function (req, res, next) {
           ipInfo: { $first: '$ipInfo' },
           deviceInfo: { $first: '$deviceInfo' },
           performanceNavigationTiming: {
-            $first: '$data.performanceNavigationTiming',
+            $first: '$data.performanceNavigationTiming'
           },
-          createdAt: { $first: '$createdAt' },
-        },
+          createdAt: { $first: '$createdAt' }
+        }
       },
       // 4. 使用$facet分别计算统计数据和获取最快/最慢列表
       {
@@ -149,8 +149,8 @@ module.exports = async function (req, res, next) {
                 maxDuration: { $max: '$performanceNavigationTiming.duration' },
                 minDuration: { $min: '$performanceNavigationTiming.duration' },
                 avgDuration: { $avg: '$performanceNavigationTiming.duration' },
-                count: { $sum: 1 },
-              },
+                count: { $sum: 1 }
+              }
             },
             {
               $project: {
@@ -158,20 +158,20 @@ module.exports = async function (req, res, next) {
                 maxDuration: 1,
                 minDuration: 1,
                 avgDuration: { $round: ['$avgDuration', 0] },
-                count: 1,
-              },
-            },
+                count: 1
+              }
+            }
           ],
           // 最慢的数据
           slowestData: [
             {
               $sort: {
                 'performanceNavigationTiming.duration': -1,
-                createdAt: 1,
-              },
+                createdAt: 1
+              }
             },
             {
-              $limit: limit,
+              $limit: limit
             },
             {
               $project: {
@@ -180,20 +180,20 @@ module.exports = async function (req, res, next) {
                 ipInfo: 1,
                 deviceInfo: 1,
                 performanceNavigationTiming: 1,
-                createdAt: 1,
-              },
-            },
+                createdAt: 1
+              }
+            }
           ],
           // 最快的数据
           fastestData: [
             {
               $sort: {
                 'performanceNavigationTiming.duration': 1,
-                createdAt: 1,
-              },
+                createdAt: 1
+              }
             },
             {
-              $limit: limit,
+              $limit: limit
             },
             {
               $project: {
@@ -202,100 +202,100 @@ module.exports = async function (req, res, next) {
                 ipInfo: 1,
                 deviceInfo: 1,
                 performanceNavigationTiming: 1,
-                createdAt: 1,
-              },
-            },
+                createdAt: 1
+              }
+            }
           ],
           // 按国家统计最慢平均用时
           countrySlowStats: [
             {
               $match: {
-                'ipInfo.countryLong': { $exists: true, $ne: null, $ne: '-' },
-              },
+                'ipInfo.countryLong': { $exists: true, $ne: null, $ne: '-' }
+              }
             },
             {
               $group: {
                 _id: '$ipInfo.countryLong',
                 avgDuration: { $avg: '$performanceNavigationTiming.duration' },
-                count: { $sum: 1 },
-              },
+                count: { $sum: 1 }
+              }
             },
             {
               $match: {
-                count: { $gte: 3 }, // 只包括至少有3个样本的国家，避免偶然性
-              },
+                count: { $gte: 3 } // 只包括至少有3个样本的国家，避免偶然性
+              }
             },
             {
               $project: {
                 _id: 0,
                 country: '$_id',
                 avgDuration: { $round: ['$avgDuration', 0] },
-                count: 1,
-              },
+                count: 1
+              }
             },
             {
-              $sort: { avgDuration: -1 }, // 从慢到快排序
+              $sort: { avgDuration: -1 } // 从慢到快排序
             },
             {
-              $limit: limit,
-            },
+              $limit: limit
+            }
           ],
           // 按国家统计最快平均用时
           countryFastStats: [
             {
               $match: {
-                'ipInfo.countryLong': { $exists: true, $ne: null, $ne: '-' },
-              },
+                'ipInfo.countryLong': { $exists: true, $ne: null, $ne: '-' }
+              }
             },
             {
               $group: {
                 _id: '$ipInfo.countryLong',
                 avgDuration: { $avg: '$performanceNavigationTiming.duration' },
-                count: { $sum: 1 },
-              },
+                count: { $sum: 1 }
+              }
             },
             {
               $match: {
-                count: { $gte: 3 }, // 只包括至少有3个样本的国家，避免偶然性
-              },
+                count: { $gte: 3 } // 只包括至少有3个样本的国家，避免偶然性
+              }
             },
             {
               $project: {
                 _id: 0,
                 country: '$_id',
                 avgDuration: { $round: ['$avgDuration', 0] },
-                count: 1,
-              },
+                count: 1
+              }
             },
             {
-              $sort: { avgDuration: 1 }, // 从快到慢排序
+              $sort: { avgDuration: 1 } // 从快到慢排序
             },
             {
-              $limit: limit,
-            },
+              $limit: limit
+            }
           ],
           // 按国家+地区统计最慢平均用时
           regionSlowStats: [
             {
               $match: {
                 'ipInfo.countryLong': { $exists: true, $ne: null, $ne: '-' },
-                'ipInfo.region': { $exists: true, $ne: null, $ne: '-' },
-              },
+                'ipInfo.region': { $exists: true, $ne: null, $ne: '-' }
+              }
             },
             {
               $group: {
                 _id: {
                   country: '$ipInfo.countryLong',
-                  region: '$ipInfo.region',
+                  region: '$ipInfo.region'
                 },
                 avgDuration: { $avg: '$performanceNavigationTiming.duration' },
-                count: { $sum: 1 },
-              },
+                count: { $sum: 1 }
+              }
             },
             {
               $match: {
-                count: { $gte: 3 }, // 只包括至少有3个样本的地区，避免偶然性
-              },
+                count: { $gte: 3 } // 只包括至少有3个样本的地区，避免偶然性
+              }
             },
             {
               $project: {
@@ -304,42 +304,42 @@ module.exports = async function (req, res, next) {
                   $cond: {
                     if: { $eq: ['$_id.country', '$_id.region'] },
                     then: '$_id.country', // 如果国家和地区相同，只显示一次
-                    else: { $concat: ['$_id.country', ' ', '$_id.region'] }, // 否则显示国家+空格+地区
-                  },
+                    else: { $concat: ['$_id.country', ' ', '$_id.region'] } // 否则显示国家+空格+地区
+                  }
                 },
                 avgDuration: { $round: ['$avgDuration', 0] },
-                count: 1,
-              },
+                count: 1
+              }
             },
             {
-              $sort: { avgDuration: -1 }, // 从慢到快排序
+              $sort: { avgDuration: -1 } // 从慢到快排序
             },
             {
-              $limit: limit,
-            },
+              $limit: limit
+            }
           ],
           // 按国家+地区统计最快平均用时
           regionFastStats: [
             {
               $match: {
                 'ipInfo.countryLong': { $exists: true, $ne: null, $ne: '-' },
-                'ipInfo.region': { $exists: true, $ne: null, $ne: '-' },
-              },
+                'ipInfo.region': { $exists: true, $ne: null, $ne: '-' }
+              }
             },
             {
               $group: {
                 _id: {
                   country: '$ipInfo.countryLong',
-                  region: '$ipInfo.region',
+                  region: '$ipInfo.region'
                 },
                 avgDuration: { $avg: '$performanceNavigationTiming.duration' },
-                count: { $sum: 1 },
-              },
+                count: { $sum: 1 }
+              }
             },
             {
               $match: {
-                count: { $gte: 3 }, // 只包括至少有3个样本的地区，避免偶然性
-              },
+                count: { $gte: 3 } // 只包括至少有3个样本的地区，避免偶然性
+              }
             },
             {
               $project: {
@@ -348,22 +348,22 @@ module.exports = async function (req, res, next) {
                   $cond: {
                     if: { $eq: ['$_id.country', '$_id.region'] },
                     then: '$_id.country', // 如果国家和地区相同，只显示一次
-                    else: { $concat: ['$_id.country', ' ', '$_id.region'] }, // 否则显示国家+空格+地区
-                  },
+                    else: { $concat: ['$_id.country', ' ', '$_id.region'] } // 否则显示国家+空格+地区
+                  }
                 },
                 avgDuration: { $round: ['$avgDuration', 0] },
-                count: 1,
-              },
+                count: 1
+              }
             },
             {
-              $sort: { avgDuration: 1 }, // 从快到慢排序
+              $sort: { avgDuration: 1 } // 从快到慢排序
             },
             {
-              $limit: limit,
-            },
-          ],
-        },
-      },
+              $limit: limit
+            }
+          ]
+        }
+      }
     ]
 
     // 新增聚合查询，按时间统计平均加载时间
@@ -376,66 +376,66 @@ module.exports = async function (req, res, next) {
           action: 'open',
           'data.performanceNavigationTiming': { $ne: null },
           'data.performanceNavigationTiming.duration': { $ne: null },
-          'data.performanceNavigationTiming.duration': { $gt: 0 }, // 剔除duration小于等于0的记录
-        },
+          'data.performanceNavigationTiming.duration': { $gt: 0 } // 剔除duration小于等于0的记录
+        }
       },
       // 2. 添加格式化的日期字段
       {
-        $addFields,
+        $addFields
       },
       // 3. 按时间单位和IP分组，取每组中duration最大的记录
       {
         $sort: {
           'data.performanceNavigationTiming.duration': -1,
-          createdAt: 1,
-        },
+          createdAt: 1
+        }
       },
       {
         $group: {
           _id: {
             formatDate: '$formatDate',
-            ip: '$ip',
+            ip: '$ip'
           },
-          duration: { $first: '$data.performanceNavigationTiming.duration' },
-        },
+          duration: { $first: '$data.performanceNavigationTiming.duration' }
+        }
       },
       // 4. 按时间单位分组，计算平均加载时间
       {
         $group: {
           _id: '$_id.formatDate',
           avgDuration: { $avg: '$duration' },
-          count: { $sum: 1 },
-        },
+          count: { $sum: 1 }
+        }
       },
       // 使用$project和$round对avgDuration进行四舍五入处理
       {
         $project: {
           _id: 1,
           avgDuration: { $round: ['$avgDuration', 0] },
-          count: 1,
-        },
+          count: 1
+        }
       },
       // 5. 按时间排序
       {
         $sort: {
-          _id: 1,
-        },
-      },
+          _id: 1
+        }
+      }
     ]
 
     // 使用Promise.all并行执行两个聚合查询
     const [result, timeSeriesResult] = await Promise.all([
       readerlogUtils.aggregate(pipeline),
-      readerlogUtils.aggregate(timeSeriesPipeline),
+      readerlogUtils.aggregate(timeSeriesPipeline)
     ])
 
     if (!result || result.length === 0) {
       res.status(500).json({
         errors: [
           {
-            message: '数据库查询错误',
-          },
-        ],
+            message: '数据库查询错误'
+          }
+        ]
       })
       return
     }
@@ -453,7 +453,7 @@ module.exports = async function (req, res, next) {
       regionSlowStats: result[0].regionSlowStats,
       regionFastStats: result[0].regionFastStats,
       timeSeriesData: [],
-      isOverDays,
+      isOverDays
     }
 
     // 生成完整的时间序列，缺失的数据填充null
@@ -468,11 +468,11 @@ module.exports = async function (req, res, next) {
           .add(i, 'hours')
           .utc()
           .format('YYYY-MM-DDTHH:00:00.000[Z]')
-        const found = timeSeriesResult.find((item) => item._id === time)
+        const found = timeSeriesResult.find(item => item._id === time)
         timeSeriesData.push({
           time,
           avgDuration: found ? found.avgDuration : null,
-          count: found ? found.count : null,
+          count: found ? found.count : null
         })
       }
     } else {
@@ -484,11 +484,11 @@ module.exports = async function (req, res, next) {
           .tz(timeZone)
           .add(i, 'days')
           .format(`YYYY-MM-DDT00:00:00.000${offset}`)
-        const found = timeSeriesResult.find((item) => item._id === time)
+        const found = timeSeriesResult.find(item => item._id === time)
         timeSeriesData.push({
           time,
           avgDuration: found ? found.avgDuration : null,
-          count: found ? found.count : null,
+          count: found ? found.count : null
         })
       }
     }
@@ -504,9 +504,9 @@ module.exports = async function (req, res, next) {
     res.status(500).json({
       errors: [
         {
-          message: '服务器内部错误',
-        },
-      ],
+          message: '服务器内部错误'
+        }
+      ]
     })
   }
 }

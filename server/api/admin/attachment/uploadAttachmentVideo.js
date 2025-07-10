@@ -18,9 +18,9 @@ module.exports = async function (req, res, next) {
     res.status(400).json({
       errors: [
         {
-          message: '请上传视频',
-        },
-      ],
+          message: '请上传视频'
+        }
+      ]
     })
     return
   }
@@ -28,9 +28,9 @@ module.exports = async function (req, res, next) {
     res.status(400).json({
       errors: [
         {
-          message: '封面图缺失',
-        },
-      ],
+          message: '封面图缺失'
+        }
+      ]
     })
     return
   }
@@ -39,9 +39,9 @@ module.exports = async function (req, res, next) {
     res.status(400).json({
       errors: [
         {
-          message: '请指定视频宽高',
-        },
-      ],
+          message: '请指定视频宽高'
+        }
+      ]
     })
     return
   }
@@ -54,9 +54,9 @@ module.exports = async function (req, res, next) {
     res.status(400).json({
       errors: [
         {
-          message: '请指定相册',
-        },
-      ],
+          message: '请指定相册'
+        }
+      ]
     })
     return
   }
@@ -65,9 +65,9 @@ module.exports = async function (req, res, next) {
     res.status(400).json({
       errors: [
         {
-          message: '相册不存在',
-        },
-      ],
+          message: '相册不存在'
+        }
+      ]
     })
     return
   }
@@ -88,7 +88,7 @@ module.exports = async function (req, res, next) {
     thumfor: '',
     thumWidth: width || 0,
     thumHeight: height || 0,
-    album: albumid,
+    album: albumid
   }
 
   // 获取当前的年月，并拼接成202301这种格式
@@ -120,17 +120,17 @@ module.exports = async function (req, res, next) {
   // 保存到数据库
   attachmentsUtils
     .save(attachment)
-    .then((data) => {
+    .then(data => {
       res.send(data)
     })
-    .catch((err) => {
+    .catch(err => {
       console.error(err)
       res.status(400).json({
         errors: [
           {
-            message: '文件上传失败',
-          },
-        ],
+            message: '文件上传失败'
+          }
+        ]
       })
     })
   // album的count+1

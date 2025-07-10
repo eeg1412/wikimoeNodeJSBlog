@@ -14,16 +14,16 @@ module.exports = async function (req, res, next) {
     password,
     cover,
     id,
-    __v,
+    __v
   } = req.body
   // 判断id是否符合mongodb的id规则
   if (!utils.isObjectId(id)) {
     res.status(400).json({
       errors: [
         {
-          message: 'id不正确',
-        },
-      ],
+          message: 'id不正确'
+        }
+      ]
     })
     return
   }
@@ -33,9 +33,9 @@ module.exports = async function (req, res, next) {
     res.status(400).json({
       errors: [
         {
-          message: '不能修改自己',
-        },
-      ],
+          message: '不能修改自己'
+        }
+      ]
     })
     return
   }
@@ -44,9 +44,9 @@ module.exports = async function (req, res, next) {
     res.status(400).json({
       errors: [
         {
-          message: 'disabled不正确',
-        },
-      ],
+          message: 'disabled不正确'
+        }
+      ]
     })
     return
   }
@@ -56,9 +56,9 @@ module.exports = async function (req, res, next) {
     res.status(400).json({
       errors: [
         {
-          message: '管理员不存在',
-        },
-      ],
+          message: '管理员不存在'
+        }
+      ]
     })
     return
   }
@@ -68,7 +68,7 @@ module.exports = async function (req, res, next) {
     email,
     description,
     cover,
-    disabled,
+    disabled
   }
   if (nickname && nickname !== userRes.nickname) {
     // 校验昵称是否重复
@@ -77,9 +77,9 @@ module.exports = async function (req, res, next) {
       res.status(400).json({
         errors: [
           {
-            message: '昵称已存在',
-          },
-        ],
+            message: '昵称已存在'
+          }
+        ]
       })
       return
     }
@@ -95,9 +95,9 @@ module.exports = async function (req, res, next) {
       res.status(400).json({
         errors: [
           {
-            message: '密码必须4位以上且包含大小写、数字和符号',
-          },
-        ],
+            message: '密码必须4位以上且包含大小写、数字和符号'
+          }
+        ]
       })
       return
     }
@@ -113,9 +113,9 @@ module.exports = async function (req, res, next) {
       res.status(400).json({
         errors: [
           {
-            message: '封面ID不正确',
-          },
-        ],
+            message: '封面ID不正确'
+          }
+        ]
       })
       return
     }
@@ -134,7 +134,7 @@ module.exports = async function (req, res, next) {
     const fileName = userRes._id
     try {
       const imgRes = utils.base64ToFile(photo, path, fileName, {
-        createDir: true,
+        createDir: true
       })
       updateData['photo'] =
         `/upload/avatar/${imgRes.fileNameAll}?v=${Date.now()}`
@@ -142,9 +142,9 @@ module.exports = async function (req, res, next) {
       res.status(400).json({
         errors: [
           {
-            message: '照片上传失败',
-          },
-        ],
+            message: '照片上传失败'
+          }
+        ]
       })
       throw new Error(error)
     }
@@ -156,14 +156,14 @@ module.exports = async function (req, res, next) {
     res.status(400).json({
       errors: [
         {
-          message: '更新失败',
-        },
-      ],
+          message: '更新失败'
+        }
+      ]
     })
     return
   }
   adminApiLog.info(
-    `admin:${userRes.nickname} - ${userRes._id} update profile,IP:${IP}`,
+    `admin:${userRes.nickname} - ${userRes._id} update profile,IP:${IP}`
   )
   res.send({})
   // 更新缓存

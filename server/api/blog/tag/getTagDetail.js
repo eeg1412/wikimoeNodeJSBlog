@@ -9,37 +9,37 @@ module.exports = async function (req, res, next) {
     res.status(400).json({
       errors: [
         {
-          message: 'id不能为空',
-        },
-      ],
+          message: 'id不能为空'
+        }
+      ]
     })
     return
   }
   // findOne
   tagUtils
     .findOne({ _id: id }, '_id tagname')
-    .then((data) => {
+    .then(data => {
       if (!data) {
         res.status(404).json({
           errors: [
             {
-              message: '标签不存在',
-            },
-          ],
+              message: '标签不存在'
+            }
+          ]
         })
         return
       }
       res.send({
-        data: data,
+        data: data
       })
     })
-    .catch((err) => {
+    .catch(err => {
       res.status(400).json({
         errors: [
           {
-            message: '标签详情获取失败',
-          },
-        ],
+            message: '标签详情获取失败'
+          }
+        ]
       })
       userApiLog.error(`tag detail get fail, ${logErrorToText(err)}`)
     })

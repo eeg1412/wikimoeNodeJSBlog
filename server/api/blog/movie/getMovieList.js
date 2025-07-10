@@ -12,14 +12,14 @@ module.exports = async function (req, res, next) {
     res.status(400).json({
       errors: [
         {
-          message: '参数错误',
-        },
-      ],
+          message: '参数错误'
+        }
+      ]
     })
     return
   }
   const params = {
-    status: 1,
+    status: 1
   }
 
   if (year) {
@@ -28,9 +28,9 @@ module.exports = async function (req, res, next) {
       res.status(400).json({
         errors: [
           {
-            message: '日期格式不正确',
-          },
-        ],
+            message: '日期格式不正确'
+          }
+        ]
       })
       return
     }
@@ -46,7 +46,7 @@ module.exports = async function (req, res, next) {
       keyword = Array.from(keyword).slice(0, 20).join('')
     }
     const keywordArray = keyword.split(' ')
-    const regexArray = keywordArray.map((keyword) => {
+    const regexArray = keywordArray.map(keyword => {
       const escapedKeyword = utils.escapeSpecialChars(keyword)
       const regex = new RegExp(escapedKeyword, 'i')
       return regex
@@ -54,11 +54,11 @@ module.exports = async function (req, res, next) {
     // 检索title和excerpt
     params.$or = [
       {
-        title: { $in: regexArray },
+        title: { $in: regexArray }
       },
       {
-        label: { $in: regexArray },
-      },
+        label: { $in: regexArray }
+      }
     ]
   }
 
@@ -74,7 +74,7 @@ module.exports = async function (req, res, next) {
     month: -1,
     day: -1,
     rating: -1,
-    _id: -1,
+    _id: -1
   }
   if (sortType === 'rating') {
     sort = {
@@ -82,7 +82,7 @@ module.exports = async function (req, res, next) {
       year: -1,
       month: -1,
       day: -1,
-      _id: -1,
+      _id: -1
     }
   }
 
@@ -92,22 +92,22 @@ module.exports = async function (req, res, next) {
       sort,
       page,
       size,
-      '_id cover label rating status summary title year month day urlList',
+      '_id cover label rating status summary title year month day urlList'
     )
-    .then((data) => {
+    .then(data => {
       // 返回格式list,total
       res.send({
         list: data.list,
-        total: data.total,
+        total: data.total
       })
     })
-    .catch((err) => {
+    .catch(err => {
       res.status(400).json({
         errors: [
           {
-            message: '电影列表获取失败',
-          },
-        ],
+            message: '电影列表获取失败'
+          }
+        ]
       })
       userApiLog.error(`movie list get fail, ${JSON.stringify(err)}`)
     })

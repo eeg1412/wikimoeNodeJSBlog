@@ -13,21 +13,21 @@ module.exports = async function (req, res, next) {
   // 校验格式
   const params = {
     username: username,
-    password: password,
+    password: password
   }
   const rule = [
     {
       key: 'username',
       label: '用户名',
       type: null,
-      required: true,
+      required: true
     },
     {
       key: 'password',
       label: '密码',
       type: null,
-      required: true,
-    },
+      required: true
+    }
   ]
   const errors = utils.checkForm(params, rule)
   if (errors.length > 0) {
@@ -41,9 +41,9 @@ module.exports = async function (req, res, next) {
     res.status(400).json({
       errors: [
         {
-          message: '用户名或密码不正确',
-        },
-      ],
+          message: '用户名或密码不正确'
+        }
+      ]
     })
     return
   }
@@ -52,9 +52,9 @@ module.exports = async function (req, res, next) {
     res.status(400).json({
       errors: [
         {
-          message: '用户名或密码不正确',
-        },
-      ],
+          message: '用户名或密码不正确'
+        }
+      ]
     })
     return
   }
@@ -64,16 +64,16 @@ module.exports = async function (req, res, next) {
     res.status(400).json({
       errors: [
         {
-          message: '该账号已被禁用',
-        },
-      ],
+          message: '该账号已被禁用'
+        }
+      ]
     })
     return
   }
   // 校验通过写入IP
   const updateRes = await userUtils.updateOne(
     { _id: admin._id, __v: admin.__v },
-    { IP, ipInfo: await utils.IP2LocationUtils(IP, null, null, false) },
+    { IP, ipInfo: await utils.IP2LocationUtils(IP, null, null, false) }
   )
   if (updateRes?.modifiedCount === 0) {
     return res.status(400).json({ errors: [{ message: '登录发生错误' }] })
@@ -84,13 +84,13 @@ module.exports = async function (req, res, next) {
         id: admin._id,
         username: admin.username,
         pwversion: admin.pwversion,
-        version: 1,
+        version: 1
       },
-      remember ? '365d' : '1h',
+      remember ? '365d' : '1h'
     )
     adminApiLog.info(`admin:${username} login,IP:${IP}`)
     res.send({
-      token: jwt,
+      token: jwt
     })
   }
 }

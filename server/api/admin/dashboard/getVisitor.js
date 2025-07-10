@@ -15,9 +15,9 @@ module.exports = async function (req, res, next) {
     res.status(400).json({
       errors: [
         {
-          message: '时区不合法',
-        },
-      ],
+          message: '时区不合法'
+        }
+      ]
     })
     return
   }
@@ -31,8 +31,8 @@ module.exports = async function (req, res, next) {
       required: true,
       options: {
         strict: true,
-        strictSeparator: true,
-      },
+        strictSeparator: true
+      }
     },
     // endTime
     {
@@ -42,17 +42,17 @@ module.exports = async function (req, res, next) {
       required: true,
       options: {
         strict: true,
-        strictSeparator: true,
-      },
-    },
+        strictSeparator: true
+      }
+    }
   ]
 
   const errors = utils.checkForm(
     {
       startTime,
-      endTime,
+      endTime
     },
-    rule,
+    rule
   )
   if (errors.length > 0) {
     res.status(400).json({ errors })
@@ -65,7 +65,7 @@ module.exports = async function (req, res, next) {
     'postListKeyword',
     'postListSort',
     'postListTag',
-    'postView',
+    'postView'
   ]
   // 根据 timeRangeType 计算开始日期和结束日期
   const startDate = moment(startTime)
@@ -86,9 +86,9 @@ module.exports = async function (req, res, next) {
     formatDate: {
       $dateToString: {
         format: `%Y-%m-%dT%H:00:00.000Z`,
-        date: '$createdAt',
-      },
-    },
+        date: '$createdAt'
+      }
+    }
   }
   // 如果超过一定天数，就按天数来统计
   if (isOverDays) {
@@ -98,9 +98,9 @@ module.exports = async function (req, res, next) {
         $dateToString: {
           format: `%Y-%m-%dT00:00:00.000${offset}`,
           date: '$createdAt',
-          timezone: timeZone,
-        },
-      },
+          timezone: timeZone
+        }
+      }
     }
   }
 
@@ -108,18 +108,18 @@ module.exports = async function (req, res, next) {
     {
       $match: {
         createdAt: { $gte: startDate.toDate(), $lte: endDate.toDate() },
-        action: { $in: vistorActionList },
-      },
+        action: { $in: vistorActionList }
+      }
     },
     // 按时间和id排序
     {
       $sort: {
         createdAt: 1,
-        _id: 1,
-      },
+        _id: 1
+      }
     },
     {
-      $addFields,
+      $addFields
     },
     {
       $facet: {
@@ -128,60 +128,60 @@ module.exports = async function (req, res, next) {
           {
             $group: {
               _id: '$formatDate',
-              count: { $sum: 1 },
-            },
-          },
+              count: { $sum: 1 }
+            }
+          }
         ],
         pvCount: [
           { $match: { isBot: false } },
           {
-            $count: 'count',
-          },
+            $count: 'count'
+          }
         ],
         robotAccess: [
           { $match: { isBot: true } },
           {
             $group: {
               _id: '$formatDate',
-              count: { $sum: 1 },
-            },
-          },
+              count: { $sum: 1 }
+            }
+          }
         ],
         robotAccessCount: [
           { $match: { isBot: true } },
           {
-            $count: 'count',
-          },
+            $count: 'count'
+          }
         ],
         uniqueIPTimeLine: [
           { $match: { isBot: false } },
           {
             $group: {
-              _id: { hour: '$formatDate', ip: '$ip' },
-            },
+              _id: { hour: '$formatDate', ip: '$ip' }
+            }
           },
           {
             $group: {
               _id: '$_id.hour',
-              count: { $sum: 1 },
-            },
-          },
+              count: { $sum: 1 }
+            }
+          }
         ],
         uniqueIPCount: [
           { $match: { isBot: false } },
           {
             $group: {
-              _id: '$ip',
-            },
+              _id: '$ip'
+            }
           },
           {
-            $count: 'count',
-          },
-        ],
-      },
-    },
+            $count: 'count'
+          }
+        ]
+      }
+    }
   ]
-  const readData = await readerlogUtils.aggregate(pipeline).catch((err) => {
+  const readData = await readerlogUtils.aggregate(pipeline).catch(err => {
     adminApiLog.error(err)
     return false
   })
@@ -189,9 +189,9 @@ module.exports = async function (req, res, next) {
     res.status(500).json({
       errors: [
         {
-          message: '数据库查询错误',
-        },
-      ],
+          message: '数据库查询错误'
+        }
+      ]
     })
     return
   }
@@ -203,7 +203,7 @@ module.exports = async function (req, res, next) {
     robotAccessCount: 0,
     uniqueIPTimeLine: [],
     uniqueIPCount: 0,
-    isOverDays,
+    isOverDays
   }
   // 初始化pv，robotAccess，uniqueIPTimeLine
   if (!isOverDays) {
@@ -239,8 +239,8 @@ module.exports = async function (req, res, next) {
     if (pv.length <= 0) {
       sendData.pv = []
     } else {
-      pv.forEach((item) => {
-        const index = sendData.pv.findIndex((i) => i._id === item._id)
+      pv.forEach(item => {
+        const index = sendData.pv.findIndex(i => i._id === item._id)
         if (index !== -1) {
           sendData.pv[index].count = item.count
         }
@@ -252,8 +252,8 @@ module.exports = async function (req, res, next) {
     if (robotAccess.length <= 0) {
       sendData.robotAccess = []
     } else {
-      robotAccess.forEach((item) => {
-        const index = sendData.robotAccess.findIndex((i) => i._id === item._id)
+      robotAccess.forEach(item => {
+        const index = sendData.robotAccess.findIndex(i => i._id === item._id)
         if (index !== -1) {
           sendData.robotAccess[index].count = item.count
         }
@@ -264,9 +264,9 @@ module.exports = async function (req, res, next) {
     if (uniqueIPTimeLine.length <= 0) {
       sendData.uniqueIPTimeLine = []
     } else {
-      uniqueIPTimeLine.forEach((item) => {
+      uniqueIPTimeLine.forEach(item => {
         const index = sendData.uniqueIPTimeLine.findIndex(
-          (i) => i._id === item._id,
+          i => i._id === item._id
         )
         if (index !== -1) {
           sendData.uniqueIPTimeLine[index].count = item.count

@@ -5,26 +5,26 @@ var emailSendHistorys = new Schema(
   {
     // 发送对象
     to: {
-      type: String,
+      type: String
     },
     subject: {
-      type: String,
+      type: String
     },
     // 发送内容
     content: {
-      type: String,
+      type: String
     },
     errInfo: {
-      type: String,
+      type: String
     },
     // 发送状态 0: 发送失败 1: 发送成功
     status: {
       type: Number,
       default: 0,
-      index: true,
-    },
+      index: true
+    }
   },
-  { capped: 15728640, timestamps: true },
+  { capped: 15728640, timestamps: true }
 )
 
 module.exports = mongoose.model('emailSendHistorys', emailSendHistorys)

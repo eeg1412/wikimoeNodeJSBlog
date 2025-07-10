@@ -9,9 +9,9 @@ module.exports = async function (req, res, next) {
     res.status(400).json({
       errors: [
         {
-          message: '备份id不能为空',
-        },
-      ],
+          message: '备份id不能为空'
+        }
+      ]
     })
     return
   }
@@ -19,15 +19,15 @@ module.exports = async function (req, res, next) {
   const backup = await backupUtils.findOne({
     _id: id,
     status: 3,
-    fileStatus: 3,
+    fileStatus: 3
   })
   if (!backup) {
     res.status(400).json({
       errors: [
         {
-          message: '备份不存在',
-        },
-      ],
+          message: '备份不存在'
+        }
+      ]
     })
     return
   }
@@ -36,9 +36,9 @@ module.exports = async function (req, res, next) {
     res.status(400).json({
       errors: [
         {
-          message: '文件大小不一致',
-        },
-      ],
+          message: '文件大小不一致'
+        }
+      ]
     })
     return
   }
@@ -49,15 +49,15 @@ module.exports = async function (req, res, next) {
     res.status(400).json({
       errors: [
         {
-          message: '备份文件不存在',
-        },
-      ],
+          message: '备份文件不存在'
+        }
+      ]
     })
     return
   }
   //  文件夹下的文件就是分片文件的index，将文件夹下的文件名返回给前端
   const files = fs.readdirSync(chunkDir)
   res.status(200).json({
-    data: files,
+    data: files
   })
 }

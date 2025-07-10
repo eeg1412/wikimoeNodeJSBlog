@@ -13,7 +13,7 @@ const routes = [
         path: '/home',
         name: 'Home',
         component: () =>
-          import(/* webpackChunkName: "Home" */ '../views/index/home/Home.vue'),
+          import(/* webpackChunkName: "Home" */ '../views/index/home/Home.vue')
       },
       // LoginUserEditor
       {
@@ -22,7 +22,7 @@ const routes = [
         component: () =>
           import(
             /* webpackChunkName: "LoginUserEditor" */ '../views/index/loginuser/LoginUserEditor.vue'
-          ),
+          )
       },
       // SortList
       {
@@ -31,7 +31,7 @@ const routes = [
         component: () =>
           import(
             /* webpackChunkName: "SortList" */ '../views/index/sort/SortList.vue'
-          ),
+          )
       },
       // SortEditor
       {
@@ -40,7 +40,7 @@ const routes = [
         component: () =>
           import(
             /* webpackChunkName: "SortEditor" */ '../views/index/sort/SortEditor.vue'
-          ),
+          )
       },
       // SortEditor
       {
@@ -49,7 +49,7 @@ const routes = [
         component: () =>
           import(
             /* webpackChunkName: "SortEditor" */ '../views/index/sort/SortEditor.vue'
-          ),
+          )
       },
       // TagList
       {
@@ -58,7 +58,7 @@ const routes = [
         component: () =>
           import(
             /* webpackChunkName: "TagList" */ '../views/index/tag/TagList.vue'
-          ),
+          )
       },
       // TagEditor
       {
@@ -67,7 +67,7 @@ const routes = [
         component: () =>
           import(
             /* webpackChunkName: "TagEditor" */ '../views/index/tag/TagEditor.vue'
-          ),
+          )
       },
       // TagEditor
       {
@@ -76,7 +76,7 @@ const routes = [
         component: () =>
           import(
             /* webpackChunkName: "TagEditor" */ '../views/index/tag/TagEditor.vue'
-          ),
+          )
       },
       // LinkList
       {
@@ -85,7 +85,7 @@ const routes = [
         component: () =>
           import(
             /* webpackChunkName: "LinkList" */ '../views/index/link/LinkList.vue'
-          ),
+          )
       },
       // LinkEditor
       {
@@ -94,7 +94,7 @@ const routes = [
         component: () =>
           import(
             /* webpackChunkName: "LinkEditor" */ '../views/index/link/LinkEditor.vue'
-          ),
+          )
       },
       // LinkEditor
       {
@@ -103,7 +103,7 @@ const routes = [
         component: () =>
           import(
             /* webpackChunkName: "LinkEditor" */ '../views/index/link/LinkEditor.vue'
-          ),
+          )
       },
       // NaviList
       {
@@ -112,7 +112,7 @@ const routes = [
         component: () =>
           import(
             /* webpackChunkName: "NaviList" */ '../views/index/navi/NaviList.vue'
-          ),
+          )
       },
       // NaviEditor
       {
@@ -121,7 +121,7 @@ const routes = [
         component: () =>
           import(
             /* webpackChunkName: "NaviEditor" */ '../views/index/navi/NaviEditor.vue'
-          ),
+          )
       },
       // NaviEditor
       {
@@ -130,7 +130,7 @@ const routes = [
         component: () =>
           import(
             /* webpackChunkName: "NaviEditor" */ '../views/index/navi/NaviEditor.vue'
-          ),
+          )
       },
       // AlbumList
       {
@@ -139,7 +139,7 @@ const routes = [
         component: () =>
           import(
             /* webpackChunkName: "AlbumList" */ '../views/index/album/AlbumList.vue'
-          ),
+          )
       },
       // postlist
       {
@@ -148,7 +148,7 @@ const routes = [
         component: () =>
           import(
             /* webpackChunkName: "PostList" */ '../views/index/post/PostList.vue'
-          ),
+          )
       },
       // posteditor
       {
@@ -157,7 +157,7 @@ const routes = [
         component: () =>
           import(
             /* webpackChunkName: "PostEditor" */ '../views/index/post/PostEditor.vue'
-          ),
+          )
       },
       // CommentList
       {
@@ -166,7 +166,7 @@ const routes = [
         component: () =>
           import(
             /* webpackChunkName: "CommentList" */ '../views/index/comment/CommentList.vue'
-          ),
+          )
       },
       // CommentEditor
       {
@@ -175,7 +175,7 @@ const routes = [
         component: () =>
           import(
             /* webpackChunkName: "CommentEditor" */ '../views/index/comment/CommentEditor.vue'
-          ),
+          )
       },
       // BangumiList
       {
@@ -184,7 +184,7 @@ const routes = [
         component: () =>
           import(
             /* webpackChunkName: "BangumiList" */ '../views/index/bangumi/BangumiList.vue'
-          ),
+          )
       },
       // BangumiEditor
       {
@@ -193,7 +193,7 @@ const routes = [
         component: () =>
           import(
             /* webpackChunkName: "BangumiEditor" */ '../views/index/bangumi/BangumiEditor.vue'
-          ),
+          )
       },
       // BangumiEditor
       {
@@ -202,7 +202,7 @@ const routes = [
         component: () =>
           import(
             /* webpackChunkName: "BangumiEditor" */ '../views/index/bangumi/BangumiEditor.vue'
-          ),
+          )
       },
       // MovieList
       {
@@ -211,7 +211,7 @@ const routes = [
         component: () =>
           import(
             /* webpackChunkName: "MovieList" */ '../views/index/movie/MovieList.vue'
-          ),
+          )
       },
       // MovieEditor
       {
@@ -220,7 +220,7 @@ const routes = [
         component: () =>
           import(
             /* webpackChunkName: "MovieEditor" */ '../views/index/movie/MovieEditor.vue'
-          ),
+          )
       },
       // MovieEditor
       {
@@ -229,7 +229,7 @@ const routes = [
         component: () =>
           import(
             /* webpackChunkName: "MovieEditor" */ '../views/index/movie/MovieEditor.vue'
-          ),
+          )
       },
       // SidebarList
       {
@@ -238,7 +238,7 @@ const routes = [
         component: () =>
           import(
             /* webpackChunkName: "SidebarList" */ '../views/index/sidebar/SidebarList.vue'
-          ),
+          )
       },
       // BannerList
       {
@@ -247,7 +247,7 @@ const routes = [
         component: () =>
           import(
             /* webpackChunkName: "BannerList" */ '../views/index/banner/BannerList.vue'
-          ),
+          )
       },
       // ReaderlogList
       {
@@ -256,7 +256,7 @@ const routes = [
         component: () =>
           import(
             /* webpackChunkName: "ReaderlogList" */ '../views/index/readerlog/ReaderlogList.vue'
-          ),
+          )
       },
       // PostLikeLogList
       {
@@ -265,7 +265,7 @@ const routes = [
         component: () =>
           import(
             /* webpackChunkName: "PostLikeLogList" */ '../views/index/postLikeLog/PostLikeLogList.vue'
-          ),
+          )
       },
       // CommentLikeLogList
       {
@@ -274,7 +274,7 @@ const routes = [
         component: () =>
           import(
             /* webpackChunkName: "CommentLikeLogList" */ '../views/index/commentLikeLog/CommentLikeLogList.vue'
-          ),
+          )
       },
       // EmailSendHistoryList
       {
@@ -283,7 +283,7 @@ const routes = [
         component: () =>
           import(
             /* webpackChunkName: "EmailSendHistoryList" */ '../views/index/emailSendHistory/EmailSendHistoryList.vue'
-          ),
+          )
       },
       // ReferrerList
       {
@@ -292,7 +292,7 @@ const routes = [
         component: () =>
           import(
             /* webpackChunkName: "ReferrerList" */ '../views/index/referrer/ReferrerList.vue'
-          ),
+          )
       },
       // RsslogList
       {
@@ -301,7 +301,7 @@ const routes = [
         component: () =>
           import(
             /* webpackChunkName: "RsslogList" */ '../views/index/rsslog/RsslogList.vue'
-          ),
+          )
       },
       // GamePlatformList
       {
@@ -310,7 +310,7 @@ const routes = [
         component: () =>
           import(
             /* webpackChunkName: "GamePlatformList" */ '../views/index/gamePlatform/GamePlatformList.vue'
-          ),
+          )
       },
       // GameList
       {
@@ -319,7 +319,7 @@ const routes = [
         component: () =>
           import(
             /* webpackChunkName: "GameList" */ '../views/index/game/GameList.vue'
-          ),
+          )
       },
       // GameEditor
       {
@@ -328,7 +328,7 @@ const routes = [
         component: () =>
           import(
             /* webpackChunkName: "GameEditor" */ '../views/index/game/GameEditor.vue'
-          ),
+          )
       },
       // GameEditor
       {
@@ -337,7 +337,7 @@ const routes = [
         component: () =>
           import(
             /* webpackChunkName: "GameEditor" */ '../views/index/game/GameEditor.vue'
-          ),
+          )
       },
       // BooktypeList
       {
@@ -346,7 +346,7 @@ const routes = [
         component: () =>
           import(
             /* webpackChunkName: "BooktypeList" */ '../views/index/booktype/BooktypeList.vue'
-          ),
+          )
       },
       // BookList
       {
@@ -355,7 +355,7 @@ const routes = [
         component: () =>
           import(
             /* webpackChunkName: "BookList" */ '../views/index/book/BookList.vue'
-          ),
+          )
       },
       // BookEditor
       {
@@ -364,7 +364,7 @@ const routes = [
         component: () =>
           import(
             /* webpackChunkName: "BookEditor" */ '../views/index/book/BookEditor.vue'
-          ),
+          )
       },
       // BookEditor
       {
@@ -373,7 +373,7 @@ const routes = [
         component: () =>
           import(
             /* webpackChunkName: "BookEditor" */ '../views/index/book/BookEditor.vue'
-          ),
+          )
       },
       // EventtypeList
       {
@@ -382,7 +382,7 @@ const routes = [
         component: () =>
           import(
             /* webpackChunkName: "EventtypeList" */ '../views/index/eventtype/EventtypeList.vue'
-          ),
+          )
       },
       // EventList
       {
@@ -391,7 +391,7 @@ const routes = [
         component: () =>
           import(
             /* webpackChunkName: "EventList" */ '../views/index/event/EventList.vue'
-          ),
+          )
       },
       // EventEditor
       {
@@ -400,7 +400,7 @@ const routes = [
         component: () =>
           import(
             /* webpackChunkName: "EventEditor" */ '../views/index/event/EventEditor.vue'
-          ),
+          )
       },
       // EventEditor
       {
@@ -409,7 +409,7 @@ const routes = [
         component: () =>
           import(
             /* webpackChunkName: "EventEditor" */ '../views/index/event/EventEditor.vue'
-          ),
+          )
       },
       // BackupList
       {
@@ -418,7 +418,7 @@ const routes = [
         component: () =>
           import(
             /* webpackChunkName: "BackupList" */ '../views/index/backup/BackupList.vue'
-          ),
+          )
       },
       // UserList
       {
@@ -427,7 +427,7 @@ const routes = [
         component: () =>
           import(
             /* webpackChunkName: "UserList" */ '../views/index/user/UserList.vue'
-          ),
+          )
       },
       // UserAdd
       {
@@ -436,7 +436,7 @@ const routes = [
         component: () =>
           import(
             /* webpackChunkName: "UserAdd" */ '../views/index/user/UserAdd.vue'
-          ),
+          )
       },
       // UserEditor
       {
@@ -445,7 +445,7 @@ const routes = [
         component: () =>
           import(
             /* webpackChunkName: "UserEditor" */ '../views/index/user/UserEditor.vue'
-          ),
+          )
       },
       // VoteList
       {
@@ -454,7 +454,7 @@ const routes = [
         component: () =>
           import(
             /* webpackChunkName: "VoteList" */ '../views/index/vote/VoteList.vue'
-          ),
+          )
       },
       // VoteAdd
       {
@@ -463,7 +463,7 @@ const routes = [
         component: () =>
           import(
             /* webpackChunkName: "VoteAdd" */ '../views/index/vote/VoteEditor.vue'
-          ),
+          )
       },
       // VoteEditor
       {
@@ -472,7 +472,7 @@ const routes = [
         component: () =>
           import(
             /* webpackChunkName: "VoteEditor" */ '../views/index/vote/VoteEditor.vue'
-          ),
+          )
       },
       // VotelogList
       {
@@ -481,7 +481,7 @@ const routes = [
         component: () =>
           import(
             /* webpackChunkName: "VotelogList" */ '../views/index/votelog/VotelogList.vue'
-          ),
+          )
       },
 
       // config
@@ -491,21 +491,21 @@ const routes = [
         component: () =>
           import(
             /* webpackChunkName: "Config" */ '../views/index/config/Config.vue'
-          ),
-      },
-    ],
+          )
+      }
+    ]
   },
   {
     path: '/login',
     name: 'Login',
     component: () =>
-      import(/* webpackChunkName: "Login" */ '../views/Login.vue'),
-  },
+      import(/* webpackChunkName: "Login" */ '../views/Login.vue')
+  }
 ]
 
 const router = createRouter({
   history: createWebHistory('/admin'),
-  routes,
+  routes
 })
 
 export default router

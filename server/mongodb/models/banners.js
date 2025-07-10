@@ -15,17 +15,17 @@ var banners = new Schema(
     // 是否新窗口打开
     newtab: {
       type: Boolean,
-      default: false,
+      default: false
     },
     // 是否本站链接
     isdefault: {
       type: Boolean,
-      default: false,
+      default: false
     },
     // 0:不可见 1:可见
-    status: { type: Number, default: 0, index: true },
+    status: { type: Number, default: 0, index: true }
   },
-  { timestamps: true },
+  { timestamps: true }
 )
 
 module.exports = mongoose.model('banners', banners)

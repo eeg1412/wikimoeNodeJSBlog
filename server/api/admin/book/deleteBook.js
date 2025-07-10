@@ -13,9 +13,9 @@ module.exports = async function (req, res, next) {
     res.status(400).json({
       errors: [
         {
-          message: 'id不能为空',
-        },
-      ],
+          message: 'id不能为空'
+        }
+      ]
     })
     return
   }
@@ -27,9 +27,9 @@ module.exports = async function (req, res, next) {
     res.status(400).json({
       errors: [
         {
-          message: '该数据不存在',
-        },
-      ],
+          message: '该数据不存在'
+        }
+      ]
     })
     return
   }
@@ -48,9 +48,9 @@ module.exports = async function (req, res, next) {
       res.status(400).json({
         errors: [
           {
-            message: '旧图片删除失败',
-          },
-        ],
+            message: '旧图片删除失败'
+          }
+        ]
       })
       throw new Error(error)
     }
@@ -58,14 +58,14 @@ module.exports = async function (req, res, next) {
   //  删除书籍
   bookUtils
     .deleteOne({ _id: id })
-    .then((data) => {
+    .then(data => {
       if (data.deletedCount === 0) {
         res.status(400).json({
           errors: [
             {
-              message: '删除失败',
-            },
-          ],
+              message: '删除失败'
+            }
+          ]
         })
         return
       }
@@ -73,35 +73,35 @@ module.exports = async function (req, res, next) {
       postUtils
         .updateMany(
           { bookList: id },
-          { $pull: { bookList: id, contentBookList: id } },
+          { $pull: { bookList: id, contentBookList: id } }
         )
-        .then((postData) => {
+        .then(postData => {
           // console.log(postData)
           res.send({
             data: {
-              message: '删除成功',
-            },
+              message: '删除成功'
+            }
           })
         })
-        .catch((err) => {
+        .catch(err => {
           res.status(400).json({
             errors: [
               {
-                message: '删除失败',
-              },
-            ],
+                message: '删除失败'
+              }
+            ]
           })
           adminApiLog.error(`book delete fail, ${utils.logErrorToText(err)}`)
         })
       cacheDataUtils.getReadingBookList()
     })
-    .catch((err) => {
+    .catch(err => {
       res.status(400).json({
         errors: [
           {
-            message: '删除失败',
-          },
-        ],
+            message: '删除失败'
+          }
+        ]
       })
       adminApiLog.error(`book delete fail, ${logErrorToText(err)}`)
     })

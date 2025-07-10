@@ -12,9 +12,9 @@ module.exports = async function (req, res, next) {
     res.status(400).json({
       errors: [
         {
-          message: '参数错误',
-        },
-      ],
+          message: '参数错误'
+        }
+      ]
     })
     return
   }
@@ -58,7 +58,7 @@ module.exports = async function (req, res, next) {
     // keyword去掉前后空格
     keyword = keyword?.trim()
     const keywordArray = keyword.split(' ')
-    const regexArray = keywordArray.map((keyword) => {
+    const regexArray = keywordArray.map(keyword => {
       const escapedKeyword = utils.escapeSpecialChars(keyword)
       const regex = new RegExp(escapedKeyword, 'i')
       return regex
@@ -66,11 +66,11 @@ module.exports = async function (req, res, next) {
     // 检索title和excerpt
     params.$or = [
       {
-        title: { $in: regexArray },
+        title: { $in: regexArray }
       },
       {
-        label: { $in: regexArray },
-      },
+        label: { $in: regexArray }
+      }
     ]
   }
   // 如果gamePlatform存在，就加入查询条件
@@ -84,24 +84,24 @@ module.exports = async function (req, res, next) {
   }
 
   const sort = {
-    _id: -1,
+    _id: -1
   }
   gameUtils
     .findPage(params, sort, page, size)
-    .then((data) => {
+    .then(data => {
       // 返回格式list,total
       res.send({
         list: data.list,
-        total: data.total,
+        total: data.total
       })
     })
-    .catch((err) => {
+    .catch(err => {
       res.status(400).json({
         errors: [
           {
-            message: '游戏列表获取失败',
-          },
-        ],
+            message: '游戏列表获取失败'
+          }
+        ]
       })
       adminApiLog.error(`game list get fail, ${JSON.stringify(err)}`)
     })

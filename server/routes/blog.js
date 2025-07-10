@@ -43,288 +43,288 @@ const blogRouteSetting = [
     path: '/options',
     method: 'get',
     middleware: [],
-    controller: require('../api/blog/option/getoptionList'),
+    controller: require('../api/blog/option/getoptionList')
   },
   // getnaviList
   {
     path: '/navi/list',
     method: 'get',
     middleware: [],
-    controller: require('../api/blog/navi/getnaviList'),
+    controller: require('../api/blog/navi/getnaviList')
   },
   // getPostList
   {
     path: '/post/list',
     method: 'get',
     middleware: [],
-    controller: require('../api/blog/post/getPostList'),
+    controller: require('../api/blog/post/getPostList')
   },
   // getBannerList
   {
     path: '/banner/list',
     method: 'get',
     middleware: [],
-    controller: require('../api/blog/banner/getBannerList'),
+    controller: require('../api/blog/banner/getBannerList')
   },
   // getSidebar
   {
     path: '/sidebar/list',
     method: 'get',
     middleware: [],
-    controller: require('../api/blog/sidebar/getSidebarList'),
+    controller: require('../api/blog/sidebar/getSidebarList')
   },
   // getLatestComments
   {
     path: '/comment/latest',
     method: 'get',
     middleware: [],
-    controller: require('../api/blog/comment/getLatestComments'),
+    controller: require('../api/blog/comment/getLatestComments')
   },
   // getSortList
   {
     path: '/sort/list',
     method: 'get',
     middleware: [],
-    controller: require('../api/blog/sort/getSortList'),
+    controller: require('../api/blog/sort/getSortList')
   },
   // getPostArchiveList
   {
     path: '/post/archive',
     method: 'get',
     middleware: [],
-    controller: require('../api/blog/post/getPostArchiveList'),
+    controller: require('../api/blog/post/getPostArchiveList')
   },
   // get getPostDetail
   {
     path: '/post/detail',
     method: 'get',
     middleware: [],
-    controller: require('../api/blog/post/getPostDetail'),
+    controller: require('../api/blog/post/getPostDetail')
   },
   // get getCommentList
   {
     path: '/comment/list',
     method: 'get',
     middleware: [],
-    controller: require('../api/blog/comment/getCommentList'),
+    controller: require('../api/blog/comment/getCommentList')
   },
   // post createComment
   {
     path: '/comment/create',
     method: 'post',
     middleware: [checkCommentRetractAuth],
-    controller: require('../api/blog/comment/createComment'),
+    controller: require('../api/blog/comment/createComment')
   },
   // post commentRetract
   {
     path: '/comment/retract',
     method: 'post',
     middleware: [checkCommentRetractAuth],
-    controller: require('../api/blog/comment/commentRetract'),
+    controller: require('../api/blog/comment/commentRetract')
   },
   // put updatePostViewCount
   {
     path: '/post/view/count',
     method: 'put',
     middleware: [],
-    controller: require('../api/blog/post/updatePostViewCount'),
+    controller: require('../api/blog/post/updatePostViewCount')
   },
   // post createPostLikeLog
   {
     path: '/post/like/log',
     method: 'post',
     middleware: [],
-    controller: require('../api/blog/postLikeLog/createPostLikeLog'),
+    controller: require('../api/blog/postLikeLog/createPostLikeLog')
   },
   // post getPostLikeLogList
   {
     path: '/post/like/log/list',
     method: 'post',
     middleware: [],
-    controller: require('../api/blog/postLikeLog/getPostLikeLogList'),
+    controller: require('../api/blog/postLikeLog/getPostLikeLogList')
   },
   // post createCommentLikeLog
   {
     path: '/comment/like/log',
     method: 'post',
     middleware: [],
-    controller: require('../api/blog/commentLikeLog/createCommentLikeLog'),
+    controller: require('../api/blog/commentLikeLog/createCommentLikeLog')
   },
   // post getPostCommentLogList
   {
     path: '/comment/like/log/list',
     method: 'post',
     middleware: [],
-    controller: require('../api/blog/commentLikeLog/getPostCommentLogList'),
+    controller: require('../api/blog/commentLikeLog/getPostCommentLogList')
   },
   // get getlinkList
   {
     path: '/link/list',
     method: 'get',
     middleware: [],
-    controller: require('../api/blog/link/getlinkList'),
+    controller: require('../api/blog/link/getlinkList')
   },
   // getBangumiList
   {
     path: '/bangumi/list',
     method: 'get',
     middleware: [],
-    controller: require('../api/blog/bangumi/getBangumiList'),
+    controller: require('../api/blog/bangumi/getBangumiList')
   },
   // getBangumiSeasonList
   {
     path: '/bangumi/season/list',
     method: 'get',
     middleware: [],
-    controller: require('../api/blog/bangumi/getBangumiSeasonList'),
+    controller: require('../api/blog/bangumi/getBangumiSeasonList')
   },
   // getBangumiYearList
   {
     path: '/bangumi/year/list',
     method: 'get',
     middleware: [],
-    controller: require('../api/blog/bangumi/getBangumiYearList'),
+    controller: require('../api/blog/bangumi/getBangumiYearList')
   },
   // getMovieList
   {
     path: '/movie/list',
     method: 'get',
     middleware: [],
-    controller: require('../api/blog/movie/getMovieList'),
+    controller: require('../api/blog/movie/getMovieList')
   },
   // getMovieYearList
   {
     path: '/movie/year/list',
     method: 'get',
     middleware: [],
-    controller: require('../api/blog/movie/getMovieYearList'),
+    controller: require('../api/blog/movie/getMovieYearList')
   },
   // getSortDetail
   {
     path: '/sort/detail',
     method: 'get',
     middleware: [],
-    controller: require('../api/blog/sort/getSortDetail'),
+    controller: require('../api/blog/sort/getSortDetail')
   },
   // getTagDetail
   {
     path: '/tag/detail',
     method: 'get',
     middleware: [],
-    controller: require('../api/blog/tag/getTagDetail'),
+    controller: require('../api/blog/tag/getTagDetail')
   },
   // getRandomTagList
   {
     path: '/tag/random/list',
     method: 'get',
     middleware: [],
-    controller: require('../api/blog/tag/getRandomTagList'),
+    controller: require('../api/blog/tag/getRandomTagList')
   },
   // getGameList
   {
     path: '/game/list',
     method: 'get',
     middleware: [],
-    controller: require('../api/blog/game/getGameList'),
+    controller: require('../api/blog/game/getGameList')
   },
   // getPlayingGameList
   {
     path: '/game/playing/list',
     method: 'get',
     middleware: [],
-    controller: require('../api/blog/game/getPlayingGameList'),
+    controller: require('../api/blog/game/getPlayingGameList')
   },
   // getGamePlatformList
   {
     path: '/game/platform/list',
     method: 'get',
     middleware: [],
-    controller: require('../api/blog/game/getGamePlatformList'),
+    controller: require('../api/blog/game/getGamePlatformList')
   },
   // getBookList
   {
     path: '/book/list',
     method: 'get',
     middleware: [],
-    controller: require('../api/blog/book/getBookList'),
+    controller: require('../api/blog/book/getBookList')
   },
   // getReadingBookList
   {
     path: '/book/reading/list',
     method: 'get',
     middleware: [],
-    controller: require('../api/blog/book/getReadingBookList'),
+    controller: require('../api/blog/book/getReadingBookList')
   },
   // getBooktypeList
   {
     path: '/booktype/list',
     method: 'get',
     middleware: [],
-    controller: require('../api/blog/book/getBooktypeList'),
+    controller: require('../api/blog/book/getBooktypeList')
   },
   // getAttachmentList
   {
     path: '/attachment/list',
     method: 'get',
     middleware: [],
-    controller: require('../api/blog/attachment/getAttachmentList'),
+    controller: require('../api/blog/attachment/getAttachmentList')
   },
   // getEventList
   {
     path: '/event/list',
     method: 'get',
     middleware: [],
-    controller: require('../api/blog/event/getEventList'),
+    controller: require('../api/blog/event/getEventList')
   },
   // getEventDetail
   {
     path: '/event/detail',
     method: 'get',
     middleware: [],
-    controller: require('../api/blog/event/getEventDetail'),
+    controller: require('../api/blog/event/getEventDetail')
   },
   // createLog
   {
     path: '/log/create',
     method: 'post',
     middleware: [],
-    controller: require('../api/blog/log/createLog'),
+    controller: require('../api/blog/log/createLog')
   },
   // updateLogPerformanceNavigationTiming
   {
     path: '/log/update/performance',
     method: 'put',
     middleware: [],
-    controller: require('../api/blog/log/updateLogPerformanceNavigationTiming'),
+    controller: require('../api/blog/log/updateLogPerformanceNavigationTiming')
   },
   // getTrendPostList
   {
     path: '/trend/post/list',
     method: 'get',
     middleware: [],
-    controller: require('../api/blog/trend/getTrendPostList'),
+    controller: require('../api/blog/trend/getTrendPostList')
   },
   // getVoteDetail
   {
     path: '/vote/detail',
     method: 'get',
     middleware: [],
-    controller: require('../api/blog/vote/getVoteDetail'),
+    controller: require('../api/blog/vote/getVoteDetail')
   },
   // postVote
   {
     path: '/vote',
     method: 'post',
     middleware: [],
-    controller: require('../api/blog/vote/postVote'),
-  },
+    controller: require('../api/blog/vote/postVote')
+  }
 ]
 
-blogRouteSetting.forEach((item) => {
+blogRouteSetting.forEach(item => {
   const middleware = [
     checkIsReady,
     referrerRecordMiddleware,
-    ...item.middleware,
+    ...item.middleware
   ]
   router[item.method](item.path, ...middleware, item.controller)
 })

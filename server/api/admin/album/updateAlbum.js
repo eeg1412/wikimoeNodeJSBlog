@@ -10,9 +10,9 @@ module.exports = async function (req, res, next) {
     res.status(400).json({
       errors: [
         {
-          message: 'id不能为空',
-        },
-      ],
+          message: 'id不能为空'
+        }
+      ]
     })
     return
   }
@@ -21,23 +21,23 @@ module.exports = async function (req, res, next) {
     res.status(400).json({
       errors: [
         {
-          message: '__v不能为空',
-        },
-      ],
+          message: '__v不能为空'
+        }
+      ]
     })
     return
   }
   // 校验格式
   const params = {
-    name: name,
+    name: name
   }
   const rule = [
     {
       key: 'name',
       label: '相册名称',
       type: null,
-      required: true,
-    },
+      required: true
+    }
   ]
   const errors = utils.checkForm(params, rule)
   if (errors.length > 0) {
@@ -50,38 +50,38 @@ module.exports = async function (req, res, next) {
     res.status(400).json({
       errors: [
         {
-          message: '相册名称已存在',
-        },
-      ],
+          message: '相册名称已存在'
+        }
+      ]
     })
     return
   }
   // updateOne
   albumUtils
     .updateOne({ _id: id, __v }, params)
-    .then((data) => {
+    .then(data => {
       if (data.modifiedCount === 0) {
         res.status(400).json({
           errors: [
             {
-              message: '更新失败',
-            },
-          ],
+              message: '更新失败'
+            }
+          ]
         })
         return
       }
       res.send({
-        data: data,
+        data: data
       })
       adminApiLog.info(`album:${name} update success`)
     })
-    .catch((err) => {
+    .catch(err => {
       res.status(400).json({
         errors: [
           {
-            message: '相册更新失败',
-          },
-        ],
+            message: '相册更新失败'
+          }
+        ]
       })
       adminApiLog.error(`album:${name} update fail, ${logErrorToText(err)}`)
     })

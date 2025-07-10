@@ -14,19 +14,19 @@ module.exports = async function (req, res, next) {
 
   optionUtils
     .find(params)
-    .then((data) => {
+    .then(data => {
       // 返回格式list,total
       res.send({
-        data,
+        data
       })
     })
-    .catch((err) => {
+    .catch(err => {
       res.status(400).json({
         errors: [
           {
-            message: '配置项列表获取失败',
-          },
-        ],
+            message: '配置项列表获取失败'
+          }
+        ]
       })
       adminApiLog.error(`option list get fail, ${JSON.stringify(err)}`)
     })

@@ -14,7 +14,7 @@ function panorama360ToHtml(elem, childrenHtml) {
 // 配置
 const conf = {
   type: 'panorama360', // 节点 type ，重要！！！
-  elemToHtml: panorama360ToHtml,
+  elemToHtml: panorama360ToHtml
 }
 
 export default conf

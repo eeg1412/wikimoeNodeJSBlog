@@ -25,7 +25,7 @@ const initGlobalConfig = async () => {
     // 视频压缩码率
     videoSettingCompressBitrate: 500,
     // 视频压缩帧率
-    videoSettingCompressFps: 30,
+    videoSettingCompressFps: 30
   }
 
   const siteSettingsConfig = {
@@ -72,7 +72,7 @@ const initGlobalConfig = async () => {
     // 加载动画文案
     siteShowLoadingText: '',
     // 显示版本号
-    siteShowBlogVersion: false,
+    siteShowBlogVersion: false
   }
   const commentSettingsConfig = {
     // 开启评论
@@ -86,7 +86,7 @@ const initGlobalConfig = async () => {
     // 评论分页
     siteCommentPageSize: 10,
     // 当日撤回限制
-    siteCommentRetractLimit: 3,
+    siteCommentRetractLimit: 3
   }
 
   const rssSettingsConfig = {
@@ -95,7 +95,7 @@ const initGlobalConfig = async () => {
     // RSS显示条数
     siteRssMaxCount: 10,
     // 是否在底部显示RSS
-    siteShowRssInFooter: false,
+    siteShowRssInFooter: false
     // RSS输出全文
     // siteRssFullText: false,
   }
@@ -126,7 +126,7 @@ const initGlobalConfig = async () => {
     emailSendToCommenterTemplateIsRichMode: true,
     // 撤回评论时通知自己模板
     emailRetractCommentTemplate: '',
-    emailRetractCommentTemplateIsRichMode: true,
+    emailRetractCommentTemplateIsRichMode: true
   }
   // 其他配置
   const otherSettingsConfig = {
@@ -137,7 +137,7 @@ const initGlobalConfig = async () => {
     // 排名统计来源忽略域名
     siteRankIgnoreReferrerDomainList: [],
     // 爬虫增加文章查看数
-    siteSpiderPostVisitEnabled: true,
+    siteSpiderPostVisitEnabled: true
   }
   // 文章页设置
   const sitePostSettingsConfig = {
@@ -156,7 +156,7 @@ const initGlobalConfig = async () => {
     // 随机相似内容显示范围
     sitePostRandomSimilarShowRange: [],
     // 随机相似内容标题
-    sitePostRandomSimilarTitle: '相似内容',
+    sitePostRandomSimilarTitle: '相似内容'
   }
   // 广告
   const adSettingsConfig = {
@@ -169,12 +169,12 @@ const initGlobalConfig = async () => {
     // 文章底部谷歌参数
     googleAdPostBottomParams: '',
     // ads.txt
-    AdAdsTxt: '',
+    AdAdsTxt: ''
   }
 
   // 写一个函数，先判断原始类型，再将字符串转换为对应的类型
   const formatResToForm = (form, obj) => {
-    Object.keys(form).forEach((key) => {
+    Object.keys(form).forEach(key => {
       if (obj[key]) {
         // 判断form[key]的类型，有数字，字符串，布尔，数组，但是value只有字符串，所以需要转换
         if (typeof form[key] === 'number') {
@@ -193,7 +193,7 @@ const initGlobalConfig = async () => {
   // 从数据库获取配置
   await optionUtils
     .find({})
-    .then((data) => {
+    .then(data => {
       // 返回格式list,total
       const config = {
         imgSettings: imgSettingConfig,
@@ -203,11 +203,11 @@ const initGlobalConfig = async () => {
         emailSettings: emailSettingsConfig,
         otherSettings: otherSettingsConfig,
         sitePostSettings: sitePostSettingsConfig,
-        adSettings: adSettingsConfig,
+        adSettings: adSettingsConfig
       }
       // 将data转换为object
       const obj = {}
-      data.forEach((item) => {
+      data.forEach(item => {
         obj[item.name] = item.value
       })
       // 将obj转换为config
@@ -227,7 +227,7 @@ const initGlobalConfig = async () => {
       showConfig.emailSettings.emailPassword = '****'
       console.info('globalConfig更新完成,配置如下:', showConfig)
     })
-    .catch((err) => {
+    .catch(err => {
       console.error('globalConfig更新失败', err)
     })
 }

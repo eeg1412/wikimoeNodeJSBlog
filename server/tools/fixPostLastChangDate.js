@@ -16,7 +16,7 @@ const init = async () => {
         .then(() => {
           console.log(chalk.green(`文章${post._id} lastChangDate字段修复完成`))
         })
-        .catch((err) => {
+        .catch(err => {
           console.log(chalk.red(`文章${post._id} lastChangDate字段修复失败`))
           console.log(err)
         })

@@ -37,7 +37,7 @@ class EditEventspan {
     if (!editor['openEventDialog']) return
 
     const nodeEntries = SlateEditor.nodes(editor, {
-      match: (node) => {
+      match: node => {
         if (SlateElement.isElement(node)) {
           if (node.type === 'eventspan') {
             return true
@@ -45,7 +45,7 @@ class EditEventspan {
         }
         return false
       },
-      universal: true,
+      universal: true
     })
 
     if (nodeEntries == null) {
@@ -63,7 +63,7 @@ const editEventspanConf = {
   key: 'editeventspan', // 定义 menu key ：要保证唯一、不重复（重要）
   factory() {
     return new EditEventspan() // 把 `YourMenuClass` 替换为你菜单的 class
-  },
+  }
 }
 
 export default editEventspanConf

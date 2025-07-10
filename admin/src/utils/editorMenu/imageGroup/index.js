@@ -13,7 +13,7 @@ const module = {
   renderElems: [renderElemConf],
   elemsToHtml: [elemToHtmlConf],
   parseElemsHtml: [parseHtmlConf],
-  menus: [menuConf],
+  menus: [menuConf]
 }
 
 export default module

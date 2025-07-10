@@ -12,9 +12,9 @@ module.exports = async function (req, res, next) {
     res.status(400).json({
       errors: [
         {
-          message: '参数错误',
-        },
-      ],
+          message: '参数错误'
+        }
+      ]
     })
     return
   }
@@ -25,7 +25,7 @@ module.exports = async function (req, res, next) {
       { content: new RegExp(keyword, 'i') },
       { nickname: new RegExp(keyword, 'i') },
       { email: new RegExp(keyword, 'i') },
-      { url: new RegExp(keyword, 'i') },
+      { url: new RegExp(keyword, 'i') }
     ]
   }
   if (ip) {
@@ -41,29 +41,29 @@ module.exports = async function (req, res, next) {
     params.status = Number(status)
   }
   const sort = {
-    date: -1,
+    date: -1
   }
   commentUtils
     .findPage(params, sort, page, size)
-    .then((data) => {
+    .then(data => {
       // 返回格式list,total
-      const list = data.list.map((item) => {
+      const list = data.list.map(item => {
         const newItem = item.toJSON()
         newItem.parentId = item.populated('parent')
         return newItem
       })
       res.send({
         list: list,
-        total: data.total,
+        total: data.total
       })
     })
-    .catch((err) => {
+    .catch(err => {
       res.status(400).json({
         errors: [
           {
-            message: '评论列表获取失败',
-          },
-        ],
+            message: '评论列表获取失败'
+          }
+        ]
       })
       adminApiLog.error(`comment list get fail, ${logErrorToText(err)}`)
     })

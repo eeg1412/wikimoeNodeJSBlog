@@ -5,49 +5,49 @@ var navis = new Schema(
   {
     naviname: {
       type: String,
-      required: true,
+      required: true
     },
     url: {
-      type: String,
+      type: String
     },
     newtab: {
       type: Boolean,
-      default: false,
+      default: false
     },
     // 状态 0 不显示 1 显示
     status: {
       type: Number,
       default: 0,
-      index: true,
+      index: true
     },
     // 排序
     taxis: {
       type: Number,
       default: 0,
-      index: true,
+      index: true
     },
     // 父导航
     parent: {
       type: Schema.Types.ObjectId,
       ref: 'navis',
-      index: true,
+      index: true
     },
     // 是否本站链接
     isdefault: {
       type: Boolean,
-      default: false,
+      default: false
     },
     // query
     query: {
       type: String,
-      default: '',
+      default: ''
     },
     deepmatch: {
       type: Boolean,
-      default: false,
-    },
+      default: false
+    }
   },
-  { timestamps: true },
+  { timestamps: true }
 )
 
 module.exports = mongoose.model('navis', navis)

@@ -7,15 +7,15 @@ module.exports = async function (req, res, next) {
   const { name } = req.body
   // 校验格式
   const params = {
-    name: name,
+    name: name
   }
   const rule = [
     {
       key: 'name',
       label: '相册名称',
       type: null,
-      required: true,
-    },
+      required: true
+    }
   ]
   const errors = utils.checkForm(params, rule)
   if (errors.length > 0) {
@@ -28,28 +28,28 @@ module.exports = async function (req, res, next) {
     res.status(400).json({
       errors: [
         {
-          message: '相册名称已存在',
-        },
-      ],
+          message: '相册名称已存在'
+        }
+      ]
     })
     return
   }
   // save
   albumUtils
     .save(params)
-    .then((data) => {
+    .then(data => {
       res.send({
-        data: data,
+        data: data
       })
       adminApiLog.info(`album:${name} create success`)
     })
-    .catch((err) => {
+    .catch(err => {
       res.status(400).json({
         errors: [
           {
-            message: '相册创建失败',
-          },
-        ],
+            message: '相册创建失败'
+          }
+        ]
       })
       adminApiLog.error(`album:${name} create fail, ${logErrorToText(err)}`)
     })

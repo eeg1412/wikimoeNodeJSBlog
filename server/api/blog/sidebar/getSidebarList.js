@@ -8,16 +8,16 @@ module.exports = async function (req, res, next) {
   } else {
     cacheDataUtils
       .getSidebarList()
-      .then((data) => {
+      .then(data => {
         res.send(data)
       })
-      .catch((err) => {
+      .catch(err => {
         res.status(400).json({
           errors: [
             {
-              message: 'sidebar列表获取失败',
-            },
-          ],
+              message: 'sidebar列表获取失败'
+            }
+          ]
         })
         userApiLog.error(`sidebar list get fail, ${JSON.stringify(err)}`)
       })

@@ -13,9 +13,9 @@ module.exports = async function (req, res, next) {
     res.status(400).json({
       errors: [
         {
-          message: 'id不能为空',
-        },
-      ],
+          message: 'id不能为空'
+        }
+      ]
     })
     return
   }
@@ -25,9 +25,9 @@ module.exports = async function (req, res, next) {
     res.status(400).json({
       errors: [
         {
-          message: '媒体不存在',
-        },
-      ],
+          message: '媒体不存在'
+        }
+      ]
     })
     return
   }
@@ -35,14 +35,14 @@ module.exports = async function (req, res, next) {
   //  删除媒体
   attachmentUtils
     .deleteOne({ _id: id })
-    .then((data) => {
+    .then(data => {
       if (data.deletedCount === 0) {
         res.status(400).json({
           errors: [
             {
-              message: '删除失败',
-            },
-          ],
+              message: '删除失败'
+            }
+          ]
         })
         return
       }
@@ -52,19 +52,19 @@ module.exports = async function (req, res, next) {
           { _id: attachmentData.album },
           {
             $inc: {
-              count: -1,
-            },
-          },
+              count: -1
+            }
+          }
         )
-        .then((data) => {
+        .then(data => {
           if (data.modifiedCount === 0) {
             adminApiLog.error(`album:${attachmentData.album} count - 1 fail`)
             res.status(400).json({
               errors: [
                 {
-                  message: '删除失败',
-                },
-              ],
+                  message: '删除失败'
+                }
+              ]
             })
             return
           }
@@ -80,12 +80,12 @@ module.exports = async function (req, res, next) {
             res.status(400).json({
               errors: [
                 {
-                  message: '删除文件失败',
-                },
-              ],
+                  message: '删除文件失败'
+                }
+              ]
             })
             adminApiLog.error(
-              `attachment delete file fail, ${JSON.stringify(error)}`,
+              `attachment delete file fail, ${JSON.stringify(error)}`
             )
             throw error
           }
@@ -95,60 +95,60 @@ module.exports = async function (req, res, next) {
             { coverImages: id },
             {
               $pull: {
-                coverImages: id,
-              },
-            },
+                coverImages: id
+              }
+            }
           )
           const userPromise = userUtils.updateMany(
             { cover: id },
             {
               $set: {
-                cover: null,
-              },
-            },
+                cover: null
+              }
+            }
           )
 
           Promise.all([postPromise, userPromise])
             .then(() => {
               res.send({
                 data: {
-                  message: '删除成功',
-                },
+                  message: '删除成功'
+                }
               })
             })
-            .catch((err) => {
+            .catch(err => {
               res.status(400).json({
                 errors: [
                   {
-                    message: '删除失败',
-                  },
-                ],
+                    message: '删除失败'
+                  }
+                ]
               })
               adminApiLog.error(
-                `attachment delete reference fail, ${logErrorToText(err)}`,
+                `attachment delete reference fail, ${logErrorToText(err)}`
               )
             })
         })
-        .catch((err) => {
+        .catch(err => {
           res.status(400).json({
             errors: [
               {
-                message: '删除失败',
-              },
-            ],
+                message: '删除失败'
+              }
+            ]
           })
           adminApiLog.error(
-            `album:${attachmentData.album} count - 1 fail, ${logErrorToText(err)}`,
+            `album:${attachmentData.album} count - 1 fail, ${logErrorToText(err)}`
           )
         })
     })
-    .catch((err) => {
+    .catch(err => {
       res.status(400).json({
         errors: [
           {
-            message: '删除失败',
-          },
-        ],
+            message: '删除失败'
+          }
+        ]
       })
       adminApiLog.error(`attachment delete fail, ${logErrorToText(err)}`)
     })

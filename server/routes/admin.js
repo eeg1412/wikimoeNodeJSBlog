@@ -106,7 +106,7 @@ const adminRouteSetting = [
     middleware: [],
     controller: require('../api/admin/login'),
     roleType: null,
-    role: null,
+    role: null
   },
   // get,loginuserinfo
   {
@@ -115,7 +115,7 @@ const adminRouteSetting = [
     middleware: [checkAuth],
     controller: require('../api/admin/user/getLoginUserInfo'),
     roleType: null,
-    role: null,
+    role: null
   },
   // put,updateLoginUserInfo
   {
@@ -124,7 +124,7 @@ const adminRouteSetting = [
     middleware: [checkAuth],
     controller: require('../api/admin/user/updateLoginUserInfo'),
     roleType: null,
-    role: null,
+    role: null
   },
   // post /sort/create
   {
@@ -133,7 +133,7 @@ const adminRouteSetting = [
     middleware: [checkAuth],
     controller: require('../api/admin/sort/createSort'),
     roleType: null,
-    role: null,
+    role: null
   },
   // get /sort/list
   {
@@ -142,7 +142,7 @@ const adminRouteSetting = [
     middleware: [checkAuth],
     controller: require('../api/admin/sort/getSortList'),
     roleType: null,
-    role: null,
+    role: null
   },
   // get /sort/detail
   {
@@ -151,7 +151,7 @@ const adminRouteSetting = [
     middleware: [checkAuth],
     controller: require('../api/admin/sort/getSortDetail'),
     roleType: null,
-    role: null,
+    role: null
   },
   // put /sort/update
   {
@@ -160,7 +160,7 @@ const adminRouteSetting = [
     middleware: [checkAuth],
     controller: require('../api/admin/sort/updateSort'),
     roleType: null,
-    role: null,
+    role: null
   },
   // delete /sort/delete
   {
@@ -169,7 +169,7 @@ const adminRouteSetting = [
     middleware: [checkAuth],
     controller: require('../api/admin/sort/deleteSort'),
     roleType: null,
-    role: null,
+    role: null
   },
   // get /tag/list
   {
@@ -178,7 +178,7 @@ const adminRouteSetting = [
     middleware: [checkAuth],
     controller: require('../api/admin/tag/getTagList'),
     roleType: null,
-    role: null,
+    role: null
   },
   // post /tag/create
   {
@@ -187,7 +187,7 @@ const adminRouteSetting = [
     middleware: [checkAuth],
     controller: require('../api/admin/tag/createTag'),
     roleType: null,
-    role: null,
+    role: null
   },
   // get /tag/detail
   {
@@ -196,7 +196,7 @@ const adminRouteSetting = [
     middleware: [checkAuth],
     controller: require('../api/admin/tag/getTagDetail'),
     roleType: null,
-    role: null,
+    role: null
   },
   // put /tag/update
   {
@@ -205,7 +205,7 @@ const adminRouteSetting = [
     middleware: [checkAuth],
     controller: require('../api/admin/tag/updateTag'),
     roleType: null,
-    role: null,
+    role: null
   },
   // put /tag/update/lastusetime
   {
@@ -214,7 +214,7 @@ const adminRouteSetting = [
     middleware: [checkAuth],
     controller: require('../api/admin/tag/updateTagLastusetime'),
     roleType: null,
-    role: null,
+    role: null
   },
   // delete /tag/delete
   {
@@ -223,7 +223,7 @@ const adminRouteSetting = [
     middleware: [checkAuth],
     controller: require('../api/admin/tag/deleteTag'),
     roleType: null,
-    role: null,
+    role: null
   },
   // get /album/list
   {
@@ -232,7 +232,7 @@ const adminRouteSetting = [
     middleware: [checkAuth],
     controller: require('../api/admin/album/getAlbumList'),
     roleType: null,
-    role: null,
+    role: null
   },
   // post /album/create
   {
@@ -241,7 +241,7 @@ const adminRouteSetting = [
     middleware: [checkAuth],
     controller: require('../api/admin/album/createAlbum'),
     roleType: null,
-    role: null,
+    role: null
   },
   // get /album/detail
   {
@@ -250,7 +250,7 @@ const adminRouteSetting = [
     middleware: [checkAuth],
     controller: require('../api/admin/album/getAlbumDetail'),
     roleType: null,
-    role: null,
+    role: null
   },
   // put /album/update
   {
@@ -259,7 +259,7 @@ const adminRouteSetting = [
     middleware: [checkAuth],
     controller: require('../api/admin/album/updateAlbum'),
     roleType: null,
-    role: null,
+    role: null
   },
   // delete /album/delete
   {
@@ -268,7 +268,7 @@ const adminRouteSetting = [
     middleware: [checkAuth],
     controller: require('../api/admin/album/deleteAlbum'),
     roleType: null,
-    role: null,
+    role: null
   },
   // post /attachment/upload
   {
@@ -277,7 +277,7 @@ const adminRouteSetting = [
     middleware: [checkAuth, upload.single('file')],
     controller: require('../api/admin/attachment/uploadAttachment'),
     roleType: null,
-    role: null,
+    role: null
   },
   // post /attachment/upload/video
   {
@@ -287,12 +287,12 @@ const adminRouteSetting = [
       checkAuth,
       upload.fields([
         { name: 'video', maxCount: 1 },
-        { name: 'cover', maxCount: 1 },
-      ]),
+        { name: 'cover', maxCount: 1 }
+      ])
     ],
     controller: require('../api/admin/attachment/uploadAttachmentVideo'),
     roleType: null,
-    role: null,
+    role: null
   },
   // get /attachment/list
   {
@@ -301,7 +301,7 @@ const adminRouteSetting = [
     middleware: [checkAuth],
     controller: require('../api/admin/attachment/getAttachmentList'),
     roleType: null,
-    role: null,
+    role: null
   },
   // delete /attachment/delete
   {
@@ -310,7 +310,7 @@ const adminRouteSetting = [
     middleware: [checkAuth],
     controller: require('../api/admin/attachment/deleteAttachment'),
     roleType: null,
-    role: null,
+    role: null
   },
   // put /attachment/update/info
   {
@@ -319,7 +319,7 @@ const adminRouteSetting = [
     middleware: [checkAuth],
     controller: require('../api/admin/attachment/updateAttachmentInfo'),
     roleType: null,
-    role: null,
+    role: null
   },
   // put /attachment/update/album
   {
@@ -328,7 +328,7 @@ const adminRouteSetting = [
     middleware: [checkAuth],
     controller: require('../api/admin/attachment/updateAttachmentAlbum'),
     roleType: null,
-    role: null,
+    role: null
   },
   // post /post/create
   {
@@ -337,7 +337,7 @@ const adminRouteSetting = [
     middleware: [checkAuth],
     controller: require('../api/admin/post/createPost'),
     roleType: null,
-    role: null,
+    role: null
   },
   // get /post/list
   {
@@ -346,7 +346,7 @@ const adminRouteSetting = [
     middleware: [checkAuth],
     controller: require('../api/admin/post/getPostList'),
     roleType: null,
-    role: null,
+    role: null
   },
   // get /post/detail
   {
@@ -355,7 +355,7 @@ const adminRouteSetting = [
     middleware: [checkAuth],
     controller: require('../api/admin/post/getPostDetail'),
     roleType: null,
-    role: null,
+    role: null
   },
   // put /post/update
   {
@@ -364,7 +364,7 @@ const adminRouteSetting = [
     middleware: [checkAuth],
     controller: require('../api/admin/post/updatePost'),
     roleType: null,
-    role: null,
+    role: null
   },
   // put updatePostEditorVersion
   {
@@ -373,7 +373,7 @@ const adminRouteSetting = [
     middleware: [checkAuth],
     controller: require('../api/admin/post/updatePostEditorVersion'),
     roleType: null,
-    role: null,
+    role: null
   },
   // delete /post/delete
   {
@@ -382,7 +382,7 @@ const adminRouteSetting = [
     middleware: [checkAuth],
     controller: require('../api/admin/post/deletePost'),
     roleType: null,
-    role: null,
+    role: null
   },
   // put /post/batch
   {
@@ -391,7 +391,7 @@ const adminRouteSetting = [
     middleware: [checkAuth],
     controller: require('../api/admin/post/batch'),
     roleType: null,
-    role: null,
+    role: null
   },
   // post /comment/create
   {
@@ -400,7 +400,7 @@ const adminRouteSetting = [
     middleware: [checkAuth],
     controller: require('../api/admin/comment/createComment'),
     roleType: null,
-    role: null,
+    role: null
   },
   // get /comment/list
   {
@@ -409,7 +409,7 @@ const adminRouteSetting = [
     middleware: [checkAuth],
     controller: require('../api/admin/comment/getCommentList'),
     roleType: null,
-    role: null,
+    role: null
   },
   // get /comment/detail
   {
@@ -418,7 +418,7 @@ const adminRouteSetting = [
     middleware: [checkAuth],
     controller: require('../api/admin/comment/getCommentDetail'),
     roleType: null,
-    role: null,
+    role: null
   },
   // put /comment/update
   {
@@ -427,7 +427,7 @@ const adminRouteSetting = [
     middleware: [checkAuth],
     controller: require('../api/admin/comment/updateComment'),
     roleType: null,
-    role: null,
+    role: null
   },
   // delete /comment/delete
   {
@@ -436,7 +436,7 @@ const adminRouteSetting = [
     middleware: [checkAuth],
     controller: require('../api/admin/comment/deleteComment'),
     roleType: null,
-    role: null,
+    role: null
   },
   // put /comment/apply applyComment
   {
@@ -445,7 +445,7 @@ const adminRouteSetting = [
     middleware: [checkAuth],
     controller: require('../api/admin/comment/applyComment'),
     roleType: null,
-    role: null,
+    role: null
   },
   // get /link/list
   {
@@ -454,7 +454,7 @@ const adminRouteSetting = [
     middleware: [checkAuth],
     controller: require('../api/admin/link/getlinkList'),
     roleType: null,
-    role: null,
+    role: null
   },
   // post /link/create
   {
@@ -463,7 +463,7 @@ const adminRouteSetting = [
     middleware: [checkAuth],
     controller: require('../api/admin/link/createlink'),
     roleType: null,
-    role: null,
+    role: null
   },
   // get /link/detail
   {
@@ -472,7 +472,7 @@ const adminRouteSetting = [
     middleware: [checkAuth],
     controller: require('../api/admin/link/getlinkDetail'),
     roleType: null,
-    role: null,
+    role: null
   },
   // put /link/update
   {
@@ -481,7 +481,7 @@ const adminRouteSetting = [
     middleware: [checkAuth],
     controller: require('../api/admin/link/updatelink'),
     roleType: null,
-    role: null,
+    role: null
   },
   // delete /link/delete
   {
@@ -490,7 +490,7 @@ const adminRouteSetting = [
     middleware: [checkAuth],
     controller: require('../api/admin/link/deletelink'),
     roleType: null,
-    role: null,
+    role: null
   },
   // get /navi/list
   {
@@ -499,7 +499,7 @@ const adminRouteSetting = [
     middleware: [checkAuth],
     controller: require('../api/admin/navi/getnaviList'),
     roleType: null,
-    role: null,
+    role: null
   },
   // post /navi/create
   {
@@ -508,7 +508,7 @@ const adminRouteSetting = [
     middleware: [checkAuth],
     controller: require('../api/admin/navi/createnavi'),
     roleType: null,
-    role: null,
+    role: null
   },
   // get /navi/detail
   {
@@ -517,7 +517,7 @@ const adminRouteSetting = [
     middleware: [checkAuth],
     controller: require('../api/admin/navi/getnaviDetail'),
     roleType: null,
-    role: null,
+    role: null
   },
   // put /navi/update
   {
@@ -526,7 +526,7 @@ const adminRouteSetting = [
     middleware: [checkAuth],
     controller: require('../api/admin/navi/updatenavi'),
     roleType: null,
-    role: null,
+    role: null
   },
   // delete /navi/delete
   {
@@ -535,7 +535,7 @@ const adminRouteSetting = [
     middleware: [checkAuth],
     controller: require('../api/admin/navi/deletenavi'),
     roleType: null,
-    role: null,
+    role: null
   },
   // put /option/update
   {
@@ -544,7 +544,7 @@ const adminRouteSetting = [
     middleware: [checkAuth],
     controller: require('../api/admin/option/updateoption'),
     roleType: null,
-    role: null,
+    role: null
   },
   // get /option/list
   {
@@ -553,7 +553,7 @@ const adminRouteSetting = [
     middleware: [checkAuth],
     controller: require('../api/admin/option/getoptionList'),
     roleType: null,
-    role: null,
+    role: null
   },
   // put /option/flushjwtsecretadmin
   {
@@ -562,7 +562,7 @@ const adminRouteSetting = [
     middleware: [checkAuth, checkRole],
     controller: require('../api/admin/option/reflushJWTScretAdmin'),
     roleType: 'eq',
-    role: 999,
+    role: 999
   },
   // put /option/flushjwtsecretblog
   {
@@ -571,7 +571,7 @@ const adminRouteSetting = [
     middleware: [checkAuth, checkRole],
     controller: require('../api/admin/option/reflushJWTScretBlog'),
     roleType: 'eq',
-    role: 999,
+    role: 999
   },
   // get dashboard
   {
@@ -580,7 +580,7 @@ const adminRouteSetting = [
     middleware: [checkAuth],
     controller: require('../api/admin/dashboard/getDashboard'),
     roleType: null,
-    role: null,
+    role: null
   },
   // get getVisitor
   {
@@ -589,7 +589,7 @@ const adminRouteSetting = [
     middleware: [checkAuth],
     controller: require('../api/admin/dashboard/getVisitor'),
     roleType: null,
-    role: null,
+    role: null
   },
   // get /sidebar/list
   {
@@ -598,7 +598,7 @@ const adminRouteSetting = [
     middleware: [checkAuth],
     controller: require('../api/admin/sidebar/getSidebarList'),
     roleType: null,
-    role: null,
+    role: null
   },
   // post /sidebar/create
   {
@@ -607,7 +607,7 @@ const adminRouteSetting = [
     middleware: [checkAuth],
     controller: require('../api/admin/sidebar/createSidebar'),
     roleType: null,
-    role: null,
+    role: null
   },
   // put /sidebar/update
   {
@@ -616,7 +616,7 @@ const adminRouteSetting = [
     middleware: [checkAuth],
     controller: require('../api/admin/sidebar/updateSidebar'),
     roleType: null,
-    role: null,
+    role: null
   },
   // put /sidebar/update/taxis
   {
@@ -625,7 +625,7 @@ const adminRouteSetting = [
     middleware: [checkAuth],
     controller: require('../api/admin/sidebar/updateSidebarTaxis'),
     roleType: null,
-    role: null,
+    role: null
   },
   // delete /sidebar/delete
   {
@@ -634,7 +634,7 @@ const adminRouteSetting = [
     middleware: [checkAuth],
     controller: require('../api/admin/sidebar/deleteSidebar'),
     roleType: null,
-    role: null,
+    role: null
   },
   // get /banner/list
   {
@@ -643,7 +643,7 @@ const adminRouteSetting = [
     middleware: [checkAuth],
     controller: require('../api/admin/banner/getBannerList'),
     roleType: null,
-    role: null,
+    role: null
   },
   // post /banner/create
   {
@@ -652,7 +652,7 @@ const adminRouteSetting = [
     middleware: [checkAuth],
     controller: require('../api/admin/banner/createBanner'),
     roleType: null,
-    role: null,
+    role: null
   },
   // put /banner/update
   {
@@ -661,7 +661,7 @@ const adminRouteSetting = [
     middleware: [checkAuth],
     controller: require('../api/admin/banner/updateBanner'),
     roleType: null,
-    role: null,
+    role: null
   },
   // put /banner/update/img
   // {
@@ -679,7 +679,7 @@ const adminRouteSetting = [
     middleware: [checkAuth],
     controller: require('../api/admin/banner/updateBannerTaxis'),
     roleType: null,
-    role: null,
+    role: null
   },
   // delete /banner/delete
   {
@@ -688,7 +688,7 @@ const adminRouteSetting = [
     middleware: [checkAuth],
     controller: require('../api/admin/banner/deleteBanner'),
     roleType: null,
-    role: null,
+    role: null
   },
   // getReaderlogList
   {
@@ -697,7 +697,7 @@ const adminRouteSetting = [
     middleware: [checkAuth],
     controller: require('../api/admin/readerlog/getReaderlogList'),
     roleType: null,
-    role: null,
+    role: null
   },
   // getReaderlogStats
   {
@@ -706,7 +706,7 @@ const adminRouteSetting = [
     middleware: [checkAuth],
     controller: require('../api/admin/readerlog/getReaderlogStats'),
     roleType: null,
-    role: null,
+    role: null
   },
   // deleteReaderlog
   {
@@ -715,7 +715,7 @@ const adminRouteSetting = [
     middleware: [checkAuth],
     controller: require('../api/admin/readerlog/deleteReaderlog'),
     roleType: null,
-    role: null,
+    role: null
   },
   // getPostLikeLogList
   {
@@ -724,7 +724,7 @@ const adminRouteSetting = [
     middleware: [checkAuth],
     controller: require('../api/admin/postLikeLog/getPostLikeLogList'),
     roleType: null,
-    role: null,
+    role: null
   },
   // getPostLikeLogStats
   {
@@ -733,7 +733,7 @@ const adminRouteSetting = [
     middleware: [checkAuth],
     controller: require('../api/admin/postLikeLog/getPostLikeLogStats'),
     roleType: null,
-    role: null,
+    role: null
   },
   // deletePostLikeLog
   {
@@ -742,7 +742,7 @@ const adminRouteSetting = [
     middleware: [checkAuth],
     controller: require('../api/admin/postLikeLog/deletePostLikeLog'),
     roleType: null,
-    role: null,
+    role: null
   },
   // getCommentLikeLogList
   {
@@ -751,7 +751,7 @@ const adminRouteSetting = [
     middleware: [checkAuth],
     controller: require('../api/admin/commentLikeLog/getCommentLikeLogList'),
     roleType: null,
-    role: null,
+    role: null
   },
   // getCommentLikeLogStats
   {
@@ -760,7 +760,7 @@ const adminRouteSetting = [
     middleware: [checkAuth],
     controller: require('../api/admin/commentLikeLog/getCommentLikeLogStats'),
     roleType: null,
-    role: null,
+    role: null
   },
   // deleteCommentLikeLog
   {
@@ -769,7 +769,7 @@ const adminRouteSetting = [
     middleware: [checkAuth],
     controller: require('../api/admin/commentLikeLog/deleteCommentLikeLog'),
     roleType: null,
-    role: null,
+    role: null
   },
   // createBangumi
   {
@@ -778,7 +778,7 @@ const adminRouteSetting = [
     middleware: [checkAuth],
     controller: require('../api/admin/bangumi/createBangumi'),
     roleType: null,
-    role: null,
+    role: null
   },
   // deleteBangumi
   {
@@ -787,7 +787,7 @@ const adminRouteSetting = [
     middleware: [checkAuth],
     controller: require('../api/admin/bangumi/deleteBangumi'),
     roleType: null,
-    role: null,
+    role: null
   },
   // getBangumiDetail
   {
@@ -796,7 +796,7 @@ const adminRouteSetting = [
     middleware: [checkAuth],
     controller: require('../api/admin/bangumi/getBangumiDetail'),
     roleType: null,
-    role: null,
+    role: null
   },
   // getBangumiList
   {
@@ -805,7 +805,7 @@ const adminRouteSetting = [
     middleware: [checkAuth],
     controller: require('../api/admin/bangumi/getBangumiList'),
     roleType: null,
-    role: null,
+    role: null
   },
   // updateBangumi
   {
@@ -814,7 +814,7 @@ const adminRouteSetting = [
     middleware: [checkAuth],
     controller: require('../api/admin/bangumi/updateBangumi'),
     roleType: null,
-    role: null,
+    role: null
   },
   // createMovie
   {
@@ -823,7 +823,7 @@ const adminRouteSetting = [
     middleware: [checkAuth],
     controller: require('../api/admin/movie/createMovie'),
     roleType: null,
-    role: null,
+    role: null
   },
   // deleteMovie
   {
@@ -832,7 +832,7 @@ const adminRouteSetting = [
     middleware: [checkAuth],
     controller: require('../api/admin/movie/deleteMovie'),
     roleType: null,
-    role: null,
+    role: null
   },
   // getMovieDetail
   {
@@ -841,7 +841,7 @@ const adminRouteSetting = [
     middleware: [checkAuth],
     controller: require('../api/admin/movie/getMovieDetail'),
     roleType: null,
-    role: null,
+    role: null
   },
   // getMovieList
   {
@@ -850,7 +850,7 @@ const adminRouteSetting = [
     middleware: [checkAuth],
     controller: require('../api/admin/movie/getMovieList'),
     roleType: null,
-    role: null,
+    role: null
   },
   // updateMovie
   {
@@ -859,7 +859,7 @@ const adminRouteSetting = [
     middleware: [checkAuth],
     controller: require('../api/admin/movie/updateMovie'),
     roleType: null,
-    role: null,
+    role: null
   },
   // getEmailSendHistoryList
   {
@@ -868,7 +868,7 @@ const adminRouteSetting = [
     middleware: [checkAuth],
     controller: require('../api/admin/emailSendHistory/getEmailSendHistoryList'),
     roleType: null,
-    role: null,
+    role: null
   },
   // resendEmail
   {
@@ -877,7 +877,7 @@ const adminRouteSetting = [
     middleware: [checkAuth],
     controller: require('../api/admin/emailSendHistory/resendEmail'),
     roleType: null,
-    role: null,
+    role: null
   },
   // getReferrerList
   {
@@ -886,7 +886,7 @@ const adminRouteSetting = [
     middleware: [checkAuth],
     controller: require('../api/admin/referrer/getReferrerList'),
     roleType: null,
-    role: null,
+    role: null
   },
   // getRsslogList
   {
@@ -895,7 +895,7 @@ const adminRouteSetting = [
     middleware: [checkAuth],
     controller: require('../api/admin/rsslog/getRsslogList'),
     roleType: null,
-    role: null,
+    role: null
   },
   // getStatistics
   {
@@ -904,7 +904,7 @@ const adminRouteSetting = [
     middleware: [checkAuth],
     controller: require('../api/admin/statistics/getStatistics'),
     roleType: null,
-    role: null,
+    role: null
   },
   // getLoadingTime
   {
@@ -913,7 +913,7 @@ const adminRouteSetting = [
     middleware: [checkAuth],
     controller: require('../api/admin/statistics/getLoadingTime'),
     roleType: null,
-    role: null,
+    role: null
   },
   // createGamePlatform
   {
@@ -922,7 +922,7 @@ const adminRouteSetting = [
     middleware: [checkAuth],
     controller: require('../api/admin/gamePlatform/createGamePlatform'),
     roleType: null,
-    role: null,
+    role: null
   },
   // deleteGamePlatform
   {
@@ -931,7 +931,7 @@ const adminRouteSetting = [
     middleware: [checkAuth],
     controller: require('../api/admin/gamePlatform/deleteGamePlatform'),
     roleType: null,
-    role: null,
+    role: null
   },
   // getGamePlatformDetail
   {
@@ -940,7 +940,7 @@ const adminRouteSetting = [
     middleware: [checkAuth],
     controller: require('../api/admin/gamePlatform/getGamePlatformDetail'),
     roleType: null,
-    role: null,
+    role: null
   },
   // getGamePlatformList
   {
@@ -949,7 +949,7 @@ const adminRouteSetting = [
     middleware: [checkAuth],
     controller: require('../api/admin/gamePlatform/getGamePlatformList'),
     roleType: null,
-    role: null,
+    role: null
   },
   // updateGamePlatform
   {
@@ -958,7 +958,7 @@ const adminRouteSetting = [
     middleware: [checkAuth],
     controller: require('../api/admin/gamePlatform/updateGamePlatform'),
     roleType: null,
-    role: null,
+    role: null
   },
   // createGame
   {
@@ -967,7 +967,7 @@ const adminRouteSetting = [
     middleware: [checkAuth],
     controller: require('../api/admin/game/createGame'),
     roleType: null,
-    role: null,
+    role: null
   },
   // deleteGame
   {
@@ -976,7 +976,7 @@ const adminRouteSetting = [
     middleware: [checkAuth],
     controller: require('../api/admin/game/deleteGame'),
     roleType: null,
-    role: null,
+    role: null
   },
   // getGameDetail
   {
@@ -985,7 +985,7 @@ const adminRouteSetting = [
     middleware: [checkAuth],
     controller: require('../api/admin/game/getGameDetail'),
     roleType: null,
-    role: null,
+    role: null
   },
   // getGameList
   {
@@ -994,7 +994,7 @@ const adminRouteSetting = [
     middleware: [checkAuth],
     controller: require('../api/admin/game/getGameList'),
     roleType: null,
-    role: null,
+    role: null
   },
   // updateGame
   {
@@ -1003,7 +1003,7 @@ const adminRouteSetting = [
     middleware: [checkAuth],
     controller: require('../api/admin/game/updateGame'),
     roleType: null,
-    role: null,
+    role: null
   },
   // createEventtype
   {
@@ -1012,7 +1012,7 @@ const adminRouteSetting = [
     middleware: [checkAuth],
     controller: require('../api/admin/eventtype/createEventtype'),
     roleType: null,
-    role: null,
+    role: null
   },
   // deleteEventtype
   {
@@ -1021,7 +1021,7 @@ const adminRouteSetting = [
     middleware: [checkAuth],
     controller: require('../api/admin/eventtype/deleteEventtype'),
     roleType: null,
-    role: null,
+    role: null
   },
   // getEventtypeDetail
   {
@@ -1030,7 +1030,7 @@ const adminRouteSetting = [
     middleware: [checkAuth],
     controller: require('../api/admin/eventtype/getEventtypeDetail'),
     roleType: null,
-    role: null,
+    role: null
   },
   // getEventtypeList
   {
@@ -1039,7 +1039,7 @@ const adminRouteSetting = [
     middleware: [checkAuth],
     controller: require('../api/admin/eventtype/getEventtypeList'),
     roleType: null,
-    role: null,
+    role: null
   },
   // updateEventtype
   {
@@ -1048,7 +1048,7 @@ const adminRouteSetting = [
     middleware: [checkAuth],
     controller: require('../api/admin/eventtype/updateEventtype'),
     roleType: null,
-    role: null,
+    role: null
   },
   // createEvent
   {
@@ -1057,7 +1057,7 @@ const adminRouteSetting = [
     middleware: [checkAuth],
     controller: require('../api/admin/event/createEvent'),
     roleType: null,
-    role: null,
+    role: null
   },
   // deleteEvent
   {
@@ -1066,7 +1066,7 @@ const adminRouteSetting = [
     middleware: [checkAuth],
     controller: require('../api/admin/event/deleteEvent'),
     roleType: null,
-    role: null,
+    role: null
   },
   // getEventDetail
   {
@@ -1075,7 +1075,7 @@ const adminRouteSetting = [
     middleware: [checkAuth],
     controller: require('../api/admin/event/getEventDetail'),
     roleType: null,
-    role: null,
+    role: null
   },
   // getEventList
   {
@@ -1084,7 +1084,7 @@ const adminRouteSetting = [
     middleware: [checkAuth],
     controller: require('../api/admin/event/getEventList'),
     roleType: null,
-    role: null,
+    role: null
   },
   // updateEvent
   {
@@ -1093,7 +1093,7 @@ const adminRouteSetting = [
     middleware: [checkAuth],
     controller: require('../api/admin/event/updateEvent'),
     roleType: null,
-    role: null,
+    role: null
   },
   // createBooktype
   {
@@ -1102,7 +1102,7 @@ const adminRouteSetting = [
     middleware: [checkAuth],
     controller: require('../api/admin/booktype/createBooktype'),
     roleType: null,
-    role: null,
+    role: null
   },
   // deleteBooktype
   {
@@ -1111,7 +1111,7 @@ const adminRouteSetting = [
     middleware: [checkAuth],
     controller: require('../api/admin/booktype/deleteBooktype'),
     roleType: null,
-    role: null,
+    role: null
   },
   // getBooktypeDetail
   {
@@ -1120,7 +1120,7 @@ const adminRouteSetting = [
     middleware: [checkAuth],
     controller: require('../api/admin/booktype/getBooktypeDetail'),
     roleType: null,
-    role: null,
+    role: null
   },
   // getBooktypeList
   {
@@ -1129,7 +1129,7 @@ const adminRouteSetting = [
     middleware: [checkAuth],
     controller: require('../api/admin/booktype/getBooktypeList'),
     roleType: null,
-    role: null,
+    role: null
   },
   // updateBooktype
   {
@@ -1138,7 +1138,7 @@ const adminRouteSetting = [
     middleware: [checkAuth],
     controller: require('../api/admin/booktype/updateBooktype'),
     roleType: null,
-    role: null,
+    role: null
   },
   // createBook
   {
@@ -1147,7 +1147,7 @@ const adminRouteSetting = [
     middleware: [checkAuth],
     controller: require('../api/admin/book/createBook'),
     roleType: null,
-    role: null,
+    role: null
   },
   // deleteBook
   {
@@ -1156,7 +1156,7 @@ const adminRouteSetting = [
     middleware: [checkAuth],
     controller: require('../api/admin/book/deleteBook'),
     roleType: null,
-    role: null,
+    role: null
   },
   // getBookDetail
   {
@@ -1165,7 +1165,7 @@ const adminRouteSetting = [
     middleware: [checkAuth],
     controller: require('../api/admin/book/getBookDetail'),
     roleType: null,
-    role: null,
+    role: null
   },
   // getBookList
   {
@@ -1174,7 +1174,7 @@ const adminRouteSetting = [
     middleware: [checkAuth],
     controller: require('../api/admin/book/getBookList'),
     roleType: null,
-    role: null,
+    role: null
   },
   // updateBook
   {
@@ -1183,7 +1183,7 @@ const adminRouteSetting = [
     middleware: [checkAuth],
     controller: require('../api/admin/book/updateBook'),
     roleType: null,
-    role: null,
+    role: null
   },
   // createBackup
   {
@@ -1192,7 +1192,7 @@ const adminRouteSetting = [
     middleware: [checkAuth],
     controller: require('../api/admin/backup/createBackup'),
     roleType: null,
-    role: null,
+    role: null
   },
   // getBackupList
   {
@@ -1201,7 +1201,7 @@ const adminRouteSetting = [
     middleware: [checkAuth],
     controller: require('../api/admin/backup/getBackupList'),
     roleType: null,
-    role: null,
+    role: null
   },
   // deleteBackup
   {
@@ -1210,7 +1210,7 @@ const adminRouteSetting = [
     middleware: [checkAuth],
     controller: require('../api/admin/backup/deleteBackup'),
     roleType: null,
-    role: null,
+    role: null
   },
   // updateBackup
   {
@@ -1219,7 +1219,7 @@ const adminRouteSetting = [
     middleware: [checkAuth],
     controller: require('../api/admin/backup/updateBackup'),
     roleType: null,
-    role: null,
+    role: null
   },
   // getBackupDetail
   {
@@ -1228,7 +1228,7 @@ const adminRouteSetting = [
     middleware: [checkAuth],
     controller: require('../api/admin/backup/getBackupDetail'),
     roleType: null,
-    role: null,
+    role: null
   },
   // downloadBackup
   {
@@ -1238,7 +1238,7 @@ const adminRouteSetting = [
     middleware: [],
     controller: require('../api/admin/backup/downloadBackup'),
     roleType: null,
-    role: null,
+    role: null
   },
   // getDownloadBackupToken
   {
@@ -1247,7 +1247,7 @@ const adminRouteSetting = [
     middleware: [checkAuth],
     controller: require('../api/admin/backup/getDownloadBackupToken'),
     roleType: null,
-    role: null,
+    role: null
   },
   // restoreBackup
   {
@@ -1256,7 +1256,7 @@ const adminRouteSetting = [
     middleware: [checkAuth],
     controller: require('../api/admin/backup/restoreBackup'),
     roleType: null,
-    role: null,
+    role: null
   },
   // post createBackupUpload 只是创建表
   {
@@ -1265,7 +1265,7 @@ const adminRouteSetting = [
     middleware: [checkAuth],
     controller: require('../api/admin/backup/createBackupUpload'),
     roleType: null,
-    role: null,
+    role: null
   },
   // get getUploadBackupFileChunkList
   {
@@ -1274,7 +1274,7 @@ const adminRouteSetting = [
     middleware: [checkAuth],
     controller: require('../api/admin/backup/getUploadBackupFileChunkList'),
     roleType: null,
-    role: null,
+    role: null
   },
   // post uploadBackupFileChunk :id :chunkindex 上传文件
   {
@@ -1283,7 +1283,7 @@ const adminRouteSetting = [
     middleware: [checkAuth, upload.single('file')],
     controller: require('../api/admin/backup/uploadBackupFileChunk'),
     roleType: null,
-    role: null,
+    role: null
   },
   // put mergeUploadBackupFile
   {
@@ -1292,7 +1292,7 @@ const adminRouteSetting = [
     middleware: [checkAuth],
     controller: require('../api/admin/backup/mergeUploadBackupFile'),
     roleType: null,
-    role: null,
+    role: null
   },
   // get getUserList
   {
@@ -1301,7 +1301,7 @@ const adminRouteSetting = [
     middleware: [checkAuth, checkRole],
     controller: require('../api/admin/user/getUserList'),
     roleType: 'eq',
-    role: 999,
+    role: 999
   },
   // post createUser
   {
@@ -1310,7 +1310,7 @@ const adminRouteSetting = [
     middleware: [checkAuth, checkRole],
     controller: require('../api/admin/user/createUser'),
     roleType: 'eq',
-    role: 999,
+    role: 999
   },
   // put updateUser
   {
@@ -1319,7 +1319,7 @@ const adminRouteSetting = [
     middleware: [checkAuth, checkRole],
     controller: require('../api/admin/user/updateUser'),
     roleType: 'eq',
-    role: 999,
+    role: 999
   },
   // get getUserDetail
   {
@@ -1328,7 +1328,7 @@ const adminRouteSetting = [
     middleware: [checkAuth, checkRole],
     controller: require('../api/admin/user/getUserDetail'),
     roleType: 'eq',
-    role: 999,
+    role: 999
   },
   // delete deleteUser
   {
@@ -1337,7 +1337,7 @@ const adminRouteSetting = [
     middleware: [checkAuth, checkRole],
     controller: require('../api/admin/user/deleteUser'),
     roleType: 'eq',
-    role: 999,
+    role: 999
   },
   // post createVote
   {
@@ -1346,7 +1346,7 @@ const adminRouteSetting = [
     middleware: [checkAuth],
     controller: require('../api/admin/vote/createVote'),
     roleType: null,
-    role: null,
+    role: null
   },
   // delete deleteVote
   {
@@ -1355,7 +1355,7 @@ const adminRouteSetting = [
     middleware: [checkAuth],
     controller: require('../api/admin/vote/deleteVote'),
     roleType: null,
-    role: null,
+    role: null
   },
   // get getVoteDetail
   {
@@ -1364,7 +1364,7 @@ const adminRouteSetting = [
     middleware: [checkAuth],
     controller: require('../api/admin/vote/getVoteDetail'),
     roleType: null,
-    role: null,
+    role: null
   },
   // get getVoteList
   {
@@ -1373,7 +1373,7 @@ const adminRouteSetting = [
     middleware: [checkAuth],
     controller: require('../api/admin/vote/getVoteList'),
     roleType: null,
-    role: null,
+    role: null
   },
   // update updateVote
   {
@@ -1382,7 +1382,7 @@ const adminRouteSetting = [
     middleware: [checkAuth],
     controller: require('../api/admin/vote/updateVote'),
     roleType: null,
-    role: null,
+    role: null
   },
   // delete deleteVotelog
   {
@@ -1391,7 +1391,7 @@ const adminRouteSetting = [
     middleware: [checkAuth],
     controller: require('../api/admin/votelog/deleteVotelog'),
     roleType: null,
-    role: null,
+    role: null
   },
   // get getVotelogList
   {
@@ -1400,7 +1400,7 @@ const adminRouteSetting = [
     method: 'get',
     controller: require('../api/admin/votelog/getVotelogList'),
     roleType: null,
-    role: null,
+    role: null
   },
   // get getVotelogStats
   {
@@ -1409,15 +1409,15 @@ const adminRouteSetting = [
     middleware: [checkAuth],
     controller: require('../api/admin/votelog/getVotelogStats'),
     roleType: null,
-    role: null,
-  },
+    role: null
+  }
 ]
 
-adminRouteSetting.forEach((item) => {
+adminRouteSetting.forEach(item => {
   const middleware = [
     checkIsReady,
     referrerRecordMiddleware,
-    ...item.middleware,
+    ...item.middleware
   ]
   router[item.method](
     item.path,
@@ -1425,13 +1425,13 @@ adminRouteSetting.forEach((item) => {
       if (item.roleType && item.role) {
         req.roleCheckInfo = {
           type: item.roleType,
-          role: item.role,
+          role: item.role
         }
       }
       next()
     },
     ...middleware,
-    item.controller,
+    item.controller
   )
 })
 

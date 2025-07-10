@@ -10,9 +10,9 @@ module.exports = async function (req, res, next) {
     res.status(400).json({
       errors: [
         {
-          message: 'id不能为空',
-        },
-      ],
+          message: 'id不能为空'
+        }
+      ]
     })
     return
   }
@@ -22,21 +22,21 @@ module.exports = async function (req, res, next) {
     title: title || '',
     content: content || '',
     count: count || 1,
-    status: status || 0,
+    status: status || 0
   }
   // updateOne
   sidebarUtils
     .updateOne({ _id: _id }, params)
-    .then((data) => {
+    .then(data => {
       // 判断是否更新成功
       if (data.modifiedCount === 0) {
         // 记录
         res.status(400).json({
           errors: [
             {
-              message: '更新失败',
-            },
-          ],
+              message: '更新失败'
+            }
+          ]
         })
         return
       }
@@ -44,21 +44,21 @@ module.exports = async function (req, res, next) {
       adminApiLog.info(`sidebar update success`)
       // 返回
       res.send({
-        data: data,
+        data: data
       })
       cacheDataUtils.getSidebarList()
       // utils.reflushBlogCache()
     })
-    .catch((err) => {
+    .catch(err => {
       // 记录
       adminApiLog.error(`sidebar update fail, ${logErrorToText(err)}`)
       // 报错
       res.status(400).json({
         errors: [
           {
-            message: '更新失败',
-          },
-        ],
+            message: '更新失败'
+          }
+        ]
       })
     })
 }

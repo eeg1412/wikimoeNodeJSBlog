@@ -35,7 +35,7 @@ for (const [key, component] of Object.entries(ElementPlusIconsVue)) {
 }
 app
   .use(ElementPlus, {
-    locale: zhCn,
+    locale: zhCn
   })
   .use(store)
   .use(router)
@@ -44,7 +44,7 @@ app
 initRichEditor()
 
 // 时间转时间戳
-const formatTimestamp = (time) => {
+const formatTimestamp = time => {
   return new Date(time).getTime()
 }
 

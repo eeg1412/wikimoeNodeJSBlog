@@ -11,9 +11,9 @@ module.exports = async function (req, res, next) {
     res.status(400).json({
       errors: [
         {
-          message: 'type格式错误',
-        },
-      ],
+          message: 'type格式错误'
+        }
+      ]
     })
     return
   }
@@ -23,27 +23,27 @@ module.exports = async function (req, res, next) {
   const params = {
     type: type,
     author: adminId,
-    lastChangDate: new Date(),
+    lastChangDate: new Date()
   }
 
   // save
   postUtils
     .save(params)
-    .then((data) => {
+    .then(data => {
       res.send({
-        data: data,
+        data: data
       })
       adminApiLog.info(`post create success`)
       cacheDataUtils.getPostArchiveList()
       // utils.reflushBlogCache()
     })
-    .catch((err) => {
+    .catch(err => {
       res.status(400).json({
         errors: [
           {
-            message: '创建文章失败',
-          },
-        ],
+            message: '创建文章失败'
+          }
+        ]
       })
       adminApiLog.error(`post create fail, ${logErrorToText(err)}`)
     })

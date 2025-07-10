@@ -8,16 +8,16 @@ module.exports = async function (req, res, next) {
   } else {
     cacheDataUtils
       .getPostArchiveList()
-      .then((data) => {
+      .then(data => {
         res.send(data)
       })
-      .catch((err) => {
+      .catch(err => {
         res.status(400).json({
           errors: [
             {
-              message: 'postArchive列表获取失败',
-            },
-          ],
+              message: 'postArchive列表获取失败'
+            }
+          ]
         })
         userApiLog.error(`postArchive list get fail, ${JSON.stringify(err)}`)
       })

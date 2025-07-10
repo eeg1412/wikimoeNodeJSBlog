@@ -29,8 +29,8 @@ app.use(express.json({ limit: process.env.JSON_LIMIT || '10mb' }))
 app.use(
   express.urlencoded({
     extended: false,
-    limit: process.env.URLENCODED_LIMIT || '10mb',
-  }),
+    limit: process.env.URLENCODED_LIMIT || '10mb'
+  })
 )
 app.use(cookieParser())
 
@@ -41,7 +41,7 @@ app.use(
     utils.referrerRecord(req.headers.referer, 'assets')
     next()
   },
-  express.static(upLoadFolder, { maxAge: '365d' }),
+  express.static(upLoadFolder, { maxAge: '365d' })
 )
 
 const contentFolder = path.join(__dirname, 'public/content')
@@ -51,7 +51,7 @@ app.use(
     utils.referrerRecord(req.headers.referer, 'assets')
     next()
   },
-  express.static(contentFolder, { maxAge: '365d' }),
+  express.static(contentFolder, { maxAge: '365d' })
 )
 
 // up_works referrerRecord
@@ -62,7 +62,7 @@ app.use(
     utils.referrerRecord(req.headers.referer, 'assets')
     next()
   },
-  express.static(upWorksFolder, { maxAge: '365d' }),
+  express.static(upWorksFolder, { maxAge: '365d' })
 )
 
 // web_demo referrerRecord
@@ -73,7 +73,7 @@ app.use(
     utils.referrerRecord(req.headers.referer, 'assets')
     next()
   },
-  express.static(webDemoFolder, { maxAge: '365d' }),
+  express.static(webDemoFolder, { maxAge: '365d' })
 )
 
 // ucloudImg referrerRecord
@@ -84,7 +84,7 @@ app.use(
     utils.referrerRecord(req.headers.referer, 'assets')
     next()
   },
-  express.static(ucloudImgFolder, { maxAge: '365d' }),
+  express.static(ucloudImgFolder, { maxAge: '365d' })
 )
 // app.use(express.static(path.join(__dirname, 'public')));
 
@@ -127,8 +127,8 @@ app.use((req, res, next) => {
 })
 app.use(
   history({
-    index: '/admin/index.html',
-  }),
+    index: '/admin/index.html'
+  })
 )
 app.use('/admin', express.static(path.join(__dirname, 'front/admin')))
 

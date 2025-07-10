@@ -12,9 +12,9 @@ module.exports = async function (req, res, next) {
     res.status(400).json({
       errors: [
         {
-          message: '参数错误',
-        },
-      ],
+          message: '参数错误'
+        }
+      ]
     })
     return
   }
@@ -23,31 +23,31 @@ module.exports = async function (req, res, next) {
   const params = {
     post: id,
     $or: [
-      { status: 1 }, // 正常状态的评论
-    ],
+      { status: 1 } // 正常状态的评论
+    ]
   }
   if (uuid) {
     params.$or.push({
       status: 0,
-      uuid: uuid,
+      uuid: uuid
     })
   }
   let sort = {
     // top置顶
     top: -1,
     date: -1,
-    _id: -1,
+    _id: -1
   }
   if (sorttype === 'like') {
     sort = {
       top: -1,
       likes: -1,
-      _id: -1,
+      _id: -1
     }
   }
   commentUtils
     .findPage(params, sort, page, size, '-post')
-    .then((data) => {
+    .then(data => {
       const keys = [
         '_id',
         'avatar',
@@ -60,7 +60,7 @@ module.exports = async function (req, res, next) {
         'parent',
         'parentId',
         'top',
-        'status',
+        'status'
       ]
 
       const list = data.list.map((item, index) => {
@@ -94,22 +94,22 @@ module.exports = async function (req, res, next) {
 
         // 只保留需要的key
         return Object.fromEntries(
-          Object.entries(jsonItem).filter(([key]) => keys.includes(key)),
+          Object.entries(jsonItem).filter(([key]) => keys.includes(key))
         )
       })
       res.send({
         list: list,
         total: data.total,
-        size: size,
+        size: size
       })
     })
-    .catch((err) => {
+    .catch(err => {
       res.status(400).json({
         errors: [
           {
-            message: '评论列表获取失败',
-          },
-        ],
+            message: '评论列表获取失败'
+          }
+        ]
       })
       userApiLog.error(`comment list get fail, ${logErrorToText(err)}`)
     })

@@ -15,9 +15,9 @@ module.exports = async function (req, res, next) {
     res.status(400).json({
       errors: [
         {
-          message: '参数错误',
-        },
-      ],
+          message: '参数错误'
+        }
+      ]
     })
     return
   }
@@ -26,9 +26,9 @@ module.exports = async function (req, res, next) {
     res.status(400).json({
       errors: [
         {
-          message: '参数错误',
-        },
-      ],
+          message: '参数错误'
+        }
+      ]
     })
     return
   }
@@ -37,9 +37,9 @@ module.exports = async function (req, res, next) {
     res.status(400).json({
       errors: [
         {
-          message: '参数错误',
-        },
-      ],
+          message: '参数错误'
+        }
+      ]
     })
     return
   }
@@ -48,9 +48,9 @@ module.exports = async function (req, res, next) {
     res.status(400).json({
       errors: [
         {
-          message: '参数错误',
-        },
-      ],
+          message: '参数错误'
+        }
+      ]
     })
     return
   }
@@ -59,9 +59,9 @@ module.exports = async function (req, res, next) {
     res.status(400).json({
       errors: [
         {
-          message: '参数错误',
-        },
-      ],
+          message: '参数错误'
+        }
+      ]
     })
     return
   }
@@ -71,9 +71,9 @@ module.exports = async function (req, res, next) {
       res.status(400).json({
         errors: [
           {
-            message: '参数错误',
-          },
-        ],
+            message: '参数错误'
+          }
+        ]
       })
       return
     }
@@ -88,18 +88,18 @@ module.exports = async function (req, res, next) {
       // 查询投票是否存在
       const voteParams = {
         _id: voteId,
-        status: 1,
+        status: 1
       }
       const voteData = await voteUtils.findOne(voteParams, undefined, {
-        lean: true,
+        lean: true
       })
       if (!voteData) {
         res.status(400).json({
           errors: [
             {
-              message: '投票不存在',
-            },
-          ],
+              message: '投票不存在'
+            }
+          ]
         })
         return
       }
@@ -109,9 +109,9 @@ module.exports = async function (req, res, next) {
         res.status(400).json({
           errors: [
             {
-              message: '投票已过期',
-            },
-          ],
+              message: '投票已过期'
+            }
+          ]
         })
         return
       }
@@ -119,44 +119,44 @@ module.exports = async function (req, res, next) {
         res.status(400).json({
           errors: [
             {
-              message: '超出最大选择数',
-            },
-          ],
+              message: '超出最大选择数'
+            }
+          ]
         })
         return
       }
       // 查询optionIdList是否都存在
       const options = voteData.options
       // 将 options 中的 ID 转换为字符串集合以便高效比较
-      const optionIds = new Set(options.map((opt) => opt._id.toString()))
+      const optionIds = new Set(options.map(opt => opt._id.toString()))
 
       // 检查 optionIdList 中的每个 ID 是否都存在于 optionIds 中
-      const allOptionsValid = optionIdList.every((id) =>
-        optionIds.has(id.toString()),
+      const allOptionsValid = optionIdList.every(id =>
+        optionIds.has(id.toString())
       )
       if (!allOptionsValid) {
         res.status(400).json({
           errors: [
             {
-              message: '参数错误',
-            },
-          ],
+              message: '参数错误'
+            }
+          ]
         })
         return
       }
       // 查询该id是否在log中有过投票，通过uuid或ip
       const logParams = {
         vote: voteId,
-        $or: [{ uuid }, { ip }],
+        $or: [{ uuid }, { ip }]
       }
       const logData = await votelogUtils.countDocuments(logParams)
       if (logData > 0) {
         res.status(400).json({
           errors: [
             {
-              message: '已经投过票或者同IP已经投过票，无法重复投票',
-            },
-          ],
+              message: '已经投过票或者同IP已经投过票，无法重复投票'
+            }
+          ]
         })
         return
       }
@@ -166,30 +166,30 @@ module.exports = async function (req, res, next) {
         {
           $inc: {
             votes: optionIdList.length, // 增加票数
-            'options.$[elem].votes': 1, // 增加符合条件的每个选项票数
-          },
+            'options.$[elem].votes': 1 // 增加符合条件的每个选项票数
+          }
         },
         {
-          arrayFilters: [{ 'elem._id': { $in: optionIdList } }],
-        },
+          arrayFilters: [{ 'elem._id': { $in: optionIdList } }]
+        }
       )
       if (voteRes.modifiedCount === 0) {
         res.status(400).json({
           errors: [
             {
-              message: '更新失败',
-            },
-          ],
+              message: '更新失败'
+            }
+          ]
         })
         return
       }
       // 返回最新的投票数据
       const newVoteData = await voteUtils.findOne(voteParams, undefined, {
-        lean: true,
+        lean: true
       })
       res.send({
         data: newVoteData,
-        voted: true,
+        voted: true
       })
       // 保存投票日志
       const ipInfo = await utils.IP2LocationUtils(ip, null, null, false)
@@ -200,16 +200,16 @@ module.exports = async function (req, res, next) {
         ipInfo,
         ip,
         deviceInfo: utils.deviceUAInfoUtils(req),
-        options: optionIdList,
+        options: optionIdList
       }
       votelogUtils.save(voteLogParams)
     })
     .then(() => {
       console.info(`voteupdate-${voteId} unlock`)
     })
-    .catch((err) => {
+    .catch(err => {
       userApiLog.error(
-        `voteupdate-${voteId} unlock error, ${logErrorToText(err)}`,
+        `voteupdate-${voteId} unlock error, ${logErrorToText(err)}`
       )
     })
 }

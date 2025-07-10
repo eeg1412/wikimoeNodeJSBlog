@@ -38,16 +38,16 @@ const panoramaLang = {
   twoFingers: '使用双指导航',
   ctrlZoom: '使用Ctrl+滚轮缩放图片',
   loadError: '全景图无法加载',
-  webglError: '您的浏览器似乎不支持WebGL',
+  webglError: '您的浏览器似乎不支持WebGL'
 }
 
 const lightbox = new PhotoSwipeLightbox({
   pswpModule: () => import('photoswipe'),
-  secondaryZoomLevel: 1,
+  secondaryZoomLevel: 1
 })
 lightbox.init()
 let videoTimer = null
-lightbox.on('pointerDown', (e) => {
+lightbox.on('pointerDown', e => {
   // console.log(e)
   const target = e.originalEvent.target
   // 如果是video元素或者canvas元素，阻止事件冒泡
@@ -76,7 +76,7 @@ lightbox.on('change', () => {
     }
     image360PanoramaTimer = setTimeout(() => {
       const container = document.querySelector(
-        `#lightbox-360panorama-${currIndex}`,
+        `#lightbox-360panorama-${currIndex}`
       )
       if (!container) {
         return
@@ -88,7 +88,7 @@ lightbox.on('change', () => {
         panorama: data?.imageSrc,
         navbar: false,
         defaultZoomLvl: 10,
-        lang: panoramaLang,
+        lang: panoramaLang
       })
       panoramaListMap[currIndex] = viewer
     }, 800)
@@ -98,7 +98,7 @@ lightbox.on('change', () => {
   videoTimer = setTimeout(() => {
     // 所有.previewer-video-body的video都暂停
     const videos = document.querySelectorAll('.previewer-video-body video')
-    videos.forEach((video) => {
+    videos.forEach(video => {
       video.pause()
     })
     // 当前video播放
@@ -112,7 +112,7 @@ lightbox.on('bindEvents', () => {
   videoTimer = setTimeout(() => {
     // 所有.previewer-video-body的video都暂停
     const videos = document.querySelectorAll('.previewer-video-body video')
-    videos.forEach((video) => {
+    videos.forEach(video => {
       video.pause()
     })
     // 当前video播放
@@ -138,7 +138,7 @@ export function loadAndOpenImg(index, DataSource, isFromCache) {
         newDataSource[index] = {
           html: `<div class="content-360panorama-body"><div class="content-360panorama-content" style="max-width:${maxWidth}px;max-height:${maxHeight}px;" id="lightbox-360panorama-${index}">加载中...</div></div>`,
           is360Panorama: true,
-          imageSrc: src,
+          imageSrc: src
         }
       } else if (mimetype && mimetype.indexOf('video') > -1) {
         newDataSource[index] = {
@@ -158,7 +158,7 @@ export function loadAndOpenImg(index, DataSource, isFromCache) {
                         type="video/mp4"
                         />
                       </video>
-                    </div>`,
+                    </div>`
         }
       }
     })
@@ -174,7 +174,7 @@ const startLoading = () => {
   loading = ElLoading.service({
     lock: true,
     text: 'Loading',
-    background: background,
+    background: background
   })
 }
 
@@ -225,7 +225,7 @@ export const getSessionParams = (key, isSelector) => {
   return data
 }
 
-export const creatColorByNickName = (NickName) => {
+export const creatColorByNickName = NickName => {
   // nick name to code
   let id = 0
   for (var i = 0; i < NickName.length; i++) {
@@ -240,7 +240,7 @@ export const creatColorByNickName = (NickName) => {
 export const hslToHex = (h, s, l) => {
   l /= 100
   const a = (s * Math.min(l, 1 - l)) / 100
-  const f = (n) => {
+  const f = n => {
     const k = (n + h / 30) % 12
     const color = l - a * Math.max(Math.min(k - 3, 9 - k, 1), -1)
     return Math.round(255 * color)
@@ -250,13 +250,13 @@ export const hslToHex = (h, s, l) => {
   return `${f(0)}${f(8)}${f(4)}`
 }
 
-export const unique = (arr) => {
+export const unique = arr => {
   return Array.from(new Set(arr))
 }
 export const uniqueObjArray = (arr, key) => {
   const map = {
-    string: (e) => e[key],
-    function: (e) => key(e),
+    string: e => e[key],
+    function: e => key(e)
   }
   const fn = map[typeof key]
   const obj = arr.reduce((o, e) => ((o[fn(e)] = e), o), {})
@@ -279,7 +279,7 @@ export const uuid = () => {
 }
 
 // 随机生成英文字母
-export const generateRandomAlphabetString = (length) => {
+export const generateRandomAlphabetString = length => {
   const characters = 'abcdefghijklmnopqrstuvwxyz'
   let result = ''
   for (let i = 0; i < length; i++) {
@@ -308,7 +308,7 @@ export const formatDate = (value, format = 'YYYY/MM/DD HH:mm:ss') => {
 }
 
 export const formatResToForm = (form, obj) => {
-  Object.keys(form).forEach((key) => {
+  Object.keys(form).forEach(key => {
     if (obj[key]) {
       // 判断form[key]的类型，有数字，字符串，布尔，数组，但是value只有字符串，所以需要转换
       if (typeof form[key] === 'number') {
@@ -324,26 +324,26 @@ export const formatResToForm = (form, obj) => {
   })
 }
 
-export const formatResToObj = (data) => {
+export const formatResToObj = data => {
   const obj = {}
-  data.forEach((item) => {
+  data.forEach(item => {
     obj[item.name] = item.value
   })
   return obj
 }
-export const copyToClipboard = (text) => {
+export const copyToClipboard = text => {
   navigator.clipboard
     .writeText(text)
     .then(() => {
       ElMessage({
         message: '复制成功',
-        type: 'success',
+        type: 'success'
       })
     })
-    .catch((err) => {
+    .catch(err => {
       ElMessage({
         message: '复制失败',
-        type: 'error',
+        type: 'error'
       })
     })
 }
@@ -390,7 +390,7 @@ export const installBufferToIndexedDB = async (key, url) => {
   }
 }
 
-export const installFFmpeg = async (baseUrl) => {
+export const installFFmpeg = async baseUrl => {
   await installBufferToIndexedDB('ffmpeg-core.js', baseUrl + coreURL)
   await installBufferToIndexedDB('ffmpeg-core.wasm', baseUrl + wasmURL)
 }
@@ -418,7 +418,7 @@ export const initFFmpeg = async () => {
   const ffmpeg = new FFmpeg()
   await ffmpeg.load({
     coreURL: await retrieveBlob(`ffmpeg-core.js`, 'text/javascript'),
-    wasmURL: await retrieveBlob(`ffmpeg-core.wasm`, 'application/wasm'),
+    wasmURL: await retrieveBlob(`ffmpeg-core.wasm`, 'application/wasm')
   })
   return ffmpeg
 }
@@ -444,7 +444,7 @@ export const execFFmpeg = async (ffmpeg, file, args, outputFileName) => {
   }
 }
 
-export const dataURLtoBlob = (dataurl) => {
+export const dataURLtoBlob = dataurl => {
   let arr = dataurl.split(','),
     mime = arr[0].match(/:(.*?);/)[1],
     bstr = atob(arr[1]),
@@ -457,11 +457,11 @@ export const dataURLtoBlob = (dataurl) => {
 }
 
 // 文字中的空格和全角空格替换为下划线
-export const replaceSpacesWithUnderscores = (str) => {
+export const replaceSpacesWithUnderscores = str => {
   return str.replace(/[\s\u3000]/g, '-')
 }
 
-export const seasonToStr = (season) => {
+export const seasonToStr = season => {
   let str = ''
   switch (season) {
     case 1:
@@ -481,7 +481,7 @@ export const seasonToStr = (season) => {
 }
 
 // 转义html
-export const escapeHtml = (str) => {
+export const escapeHtml = str => {
   return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
 }
 
@@ -500,7 +500,7 @@ export const nowTimestampToBase36WithRandom = () => {
   // 返回结果
   return base36String + randomString
 }
-export const fieldErrorNotice = (fields) => {
+export const fieldErrorNotice = fields => {
   // 检查fields是否是Object
   if (typeof fields === 'object') {
     // 遍历Object
@@ -508,7 +508,7 @@ export const fieldErrorNotice = (fields) => {
       // 判断是否是数组
       if (Array.isArray(fields[key]) && fields[key].length > 0) {
         // 遍历数组
-        fields[key].forEach((field) => {
+        fields[key].forEach(field => {
           // 判断是否是对象
           if (typeof field === 'object') {
             // 判断是否有message属性
@@ -516,7 +516,7 @@ export const fieldErrorNotice = (fields) => {
               setTimeout(() => {
                 ElNotification.error({
                   message: field.message,
-                  type: 'error',
+                  type: 'error'
                 })
               }, 10)
             }

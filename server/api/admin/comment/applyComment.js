@@ -11,9 +11,9 @@ module.exports = async function (req, res, next) {
     res.status(400).json({
       errors: [
         {
-          message: 'id不能为空',
-        },
-      ],
+          message: 'id不能为空'
+        }
+      ]
     })
     return
   }
@@ -22,9 +22,9 @@ module.exports = async function (req, res, next) {
     res.status(400).json({
       errors: [
         {
-          message: '__v不能为空',
-        },
-      ],
+          message: '__v不能为空'
+        }
+      ]
     })
     return
   }
@@ -34,15 +34,15 @@ module.exports = async function (req, res, next) {
     res.status(400).json({
       errors: [
         {
-          message: 'status状态不正确',
-        },
-      ],
+          message: 'status状态不正确'
+        }
+      ]
     })
     return
   }
 
   const params = {
-    status,
+    status
   }
 
   // 评论状态,0待审核,1已审核,2未通过
@@ -53,9 +53,9 @@ module.exports = async function (req, res, next) {
     res.status(400).json({
       errors: [
         {
-          message: '评论不存在',
-        },
-      ],
+          message: '评论不存在'
+        }
+      ]
     })
     return
   }
@@ -63,19 +63,19 @@ module.exports = async function (req, res, next) {
   // updateOne
   commentUtils
     .updateOne({ _id: id, __v }, params)
-    .then((data) => {
+    .then(data => {
       if (data.modifiedCount === 0) {
         res.status(400).json({
           errors: [
             {
-              message: '更新失败',
-            },
-          ],
+              message: '更新失败'
+            }
+          ]
         })
         return
       }
       res.send({
-        data: data,
+        data: data
       })
       adminApiLog.info(`comment:${id} update success`)
       // 判断是否更新了评论状态
@@ -88,7 +88,7 @@ module.exports = async function (req, res, next) {
         if (newStatus === 1) {
           postUtils.updateOne(
             { _id: commentInfo.post },
-            { $inc: { comnum: 1 } },
+            { $inc: { comnum: 1 } }
           )
           // 发送邮件通知
           // 包含parent时,needSendMailToParent为true
@@ -99,7 +99,7 @@ module.exports = async function (req, res, next) {
             // 更新needSendMailToParent为false
             commentUtils.updateOne(
               { _id: commentInfo._id },
-              { needSendMailToParent: false },
+              { needSendMailToParent: false }
             )
           }
         }
@@ -107,7 +107,7 @@ module.exports = async function (req, res, next) {
         if ((newStatus === 2 || newStatus === 0) && oldStatus === 1) {
           postUtils.updateOne(
             { _id: commentInfo.post },
-            { $inc: { comnum: -1 } },
+            { $inc: { comnum: -1 } }
           )
         }
       }
@@ -115,13 +115,13 @@ module.exports = async function (req, res, next) {
       cacheDataUtils.getCommentList()
       // utils.reflushBlogCache()
     })
-    .catch((err) => {
+    .catch(err => {
       res.status(400).json({
         errors: [
           {
-            message: '评论更新失败',
-          },
-        ],
+            message: '评论更新失败'
+          }
+        ]
       })
       adminApiLog.error(`comment:${id} update fail, ${logErrorToText(err)}`)
     })

@@ -10,23 +10,23 @@ module.exports = async function (req, res, next) {
     res.status(400).json({
       errors: [
         {
-          message: 'id不能为空',
-        },
-      ],
+          message: 'id不能为空'
+        }
+      ]
     })
     return
   }
   //  删除投票
   voteUtils
     .deleteOne({ _id: id })
-    .then((data) => {
+    .then(data => {
       if (data.deletedCount === 0) {
         res.status(400).json({
           errors: [
             {
-              message: '删除失败',
-            },
-          ],
+              message: '删除失败'
+            }
+          ]
         })
         return
       }
@@ -35,41 +35,41 @@ module.exports = async function (req, res, next) {
           {
             $or: [
               {
-                voteList: id,
+                voteList: id
               },
               {
-                contentVoteList: id,
-              },
-            ],
+                contentVoteList: id
+              }
+            ]
           },
-          { $pull: { voteList: id, contentVoteList: id } },
+          { $pull: { voteList: id, contentVoteList: id } }
         )
-        .then((data) => {
+        .then(data => {
           // console.log('data', data)
           res.send({
             data: {
-              message: '删除成功',
-            },
+              message: '删除成功'
+            }
           })
         })
-        .catch((err) => {
+        .catch(err => {
           res.status(400).json({
             errors: [
               {
-                message: '删除失败',
-              },
-            ],
+                message: '删除失败'
+              }
+            ]
           })
           adminApiLog.error(`vote delete fail, ${logErrorToText(err)}`)
         })
     })
-    .catch((err) => {
+    .catch(err => {
       res.status(400).json({
         errors: [
           {
-            message: '删除失败',
-          },
-        ],
+            message: '删除失败'
+          }
+        ]
       })
       adminApiLog.error(`vote delete fail, ${logErrorToText(err)}`)
     })

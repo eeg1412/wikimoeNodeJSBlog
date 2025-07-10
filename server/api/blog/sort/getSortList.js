@@ -8,16 +8,16 @@ module.exports = async function (req, res, next) {
   } else {
     cacheDataUtils
       .getSortList()
-      .then((data) => {
+      .then(data => {
         res.send(data)
       })
-      .catch((err) => {
+      .catch(err => {
         res.status(400).json({
           errors: [
             {
-              message: 'sort列表获取失败',
-            },
-          ],
+              message: 'sort列表获取失败'
+            }
+          ]
         })
         userApiLog.error(`sort list get fail, ${JSON.stringify(err)}`)
       })

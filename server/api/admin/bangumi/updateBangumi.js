@@ -20,15 +20,15 @@ module.exports = async function (req, res, next) {
     id,
     urlList,
     giveUp,
-    __v,
+    __v
   } = req.body
   if (!id) {
     res.status(400).json({
       errors: [
         {
-          message: 'id不能为空',
-        },
-      ],
+          message: 'id不能为空'
+        }
+      ]
     })
     return
   }
@@ -37,9 +37,9 @@ module.exports = async function (req, res, next) {
     res.status(400).json({
       errors: [
         {
-          message: '__v不能为空',
-        },
-      ],
+          message: '__v不能为空'
+        }
+      ]
     })
     return
   }
@@ -53,7 +53,7 @@ module.exports = async function (req, res, next) {
     label,
     urlList,
     giveUp,
-    status,
+    status
   }
 
   const oldData = await bangumiUtils.findOne({ _id: id, __v })
@@ -61,9 +61,9 @@ module.exports = async function (req, res, next) {
     res.status(400).json({
       errors: [
         {
-          message: '该数据不存在或已被更新',
-        },
-      ],
+          message: '该数据不存在或已被更新'
+        }
+      ]
     })
     return
   }
@@ -77,7 +77,7 @@ module.exports = async function (req, res, next) {
     const fileName = id
     try {
       const imgRes = utils.base64ToFile(cover, path, fileName, {
-        createDir: true,
+        createDir: true
       })
       let baseCover = '/upload/bangumi/'
       // 拼接文件夹
@@ -88,9 +88,9 @@ module.exports = async function (req, res, next) {
       res.status(400).json({
         errors: [
           {
-            message: '照片上传失败',
-          },
-        ],
+            message: '照片上传失败'
+          }
+        ]
       })
       throw new Error(error)
     }
@@ -107,9 +107,9 @@ module.exports = async function (req, res, next) {
       res.status(400).json({
         errors: [
           {
-            message: '旧图片删除失败',
-          },
-        ],
+            message: '旧图片删除失败'
+          }
+        ]
       })
       return
     }
@@ -120,32 +120,32 @@ module.exports = async function (req, res, next) {
   // updateOne
   bangumiUtils
     .updateOne({ _id: id, __v }, params)
-    .then((data) => {
+    .then(data => {
       if (data.modifiedCount === 0) {
         res.status(400).json({
           errors: [
             {
-              message: '更新失败',
-            },
-          ],
+              message: '更新失败'
+            }
+          ]
         })
         return
       }
       res.send({
-        data: data,
+        data: data
       })
       adminApiLog.info(`bangumi update success`)
       cacheDataUtils.getBangumiYearList()
       cacheDataUtils.getBangumiSeasonList()
       // utils.reflushBlogCache()
     })
-    .catch((err) => {
+    .catch(err => {
       res.status(400).json({
         errors: [
           {
-            message: '番剧更新失败',
-          },
-        ],
+            message: '番剧更新失败'
+          }
+        ]
       })
       adminApiLog.error(`bangumi update fail, ${logErrorToText(err)}`)
     })

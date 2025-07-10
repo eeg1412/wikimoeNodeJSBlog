@@ -21,8 +21,8 @@ module.exports = async function (req, res, next) {
       required: true,
       options: {
         strict: true,
-        strictSeparator: true,
-      },
+        strictSeparator: true
+      }
     },
     // endTime
     {
@@ -32,17 +32,17 @@ module.exports = async function (req, res, next) {
       required: true,
       options: {
         strict: true,
-        strictSeparator: true,
-      },
-    },
+        strictSeparator: true
+      }
+    }
   ]
 
   const errors = utils.checkForm(
     {
       startTime,
-      endTime,
+      endTime
     },
-    rule,
+    rule
   )
   if (errors.length > 0) {
     res.status(400).json({ errors })
@@ -56,7 +56,7 @@ module.exports = async function (req, res, next) {
   const siteRankIgnoreReferrerDomainList =
     global.$globalConfig?.otherSettings?.siteRankIgnoreReferrerDomainList || []
   const siteRankIgnoreReferrerDomainListReg =
-    siteRankIgnoreReferrerDomainList.map((domain) => new RegExp(domain, 'i'))
+    siteRankIgnoreReferrerDomainList.map(domain => new RegExp(domain, 'i'))
 
   // 来源站统计
   const readReferrerpipeline = [
@@ -65,31 +65,31 @@ module.exports = async function (req, res, next) {
         createdAt: { $gte: startDate.toDate(), $lte: endDate.toDate() },
         action: { $in: ['open'] },
         referrer: { $ne: null, $nin: siteRankIgnoreReferrerDomainListReg },
-        isBot: false,
-      },
+        isBot: false
+      }
     },
     // 统计每个referrer出现的次数
     {
       $group: {
         _id: '$referrer',
-        count: { $sum: 1 },
-      },
+        count: { $sum: 1 }
+      }
     },
     // 按照次数排序
     {
       $sort: {
         count: -1,
-        _id: -1,
-      },
+        _id: -1
+      }
     },
     // 只取前10
     {
-      $limit: limit,
-    },
+      $limit: limit
+    }
   ]
   const readReferrerData = readerlogUtils
     .aggregate(readReferrerpipeline)
-    .catch((err) => {
+    .catch(err => {
       adminApiLog.error(err)
       return false
     })
@@ -101,26 +101,26 @@ module.exports = async function (req, res, next) {
       $match: {
         createdAt: { $gte: startDate.toDate(), $lte: endDate.toDate() },
         action: { $in: ['postView'] },
-        isBot: false,
-      },
+        isBot: false
+      }
     },
     // 根据{data.targetId} 分组
     {
       $group: {
         _id: '$data.targetId',
-        count: { $sum: 1 },
-      },
+        count: { $sum: 1 }
+      }
     },
     // 按照次数排序
     {
       $sort: {
         count: -1,
-        _id: -1,
-      },
+        _id: -1
+      }
     },
     // 只取前10
     {
-      $limit: limit,
+      $limit: limit
     },
     // 根据id查询posts,只要返回id,title,excerpt,type
     {
@@ -128,11 +128,11 @@ module.exports = async function (req, res, next) {
         from: 'posts',
         localField: '_id',
         foreignField: '_id',
-        as: 'post',
-      },
+        as: 'post'
+      }
     },
     {
-      $unwind: '$post',
+      $unwind: '$post'
     },
     {
       $project: {
@@ -140,14 +140,14 @@ module.exports = async function (req, res, next) {
         count: 1,
         title: '$post.title',
         excerpt: '$post.excerpt',
-        type: '$post.type',
-      },
-    },
+        type: '$post.type'
+      }
+    }
   ]
 
   const readPostViewData = readerlogUtils
     .aggregate(readPostViewPipeline)
-    .catch((err) => {
+    .catch(err => {
       adminApiLog.error(err)
       return false
     })
@@ -158,26 +158,26 @@ module.exports = async function (req, res, next) {
     {
       $match: {
         date: { $gte: startDate.toDate(), $lte: endDate.toDate() },
-        like: true,
-      },
+        like: true
+      }
     },
     // 根据{post} 分组
     {
       $group: {
         _id: '$post',
-        count: { $sum: 1 },
-      },
+        count: { $sum: 1 }
+      }
     },
     // 按照次数排序
     {
       $sort: {
         count: -1,
-        _id: -1,
-      },
+        _id: -1
+      }
     },
     // 只取前10
     {
-      $limit: limit,
+      $limit: limit
     },
     // 根据id查询posts,只要返回id,title,excerpt,type
     {
@@ -185,11 +185,11 @@ module.exports = async function (req, res, next) {
         from: 'posts',
         localField: '_id',
         foreignField: '_id',
-        as: 'post',
-      },
+        as: 'post'
+      }
     },
     {
-      $unwind: '$post',
+      $unwind: '$post'
     },
     {
       $project: {
@@ -197,13 +197,13 @@ module.exports = async function (req, res, next) {
         count: 1,
         title: '$post.title',
         excerpt: '$post.excerpt',
-        type: '$post.type',
-      },
-    },
+        type: '$post.type'
+      }
+    }
   ]
   const readPostLikeData = postLikeLogUtils
     .aggregate(readPostLikePipeline)
-    .catch((err) => {
+    .catch(err => {
       adminApiLog.error(err)
       return false
     })
@@ -216,26 +216,26 @@ module.exports = async function (req, res, next) {
       $match: {
         createdAt: { $gte: startDate.toDate(), $lte: endDate.toDate() },
         action: { $in: ['postListSort'] },
-        isBot: false,
-      },
+        isBot: false
+      }
     },
     // 根据{data.targetId} 分组
     {
       $group: {
         _id: '$data.targetId',
-        count: { $sum: 1 },
-      },
+        count: { $sum: 1 }
+      }
     },
     // 按照次数排序
     {
       $sort: {
         count: -1,
-        _id: -1,
-      },
+        _id: -1
+      }
     },
     // 只取前10
     {
-      $limit: limit,
+      $limit: limit
     },
     // 根据id查询sorts,只要返回id,sortname
     {
@@ -243,23 +243,23 @@ module.exports = async function (req, res, next) {
         from: 'sorts',
         localField: '_id',
         foreignField: '_id',
-        as: 'sort',
-      },
+        as: 'sort'
+      }
     },
     {
-      $unwind: '$sort',
+      $unwind: '$sort'
     },
     {
       $project: {
         _id: 1,
         count: 1,
-        sortname: '$sort.sortname',
-      },
-    },
+        sortname: '$sort.sortname'
+      }
+    }
   ]
   const readPostListSortData = readerlogUtils
     .aggregate(readPostListSortPipeline)
-    .catch((err) => {
+    .catch(err => {
       adminApiLog.error(err)
       return false
     })
@@ -272,26 +272,26 @@ module.exports = async function (req, res, next) {
       $match: {
         createdAt: { $gte: startDate.toDate(), $lte: endDate.toDate() },
         action: { $in: ['postListTag'] },
-        isBot: false,
-      },
+        isBot: false
+      }
     },
     // 根据{data.targetId} 分组
     {
       $group: {
         _id: '$data.targetId',
-        count: { $sum: 1 },
-      },
+        count: { $sum: 1 }
+      }
     },
     // 按照次数排序
     {
       $sort: {
         count: -1,
-        _id: -1,
-      },
+        _id: -1
+      }
     },
     // 只取前10
     {
-      $limit: limit,
+      $limit: limit
     },
     // 根据id查询tags,只要返回id,tagname
     {
@@ -299,23 +299,23 @@ module.exports = async function (req, res, next) {
         from: 'tags',
         localField: '_id',
         foreignField: '_id',
-        as: 'tag',
-      },
+        as: 'tag'
+      }
     },
     {
-      $unwind: '$tag',
+      $unwind: '$tag'
     },
     {
       $project: {
         _id: 1,
         count: 1,
-        tagname: '$tag.tagname',
-      },
-    },
+        tagname: '$tag.tagname'
+      }
+    }
   ]
   const readPostListTagData = readerlogUtils
     .aggregate(readPostListTagPipeline)
-    .catch((err) => {
+    .catch(err => {
       adminApiLog.error(err)
       return false
     })
@@ -328,31 +328,31 @@ module.exports = async function (req, res, next) {
       $match: {
         createdAt: { $gte: startDate.toDate(), $lte: endDate.toDate() },
         action: { $in: ['postListKeyword'] },
-        isBot: false,
-      },
+        isBot: false
+      }
     },
     // 根据{data.content} 分组
     {
       $group: {
         _id: '$data.content',
-        count: { $sum: 1 },
-      },
+        count: { $sum: 1 }
+      }
     },
     // 按照次数排序
     {
       $sort: {
         count: -1,
-        _id: -1,
-      },
+        _id: -1
+      }
     },
     // 只取前10
     {
-      $limit: limit,
-    },
+      $limit: limit
+    }
   ]
   const readPostListKeywordData = readerlogUtils
     .aggregate(readPostListKeywordPipeline)
-    .catch((err) => {
+    .catch(err => {
       adminApiLog.error(err)
       return false
     })
@@ -365,15 +365,15 @@ module.exports = async function (req, res, next) {
       $match: {
         createdAt: { $gte: startDate.toDate(), $lte: endDate.toDate() },
         action: 'open',
-        isBot: false,
-      },
+        isBot: false
+      }
     },
     {
       // 只保留需要的字段，减少后续处理的数据量
       $project: {
         deviceInfo: 1,
-        ipInfo: 1,
-      },
+        ipInfo: 1
+      }
     },
     {
       $facet: {
@@ -381,8 +381,8 @@ module.exports = async function (req, res, next) {
         browserStats: [
           {
             $match: {
-              'deviceInfo.browser.name': { $exists: true, $ne: null },
-            },
+              'deviceInfo.browser.name': { $exists: true, $ne: null }
+            }
           },
           // 预处理：规范化版本号
           {
@@ -396,23 +396,23 @@ module.exports = async function (req, res, next) {
                       // 再处理空字符串
                       { $eq: ['$deviceInfo.browser.version', ''] },
                       '未知版本',
-                      '$deviceInfo.browser.version',
-                    ],
+                      '$deviceInfo.browser.version'
+                    ]
                   },
-                  '未知版本', // 字段不存在时返回"未知版本"
-                ],
-              },
-            },
+                  '未知版本' // 字段不存在时返回"未知版本"
+                ]
+              }
+            }
           },
           // 直接按浏览器名称+版本分组，避免中间步骤
           {
             $group: {
               _id: {
                 name: '$browserName',
-                version: '$browserVersion',
+                version: '$browserVersion'
               },
-              count: { $sum: 1 },
-            },
+              count: { $sum: 1 }
+            }
           },
           // 按浏览器名称重新分组
           {
@@ -422,10 +422,10 @@ module.exports = async function (req, res, next) {
               versions: {
                 $push: {
                   version: '$_id.version',
-                  count: '$count',
-                },
-              },
-            },
+                  count: '$count'
+                }
+              }
+            }
           },
           // 对版本数组排序
           {
@@ -435,10 +435,10 @@ module.exports = async function (req, res, next) {
               sortedVersions: {
                 $sortArray: {
                   input: '$versions',
-                  sortBy: { count: -1 },
-                },
-              },
-            },
+                  sortBy: { count: -1 }
+                }
+              }
+            }
           },
           // 分离前10个和剩余的版本
           {
@@ -456,18 +456,18 @@ module.exports = async function (req, res, next) {
                           $slice: [
                             '$sortedVersions',
                             10,
-                            { $subtract: [{ $size: '$sortedVersions' }, 10] },
-                          ],
+                            { $subtract: [{ $size: '$sortedVersions' }, 10] }
+                          ]
                         },
                         as: 'item',
-                        in: '$$item.count',
-                      },
-                    },
+                        in: '$$item.count'
+                      }
+                    }
                   },
-                  else: 0,
-                },
-              },
-            },
+                  else: 0
+                }
+              }
+            }
           },
           // 添加"其他"项
           {
@@ -480,28 +480,28 @@ module.exports = async function (req, res, next) {
                   then: {
                     $concatArrays: [
                       '$top10',
-                      [{ version: '其他', count: '$remainingCount' }],
-                    ],
+                      [{ version: '其他', count: '$remainingCount' }]
+                    ]
                   },
-                  else: '$top10',
-                },
-              },
-            },
+                  else: '$top10'
+                }
+              }
+            }
           },
           // 按总数量排序
           {
-            $sort: { count: -1 },
+            $sort: { count: -1 }
           },
           {
-            $limit: limit,
-          },
+            $limit: limit
+          }
         ],
         // 操作系统统计，包含版本信息
         osStats: [
           {
             $match: {
-              'deviceInfo.os.name': { $exists: true, $ne: null },
-            },
+              'deviceInfo.os.name': { $exists: true, $ne: null }
+            }
           },
           // 预处理：规范化版本号
           {
@@ -515,23 +515,23 @@ module.exports = async function (req, res, next) {
                       // 再处理空字符串
                       { $eq: ['$deviceInfo.os.version', ''] },
                       '未知版本',
-                      '$deviceInfo.os.version',
-                    ],
+                      '$deviceInfo.os.version'
+                    ]
                   },
-                  '未知版本', // 字段不存在时返回"未知版本"
-                ],
-              },
-            },
+                  '未知版本' // 字段不存在时返回"未知版本"
+                ]
+              }
+            }
           },
           // 直接按操作系统名称+版本分组
           {
             $group: {
               _id: {
                 name: '$osName',
-                version: '$osVersion',
+                version: '$osVersion'
               },
-              count: { $sum: 1 },
-            },
+              count: { $sum: 1 }
+            }
           },
           // 按操作系统名称重新分组
           {
@@ -541,10 +541,10 @@ module.exports = async function (req, res, next) {
               versions: {
                 $push: {
                   version: '$_id.version',
-                  count: '$count',
-                },
-              },
-            },
+                  count: '$count'
+                }
+              }
+            }
           },
           // 对版本数组排序
           {
@@ -554,10 +554,10 @@ module.exports = async function (req, res, next) {
               sortedVersions: {
                 $sortArray: {
                   input: '$versions',
-                  sortBy: { count: -1 },
-                },
-              },
-            },
+                  sortBy: { count: -1 }
+                }
+              }
+            }
           },
           // 分离前10个和剩余的版本
           {
@@ -575,18 +575,18 @@ module.exports = async function (req, res, next) {
                           $slice: [
                             '$sortedVersions',
                             10,
-                            { $subtract: [{ $size: '$sortedVersions' }, 10] },
-                          ],
+                            { $subtract: [{ $size: '$sortedVersions' }, 10] }
+                          ]
                         },
                         as: 'item',
-                        in: '$$item.count',
-                      },
-                    },
+                        in: '$$item.count'
+                      }
+                    }
                   },
-                  else: 0,
-                },
-              },
-            },
+                  else: 0
+                }
+              }
+            }
           },
           // 添加"其他"项
           {
@@ -599,55 +599,55 @@ module.exports = async function (req, res, next) {
                   then: {
                     $concatArrays: [
                       '$top10',
-                      [{ version: '其他', count: '$remainingCount' }],
-                    ],
+                      [{ version: '其他', count: '$remainingCount' }]
+                    ]
                   },
-                  else: '$top10',
-                },
-              },
-            },
+                  else: '$top10'
+                }
+              }
+            }
           },
           // 按总数量排序
           {
-            $sort: { count: -1 },
+            $sort: { count: -1 }
           },
           {
-            $limit: limit,
-          },
+            $limit: limit
+          }
         ],
         // 国家统计
         countryStats: [
           {
             $match: {
-              'ipInfo.countryLong': { $exists: true, $ne: null, $ne: '-' },
-            },
+              'ipInfo.countryLong': { $exists: true, $ne: null, $ne: '-' }
+            }
           },
           {
             $group: {
               _id: '$ipInfo.countryLong',
-              count: { $sum: 1 },
-            },
+              count: { $sum: 1 }
+            }
           },
           {
-            $sort: { count: -1 },
+            $sort: { count: -1 }
           },
           {
-            $limit: limit,
-          },
+            $limit: limit
+          }
         ],
         // 国家+地区统计
         regionStats: [
           {
             $match: {
               'ipInfo.countryLong': { $exists: true, $ne: null, $ne: '-' },
-              'ipInfo.region': { $exists: true, $ne: null, $ne: '-' },
-            },
+              'ipInfo.region': { $exists: true, $ne: null, $ne: '-' }
+            }
           },
           {
             $group: {
               _id: { country: '$ipInfo.countryLong', region: '$ipInfo.region' },
-              count: { $sum: 1 },
-            },
+              count: { $sum: 1 }
+            }
           },
           {
             $project: {
@@ -656,26 +656,26 @@ module.exports = async function (req, res, next) {
                 $cond: {
                   if: { $eq: ['$_id.country', '$_id.region'] },
                   then: '$_id.country', // 如果国家和地区相同，只显示一次
-                  else: { $concat: ['$_id.country', ' ', '$_id.region'] }, // 否则显示国家+空格+地区
-                },
+                  else: { $concat: ['$_id.country', ' ', '$_id.region'] } // 否则显示国家+空格+地区
+                }
               },
-              count: 1,
-            },
+              count: 1
+            }
           },
           {
-            $sort: { count: -1 },
+            $sort: { count: -1 }
           },
           {
-            $limit: limit,
-          },
-        ],
-      },
-    },
+            $limit: limit
+          }
+        ]
+      }
+    }
   ]
 
   const deviceAndLocationData = readerlogUtils
     .aggregate(deviceAndLocationPipeline)
-    .catch((err) => {
+    .catch(err => {
       adminApiLog.error(err)
       return false
     })
@@ -688,29 +688,27 @@ module.exports = async function (req, res, next) {
         createdAt: { $gte: startDate.toDate(), $lte: endDate.toDate() },
         action: 'open',
         isBot: true,
-        botName: { $exists: true, $ne: null, $ne: '' },
-      },
+        botName: { $exists: true, $ne: null, $ne: '' }
+      }
     },
     {
       $group: {
         _id: '$botName',
-        count: { $sum: 1 },
-      },
+        count: { $sum: 1 }
+      }
     },
     {
-      $sort: { count: -1 },
+      $sort: { count: -1 }
     },
     {
-      $limit: limit,
-    },
+      $limit: limit
+    }
   ]
 
-  const botStatsData = readerlogUtils
-    .aggregate(botStatsPipeline)
-    .catch((err) => {
-      adminApiLog.error(err)
-      return false
-    })
+  const botStatsData = readerlogUtils.aggregate(botStatsPipeline).catch(err => {
+    adminApiLog.error(err)
+    return false
+  })
   promiseArray.push(botStatsData)
 
   try {
@@ -722,7 +720,7 @@ module.exports = async function (req, res, next) {
       readPostListTagData,
       readPostListKeywordData,
       deviceAndLocationData,
-      botStatsData, // 新增的爬虫统计数据
+      botStatsData // 新增的爬虫统计数据
     ] = await Promise.all(promiseArray)
 
     if (
@@ -738,9 +736,9 @@ module.exports = async function (req, res, next) {
       res.status(500).json({
         errors: [
           {
-            message: '数据库查询错误',
-          },
-        ],
+            message: '数据库查询错误'
+          }
+        ]
       })
       return
     }
@@ -758,7 +756,7 @@ module.exports = async function (req, res, next) {
       countryStats: deviceAndLocationData[0].countryStats,
       regionStats: deviceAndLocationData[0].regionStats,
       // 新增爬虫统计数据
-      botStats: botStatsData,
+      botStats: botStatsData
     }
 
     // 发送响应
@@ -769,9 +767,9 @@ module.exports = async function (req, res, next) {
     res.status(500).json({
       errors: [
         {
-          message: '服务器内部错误',
-        },
-      ],
+          message: '服务器内部错误'
+        }
+      ]
     })
   }
 }

@@ -11,9 +11,9 @@ module.exports = async function (req, res, next) {
     res.status(400).json({
       errors: [
         {
-          message: '缺少ids',
-        },
-      ],
+          message: '缺少ids'
+        }
+      ]
     })
     return
   }
@@ -22,11 +22,11 @@ module.exports = async function (req, res, next) {
       key: 'album',
       label: '媒体名称',
       type: 'isMongoId',
-      required: true,
-    },
+      required: true
+    }
   ]
   const params = {
-    album: albumId,
+    album: albumId
   }
   const errors = utils.checkForm(params, rule)
   if (errors.length > 0) {
@@ -40,25 +40,25 @@ module.exports = async function (req, res, next) {
   // updateMany
   attachmentUtils
     .updateMany({ _id: { $in: ids } }, params)
-    .then(async (data) => {
+    .then(async data => {
       if (data.modifiedCount === 0) {
         res.status(400).json({
           errors: [
             {
-              message: '更新失败',
-            },
-          ],
+              message: '更新失败'
+            }
+          ]
         })
         return
       }
       // 更新成功后,更新旧album的count
       // 获取ids对应的album的id
-      const albumIds = attachmentList.map((item) => {
+      const albumIds = attachmentList.map(item => {
         return item.album
       })
       // 根据id进行album分类,结构为{albumId: 对应的attachment数量}
       const albumIdMap = {}
-      albumIds.forEach((item) => {
+      albumIds.forEach(item => {
         if (albumIdMap[item]) {
           albumIdMap[item] += 1
         } else {
@@ -73,10 +73,10 @@ module.exports = async function (req, res, next) {
             { _id: key },
             {
               $inc: {
-                count: -albumIdMap[key],
-              },
-            },
-          ),
+                count: -albumIdMap[key]
+              }
+            }
+          )
         )
       }
       // 更新album的count
@@ -85,53 +85,53 @@ module.exports = async function (req, res, next) {
           // 更新对象album的count
           const toAlbumParams = {
             $inc: {
-              count: ids.length,
-            },
+              count: ids.length
+            }
           }
           // 更新album的count
           albumUtils
             .updateOne({ _id: albumId }, toAlbumParams)
-            .then((data) => {
+            .then(data => {
               res.send({
-                data: data,
+                data: data
               })
               adminApiLog.info(`attachment album update success`)
             })
-            .catch((err) => {
+            .catch(err => {
               res.status(400).json({
                 errors: [
                   {
-                    message: '更新目标相册计数时失败',
-                  },
-                ],
+                    message: '更新目标相册计数时失败'
+                  }
+                ]
               })
               adminApiLog.error(
-                `attachment album update fail, ${logErrorToText(err)}`,
+                `attachment album update fail, ${logErrorToText(err)}`
               )
               return
             })
         })
-        .catch((err) => {
+        .catch(err => {
           res.status(400).json({
             errors: [
               {
-                message: '更新源相册计数时失败',
-              },
-            ],
+                message: '更新源相册计数时失败'
+              }
+            ]
           })
           adminApiLog.error(
-            `attachment album update fail, ${logErrorToText(err)}`,
+            `attachment album update fail, ${logErrorToText(err)}`
           )
           return
         })
     })
-    .catch((err) => {
+    .catch(err => {
       res.status(400).json({
         errors: [
           {
-            message: '更新失败',
-          },
-        ],
+            message: '更新失败'
+          }
+        ]
       })
       adminApiLog.error(`attachment album update fail, ${logErrorToText(err)}`)
     })

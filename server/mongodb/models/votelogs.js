@@ -7,48 +7,48 @@ var votelogs = new Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: 'votes',
       required: true,
-      index: true,
+      index: true
     },
     post: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'posts',
       index: true,
-      default: null,
+      default: null
     },
     // 选项 数组
     options: [
       {
         type: mongoose.Schema.Types.ObjectId,
-        required: true,
-      },
+        required: true
+      }
     ],
 
     // 操作者的uuid
     uuid: {
       type: String,
-      required: true,
+      required: true
     },
     // ip
     ip: {
       type: String,
-      index: true,
+      index: true
     },
     ipInfo: {
       type: Object,
-      default: {},
+      default: {}
     },
     deviceInfo: {
       type: Object,
-      default: {},
+      default: {}
     },
     expireAt: {
       type: Date,
       expires: 31968000,
       default: Date.now,
-      index: true,
-    },
+      index: true
+    }
   },
-  { timestamps: true },
+  { timestamps: true }
 )
 
 module.exports = mongoose.model('votelogs', votelogs)

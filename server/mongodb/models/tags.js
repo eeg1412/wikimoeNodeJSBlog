@@ -5,15 +5,15 @@ var tags = new Schema(
   {
     tagname: {
       type: String,
-      required: true,
+      required: true
     },
     // 最后一次使用时间
     lastusetime: {
       type: Date,
-      default: Date.now,
-    },
+      default: Date.now
+    }
   },
-  { timestamps: true },
+  { timestamps: true }
 )
 
 module.exports = mongoose.model('tags', tags)

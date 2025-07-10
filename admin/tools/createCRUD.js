@@ -17,7 +17,7 @@ if (!fs.existsSync(tableNamePath)) {
 // 将tableName首字母替换为大写
 const tableNameFirstLetter = tableName.replace(
   tableName[0],
-  tableName[0].toUpperCase(),
+  tableName[0].toUpperCase()
 )
 
 const listTemplate = (tableName, chineseName) => {
@@ -197,7 +197,7 @@ export default {
     console.log(`${tableName}s.js is exist`)
     return
   }
-  fs.writeFile(filePath, template, (err) => {
+  fs.writeFile(filePath, template, err => {
     if (err) {
       console.log(err)
     } else {
@@ -310,7 +310,7 @@ setup() {
     console.log(`${tableName}s.js is exist`)
     return
   }
-  fs.writeFile(filePath, template, (err) => {
+  fs.writeFile(filePath, template, err => {
     if (err) {
       console.log(err)
     } else {

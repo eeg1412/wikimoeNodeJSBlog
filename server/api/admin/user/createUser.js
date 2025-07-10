@@ -14,7 +14,7 @@ module.exports = async function (req, res, next) {
     email,
     description,
     password,
-    role: 990,
+    role: 990
   }
   const rule = [
     {
@@ -22,7 +22,7 @@ module.exports = async function (req, res, next) {
       label: '用户名',
       type: 'regCheck',
       reg: /^[a-z0-9]+$/,
-      required: true,
+      required: true
     },
     {
       // nickname
@@ -31,7 +31,7 @@ module.exports = async function (req, res, next) {
       type: 'regCheck',
       // 10以内的文字
       reg: /^.{1,10}$/,
-      required: true,
+      required: true
     },
     // password
     {
@@ -39,15 +39,15 @@ module.exports = async function (req, res, next) {
       label: '密码',
       type: 'regCheck',
       reg: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*])[a-zA-Z\d!@#$%^&*]{4,}$/,
-      required: true,
+      required: true
     },
     // email
     {
       key: 'email',
       label: '邮箱',
       type: 'isEmail',
-      required: false,
-    },
+      required: false
+    }
   ]
   const errors = utils.checkForm(params, rule)
   if (errors.length > 0) {
@@ -61,9 +61,9 @@ module.exports = async function (req, res, next) {
       res.status(400).json({
         errors: [
           {
-            message: '用户名已存在',
-          },
-        ],
+            message: '用户名已存在'
+          }
+        ]
       })
       return
     }
@@ -71,9 +71,9 @@ module.exports = async function (req, res, next) {
     res.status(400).json({
       errors: [
         {
-          message: '用户名校验失败',
-        },
-      ],
+          message: '用户名校验失败'
+        }
+      ]
     })
     return
   }
@@ -84,9 +84,9 @@ module.exports = async function (req, res, next) {
       res.status(400).json({
         errors: [
           {
-            message: '昵称已存在',
-          },
-        ],
+            message: '昵称已存在'
+          }
+        ]
       })
       return
     }
@@ -94,9 +94,9 @@ module.exports = async function (req, res, next) {
     res.status(400).json({
       errors: [
         {
-          message: '昵称校验失败',
-        },
-      ],
+          message: '昵称校验失败'
+        }
+      ]
     })
     return
   }
@@ -109,9 +109,9 @@ module.exports = async function (req, res, next) {
       res.status(400).json({
         errors: [
           {
-            message: '封面ID不正确',
-          },
-        ],
+            message: '封面ID不正确'
+          }
+        ]
       })
       return
     }
@@ -134,16 +134,16 @@ module.exports = async function (req, res, next) {
     const fileName = newId
     try {
       const imgRes = utils.base64ToFile(photo, path, fileName, {
-        createDir: true,
+        createDir: true
       })
       params['photo'] = `/upload/avatar/${imgRes.fileNameAll}?v=${Date.now()}`
     } catch (error) {
       res.status(400).json({
         errors: [
           {
-            message: '照片上传失败',
-          },
-        ],
+            message: '照片上传失败'
+          }
+        ]
       })
       throw new Error(error)
     }
@@ -152,18 +152,18 @@ module.exports = async function (req, res, next) {
   // 写入数据库
   userUtils
     .save(params)
-    .then((data) => {
+    .then(data => {
       adminApiLog.info(`admin:${req.admin.username} create user:${username} success,
   ,IP:${IP}`)
       res.send({})
     })
-    .catch((err) => {
+    .catch(err => {
       res.status(400).json({
         errors: [
           {
-            message: '用户创建失败',
-          },
-        ],
+            message: '用户创建失败'
+          }
+        ]
       })
       adminApiLog.error(`admin:${username} create fail, ${logErrorToText(err)}`)
     })

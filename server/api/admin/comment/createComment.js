@@ -20,27 +20,27 @@ module.exports = async function (req, res, next) {
     status: 1,
     ip: ip,
     deviceInfo: utils.deviceUAInfoUtils(req),
-    ipInfo: await utils.IP2LocationUtils(ip, null, null, false),
+    ipInfo: await utils.IP2LocationUtils(ip, null, null, false)
   }
   const rule = [
     {
       key: 'post',
       label: '评论文章',
       type: null,
-      required: true,
+      required: true
     },
     {
       key: 'content',
       label: '评论内容',
       type: null,
-      required: true,
+      required: true
     },
     {
       key: 'user',
       label: '评论用户',
       type: null,
-      required: true,
-    },
+      required: true
+    }
   ]
   const errors = utils.checkForm(params, rule)
   if (errors.length > 0) {
@@ -53,9 +53,9 @@ module.exports = async function (req, res, next) {
     res.status(400).json({
       errors: [
         {
-          message: '文章不存在',
-        },
-      ],
+          message: '文章不存在'
+        }
+      ]
     })
     return
   }
@@ -63,9 +63,9 @@ module.exports = async function (req, res, next) {
   // save
   commentUtils
     .save(params)
-    .then((data) => {
+    .then(data => {
       res.send({
-        data: data,
+        data: data
       })
       adminApiLog.info(`comment:${content} create success`)
       cacheDataUtils.getCommentList()
@@ -77,17 +77,17 @@ module.exports = async function (req, res, next) {
       }
       // utils.reflushBlogCache()
     })
-    .catch((err) => {
+    .catch(err => {
       console.error(err)
       res.status(400).json({
         errors: [
           {
-            message: '评论创建失败',
-          },
-        ],
+            message: '评论创建失败'
+          }
+        ]
       })
       adminApiLog.error(
-        `comment:${content} create fail, ${logErrorToText(err)}`,
+        `comment:${content} create fail, ${logErrorToText(err)}`
       )
     })
 }

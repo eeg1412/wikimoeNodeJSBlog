@@ -21,8 +21,8 @@ exports.findOne = async function (parmas, projection, options = {}) {
       select: options.authorFilter || 'nickname _id photo cover',
       populate: {
         path: 'cover',
-        select: '_id filepath height mimetype width',
-      },
+        select: '_id filepath height mimetype width'
+      }
     })
     .populate('sort')
     .populate('tags')
@@ -30,12 +30,12 @@ exports.findOne = async function (parmas, projection, options = {}) {
     .populate({
       path: 'bangumiList',
       match: { status: matchStatus },
-      select: '-coverFileName -coverFolder -createdAt -updatedAt',
+      select: '-coverFileName -coverFolder -createdAt -updatedAt'
     })
     .populate({
       path: 'movieList',
       match: { status: matchStatus },
-      select: '-coverFileName -coverFolder -createdAt -updatedAt',
+      select: '-coverFileName -coverFolder -createdAt -updatedAt'
     })
     .populate({
       path: 'gameList',
@@ -44,14 +44,14 @@ exports.findOne = async function (parmas, projection, options = {}) {
       populate: [
         {
           path: 'gamePlatform',
-          select: '_id name color',
+          select: '_id name color'
         },
         // screenshotAlbum
         {
           path: 'screenshotAlbum',
-          select: '_id name',
-        },
-      ],
+          select: '_id name'
+        }
+      ]
     })
     .populate({
       path: 'bookList',
@@ -59,16 +59,16 @@ exports.findOne = async function (parmas, projection, options = {}) {
       select: '-coverFileName -coverFolder -createdAt -updatedAt',
       populate: {
         path: 'booktype',
-        select: '_id name color',
-      },
+        select: '_id name color'
+      }
     })
     .populate({
       path: 'postList',
       match: { status: matchStatus, type: 1 },
       select: 'title _id coverImages alias date status',
       populate: {
-        path: 'coverImages',
-      },
+        path: 'coverImages'
+      }
     })
     .populate({
       path: 'eventList',
@@ -76,23 +76,23 @@ exports.findOne = async function (parmas, projection, options = {}) {
       select: '_id title eventtype startTime status',
       populate: {
         path: 'eventtype',
-        select: '_id name color',
-      },
+        select: '_id name color'
+      }
     })
     .populate({
       path: 'voteList',
       match: { status: matchStatus },
-      select: options.voteFliter || undefined,
+      select: options.voteFliter || undefined
     })
     .populate({
       path: 'contentBangumiList',
       match: { status: matchStatus },
-      select: '-coverFileName -coverFolder -createdAt -updatedAt',
+      select: '-coverFileName -coverFolder -createdAt -updatedAt'
     })
     .populate({
       path: 'contentMovieList',
       match: { status: matchStatus },
-      select: '-coverFileName -coverFolder -createdAt -updatedAt',
+      select: '-coverFileName -coverFolder -createdAt -updatedAt'
     })
     .populate({
       path: 'contentGameList',
@@ -101,14 +101,14 @@ exports.findOne = async function (parmas, projection, options = {}) {
       populate: [
         {
           path: 'gamePlatform',
-          select: '_id name color',
+          select: '_id name color'
         },
         // screenshotAlbum
         {
           path: 'screenshotAlbum',
-          select: '_id name',
-        },
-      ],
+          select: '_id name'
+        }
+      ]
     })
     .populate({
       path: 'contentBookList',
@@ -116,16 +116,16 @@ exports.findOne = async function (parmas, projection, options = {}) {
       select: '-coverFileName -coverFolder -createdAt -updatedAt',
       populate: {
         path: 'booktype',
-        select: '_id name color',
-      },
+        select: '_id name color'
+      }
     })
     .populate({
       path: 'contentPostList',
       match: { status: matchStatus, type: 1 },
       select: 'title _id coverImages alias date status',
       populate: {
-        path: 'coverImages',
-      },
+        path: 'coverImages'
+      }
     })
     .populate({
       path: 'contentEventList',
@@ -133,13 +133,13 @@ exports.findOne = async function (parmas, projection, options = {}) {
       select: '_id title eventtype startTime status',
       populate: {
         path: 'eventtype',
-        select: '_id name color',
-      },
+        select: '_id name color'
+      }
     })
     .populate({
       path: 'contentVoteList',
       match: { status: matchStatus },
-      select: options.voteFliter || undefined,
+      select: options.voteFliter || undefined
     })
 }
 
@@ -161,7 +161,7 @@ exports.findPage = async function (
   page,
   limit,
   projection,
-  options = {},
+  options = {}
 ) {
   const isAdmin = options.isAdmin || false
   let matchStatus = 1
@@ -180,7 +180,7 @@ exports.findPage = async function (
     query = query.populate({
       path: 'bangumiList',
       match: { status: matchStatus },
-      select: '_id title year season status',
+      select: '_id title year season status'
     })
   }
 
@@ -188,7 +188,7 @@ exports.findPage = async function (
     query = query.populate({
       path: 'movieList',
       match: { status: matchStatus },
-      select: '_id title year month day status',
+      select: '_id title year month day status'
     })
   }
 
@@ -199,8 +199,8 @@ exports.findPage = async function (
       select: '_id title gamePlatform status',
       populate: {
         path: 'gamePlatform',
-        select: '_id name color',
-      },
+        select: '_id name color'
+      }
     })
   }
 
@@ -211,8 +211,8 @@ exports.findPage = async function (
       select: '_id title booktype status',
       populate: {
         path: 'booktype',
-        select: '_id name color',
-      },
+        select: '_id name color'
+      }
     })
   }
 
@@ -220,7 +220,7 @@ exports.findPage = async function (
     query = query.populate({
       path: 'postList',
       match: { status: matchStatus, type: 1 },
-      select: 'title _id alias date status',
+      select: 'title _id alias date status'
     })
   }
 
@@ -228,7 +228,7 @@ exports.findPage = async function (
     query = query.populate({
       path: 'eventList',
       match: { status: matchStatus },
-      select: '_id title startTime status',
+      select: '_id title startTime status'
     })
   }
 
@@ -236,7 +236,7 @@ exports.findPage = async function (
     query = query.populate({
       path: 'voteList',
       match: { status: matchStatus },
-      select: options.voteFliter || undefined,
+      select: options.voteFliter || undefined
     })
   }
 
@@ -244,7 +244,7 @@ exports.findPage = async function (
     query = query.populate({
       path: 'contentBangumiList',
       match: { status: matchStatus },
-      select: '-coverFileName -coverFolder -createdAt -updatedAt',
+      select: '-coverFileName -coverFolder -createdAt -updatedAt'
     })
   }
 
@@ -252,7 +252,7 @@ exports.findPage = async function (
     query = query.populate({
       path: 'contentMovieList',
       match: { status: matchStatus },
-      select: '-coverFileName -coverFolder -createdAt -updatedAt',
+      select: '-coverFileName -coverFolder -createdAt -updatedAt'
     })
   }
 
@@ -264,14 +264,14 @@ exports.findPage = async function (
       populate: [
         {
           path: 'gamePlatform',
-          select: '_id name color',
+          select: '_id name color'
         },
         // screenshotAlbum
         {
           path: 'screenshotAlbum',
-          select: '_id name',
-        },
-      ],
+          select: '_id name'
+        }
+      ]
     })
   }
 
@@ -282,8 +282,8 @@ exports.findPage = async function (
       select: '-coverFileName -coverFolder -createdAt -updatedAt',
       populate: {
         path: 'booktype',
-        select: '_id name color',
-      },
+        select: '_id name color'
+      }
     })
   }
 
@@ -293,8 +293,8 @@ exports.findPage = async function (
       match: { status: matchStatus, type: 1 },
       select: 'title _id coverImages alias date status',
       populate: {
-        path: 'coverImages',
-      },
+        path: 'coverImages'
+      }
     })
   }
 
@@ -305,8 +305,8 @@ exports.findPage = async function (
       select: '_id title eventtype startTime status',
       populate: {
         path: 'eventtype',
-        select: '_id name color',
-      },
+        select: '_id name color'
+      }
     })
   }
 
@@ -314,7 +314,7 @@ exports.findPage = async function (
     query = query.populate({
       path: 'contentVoteList',
       match: { status: matchStatus },
-      select: options.voteFliter || undefined,
+      select: options.voteFliter || undefined
     })
   }
 
@@ -329,7 +329,7 @@ exports.findPage = async function (
   }
   return {
     list,
-    total,
+    total
   }
 }
 

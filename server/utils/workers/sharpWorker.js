@@ -11,11 +11,11 @@ const action = {
     newWidth,
     newHeight,
     imgSettingCompressQuality,
-    filePath,
+    filePath
   ) => {
     let imageData = sharp(fileData, {
       failOn: 'error',
-      animated,
+      animated
     }).rotate()
     if (newWidth && newHeight) {
       imageData.resize(newWidth, newHeight)
@@ -44,14 +44,14 @@ const action = {
     // 释放内存
     imageData = null
   },
-  imageMetadata: async (fileData) => {
+  imageMetadata: async fileData => {
     const image = sharp(fileData)
     const imageInfo = await image.metadata()
     return imageInfo
-  },
+  }
 }
 
-parentPort.on('message', async (params) => {
+parentPort.on('message', async params => {
   // params 结构为 {action:'',data:{}} action为操作类型，data为操作数据
   let res = null
   if (action[params.action]) {

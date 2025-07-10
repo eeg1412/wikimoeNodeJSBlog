@@ -14,14 +14,14 @@ var sidebars = new Schema(
       type: Number,
       // 必填
       required: true,
-      index: true,
+      index: true
     },
     // 排序
     taxis: { type: Number, default: 0, index: true },
     // 0:不可见 1:可见
-    status: { type: Number, default: 0, index: true },
+    status: { type: Number, default: 0, index: true }
   },
-  { timestamps: true },
+  { timestamps: true }
 )
 
 module.exports = mongoose.model('sidebars', sidebars)

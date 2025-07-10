@@ -7,20 +7,20 @@ var users = new Schema(
       type: String,
       required: true,
       unique: true,
-      index: true,
+      index: true
     },
     password: {
       type: String,
-      required: true,
+      required: true
     },
     nickname: {
       type: String,
-      required: true,
+      required: true
     },
     role: {
       type: Number,
       default: 1,
-      index: true,
+      index: true
     },
     photo: String,
     email: String,
@@ -29,20 +29,20 @@ var users = new Schema(
     disabled: {
       type: Boolean,
       default: false,
-      index: true,
+      index: true
     },
     pwversion: {
       type: Number,
       default: 0,
-      index: true,
+      index: true
     },
     IP: String,
     ipInfo: {
       type: Object,
-      default: {},
-    },
+      default: {}
+    }
   },
-  { timestamps: true },
+  { timestamps: true }
 )
 
 module.exports = mongoose.model('users', users)

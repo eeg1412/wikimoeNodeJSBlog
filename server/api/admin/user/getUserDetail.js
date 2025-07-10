@@ -9,37 +9,37 @@ module.exports = async function (req, res, next) {
     res.status(400).json({
       errors: [
         {
-          message: 'id不能为空',
-        },
-      ],
+          message: 'id不能为空'
+        }
+      ]
     })
     return
   }
   // findOne
   userUtils
     .findOne({ _id: id }, '-password')
-    .then((data) => {
+    .then(data => {
       if (!data) {
         res.status(400).json({
           errors: [
             {
-              message: '管理员不存在',
-            },
-          ],
+              message: '管理员不存在'
+            }
+          ]
         })
         return
       }
       res.send({
-        data: data,
+        data: data
       })
     })
-    .catch((err) => {
+    .catch(err => {
       res.status(400).json({
         errors: [
           {
-            message: '管理员详情获取失败',
-          },
-        ],
+            message: '管理员详情获取失败'
+          }
+        ]
       })
       adminApiLog.error(`admin detail get fail, ${logErrorToText(err)}`)
     })

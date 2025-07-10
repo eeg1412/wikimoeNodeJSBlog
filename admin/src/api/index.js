@@ -8,7 +8,7 @@ import store from '../store'
 const api = createAPI({ baseURL: '/api/admin' })
 //请求拦截器
 api.interceptors.request.use(
-  (config) => {
+  config => {
     const data = config.data || {}
     let shouldAdminJWT = config.shouldAdminJWT
 
@@ -21,20 +21,20 @@ api.interceptors.request.use(
     }
     return config
   },
-  (error) => {
+  error => {
     const config = error.response?.config || {}
     const noLoading = config.noLoading
     if (!noLoading) {
       hideLoading()
     }
     return Promise.reject(error)
-  },
+  }
 )
 
 //响应拦截器
 let goLoginFlagTimer = null
 api.interceptors.response.use(
-  (response) => {
+  response => {
     const config = response.config
     const noLoading = config.noLoading
     if (!noLoading) {
@@ -42,7 +42,7 @@ api.interceptors.response.use(
     }
     return response
   },
-  async (error) => {
+  async error => {
     const status = error?.response?.status
     const config = error.response?.config || {}
     const noLoading = config.noLoading
@@ -54,10 +54,10 @@ api.interceptors.response.use(
       case 403:
         const errorList = error?.response?.data?.errors
         if (typeof errorList === 'object') {
-          errorList.forEach((errorMessage) => {
+          errorList.forEach(errorMessage => {
             ElMessage.error({
               message: errorMessage.message,
-              'custom-class': 'common-message-error',
+              'custom-class': 'common-message-error'
             })
           })
         }
@@ -66,7 +66,7 @@ api.interceptors.response.use(
           goLoginFlagTimer = setTimeout(() => {
             ElMessage.error({
               message: '请重新登录',
-              'custom-class': 'common-message-error',
+              'custom-class': 'common-message-error'
             })
             router.replace({ name: 'Login' })
           }, 200)
@@ -79,17 +79,17 @@ api.interceptors.response.use(
           goLoginFlagTimer = setTimeout(() => {
             ElMessage.error({
               message: '请重新登录',
-              'custom-class': 'common-message-error',
+              'custom-class': 'common-message-error'
             })
             router.replace({ name: 'Login' })
           }, 200)
         } else {
           const errorList = error?.response?.data
           if (typeof errorList === 'object') {
-            errorList.forEach((errorMessage) => {
+            errorList.forEach(errorMessage => {
               ElMessage.error({
                 message: errorMessage,
-                'custom-class': 'common-message-error',
+                'custom-class': 'common-message-error'
               })
             })
           }
@@ -98,13 +98,13 @@ api.interceptors.response.use(
       default:
         ElMessage.error({
           message: '发生错误。code:' + status,
-          'custom-class': 'common-message-error',
+          'custom-class': 'common-message-error'
         })
         console.error(error)
         break
     }
     return Promise.reject(error)
-  },
+  }
 )
 
 export const authApi = auth(api)

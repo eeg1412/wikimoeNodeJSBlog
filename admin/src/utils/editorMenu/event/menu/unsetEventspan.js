@@ -37,12 +37,12 @@ class UnsetEventspan {
     // 取消
     let text = ''
     Transforms.removeNodes(editor, {
-      match: (n) => {
+      match: n => {
         if (n.type === 'eventspan') {
           text = n.textContent
           return true
         }
-      },
+      }
     })
     Transforms.insertText(editor, text)
   }
@@ -52,7 +52,7 @@ const unsetEventspanConf = {
   key: 'uneventspan', // 定义 menu key ：要保证唯一、不重复（重要）
   factory() {
     return new UnsetEventspan() // 把 `YourMenuClass` 替换为你菜单的 class
-  },
+  }
 }
 
 export default unsetEventspanConf

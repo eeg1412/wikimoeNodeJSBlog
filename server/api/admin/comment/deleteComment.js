@@ -12,9 +12,9 @@ module.exports = async function (req, res, next) {
     res.status(400).json({
       errors: [
         {
-          message: 'id不能为空',
-        },
-      ],
+          message: 'id不能为空'
+        }
+      ]
     })
     return
   }
@@ -24,30 +24,30 @@ module.exports = async function (req, res, next) {
     res.status(400).json({
       errors: [
         {
-          message: '评论不存在',
-        },
-      ],
+          message: '评论不存在'
+        }
+      ]
     })
     return
   }
   //  删除评论
   commentUtils
     .deleteOne({ _id: id })
-    .then((data) => {
+    .then(data => {
       if (data.deletedCount === 0) {
         res.status(400).json({
           errors: [
             {
-              message: '删除失败',
-            },
-          ],
+              message: '删除失败'
+            }
+          ]
         })
         return
       }
       res.send({
         data: {
-          message: '删除成功',
-        },
+          message: '删除成功'
+        }
       })
       // 记录
       adminApiLog.info(`comment delete success`)
@@ -59,13 +59,13 @@ module.exports = async function (req, res, next) {
         // utils.reflushBlogCache()
       }
     })
-    .catch((err) => {
+    .catch(err => {
       res.status(400).json({
         errors: [
           {
-            message: '删除失败',
-          },
-        ],
+            message: '删除失败'
+          }
+        ]
       })
       adminApiLog.error(`comment delete fail, ${logErrorToText(err)}`)
     })

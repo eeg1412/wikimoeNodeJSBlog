@@ -4,9 +4,9 @@ var Schema = mongoose.Schema
 var eventtypes = new Schema(
   {
     name: { type: String, required: true },
-    color: { type: String, required: true },
+    color: { type: String, required: true }
   },
-  { timestamps: true },
+  { timestamps: true }
 )
 
 module.exports = mongoose.model('eventtypes', eventtypes)

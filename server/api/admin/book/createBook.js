@@ -17,7 +17,7 @@ module.exports = async function (req, res, next) {
     startTime,
     endTime,
     giveUp,
-    status,
+    status
   } = req.body
   // 校验格式
   const params = {
@@ -31,21 +31,21 @@ module.exports = async function (req, res, next) {
     startTime,
     endTime,
     giveUp,
-    status,
+    status
   }
   const rule = [
     {
       key: 'title',
       label: '书籍名称',
       type: null,
-      required: true,
+      required: true
     },
     {
       key: 'booktype',
       label: '书籍类型',
       type: 'isMongoId',
-      required: true,
-    },
+      required: true
+    }
   ]
   const errors = utils.checkForm(params, rule)
   if (errors.length > 0) {
@@ -69,7 +69,7 @@ module.exports = async function (req, res, next) {
     path = path + coverYear16 + '/'
     try {
       const imgRes = utils.base64ToFile(cover, path, fileName, {
-        createDir: true,
+        createDir: true
       })
       params['cover'] =
         `/upload/bookCover/${coverYear16}/${imgRes.fileNameAll}?v=${Date.now()}`
@@ -78,9 +78,9 @@ module.exports = async function (req, res, next) {
       res.status(400).json({
         errors: [
           {
-            message: '照片上传失败',
-          },
-        ],
+            message: '照片上传失败'
+          }
+        ]
       })
       throw new Error(error)
     }
@@ -88,20 +88,20 @@ module.exports = async function (req, res, next) {
   // save
   bookUtils
     .save(params)
-    .then((data) => {
+    .then(data => {
       res.send({
-        data: data,
+        data: data
       })
       adminApiLog.info(`book create success`)
       cacheDataUtils.getReadingBookList()
     })
-    .catch((err) => {
+    .catch(err => {
       res.status(400).json({
         errors: [
           {
-            message: '书籍创建失败',
-          },
-        ],
+            message: '书籍创建失败'
+          }
+        ]
       })
       adminApiLog.error(`book create fail, ${logErrorToText(err)}`)
     })

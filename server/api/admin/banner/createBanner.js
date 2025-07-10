@@ -10,26 +10,26 @@ module.exports = async function (req, res, next) {
   const params = {
     title: title || '',
     taxis: taxis || 0,
-    link: link || '',
+    link: link || ''
   }
   // save
   bannerUtils
     .save(params)
-    .then((data) => {
+    .then(data => {
       res.send({
-        data: data,
+        data: data
       })
       adminApiLog.info(`banner create success`)
       cacheDataUtils.getBannerList()
       // utils.reflushBlogCache()
     })
-    .catch((err) => {
+    .catch(err => {
       res.status(400).json({
         errors: [
           {
-            message: '横幅创建失败',
-          },
-        ],
+            message: '横幅创建失败'
+          }
+        ]
       })
       adminApiLog.error(`banner create fail, ${logErrorToText(err)}`)
     })

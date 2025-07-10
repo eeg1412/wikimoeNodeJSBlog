@@ -12,10 +12,10 @@ function renderEventspan(elem, children, editor, info) {
     {
       style: {
         cursor: 'pointer',
-        color: 'var(--el-color-primary)',
-      },
+        color: 'var(--el-color-primary)'
+      }
     },
-    [{ text: elem.textContent }],
+    [{ text: elem.textContent }]
   )
 
   return vnode
@@ -23,7 +23,7 @@ function renderEventspan(elem, children, editor, info) {
 
 const conf = {
   type: 'eventspan', // 节点 type ，重要！！！
-  renderElem: renderEventspan,
+  renderElem: renderEventspan
 }
 
 export default conf

@@ -19,21 +19,21 @@ module.exports = async function (req, res, next) {
         totalLikes: { $sum: '$likes' },
         blogCount: {
           $sum: {
-            $cond: [{ $eq: ['$type', 1] }, 1, 0],
-          },
+            $cond: [{ $eq: ['$type', 1] }, 1, 0]
+          }
         },
         tweetCount: {
           $sum: {
-            $cond: [{ $eq: ['$type', 2] }, 1, 0],
-          },
+            $cond: [{ $eq: ['$type', 2] }, 1, 0]
+          }
         },
         pageCount: {
           $sum: {
-            $cond: [{ $eq: ['$type', 3] }, 1, 0],
-          },
-        },
-      },
-    },
+            $cond: [{ $eq: ['$type', 3] }, 1, 0]
+          }
+        }
+      }
+    }
   ]
 
   let postCount = {
@@ -41,7 +41,7 @@ module.exports = async function (req, res, next) {
     totalLikes: 0,
     blogCount: 0,
     tweetCount: 0,
-    pageCount: 0,
+    pageCount: 0
   }
   const postCountRes = await postUtils.aggregate(pipeline)
   if (postCountRes.length > 0) {
@@ -82,7 +82,7 @@ module.exports = async function (req, res, next) {
       memory,
       arch,
       uptime,
-      version: process.env.npm_package_version,
-    },
+      version: process.env.npm_package_version
+    }
   })
 }

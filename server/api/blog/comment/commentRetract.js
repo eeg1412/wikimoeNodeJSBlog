@@ -18,10 +18,10 @@ module.exports = async function (req, res, next) {
         res.status(400).json({
           errors: [
             {
-              message: '撤回失败，认证信息已过期',
-            },
+              message: '撤回失败，认证信息已过期'
+            }
           ],
-          code: 401,
+          code: 401
         })
         return
       }
@@ -30,9 +30,9 @@ module.exports = async function (req, res, next) {
         res.status(400).json({
           errors: [
             {
-              message: '撤回失败，id格式错误',
-            },
-          ],
+              message: '撤回失败，id格式错误'
+            }
+          ]
         })
         return
       }
@@ -41,22 +41,22 @@ module.exports = async function (req, res, next) {
         res.status(400).json({
           errors: [
             {
-              message: '参数错误',
-            },
-          ],
+              message: '参数错误'
+            }
+          ]
         })
         return
       }
 
       const decodeCommentList = commentRetractAuthDecode?.commentList || []
-      const currComment = decodeCommentList.find((item) => item.id === id)
+      const currComment = decodeCommentList.find(item => item.id === id)
       if (!currComment) {
         res.status(400).json({
           errors: [
             {
-              message: '撤回失败，该评论不存在或者不可以撤回',
-            },
-          ],
+              message: '撤回失败，该评论不存在或者不可以撤回'
+            }
+          ]
         })
         return
       }
@@ -69,9 +69,9 @@ module.exports = async function (req, res, next) {
           res.status(400).json({
             errors: [
               {
-                message: '撤回失败，评论已超过5分钟',
-              },
-            ],
+                message: '撤回失败，评论已超过5分钟'
+              }
+            ]
           })
           return
         }
@@ -79,9 +79,9 @@ module.exports = async function (req, res, next) {
         res.status(400).json({
           errors: [
             {
-              message: '撤回失败，评论时间错误',
-            },
-          ],
+              message: '撤回失败，评论时间错误'
+            }
+          ]
         })
         return
       }
@@ -93,9 +93,9 @@ module.exports = async function (req, res, next) {
         res.status(400).json({
           errors: [
             {
-              message: '当前禁止撤回评论',
-            },
-          ],
+              message: '当前禁止撤回评论'
+            }
+          ]
         })
         return
       }
@@ -104,31 +104,31 @@ module.exports = async function (req, res, next) {
       const readerlogCount = await readerlogUtils.count({
         $or: [
           {
-            uuid: uuid,
+            uuid: uuid
           },
           {
-            ip: ip,
-          },
+            ip: ip
+          }
         ],
         action: 'commentRetract',
         createdAt: {
           $gte: todayStartTime,
-          $lte: todayEndTime,
-        },
+          $lte: todayEndTime
+        }
       })
       const commentRetractCountData = {
         count: readerlogCount,
         todayStartTime: todayStartTime,
-        todayEndTime: todayEndTime,
+        todayEndTime: todayEndTime
       }
       if (readerlogCount >= siteCommentRetractLimit) {
         res.status(400).json({
           errors: [
             {
-              message: '已到达今日撤回上限',
-            },
+              message: '已到达今日撤回上限'
+            }
           ],
-          commentRetractCountData,
+          commentRetractCountData
         })
         return
       }
@@ -138,17 +138,17 @@ module.exports = async function (req, res, next) {
       commentUtils
         .findOneAndDelete({
           _id: id,
-          date: { $gte: fiveMinutesAgo },
+          date: { $gte: fiveMinutesAgo }
         })
-        .then(async (comment) => {
+        .then(async comment => {
           // 判断是否删除成功
           if (!comment) {
             res.status(400).json({
               errors: [
                 {
-                  message: '该评论暂时无法撤回',
-                },
-              ],
+                  message: '该评论暂时无法撤回'
+                }
+              ]
             })
             userApiLog.error(`comment retract fail, comment not exist`)
             return
@@ -161,7 +161,7 @@ module.exports = async function (req, res, next) {
             await postUtils.updateOne(
               { _id: comment.post },
               { $inc: { comnum: -1 } },
-              true,
+              true
             )
             cacheDataUtils.getCommentList()
             // utils.reflushBlogCache()
@@ -170,9 +170,9 @@ module.exports = async function (req, res, next) {
           commentRetractCountData.count++
           res.send({
             data: {
-              message: '撤回成功',
+              message: '撤回成功'
             },
-            commentRetractCountData,
+            commentRetractCountData
           })
           userApiLog.info(`comment retract success`)
           // 发送邮件
@@ -189,12 +189,12 @@ module.exports = async function (req, res, next) {
             uuid: uuid,
             action: 'commentRetract',
             data: {
-              content: content,
+              content: content
             },
             ...utils.isSearchEngine(req),
             deviceInfo: utils.deviceUAInfoUtils(req),
             ipInfo: null,
-            ip: ip,
+            ip: ip
           }
           const ipInfo = await utils.IP2LocationUtils(ip, null, null, false)
           params.ipInfo = ipInfo
@@ -205,7 +205,7 @@ module.exports = async function (req, res, next) {
       // 释放锁
       console.info('commentRetract unlock')
     })
-    .catch((err) => {
+    .catch(err => {
       // 释放锁
       userApiLog.error(`commentRetract unlock error, ${logErrorToText(err)}`)
     })

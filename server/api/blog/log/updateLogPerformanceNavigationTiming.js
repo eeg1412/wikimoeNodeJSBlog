@@ -39,11 +39,11 @@ module.exports = async function (req, res, next) {
       'domainLookupDuration',
       'duration',
       'loadEventDuration',
-      'redirectCount',
+      'redirectCount'
     ]
     const stringKeys = ['entryType', 'name', 'type']
 
-    keys.forEach((key) => {
+    keys.forEach(key => {
       if (performanceNavigationTimingData.hasOwnProperty(key)) {
         const value = performanceNavigationTimingData[key]
         if (typeof value === 'number' && !isNaN(value) && value < 999999) {
@@ -54,7 +54,7 @@ module.exports = async function (req, res, next) {
       }
     })
 
-    stringKeys.forEach((key) => {
+    stringKeys.forEach(key => {
       if (performanceNavigationTimingData.hasOwnProperty(key)) {
         const value = performanceNavigationTimingData[key]
         if (typeof value === 'string' && value.length < 200) {
@@ -76,8 +76,8 @@ module.exports = async function (req, res, next) {
 
   const readerlogParams = {
     data: {
-      performanceNavigationTiming: performanceNavigationTiming,
-    },
+      performanceNavigationTiming: performanceNavigationTiming
+    }
   }
   setTimeout(() => {
     const filters = {
@@ -85,16 +85,16 @@ module.exports = async function (req, res, next) {
       uuid: uuid,
       action: action,
       createdAt: {
-        $gt: new Date(new Date().setMinutes(new Date().getMinutes() - 2)),
-      },
+        $gt: new Date(new Date().setMinutes(new Date().getMinutes() - 2))
+      }
     }
     readerlogUtils
       .updateOne(filters, readerlogParams)
-      .then((data) => {
+      .then(data => {
         // console.log(data)
         userApiLog.info(`post view log create success`)
       })
-      .catch((err) => {
+      .catch(err => {
         userApiLog.error(`post view log create fail, ${logErrorToText(err)}`)
       })
   }, 1000)

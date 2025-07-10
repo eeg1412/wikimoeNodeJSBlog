@@ -10,11 +10,11 @@ function renderImageGroup(elem, children, editor, info) {
   console.log(elem)
   const childrens = []
   // 遍历子节点的img标签
-  elem.childrenList.forEach((child) => {
+  elem.childrenList.forEach(child => {
     const item = h(
       'div',
       {
-        className: 'w-e-image-group-img-body',
+        className: 'w-e-image-group-img-body'
       },
       [
         h('img', {
@@ -26,9 +26,9 @@ function renderImageGroup(elem, children, editor, info) {
           'data-href-width': child.dataHrefWidth,
           'data-href-height': child.dataHrefHeight,
           alt: child.alt,
-          text: '',
-        }),
-      ],
+          text: ''
+        })
+      ]
     )
     childrens.push(item)
   })
@@ -48,9 +48,9 @@ function renderImageGroup(elem, children, editor, info) {
   const vnode = h(
     'div',
     {
-      className: className,
+      className: className
     },
-    childrens,
+    childrens
   )
 
   return vnode
@@ -58,7 +58,7 @@ function renderImageGroup(elem, children, editor, info) {
 
 const conf = {
   type: 'imageGroup', // 节点 type ，重要！！！
-  renderElem: renderImageGroup,
+  renderElem: renderImageGroup
 }
 
 export default conf

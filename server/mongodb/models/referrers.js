@@ -6,15 +6,15 @@ var referrers = new Schema(
     // 来源
     referrer: {
       type: String,
-      required: true,
+      required: true
     },
     // 来源类型
     referrerType: {
       type: String,
-      required: true,
-    },
+      required: true
+    }
   },
-  { capped: 15728640, timestamps: true },
+  { capped: 15728640, timestamps: true }
 )
 
 module.exports = mongoose.model('referrers', referrers)

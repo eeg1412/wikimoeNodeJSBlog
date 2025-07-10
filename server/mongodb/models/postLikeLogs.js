@@ -7,39 +7,39 @@ var postLikeLogs = new Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: 'posts',
       required: true,
-      index: true,
+      index: true
     },
     // 操作者的uuid
     uuid: {
       type: String,
-      required: true,
+      required: true
     },
     // 点赞还是取消点赞
     like: {
       type: Boolean,
-      required: true,
+      required: true
     },
     // date
     date: {
       type: Date,
       expires: 31968000,
-      default: Date.now,
+      default: Date.now
     },
     // 评论者ip
     ip: {
       type: String,
-      default: '',
+      default: ''
     },
     ipInfo: {
       type: Object,
-      default: {},
+      default: {}
     },
     deviceInfo: {
       type: Object,
-      default: {},
-    },
+      default: {}
+    }
   },
-  { timestamps: true },
+  { timestamps: true }
 )
 
 module.exports = mongoose.model('postLikeLogs', postLikeLogs)

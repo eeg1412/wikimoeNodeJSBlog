@@ -10,8 +10,8 @@ module.exports = async function (req, res, next) {
   // 构建聚合管道
   const pipeline = [
     {
-      $match: params,
-    },
+      $match: params
+    }
   ]
 
   if (shouldCount === '1') {
@@ -21,8 +21,8 @@ module.exports = async function (req, res, next) {
           from: 'posts',
           localField: '_id',
           foreignField: 'sort',
-          as: 'posts',
-        },
+          as: 'posts'
+        }
       },
       // 添加文章数量字段
       {
@@ -33,44 +33,44 @@ module.exports = async function (req, res, next) {
               $filter: {
                 input: '$posts',
                 as: 'post',
-                cond: { $eq: ['$$post.status', 1] },
-              },
-            },
-          },
-        },
+                cond: { $eq: ['$$post.status', 1] }
+              }
+            }
+          }
+        }
       },
       // 移除posts字段
       {
         $project: {
-          posts: 0,
-        },
-      },
+          posts: 0
+        }
+      }
     )
   }
 
   pipeline.push(
     // 排序
     {
-      $sort: sort,
-    },
+      $sort: sort
+    }
   )
 
   sortUtils
     .aggregate(pipeline)
-    .then((data) => {
+    .then(data => {
       // 生成树形结构
       const treeData = utils.generateTreeData(data)
       res.send({
-        data: treeData,
+        data: treeData
       })
     })
-    .catch((err) => {
+    .catch(err => {
       res.status(400).json({
         errors: [
           {
-            message: '分类列表获取失败',
-          },
-        ],
+            message: '分类列表获取失败'
+          }
+        ]
       })
       adminApiLog.error(`sort list get fail, ${logErrorToText(err)}`)
     })

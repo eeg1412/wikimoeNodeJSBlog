@@ -25,96 +25,96 @@ var posts = new Schema(
     title: {
       type: String,
       default: '',
-      index: true,
+      index: true
     },
     date: {
       type: Date,
       default: Date.now,
-      index: true,
+      index: true
     },
     lastChangDate: {
       type: Date,
-      default: Date.now,
+      default: Date.now
     },
     content: {
       type: String,
-      default: '',
+      default: ''
     },
     excerpt: {
       type: String,
-      default: '',
+      default: ''
     },
     alias: {
       type: String,
       default: null,
-      index: true,
+      index: true
     },
     author: {
       type: Schema.Types.ObjectId,
       ref: 'users',
-      index: true,
+      index: true
     },
     sort: {
       type: Schema.Types.ObjectId,
       ref: 'sorts',
       default: null,
-      index: true,
+      index: true
     },
     // 1blog,2tweet,3page
     type: {
       type: Number,
-      index: true,
+      index: true
     },
     tags: [{ type: Schema.ObjectId, ref: 'tags', index: true }],
     views: {
       type: Number,
       default: 0,
-      index: true,
+      index: true
     },
     comnum: {
       type: Number,
       default: 0,
-      index: true,
+      index: true
     },
     likes: {
       type: Number,
       default: 0,
-      index: true,
+      index: true
     },
     top: {
       type: Boolean,
       default: false,
-      index: true,
+      index: true
     },
     sortop: {
       type: Boolean,
       default: false,
-      index: true,
+      index: true
     },
     status: {
       type: Number,
       default: 0,
-      index: true,
+      index: true
     },
     allowRemark: {
       type: Boolean,
-      default: true,
+      default: true
     },
     template: {
       type: String,
-      default: '',
+      default: ''
     },
     code: {
       type: String,
-      default: '',
+      default: ''
     },
     editorVersion: {
       type: Number,
-      default: 5,
+      default: 5
     },
     client__v: {
       type: Number,
-      default: 0,
+      default: 0
     },
     coverImages: [{ type: Schema.ObjectId, ref: 'attachments' }],
     // 仅用于详情页下方的推荐内容，可能是扩展阅读或相关作品推荐。
@@ -130,7 +130,7 @@ var posts = new Schema(
 
     // 用于文章列表页和详情页的文章内容里，表示与文章本身强相关的内容。
     contentBangumiList: [
-      { type: Schema.ObjectId, ref: 'bangumis', default: [] },
+      { type: Schema.ObjectId, ref: 'bangumis', default: [] }
     ],
     contentMovieList: [{ type: Schema.ObjectId, ref: 'movies', default: [] }],
     contentGameList: [{ type: Schema.ObjectId, ref: 'games', default: [] }],
@@ -139,9 +139,9 @@ var posts = new Schema(
     contentEventList: [{ type: Schema.ObjectId, ref: 'events', default: [] }],
     contentVoteList: [{ type: Schema.ObjectId, ref: 'votes', default: [] }],
     // 列表排序 String 数组
-    contentSeriesSortList: [{ type: String, default: [] }],
+    contentSeriesSortList: [{ type: String, default: [] }]
   },
-  { timestamps: true },
+  { timestamps: true }
 )
 
 module.exports = mongoose.model('posts', posts)

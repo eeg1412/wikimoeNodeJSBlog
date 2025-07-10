@@ -12,9 +12,9 @@ module.exports = async function (req, res, next) {
     res.status(400).json({
       errors: [
         {
-          message: '参数错误',
-        },
-      ],
+          message: '参数错误'
+        }
+      ]
     })
     return
   }
@@ -27,24 +27,24 @@ module.exports = async function (req, res, next) {
 
   const sort = {
     lastusetime: -1,
-    _id: -1,
+    _id: -1
   }
   voteUtils
     .findPage(params, sort, page, size)
-    .then((data) => {
+    .then(data => {
       // 返回格式list,total
       res.send({
         list: data.list,
-        total: data.total,
+        total: data.total
       })
     })
-    .catch((err) => {
+    .catch(err => {
       res.status(400).json({
         errors: [
           {
-            message: '投票列表获取失败',
-          },
-        ],
+            message: '投票列表获取失败'
+          }
+        ]
       })
       adminApiLog.error(`vote list get fail, ${JSON.stringify(err)}`)
     })

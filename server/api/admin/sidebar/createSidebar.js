@@ -27,15 +27,15 @@ module.exports = async function (req, res, next) {
     count: count || 1,
     type: type || 1,
     taxis: taxis || 0,
-    status: status || 0,
+    status: status || 0
   }
   const rule = [
     {
       key: 'type',
       label: '侧边栏类型',
       type: null,
-      required: true,
-    },
+      required: true
+    }
   ]
   const errors = utils.checkForm(params, rule)
   if (errors.length > 0) {
@@ -51,9 +51,9 @@ module.exports = async function (req, res, next) {
       res.status(400).json({
         errors: [
           {
-            message: '该侧边栏已存在',
-          },
-        ],
+            message: '该侧边栏已存在'
+          }
+        ]
       })
       return
     }
@@ -61,21 +61,21 @@ module.exports = async function (req, res, next) {
   // save
   sidebarUtils
     .save(params)
-    .then((data) => {
+    .then(data => {
       res.send({
-        data: data,
+        data: data
       })
       adminApiLog.info(`sidebar create success`)
       cacheDataUtils.getSidebarList()
       // utils.reflushBlogCache()
     })
-    .catch((err) => {
+    .catch(err => {
       res.status(400).json({
         errors: [
           {
-            message: '侧边栏创建失败',
-          },
-        ],
+            message: '侧边栏创建失败'
+          }
+        ]
       })
       adminApiLog.error(`sidebar create fail, ${logErrorToText(err)}`)
     })

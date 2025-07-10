@@ -12,9 +12,9 @@ module.exports = async function (req, res, next) {
     res.status(400).json({
       errors: [
         {
-          message: '参数错误',
-        },
-      ],
+          message: '参数错误'
+        }
+      ]
     })
     return
   }
@@ -24,7 +24,7 @@ module.exports = async function (req, res, next) {
     keyword = utils.escapeSpecialChars(keyword)
     params.$or = [
       { title: new RegExp(keyword, 'i') },
-      { content: new RegExp(keyword, 'i') },
+      { content: new RegExp(keyword, 'i') }
     ]
   }
   // 如果eventtype存在，就加入查询条件
@@ -38,24 +38,24 @@ module.exports = async function (req, res, next) {
 
   const sort = {
     startTime: -1,
-    _id: -1,
+    _id: -1
   }
   eventUtils
     .findPage(params, sort, page, size, '-content')
-    .then((data) => {
+    .then(data => {
       // 返回格式list,total
       res.send({
         list: data.list,
-        total: data.total,
+        total: data.total
       })
     })
-    .catch((err) => {
+    .catch(err => {
       res.status(400).json({
         errors: [
           {
-            message: '活动列表获取失败',
-          },
-        ],
+            message: '活动列表获取失败'
+          }
+        ]
       })
       adminApiLog.error(`event list get fail, ${JSON.stringify(err)}`)
     })

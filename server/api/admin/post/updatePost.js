@@ -60,16 +60,16 @@ module.exports = async function (req, res, next) {
     contentSeriesSortList,
     __v,
     isAutoSave,
-    force,
+    force
   } = req.body
   // 校验id是否存在
   if (!id) {
     res.status(400).json({
       errors: [
         {
-          message: 'id不能为空',
-        },
-      ],
+          message: 'id不能为空'
+        }
+      ]
     })
     return
   }
@@ -78,9 +78,9 @@ module.exports = async function (req, res, next) {
     res.status(400).json({
       errors: [
         {
-          message: '只有草稿才能自动保存',
-        },
-      ],
+          message: '只有草稿才能自动保存'
+        }
+      ]
     })
     return
   }
@@ -112,9 +112,9 @@ module.exports = async function (req, res, next) {
       res.status(400).json({
         errors: [
           {
-            message: 'bangumiList格式错误',
-          },
-        ],
+            message: 'bangumiList格式错误'
+          }
+        ]
       })
       return
     }
@@ -124,9 +124,9 @@ module.exports = async function (req, res, next) {
       res.status(400).json({
         errors: [
           {
-            message: 'movieList格式错误',
-          },
-        ],
+            message: 'movieList格式错误'
+          }
+        ]
       })
       return
     }
@@ -136,9 +136,9 @@ module.exports = async function (req, res, next) {
       res.status(400).json({
         errors: [
           {
-            message: 'gameList格式错误',
-          },
-        ],
+            message: 'gameList格式错误'
+          }
+        ]
       })
       return
     }
@@ -148,9 +148,9 @@ module.exports = async function (req, res, next) {
       res.status(400).json({
         errors: [
           {
-            message: 'bookList格式错误',
-          },
-        ],
+            message: 'bookList格式错误'
+          }
+        ]
       })
       return
     }
@@ -160,9 +160,9 @@ module.exports = async function (req, res, next) {
       res.status(400).json({
         errors: [
           {
-            message: 'postList格式错误',
-          },
-        ],
+            message: 'postList格式错误'
+          }
+        ]
       })
       return
     }
@@ -172,9 +172,9 @@ module.exports = async function (req, res, next) {
       res.status(400).json({
         errors: [
           {
-            message: 'eventList格式错误',
-          },
-        ],
+            message: 'eventList格式错误'
+          }
+        ]
       })
       return
     }
@@ -184,9 +184,9 @@ module.exports = async function (req, res, next) {
       res.status(400).json({
         errors: [
           {
-            message: 'voteList格式错误',
-          },
-        ],
+            message: 'voteList格式错误'
+          }
+        ]
       })
       return
     }
@@ -198,9 +198,9 @@ module.exports = async function (req, res, next) {
       res.status(400).json({
         errors: [
           {
-            message: 'contentBangumiList格式错误',
-          },
-        ],
+            message: 'contentBangumiList格式错误'
+          }
+        ]
       })
       return
     }
@@ -210,9 +210,9 @@ module.exports = async function (req, res, next) {
       res.status(400).json({
         errors: [
           {
-            message: 'contentMovieList格式错误',
-          },
-        ],
+            message: 'contentMovieList格式错误'
+          }
+        ]
       })
       return
     }
@@ -222,9 +222,9 @@ module.exports = async function (req, res, next) {
       res.status(400).json({
         errors: [
           {
-            message: 'contentGameList格式错误',
-          },
-        ],
+            message: 'contentGameList格式错误'
+          }
+        ]
       })
       return
     }
@@ -234,9 +234,9 @@ module.exports = async function (req, res, next) {
       res.status(400).json({
         errors: [
           {
-            message: 'contentBookList格式错误',
-          },
-        ],
+            message: 'contentBookList格式错误'
+          }
+        ]
       })
       return
     }
@@ -246,9 +246,9 @@ module.exports = async function (req, res, next) {
       res.status(400).json({
         errors: [
           {
-            message: 'contentPostList格式错误',
-          },
-        ],
+            message: 'contentPostList格式错误'
+          }
+        ]
       })
       return
     }
@@ -258,9 +258,9 @@ module.exports = async function (req, res, next) {
       res.status(400).json({
         errors: [
           {
-            message: 'contentEventList格式错误',
-          },
-        ],
+            message: 'contentEventList格式错误'
+          }
+        ]
       })
       return
     }
@@ -270,9 +270,9 @@ module.exports = async function (req, res, next) {
       res.status(400).json({
         errors: [
           {
-            message: 'contentVoteList格式错误',
-          },
-        ],
+            message: 'contentVoteList格式错误'
+          }
+        ]
       })
       return
     }
@@ -283,9 +283,9 @@ module.exports = async function (req, res, next) {
     res.status(400).json({
       errors: [
         {
-          message: 'tags必须是数组',
-        },
-      ],
+          message: 'tags必须是数组'
+        }
+      ]
     })
     return
   }
@@ -296,9 +296,9 @@ module.exports = async function (req, res, next) {
       res.status(400).json({
         errors: [
           {
-            message: 'tags格式错误',
-          },
-        ],
+            message: 'tags格式错误'
+          }
+        ]
       })
       return
     }
@@ -310,9 +310,9 @@ module.exports = async function (req, res, next) {
     res.status(400).json({
       errors: [
         {
-          message: 'tags不能重复',
-        },
-      ],
+          message: 'tags不能重复'
+        }
+      ]
     })
     return
   }
@@ -321,27 +321,27 @@ module.exports = async function (req, res, next) {
   // seriesSortList 和 contentSeriesSortList 必须为数组且只能包含listSortList里面的值
   if (
     !Array.isArray(seriesSortList) ||
-    seriesSortList.some((item) => !listSortList.includes(item))
+    seriesSortList.some(item => !listSortList.includes(item))
   ) {
     res.status(400).json({
       errors: [
         {
-          message: 'seriesSortList格式错误',
-        },
-      ],
+          message: 'seriesSortList格式错误'
+        }
+      ]
     })
     return
   }
   if (
     !Array.isArray(contentSeriesSortList) ||
-    contentSeriesSortList.some((item) => !listSortList.includes(item))
+    contentSeriesSortList.some(item => !listSortList.includes(item))
   ) {
     res.status(400).json({
       errors: [
         {
-          message: 'contentSeriesSortList格式错误',
-        },
-      ],
+          message: 'contentSeriesSortList格式错误'
+        }
+      ]
     })
     return
   }
@@ -379,26 +379,26 @@ module.exports = async function (req, res, next) {
     contentEventList: contentEventList,
     contentVoteList: contentVoteList,
     contentSeriesSortList: contentSeriesSortList,
-    lastChangDate: new Date(),
+    lastChangDate: new Date()
   }
   const rules = [
     {
       key: 'date',
       label: '发布日期',
-      type: 'isISO8601',
-    },
+      type: 'isISO8601'
+    }
   ]
   if (sort) {
     rules.push({
       key: 'sort',
       label: '分类',
-      type: 'isMongoId',
+      type: 'isMongoId'
     })
   }
   const errors = utils.checkForm(params, rules)
   if (errors.length > 0) {
     res.status(400).json({
-      errors: errors,
+      errors: errors
     })
     return
   }
@@ -411,9 +411,9 @@ module.exports = async function (req, res, next) {
       res.status(400).json({
         errors: [
           {
-            message: 'coverImages格式错误',
-          },
-        ],
+            message: 'coverImages格式错误'
+          }
+        ]
       })
       return
     }
@@ -424,23 +424,23 @@ module.exports = async function (req, res, next) {
     const aliasPostCount = await postUtils
       .count({
         alias: {
-          $regex: new RegExp('^' + alias + '$', 'i'),
+          $regex: new RegExp('^' + alias + '$', 'i')
         },
         // 排除自己
         _id: {
-          $ne: id,
-        },
+          $ne: id
+        }
       })
-      .catch((err) => {
+      .catch(err => {
         return 500
       })
     if (aliasPostCount > 0) {
       res.status(400).json({
         errors: [
           {
-            message: '别名已存在',
-          },
-        ],
+            message: '别名已存在'
+          }
+        ]
       })
       return
     }
@@ -462,15 +462,15 @@ module.exports = async function (req, res, next) {
       const tagname = utils.replaceSpacesWithUnderscores(tagId)
       // 不是id，创建tag
       // 校验tagname是否存在
-      let tag = await tagUtils.findOne({ tagname: tagname }).catch((err) => {
+      let tag = await tagUtils.findOne({ tagname: tagname }).catch(err => {
         return null
       })
       if (!tag) {
         tag = await tagUtils
           .save({
-            tagname: tagname,
+            tagname: tagname
           })
-          .catch((err) => {
+          .catch(err => {
             return false
           })
       }
@@ -484,14 +484,14 @@ module.exports = async function (req, res, next) {
   }
   // tagsIdArr 去重
   tagsIdArr = tagsIdArr.filter(
-    (elem, index, self) => self.indexOf(elem) === index,
+    (elem, index, self) => self.indexOf(elem) === index
   )
   params.tags = tagsIdArr
 
   // 更新
   const updateFilter = {
     _id: id,
-    __v: __v,
+    __v: __v
   }
   if (isAutoSave) {
     // 只能是草稿
@@ -505,19 +505,19 @@ module.exports = async function (req, res, next) {
 
   postUtils
     .updateOne(updateFilter, params)
-    .then((data) => {
+    .then(data => {
       if (data.modifiedCount === 0) {
         res.status(400).json({
           errors: [
             {
-              message: '更新失败',
-            },
-          ],
+              message: '更新失败'
+            }
+          ]
         })
         return
       }
       res.send({
-        data: data,
+        data: data
       })
       adminApiLog.info(`post update success`)
       if (!isAutoSave) {
@@ -528,13 +528,13 @@ module.exports = async function (req, res, next) {
 
       // utils.reflushBlogCache()
     })
-    .catch((err) => {
+    .catch(err => {
       res.status(400).json({
         errors: [
           {
-            message: '更新文章失败',
-          },
-        ],
+            message: '更新文章失败'
+          }
+        ]
       })
       adminApiLog.error(`post update fail, ${logErrorToText(err)}`)
     })

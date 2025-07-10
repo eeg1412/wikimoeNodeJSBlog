@@ -12,7 +12,7 @@ if (!process.env.DB_HOST) {
 }
 mongoose.connect(process.env.DB_HOST, {
   useNewUrlParser: true,
-  useUnifiedTopology: true,
+  useUnifiedTopology: true
 })
 const db = mongoose.connection
 
@@ -30,7 +30,7 @@ function handleDbError() {
     console.info('数据库连接中...')
     mongoose.connect(process.env.DB_HOST, {
       useNewUrlParser: true,
-      useUnifiedTopology: true,
+      useUnifiedTopology: true
     })
   }, retryTime)
 }

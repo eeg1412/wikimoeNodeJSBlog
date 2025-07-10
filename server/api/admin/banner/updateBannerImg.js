@@ -11,24 +11,24 @@ module.exports = async function (req, res, next) {
     res.status(400).json({
       errors: [
         {
-          message: 'id不能为空',
-        },
-      ],
+          message: 'id不能为空'
+        }
+      ]
     })
     return
   }
 
   // 校验格式
   const params = {
-    img: img,
+    img: img
   }
   const rule = [
     {
       key: 'img',
       label: '图片',
       type: null,
-      required: true,
-    },
+      required: true
+    }
   ]
   const errors = utils.checkForm(params, rule)
   if (errors.length > 0) {
@@ -41,9 +41,9 @@ module.exports = async function (req, res, next) {
     res.status(400).json({
       errors: [
         {
-          message: '图片格式不正确',
-        },
-      ],
+          message: '图片格式不正确'
+        }
+      ]
     })
     return
   }
@@ -58,9 +58,9 @@ module.exports = async function (req, res, next) {
     res.status(400).json({
       errors: [
         {
-          message: '照片上传失败',
-        },
-      ],
+          message: '照片上传失败'
+        }
+      ]
     })
     throw new Error(error)
   }
@@ -68,33 +68,33 @@ module.exports = async function (req, res, next) {
   // updateOne
   bannerUtils
     .updateOne({ _id: _id }, params)
-    .then((data) => {
+    .then(data => {
       if (data.modifiedCount === 0) {
         res.status(400).json({
           errors: [
             {
-              message: '更新失败',
-            },
-          ],
+              message: '更新失败'
+            }
+          ]
         })
         return
       }
       res.send({
         data: {
-          img: params.img,
-        },
+          img: params.img
+        }
       })
       adminApiLog.info(`banner update success`)
       cacheDataUtils.getBannerList()
       // utils.reflushBlogCache()
     })
-    .catch((err) => {
+    .catch(err => {
       res.status(400).json({
         errors: [
           {
-            message: '横幅更新失败',
-          },
-        ],
+            message: '横幅更新失败'
+          }
+        ]
       })
       adminApiLog.error(`banner update fail, ${logErrorToText(err)}`)
     })

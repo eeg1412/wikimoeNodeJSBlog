@@ -8,13 +8,13 @@ module.exports = async function (req, res, next) {
   utils
     .executeInLock('getRandomTagList', async () => {
       const sidebarList = global.$cacheData.sidebarList || []
-      const randomTagListSidebar = sidebarList.find((item) => {
+      const randomTagListSidebar = sidebarList.find(item => {
         return item.type === 4
       })
       // 不存在type为4的侧边栏
       if (!randomTagListSidebar) {
         res.send({
-          list: [],
+          list: []
         })
         // reject
         return
@@ -24,7 +24,7 @@ module.exports = async function (req, res, next) {
       // 如果count小于等于0，不获取
       if (limit <= 0) {
         res.send({
-          list: [],
+          list: []
         })
         // reject
         return
@@ -36,7 +36,7 @@ module.exports = async function (req, res, next) {
       let shouldUpdate = true
       if (randomTagListData) {
         res.send({
-          list: randomTagListData.list,
+          list: randomTagListData.list
         })
         // 确保randomTagListData.date也在相同的时区
         const randomTagListDate = randomTagListData.date
@@ -57,8 +57,8 @@ module.exports = async function (req, res, next) {
         const pipe = [
           {
             $sample: {
-              size: limit + 10,
-            },
+              size: limit + 10
+            }
           },
           {
             $lookup: {
@@ -68,55 +68,55 @@ module.exports = async function (req, res, next) {
               pipeline: [
                 {
                   $match: {
-                    status: 1, // 只统计已发布的文章
-                  },
-                },
+                    status: 1 // 只统计已发布的文章
+                  }
+                }
               ],
-              as: 'posts',
-            },
+              as: 'posts'
+            }
           },
           // 计算公开文章数量
           {
             $addFields: {
-              publicPostCount: { $size: '$posts' },
-            },
+              publicPostCount: { $size: '$posts' }
+            }
           },
           // 过滤掉文章数为0的标签
           {
             $match: {
-              publicPostCount: { $gt: 0 },
-            },
+              publicPostCount: { $gt: 0 }
+            }
           },
           // 只输出limit个
           {
-            $limit: limit,
+            $limit: limit
           },
           // 只输出_id和tagname
           {
             $project: {
               _id: 1,
               tagname: 1,
-              publicPostCount: 1,
-            },
-          },
+              publicPostCount: 1
+            }
+          }
         ]
         await tagUtils
           .aggregate(pipe)
-          .then((data) => {
+          .then(data => {
             // 写入缓存
             global.$cacheData.randomTagListData = {
               date: moment().toDate(),
               list: data,
-              limit: limit,
+              limit: limit
             }
             if (!randomTagListData) {
               console.info('getRandomTagList should send new data')
               res.send({
-                list: data,
+                list: data
               })
             }
           })
-          .catch((err) => {
+          .catch(err => {
             userApiLog.error(`getRandomTagList error, ${logErrorToText(err)}`)
           })
       }
@@ -125,7 +125,7 @@ module.exports = async function (req, res, next) {
       // 释放锁
       console.info('getRandomTagList unlock')
     })
-    .catch((err) => {
+    .catch(err => {
       // 释放锁
       userApiLog.error(`getRandomTagList unlock error, ${logErrorToText(err)}`)
     })

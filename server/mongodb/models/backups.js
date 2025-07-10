@@ -6,50 +6,50 @@ var backups = new Schema(
     // 备份名称
     name: {
       type: String,
-      required: true,
+      required: true
     },
     // 备份类型, 1: 备份，2: 还原
     type: {
       type: Number,
       required: true,
-      index: true,
+      index: true
     },
     // 备份文件名
     filename: {
       type: String,
-      default: '',
+      default: ''
     },
     // 备份文件状态，0: 备份中，1: 未删除, 2: 已删除, 3: 上传尚未完成
     fileStatus: {
       type: Number,
       required: true,
       default: 0,
-      index: true,
+      index: true
     },
     // 备份文件大小
     fileSize: {
       type: Number,
-      default: null,
+      default: null
     },
     // 备份状态，0: 备份中/还原中,1: 成功，2: 失败, 3: 上传尚未完成
     status: {
       type: Number,
       required: true,
       default: 0,
-      index: true,
+      index: true
     },
     // 原因
     reason: {
       type: String,
-      default: '',
+      default: ''
     },
     // 备份备注
     remark: {
       type: String,
-      default: '',
-    },
+      default: ''
+    }
   },
-  { timestamps: true },
+  { timestamps: true }
 )
 
 module.exports = mongoose.model('backups', backups)

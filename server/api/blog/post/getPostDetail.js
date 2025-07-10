@@ -12,21 +12,21 @@ module.exports = async function (req, res, next) {
     res.status(400).json({
       errors: [
         {
-          message: 'id不能为空',
-        },
-      ],
+          message: 'id不能为空'
+        }
+      ]
     })
     return
   }
   const params = {
-    status: 1,
+    status: 1
   }
   if (type && Array.isArray(type) && type.length > 0) {
     // type是数组
     // 将type转换为数字
     let newType = type.map(Number)
     params.type = {
-      $in: newType,
+      $in: newType
     }
   }
   // 判断id是否是ObjectId
@@ -42,16 +42,16 @@ module.exports = async function (req, res, next) {
     .findOne(params, undefined, {
       authorFilter: 'nickname _id photo description cover',
       voteFliter:
-        '_id endTime maxSelect showResultAfter title options.title options._id',
+        '_id endTime maxSelect showResultAfter title options.title options._id'
     })
-    .then(async (data) => {
+    .then(async data => {
       if (!data) {
         res.status(404).json({
           errors: [
             {
-              message: '文章不存在',
-            },
-          ],
+              message: '文章不存在'
+            }
+          ]
         })
         userApiLog.error(`post detail get fail, 文章不存在, id: ${id}`)
         return
@@ -64,7 +64,7 @@ module.exports = async function (req, res, next) {
         global.$globalConfig?.sitePostSettings?.sitePostRandomSimilarRange || []
       const findType = []
       // 遍历sitePostRandomSimilarRange，如果有'1',添加1，如果有'2',添加2
-      sitePostRandomSimilarRange.forEach((item) => {
+      sitePostRandomSimilarRange.forEach(item => {
         switch (item) {
           case '1':
             findType.push(1)
@@ -97,7 +97,7 @@ module.exports = async function (req, res, next) {
           const sortCache = global.$cacheData.sortList || []
           // 遍历sortCache
           const sortCacheItem = sortCache.find(
-            (item) => String(item._id) === String(sortId),
+            item => String(item._id) === String(sortId)
           )
           if (
             sortCacheItem &&
@@ -105,12 +105,12 @@ module.exports = async function (req, res, next) {
             sortCacheItem.children.length > 0
           ) {
             // 说明是父级，需要看有没有children
-            sortList.push(...sortCacheItem.children.map((item) => item._id))
+            sortList.push(...sortCacheItem.children.map(item => item._id))
           }
         }
         // 处理标签
         if (jsonData.tags && jsonData.tags.length > 0) {
-          jsonData.tags.forEach((tag) => {
+          jsonData.tags.forEach(tag => {
             tagList.push(tag._id)
           })
         }
@@ -121,7 +121,7 @@ module.exports = async function (req, res, next) {
           idSet.add(jsonData._id.toString())
           // 如果存在postList，则将postList的id加入nePostIdList
           if (jsonData.postList && jsonData.postList.length > 0) {
-            jsonData.postList.forEach((post) => {
+            jsonData.postList.forEach(post => {
               const strId = post._id.toString()
               if (!idSet.has(strId)) {
                 idSet.add(strId)
@@ -131,7 +131,7 @@ module.exports = async function (req, res, next) {
           }
           // 如果存在contentPostList，则将contentPostList的id加入nePostIdList
           if (jsonData.contentPostList && jsonData.contentPostList.length > 0) {
-            jsonData.contentPostList.forEach((post) => {
+            jsonData.contentPostList.forEach(post => {
               const strId = post._id.toString()
               if (!idSet.has(strId)) {
                 idSet.add(strId)
@@ -146,36 +146,36 @@ module.exports = async function (req, res, next) {
               $match: {
                 status: 1,
                 _id: {
-                  $nin: nePostIdList,
+                  $nin: nePostIdList
                 },
                 type: {
-                  $in: findType,
+                  $in: findType
                 },
                 $or: [
                   {
                     sort: {
-                      $in: sortList,
-                    },
+                      $in: sortList
+                    }
                   },
                   {
                     tags: {
-                      $in: tagList,
-                    },
-                  },
-                ],
-              },
+                      $in: tagList
+                    }
+                  }
+                ]
+              }
             },
             {
               $sample: {
-                size: sitePostRandomSimilarCount,
-              },
+                size: sitePostRandomSimilarCount
+              }
             },
             // 按照date和_id排序
             {
               $sort: {
                 date: -1,
-                _id: -1,
-              },
+                _id: -1
+              }
             },
             // 获取字段 title date excerpt alias type status
             {
@@ -188,9 +188,9 @@ module.exports = async function (req, res, next) {
                 status: 1,
                 // 只要第一张cover
                 coverImage: {
-                  $arrayElemAt: ['$coverImages', 0],
-                },
-              },
+                  $arrayElemAt: ['$coverImages', 0]
+                }
+              }
             },
             // 获取 coverImage 的数据
             {
@@ -198,15 +198,15 @@ module.exports = async function (req, res, next) {
                 from: 'attachments',
                 localField: 'coverImage',
                 foreignField: '_id',
-                as: 'coverImage',
-              },
+                as: 'coverImage'
+              }
             },
             {
               $unwind: {
                 path: '$coverImage',
-                preserveNullAndEmptyArrays: true, // 可选：保留空数组和 null 值
-              },
-            },
+                preserveNullAndEmptyArrays: true // 可选：保留空数组和 null 值
+              }
+            }
           ])
           if (randomPostList && randomPostList.length > 0) {
             jsonData.randomPostList = randomPostList
@@ -214,16 +214,16 @@ module.exports = async function (req, res, next) {
         }
       }
       res.send({
-        data: jsonData,
+        data: jsonData
       })
     })
-    .catch((err) => {
+    .catch(err => {
       res.status(400).json({
         errors: [
           {
-            message: '文章详情获取失败',
-          },
-        ],
+            message: '文章详情获取失败'
+          }
+        ]
       })
       userApiLog.error(`post detail get fail, ${logErrorToText(err)}`)
     })

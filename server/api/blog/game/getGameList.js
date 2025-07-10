@@ -12,14 +12,14 @@ module.exports = async function (req, res, next) {
     res.status(400).json({
       errors: [
         {
-          message: '参数错误',
-        },
-      ],
+          message: '参数错误'
+        }
+      ]
     })
     return
   }
   const params = {
-    status: 1,
+    status: 1
   }
 
   const sort = {}
@@ -77,7 +77,7 @@ module.exports = async function (req, res, next) {
       keyword = Array.from(keyword).slice(0, 20).join('')
     }
     const keywordArray = keyword.split(' ')
-    const regexArray = keywordArray.map((keyword) => {
+    const regexArray = keywordArray.map(keyword => {
       const escapedKeyword = utils.escapeSpecialChars(keyword)
       const regex = new RegExp(escapedKeyword, 'i')
       return regex
@@ -85,11 +85,11 @@ module.exports = async function (req, res, next) {
     // 检索title和excerpt
     params.$or = [
       {
-        title: { $in: regexArray },
+        title: { $in: regexArray }
       },
       {
-        label: { $in: regexArray },
-      },
+        label: { $in: regexArray }
+      }
     ]
   }
 
@@ -99,22 +99,22 @@ module.exports = async function (req, res, next) {
       sort,
       page,
       size,
-      '_id cover endTime gamePlatform label rating screenshotAlbum startTime status summary title urlList giveUp',
+      '_id cover endTime gamePlatform label rating screenshotAlbum startTime status summary title urlList giveUp'
     )
-    .then((data) => {
+    .then(data => {
       // 返回格式list,total
       res.send({
         list: data.list,
-        total: data.total,
+        total: data.total
       })
     })
-    .catch((err) => {
+    .catch(err => {
       res.status(400).json({
         errors: [
           {
-            message: '游戏列表获取失败',
-          },
-        ],
+            message: '游戏列表获取失败'
+          }
+        ]
       })
       userApiLog.error(`game list get fail, ${JSON.stringify(err)}`)
     })
