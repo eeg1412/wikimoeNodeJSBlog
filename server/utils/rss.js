@@ -111,7 +111,11 @@ exports.updateRSS = async type => {
               if (imageIsVideo) {
                 newContent += `<p><video src="${siteUrl}${image.filepath}" controls="controls" playsinline="true" preload="none" muted="muted" poster="${siteUrl}${image.thumfor}?${createdAt}" loop="loop" style="border-radius: 10px; margin-bottom: 10px; max-width: 100%;"></video></p>`
               } else {
-                newContent += `<p><img src="${siteUrl}${image.thumfor || image.filepath}" alt="${image.name}" style="border-radius: 10px; margin-bottom: 10px; max-width: 100%;" /></p>`
+                newContent += `<p><img src="${siteUrl}${
+                  image.thumfor || image.filepath
+                }" alt="${
+                  image.name
+                }" style="border-radius: 10px; margin-bottom: 10px; max-width: 100%;" /></p>`
               }
             })
           } else if (typeName === 'event') {
@@ -130,7 +134,9 @@ exports.updateRSS = async type => {
             // 遍历contentPostList，以链接形式展示
             const contentPostList = item.contentPostList || []
             contentPostList.forEach(post => {
-              newContent += `<p><a href="${siteUrl}/post/${post.alias || post._id}" target="_blank">文章：${post.title}</a></p>`
+              newContent += `<p><a href="${siteUrl}/post/${
+                post.alias || post._id
+              }" target="_blank">博文：${post.title}</a></p>`
             })
           } else if (typeName === 'acgn') {
             // 遍历contentBangumiList，以链接形式展示
