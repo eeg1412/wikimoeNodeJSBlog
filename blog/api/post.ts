@@ -36,21 +36,21 @@ const getDetailApi = (params: PostDetailParams) => {
 const viewCountURL = `/post/view/count`
 const putViewCountApi = (params: any) => {
   return httpRequest.putFetch(`${viewCountURL}`, params, {
-    shouldUuid: true,
+    shouldUuid: true
   })
 }
 // post '/post/like/log'
 const likeLogURL = `/post/like/log`
 const postLikeLogApi = (params: any) => {
   return httpRequest.postFetch(`${likeLogURL}`, params, {
-    shouldUuid: true,
+    shouldUuid: true
   })
 }
 // post '/post/like/log/list'
 const likeLogListURL = `/post/like/log/list`
 const postLikeLogListApi = (params: any) => {
   return httpRequest.postFetch(`${likeLogListURL}`, params, {
-    shouldUuid: true,
+    shouldUuid: true
   })
 }
 export {
@@ -59,5 +59,5 @@ export {
   getDetailApi,
   putViewCountApi,
   postLikeLogApi,
-  postLikeLogListApi,
+  postLikeLogListApi
 }

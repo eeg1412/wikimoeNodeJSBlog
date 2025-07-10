@@ -29,5 +29,5 @@ export {
   getBookListApi,
   getBookListApiFetch,
   getBooktypeListApi,
-  getBookReadingListApi,
+  getBookReadingListApi
 }

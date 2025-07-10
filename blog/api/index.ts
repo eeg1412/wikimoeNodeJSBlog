@@ -21,7 +21,7 @@ class HttpRequest {
       const newOptions: UseFetchOptions<T> = {
         baseURL: BASE_URL,
         method: method,
-        ...options,
+        ...options
       }
 
       if (method === 'GET' || method === 'DELETE') {
@@ -31,19 +31,19 @@ class HttpRequest {
         newOptions.body = data
       }
       useFetch(url, newOptions)
-        .then((res) => {
+        .then(res => {
           if (res.error?.value) {
             const statusCode = res.error?.value?.statusCode
             console.log('statusCode', statusCode)
             showError({
               statusCode: statusCode || 500,
-              message: '发生一点小意外',
+              message: '发生一点小意外'
             })
           } else {
             resolve(res)
           }
         })
-        .catch((error) => {
+        .catch(error => {
           reject(error)
         })
     })
@@ -61,7 +61,7 @@ class HttpRequest {
         options.headers = {
           ...options.headers,
           // 将uuid放入请求头 wmb-request-id
-          'wmb-request-id': uuid,
+          'wmb-request-id': uuid
         }
       }
     }
@@ -76,7 +76,7 @@ class HttpRequest {
         options.headers = {
           ...options.headers,
           // 将commentRetractJWT放入请求头 comment-retract-jwt
-          'wm-comment-retract-authorization': `Bearer ${commentRetractJWT}`,
+          'wm-comment-retract-authorization': `Bearer ${commentRetractJWT}`
         }
       }
     }
@@ -85,7 +85,7 @@ class HttpRequest {
         .then((res: any) => {
           resolve(res)
         })
-        .catch((error) => {
+        .catch(error => {
           reject(error)
         })
     })

@@ -30,5 +30,5 @@ export {
   getBangumiListApi,
   getBangumiListApiFetch,
   getBangumiYearListApi,
-  getBangumiSeasonListApi,
+  getBangumiSeasonListApi
 }

@@ -10,7 +10,7 @@ import httpRequest from '~/api'
 const voteDetailURL = `/vote/detail`
 const getVoteDetailApi = (params: any) => {
   return httpRequest.getFetch(`${voteDetailURL}`, params, {
-    shouldUuid: true,
+    shouldUuid: true
   })
 }
 
@@ -18,7 +18,7 @@ const getVoteDetailApi = (params: any) => {
 const voteURL = `/vote`
 const postVoteApi = (params: any) => {
   return httpRequest.postFetch(`${voteURL}`, params, {
-    shouldUuid: true,
+    shouldUuid: true
   })
 }
 

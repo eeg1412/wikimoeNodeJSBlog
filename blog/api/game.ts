@@ -29,5 +29,5 @@ export {
   getGameListApi,
   getGameListApiFetch,
   getGamePlatformListApi,
-  getGamePlayingListApi,
+  getGamePlayingListApi
 }

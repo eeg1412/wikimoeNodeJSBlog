@@ -11,45 +11,45 @@ const staleMaxAge = process.env.SWR_CACHE_STALEMAXAGE
 
 let routeRules = {
   '/rss': {
-    proxy: `${process.env.NUXT_API_DOMAIN}/rss`,
+    proxy: `${process.env.NUXT_API_DOMAIN}/rss`
   },
   '/rss/blog': {
-    proxy: `${process.env.NUXT_API_DOMAIN}/rss/blog`,
+    proxy: `${process.env.NUXT_API_DOMAIN}/rss/blog`
   },
   '/rss/tweet': {
-    proxy: `${process.env.NUXT_API_DOMAIN}/rss/tweet`,
+    proxy: `${process.env.NUXT_API_DOMAIN}/rss/tweet`
   },
   '/content/**': {
-    proxy: `${process.env.NUXT_API_DOMAIN}/content/**`,
+    proxy: `${process.env.NUXT_API_DOMAIN}/content/**`
   },
   '/upload/**': {
-    proxy: `${process.env.NUXT_API_DOMAIN}/upload/**`,
+    proxy: `${process.env.NUXT_API_DOMAIN}/upload/**`
   },
   '/up_works/**': {
-    proxy: `${process.env.NUXT_API_DOMAIN}/up_works/**`,
+    proxy: `${process.env.NUXT_API_DOMAIN}/up_works/**`
   },
   '/web_demo/**': {
-    proxy: `${process.env.NUXT_API_DOMAIN}/web_demo/**`,
+    proxy: `${process.env.NUXT_API_DOMAIN}/web_demo/**`
   },
   // ucloudImg
   '/ucloudImg/**': {
-    proxy: `${process.env.NUXT_API_DOMAIN}/ucloudImg/**`,
+    proxy: `${process.env.NUXT_API_DOMAIN}/ucloudImg/**`
   },
   '/api/blog/**': {
-    proxy: `${process.env.NUXT_API_DOMAIN}/api/blog/**`,
+    proxy: `${process.env.NUXT_API_DOMAIN}/api/blog/**`
   },
   // sitemap.xml
   '/sitemap.xml': {
-    proxy: `${process.env.NUXT_API_DOMAIN}/sitemap.xml`,
+    proxy: `${process.env.NUXT_API_DOMAIN}/sitemap.xml`
   },
   // sitemap.xsl
   '/sitemap.xsl': {
-    proxy: `${process.env.NUXT_API_DOMAIN}/sitemap.xsl`,
+    proxy: `${process.env.NUXT_API_DOMAIN}/sitemap.xsl`
   },
   // ads.txt
   '/ads.txt': {
-    proxy: `${process.env.NUXT_API_DOMAIN}/ads.txt`,
-  },
+    proxy: `${process.env.NUXT_API_DOMAIN}/ads.txt`
+  }
 }
 // 如果开启了SWR
 if (process.env.SWR_ENABLED === '1') {
@@ -57,21 +57,21 @@ if (process.env.SWR_ENABLED === '1') {
     '/': {
       swr: cacheTime,
       cache: {
-        staleMaxAge: staleMaxAge,
-      },
+        staleMaxAge: staleMaxAge
+      }
     },
     '/page/**': {
       swr: cacheTime,
       cache: {
-        staleMaxAge: staleMaxAge,
-      },
+        staleMaxAge: staleMaxAge
+      }
     },
     '/post/**': {
       swr: cacheTime,
       cache: {
-        staleMaxAge: staleMaxAge,
-      },
-    },
+        staleMaxAge: staleMaxAge
+      }
+    }
   }
   routeRules = { ...routeRules, ...swrRules }
 }
@@ -87,8 +87,8 @@ export default defineNuxtConfig({
     head: {
       charset: 'utf-8',
       viewport:
-        'width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0',
-    },
+        'width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0'
+    }
     // 因为nuxt的页面动画有BUG导致两次运行onmounted，所以关闭
     // pageTransition: { name: 'page', mode: 'out-in' },
   },
@@ -97,7 +97,7 @@ export default defineNuxtConfig({
 
   devServer: {
     // host: '0.0.0.0',
-    port: 8078,
+    port: 8078
   },
 
   modules: ['@pinia/nuxt', '@nuxt/ui', 'nuxt-swiper'],
@@ -106,7 +106,7 @@ export default defineNuxtConfig({
     // Swiper options
     //----------------------
     // prefix: 'Swiper',
-    styleLang: 'css',
+    styleLang: 'css'
     // modules: ['navigation', 'pagination'], // all modules are imported by default
   },
 
@@ -116,8 +116,8 @@ export default defineNuxtConfig({
     // apiDomain: '',
     public: {
       version: process.env.npm_package_version,
-      ...publicRuntimeConfigPlus,
-    },
+      ...publicRuntimeConfigPlus
+    }
   },
 
   routeRules,
@@ -125,14 +125,14 @@ export default defineNuxtConfig({
   colorMode: {
     preference: 'system',
     fallback: 'light',
-    hid: 'nuxt-color-mode-script',
+    hid: 'nuxt-color-mode-script'
   },
 
   nitro: {
     output: {
       dir: 'build/.output',
       serverDir: 'build/.output/server',
-      publicDir: 'build/.output/public',
+      publicDir: 'build/.output/public'
     },
     storage: {
       cache: {
@@ -140,8 +140,8 @@ export default defineNuxtConfig({
         max: CACHE_MAX_PAGE,
         ttl: CACHE_TTL,
         updateAgeOnGet: true,
-        updateAgeOnHas: true,
-      },
+        updateAgeOnHas: true
+      }
     },
     devStorage: {
       cache: {
@@ -149,9 +149,9 @@ export default defineNuxtConfig({
         max: CACHE_MAX_PAGE,
         ttl: CACHE_TTL,
         updateAgeOnGet: true,
-        updateAgeOnHas: true,
-      },
-    },
+        updateAgeOnHas: true
+      }
+    }
   },
   vite: {
     esbuild: {
@@ -161,10 +161,10 @@ export default defineNuxtConfig({
         'console.error',
         'console.warn',
         'console.debug',
-        'console.trace',
-      ],
-    },
+        'console.trace'
+      ]
+    }
   },
 
-  compatibilityDate: '2024-12-09',
+  compatibilityDate: '2024-12-09'
 })

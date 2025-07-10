@@ -16,14 +16,14 @@ export default <Partial<Config>>{
           '700': '#d4356a',
           '800': '#bf2b64',
           '900': '#a72a5e',
-          '950': '#75153a',
-        },
-      },
+          '950': '#75153a'
+        }
+      }
     },
     fontFamily: {
       sans: [],
       serif: [],
-      mono: [],
-    },
-  },
+      mono: []
+    }
+  }
 }

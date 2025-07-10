@@ -7,7 +7,7 @@ type OpenFunction = (
 ) => void
 
 let photoSwipe = {
-  open: null as OpenFunction | null,
+  open: null as OpenFunction | null
 }
 
 export function setPhotoSwipe(open: OpenFunction) {
@@ -64,7 +64,7 @@ export function formatDate(
     'm+': date.getMinutes(), // 分
     's+': date.getSeconds(), // 秒
     'q+': Math.floor((date.getMonth() + 3) / 3), // 季度
-    S: date.getMilliseconds(), // 毫秒
+    S: date.getMilliseconds() // 毫秒
   }
 
   const yearMatch = /(y+)/.exec(fmt)
@@ -246,7 +246,7 @@ export const copyToClipboard = async (text: string, toast: any) => {
       title: '复制成功',
       icon: 'i-heroicons-check-circle',
       color: 'green',
-      timeout: 10000,
+      timeout: 10000
     })
   } catch (err) {
     if (!toast) return
@@ -254,7 +254,7 @@ export const copyToClipboard = async (text: string, toast: any) => {
       title: '复制失败',
       icon: 'i-heroicons-x-circle',
       color: 'red',
-      timeout: 10000,
+      timeout: 10000
     })
   }
 }
@@ -267,12 +267,12 @@ export const changedParams = (
 
   // 获取两个对象的所有唯一字段
   const allKeys = [
-    ...new Set([...Object.keys(checkedParams), ...Object.keys(paramsValue)]),
+    ...new Set([...Object.keys(checkedParams), ...Object.keys(paramsValue)])
   ]
 
   // 比较所有字段的值
   const list = allKeys.filter(
-    (key) => (checkedParams as any)[key] !== (paramsValue as any)[key]
+    key => (checkedParams as any)[key] !== (paramsValue as any)[key]
   )
 
   console.log(list)

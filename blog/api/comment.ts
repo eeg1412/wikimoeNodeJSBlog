@@ -15,7 +15,7 @@ const commentListURL = `/comment/list`
 const getCommentListApi = (params: any, options: any) => {
   return httpRequest.getFetch(commentListURL, params, {
     ...options,
-    shouldUuid: true,
+    shouldUuid: true
   })
 }
 // /comment/create
@@ -24,7 +24,7 @@ const getCommentCreateApi = (params: any, options: any) => {
   return httpRequest.postFetch(commentCreateURL, params, {
     ...options,
     shouldUuid: true,
-    shouldCommentRetractJWT: true,
+    shouldCommentRetractJWT: true
   })
 }
 
@@ -34,7 +34,7 @@ const deleteCommentRetractApi = (params: any, options: any) => {
   return httpRequest.postFetch(`${commentRetractURL}`, params, {
     ...options,
     shouldUuid: true,
-    shouldCommentRetractJWT: true,
+    shouldCommentRetractJWT: true
   })
 }
 
@@ -42,14 +42,14 @@ const deleteCommentRetractApi = (params: any, options: any) => {
 const commentLikeLogURL = `/comment/like/log`
 const postCommentLikeLogApi = (params: any) => {
   return httpRequest.postFetch(`${commentLikeLogURL}`, params, {
-    shouldUuid: true,
+    shouldUuid: true
   })
 }
 // post /comment/like/log/list
 const commentLikeLogListURL = `/comment/like/log/list`
 const postCommentLikeLogListApi = (params: any) => {
   return httpRequest.postFetch(`${commentLikeLogListURL}`, params, {
-    shouldUuid: true,
+    shouldUuid: true
   })
 }
 export {
@@ -58,5 +58,5 @@ export {
   getCommentCreateApi,
   deleteCommentRetractApi,
   postCommentLikeLogApi,
-  postCommentLikeLogListApi,
+  postCommentLikeLogListApi
 }
