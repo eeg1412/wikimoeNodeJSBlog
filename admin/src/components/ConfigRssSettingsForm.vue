@@ -22,6 +22,14 @@
         :precision="0"
       ></el-input-number>
     </el-form-item>
+    <!-- 推文标题类型 -->
+    <el-form-item label="推文标题类型" prop="siteRssTweetTitleType">
+      <!-- radio -->
+      <el-radio-group v-model="rssSettingsForm.siteRssTweetTitleType">
+        <el-radio :label="1">裁切内容</el-radio>
+        <el-radio :label="2">日期</el-radio>
+      </el-radio-group>
+    </el-form-item>
     <!-- 底部显示RSS siteShowRssInFooter -->
     <el-form-item label="底部显示RSS" prop="siteShowRssInFooter">
       <el-switch v-model="rssSettingsForm.siteShowRssInFooter"></el-switch>
@@ -56,7 +64,9 @@ export default {
       // RSS显示条数
       siteRssMaxCount: 10,
       // 底部显示RSS
-      siteShowRssInFooter: false
+      siteShowRssInFooter: false,
+      // 推文标题类型
+      siteRssTweetTitleType: 1 // 1:裁切内容，2:日期
       // RSS输出全文
       // siteRssFullText: false,
     })

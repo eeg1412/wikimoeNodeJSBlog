@@ -16,6 +16,7 @@ const AsyncLock = require('async-lock')
 const lock = new AsyncLock({ timeout: 60000 })
 const crawlerUserAgents = require('./crawler-user-agents.json')
 const { Worker } = require('worker_threads')
+const moment = require('moment-timezone')
 
 const botUserAgentList = []
 crawlerUserAgents.forEach(item => {
@@ -1156,6 +1157,23 @@ exports.validateDate = (year, month, day) => {
   }
 
   return true
+}
+
+/**
+ * 按照时区将时间格式化成指定格式
+ * @param {string|Date|number} date - 输入的时间，可以是字符串、Date对象或时间戳
+ * @param {string} timezone - 时区，如 'Asia/Shanghai'
+ * @param {string} format - 格式，如 'YYYY-MM-DD HH:mm:ss'
+ * @returns {string} 格式化后的时间字符串
+ */
+exports.formatDateByTimezone = function (date, timezone, format) {
+  if (!date) return ''
+  try {
+    return moment.tz(date, timezone).format(format)
+  } catch (e) {
+    console.error('formatDateByTimezone error:', e)
+    return ''
+  }
 }
 
 // let reflushBlogCacheTimer = null

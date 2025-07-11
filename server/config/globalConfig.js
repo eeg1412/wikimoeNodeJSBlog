@@ -95,7 +95,9 @@ const initGlobalConfig = async () => {
     // RSS显示条数
     siteRssMaxCount: 10,
     // 是否在底部显示RSS
-    siteShowRssInFooter: false
+    siteShowRssInFooter: false,
+    // 推文标题类型
+    siteRssTweetTitleType: 1 // 1:裁切内容，2:日期
     // RSS输出全文
     // siteRssFullText: false,
   }

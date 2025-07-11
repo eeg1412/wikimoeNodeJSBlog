@@ -9,10 +9,16 @@ exports.updateRSS = async type => {
   const prmise = new Promise(async (resolve, reject) => {
     console.info('creating rss:' + type)
     const config = global.$globalConfig?.rssSettings || {}
-    const { siteEnableRss, siteRssMaxCount } = config
+    const { siteEnableRss, siteRssMaxCount, siteRssTweetTitleType } = config
     const siteSettings = global.$globalConfig?.siteSettings || {}
-    const { siteTitle, siteUrl, siteDescription, siteLogo, siteFavicon } =
-      siteSettings
+    const {
+      siteTitle,
+      siteUrl,
+      siteDescription,
+      siteLogo,
+      siteFavicon,
+      siteTimeZone
+    } = siteSettings
     if (siteEnableRss !== true) {
       console.info(`rss:${type} not enabled`)
       return resolve(null)
@@ -86,12 +92,22 @@ exports.updateRSS = async type => {
         // const siteTimeZone = global.$globalConfig.siteSettings.siteTimeZone || 'Asia/Shanghai'
         // const dateStr = moment(date).tz(siteTimeZone).format('YYYY年M月D日H点m分')
         // newTitle = `${authorName}在${dateStr}发布了一篇推文`
-
-        // 将excerpt去掉换行符设定为newTitle，最大长度为50，超过50的部分用...代替
-        newTitle = excerpt.replace(/\n/g, '')
-        if (newTitle.length > 50) {
-          newTitle = Array.from(newTitle).slice(0, 50).join('') + '...'
+        if (siteRssTweetTitleType === 2) {
+          // 推文标题类型为日期
+          const dateStr = utils.formatDateByTimezone(
+            date,
+            siteTimeZone,
+            'YYYY年MM月DD日 HH:mm:ss'
+          )
+          newTitle = `发布于 ${dateStr} 的推文`
+        } else {
+          // 将excerpt去掉换行符设定为newTitle，最大长度为50，超过50的部分用...代替
+          newTitle = excerpt.replace(/\n/g, '')
+          if (newTitle.length > 50) {
+            newTitle = Array.from(newTitle).slice(0, 50).join('') + '...'
+          }
         }
+
         newContent = `<p>${excerpt}</p>`
         // 换行符替换为br标签
         newContent = newContent.replace(/\n/g, '<br/>')
