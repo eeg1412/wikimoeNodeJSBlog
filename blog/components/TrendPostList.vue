@@ -78,7 +78,7 @@ const getTrendDetail = (item, target) => {
   }
   return detail
 }
-const getLinkObj = (item) => {
+const getLinkObj = item => {
   let linkObj = {}
   const target = item.target
   const detail = getTrendDetail(item, target)
@@ -87,13 +87,13 @@ const getLinkObj = (item) => {
     case 'blog':
       linkObj = {
         name: 'postDetail',
-        params: { id: detail.alias || detail._id },
+        params: { id: detail.alias || detail._id }
       }
       break
     case 'page':
       linkObj = {
         name: 'pageDetail',
-        params: { id: detail.alias || detail._id },
+        params: { id: detail.alias || detail._id }
       }
 
       break
@@ -102,7 +102,7 @@ const getLinkObj = (item) => {
   }
   return linkObj
 }
-const getTrendTitle = (item) => {
+const getTrendTitle = item => {
   let title = ''
   const target = item.target
   const detail = getTrendDetail(item, target)
@@ -122,7 +122,7 @@ const getTrendTitle = (item) => {
   }
   return title
 }
-const getTrendCategory = (item) => {
+const getTrendCategory = item => {
   let category = ''
   const target = item.target
   switch (target) {
@@ -144,7 +144,7 @@ const getTrendCategory = (item) => {
   }
   return category
 }
-const getBackgroundImage = (item) => {
+const getBackgroundImage = item => {
   let backgroundImage = options.value.siteDefaultCover
   const target = item.target
   const detail = getTrendDetail(item, target)

@@ -37,8 +37,8 @@ export default {
   props: {
     id: {
       type: String,
-      default: '',
-    },
+      default: ''
+    }
   },
   emits: ['update'],
   setup(props, { emit }) {
@@ -48,20 +48,20 @@ export default {
     const form = reactive({
       __v: null,
       name: '',
-      color: '',
+      color: ''
     })
     const rules = reactive({
       name: [{ required: true, message: '请输入名称', trigger: 'blur' }],
-      color: [{ required: true, message: '请输入颜色', trigger: 'blur' }],
+      color: [{ required: true, message: '请输入颜色', trigger: 'blur' }]
     })
     const formRef = ref(null)
     const submit = () => {
-      formRef.value.validate(async (valid) => {
+      formRef.value.validate(async valid => {
         if (!valid) {
           return false
         }
         const data = {
-          ...form,
+          ...form
         }
         if (props.id) {
           // 编辑
@@ -95,11 +95,11 @@ export default {
 
     const getGamePlatformDetail = () => {
       const params = {
-        id: props.id,
+        id: props.id
       }
       authApi
         .getGamePlatformDetail(params)
-        .then((res) => {
+        .then(res => {
           form.__v = res.data.data.__v
           form.name = res.data.data.name
           form.color = res.data.data.color
@@ -119,9 +119,9 @@ export default {
       formRef,
       submit,
       closeDialog,
-      open,
+      open
     }
-  },
+  }
 }
 </script>
 <style scoped></style>

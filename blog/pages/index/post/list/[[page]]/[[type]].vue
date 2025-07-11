@@ -7,11 +7,11 @@
 import { postLogCreateApi } from '@/api/log'
 definePageMeta({
   alias: ['/'],
-  name: 'postList',
+  name: 'postList'
 })
 onMounted(() => {
   postLogCreateApi({
-    action: 'postList',
+    action: 'postList'
   })
 })
 </script>

@@ -36,7 +36,7 @@
               <div
                 class="m-2 px-3 py-1 transition duration-300 hover:text-primary-400 hover:border-primary-400 border-solid border border-transparent cursor-pointer common-right-tool-menu-item-text rounded"
                 :class="{
-                  active: colorMode.preference === 'light',
+                  active: colorMode.preference === 'light'
                 }"
                 @click="setColorMode('light')"
               >
@@ -65,7 +65,7 @@ const colorMode = useColorMode()
 const showFilterMenu = ref(false)
 
 // 切换主题
-const setColorMode = (mode) => {
+const setColorMode = mode => {
   colorMode.preference = mode
   showFilterMenu.value = false
 }
@@ -81,7 +81,7 @@ const switchFilterMenu = () => {
   }
 }
 // watch showFilterMenu
-watch(showFilterMenu, (val) => {
+watch(showFilterMenu, val => {
   if (!val) {
     clearRightMenuCloseFn('themeChanger')
   }

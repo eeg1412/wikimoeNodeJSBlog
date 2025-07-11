@@ -6,8 +6,8 @@ const props = defineProps({
     type: String,
     default() {
       return ''
-    },
-  },
+    }
+  }
 })
 
 const toast = useToast()
@@ -15,8 +15,8 @@ const toast = useToast()
 const attachmentList = ref([])
 const getList = async () => {
   const res = await getAttachmentListApiFetch({
-    album: props.albumId,
-  }).catch((err) => {
+    album: props.albumId
+  }).catch(err => {
     console.log(err)
     return null
   })
@@ -26,7 +26,7 @@ const getList = async () => {
     toast.add({
       title: '暂无相关内容',
       icon: 'i-heroicons-x-circle',
-      color: 'red',
+      color: 'red'
     })
     return
   }

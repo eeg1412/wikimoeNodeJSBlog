@@ -25,52 +25,52 @@ const props = defineProps({
   // src
   src: {
     type: String,
-    required: true,
+    required: true
   },
   // alt
   alt: {
     type: String,
-    required: true,
+    required: true
   },
   // width
   width: {
     type: Number,
-    required: false,
+    required: false
   },
   // height
   height: {
     type: Number,
-    required: false,
+    required: false
   },
   // fit
   fit: {
-    type: String,
+    type: String
   },
   // lazy
   loading: {
-    type: String,
+    type: String
   },
   // 是否能点击打开
   dataHrefList: {
     type: Array,
-    default: null,
+    default: null
   },
   dataHrefIndex: {
     type: Number,
-    default: 0,
+    default: 0
   },
   clickStop: {
     type: Boolean,
-    default: false,
+    default: false
   },
   updatedAt: {
     type: String,
-    default: null,
+    default: null
   },
   mimetype: {
     type: String,
-    default: null,
-  },
+    default: null
+  }
 })
 
 // computed properties
@@ -92,13 +92,13 @@ const styleObject = computed(() => {
   return obj
 })
 
-const tryOpenHref = async (e) => {
+const tryOpenHref = async e => {
   if (props.clickStop) {
     e.stopPropagation()
   }
   if (props.dataHrefList) {
     const list = props.dataHrefList
-    const dataSource = list.map((item) => {
+    const dataSource = list.map(item => {
       let width = item.width || null
       let height = item.height || null
       return {
@@ -108,7 +108,7 @@ const tryOpenHref = async (e) => {
         height: height,
         mimetype: item.mimetype,
         description: item.description,
-        is360Panorama: item.is360Panorama ? true : false,
+        is360Panorama: item.is360Panorama ? true : false
       }
     })
     const index = props.dataHrefIndex || 0

@@ -7,7 +7,7 @@
         <span
           class="page-event-block"
           :style="{
-            backgroundColor: currentData.eventtype?.color,
+            backgroundColor: currentData.eventtype?.color
           }"
           v-if="currentData.eventtype"
           >{{ currentData.eventtype?.name }}</span
@@ -51,19 +51,19 @@
 const props = defineProps({
   show: {
     type: Boolean,
-    default: false,
+    default: false
   },
   currentData: {
     type: Object,
-    default: null,
-  },
+    default: null
+  }
 })
 const emits = defineEmits()
 const eventOpen = computed({
   get: () => props.show,
-  set: (val) => {
+  set: val => {
     emits('update:show', val)
-  },
+  }
 })
 </script>
 <style scoped></style>

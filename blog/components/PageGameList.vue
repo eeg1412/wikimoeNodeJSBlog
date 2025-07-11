@@ -185,7 +185,7 @@
           variant="outline"
           class="mr-1"
           :ui="{
-            base: 'focus:outline-none focus-visible:outline-0 disabled:cursor-not-allowed disabled:opacity-40 flex-shrink-0',
+            base: 'focus:outline-none focus-visible:outline-0 disabled:cursor-not-allowed disabled:opacity-40 flex-shrink-0'
           }"
           :disabled="!hasPrev"
           @click="toPrev"
@@ -197,7 +197,7 @@
           square
           variant="outline"
           :ui="{
-            base: 'focus:outline-none focus-visible:outline-0 disabled:cursor-not-allowed disabled:opacity-40 flex-shrink-0',
+            base: 'focus:outline-none focus-visible:outline-0 disabled:cursor-not-allowed disabled:opacity-40 flex-shrink-0'
           }"
           :disabled="!hasNext"
           @click="toNext"
@@ -210,17 +210,17 @@
 import {
   getGameListApi,
   getGameListApiFetch,
-  getGamePlatformListApi,
+  getGamePlatformListApi
 } from '@/api/game'
 const route = useRoute()
 const router = useRouter()
 const onlyRouteChange = ref(false)
 let hash = route.hash
-const setRouterQuery = (query) => {
+const setRouterQuery = query => {
   const nowQuery = route.query
   router.replace({
     query: { ...nowQuery, ...query },
-    hash: hash,
+    hash: hash
   })
 }
 
@@ -228,9 +228,9 @@ const setRouterQuery = (query) => {
 const gamePlatformList = ref([])
 const selectPlatformData = ref({
   name: '全部平台',
-  _id: undefined,
+  _id: undefined
 })
-await getGamePlatformListApi().then((res) => {
+await getGamePlatformListApi().then(res => {
   gamePlatformList.value = res.data.value.data
 })
 
@@ -241,18 +241,18 @@ const rawQuery = {
   sortType: 'startTime',
   gamePlatformId: undefined,
   status: undefined,
-  keyword: undefined,
+  keyword: undefined
 }
 const params = computed(() => {
   const routeQuery = JSON.parse(JSON.stringify(route.query))
   const numberKey = ['page', 'status']
   const newParams = { ...rawQuery }
-  Object.keys(newParams).forEach((key) => {
+  Object.keys(newParams).forEach(key => {
     if (routeQuery[key]) {
       newParams[key] = routeQuery[key]
     }
   })
-  numberKey.forEach((key) => {
+  numberKey.forEach(key => {
     if (newParams[key]) {
       const num = Number(newParams[key])
       if (!isNaN(num)) {
@@ -268,50 +268,50 @@ const params = computed(() => {
 const statusList = [
   {
     label: '全部',
-    value: undefined,
+    value: undefined
   },
   {
     label: '尚未攻略',
-    value: 1,
+    value: 1
   },
   {
     label: '攻略中',
-    value: 2,
+    value: 2
   },
   {
     label: '已通关',
-    value: 3,
+    value: 3
   },
   {
     label: '弃坑',
-    value: 99,
-  },
+    value: 99
+  }
 ]
 
 const sortTypeMap = {
   startTime: '按开始时间排序',
-  rating: '按评分排序',
+  rating: '按评分排序'
 }
 const sortTypeList = [
   {
     label: '按开始时间排序',
-    value: 'startTime',
+    value: 'startTime'
   },
   {
     label: '按评分排序',
-    value: 'rating',
-  },
+    value: 'rating'
+  }
 ]
 const selectType = (type, close) => {
   if (gameLoading.value) return
   setRouterQuery({
-    sortType: type,
+    sortType: type
   })
   close()
 }
 
 const checkedParams = {
-  ...rawQuery,
+  ...rawQuery
 }
 const initParams = () => {
   // page必须是数字，sortType必须是sortTypeList，gamePlatformId必须是isObjectId
@@ -329,14 +329,14 @@ const initParams = () => {
     checkedParams.page = Number(queryPage)
   }
   // sortType必须是sortTypeList里的
-  if (sortTypeList.find((item) => item.value === querySortType)) {
+  if (sortTypeList.find(item => item.value === querySortType)) {
     checkedParams.sortType = querySortType
   }
   // gamePlatformId必须是isObjectId
   if (queryGamePlatformId && isObjectId(queryGamePlatformId)) {
     // 检查queryGamePlatformId是否在gamePlatformList里
     const gamePlatform = gamePlatformList.value.find(
-      (item) => item._id === queryGamePlatformId
+      item => item._id === queryGamePlatformId
     )
     if (gamePlatform) {
       selectPlatformData.value = gamePlatform
@@ -344,7 +344,7 @@ const initParams = () => {
     }
   }
 
-  if (queryStatus && statusList.some((item) => item.value === queryStatus)) {
+  if (queryStatus && statusList.some(item => item.value === queryStatus)) {
     checkedParams.status = queryStatus
   }
 
@@ -367,7 +367,7 @@ const gameList = ref([])
 const total = ref(0)
 
 // 获取数据
-await getGameListApi(checkedParams).then((res) => {
+await getGameListApi(checkedParams).then(res => {
   gameList.value = res.data.value.list
   total.value = res.data.value.total
 })
@@ -379,7 +379,7 @@ const listRef = ref(null)
 const fetchGameList = async () => {
   gameLoading.value = true
   const newParams = {
-    ...params.value,
+    ...params.value
   }
   const res = await getGameListApiFetch(newParams)
   gameList.value = res?.list || []
@@ -390,7 +390,7 @@ const fetchGameList = async () => {
       // const rect = listRef.value.getBoundingClientRect()
       window.scrollTo({
         top: 0,
-        behavior: 'smooth',
+        behavior: 'smooth'
       })
     }
   })
@@ -417,7 +417,7 @@ const filterOpen = ref(false)
 const filterCache = reactive({
   gamePlatformId: params.value.gamePlatformId,
   status: params.value.status,
-  keyword: params.value.keyword,
+  keyword: params.value.keyword
 })
 const filterCount = computed(() => {
   let count = 0
@@ -439,7 +439,7 @@ const filterText = computed(() => {
   return '所有内容'
 })
 // watch filterOpen
-watch(filterOpen, (val) => {
+watch(filterOpen, val => {
   console.log('filterOpen', val)
   if (val) {
     // 还原filterCache
@@ -449,13 +449,13 @@ watch(filterOpen, (val) => {
   }
 })
 // 添加一个方法，用于同时应用年份和季度筛选
-const applyFilters = async (close) => {
+const applyFilters = async close => {
   if (close) close()
   setRouterQuery({
     gamePlatformId: filterCache.gamePlatformId,
     status: filterCache.status,
     keyword: filterCache.keyword,
-    page: 1,
+    page: 1
   })
 }
 
@@ -473,14 +473,14 @@ watch(
     const compareKeys = Object.keys(rawQuery)
     // 拾取newQuery中的compareKeys
     const newQueryCompareObj = {}
-    compareKeys.forEach((key) => {
+    compareKeys.forEach(key => {
       if (newQuery[key]) {
         newQueryCompareObj[key] = newQuery[key]
       }
     })
     // 拾取oldQuery中的compareKeys
     const oldQueryCompareObj = {}
-    compareKeys.forEach((key) => {
+    compareKeys.forEach(key => {
       if (oldQuery[key]) {
         oldQueryCompareObj[key] = oldQuery[key]
       }
@@ -499,7 +499,7 @@ onMounted(() => {
     if (gameList.value.length === 0 && params.page > 1) {
       console.log('重新获取数据')
       setRouterQuery({
-        page: 1,
+        page: 1
       })
     }
     hash = undefined

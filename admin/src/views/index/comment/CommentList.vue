@@ -125,8 +125,8 @@
                   row.status === 0
                     ? 'info'
                     : row.status === 1
-                    ? 'success'
-                    : 'danger'
+                      ? 'success'
+                      : 'danger'
                 "
                 :disabled="!row.post"
               >
@@ -134,8 +134,8 @@
                   row.status === 0
                     ? '待审核'
                     : row.status === 1
-                    ? '通过'
-                    : '未通过'
+                      ? '通过'
+                      : '未通过'
                 }}
                 <el-icon class="el-icon--right"><arrow-down /></el-icon>
               </el-button>
@@ -353,14 +353,14 @@ import {
   setSessionParams,
   getSessionParams,
   copyToClipboard,
-  escapeHtml,
+  escapeHtml
 } from '@/utils/utils'
 import store from '@/store'
 import CheckDialogService from '@/services/CheckDialogService'
 
 export default {
   components: {
-    EmojiTextarea,
+    EmojiTextarea
   },
   setup() {
     const route = useRoute()
@@ -372,24 +372,24 @@ export default {
       keyword: '',
       ip: '',
       uuid: '',
-      status: '',
+      status: ''
     })
     const total = ref(0)
     const tableRef = ref(null)
-    const getCommentList = (resetPage) => {
+    const getCommentList = resetPage => {
       if (resetPage === true && params.page !== 1) {
         params.page = 1
         return
       }
       authApi
         .getCommentList(params)
-        .then((res) => {
+        .then(res => {
           commentList.value = res.data.list
           total.value = res.data.total
           tableRef.value.scrollTo({ top: 0 })
           setSessionParams(route.name, params)
         })
-        .catch((err) => {
+        .catch(err => {
           console.log(err)
         })
     }
@@ -402,15 +402,15 @@ export default {
       }
     )
 
-    const goEdit = (id) => {
+    const goEdit = id => {
       router.push({
         name: 'CommentEdit',
         params: {
-          id,
-        },
+          id
+        }
       })
     }
-    const deleteComment = (row) => {
+    const deleteComment = row => {
       const id = row._id
       let nickname = row.user?.nickname || row.nickname
       const email = row.email
@@ -436,15 +436,15 @@ export default {
             ElMessage.success('删除成功')
             getCommentList()
           })
-        },
+        }
       })
         .then(() => {})
-        .catch((error) => {
+        .catch(error => {
           console.log('Dialog closed:', error)
         })
     }
 
-    const titleLimit = (title) => {
+    const titleLimit = title => {
       let title_ = Array.from(title || '')
       if (title_.length > 20) {
         title_ = title_.slice(0, 20).join('') + '...'
@@ -471,16 +471,16 @@ export default {
       post: '',
       content: '',
       parent: '',
-      top: false,
+      top: false
     })
     const commentFormRef = ref(null)
     const commentFormRules = {
-      content: [{ required: true, message: '请输入评论内容', trigger: 'blur' }],
+      content: [{ required: true, message: '请输入评论内容', trigger: 'blur' }]
     }
     const commentParentData = ref({})
 
     const commentFormVisible = ref(false)
-    const openCommentForm = (item) => {
+    const openCommentForm = item => {
       const nickname = item.user?.nickname || item.nickname
       commentForm.content = `@${nickname}：`
       commentForm.top = false
@@ -493,9 +493,9 @@ export default {
       commentFormVisible.value = false
     }
     const submitCommentForm = () => {
-      commentFormRef.value.validate((valid) => {
+      commentFormRef.value.validate(valid => {
         if (valid) {
-          authApi.createComment(commentForm).then((res) => {
+          authApi.createComment(commentForm).then(res => {
             ElMessage.success('评论成功')
             closeCommentForm()
             getCommentList()
@@ -511,7 +511,7 @@ export default {
       const params = {
         id,
         status,
-        __v,
+        __v
       }
       authApi
         .applyComment(params)
@@ -531,7 +531,7 @@ export default {
       return store.getters.siteUrl
     })
 
-    const getPath = (row) => {
+    const getPath = row => {
       if (!siteUrl.value) {
         ElMessage.error('请先设置站点地址')
         return
@@ -554,7 +554,7 @@ export default {
       }
       return siteUrl.value + path
     }
-    const goToBlog = (row) => {
+    const goToBlog = row => {
       const url = getPath(row)
       window.open(url, '_blank')
     }
@@ -586,9 +586,9 @@ export default {
       applyComment,
       // 搜索
       addParamsAndSearch,
-      goToBlog,
+      goToBlog
     }
-  },
+  }
 }
 </script>
 <style lang=""></style>

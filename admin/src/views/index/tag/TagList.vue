@@ -129,30 +129,30 @@ export default {
       page: 1,
       size: 50,
       keyword: '',
-      shouldCount: '1',
+      shouldCount: '1'
     })
     const total = ref(0)
     const tableRef = ref(null)
-    const getTagList = (resetPage) => {
+    const getTagList = resetPage => {
       if (resetPage === true && params.page !== 1) {
         params.page = 1
         return
       }
       authApi
         .getTagList(params)
-        .then((res) => {
+        .then(res => {
           tagList.value = res.data.list
           total.value = res.data.total
           tableRef.value.scrollTo({ top: 0 })
           setSessionParams(route.name, params)
         })
-        .catch((err) => {
+        .catch(err => {
           console.log(err)
         })
     }
     const handleAdd = () => {
       router.push({
-        name: 'TagAdd',
+        name: 'TagAdd'
       })
     }
     // 监听 params.page 的变化
@@ -163,15 +163,15 @@ export default {
       }
     )
 
-    const goEdit = (id) => {
+    const goEdit = id => {
       router.push({
         name: 'TagEdit',
         params: {
-          id,
-        },
+          id
+        }
       })
     }
-    const deleteTag = (row) => {
+    const deleteTag = row => {
       const id = row._id
       const title = escapeHtml(row.tagname)
 
@@ -183,10 +183,10 @@ export default {
             ElMessage.success('删除成功')
             getTagList()
           })
-        },
+        }
       })
         .then(() => {})
-        .catch((error) => {
+        .catch(error => {
           console.log('Dialog closed:', error)
         })
     }
@@ -204,18 +204,18 @@ export default {
       return store.getters.siteUrl
     })
 
-    const getPath = (row) => {
+    const getPath = row => {
       if (!siteUrl.value) {
         ElMessage.error('请先设置站点地址')
         return
       }
       return `${siteUrl.value}/post/list/tag/${row._id}/1`
     }
-    const goToBlog = (row) => {
+    const goToBlog = row => {
       const url = getPath(row)
       window.open(url, '_blank')
     }
-    const copyPage = (row) => {
+    const copyPage = row => {
       const url = getPath(row)
       copyToClipboard(url)
     }
@@ -234,9 +234,9 @@ export default {
       goEdit,
       deleteTag,
       goToBlog,
-      copyPage,
+      copyPage
     }
-  },
+  }
 }
 </script>
 <style lang=""></style>

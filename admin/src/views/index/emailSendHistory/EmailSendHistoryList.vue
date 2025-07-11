@@ -160,7 +160,7 @@ import { onMounted, reactive, ref, watch } from 'vue'
 import {
   setSessionParams,
   getSessionParams,
-  copyToClipboard,
+  copyToClipboard
 } from '@/utils/utils'
 export default {
   setup() {
@@ -172,24 +172,24 @@ export default {
       size: 50,
       to: '',
       status: null,
-      keyword: '',
+      keyword: ''
     })
     const total = ref(0)
     const tableRef = ref(null)
-    const getEmailSendHistoryList = (resetPage) => {
+    const getEmailSendHistoryList = resetPage => {
       if (resetPage === true && params.page !== 1) {
         params.page = 1
         return
       }
       authApi
         .getEmailSendHistoryList(params)
-        .then((res) => {
+        .then(res => {
           emailSendHistoryList.value = res.data.list
           total.value = res.data.total
           tableRef.value.scrollTo({ top: 0 })
           setSessionParams(route.name, params)
         })
-        .catch((err) => {
+        .catch(err => {
           console.log(err)
         })
     }
@@ -205,12 +205,12 @@ export default {
       }
     )
 
-    const resend = (id) => {
+    const resend = id => {
       // 先询问是否重新发送
       ElMessageBox.confirm('确定要重新发送吗？', {
         confirmButtonText: '是',
         cancelButtonText: '否',
-        type: 'warning',
+        type: 'warning'
       })
         .then(() => {
           authApi
@@ -235,7 +235,7 @@ export default {
       }
     }
 
-    const openHtml = (html) => {
+    const openHtml = html => {
       const newWindow = window.open(
         '',
         '_blank',
@@ -257,9 +257,9 @@ export default {
       resend,
       // 搜索
       addParamsAndSearch,
-      openHtml,
+      openHtml
     }
-  },
+  }
 }
 </script>
 <style lang=""></style>

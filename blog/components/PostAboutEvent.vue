@@ -20,7 +20,7 @@
                 v-if="event.eventtype"
                 class="post-event-about-event-type"
                 :style="{
-                  backgroundColor: event.eventtype.color,
+                  backgroundColor: event.eventtype.color
                 }"
                 >{{ event.eventtype.name }}</span
               >{{ event.title }}</span
@@ -42,48 +42,48 @@ const props = defineProps({
     type: Array,
     default() {
       return []
-    },
+    }
   },
   showTitle: {
     type: Boolean,
-    default: true,
+    default: true
   },
   idPrefix: {
     type: String,
-    default: '',
+    default: ''
   },
   postId: {
     type: String,
-    default: '',
-  },
+    default: ''
+  }
 })
 
 const eventOpen = ref(false)
 const currentEventData = ref(null)
 const contentIsLoading = ref(false)
-const getEventDetail = async (id) => {
+const getEventDetail = async id => {
   if (contentIsLoading.value) {
     console.log('loading')
     return
   }
   contentIsLoading.value = true
   getEventDetailApiFetch({
-    id,
+    id
   })
-    .then((res) => {
+    .then(res => {
       currentEventData.value = res.data
       eventOpen.value = true
     })
-    .catch((err) => {
+    .catch(err => {
       console.log(err)
       const errors = err.response?._data?.errors
       if (errors) {
-        errors.forEach((item) => {
+        errors.forEach(item => {
           const message = item.message
           toast.add({
             title: message,
             icon: 'i-heroicons-x-circle',
-            color: 'red',
+            color: 'red'
           })
         })
       }
@@ -93,7 +93,7 @@ const getEventDetail = async (id) => {
     })
 }
 
-const eventClick = (event) => {}
+const eventClick = event => {}
 </script>
 <style scoped>
 .post-event-about-event-type {

@@ -18,7 +18,7 @@
           :disabled-date="timeRangeDisabledDate"
           :default-time="[
             new Date().setHours(0, 0, 0, 0),
-            new Date().setHours(23, 59, 59, 999),
+            new Date().setHours(23, 59, 59, 999)
           ]"
           @change="getDashboardVisitor"
         />
@@ -79,7 +79,7 @@ import {
   PointElement,
   LineElement,
   Title,
-  Tooltip,
+  Tooltip
 } from 'chart.js'
 import { Line } from 'vue-chartjs'
 ChartJS.register(
@@ -94,7 +94,7 @@ moment.locale('zh-cn')
 
 export default {
   components: {
-    Line,
+    Line
   },
   setup() {
     const pickerClass = ref(generateRandomAlphabetString(12))
@@ -115,7 +115,7 @@ export default {
           const start = new Date()
           start.setHours(0, 0, 0, 0)
           return [start, end]
-        },
+        }
       },
       // 昨天
       {
@@ -128,7 +128,7 @@ export default {
           start.setHours(0, 0, 0, 0)
           start.setTime(start.getTime() - 3600 * 1000 * 24)
           return [start, end]
-        },
+        }
       },
       {
         text: '过去3天',
@@ -139,7 +139,7 @@ export default {
           start.setDate(start.getDate() - 2) // 减去2天
           start.setHours(0, 0, 0, 0)
           return [start, end]
-        },
+        }
       },
       {
         text: '过去7天',
@@ -150,7 +150,7 @@ export default {
           start.setDate(start.getDate() - 6) // 减去6天
           start.setHours(0, 0, 0, 0)
           return [start, end]
-        },
+        }
       },
       {
         text: '过去1个月',
@@ -161,7 +161,7 @@ export default {
           start.setMonth(start.getMonth() - 1)
           start.setHours(0, 0, 0, 0)
           return [start, end]
-        },
+        }
       },
       {
         text: '过去3个月',
@@ -172,7 +172,7 @@ export default {
           start.setMonth(start.getMonth() - 3)
           start.setHours(0, 0, 0, 0)
           return [start, end]
-        },
+        }
       },
       {
         text: '过去一年',
@@ -183,11 +183,11 @@ export default {
           start.setFullYear(start.getFullYear() - 1)
           start.setHours(0, 0, 0, 0)
           return [start, end]
-        },
-      },
+        }
+      }
     ]
 
-    const timeRangeDisabledDate = (time) => {
+    const timeRangeDisabledDate = time => {
       const today = new Date()
       const past370Days = new Date()
       past370Days.setDate(today.getDate() - 370)
@@ -210,9 +210,9 @@ export default {
         .getDashboardVisitor({
           startTime: startTime,
           endTime: endTime,
-          timeZone: timeZone,
+          timeZone: timeZone
         })
-        .then((res) => {
+        .then(res => {
           visitorData.value = res.data
           showData.value = true
         })
@@ -228,7 +228,7 @@ export default {
         const labels = []
         const values = []
         const isOverDays = visitorData.value.isOverDays
-        data.forEach((item) => {
+        data.forEach(item => {
           // _id 为日期 2024-01-13T07:00:00.000Z
           let f = moment(item._id).format(
             `YYYY/MM/DD dddd${isOverDays ? '' : ' HH:mm'}`
@@ -244,9 +244,9 @@ export default {
             {
               label: 'PV',
               data: values,
-              borderColor: '#409EFF',
-            },
-          ],
+              borderColor: '#409EFF'
+            }
+          ]
         }
       }
       return {}
@@ -262,7 +262,7 @@ export default {
         const labels = []
         const values = []
         const isOverDays = visitorData.value.isOverDays
-        data.forEach((item) => {
+        data.forEach(item => {
           // _id 为日期 2024-01-13T07:00:00.000Z
           let f = moment(item._id).format(
             `YYYY/MM/DD dddd${isOverDays ? '' : ' HH:mm'}`
@@ -278,9 +278,9 @@ export default {
             {
               label: 'IP',
               data: values,
-              borderColor: '#409EFF',
-            },
-          ],
+              borderColor: '#409EFF'
+            }
+          ]
         }
       }
       return {}
@@ -296,7 +296,7 @@ export default {
         const labels = []
         const values = []
         const isOverDays = visitorData.value.isOverDays
-        data.forEach((item) => {
+        data.forEach(item => {
           // _id 为日期 2024-01-13T07:00:00.000Z
           let f = moment(item._id).format(
             `YYYY/MM/DD dddd${isOverDays ? '' : ' HH:mm'}`
@@ -312,9 +312,9 @@ export default {
             {
               label: '机器人访问',
               data: values,
-              borderColor: '#409EFF',
-            },
-          ],
+              borderColor: '#409EFF'
+            }
+          ]
         }
       }
       return {}
@@ -326,30 +326,30 @@ export default {
       maintainAspectRatio: false,
       interaction: {
         mode: 'index',
-        intersect: false,
+        intersect: false
       },
       scales: {
         y: {
           grid: {
-            color: 'rgba(155, 155, 155, 0.2)', // X轴网格线颜色
+            color: 'rgba(155, 155, 155, 0.2)' // X轴网格线颜色
           },
           ticks: {
             beginAtZero: true,
             precision: 0,
-            stepSize: 1,
-          },
+            stepSize: 1
+          }
         },
         x: {
           grid: {
-            color: 'rgba(155, 155, 155, 0.2)', // X轴网格线颜色
+            color: 'rgba(155, 155, 155, 0.2)' // X轴网格线颜色
           },
           ticks: {
             // 禁止倾斜
-            maxRotation: 0,
+            maxRotation: 0
             // display: false,
-          },
-        },
-      },
+          }
+        }
+      }
     }
 
     const showData = ref(false)
@@ -377,9 +377,9 @@ export default {
       robotAccessData,
       chartOptions,
       showData,
-      tryShowData,
+      tryShowData
     }
-  },
+  }
 }
 </script>
 <style scoped></style>

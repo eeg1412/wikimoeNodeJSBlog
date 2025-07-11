@@ -52,71 +52,71 @@ import { Plus } from '@element-plus/icons-vue'
 export default {
   components: {
     VueCropper,
-    Plus,
+    Plus
   },
   emits: ['crop'],
   props: {
     src: {
-      type: String,
+      type: String
     },
     initialAspectRatio: {
       initialAspectRatio: Number,
-      default: NaN,
+      default: NaN
     },
     aspectRatio: {
-      type: Number,
+      type: Number
     },
     width: {
-      type: Number,
+      type: Number
     },
     height: {
-      type: Number,
+      type: Number
     },
     maxWidth: {
       type: Number,
-      default: Infinity,
+      default: Infinity
     },
     maxHeight: {
       type: Number,
-      default: Infinity,
+      default: Infinity
     },
     minWidth: {
       type: Number,
-      default: 0,
+      default: 0
     },
     minHeight: {
       type: Number,
-      default: 0,
+      default: 0
     },
     fixedMode: {
       type: Boolean,
-      default: false,
+      default: false
     },
     putImageType: {
       type: String,
-      default: 'image/webp',
+      default: 'image/webp'
     },
     putImageQuality: {
       type: Number,
-      default: 0.8,
-    },
+      default: 0.8
+    }
   },
   setup(props, { emit }) {
     const cropperDialogOpen = ref(false)
     const cropper = ref(null)
     const imgSrc = ref('')
     const uploder = ref(null)
-    const uploadImage = (file) => {
+    const uploadImage = file => {
       // file to base64
       const reader = new FileReader()
       reader.readAsDataURL(file.raw)
-      reader.onload = (e) => {
+      reader.onload = e => {
         imgSrc.value = e.target.result
         cropperDialogOpen.value = true
       }
     }
 
-    const handlePaste = (event) => {
+    const handlePaste = event => {
       const items = (event.clipboardData || event.originalEvent.clipboardData)
         .items
       console.log(items)
@@ -139,7 +139,7 @@ export default {
         minWidth: props.minWidth,
         minHeight: props.minHeight,
         imageSmoothingEnabled: true,
-        imageSmoothingQuality: 'high',
+        imageSmoothingQuality: 'high'
       }
       const base64 = cropper.value
         .getCroppedCanvas(config)
@@ -173,9 +173,9 @@ export default {
       imgSrc,
       uploadImage,
       toCrop,
-      uploder,
+      uploder
     }
-  },
+  }
 }
 </script>
 <style lang="less">

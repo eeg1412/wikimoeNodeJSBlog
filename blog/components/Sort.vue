@@ -10,7 +10,7 @@
         <NuxtLink
           :to="{
             name: 'postListSort',
-            params: { sortid: item.alias || item._id, page: 1 },
+            params: { sortid: item.alias || item._id, page: 1 }
           }"
           class="sort-list-item-link"
           :class="{ active: sortid === item.alias || sortid === item._id }"
@@ -27,7 +27,7 @@
             <NuxtLink
               :to="{
                 name: 'postListSort',
-                params: { sortid: item.alias || item._id, page: 1 },
+                params: { sortid: item.alias || item._id, page: 1 }
               }"
               class="sort-list-item-link"
               :class="{ active: sortid === item.alias || sortid === item._id }"

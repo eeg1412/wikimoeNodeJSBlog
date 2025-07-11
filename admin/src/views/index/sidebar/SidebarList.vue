@@ -196,7 +196,7 @@ export default {
   components: {
     RichEditor5,
     draggable,
-    GoogleAdInput,
+    GoogleAdInput
   },
   setup() {
     const route = useRoute()
@@ -213,7 +213,7 @@ export default {
           count: 1,
           type: 1,
           taxis: 0,
-          status: 0,
+          status: 0
         },
         // 自定义HTML
         {
@@ -222,7 +222,7 @@ export default {
           count: 1,
           type: 11,
           taxis: 0,
-          status: 0,
+          status: 0
         },
         // 谷歌广告
         {
@@ -231,8 +231,8 @@ export default {
           count: 1,
           type: 10,
           taxis: 0,
-          status: 0,
-        },
+          status: 0
+        }
       ]
       const only1 = [
         {
@@ -241,7 +241,7 @@ export default {
           count: 10,
           type: 3,
           taxis: 0,
-          status: 0,
+          status: 0
         },
         {
           title: '随机标签',
@@ -249,7 +249,7 @@ export default {
           count: 10,
           type: 4,
           taxis: 0,
-          status: 0,
+          status: 0
         },
         // {
         //   title: '随机文章',
@@ -281,7 +281,7 @@ export default {
           count: 1,
           type: 8,
           taxis: 0,
-          status: 0,
+          status: 0
         },
         {
           title: '归档',
@@ -289,7 +289,7 @@ export default {
           count: 1,
           type: 9,
           taxis: 0,
-          status: 0,
+          status: 0
         },
         // 热门文章
         {
@@ -298,7 +298,7 @@ export default {
           count: 5,
           type: 12,
           taxis: 0,
-          status: 0,
+          status: 0
         },
         // 当季追番
         {
@@ -307,7 +307,7 @@ export default {
           count: 10,
           type: 13,
           taxis: 0,
-          status: 0,
+          status: 0
         },
         // 攻略中
         {
@@ -316,7 +316,7 @@ export default {
           count: 10,
           type: 14,
           taxis: 0,
-          status: 0,
+          status: 0
         },
         // 阅读中
         {
@@ -325,12 +325,12 @@ export default {
           count: 10,
           type: 15,
           taxis: 0,
-          status: 0,
-        },
+          status: 0
+        }
       ]
       // 检查 sidebarSettingsForm 里存在的 type，如果存在，只输出sidebarSettingsForm中没有的type
-      const typeList = sidebarSettingsForm.value.map((item) => item.type)
-      const result = only1.filter((item) => !typeList.includes(item.type))
+      const typeList = sidebarSettingsForm.value.map(item => item.type)
+      const result = only1.filter(item => !typeList.includes(item.type))
       return base.concat(result)
     })
 
@@ -341,39 +341,39 @@ export default {
 
     const placeholderMap = {
       10: '填写格式为：ad-slot,ad-format,ad-layout-key',
-      11: '填写可信任的HTML代码，注意代码安全！',
+      11: '填写可信任的HTML代码，注意代码安全！'
     }
 
     const getSidebarList = () => {
-      authApi.getSidebarList().then((res) => {
+      authApi.getSidebarList().then(res => {
         sidebarSettingsForm.value = res.data.list
       })
     }
-    const handleSideBarCommand = (command) => {
+    const handleSideBarCommand = command => {
       const item = sidebarSettingsTemplate.value.find(
-        (item) => item.type === command
+        item => item.type === command
       )
       authApi
         .createSidebar(item)
-        .then((res) => {
+        .then(res => {
           // 在前面插入
           sidebarSettingsForm.value.unshift(res.data.data)
         })
-        .catch((err) => {
+        .catch(err => {
           console.log(err)
         })
     }
-    const sidebarSettingsSubmit = (item) => {
+    const sidebarSettingsSubmit = item => {
       authApi
         .updateSidebar(item)
-        .then((res) => {
+        .then(res => {
           ElMessage.success('更新成功')
         })
-        .catch((err) => {
+        .catch(err => {
           console.log(err)
         })
     }
-    const sidebarSettingsDelete = (row) => {
+    const sidebarSettingsDelete = row => {
       // 询问是否删除
       const id = row._id
       const title = escapeHtml(row.title) || '未定义标题'
@@ -385,13 +385,13 @@ export default {
           return authApi.deleteSidebar({ id }).then(() => {
             ElMessage.success('删除成功')
             sidebarSettingsForm.value = sidebarSettingsForm.value.filter(
-              (item) => item._id !== id
+              item => item._id !== id
             )
           })
-        },
+        }
       })
         .then(() => {})
-        .catch((error) => {
+        .catch(error => {
           console.log('Dialog closed:', error)
         })
     }
@@ -404,12 +404,12 @@ export default {
         const params = sidebarSettingsForm.value.map((item, index) => {
           return {
             _id: item._id,
-            taxis: index,
+            taxis: index
           }
         })
         updateSidebarTaxis({
-          sidebarList: params,
-        }).then((res) => {
+          sidebarList: params
+        }).then(res => {
           canDrag.value = false
           getSidebarList()
         })
@@ -417,8 +417,8 @@ export default {
         canDrag.value = true
       }
     }
-    const updateSidebarTaxis = (params) => {
-      return authApi.updateSidebarTaxis(params).then((res) => {
+    const updateSidebarTaxis = params => {
+      return authApi.updateSidebarTaxis(params).then(res => {
         ElMessage.success('更新成功')
       })
     }
@@ -441,9 +441,9 @@ export default {
       sidebarSettingsDelete,
       showIdList,
       canDrag,
-      onDragBtnClick,
+      onDragBtnClick
     }
-  },
+  }
 }
 </script>
 <style scoped>

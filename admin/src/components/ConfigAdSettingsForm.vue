@@ -50,7 +50,7 @@
 import {
   formatResToForm,
   formatResToObj,
-  fieldErrorNotice,
+  fieldErrorNotice
 } from '@/utils/utils'
 import { ref, reactive, onMounted, computed } from 'vue'
 import { authApi } from '@/api'
@@ -60,7 +60,7 @@ import GoogleAdInput from '@/components/GoogleAdInput.vue'
 
 export default {
   components: {
-    GoogleAdInput,
+    GoogleAdInput
   },
   setup(props, { emit }) {
     const adSettingsFormRef = ref(null)
@@ -74,7 +74,7 @@ export default {
       // 文章底部谷歌参数
       googleAdPostBottomParams: '',
       // ads.txt
-      AdAdsTxt: '',
+      AdAdsTxt: ''
     })
 
     // 表单验证规则
@@ -83,38 +83,38 @@ export default {
         {
           required: adSettingsForm.googleAdEnabled,
           message: '请输入谷歌广告ID',
-          trigger: 'blur',
-        },
+          trigger: 'blur'
+        }
       ],
       googleAdPostBottomParams: [
         {
           required: adSettingsForm.googleAdPostBottomEnabled,
           message: '请输入文章底部谷歌参数',
-          trigger: 'blur',
-        },
-      ],
+          trigger: 'blur'
+        }
+      ]
     }))
 
     const adSettingsSubmit = () => {
       adSettingsFormRef.value.validate((valid, fields) => {
         if (valid) {
           const params = []
-          Object.keys(adSettingsForm).forEach((key) => {
+          Object.keys(adSettingsForm).forEach(key => {
             params.push({
               name: key,
-              value: adSettingsForm[key],
+              value: adSettingsForm[key]
             })
           })
           authApi
             .updateOption({ optionList: params })
-            .then((res) => {
+            .then(res => {
               const obj = formatResToObj(res.data.data)
               formatResToForm(adSettingsForm, obj)
               store.dispatch('setOptions')
               emit('submitSuccess')
               ElMessage.success('更新成功')
             })
-            .catch((err) => {
+            .catch(err => {
               console.log(err)
             })
         } else {
@@ -128,11 +128,11 @@ export default {
     const inited = ref(false)
     const getOptionList = () => {
       const params = {
-        nameList: Object.keys(adSettingsForm),
+        nameList: Object.keys(adSettingsForm)
       }
       authApi
         .getOptionList(params)
-        .then((res) => {
+        .then(res => {
           const obj = formatResToObj(res.data.data)
           formatResToForm(adSettingsForm, obj)
         })
@@ -150,8 +150,8 @@ export default {
       adSettingsForm,
       adSettingsRules,
       adSettingsSubmit,
-      inited,
+      inited
     }
-  },
+  }
 }
 </script>

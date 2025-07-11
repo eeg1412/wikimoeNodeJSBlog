@@ -110,30 +110,30 @@ export default {
     const params = reactive({
       page: 1,
       size: 50,
-      keyword: '',
+      keyword: ''
     })
     const total = ref(0)
     const tableRef = ref(null)
-    const getLinkList = (resetPage) => {
+    const getLinkList = resetPage => {
       if (resetPage === true && params.page !== 1) {
         params.page = 1
         return
       }
       authApi
         .getLinkList(params)
-        .then((res) => {
+        .then(res => {
           linkList.value = res.data.list
           total.value = res.data.total
           tableRef.value.scrollTo({ top: 0 })
           setSessionParams(route.name, params)
         })
-        .catch((err) => {
+        .catch(err => {
           console.log(err)
         })
     }
     const handleAdd = () => {
       router.push({
-        name: 'LinkAdd',
+        name: 'LinkAdd'
       })
     }
     // 监听 params.page 的变化
@@ -144,15 +144,15 @@ export default {
       }
     )
 
-    const goEdit = (id) => {
+    const goEdit = id => {
       router.push({
         name: 'LinkEdit',
         params: {
-          id,
-        },
+          id
+        }
       })
     }
-    const deleteLink = (row) => {
+    const deleteLink = row => {
       const id = row._id
       const title = escapeHtml(row.sitename)
 
@@ -164,10 +164,10 @@ export default {
             ElMessage.success('删除成功')
             getLinkList()
           })
-        },
+        }
       })
         .then(() => {})
-        .catch((error) => {
+        .catch(error => {
           console.log('Dialog closed:', error)
         })
     }
@@ -192,9 +192,9 @@ export default {
       getLinkList,
       handleAdd,
       goEdit,
-      deleteLink,
+      deleteLink
     }
-  },
+  }
 }
 </script>
 <style lang=""></style>

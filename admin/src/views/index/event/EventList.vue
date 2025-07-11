@@ -178,30 +178,30 @@ export default {
     const params = reactive({
       page: 1,
       size: 50,
-      keyword: '',
+      keyword: ''
     })
     const total = ref(0)
     const tableRef = ref(null)
-    const getEventList = (resetPage) => {
+    const getEventList = resetPage => {
       if (resetPage === true && params.page !== 1) {
         params.page = 1
         return
       }
       authApi
         .getEventList(params)
-        .then((res) => {
+        .then(res => {
           eventList.value = res.data.list
           total.value = res.data.total
           tableRef.value.scrollTo({ top: 0 })
           setSessionParams(route.name, params)
         })
-        .catch((err) => {
+        .catch(err => {
           console.log(err)
         })
     }
     const handleAdd = () => {
       router.push({
-        name: 'EventAdd',
+        name: 'EventAdd'
       })
     }
     // 监听 params.page 的变化
@@ -212,15 +212,15 @@ export default {
       }
     )
 
-    const goEdit = (id) => {
+    const goEdit = id => {
       router.push({
         name: 'EventEdit',
         params: {
-          id,
-        },
+          id
+        }
       })
     }
-    const deleteEvent = (row) => {
+    const deleteEvent = row => {
       const id = row._id
       const title = escapeHtml(row.title) || '未命名'
 
@@ -232,10 +232,10 @@ export default {
             ElMessage.success('删除成功')
             getEventList()
           })
-        },
+        }
       })
         .then(() => {})
-        .catch((error) => {
+        .catch(error => {
           console.log('Dialog closed:', error)
         })
     }
@@ -251,7 +251,7 @@ export default {
         if (params.eventtype) {
           queryEventtypeList(null, {
             idList: params.eventtype,
-            size: 999999,
+            size: 999999
           })
         }
       }
@@ -270,11 +270,11 @@ export default {
           keyword: query,
           page: 1,
           size: 50,
-          ...options,
+          ...options
         }
         authApi
           .getEventtypeList(params, { noLoading: true })
-          .then((res) => {
+          .then(res => {
             eventtypeList.value = res.data.list
           })
           .catch(() => {})
@@ -298,9 +298,9 @@ export default {
       deleteEvent,
       eventtypeList,
       eventtypeListIsLoading,
-      queryEventtypeList,
+      queryEventtypeList
     }
-  },
+  }
 }
 </script>
 <style scoped>

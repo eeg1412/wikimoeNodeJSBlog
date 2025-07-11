@@ -41,8 +41,8 @@ import { ref } from 'vue'
 const props = defineProps({
   modelValue: {
     type: String,
-    default: '',
-  },
+    default: ''
+  }
 })
 
 // 定义 emits
@@ -52,7 +52,7 @@ const dialogVisible = ref(false)
 const textareaValue = ref('')
 
 // 更新值的方法
-const updateValue = (value) => {
+const updateValue = value => {
   emit('update:modelValue', value)
 }
 

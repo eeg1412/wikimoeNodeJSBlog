@@ -61,7 +61,7 @@ export default {
     ConfigEmailSettingsForm,
     ConfigOtherSettingsForm,
     ConfigSitePostForm,
-    ConfigAdSettingsForm,
+    ConfigAdSettingsForm
   },
   setup() {
     const route = useRoute()
@@ -73,16 +73,16 @@ export default {
       activeName.value = 'site'
     }
 
-    watch(activeName, (val) => {
+    watch(activeName, val => {
       const query = { active: val }
       router.replace({ query })
     })
 
     onMounted(() => {})
     return {
-      activeName,
+      activeName
     }
-  },
+  }
 }
 </script>
 <style scoped>

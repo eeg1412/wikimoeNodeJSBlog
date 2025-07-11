@@ -9,7 +9,7 @@
     <div
       class="grid gap-3 post-acg-grid"
       :class="{
-        odd: contentCount % 2 === 1,
+        odd: contentCount % 2 === 1
       }"
     >
       <div
@@ -57,38 +57,38 @@ const props = defineProps({
     type: Array,
     default() {
       return []
-    },
+    }
   },
   movieList: {
     type: Array,
     default() {
       return []
-    },
+    }
   },
   gameList: {
     type: Array,
     default() {
       return []
-    },
+    }
   },
   bookList: {
     type: Array,
     default() {
       return []
-    },
+    }
   },
   showTitle: {
     type: Boolean,
-    default: true,
+    default: true
   },
   idPrefix: {
     type: String,
-    default: '',
+    default: ''
   },
   postId: {
     type: String,
-    default: '',
-  },
+    default: ''
+  }
 })
 const contentCount = computed(() => {
   return (

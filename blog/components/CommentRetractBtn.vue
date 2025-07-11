@@ -36,12 +36,12 @@ const emits = defineEmits(['refresh'])
 const props = defineProps({
   commentid: {
     type: String,
-    default: '',
+    default: ''
   },
   content: {
     type: String,
-    default: '',
-  },
+    default: ''
+  }
 })
 const optionStore = useOptionStore()
 const { options } = storeToRefs(optionStore)
@@ -112,16 +112,16 @@ const retractComment = () => {
       title: '已超过撤回时间，无法撤回评论',
       icon: 'i-heroicons-x-circle',
       color: 'red',
-      timeout: 10000,
+      timeout: 10000
     })
     isModalOpen.value = false
     return
   }
   isLoading.value = true
   deleteCommentRetractApi({
-    id: props.commentid,
+    id: props.commentid
   })
-    .then((res) => {
+    .then(res => {
       console.log(res)
       toast.add({
         title: '已成功撤回评论',
@@ -131,9 +131,9 @@ const retractComment = () => {
         actions: [
           {
             label: '复制评论内容',
-            click: () => copyToClipboard(props.content, toast),
-          },
-        ],
+            click: () => copyToClipboard(props.content, toast)
+          }
+        ]
       })
       const commentRetractCountData = res.commentRetractCountData
       if (commentRetractCountData) {
@@ -149,17 +149,17 @@ const retractComment = () => {
       // 刷新评论列表
       emits('refresh')
     })
-    .catch((err) => {
+    .catch(err => {
       console.log(err)
       const errors = err.response?._data?.errors
       if (errors) {
-        errors.forEach((item) => {
+        errors.forEach(item => {
           const message = item.message
           toast.add({
             title: message,
             icon: 'i-heroicons-x-circle',
             color: 'red',
-            timeout: 10000,
+            timeout: 10000
           })
         })
       }
@@ -189,7 +189,7 @@ const retractComment = () => {
 const currentComment = ref(null)
 const findCurrentComment = () => {
   const commentList = commentRetractAuthDecode.value?.commentList || []
-  currentComment.value = commentList.find((item) => item.id === props.commentid)
+  currentComment.value = commentList.find(item => item.id === props.commentid)
 }
 
 // 只在 commentid 和 commentRetractAuthDecode 变化时更新 currentComment

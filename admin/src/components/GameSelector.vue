@@ -30,16 +30,16 @@ import { authApi } from '@/api'
 const props = defineProps({
   modelValue: {
     type: Array,
-    default: () => [],
+    default: () => []
   },
   gameList: {
     type: Array,
-    default: () => [],
+    default: () => []
   },
   placeholder: {
     type: String,
-    default: '请选择游戏',
-  },
+    default: '请选择游戏'
+  }
 })
 
 const emit = defineEmits(['update:modelValue', 'update:gameList'])
@@ -53,11 +53,11 @@ const selectedGames = computed({
   },
   set(value) {
     emit('update:modelValue', value)
-  },
+  }
 })
 
 // 检查显示文本
-const checkShowText = (item) => {
+const checkShowText = item => {
   if (item.status === 0) {
     return '【状态:不显示】'
   }
@@ -72,7 +72,7 @@ const getGameList = (keyword = null) => {
   loading.value = true
   authApi
     .getGameList({ keyword, status: 1, size: 50, page: 1 }, true)
-    .then((res) => {
+    .then(res => {
       emit('update:gameList', res.data.list)
     })
     .finally(() => {
@@ -82,7 +82,7 @@ const getGameList = (keyword = null) => {
 
 // 搜索游戏
 let queryGamesTimer = null
-const queryGames = (query) => {
+const queryGames = query => {
   if (queryGamesTimer) {
     clearTimeout(queryGamesTimer)
   }

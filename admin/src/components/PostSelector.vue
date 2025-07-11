@@ -31,20 +31,20 @@ import { authApi } from '@/api'
 const props = defineProps({
   modelValue: {
     type: Array,
-    default: () => [],
+    default: () => []
   },
   postList: {
     type: Array,
-    default: () => [],
+    default: () => []
   },
   placeholder: {
     type: String,
-    default: '请选择博文',
+    default: '请选择博文'
   },
   currentPostId: {
     type: String,
-    default: '',
-  },
+    default: ''
+  }
 })
 
 const emit = defineEmits(['update:modelValue', 'update:postList'])
@@ -58,11 +58,11 @@ const selectedPosts = computed({
   },
   set(value) {
     emit('update:modelValue', value)
-  },
+  }
 })
 
 // 检查显示文本
-const checkShowText = (item) => {
+const checkShowText = item => {
   if (item.status === 0) {
     return '【状态:不显示】'
   }
@@ -77,7 +77,7 @@ const getPostList = (keyword = null) => {
   loading.value = true
   authApi
     .getPostList({ keyword, status: 1, type: 1, size: 50, page: 1 }, true)
-    .then((res) => {
+    .then(res => {
       emit('update:postList', res.data.list)
     })
     .finally(() => {
@@ -87,7 +87,7 @@ const getPostList = (keyword = null) => {
 
 // 搜索博文
 let queryPostsTimer = null
-const queryPosts = (query) => {
+const queryPosts = query => {
   if (queryPostsTimer) {
     clearTimeout(queryPostsTimer)
   }

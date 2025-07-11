@@ -12,8 +12,8 @@ import { useOptionStore } from '@/store/options'
 const props = defineProps({
   post: {
     type: Object,
-    required: true,
-  },
+    required: true
+  }
 })
 
 const optionStore = useOptionStore()
@@ -42,13 +42,13 @@ const getLinkObj = () => {
     case 1:
       linkObj = {
         name: 'postDetail',
-        params: { id: detail.alias || detail._id },
+        params: { id: detail.alias || detail._id }
       }
       break
     case 3:
       linkObj = {
         name: 'pageDetail',
-        params: { id: detail.alias || detail._id },
+        params: { id: detail.alias || detail._id }
       }
 
       break

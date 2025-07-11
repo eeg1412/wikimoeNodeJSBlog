@@ -17,8 +17,8 @@ const route = useRoute()
 const props = defineProps({
   ad: {
     type: String,
-    default: '',
-  },
+    default: ''
+  }
 })
 // ad 转换
 const adArray = props.ad ? props.ad.split(',') : []

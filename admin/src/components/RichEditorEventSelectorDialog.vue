@@ -58,16 +58,16 @@ export default {
   props: {
     show: {
       type: Boolean,
-      default: false,
+      default: false
     },
     id: {
       type: String,
-      default: '',
+      default: ''
     },
     text: {
       type: String,
-      default: '',
-    },
+      default: ''
+    }
   },
   emits: ['update:show', 'ok'],
   setup(props, { emit }) {
@@ -84,20 +84,20 @@ export default {
       },
       set(val) {
         emit('update:show', val)
-      },
+      }
     })
 
     const form = reactive({
       id: null,
-      text: '',
+      text: ''
     })
     const rules = reactive({
       id: [{ required: true, message: '请选择活动', trigger: 'blur' }],
-      text: [{ required: true, message: '请输入文本', trigger: 'blur' }],
+      text: [{ required: true, message: '请输入文本', trigger: 'blur' }]
     })
     const formRef = ref(null)
     const submit = () => {
-      formRef.value.validate(async (valid) => {
+      formRef.value.validate(async valid => {
         if (!valid) {
           return false
         }
@@ -117,12 +117,12 @@ export default {
     const eventList = ref([])
     const eventListIsLoading = ref(false)
     const eventListTimer = null
-    const getEventDetail = (id) => {
+    const getEventDetail = id => {
       authApi
         .getEventDetail({
-          id,
+          id
         })
-        .then((res) => {
+        .then(res => {
           eventList.value = [res.data.data]
         })
         .catch(() => {})
@@ -137,11 +137,11 @@ export default {
           keyword: query,
           page: 1,
           size: 50,
-          ...options,
+          ...options
         }
         authApi
           .getEventList(params, { noLoading: true })
-          .then((res) => {
+          .then(res => {
             eventList.value = res.data.list
           })
           .catch(() => {})
@@ -159,9 +159,9 @@ export default {
       resetData,
       eventList,
       eventListIsLoading,
-      queryEventList,
+      queryEventList
     }
-  },
+  }
 }
 </script>
 <style lang=""></style>

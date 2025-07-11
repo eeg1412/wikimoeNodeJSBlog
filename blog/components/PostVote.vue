@@ -24,20 +24,20 @@ const props = defineProps({
     type: Array,
     default() {
       return []
-    },
+    }
   },
   showTitle: {
     type: Boolean,
-    default: true,
+    default: true
   },
   idPrefix: {
     type: String,
-    default: '',
+    default: ''
   },
   postId: {
     type: String,
-    default: null,
-  },
+    default: null
+  }
 })
 </script>
 <style scoped></style>

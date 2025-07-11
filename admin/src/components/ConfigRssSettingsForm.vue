@@ -40,7 +40,7 @@
 import {
   formatResToForm,
   formatResToObj,
-  fieldErrorNotice,
+  fieldErrorNotice
 } from '@/utils/utils'
 import { ref, reactive, onMounted } from 'vue'
 import { authApi } from '@/api'
@@ -56,28 +56,28 @@ export default {
       // RSS显示条数
       siteRssMaxCount: 10,
       // 底部显示RSS
-      siteShowRssInFooter: false,
+      siteShowRssInFooter: false
       // RSS输出全文
       // siteRssFullText: false,
     })
     const rssSettingsRules = {
       siteRssMaxCount: [
-        { required: true, message: '请输入RSS显示条数', trigger: 'blur' },
-      ],
+        { required: true, message: '请输入RSS显示条数', trigger: 'blur' }
+      ]
     }
     const rssSettingsSubmit = () => {
       rssSettingsFormRef.value.validate((valid, fields) => {
         if (valid) {
           const params = []
-          Object.keys(rssSettingsForm).forEach((key) => {
+          Object.keys(rssSettingsForm).forEach(key => {
             params.push({
               name: key,
-              value: rssSettingsForm[key],
+              value: rssSettingsForm[key]
             })
           })
           authApi
             .updateOption({ optionList: params })
-            .then((res) => {
+            .then(res => {
               const obj = formatResToObj(res.data.data)
               formatResToForm(rssSettingsForm, obj)
               store.dispatch('setOptions')
@@ -86,7 +86,7 @@ export default {
 
               ElMessage.success('更新成功')
             })
-            .catch((err) => {
+            .catch(err => {
               console.log(err)
             })
         } else {
@@ -101,14 +101,14 @@ export default {
     const getOptionList = () => {
       // 将rssSettingsForm的key转换为数组
       const params = {
-        nameList: [],
+        nameList: []
       }
-      Object.keys(rssSettingsForm).forEach((key) => {
+      Object.keys(rssSettingsForm).forEach(key => {
         params.nameList.push(key)
       })
       authApi
         .getOptionList(params)
-        .then((res) => {
+        .then(res => {
           // res.data.data是数组，需要转换为对象
           const obj = formatResToObj(res.data.data)
           formatResToForm(rssSettingsForm, obj)
@@ -127,9 +127,9 @@ export default {
       rssSettingsForm,
       rssSettingsRules,
       rssSettingsSubmit,
-      inited,
+      inited
     }
-  },
+  }
 }
 </script>
 <style></style>

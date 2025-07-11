@@ -359,7 +359,7 @@ import {
   onMounted,
   reactive,
   ref,
-  watch,
+  watch
 } from 'vue'
 import store from '@/store'
 // AttachmentImage
@@ -373,7 +373,7 @@ import {
   Search,
   Sort,
   CircleCheck,
-  Remove,
+  Remove
 } from '@element-plus/icons-vue'
 import axios from 'axios'
 import { showLoading, hideLoading } from '@/utils/utils'
@@ -384,36 +384,36 @@ export default {
   components: {
     AttachmentImage,
     VideoUploader,
-    draggable,
+    draggable
   },
   props: {
     albumIdProp: {
       type: String,
-      default: '',
+      default: ''
     },
     shouldSelectOk: {
       type: Boolean,
-      default: false,
+      default: false
     },
     hasDelete: {
       type: Boolean,
-      default: true,
+      default: true
     },
     // 选择上限
     selectLimit: {
       type: Number,
-      default: null,
+      default: null
     },
     typeList: {
       type: Array,
       default: () => {
         return ['image', 'video']
-      },
+      }
     },
     is360Panorama: {
       type: Boolean,
-      default: undefined,
-    },
+      default: undefined
+    }
   },
   emits: [
     'success',
@@ -423,7 +423,7 @@ export default {
     'onAttachmentsAlbumChange',
     'selectAttachments',
     'onDialogClosed',
-    'onDialogClose',
+    'onDialogClose'
   ],
   setup(props, { emit }) {
     const visible = ref(false)
@@ -468,8 +468,8 @@ export default {
           ...albumList.value,
           {
             _id: '-1',
-            name: `添加相册「${keyword.value}」`,
-          },
+            name: `添加相册「${keyword.value}」`
+          }
         ]
       }
       return albumList.value
@@ -478,39 +478,39 @@ export default {
       const params = {
         page: 1,
         size: 10,
-        keyword: keyword.value,
+        keyword: keyword.value
       }
-      await authApi.getAlbumList(params, { noLoading: true }).then((res) => {
+      await authApi.getAlbumList(params, { noLoading: true }).then(res => {
         albumList.value = res.data.list
       })
     }
-    const getToAlbumList = async (isTo) => {
+    const getToAlbumList = async isTo => {
       const params = {
         page: 1,
         size: 10,
-        keyword: toKeyword.value,
+        keyword: toKeyword.value
       }
-      await authApi.getAlbumList(params, { noLoading: true }).then((res) => {
+      await authApi.getAlbumList(params, { noLoading: true }).then(res => {
         toAlbumList.value = res.data.list
       })
     }
     const toKeyword = ref('')
     const toAlbumList = ref([])
     let searchToTimer = null
-    const searchToAlbumsRemote = async (query) => {
+    const searchToAlbumsRemote = async query => {
       clearTimeout(searchToTimer)
       searchToTimer = setTimeout(() => {
         toKeyword.value = query
         getToAlbumList()
       }, 100)
     }
-    const getAlbumDetail = async (id) => {
+    const getAlbumDetail = async id => {
       const params = {
-        id: id || albumId.value,
+        id: id || albumId.value
       }
       await authApi
         .getAlbumDetail(params)
-        .then((res) => {
+        .then(res => {
           albumList.value = [res.data.data]
         })
         .catch(() => {})
@@ -520,7 +520,7 @@ export default {
       await createAlbum()
       changeAlbum(albumId.value)
     }
-    const searchAlbumsRemote = async (query) => {
+    const searchAlbumsRemote = async query => {
       clearTimeout(searchTimer)
       searchTimer = setTimeout(() => {
         keyword.value = query
@@ -538,17 +538,17 @@ export default {
         'x-compress-max-size': options.imgSettingCompressMaxSize
           ? String(options.imgSettingCompressMaxSize)
           : '',
-        'x-is-360-panorama': options.is360Panorama ? '1' : '0',
+        'x-is-360-panorama': options.is360Panorama ? '1' : '0'
       }
     }
     const options = reactive({
       noCompress: false,
       noThumbnail: false,
       is360Panorama: false,
-      imgSettingCompressMaxSize: null,
+      imgSettingCompressMaxSize: null
     })
     const optionsCount = computed(() => {
-      return Object.keys(options).filter((key) => {
+      return Object.keys(options).filter(key => {
         return options[key] !== null && options[key] !== false
       }).length
     })
@@ -562,7 +562,7 @@ export default {
 
     let getAttachmentListTimer = null
 
-    const handleSuccess = (res) => {
+    const handleSuccess = res => {
       console.log(res)
       emit('success', res)
       clearTimeout(getAttachmentListTimer)
@@ -571,11 +571,11 @@ export default {
       }, 500)
     }
 
-    const handleError = (err) => {
+    const handleError = err => {
       try {
         const obj = JSON.parse(err.message)
         const errors = obj.errors
-        errors.forEach((item) => {
+        errors.forEach(item => {
           ElMessage.error(item.message)
         })
       } catch (error) {
@@ -590,7 +590,7 @@ export default {
       page: 1,
       size: 20,
       keyword: '',
-      album: albumId.value,
+      album: albumId.value
     })
     const total = ref(0)
     const getAttachmentList = (resetPage, resetKeyword) => {
@@ -606,12 +606,12 @@ export default {
       }
       authApi
         .getAttachmentList(params)
-        .then((res) => {
+        .then(res => {
           attachmentList.value = res.data.list
           total.value = res.data.total
           emit('paramsChange', params)
         })
-        .catch((err) => {
+        .catch(err => {
           console.log(err)
         })
         .finally(() => {
@@ -621,7 +621,7 @@ export default {
 
     const createAlbum = async () => {
       const params = {
-        name: keyword.value,
+        name: keyword.value
       }
       const res = await authApi.createAlbum(params).catch(() => {
         return null
@@ -635,7 +635,7 @@ export default {
       }
     }
 
-    const preChangeAlbum = async (value) => {
+    const preChangeAlbum = async value => {
       if (value === '-1') {
         // 添加相册
         checkAlbumId()
@@ -648,7 +648,7 @@ export default {
           {
             confirmButtonText: '是',
             cancelButtonText: '否',
-            type: 'warning',
+            type: 'warning'
           }
         )
           .then(() => {
@@ -659,7 +659,7 @@ export default {
         changeAlbum(value)
       }
     }
-    const changeAlbum = async (value) => {
+    const changeAlbum = async value => {
       albumId.value = value
       params.album = albumId.value
       clearSelectedImageList()
@@ -682,7 +682,7 @@ export default {
       clearTimeout(clearSuccessFileListTimer)
       clearSuccessFileListTimer = setTimeout(() => {
         // 清除掉status: "success" 的file
-        const filterList = fileList.value.filter((item) => {
+        const filterList = fileList.value.filter(item => {
           return item.status !== 'success'
         })
         if (filterList.length !== fileList.value.length) {
@@ -692,12 +692,12 @@ export default {
     }
 
     const selectedImageList = computed(() => {
-      return selectedImageObjList.value.map((item) => {
+      return selectedImageObjList.value.map(item => {
         return item._id
       })
     })
     const selectedImageObjList = ref([])
-    const onSelectorClick = (item) => {
+    const onSelectorClick = item => {
       // 查询类型是否符合
       if (props.typeList.length > 0) {
         if (!props.typeList.includes(item.mimetype.split('/')[0])) {
@@ -724,8 +724,8 @@ export default {
         selectedImageObjList.value.push(item)
       }
     }
-    const findImageInSelectedImageList = (id) => {
-      const index = selectedImageList.value.findIndex((item) => {
+    const findImageInSelectedImageList = id => {
+      const index = selectedImageList.value.findIndex(item => {
         return item === id
       })
       return index
@@ -738,7 +738,7 @@ export default {
         content: `确定要删除<span class="cRed">${selectedImageList.value.length}</span>件媒体文件吗？`,
         success: () => {
           // 删除
-          const promiseList = selectedImageList.value.map((item) => {
+          const promiseList = selectedImageList.value.map(item => {
             return new Promise((resolve, reject) => {
               authApi
                 .deleteAttachment({ id: item })
@@ -751,11 +751,11 @@ export default {
             })
           })
           Promise.all(promiseList)
-            .then((res) => {
+            .then(res => {
               // 统计有多少个成功，多少个失败
               let successCount = 0
               let failCount = 0
-              res.forEach((item) => {
+              res.forEach(item => {
                 if (item) {
                   successCount++
                 } else {
@@ -770,7 +770,7 @@ export default {
               } else {
                 ElMessage({
                   type: 'success',
-                  message: `成功删除${successCount}件媒体文件`,
+                  message: `成功删除${successCount}件媒体文件`
                 })
               }
               // 清空selectedImageList
@@ -779,10 +779,10 @@ export default {
               emit('onAttachmentsDelete')
             })
             .catch(() => {})
-        },
+        }
       })
         .then(() => {})
-        .catch((error) => {
+        .catch(error => {
           console.log('Dialog closed:', error)
         })
     }
@@ -796,7 +796,7 @@ export default {
     const toChangeAttachmentsAlbum = () => {
       const params = {
         ids: selectedImageList.value,
-        albumId: toAlbumId.value,
+        albumId: toAlbumId.value
       }
       authApi
         .updateAttachmentAlbum(params)
@@ -819,7 +819,7 @@ export default {
       visible.value = false
     }
 
-    const handlePaste = (event) => {
+    const handlePaste = event => {
       const items = (event.clipboardData || event.originalEvent.clipboardData)
         .items
       console.log(items)
@@ -846,14 +846,14 @@ export default {
               .post('/api/admin/attachment/upload', formData, {
                 headers: {
                   'Content-Type': 'multipart/form-data',
-                  ...headers.value,
-                },
+                  ...headers.value
+                }
               })
-              .then((response) => {
+              .then(response => {
                 console.log(response.data)
                 handleSuccess(response.data)
               })
-              .catch((error) => {
+              .catch(error => {
                 console.error(error)
               })
               .finally(() => {
@@ -864,7 +864,7 @@ export default {
       }
     }
 
-    const generateRandomString = (length) => {
+    const generateRandomString = length => {
       const characters = 'abcdefghijklmnopqrstuvwxyz0123456789'
       let result = ''
       for (let i = 0; i < length; i++) {
@@ -885,7 +885,7 @@ export default {
       emit('onDialogClose')
     }
 
-    const onVideoUploaded = (res) => {
+    const onVideoUploaded = res => {
       handleSuccess(res)
     }
 
@@ -894,7 +894,7 @@ export default {
     const uploading = ref(0)
     const maxUploads = 1 // 最大并发数
 
-    const uploadFile = (file) => {
+    const uploadFile = file => {
       return new Promise((resolve, reject) => {
         uploadQueue.value.push({ file, resolve, reject })
 
@@ -922,7 +922,7 @@ export default {
         axios
           .post('/api/admin/attachment/upload', formData, {
             headers: headers.value,
-            onUploadProgress: (progressEvent) => {
+            onUploadProgress: progressEvent => {
               const percentCompleted = Math.round(
                 (progressEvent.loaded * 100) / progressEvent.total
               )
@@ -933,14 +933,14 @@ export default {
                   fileList.value[index].percentage = percentCompleted
                 }
               })
-            },
+            }
           })
-          .then((response) => {
+          .then(response => {
             uploading.value--
             processQueue()
             resolve(response)
           })
-          .catch((error) => {
+          .catch(error => {
             uploading.value--
             processQueue()
             reject(error)
@@ -969,7 +969,7 @@ export default {
 
     // 本页全选
     const selectPageAttachments = () => {
-      attachmentList.value.forEach((item) => {
+      attachmentList.value.forEach(item => {
         const index = findImageInSelectedImageList(item._id)
         if (index === -1) {
           selectedImageObjList.value.push(item)
@@ -978,7 +978,7 @@ export default {
     }
     // 取消本页选择
     const clearSelectedPageImageList = () => {
-      attachmentList.value.forEach((item) => {
+      attachmentList.value.forEach(item => {
         const index = findImageInSelectedImageList(item._id)
         if (index > -1) {
           selectedImageObjList.value.splice(index, 1)
@@ -1054,9 +1054,9 @@ export default {
       // 本页全选
       selectPageAttachments,
       // 取消本页选择
-      clearSelectedPageImageList,
+      clearSelectedPageImageList
     }
-  },
+  }
 }
 </script>
 <style scoped>

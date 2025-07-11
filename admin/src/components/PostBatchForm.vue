@@ -165,14 +165,14 @@ export default {
   components: {
     SortSelector,
     TagSelector,
-    CheckDialog,
+    CheckDialog
   },
   props: {
     // 选中的postList
     postList: {
       type: Array,
-      default: () => [],
-    },
+      default: () => []
+    }
   },
   emits: ['success', 'cancel'],
   setup(props, { emit }) {
@@ -182,13 +182,13 @@ export default {
       { value: 'setTag', title: '设置标签' },
       { value: 'removeTag', title: '移除标签' },
       { value: 'changeStatus', title: '更改状态' },
-      { value: 'delete', title: '删除' },
+      { value: 'delete', title: '删除' }
     ]
     const params = reactive({
       action: null,
       status: null,
       sortId: null,
-      tagIdList: [],
+      tagIdList: []
     })
 
     const SearchTagSelectorRef = ref(null)
@@ -238,7 +238,7 @@ export default {
       // 根据action执行不同的操作
       const form = {
         action: params.action,
-        idList: props.postList.map((post) => post._id),
+        idList: props.postList.map(post => post._id)
       }
       switch (form.action) {
         case 'changeSort':
@@ -267,7 +267,7 @@ export default {
     const statusMap = {
       0: '草稿',
       1: '发布',
-      99: '回收站',
+      99: '回收站'
     }
 
     const cancel = () => {
@@ -286,9 +286,9 @@ export default {
       dialogOpen,
       doBatch,
       cancel,
-      statusMap,
+      statusMap
     }
-  },
+  }
 }
 </script>
 

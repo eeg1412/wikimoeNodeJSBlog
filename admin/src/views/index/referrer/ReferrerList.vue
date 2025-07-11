@@ -109,31 +109,31 @@ export default {
       page: 1,
       size: 50,
       keyword: '',
-      referrerType: '',
+      referrerType: ''
     })
     const total = ref(0)
     const tableRef = ref(null)
-    const getReferrerList = (resetPage) => {
+    const getReferrerList = resetPage => {
       if (resetPage === true && params.page !== 1) {
         params.page = 1
         return
       }
       authApi
         .getReferrerList(params)
-        .then((res) => {
+        .then(res => {
           referrerList.value = res.data.list
           total.value = res.data.total
           tableRef.value.scrollTo({ top: 0 })
           setSessionParams(route.name, params)
         })
-        .catch((err) => {
+        .catch(err => {
           console.log(err)
         })
     }
     const referrerTypeMap = {
       assets: '静态资源',
       blogApi: '博客接口',
-      adminApi: '管理后台接口',
+      adminApi: '管理后台接口'
     }
     // 监听 params.page 的变化
     watch(
@@ -143,23 +143,23 @@ export default {
       }
     )
 
-    const goEdit = (id) => {
+    const goEdit = id => {
       router.push({
         name: 'ReferrerEdit',
         params: {
-          id,
-        },
+          id
+        }
       })
     }
-    const deleteReferrer = (id) => {
+    const deleteReferrer = id => {
       ElMessageBox.confirm('确定要删除吗？', {
         confirmButtonText: '是',
         cancelButtonText: '否',
-        type: 'warning',
+        type: 'warning'
       })
         .then(() => {
           const params = {
-            id,
+            id
           }
           authApi
             .deleteReferrer(params)
@@ -193,9 +193,9 @@ export default {
       getReferrerList,
       referrerTypeMap,
       goEdit,
-      deleteReferrer,
+      deleteReferrer
     }
-  },
+  }
 }
 </script>
 

@@ -8,10 +8,10 @@
           class="post-list-body-item hover:bg-gray-50 dark:hover:bg-gray-800/30"
           :class="{
             pointer: isHydrated,
-            'cursor-progress': !isHydrated,
+            'cursor-progress': !isHydrated
           }"
-          @click="(e) => goPostDetail(e, item)"
-          @click.middle="(e) => goPostDetail(e, item, true)"
+          @click="e => goPostDetail(e, item)"
+          @click.middle="e => goPostDetail(e, item, true)"
           @mousedown="preventDefaultMiddleClick"
         >
           <!-- seo 为了抓取链接 -->
@@ -19,7 +19,7 @@
             class="none seo"
             :to="{
               name: 'postDetail',
-              params: { id: item.alias || item._id },
+              params: { id: item.alias || item._id }
             }"
           >
             {{ item.title || item.excerpt }}
@@ -44,8 +44,8 @@
                     name: 'postListSort',
                     params: {
                       sortid: item.sort.alias || item.sort._id,
-                      page: 1,
-                    },
+                      page: 1
+                    }
                   }"
                   v-if="item.sort"
                 >
@@ -108,7 +108,7 @@
               @click.middle.stop
               :to="{
                 name: 'postDetail',
-                params: { id: item.alias || item._id },
+                params: { id: item.alias || item._id }
               }"
             >
               <LazyPostItem :post="item" />
@@ -124,7 +124,7 @@
                   @click.middle.stop
                   :to="{
                     name: 'postDetail',
-                    params: { id: item.alias || item._id },
+                    params: { id: item.alias || item._id }
                   }"
                 >
                   <!-- icon book-open -->
@@ -140,7 +140,7 @@
                   :to="{
                     name: 'postDetail',
                     params: { id: item.alias || item._id },
-                    hash: '#commentlist-container',
+                    hash: '#commentlist-container'
                   }"
                 >
                   <!-- icon chat-bubble-left-ellipsis -->
@@ -255,7 +255,7 @@
                     <div
                       class="m-2 px-3 py-1 transition duration-300 hover:text-primary-400 hover:border-primary-400 border-solid border border-transparent cursor-pointer common-right-tool-menu-item-text rounded"
                       :class="{
-                        active: postType !== '1' && postType !== '2',
+                        active: postType !== '1' && postType !== '2'
                       }"
                       @click="switchPostType(null)"
                     >
@@ -346,7 +346,7 @@ const routePagination = computed(() => {
     // 上一页
     prevRoute: {},
     // 下一页
-    nextRoute: {},
+    nextRoute: {}
   }
   switch (routeName.value) {
     case 'postList':
@@ -358,29 +358,29 @@ const routePagination = computed(() => {
         name: routeName.value,
         params: {
           page: 1,
-          type: postRouteType.value,
-        },
+          type: postRouteType.value
+        }
       }
       to.lastRoute = {
         name: routeName.value,
         params: {
           page: totalPage.value,
-          type: postRouteType.value,
-        },
+          type: postRouteType.value
+        }
       }
       to.prevRoute = {
         name: routeName.value,
         params: {
           page: page - 1,
-          type: postRouteType.value,
-        },
+          type: postRouteType.value
+        }
       }
       to.nextRoute = {
         name: routeName.value,
         params: {
           page: page + 1,
-          type: postRouteType.value,
-        },
+          type: postRouteType.value
+        }
       }
       break
 
@@ -393,7 +393,7 @@ const routePagination = computed(() => {
 if (!/^\d+$/.test(page)) {
   showError({
     statusCode: 404,
-    message: '页面不存在',
+    message: '页面不存在'
   })
   throw new Error('页面不存在')
 }
@@ -406,12 +406,12 @@ const [postsDataResponse] = await Promise.all([
     year,
     month,
     tags: tagid ? [tagid] : null,
-    type: postType.value ? postType.value : null,
-  }),
+    type: postType.value ? postType.value : null
+  })
 ])
 
 const { data: postsData } = postsDataResponse
-const showTopIcon = (item) => {
+const showTopIcon = item => {
   switch (routeName.value) {
     case 'postList':
       return item.top
@@ -462,7 +462,7 @@ const goPostDetail = (e, item, middle) => {
     // resolveUrl
     const url = router.resolve({
       name: routeName,
-      params: { id },
+      params: { id }
     }).href
     window.open(url, '_blank')
   } else {
@@ -470,13 +470,13 @@ const goPostDetail = (e, item, middle) => {
     router.push({
       name: routeName,
       params: {
-        id: id,
-      },
+        id: id
+      }
     })
   }
 }
 
-const preventDefaultMiddleClick = (e) => {
+const preventDefaultMiddleClick = e => {
   console.log(e.button, e.target.tagName)
   if (e.button === 1 && e.target.tagName !== 'A') {
     console.log('preventDefault middle click')
@@ -489,13 +489,13 @@ const likeListInited = ref(false)
 const likeListLoading = ref(false)
 const likeList = ref([])
 const postLikeLogList = () => {
-  const postIdList = postsData.value.list.map((item) => item._id)
+  const postIdList = postsData.value.list.map(item => item._id)
   likeListLoading.value = true
   postLikeLogListApi({ postIdList })
-    .then((res) => {
+    .then(res => {
       likeList.value = res.list
       postsData.value.list.forEach((item, index) => {
-        const likeData = res.list.find((likeItem) => likeItem.post === item._id)
+        const likeData = res.list.find(likeItem => likeItem.post === item._id)
         if (likeData && likeData.like) {
           if (item.likes === 0) {
             // 延迟补偿
@@ -510,16 +510,16 @@ const postLikeLogList = () => {
       likeListLoading.value = false
     })
 }
-const checkIsLike = (postId) => {
-  const likeData = likeList.value.find((item) => item.post === postId)
+const checkIsLike = postId => {
+  const likeData = likeList.value.find(item => item.post === postId)
   if (likeData) {
     return likeData.like
   } else {
     return false
   }
 }
-const getLikeDataByPostId = (postId) => {
-  const likeData = likeList.value.find((item) => item.post === postId)
+const getLikeDataByPostId = postId => {
+  const likeData = likeList.value.find(item => item.post === postId)
   if (likeData) {
     return likeData
   } else {
@@ -528,10 +528,10 @@ const getLikeDataByPostId = (postId) => {
 }
 
 const likePostIsLoading = reactive({})
-const getLikePostIsLoading = (postId) => {
+const getLikePostIsLoading = postId => {
   return likePostIsLoading[postId] === true
 }
-const likePost = (postId) => {
+const likePost = postId => {
   if (likePostIsLoading[postId]) {
     return
   }
@@ -541,9 +541,9 @@ const likePost = (postId) => {
   likePostIsLoading[postId] = true
 
   postLikeLogApi({ id: postId, like: !like, __v })
-    .then((res) => {
+    .then(res => {
       // 将对应的likeList里的postId替换为res.data
-      const index = likeList.value.findIndex((item) => item.post === postId)
+      const index = likeList.value.findIndex(item => item.post === postId)
       if (index > -1) {
         likeList.value[index] = res.data
       } else {
@@ -552,7 +552,7 @@ const likePost = (postId) => {
       const newLike = res.data.like
       // postsData.value.list 找到对应的postId，将likes数量根据newLike加减
       const postIndex = postsData.value.list.findIndex(
-        (item) => item._id === postId
+        item => item._id === postId
       )
 
       const post = postsData.value.list[postIndex]
@@ -560,16 +560,16 @@ const likePost = (postId) => {
       postsData.value.list[postIndex].likes = newLikeCount
       postsData.value.list[postIndex].isLike = newLike
     })
-    .catch((err) => {
+    .catch(err => {
       console.log(err)
       const errors = err.response?._data?.errors
       if (errors) {
-        errors.forEach((item) => {
+        errors.forEach(item => {
           const message = item.message
           toast.add({
             title: message,
             icon: 'i-heroicons-x-circle',
-            color: 'red',
+            color: 'red'
           })
         })
       }
@@ -590,12 +590,12 @@ const switchFilterMenu = () => {
     }, 'postListFilter')
   }
 }
-watch(showFilterMenu, (val) => {
+watch(showFilterMenu, val => {
   if (!val) {
     clearRightMenuCloseFn('postListFilter')
   }
 })
-const switchPostType = (type) => {
+const switchPostType = type => {
   if (type === postType.value) {
     return
   }
@@ -603,7 +603,7 @@ const switchPostType = (type) => {
   params.page = 1
   params.type = type
   router.push({
-    params: params,
+    params: params
   })
   showFilterMenu.value = false
 }

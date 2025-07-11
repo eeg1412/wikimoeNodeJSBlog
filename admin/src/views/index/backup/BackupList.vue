@@ -128,7 +128,7 @@
                 type="danger"
                 trigger="click"
                 @click="deleteBackup(row._id, '1', '1')"
-                @command="(command) => deleteCommand(row._id, command)"
+                @command="command => deleteCommand(row._id, command)"
                 v-if="row.type === 1 && row.fileStatus === 1"
               >
                 完整删除
@@ -291,7 +291,7 @@ import CheckDialogService from '@/services/CheckDialogService'
 
 export default {
   components: {
-    BackupEditor,
+    BackupEditor
   },
   setup() {
     const route = useRoute()
@@ -300,24 +300,24 @@ export default {
     const params = reactive({
       page: 1,
       size: 50,
-      keyword: '',
+      keyword: ''
     })
     const total = ref(0)
     const tableRef = ref(null)
-    const getBackupList = (resetPage) => {
+    const getBackupList = resetPage => {
       if (resetPage === true && params.page !== 1) {
         params.page = 1
         return
       }
       authApi
         .getBackupList(params)
-        .then((res) => {
+        .then(res => {
           backupList.value = res.data.list
           total.value = res.data.total
           tableRef.value.scrollTo({ top: 0 })
           setSessionParams(route.name, params)
         })
-        .catch((err) => {
+        .catch(err => {
           console.log(err)
         })
     }
@@ -337,7 +337,7 @@ export default {
     )
 
     const editId = ref(null)
-    const goEdit = (id) => {
+    const goEdit = id => {
       editId.value = id
       nextTick(() => {
         BackupEditorRef.value.open()
@@ -375,7 +375,7 @@ export default {
           const params = {
             id,
             deletefile,
-            deleterecord,
+            deleterecord
           }
           return authApi
             .deleteBackup(params)
@@ -384,10 +384,10 @@ export default {
               getBackupList()
             })
             .catch(() => {})
-        },
+        }
       })
         .then(() => {})
-        .catch((error) => {
+        .catch(error => {
           console.log('Dialog closed:', error)
         })
     }
@@ -401,7 +401,7 @@ export default {
       }
     }
 
-    const getBackupType = (type) => {
+    const getBackupType = type => {
       switch (type) {
         case 1:
           return { text: '备份', tagType: 'success' }
@@ -412,7 +412,7 @@ export default {
       }
     }
 
-    const getFileStatus = (status) => {
+    const getFileStatus = status => {
       switch (status) {
         case 0:
           return { text: '备份中', tagType: 'warning' }
@@ -443,10 +443,10 @@ export default {
     }
 
     // 下载
-    const downloadBackup = (id) => {
+    const downloadBackup = id => {
       authApi
         .getDownloadBackupToken({ id })
-        .then((res) => {
+        .then(res => {
           const token = res.data.token
           const form = document.createElement('form')
           form.action = '/api/admin/backup/download' // your url
@@ -467,7 +467,7 @@ export default {
           // remove form from body
           document.body.removeChild(form)
         })
-        .catch((err) => {
+        .catch(err => {
           console.error(err)
         })
     }
@@ -477,7 +477,7 @@ export default {
     const isBackupNoticeChecked = ref(false)
     const restoreId = ref(null)
 
-    const showBackupDialog = (id) => {
+    const showBackupDialog = id => {
       restoreId.value = id
       isBackupNoticeChecked.value = false
       isBackupDialogVisible.value = true
@@ -495,12 +495,12 @@ export default {
       isBackupDialogVisible.value = false
     }
 
-    const closeBackupDialog = (done) => {
+    const closeBackupDialog = done => {
       isBackupDialogVisible.value = false
     }
 
     // 将字节转换成MB
-    const formatSize = (size) => {
+    const formatSize = size => {
       if (!size) return '0 B'
       const num = 1024.0 // byte
       if (size < num) return size + ' B'
@@ -514,13 +514,13 @@ export default {
 
     // 上传备份
     const uploadDialog = ref(false)
-    const openUploadDialog = (id) => {
+    const openUploadDialog = id => {
       continueUploadId.value = id || null
       backupFileUploading.value = false
       uploadProgress.value = 0
       uploadDialog.value = true
     }
-    const uploadBackup = (file) => {
+    const uploadBackup = file => {
       backupFileUploading.value = true
       // 获取文件名和文件大小
       const fileName = file.raw.name
@@ -530,19 +530,19 @@ export default {
         authApi
           .getBackupUploadChunkList({
             id: continueUploadId.value,
-            fileSize,
+            fileSize
           })
-          .then((res) => {
+          .then(res => {
             const uploadedFileChunkIndexList = res.data.data
             uploadFileChunk(
               {
-                _id: continueUploadId.value,
+                _id: continueUploadId.value
               },
               file.raw,
               uploadedFileChunkIndexList
             )
           })
-          .catch((err) => {
+          .catch(err => {
             console.error(err)
             backupFileUploading.value = false
           })
@@ -551,19 +551,19 @@ export default {
         authApi
           .createBackupUpload({
             fileName,
-            fileSize,
+            fileSize
           })
-          .then((res) => {
+          .then(res => {
             uploadFileChunk(res.data.data, file.raw)
           })
-          .catch((err) => {
+          .catch(err => {
             console.error(err)
             backupFileUploading.value = false
           })
       }
     }
     const continueUploadId = ref(null)
-    const continueUploadBackup = (id) => {
+    const continueUploadBackup = id => {
       openUploadDialog(id)
     }
 
@@ -587,13 +587,13 @@ export default {
         const chunkInfo = {
           start,
           end,
-          index: i,
+          index: i
         }
         chunkInfoList.push(chunkInfo)
       }
       // 根据 uploadedFileChunkIndexList 剔除已上传的切片
       const needUploadChunkList = chunkInfoList.filter(
-        (chunk) => !uploadedFileChunkIndexList.includes(String(chunk.index))
+        chunk => !uploadedFileChunkIndexList.includes(String(chunk.index))
       )
       let errorCount = 0
       //遍历 needUploadChunkList 上传切片
@@ -603,7 +603,7 @@ export default {
         formData.append('file', file.slice(chunk.start, chunk.end))
         await authApi
           .uploadBackupUploadChunk(data._id, chunk.index, formData)
-          .then((res) => {
+          .then(res => {
             errorCount = 0
             // 进度
             uploadProgress.value = Math.ceil(
@@ -615,19 +615,19 @@ export default {
               // 上传完成
               authApi
                 .mergeUploadBackupFile({ id: data._id })
-                .then((res) => {
+                .then(res => {
                   uploadProgress.value = 100
                   backupFileUploading.value = false
                   ElMessage.success('上传成功')
                   uploadDialog.value = false
                   getBackupList()
                 })
-                .catch((err) => {
+                .catch(err => {
                   console.error(err)
                 })
             }
           })
-          .catch((err) => {
+          .catch(err => {
             console.error(err)
             errorCount++
             if (errorCount > 3) {
@@ -676,9 +676,9 @@ export default {
       continueUploadId,
       continueUploadBackup,
       backupFileUploading,
-      uploadProgress,
+      uploadProgress
     }
-  },
+  }
 }
 </script>
 <style scoped>

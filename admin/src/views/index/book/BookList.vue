@@ -223,30 +223,30 @@ export default {
       keyword: '',
       booktype: '',
       status: '',
-      readStatus: null,
+      readStatus: null
     })
     const total = ref(0)
     const tableRef = ref(null)
-    const getBookList = (resetPage) => {
+    const getBookList = resetPage => {
       if (resetPage === true && params.page !== 1) {
         params.page = 1
         return
       }
       authApi
         .getBookList(params)
-        .then((res) => {
+        .then(res => {
           bookList.value = res.data.list
           total.value = res.data.total
           tableRef.value.scrollTo({ top: 0 })
           setSessionParams(route.name, params)
         })
-        .catch((err) => {
+        .catch(err => {
           console.log(err)
         })
     }
     const handleAdd = () => {
       router.push({
-        name: 'BookAdd',
+        name: 'BookAdd'
       })
     }
     // 监听 params.page 的变化
@@ -257,15 +257,15 @@ export default {
       }
     )
 
-    const goEdit = (id) => {
+    const goEdit = id => {
       router.push({
         name: 'BookEdit',
         params: {
-          id,
-        },
+          id
+        }
       })
     }
-    const deleteBook = (row) => {
+    const deleteBook = row => {
       const id = row._id
       const title = escapeHtml(row.title) || '未命名'
 
@@ -277,10 +277,10 @@ export default {
             ElMessage.success('删除成功')
             getBookList()
           })
-        },
+        }
       })
         .then(() => {})
-        .catch((error) => {
+        .catch(error => {
           console.log('Dialog closed:', error)
         })
     }
@@ -297,7 +297,7 @@ export default {
         if (params.booktype) {
           queryBooktypeList(null, {
             idList: params.booktype,
-            size: 999999,
+            size: 999999
           })
         }
       }
@@ -317,11 +317,11 @@ export default {
           keyword: query,
           page: 1,
           size: 50,
-          ...options,
+          ...options
         }
         authApi
           .getBooktypeList(params, { noLoading: true })
-          .then((res) => {
+          .then(res => {
             booktypeList.value = res.data.list
           })
           .catch(() => {})
@@ -336,21 +336,21 @@ export default {
       // 1 尚未阅读
       {
         label: '尚未阅读',
-        value: 1,
+        value: 1
       },
       {
         label: '阅读中',
-        value: 2,
+        value: 2
       },
       // 2已读完
       {
         label: '已读完',
-        value: 3,
+        value: 3
       },
       {
         label: '弃坑',
-        value: 99,
-      },
+        value: 99
+      }
     ]
     onMounted(() => {
       initParams()
@@ -368,9 +368,9 @@ export default {
       booktypeList,
       booktypeListIsLoading,
       queryBooktypeList,
-      readStatusList,
+      readStatusList
     }
-  },
+  }
 }
 </script>
 <style scoped>

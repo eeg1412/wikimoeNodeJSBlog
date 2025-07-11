@@ -137,32 +137,32 @@ const { setCommentRetractAuthDecode } = commentRetractAuthDecodeStore
 const props = defineProps({
   postid: {
     type: String,
-    required: true,
+    required: true
   },
   commentid: {
     type: String,
-    default: '',
+    default: ''
   },
   parentNickname: {
     type: String,
-    default: null,
+    default: null
   },
   allowRemark: {
     type: Boolean,
-    default: false,
-  },
+    default: false
+  }
 })
 const form = reactive({
   nickname: '',
   email: '',
   url: '',
-  content: props.parentNickname ? `@${props.parentNickname}：` : '',
+  content: props.parentNickname ? `@${props.parentNickname}：` : ''
 })
 const emits = defineEmits()
 
 const error = ref({})
 const commentIsSending = ref(false)
-const onSubmit = (event) => {
+const onSubmit = event => {
   if (commentIsSending.value) {
     return
   }
@@ -176,7 +176,7 @@ const onSubmit = (event) => {
       toast.add({
         title: '昵称不能为空',
         icon: 'i-heroicons-x-circle',
-        color: 'red',
+        color: 'red'
       })
     }, 0)
   }
@@ -187,7 +187,7 @@ const onSubmit = (event) => {
       toast.add({
         title: '内容不能为空',
         icon: 'i-heroicons-x-circle',
-        color: 'red',
+        color: 'red'
       })
     }, 0)
   }
@@ -212,7 +212,7 @@ const onSubmit = (event) => {
         toast.add({
           title: '邮箱格式不正确',
           icon: 'i-heroicons-x-circle',
-          color: 'red',
+          color: 'red'
         })
       }, 0)
     }
@@ -236,9 +236,9 @@ const onSubmit = (event) => {
     nickname: event.data.nickname,
     email: event.data.email,
     url: event.data.url,
-    content: event.data.content,
+    content: event.data.content
   })
-    .then((res) => {
+    .then(res => {
       console.log(res)
       // 清空表单
       // form.nickname = ''
@@ -252,14 +252,14 @@ const onSubmit = (event) => {
           title: '评论成功，将在审核后公开',
           icon: 'i-heroicons-check-circle',
           color: 'green',
-          timeout: 10000,
+          timeout: 10000
         })
       } else {
         toast.add({
           title: '评论成功',
           icon: 'i-heroicons-check-circle',
           color: 'green',
-          timeout: 10000,
+          timeout: 10000
         })
       }
       const commentRetractJWT = res.commentRetractJWT
@@ -270,17 +270,17 @@ const onSubmit = (event) => {
       // 刷新评论列表
       emits('refresh')
     })
-    .catch((err) => {
+    .catch(err => {
       console.log(err)
       const errors = err.response?._data?.errors
       if (errors) {
-        errors.forEach((item) => {
+        errors.forEach(item => {
           const message = item.message
           toast.add({
             title: message,
             icon: 'i-heroicons-x-circle',
             color: 'red',
-            timeout: 10000,
+            timeout: 10000
           })
         })
       }
@@ -290,7 +290,7 @@ const onSubmit = (event) => {
     })
 }
 const contentRef = ref(null)
-const emojiClick = (item) => {
+const emojiClick = item => {
   const startPos = contentRef.value.textarea.selectionStart
   const endPos = contentRef.value.textarea.selectionEnd
   const emojiLength = item.length
@@ -313,7 +313,7 @@ const emojiBtnClick = () => {
 
 // 保存个人信息
 const commentSetting = reactive({
-  commentSaveUserInfo: true,
+  commentSaveUserInfo: true
 })
 const initCommentSaveUserInfo = () => {
   const commentNickname = localStorage.getItem('commentNickname')
@@ -356,7 +356,7 @@ const removeUserInfo = () => {
   toast.add({
     title: '已清除个人信息',
     icon: 'i-heroicons-check-circle',
-    color: 'green',
+    color: 'green'
   })
 }
 // 深度watch commentSetting
@@ -366,7 +366,7 @@ watch(
     localStorage.setItem('commentSetting', JSON.stringify(newVal))
   },
   {
-    deep: true,
+    deep: true
   }
 )
 

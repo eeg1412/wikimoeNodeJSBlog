@@ -19,8 +19,8 @@
 const props = defineProps({
   rating: {
     type: Number,
-    default: 0,
-  },
+    default: 0
+  }
 })
 </script>
 <style scoped>

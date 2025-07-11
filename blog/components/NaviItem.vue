@@ -71,17 +71,17 @@
 const props = defineProps({
   item: {
     type: Object,
-    required: true,
-  },
+    required: true
+  }
 })
 const route = useRoute()
 const showChildren = ref(false)
-const checkActive = (item) => {
+const checkActive = item => {
   const currentPath = route.path
   if (item.deepmatch) {
     const currentQuery = route.query
     let currentQueryStr = Object.keys(currentQuery)
-      .map((key) => `${key}=${currentQuery[key]}`)
+      .map(key => `${key}=${currentQuery[key]}`)
       .join('&')
     currentQueryStr = currentQueryStr ? `?${currentQueryStr}` : ''
     const itemQuery = item.query
@@ -92,7 +92,7 @@ const checkActive = (item) => {
   }
 }
 
-const enter = (el) => {
+const enter = el => {
   el.style.overflow = 'hidden'
   el.style.height = '0'
 
@@ -101,7 +101,7 @@ const enter = (el) => {
   })
 }
 
-const leave = (el) => {
+const leave = el => {
   el.style.overflow = 'hidden'
   el.style.height = `${el.scrollHeight}px`
 
@@ -110,12 +110,12 @@ const leave = (el) => {
   })
 }
 
-const afterEnter = (el) => {
+const afterEnter = el => {
   el.style.height = ''
   el.style.overflow = ''
 }
 
-const afterLeave = (el) => {
+const afterLeave = el => {
   el.style.height = ''
   el.style.overflow = ''
 }

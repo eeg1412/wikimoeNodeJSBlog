@@ -143,7 +143,7 @@ import store from '@/store'
 import UserDeleteDialog from '@/components/UserDeleteDialog'
 export default {
   components: {
-    UserDeleteDialog,
+    UserDeleteDialog
   },
   setup() {
     const route = useRoute()
@@ -152,30 +152,30 @@ export default {
     const params = reactive({
       page: 1,
       size: 50,
-      keyword: '',
+      keyword: ''
     })
     const total = ref(0)
     const tableRef = ref(null)
-    const getUserList = (resetPage) => {
+    const getUserList = resetPage => {
       if (resetPage === true && params.page !== 1) {
         params.page = 1
         return
       }
       authApi
         .getUserList(params)
-        .then((res) => {
+        .then(res => {
           userList.value = res.data.list
           total.value = res.data.total
           tableRef.value.scrollTo({ top: 0 })
           setSessionParams(route.name, params)
         })
-        .catch((err) => {
+        .catch(err => {
           console.log(err)
         })
     }
     const handleAdd = () => {
       router.push({
-        name: 'UserAdd',
+        name: 'UserAdd'
       })
     }
     // 监听 params.page 的变化
@@ -186,18 +186,18 @@ export default {
       }
     )
 
-    const goEdit = (id) => {
+    const goEdit = id => {
       if (id === adminInfo.value.id) {
         sessionStorage.setItem('LoginUserEditor-from', route.name)
         router.push({
-          name: 'LoginUserEditor',
+          name: 'LoginUserEditor'
         })
       } else {
         router.push({
           name: 'UserEdit',
           params: {
-            id,
-          },
+            id
+          }
         })
       }
     }
@@ -205,7 +205,7 @@ export default {
     const showDeleteDialog = ref(false)
     const deleteId = ref('')
     const deleteUsername = ref('')
-    const deleteUser = (row) => {
+    const deleteUser = row => {
       showDeleteDialog.value = true
       deleteId.value = row._id
       deleteUsername.value = row.username
@@ -239,9 +239,9 @@ export default {
       deleteUser,
       adminInfo,
       deleteId,
-      deleteUsername,
+      deleteUsername
     }
-  },
+  }
 }
 </script>
 <style lang=""></style>

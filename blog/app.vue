@@ -33,22 +33,22 @@ const rssHead = () => {
         rel: 'alternate',
         type: 'application/rss+xml',
         title: 'RSS',
-        href: options.value.siteUrl + '/rss',
+        href: options.value.siteUrl + '/rss'
       },
       // rss for blog
       {
         rel: 'alternate',
         type: 'application/rss+xml',
         title: 'RSS for blog',
-        href: options.value.siteUrl + '/rss/blog',
+        href: options.value.siteUrl + '/rss/blog'
       },
       // rss for tweet
       {
         rel: 'alternate',
         type: 'application/rss+xml',
         title: 'RSS for tweet',
-        href: options.value.siteUrl + '/rss/tweet',
-      },
+        href: options.value.siteUrl + '/rss/tweet'
+      }
     ]
   } else {
     return []
@@ -60,7 +60,7 @@ if (options.value.googleAdEnabled) {
   script.push({
     src: `https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${options.value.googleAdId}`,
     async: true,
-    crossorigin: 'anonymous',
+    crossorigin: 'anonymous'
   })
 }
 
@@ -78,12 +78,12 @@ if (siteThemeModeList && siteThemeModeList.includes(siteThemeMode)) {
         }
       })();
     `,
-    type: 'text/javascript',
+    type: 'text/javascript'
   })
 }
 
 useHead({
-  titleTemplate: (titleChunk) => {
+  titleTemplate: titleChunk => {
     if (!titleChunk) {
       return options.value.siteTitle
     } else if (titleChunk === options.value.siteSubTitle) {
@@ -94,7 +94,7 @@ useHead({
   },
   title: options.value.siteSubTitle,
   htmlAttrs: {
-    lang: 'zh-hans',
+    lang: 'zh-hans'
   },
   meta: [
     { name: 'description', content: options.value.siteDescription },
@@ -112,7 +112,7 @@ useHead({
     { property: 'og:url', content: options.value.siteUrl },
     {
       property: 'og:image',
-      content: options.value.siteUrl + options.value.siteDefaultCover,
+      content: options.value.siteUrl + options.value.siteDefaultCover
     },
     // twitter
     { name: 'twitter:card', content: 'summary' },
@@ -121,24 +121,24 @@ useHead({
     { name: 'twitter:description', content: options.value.siteDescription },
     {
       name: 'twitter:image',
-      content: options.value.siteUrl + options.value.siteDefaultCover,
-    },
+      content: options.value.siteUrl + options.value.siteDefaultCover
+    }
   ],
   link: [
     {
       rel: 'icon',
       type: 'image/x-icon',
-      href: options.value.siteFavicon,
+      href: options.value.siteFavicon
     },
     {
       rel: 'apple-touch-icon',
       sizes: '256x256',
-      href: options.value.siteFavicon,
+      href: options.value.siteFavicon
     },
     // rss
-    ...rssHead(),
+    ...rssHead()
   ],
-  script: script,
+  script: script
 })
 const getPerformanceNavigationTiming = () => {
   let dataContentObj = null
@@ -181,7 +181,7 @@ const getPerformanceNavigationTiming = () => {
           : null,
       entryType: navTiming.entryType || null,
       name: navTiming.name || null,
-      type: navTiming.type || null,
+      type: navTiming.type || null
     }
   } catch (e) {
     dataContentObj = null
@@ -201,8 +201,8 @@ const postLogCreate = () => {
   postLogCreateApi({
     referrer: referrer,
     action: 'open',
-    performanceNavigationTiming: performanceNavigationTiming,
-  }).then((res) => {
+    performanceNavigationTiming: performanceNavigationTiming
+  }).then(res => {
     openLogId = res.id
     // 如果 performanceNavigationTiming的duration为0，则250毫秒后再次获取
     if (dataContentObj && duration === 0) {
@@ -220,7 +220,7 @@ const updatePerformance = () => {
     putLogUpdatePerformanceApi({
       id: openLogId,
       action: 'open',
-      performanceNavigationTiming: performanceNavigationTiming,
+      performanceNavigationTiming: performanceNavigationTiming
     })
   } else if (tryCount < 60) {
     setTimeout(() => {
@@ -234,7 +234,7 @@ const setStyle = () => {
   // 如果存在 options.siteExtraCss
   if (options.value.siteExtraCss) {
     useHead({
-      style: [options.value.siteExtraCss],
+      style: [options.value.siteExtraCss]
     })
   }
 }

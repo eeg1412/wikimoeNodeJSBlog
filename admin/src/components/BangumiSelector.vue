@@ -31,16 +31,16 @@ import { seasonToStr } from '@/utils/utils'
 const props = defineProps({
   modelValue: {
     type: Array,
-    default: () => [],
+    default: () => []
   },
   bangumiList: {
     type: Array,
-    default: () => [],
+    default: () => []
   },
   placeholder: {
     type: String,
-    default: '请选择番剧',
-  },
+    default: '请选择番剧'
+  }
 })
 
 const emit = defineEmits(['update:modelValue', 'update:bangumiList'])
@@ -54,11 +54,11 @@ const selectedBangumis = computed({
   },
   set(value) {
     emit('update:modelValue', value)
-  },
+  }
 })
 
 // 检查显示文本
-const checkShowText = (item) => {
+const checkShowText = item => {
   if (item.status === 0) {
     return '【状态:不显示】'
   }
@@ -73,7 +73,7 @@ const getBangumiList = (keyword = null) => {
   loading.value = true
   authApi
     .getBangumiList({ keyword, status: 1, size: 50, page: 1 }, true)
-    .then((res) => {
+    .then(res => {
       emit('update:bangumiList', res.data.list)
     })
     .finally(() => {
@@ -83,7 +83,7 @@ const getBangumiList = (keyword = null) => {
 
 // 搜索番剧
 let queryBangumisTimer = null
-const queryBangumis = (query) => {
+const queryBangumis = query => {
   if (queryBangumisTimer) {
     clearTimeout(queryBangumisTimer)
   }

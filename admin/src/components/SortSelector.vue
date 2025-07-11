@@ -22,30 +22,30 @@ export default {
   props: {
     modelValue: {
       type: String,
-      default: '',
+      default: ''
     },
     placeholder: {
       type: String,
-      default: '请选择分类',
+      default: '请选择分类'
     },
     width: {
       type: String,
-      default: '120px',
-    },
+      default: '120px'
+    }
   },
   emits: ['update:modelValue'],
   setup(props, { emit }) {
     const sortList = ref([])
 
     const getSortList = () => {
-      authApi.getSortList().then((res) => {
+      authApi.getSortList().then(res => {
         const list = res.data.data
         const newlist = []
-        list.forEach((item) => {
+        list.forEach(item => {
           item.originName = item.sortname
           newlist.push(item)
           if (item.children && item.children.length) {
-            item.children.forEach((child) => {
+            item.children.forEach(child => {
               child.originName = child.sortname
               child.sortname = '└─ ' + child.sortname
             })
@@ -58,13 +58,11 @@ export default {
 
     const selectedSort = computed({
       get: () => props.modelValue,
-      set: (value) => emit('update:modelValue', value),
+      set: value => emit('update:modelValue', value)
     })
 
     const getOriginName = () => {
-      const sort = sortList.value.find(
-        (item) => item._id === selectedSort.value
-      )
+      const sort = sortList.value.find(item => item._id === selectedSort.value)
       return sort ? sort.originName : ''
     }
 
@@ -75,8 +73,8 @@ export default {
     return {
       sortList,
       selectedSort,
-      getOriginName,
+      getOriginName
     }
-  },
+  }
 }
 </script>

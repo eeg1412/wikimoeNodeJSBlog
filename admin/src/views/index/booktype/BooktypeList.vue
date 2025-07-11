@@ -99,7 +99,7 @@ import BooktypeEditor from '@/components/BooktypeEditor.vue'
 import CheckDialogService from '@/services/CheckDialogService'
 export default {
   components: {
-    BooktypeEditor,
+    BooktypeEditor
   },
   setup() {
     const route = useRoute()
@@ -108,24 +108,24 @@ export default {
     const params = reactive({
       page: 1,
       size: 50,
-      keyword: '',
+      keyword: ''
     })
     const total = ref(0)
     const tableRef = ref(null)
-    const getBooktypeList = (resetPage) => {
+    const getBooktypeList = resetPage => {
       if (resetPage === true && params.page !== 1) {
         params.page = 1
         return
       }
       authApi
         .getBooktypeList(params)
-        .then((res) => {
+        .then(res => {
           booktypeList.value = res.data.list
           total.value = res.data.total
           tableRef.value.scrollTo({ top: 0 })
           setSessionParams(route.name, params)
         })
-        .catch((err) => {
+        .catch(err => {
           console.log(err)
         })
     }
@@ -145,13 +145,13 @@ export default {
       }
     )
 
-    const goEdit = (id) => {
+    const goEdit = id => {
       activeId.value = id
       nextTick(() => {
         BooktypeEditorRef.value.open()
       })
     }
-    const deleteBooktype = (row) => {
+    const deleteBooktype = row => {
       const id = row._id
       const title = escapeHtml(row.name) || '未命名'
 
@@ -163,10 +163,10 @@ export default {
             ElMessage.success('删除成功')
             getBooktypeList()
           })
-        },
+        }
       })
         .then(() => {})
-        .catch((error) => {
+        .catch(error => {
           console.log('Dialog closed:', error)
         })
     }
@@ -193,9 +193,9 @@ export default {
       activeId,
       handleAdd,
       goEdit,
-      deleteBooktype,
+      deleteBooktype
     }
-  },
+  }
 }
 </script>
 <style scoped>

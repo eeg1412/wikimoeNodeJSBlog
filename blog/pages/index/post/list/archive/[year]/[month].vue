@@ -18,7 +18,7 @@ const page = route.params.page
 if (!/^\d+$/.test(page)) {
   showError({
     statusCode: 404,
-    message: '页面不存在',
+    message: '页面不存在'
   })
   throw new Error('页面不存在')
 }
@@ -30,12 +30,12 @@ useSeoMeta({
   title: title,
   ogTitle: title,
   // twitter
-  twitterTitle: title,
+  twitterTitle: title
 })
 onMounted(() => {
   postLogCreateApi({
     action: 'postListArchive',
-    title: title,
+    title: title
   })
 })
 </script>

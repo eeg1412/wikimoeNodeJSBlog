@@ -484,7 +484,7 @@ import {
   watch,
   computed,
   onUnmounted,
-  nextTick,
+  nextTick
 } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import { authApi } from '@/api'
@@ -507,7 +507,7 @@ import {
   loadAndOpenImg,
   replaceSpacesWithUnderscores,
   seasonToStr,
-  nowTimestampToBase36WithRandom,
+  nowTimestampToBase36WithRandom
 } from '@/utils/utils'
 import store from '@/store'
 
@@ -525,7 +525,7 @@ export default {
     PostSelector,
     EventSelector,
     VoteSelector,
-    StringSortEditBox,
+    StringSortEditBox
   },
   setup() {
     const router = useRouter()
@@ -553,7 +553,7 @@ export default {
       }
       return 1
     })
-    const generateRandomString = (length) => {
+    const generateRandomString = length => {
       const characters = 'abcdefghijklmnopqrstuvwxyz0123456789'
       let result = ''
       for (let i = 0; i < length; i++) {
@@ -567,8 +567,8 @@ export default {
     const getPostDetail = () => {
       authApi
         .getPostDetail({ id: id.value })
-        .then((res) => {
-          Object.keys(form).forEach((key) => {
+        .then(res => {
+          Object.keys(form).forEach(key => {
             switch (key) {
               case 'date':
                 if (res.data.data[key]) {
@@ -579,35 +579,35 @@ export default {
                 form[key] = res.data.data[key]?._id || null
                 break
               case 'tags':
-                form[key] = res.data.data[key].map((item) => item._id)
+                form[key] = res.data.data[key].map(item => item._id)
                 tagList.value = res.data.data[key]
                 break
               case 'bangumiList':
-                form[key] = res.data.data[key].map((item) => item._id)
+                form[key] = res.data.data[key].map(item => item._id)
                 bangumiList.value = res.data.data[key]
                 break
               case 'movieList':
-                form[key] = res.data.data[key].map((item) => item._id)
+                form[key] = res.data.data[key].map(item => item._id)
                 movieList.value = res.data.data[key]
                 break
               case 'gameList':
-                form[key] = res.data.data[key].map((item) => item._id)
+                form[key] = res.data.data[key].map(item => item._id)
                 gameList.value = res.data.data[key]
                 break
               case 'bookList':
-                form[key] = res.data.data[key].map((item) => item._id)
+                form[key] = res.data.data[key].map(item => item._id)
                 bookList.value = res.data.data[key]
                 break
               case 'postList':
-                form[key] = res.data.data[key].map((item) => item._id)
+                form[key] = res.data.data[key].map(item => item._id)
                 postList.value = res.data.data[key]
                 break
               case 'eventList':
-                form[key] = res.data.data[key].map((item) => item._id)
+                form[key] = res.data.data[key].map(item => item._id)
                 eventList.value = res.data.data[key]
                 break
               case 'voteList':
-                form[key] = res.data.data[key].map((item) => item._id)
+                form[key] = res.data.data[key].map(item => item._id)
                 voteList.value = res.data.data[key]
                 break
               case 'seriesSortList':
@@ -626,37 +626,37 @@ export default {
                 break
 
               case 'contentBangumiList':
-                form[key] = res.data.data[key].map((item) => item._id)
+                form[key] = res.data.data[key].map(item => item._id)
                 contentBangumiList.value = res.data.data[key]
                 break
               case 'contentMovieList':
-                form[key] = res.data.data[key].map((item) => item._id)
+                form[key] = res.data.data[key].map(item => item._id)
                 contentMovieList.value = res.data.data[key]
                 break
               case 'contentGameList':
-                form[key] = res.data.data[key].map((item) => item._id)
+                form[key] = res.data.data[key].map(item => item._id)
                 contentGameList.value = res.data.data[key]
                 break
               case 'contentBookList':
-                form[key] = res.data.data[key].map((item) => item._id)
+                form[key] = res.data.data[key].map(item => item._id)
                 contentBookList.value = res.data.data[key]
                 break
               case 'contentPostList':
-                form[key] = res.data.data[key].map((item) => item._id)
+                form[key] = res.data.data[key].map(item => item._id)
                 contentPostList.value = res.data.data[key]
                 break
               case 'contentEventList':
-                form[key] = res.data.data[key].map((item) => item._id)
+                form[key] = res.data.data[key].map(item => item._id)
                 contentEventList.value = res.data.data[key]
                 break
               case 'contentVoteList':
-                form[key] = res.data.data[key].map((item) => item._id)
+                form[key] = res.data.data[key].map(item => item._id)
                 contentVoteList.value = res.data.data[key]
                 break
 
               case 'coverImages':
-                form[key] = res.data.data[key].map((item) => item._id)
-                res.data.data[key].forEach((item) => {
+                form[key] = res.data.data[key].map(item => item._id)
+                res.data.data[key].forEach(item => {
                   coverImageListObj[item._id] = item
                 })
                 break
@@ -700,7 +700,7 @@ export default {
             setAutoSaveTimer()
           }
         })
-        .catch((err) => {
+        .catch(err => {
           console.error(err)
           // 获取http code
           const code = err.response?.status
@@ -710,9 +710,9 @@ export default {
               confirmButtonText: '确定',
               callback: () => {
                 router.push({
-                  name: 'PostList',
+                  name: 'PostList'
                 })
-              },
+              }
             })
           }
         })
@@ -731,7 +731,7 @@ export default {
       event: '活动',
       vote: '投票',
       post: '博文',
-      acgn: '番剧/电影/游戏/书籍',
+      acgn: '番剧/电影/游戏/书籍'
     }
     const form = reactive({
       // - title	标题字段
@@ -788,7 +788,7 @@ export default {
       coverImages: [],
       __v: null,
       id: null,
-      force: false,
+      force: false
     })
 
     const updateContentSeriesSortList = () => {
@@ -835,12 +835,12 @@ export default {
       }
 
       // 创建新的排序列表
-      const newSortList = oldSortList.filter((type) =>
+      const newSortList = oldSortList.filter(type =>
         shouldExistTypes.includes(type)
       )
 
       // 添加那些应该存在但不在原列表中的类型
-      shouldExistTypes.forEach((type) => {
+      shouldExistTypes.forEach(type => {
         if (!newSortList.includes(type)) {
           newSortList.push(type)
         }
@@ -851,7 +851,7 @@ export default {
     }
 
     // 修改开关状态变化处理函数
-    const contentSeriesSortListTurnOnChange = (val) => {
+    const contentSeriesSortListTurnOnChange = val => {
       if (!val) {
         form.contentSeriesSortList = []
       } else {
@@ -898,12 +898,12 @@ export default {
       }
 
       // 创建新的排序列表
-      const newSortList = oldSortList.filter((type) =>
+      const newSortList = oldSortList.filter(type =>
         shouldExistTypes.includes(type)
       )
 
       // 添加那些应该存在但不在原列表中的类型
-      shouldExistTypes.forEach((type) => {
+      shouldExistTypes.forEach(type => {
         if (!newSortList.includes(type)) {
           newSortList.push(type)
         }
@@ -914,7 +914,7 @@ export default {
     }
 
     // 修改开关状态变化处理函数
-    const seriesSortListTurnOnChange = (val) => {
+    const seriesSortListTurnOnChange = val => {
       if (!val) {
         form.seriesSortList = []
       } else {
@@ -937,12 +937,12 @@ export default {
         ElMessage.success('保存成功')
         submitSuccessFlag = true
         router.push({
-          name: 'PostList',
+          name: 'PostList'
         })
       })
     }
     const contentSource = ref('')
-    const contentTabChange = (tab) => {
+    const contentTabChange = tab => {
       if (tab === 'richText') {
         resetRichEditor()
       } else {
@@ -970,18 +970,18 @@ export default {
       tagsIsLoading.value = true
       authApi
         .getTagList({ keyword: formatTagKeyword, size: 50, page: 1 }, true)
-        .then((res) => {
+        .then(res => {
           const list = res.data.list
           if (tagKeyword) {
             // 如果tagkeyword没有在list里面，就把tagkeyword push到list里面
             const hasTagKeyword = list.some(
-              (item) => item.tagname === formatTagKeyword
+              item => item.tagname === formatTagKeyword
             )
             if (!hasTagKeyword) {
               list.push({
                 _id: formatTagKeyword,
                 tagname: formatTagKeyword,
-                isNew: true,
+                isNew: true
               })
             }
           }
@@ -992,7 +992,7 @@ export default {
         })
     }
     let queryTagsTimer = null
-    const queryTags = (query) => {
+    const queryTags = query => {
       if (queryTagsTimer) {
         clearTimeout(queryTagsTimer)
       }
@@ -1003,15 +1003,15 @@ export default {
     const updateTagLastUseTime = (newTagIdList, oldTagIdList) => {
       // 对比newTagIdList对比oldTagIdList，多了哪些ID
       const addTagIdList = newTagIdList.filter(
-        (item) => !oldTagIdList.includes(item)
+        item => !oldTagIdList.includes(item)
       )
       // 从addTagIdList中筛选出mongodbId格式的数据，用正则
-      const addTagMongoIdList = addTagIdList.filter((item) => {
+      const addTagMongoIdList = addTagIdList.filter(item => {
         const reg = /^[0-9a-fA-F]{24}$/
         return reg.test(item)
       })
       // 遍历addTagMongoIdList，把这些ID的tag的lastUseTime更新为当前时间
-      addTagMongoIdList.forEach((id) => {
+      addTagMongoIdList.forEach(id => {
         authApi.updateTagLastUseTime({ id })
       })
     }
@@ -1064,14 +1064,14 @@ export default {
     // sorts
     const sortList = ref([])
     const getSortList = () => {
-      authApi.getSortList().then((res) => {
+      authApi.getSortList().then(res => {
         const list = res.data.data
         // 循环list，查找里面有没有children，如果有，就把children里面的sortname前面加上'--',然后把children push到newlist里面
         const newlist = []
-        list.forEach((item) => {
+        list.forEach(item => {
           newlist.push(item)
           if (item.children && item.children.length) {
-            item.children.forEach((child) => {
+            item.children.forEach(child => {
               child.sortname = '└─ ' + child.sortname
             })
             newlist.push(...item.children)
@@ -1094,14 +1094,14 @@ export default {
     const openAttachmentsDialog = () => {
       attachmentsDialogRef.value.open()
     }
-    const selectAttachments = (attachments) => {
+    const selectAttachments = attachments => {
       console.log(attachments)
-      attachments.forEach((item) => {
+      attachments.forEach(item => {
         coverImageListObj[item._id] = item
         form.coverImages.push(item._id)
       })
     }
-    const getAttachmentById = (id) => {
+    const getAttachmentById = id => {
       const data = coverImageListObj[id]
       return data
     }
@@ -1109,7 +1109,7 @@ export default {
       get() {
         const list = []
         const coverImages = form.coverImages
-        coverImages.forEach((id) => {
+        coverImages.forEach(id => {
           const data = getAttachmentById(id)
           if (data) {
             list.push(data)
@@ -1118,8 +1118,8 @@ export default {
         return list
       },
       set(val) {
-        form.coverImages = val.map((item) => item._id)
-      },
+        form.coverImages = val.map(item => item._id)
+      }
     })
     const attachmentDrag = ref(false)
     // template
@@ -1127,38 +1127,38 @@ export default {
     const templateList = ref([
       {
         label: '关于',
-        value: 'about',
+        value: 'about'
       },
       {
         label: '友情链接',
-        value: 'link',
+        value: 'link'
       },
       {
         label: '程序员老黄历',
-        value: 'almanac',
+        value: 'almanac'
       },
       {
         label: '番剧',
-        value: 'bangumi',
+        value: 'bangumi'
       },
       {
         label: '电影',
-        value: 'movieList',
+        value: 'movieList'
       },
       {
         label: '游戏列表',
-        value: 'gameList',
+        value: 'gameList'
       },
       // book
       {
         label: '书籍',
-        value: 'bookList',
+        value: 'bookList'
       },
       // 活动
       {
         label: '活动',
-        value: 'event',
-      },
+        value: 'event'
+      }
     ])
 
     // auto save
@@ -1172,7 +1172,7 @@ export default {
         newForm.isAutoSave = true
         authApi
           .updatePost(newForm, true)
-          .then((res) => {
+          .then(res => {
             // 成功消息
             form.__v = form.__v + 1
             autoSaveTimeDate.value = new Date()
@@ -1185,9 +1185,12 @@ export default {
 
     let autoSaveTimer = null
     const setAutoSaveTimer = () => {
-      autoSaveTimer = setInterval(() => {
-        autoSave()
-      }, 1000 * 60 * 2)
+      autoSaveTimer = setInterval(
+        () => {
+          autoSave()
+        },
+        1000 * 60 * 2
+      )
     }
 
     // 升级编辑器版本
@@ -1199,7 +1202,7 @@ export default {
         {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
-          type: 'warning',
+          type: 'warning'
         }
       )
         .then(() => {
@@ -1224,7 +1227,7 @@ export default {
           {
             confirmButtonText: '确定',
             cancelButtonText: '取消',
-            type: 'warning',
+            type: 'warning'
           }
         )
           .then(() => {
@@ -1236,7 +1239,7 @@ export default {
       }
     })
 
-    const beforeUnloadEvent = (e) => {
+    const beforeUnloadEvent = e => {
       e.preventDefault()
       e.returnValue = ''
     }
@@ -1244,7 +1247,7 @@ export default {
     const siteUrl = computed(() => {
       return store.getters.siteUrl
     })
-    const openPreviewer = (item) => {
+    const openPreviewer = item => {
       const mimetype = item.mimetype
       const { filepath, width, height, is360Panorama } = item
       loadAndOpenImg(0, [
@@ -1253,8 +1256,8 @@ export default {
           width,
           height,
           mimetype,
-          is360Panorama,
-        },
+          is360Panorama
+        }
       ])
     }
 
@@ -1285,14 +1288,14 @@ export default {
           obj = {
             link: firstLink,
             content: iframe,
-            type: 'iframe',
+            type: 'iframe'
           }
         }
       }
       return obj
     }
 
-    const checkShowText = (item) => {
+    const checkShowText = item => {
       if (item.status === 0) {
         return '【状态:不显示】'
       }
@@ -1328,7 +1331,7 @@ export default {
         () => form.contentMovieList,
         () => form.contentGameList,
         () => form.contentBookList,
-        () => tweetContentParseRes,
+        () => tweetContentParseRes
       ],
       () => {
         if (form.contentSeriesSortListTurnOn) {
@@ -1352,7 +1355,7 @@ export default {
         () => form.bangumiList,
         () => form.movieList,
         () => form.gameList,
-        () => form.bookList,
+        () => form.bookList
       ],
       () => {
         if (form.seriesSortListTurnOn) {
@@ -1449,9 +1452,9 @@ export default {
       openPreviewer,
       // tweetContentParse
       tweetContentParseRes,
-      checkShowText,
+      checkShowText
     }
-  },
+  }
 }
 </script>
 <style scoped>

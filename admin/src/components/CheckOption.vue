@@ -11,21 +11,21 @@ export default {
   props: {
     vote: {
       type: Object,
-      required: true,
+      required: true
     },
     optionId: {
       type: String,
-      required: true,
-    },
+      required: true
+    }
   },
   setup(props) {
     const option = computed(() => {
-      return props.vote.options.find((option) => option._id === props.optionId)
+      return props.vote.options.find(option => option._id === props.optionId)
     })
     return {
-      option,
+      option
     }
-  },
+  }
 }
 </script>
 <style scoped>

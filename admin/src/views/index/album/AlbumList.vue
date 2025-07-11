@@ -17,7 +17,7 @@ import { setSessionParams, getSessionParams } from '@/utils/utils'
 import AlbumTable from '@/components/AlbumTable.vue'
 export default {
   components: {
-    AlbumTable,
+    AlbumTable
   },
   setup() {
     const route = useRoute()
@@ -25,7 +25,7 @@ export default {
     const params = reactive({
       page: 1,
       size: 50,
-      keyword: '',
+      keyword: ''
     })
 
     const initParams = () => {
@@ -39,7 +39,7 @@ export default {
 
     initParams()
 
-    const paramsChange = (params) => {
+    const paramsChange = params => {
       setSessionParams(route.name, params)
     }
 
@@ -47,9 +47,9 @@ export default {
 
     return {
       params,
-      paramsChange,
+      paramsChange
     }
-  },
+  }
 }
 </script>
 <style lang=""></style>

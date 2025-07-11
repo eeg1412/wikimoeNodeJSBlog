@@ -18,16 +18,16 @@ const { options } = storeToRefs(optionStore)
 const props = defineProps({
   adSlot: {
     type: String,
-    default: '',
+    default: ''
   },
   adFormat: {
     type: String,
-    default: '',
+    default: ''
   },
   adLayoutKey: {
     type: String,
-    default: '',
-  },
+    default: ''
+  }
 })
 
 const adClient = options.googleAdId

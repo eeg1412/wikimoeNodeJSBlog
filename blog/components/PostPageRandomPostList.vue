@@ -8,7 +8,7 @@
     <div
       class="random-post-list-body mt-3"
       :class="{
-        'is-odd': randomPostList.length % 2 !== 0,
+        'is-odd': randomPostList.length % 2 !== 0
       }"
     >
       <!-- 遍历randomPostList -->
@@ -59,14 +59,14 @@ import { storeToRefs } from 'pinia'
 const props = defineProps({
   randomPostList: {
     type: Array,
-    default: () => [],
-  },
+    default: () => []
+  }
 })
 
 const optionStore = useOptionStore()
 const { options } = storeToRefs(optionStore)
 
-const getLinkObj = (item) => {
+const getLinkObj = item => {
   let linkObj = {}
   const type = item.type
   const detail = item
@@ -75,13 +75,13 @@ const getLinkObj = (item) => {
     case 1:
       linkObj = {
         name: 'postDetail',
-        params: { id: detail.alias || detail._id },
+        params: { id: detail.alias || detail._id }
       }
       break
     case 3:
       linkObj = {
         name: 'pageDetail',
-        params: { id: detail.alias || detail._id },
+        params: { id: detail.alias || detail._id }
       }
 
       break
@@ -90,7 +90,7 @@ const getLinkObj = (item) => {
   }
   return linkObj
 }
-const getRandomPostTitle = (item) => {
+const getRandomPostTitle = item => {
   let title = ''
   const type = item.type
   const detail = item
@@ -107,7 +107,7 @@ const getRandomPostTitle = (item) => {
   }
   return title
 }
-const getRandomPostCategory = (item) => {
+const getRandomPostCategory = item => {
   let category = ''
   const type = item.type
   switch (type) {
@@ -129,7 +129,7 @@ const getRandomPostCategory = (item) => {
   }
   return category
 }
-const getBackgroundImage = (item) => {
+const getBackgroundImage = item => {
   let backgroundImage = options.value.siteDefaultCover
   const detail = item
   if (detail.coverImage) {

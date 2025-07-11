@@ -114,7 +114,7 @@
 import {
   formatResToForm,
   formatResToObj,
-  fieldErrorNotice,
+  fieldErrorNotice
 } from '@/utils/utils'
 import { ref, reactive, onMounted, computed } from 'vue'
 import { authApi } from '@/api'
@@ -124,7 +124,7 @@ import RichEditor5Switch from '@/components/RichEditor5Switch'
 
 export default {
   components: {
-    RichEditor5Switch,
+    RichEditor5Switch
   },
   setup(props, { emit }) {
     // 其他设置
@@ -145,30 +145,30 @@ export default {
       // 随机相似内容显示范围
       sitePostRandomSimilarShowRange: [],
       // 随机相似内容标题
-      sitePostRandomSimilarTitle: '相似内容',
+      sitePostRandomSimilarTitle: '相似内容'
     })
     const sitePostRules = {
       sitePostRandomSimilarCount: [
         {
           required: true,
           message: '请输入随机相似内容文章数',
-          trigger: 'blur',
-        },
+          trigger: 'blur'
+        }
       ],
       // sitePostRandomSimilarTitle
       sitePostRandomSimilarTitle: [
         {
           required: true,
           message: '请输入随机相似内容标题',
-          trigger: 'blur',
-        },
+          trigger: 'blur'
+        }
       ],
       // sitePostRandomSimilarRange 必须选择一个
       sitePostRandomSimilarRange: [
         {
           required: true,
           message: '请选择随机相似内容范围',
-          trigger: 'blur',
+          trigger: 'blur'
         },
         {
           validator: (rule, value, callback) => {
@@ -178,14 +178,14 @@ export default {
               callback()
             }
           },
-          trigger: 'change',
-        },
+          trigger: 'change'
+        }
       ],
       sitePostRandomSimilarShowRange: [
         {
           required: true,
           message: '请选择随机相似内容显示范围',
-          trigger: 'blur',
+          trigger: 'blur'
         },
         {
           validator: (rule, value, callback) => {
@@ -195,31 +195,31 @@ export default {
               callback()
             }
           },
-          trigger: 'change',
-        },
-      ],
+          trigger: 'change'
+        }
+      ]
     }
     const sitePostSubmit = () => {
       sitePostFormRef.value.validate((valid, fields) => {
         if (valid) {
           const params = []
-          Object.keys(sitePostForm).forEach((key) => {
+          Object.keys(sitePostForm).forEach(key => {
             if (Array.isArray(sitePostForm[key])) {
               // 转换成字符串
               params.push({
                 name: key,
-                value: sitePostForm[key].join(','),
+                value: sitePostForm[key].join(',')
               })
             } else {
               params.push({
                 name: key,
-                value: sitePostForm[key],
+                value: sitePostForm[key]
               })
             }
           })
           authApi
             .updateOption({ optionList: params })
-            .then((res) => {
+            .then(res => {
               const obj = formatResToObj(res.data.data)
               formatResToForm(sitePostForm, obj)
               store.dispatch('setOptions')
@@ -227,7 +227,7 @@ export default {
 
               ElMessage.success('更新成功')
             })
-            .catch((err) => {
+            .catch(err => {
               console.log(err)
             })
         } else {
@@ -241,14 +241,14 @@ export default {
     const getOptionList = () => {
       // 将sitePostForm的key转换为数组
       const params = {
-        nameList: [],
+        nameList: []
       }
-      Object.keys(sitePostForm).forEach((key) => {
+      Object.keys(sitePostForm).forEach(key => {
         params.nameList.push(key)
       })
       authApi
         .getOptionList(params)
-        .then((res) => {
+        .then(res => {
           // res.data.data是数组，需要转换为对象
           const obj = formatResToObj(res.data.data)
           formatResToForm(sitePostForm, obj)
@@ -265,8 +265,8 @@ export default {
       sitePostForm,
       sitePostRules,
       sitePostSubmit,
-      inited,
+      inited
     }
-  },
+  }
 }
 </script>

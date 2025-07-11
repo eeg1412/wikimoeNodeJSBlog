@@ -43,29 +43,29 @@ export default {
     ElForm,
     ElFormItem,
     ElInput,
-    ElButton,
+    ElButton
   },
   props: {
     isOpen: {
       type: Boolean,
-      required: true,
+      required: true
     },
     correctAnswer: {
       type: String,
-      required: true,
+      required: true
     },
     content: {
       type: String,
-      default: '',
+      default: ''
     },
     success: {
       type: Function,
-      default: null,
-    },
+      default: null
+    }
   },
   setup(props, { emit }) {
     const form = ref({
-      inputAnswer: '',
+      inputAnswer: ''
     })
 
     const rules = ref({
@@ -79,9 +79,9 @@ export default {
               callback()
             }
           },
-          trigger: 'blur',
-        },
-      ],
+          trigger: 'blur'
+        }
+      ]
     })
 
     const formRef = ref(null)
@@ -93,7 +93,7 @@ export default {
     }
 
     const handleConfirm = () => {
-      formRef.value.validate(async (valid) => {
+      formRef.value.validate(async valid => {
         if (valid) {
           if (props.success) {
             try {
@@ -115,7 +115,7 @@ export default {
 
     watch(
       () => props.isOpen,
-      (newVal) => {
+      newVal => {
         console.log('isOpen changed:', newVal)
         if (!newVal) {
           form.value.inputAnswer = ''
@@ -130,9 +130,9 @@ export default {
       formRef,
       handleCancel,
       handleConfirm,
-      handleClosed,
+      handleClosed
     }
-  },
+  }
 }
 </script>
 

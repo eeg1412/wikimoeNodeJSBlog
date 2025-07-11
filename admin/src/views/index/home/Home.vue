@@ -113,7 +113,7 @@ export default {
   components: {
     Statistics,
     StatisticsReader,
-    StatisticsLoadingTime,
+    StatisticsLoadingTime
   },
   setup() {
     const route = useRoute()
@@ -121,7 +121,7 @@ export default {
     const data = ref(null)
 
     const getDashboard = () => {
-      authApi.getDashboard().then((res) => {
+      authApi.getDashboard().then(res => {
         const resData = res.data.data
         // 将内存转换为MB
         resData.memory = (resData.memory / 1024 / 1024).toFixed(2) + 'MB'
@@ -143,7 +143,7 @@ export default {
         '{"page":1,"size":50,"keyword":"","status":0}'
       )
       router.push({
-        name: 'CommentList',
+        name: 'CommentList'
       })
     }
 
@@ -156,9 +156,9 @@ export default {
     return {
       data,
       goCommentAudit,
-      version,
+      version
     }
-  },
+  }
 }
 </script>
 <style scoped>

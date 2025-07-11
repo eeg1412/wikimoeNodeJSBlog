@@ -38,7 +38,7 @@ import {
   onMounted,
   computed,
   watch,
-  nextTick,
+  nextTick
 } from 'vue'
 import { Editor, Toolbar } from '@wangeditor/editor-for-vue'
 import AttachmentsDialog from '@/components/AttachmentsDialog'
@@ -50,18 +50,18 @@ export default {
   props: {
     content: {
       type: String,
-      default: '',
+      default: ''
     },
     isPost: {
       type: Boolean,
-      default: false,
-    },
+      default: false
+    }
   },
   components: {
     Editor,
     Toolbar,
     AttachmentsDialog,
-    RichEditorEventSelectorDialog,
+    RichEditorEventSelectorDialog
   },
   setup(props, { emit }) {
     // 编辑器实例，必须用 shallowRef
@@ -74,7 +74,7 @@ export default {
       },
       set(val) {
         emit('update:content', val)
-      },
+      }
     })
 
     // 模拟 ajax 异步获取内容
@@ -93,7 +93,7 @@ export default {
           title: '更多',
           iconSvg:
             '<svg viewBox="0 0 1024 1024"><path d="M204.8 505.6m-76.8 0a76.8 76.8 0 1 0 153.6 0 76.8 76.8 0 1 0-153.6 0Z"></path><path d="M505.6 505.6m-76.8 0a76.8 76.8 0 1 0 153.6 0 76.8 76.8 0 1 0-153.6 0Z"></path><path d="M806.4 505.6m-76.8 0a76.8 76.8 0 1 0 153.6 0 76.8 76.8 0 1 0-153.6 0Z"></path></svg>',
-          menuKeys: ['through', 'code', 'sup', 'sub', 'clearStyle'],
+          menuKeys: ['through', 'code', 'sup', 'sub', 'clearStyle']
         },
         'color',
         'bgColor',
@@ -114,15 +114,15 @@ export default {
             'justifyLeft',
             'justifyRight',
             'justifyCenter',
-            'justifyJustify',
-          ],
+            'justifyJustify'
+          ]
         },
         {
           key: 'group-indent',
           title: '缩进',
           iconSvg:
             '<svg viewBox="0 0 1024 1024"><path d="M0 64h1024v128H0z m384 192h640v128H384z m0 192h640v128H384z m0 192h640v128H384zM0 832h1024v128H0z m0-128V320l256 192z"></path></svg>',
-          menuKeys: ['indent', 'delIndent'],
+          menuKeys: ['indent', 'delIndent']
         },
         '|',
         'emotion',
@@ -135,15 +135,15 @@ export default {
           menuKeys: [
             'insertImage',
             'uploadImage',
-            ...(props.isPost ? ['imageGroup', 'panorama360'] : []),
-          ],
+            ...(props.isPost ? ['imageGroup', 'panorama360'] : [])
+          ]
         },
         {
           key: 'group-video',
           title: '视频',
           iconSvg:
             '<svg viewBox="0 0 1024 1024"><path d="M981.184 160.096C837.568 139.456 678.848 128 512 128S186.432 139.456 42.816 160.096C15.296 267.808 0 386.848 0 512s15.264 244.16 42.816 351.904C186.464 884.544 345.152 896 512 896s325.568-11.456 469.184-32.096C1008.704 756.192 1024 637.152 1024 512s-15.264-244.16-42.816-351.904zM384 704V320l320 192-320 192z"></path></svg>',
-          menuKeys: ['insertVideo', 'uploadVideo'],
+          menuKeys: ['insertVideo', 'uploadVideo']
         },
         'insertTable',
         'codeBlock',
@@ -153,8 +153,8 @@ export default {
         'redo',
         ...(props.isPost ? ['|', 'eventspan'] : []),
         '|',
-        'fullScreen',
-      ],
+        'fullScreen'
+      ]
     }
     const editorConfig = {
       placeholder: '请输入内容...',
@@ -162,7 +162,7 @@ export default {
       hoverbarKeys: {
         // key 即 element type
         link: {
-          menuKeys: ['editLink', 'unLink', 'viewLink'],
+          menuKeys: ['editLink', 'unLink', 'viewLink']
         },
         image: {
           menuKeys: [
@@ -172,11 +172,11 @@ export default {
             'imageWidthauto',
             'editImage',
             'viewImageLink',
-            'deleteImage',
-          ],
+            'deleteImage'
+          ]
         },
         pre: {
-          menuKeys: ['enter', 'codeBlock', 'codeSelectLang'],
+          menuKeys: ['enter', 'codeBlock', 'codeSelectLang']
         },
         table: {
           menuKeys: [
@@ -187,23 +187,23 @@ export default {
             'deleteTableRow',
             'insertTableCol',
             'deleteTableCol',
-            'deleteTable',
-          ],
+            'deleteTable'
+          ]
         },
         divider: {
-          menuKeys: ['enter'],
+          menuKeys: ['enter']
         },
         video: {
-          menuKeys: ['enter', 'editVideoSize'],
+          menuKeys: ['enter', 'editVideoSize']
         },
         ...(props.isPost
           ? {
               eventspan: {
-                menuKeys: ['uneventspan', 'editeventspan'],
-              },
+                menuKeys: ['uneventspan', 'editeventspan']
+              }
             }
-          : {}),
-      },
+          : {})
+      }
     }
 
     // 组件销毁时，也及时销毁编辑器
@@ -213,7 +213,7 @@ export default {
       editor.destroy()
     })
 
-    const handleCreated = (editor) => {
+    const handleCreated = editor => {
       editorRef.value = editor // 记录 editor 实例，重要！
       editor['openEventDialog'] = openEventDialog
       editor['openAttachmentsDialog'] = openAttachmentsDialog
@@ -222,7 +222,7 @@ export default {
       const { insertBreak } = editor
       // 检测shift+enter
       let isShiftEnter = false
-      editorDom.addEventListener('keydown', (e) => {
+      editorDom.addEventListener('keydown', e => {
         if (e.shiftKey && e.keyCode === 13) {
           console.log('shift+enter')
           isShiftEnter = true
@@ -244,7 +244,7 @@ export default {
         emotions:
           '😀 😃 😄 😁 😆 😅 😂 🤣 😊 😇 🙂 🙃 😉 😌 😍 😘 😗 😙 😚 😋 😛 😝 😜 🤓 😎 😏 😒 😞 😔 😟 😕 🙁 😣 😖 😫 😩 😢 😭 😤 😠 😡 😳 😱 😨 🤗 🤔 😶 😑 😬 🙄 😯 😴 😷 🤑 😈 🤡 💩 👻 💀 👀 👣 👐 🙌 👏'.split(
             ' '
-          ), // 数组
+          ) // 数组
       }
       config.MENU_CONF['codeSelectLang'] = {
         codeLangs: [
@@ -270,8 +270,8 @@ export default {
           { text: 'Markdown', value: 'markdown' },
           { text: 'JSON', value: 'json' },
           { text: 'Bash', value: 'bash' },
-          { text: 'sh', value: 'sh' },
-        ],
+          { text: 'sh', value: 'sh' }
+        ]
       }
       config.MENU_CONF['uploadImage'] = {
         // 自定义选择图片
@@ -281,7 +281,7 @@ export default {
           insertFnType.value = 'image'
           insertFnIs360Panorama.value = false
           openAttachmentsDialog()
-        },
+        }
       }
       // 自定义上传视频
       config.MENU_CONF['uploadVideo'] = {
@@ -292,7 +292,7 @@ export default {
           insertFnType.value = 'video'
           insertFnIs360Panorama.value = false
           openAttachmentsDialog()
-        },
+        }
       }
       config.MENU_CONF['insertVideo'] = {
         onInsertedVideo(videoNode) {
@@ -307,7 +307,7 @@ export default {
           }
           return true
         },
-        parseVideoSrc: (videoSrc) => {
+        parseVideoSrc: videoSrc => {
           if (videoSrc.indexOf('<iframe') !== -1) {
             // 如果是 iframe 形式，直接返回
             return videoSrc
@@ -321,7 +321,7 @@ export default {
             videoSrc = `<iframe src="https://www.bilibili.com/blackboard/html5mobileplayer.html?bvid=${bvid}&p=${p}&as_wide=1&danmaku=0&hasMuteButton=1" scrolling="no" border="0" frameborder="no" framespacing="0" allowfullscreen="true" width="1280" height="720" style="width: 100%; height: auto; aspect-ratio: 1280 / 720;"> </iframe>`
           }
           return videoSrc
-        },
+        }
       }
       console.log(config)
     }
@@ -331,7 +331,7 @@ export default {
     const insertFnIs360Panorama = ref(false)
     const attachmentsDialogRef = ref(null)
     const openAttachmentsDialogType = ref('')
-    const openAttachmentsDialog = (type) => {
+    const openAttachmentsDialog = type => {
       let insertFnIs360Panorama_ = false
       openAttachmentsDialogType.value = type || ''
       if (type) {
@@ -359,7 +359,7 @@ export default {
     const getTime = () => {
       return new Date().getTime()
     }
-    const selectAttachments = async (attachments) => {
+    const selectAttachments = async attachments => {
       console.log(attachments)
       // let html = ''
       // attachments.forEach((item) => {
@@ -374,7 +374,7 @@ export default {
         const editor = editorRef.value
         editor.restoreSelection()
         setTimeout(() => {
-          const children = attachments.map((item) => {
+          const children = attachments.map(item => {
             return {
               src: item.thumfor
                 ? `${siteUrl.value + item.thumfor}?t=${getTime()}`
@@ -385,13 +385,13 @@ export default {
               dataHrefWidth: item.width,
               dataHrefHeight: item.height,
               alt: item.description || item.filename || '',
-              text: '',
+              text: ''
             }
           })
           const imageGroupElem = {
             type: 'imageGroup',
             children: [{ text: '' }],
-            childrenList: children,
+            childrenList: children
           }
           SlateTransforms.insertNodes(editor, [imageGroupElem])
         }, 100)
@@ -402,7 +402,7 @@ export default {
           // 处理所有选中的图片
           if (attachments.length > 0) {
             // 创建每个全景图片的元素数组
-            const panoramaElems = attachments.map((item) => ({
+            const panoramaElems = attachments.map(item => ({
               type: 'panorama360',
               src: item.thumfor
                 ? `${siteUrl.value + item.thumfor}?t=${getTime()}`
@@ -415,7 +415,7 @@ export default {
               dataHrefWidth: item.width || '',
               dataHrefHeight: item.height || '',
               alt: item.description || item.filename || '360°全景图片',
-              children: [{ text: '' }],
+              children: [{ text: '' }]
             }))
 
             // 插入所有全景图片元素，并在每个元素之间插入换行（除了最后一个元素）
@@ -426,7 +426,7 @@ export default {
               if (i < panoramaElems.length - 1) {
                 SlateTransforms.insertNodes(editor, {
                   type: 'paragraph',
-                  children: [{ text: '' }],
+                  children: [{ text: '' }]
                 })
               }
             }
@@ -460,12 +460,12 @@ export default {
                 width: item.thumWidth || item.width,
                 height: item.thumHeight || item.height,
                 hrefWidth: item.width,
-                hrefHeight: item.height,
+                hrefHeight: item.height
               },
               {
-                match: (n) => {
+                match: n => {
                   return n.type === 'image' || n.type === 'video'
-                },
+                }
               }
             )
           }
@@ -497,14 +497,14 @@ export default {
       }
       showEventDialog.value = true
     }
-    watch(showEventDialog, (val) => {
+    watch(showEventDialog, val => {
       if (!val) {
         eventText.value = ''
         eventId.value = null
         editorRef.value.restoreSelection()
       }
     })
-    const onEventDialogOk = (form) => {
+    const onEventDialogOk = form => {
       const editor = editorRef.value
       if (eventDialogEditMode.value) {
         // 编辑节点
@@ -514,12 +514,12 @@ export default {
             {
               id: form.id,
               textContent: form.text,
-              children: [{ text: form.text }],
+              children: [{ text: form.text }]
             },
             {
-              match: (n) => {
+              match: n => {
                 return n.type === 'eventspan'
-              },
+              }
             }
           )
           editor.move(1)
@@ -531,7 +531,7 @@ export default {
             type: 'eventspan',
             id: form.id,
             textContent: form.text,
-            children: [{ text: form.text }],
+            children: [{ text: form.text }]
           }
           editor.insertNode(eventspanElem)
         }, 100)
@@ -558,9 +558,9 @@ export default {
       eventText,
       eventId,
       openEventDialog,
-      onEventDialogOk,
+      onEventDialogOk
     }
-  },
+  }
 }
 </script>
 <style>

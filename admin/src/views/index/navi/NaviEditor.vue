@@ -90,11 +90,11 @@ export default {
       isdefault: false,
       deepmatch: false,
       query: '',
-      __v: null,
+      __v: null
     })
     const rules = reactive({
       naviname: [
-        { required: true, message: '请输入导航名称', trigger: 'blur' },
+        { required: true, message: '请输入导航名称', trigger: 'blur' }
       ],
       url: [
         {
@@ -124,18 +124,18 @@ export default {
               callback()
             }
           },
-          trigger: 'blur',
-        },
-      ],
+          trigger: 'blur'
+        }
+      ]
     })
     const formRef = ref(null)
     const submit = () => {
-      formRef.value.validate(async (valid) => {
+      formRef.value.validate(async valid => {
         if (!valid) {
           return false
         }
         const data = {
-          ...form,
+          ...form
         }
         if (id.value) {
           // 编辑
@@ -145,7 +145,7 @@ export default {
             .updateNavi(data)
             .then(() => {
               router.push({
-                name: 'NaviList',
+                name: 'NaviList'
               })
             })
             .catch(() => {})
@@ -155,7 +155,7 @@ export default {
             .createNavi(data)
             .then(() => {
               router.push({
-                name: 'NaviList',
+                name: 'NaviList'
               })
             })
             .catch(() => {})
@@ -165,11 +165,11 @@ export default {
 
     const getNaviDetail = () => {
       const params = {
-        id: id.value,
+        id: id.value
       }
       authApi
         .getNaviDetail(params)
-        .then((res) => {
+        .then(res => {
           form.__v = res.data.data.__v
           form.naviname = res.data.data.naviname
           form.url = res.data.data.url
@@ -188,7 +188,7 @@ export default {
     const getNaviList = () => {
       authApi
         .getNaviList()
-        .then((res) => {
+        .then(res => {
           naviList.value = res.data.data
         })
         .catch(() => {})
@@ -205,9 +205,9 @@ export default {
       rules,
       formRef,
       submit,
-      naviList,
+      naviList
     }
-  },
+  }
 }
 </script>
 <style scoped></style>

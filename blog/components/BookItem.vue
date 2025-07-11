@@ -33,7 +33,7 @@
           <span
             class="books-platform-block"
             :style="{
-              backgroundColor: book.booktype.color,
+              backgroundColor: book.booktype.color
             }"
             v-if="book.booktype"
             >{{ book.booktype.name }}</span
@@ -125,19 +125,19 @@
 const props = defineProps({
   book: {
     type: Object,
-    required: true,
+    required: true
   },
   showAnimeDot: {
     type: Boolean,
-    default: true,
-  },
+    default: true
+  }
 })
 
-const setDataHrefList = (cover) => {
+const setDataHrefList = cover => {
   return [
     {
-      filepath: cover,
-    },
+      filepath: cover
+    }
   ]
 }
 </script>

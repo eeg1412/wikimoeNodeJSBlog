@@ -41,8 +41,8 @@ export default {
   props: {
     id: {
       type: String,
-      default: '',
-    },
+      default: ''
+    }
   },
   emits: ['update'],
   setup(props, { emit }) {
@@ -52,19 +52,19 @@ export default {
     const form = reactive({
       __v: null,
       name: '',
-      remark: '',
+      remark: ''
     })
     const rules = reactive({
-      name: [{ required: true, message: '请输入名称', trigger: 'blur' }],
+      name: [{ required: true, message: '请输入名称', trigger: 'blur' }]
     })
     const formRef = ref(null)
     const submit = () => {
-      formRef.value.validate(async (valid) => {
+      formRef.value.validate(async valid => {
         if (!valid) {
           return false
         }
         const data = {
-          ...form,
+          ...form
         }
         if (props.id) {
           // 编辑
@@ -98,11 +98,11 @@ export default {
 
     const getBackupDetail = () => {
       const params = {
-        id: props.id,
+        id: props.id
       }
       authApi
         .getBackupDetail(params)
-        .then((res) => {
+        .then(res => {
           form.__v = res.data.data.__v
           form.name = res.data.data.name
           form.remark = res.data.data.remark
@@ -122,9 +122,9 @@ export default {
       formRef,
       submit,
       closeDialog,
-      open,
+      open
     }
-  },
+  }
 }
 </script>
 <style scoped></style>

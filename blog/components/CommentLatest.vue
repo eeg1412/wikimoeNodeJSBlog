@@ -4,8 +4,8 @@
       v-for="(item, index) in commentLatest"
       :key="item._id"
       class="comment-latest-item-body pointer"
-      @click="(e) => goPostDetail(e, item)"
-      @click.middle="(e) => goPostDetail(e, item, true)"
+      @click="e => goPostDetail(e, item)"
+      @click.middle="e => goPostDetail(e, item, true)"
       @mousedown="preventDefaultMiddleClick"
     >
       <!-- 左边头像 -->
@@ -72,7 +72,7 @@ const goPostDetail = (e, item, middle) => {
   const url = router.resolve({
     name: routeName,
     params: { id },
-    hash: `#comment-${item._id}`,
+    hash: `#comment-${item._id}`
   }).href
   const newTabOpen = () => {
     window.open(url, '_blank')
@@ -91,13 +91,13 @@ const goPostDetail = (e, item, middle) => {
     router.push({
       name: routeName,
       params: {
-        id: id,
+        id: id
       },
-      hash: `#comment-${item._id}`,
+      hash: `#comment-${item._id}`
     })
   }
 }
-const preventDefaultMiddleClick = (e) => {
+const preventDefaultMiddleClick = e => {
   console.log(e.button, e.target.tagName)
   if (e.button === 1 && e.target.tagName !== 'A') {
     console.log('preventDefault middle click')

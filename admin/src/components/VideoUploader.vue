@@ -230,7 +230,7 @@ import {
   getFFmpegInstalled,
   initFFmpeg,
   execFFmpeg,
-  dataURLtoBlob,
+  dataURLtoBlob
 } from '@/utils/utils'
 import { authApi } from '@/api'
 import { ElMessage } from 'element-plus'
@@ -238,18 +238,18 @@ export default {
   props: {
     albumId: {
       type: String,
-      default: '',
-    },
+      default: ''
+    }
   },
   emits: ['onVideoUploaded'],
   setup(props, { emit }) {
     const videoLoading = ref(false)
     const step = ref(1)
     const options = reactive({
-      noCompress: false,
+      noCompress: false
     })
     const optionsCount = computed(() => {
-      return Object.keys(options).filter((key) => {
+      return Object.keys(options).filter(key => {
         return options[key] !== null && options[key] !== false
       }).length
     })
@@ -258,7 +258,7 @@ export default {
     const videoRef = ref(null)
     let file = null
     let fileRawName = ''
-    const uploadVideo = async (file_) => {
+    const uploadVideo = async file_ => {
       file = file_.raw
       fileRawName = file_.name
       // 禁止大于500M的文件
@@ -297,7 +297,7 @@ export default {
       'slow',
       'slower',
       'veryslow',
-      'placebo',
+      'placebo'
     ]
 
     const videoForm = reactive({
@@ -314,7 +314,7 @@ export default {
       // 视频压缩声音
       videoSettingCompressAudio: true,
       // 编码速度
-      videoSettingCompressPreset: 'veryfast',
+      videoSettingCompressPreset: 'veryfast'
     })
     const getOptionList = () => {
       // 将mediaForm的key转换为数组
@@ -322,11 +322,11 @@ export default {
         nameList: [
           'videoSettingCompressMaxSize',
           'videoSettingCompressBitrate',
-          'videoSettingCompressFps',
-        ],
+          'videoSettingCompressFps'
+        ]
       }
-      authApi.getOptionList(params).then((res) => {
-        res.data.data.forEach((item) => {
+      authApi.getOptionList(params).then(res => {
+        res.data.data.forEach(item => {
           videoForm[item.name] = Number(item.value)
         })
       })
@@ -336,37 +336,37 @@ export default {
         {
           required: true,
           message: '请输入开始时间',
-          trigger: 'blur',
-        },
+          trigger: 'blur'
+        }
       ],
       endTime: [
         {
           required: true,
           message: '请输入结束时间',
-          trigger: 'blur',
-        },
+          trigger: 'blur'
+        }
       ],
       videoSettingCompressMaxSize: [
         {
           required: true,
           message: '请输入视频压缩最长边',
-          trigger: 'blur',
-        },
+          trigger: 'blur'
+        }
       ],
       videoSettingCompressBitrate: [
         {
           required: true,
           message: '请输入视频压缩码率',
-          trigger: 'blur',
-        },
+          trigger: 'blur'
+        }
       ],
       videoSettingCompressFps: [
         {
           required: true,
           message: '请输入视频压缩帧率',
-          trigger: 'blur',
-        },
-      ],
+          trigger: 'blur'
+        }
+      ]
     }
     // 获取开始时间
     const getStartTime = () => {
@@ -405,7 +405,7 @@ export default {
 
     let ffmpeg = null
     const tryInitFFmpeg = async () => {
-      ffmpeg = await initFFmpeg().catch((err) => {
+      ffmpeg = await initFFmpeg().catch(err => {
         ElMessage.error('初始化FFmpeg失败')
         console.log(err)
       })
@@ -422,7 +422,7 @@ export default {
       return promise
     }
 
-    const getVideoCover = (callback) => {
+    const getVideoCover = callback => {
       const canvas = document.createElement('canvas')
       const ctx = canvas.getContext('2d')
       const video = outputVideoRef.value
@@ -433,7 +433,7 @@ export default {
       ctx.drawImage(video, 0, 0, canvas.width, canvas.height)
       // 转成webp
       canvas.toBlob(
-        (blob) => {
+        blob => {
           outputVideoCoverUrl.value = URL.createObjectURL(blob)
           if (callback) {
             callback()
@@ -444,7 +444,7 @@ export default {
       )
     }
 
-    const setNewCover = (crop) => {
+    const setNewCover = crop => {
       // crop是base64,需要转换为blob
       const blob = dataURLtoBlob(crop)
       outputVideoCoverUrl.value = URL.createObjectURL(blob)
@@ -458,7 +458,7 @@ export default {
       }
       // log
       log.value = ''
-      ffmpeg.on('log', (msg) => {
+      ffmpeg.on('log', msg => {
         log.value = msg.message
         console.log(msg.message)
       })
@@ -561,7 +561,7 @@ export default {
       formData.append('filename', fileRawName)
       authApi
         .uploadAttachmentVideo(formData)
-        .then((res) => {
+        .then(res => {
           emit('onVideoUploaded', res)
           ElMessage.success('上传成功')
           // 关闭弹窗
@@ -615,9 +615,9 @@ export default {
       tryGetVideoCover,
       getVideoCover,
       tryUploadVideo,
-      tryDownloadVideo,
+      tryDownloadVideo
     }
-  },
+  }
 }
 </script>
 <style scoped>

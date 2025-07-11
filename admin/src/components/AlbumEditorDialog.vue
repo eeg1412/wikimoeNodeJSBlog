@@ -41,12 +41,12 @@ export default {
   props: {
     show: {
       type: Boolean,
-      default: false,
+      default: false
     },
     id: {
       type: String,
-      default: '',
-    },
+      default: ''
+    }
   },
   setup(props, { emit }) {
     const showDialog = computed({
@@ -55,15 +55,15 @@ export default {
       },
       set(val) {
         emit('update:show', val)
-      },
+      }
     })
 
     const form = reactive({
       name: '',
-      __v: null,
+      __v: null
     })
     const rules = reactive({
-      name: [{ required: true, message: '请输入相册名称', trigger: 'blur' }],
+      name: [{ required: true, message: '请输入相册名称', trigger: 'blur' }]
     })
     const formRef = ref(null)
 
@@ -77,12 +77,12 @@ export default {
     }
 
     const submit = () => {
-      formRef.value.validate(async (valid) => {
+      formRef.value.validate(async valid => {
         if (!valid) {
           return false
         }
         const data = {
-          name: form.name,
+          name: form.name
         }
         if (props.id) {
           // 编辑
@@ -110,11 +110,11 @@ export default {
 
     const getAlbumDetail = () => {
       const params = {
-        id: props.id,
+        id: props.id
       }
       authApi
         .getAlbumDetail(params)
-        .then((res) => {
+        .then(res => {
           form.name = res.data.data.name
           form.__v = res.data.data.__v
         })
@@ -142,9 +142,9 @@ export default {
       formRef,
       submit,
       resetData,
-      fillCurrentDate,
+      fillCurrentDate
     }
-  },
+  }
 }
 </script>
 <style lang=""></style>

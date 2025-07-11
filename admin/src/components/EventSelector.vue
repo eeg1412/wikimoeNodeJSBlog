@@ -31,16 +31,16 @@ import { authApi } from '@/api'
 const props = defineProps({
   modelValue: {
     type: Array,
-    default: () => [],
+    default: () => []
   },
   eventList: {
     type: Array,
-    default: () => [],
+    default: () => []
   },
   placeholder: {
     type: String,
-    default: '请选择活动',
-  },
+    default: '请选择活动'
+  }
 })
 
 const emit = defineEmits(['update:modelValue', 'update:eventList'])
@@ -54,11 +54,11 @@ const selectedEvents = computed({
   },
   set(value) {
     emit('update:modelValue', value)
-  },
+  }
 })
 
 // 检查显示文本
-const checkShowText = (item) => {
+const checkShowText = item => {
   if (item.status === 0) {
     return '【状态:不显示】'
   }
@@ -73,7 +73,7 @@ const getEventList = (keyword = null) => {
   loading.value = true
   authApi
     .getEventList({ keyword, status: 1, size: 50, page: 1 }, true)
-    .then((res) => {
+    .then(res => {
       emit('update:eventList', res.data.list)
     })
     .finally(() => {
@@ -83,7 +83,7 @@ const getEventList = (keyword = null) => {
 
 // 搜索活动
 let queryEventsTimer = null
-const queryEvents = (query) => {
+const queryEvents = query => {
   if (queryEventsTimer) {
     clearTimeout(queryEventsTimer)
   }

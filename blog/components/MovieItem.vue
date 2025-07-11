@@ -74,18 +74,18 @@
 const props = defineProps({
   movie: {
     type: Object,
-    required: true,
+    required: true
   },
   showType: {
     type: Boolean,
-    default: false,
-  },
+    default: false
+  }
 })
-const setDataHrefList = (cover) => {
+const setDataHrefList = cover => {
   return [
     {
-      filepath: cover,
-    },
+      filepath: cover
+    }
   ]
 }
 const watDate = computed(() => {

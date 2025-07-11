@@ -36,20 +36,20 @@ export default {
   props: {
     modelValue: {
       type: Array,
-      default: () => [],
+      default: () => []
     },
     placeholder: {
       type: String,
-      default: '请选择标签',
+      default: '请选择标签'
     },
     width: {
       type: String,
-      default: '200px',
+      default: '200px'
     },
     addNew: {
       type: Boolean,
-      default: false,
-    },
+      default: false
+    }
   },
   emits: ['update:modelValue'],
   setup(props, { emit }) {
@@ -68,18 +68,18 @@ export default {
           { keyword: formatTagKeyword, size: 100, page: 1, ...options },
           true
         )
-        .then((res) => {
+        .then(res => {
           const list = res.data.list
           if (tagKeyword && props.addNew) {
             // 如果tagkeyword没有在list里面，就把tagkeyword push到list里面
             const hasTagKeyword = list.some(
-              (item) => item.tagname === formatTagKeyword
+              item => item.tagname === formatTagKeyword
             )
             if (!hasTagKeyword) {
               list.push({
                 _id: formatTagKeyword,
                 tagname: formatTagKeyword,
-                isNew: true,
+                isNew: true
               })
             }
           }
@@ -90,7 +90,7 @@ export default {
         })
     }
 
-    const queryTags = (query) => {
+    const queryTags = query => {
       if (queryTagsTimer) {
         clearTimeout(queryTagsTimer)
       }
@@ -101,7 +101,7 @@ export default {
 
     const selectedTags = computed({
       get: () => props.modelValue,
-      set: (value) => emit('update:modelValue', value),
+      set: value => emit('update:modelValue', value)
     })
 
     const tagSelectorRef = ref(null)
@@ -117,8 +117,8 @@ export default {
       queryTags,
       selectedTags,
       tagSelectorRef,
-      getSelectedList,
+      getSelectedList
     }
-  },
+  }
 }
 </script>

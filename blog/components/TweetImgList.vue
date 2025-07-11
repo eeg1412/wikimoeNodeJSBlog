@@ -9,13 +9,13 @@
       class="blog-tweet-img-list-body cover-count-1-1"
       :class="{
         'is-height': isHeight,
-        'no-swiper-mode': !swiperMode,
+        'no-swiper-mode': !swiperMode
       }"
       :style="{
         aspectRatio: `${coverImages[0].thumWidth || coverImages[0].width} / ${
           coverImages[0].thumHeight || coverImages[0].height
         }`,
-        ...checkHeightWidth(coverImages),
+        ...checkHeightWidth(coverImages)
       }"
       v-if="coverImages.length === 1"
     >
@@ -104,7 +104,7 @@
       <div
         class="blog-tweet-img-swiper-body"
         :class="{
-          'video-playing': videoPlayId !== null,
+          'video-playing': videoPlayId !== null
         }"
         v-if="swiperMode"
       >
@@ -113,10 +113,10 @@
           :slides-per-view="1"
           :loop="false"
           :mousewheel="{
-            releaseOnEdges: true,
+            releaseOnEdges: true
           }"
           :pagination="{
-            type: 'fraction',
+            type: 'fraction'
           }"
           @slideChangeTransitionStart="slideChangeTransitionStart"
           @slideChangeTransitionEnd="slideChangeTransitionEnd"
@@ -339,12 +339,12 @@ const isFullscreen = computed(() => {
 const props = defineProps({
   coverImages: {
     type: Array,
-    required: true,
+    required: true
   },
   swiperMode: {
     type: Boolean,
-    default: true,
-  },
+    default: true
+  }
 })
 
 const imageGroup = computed(() => {
@@ -378,7 +378,7 @@ const imageGroup = computed(() => {
 })
 const dataHrefList = computed(() => {
   // src width height
-  return props.coverImages.map((item) => {
+  return props.coverImages.map(item => {
     return {
       filepath: item.filepath,
       thumfor: item.thumfor,
@@ -386,14 +386,14 @@ const dataHrefList = computed(() => {
       height: item.height,
       mimetype: item.mimetype,
       description: item.description,
-      is360Panorama: item.is360Panorama ? true : false,
+      is360Panorama: item.is360Panorama ? true : false
     }
   })
 })
-const slideChangeTransitionStart = (swiper) => {
+const slideChangeTransitionStart = swiper => {
   swiper.params.mousewheel.releaseOnEdges = false
 }
-const slideChangeTransitionEnd = (swiper) => {
+const slideChangeTransitionEnd = swiper => {
   swiper.params.mousewheel.releaseOnEdges = true
   // videoPlayId 的视频暂停
   if (videoPlayId.value) {
@@ -406,7 +406,7 @@ const slideChangeTransitionEnd = (swiper) => {
 
 const videoPlayId = ref(null)
 const videoPlayedIdList = ref([])
-const videoPlay = async (id) => {
+const videoPlay = async id => {
   let pasusePromise = null
   // videoPlayId 的视频暂停
   if (videoPlayId.value) {
@@ -414,7 +414,7 @@ const videoPlay = async (id) => {
       `${componentUUID.value}-${videoPlayId.value}`
     )
     if (video) {
-      pasusePromise = new Promise((resolve) => {
+      pasusePromise = new Promise(resolve => {
         // 定义一个处理函数，便于之后移除监听器
         const onPause = () => {
           video.removeEventListener('pause', onPause) // 暂停后移除监听器
@@ -441,14 +441,14 @@ const videoPlay = async (id) => {
     }
   })
 }
-const checkVideoPlay = async (id) => {
+const checkVideoPlay = async id => {
   if (videoPlayId.value === id) {
     return
   }
   console.log('和当前播放的不一样，尝试播放')
   videoPlay(id)
 }
-const videoPause = async (e) => {
+const videoPause = async e => {
   const target = e.target
   if (target.seeking) {
     return
@@ -458,12 +458,12 @@ const videoPause = async (e) => {
 const componentUUID = ref(null)
 const blogTweetImgListWrapRef = ref(null)
 
-const tryOpenHref = async (index) => {
+const tryOpenHref = async index => {
   if (props.clickStop) {
     e.stopPropagation()
   }
   const list = dataHrefList.value
-  const dataSource = list.map((item) => {
+  const dataSource = list.map(item => {
     let width = item.width || null
     let height = item.height || null
     return {
@@ -473,7 +473,7 @@ const tryOpenHref = async (index) => {
       height: height,
       mimetype: item.mimetype,
       description: item.description,
-      is360Panorama: item.is360Panorama ? true : false,
+      is360Panorama: item.is360Panorama ? true : false
     }
   })
   openPhotoSwipe(dataSource, index)
@@ -489,7 +489,7 @@ const isHeight = computed(() => {
   }
   return false
 })
-const checkHeightWidth = (item) => {
+const checkHeightWidth = item => {
   let h = item[0].thumHeight || item[0].height
   let w = item[0].thumWidth || item[0].width
   if (h > w) {
@@ -500,7 +500,7 @@ const checkHeightWidth = (item) => {
       h = w / ratio
     }
     return {
-      height: `${h}px`,
+      height: `${h}px`
     }
   } else {
     if (h < 150) {
@@ -510,7 +510,7 @@ const checkHeightWidth = (item) => {
       w = h / ratio
     }
     return {
-      width: `${w}px`,
+      width: `${w}px`
     }
   }
 }

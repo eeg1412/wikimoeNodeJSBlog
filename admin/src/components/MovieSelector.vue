@@ -28,16 +28,16 @@ import { authApi } from '@/api'
 const props = defineProps({
   modelValue: {
     type: Array,
-    default: () => [],
+    default: () => []
   },
   movieList: {
     type: Array,
-    default: () => [],
+    default: () => []
   },
   placeholder: {
     type: String,
-    default: '请选择电影',
-  },
+    default: '请选择电影'
+  }
 })
 
 const emit = defineEmits(['update:modelValue', 'update:movieList'])
@@ -51,11 +51,11 @@ const selectedMovies = computed({
   },
   set(value) {
     emit('update:modelValue', value)
-  },
+  }
 })
 
 // 检查显示文本
-const checkShowText = (item) => {
+const checkShowText = item => {
   if (item.status === 0) {
     return '【状态:不显示】'
   }
@@ -63,7 +63,7 @@ const checkShowText = (item) => {
 }
 
 // 设置电影标题显示格式
-const setMovieTitle = (item) => {
+const setMovieTitle = item => {
   const year = item.year
   const month = item.month
   const day = item.day
@@ -81,7 +81,7 @@ const getMovieList = (keyword = null) => {
   loading.value = true
   authApi
     .getMovieList({ keyword, status: 1, size: 50, page: 1 }, true)
-    .then((res) => {
+    .then(res => {
       emit('update:movieList', res.data.list)
     })
     .finally(() => {
@@ -91,7 +91,7 @@ const getMovieList = (keyword = null) => {
 
 // 搜索电影
 let queryMoviesTimer = null
-const queryMovies = (query) => {
+const queryMovies = query => {
   if (queryMoviesTimer) {
     clearTimeout(queryMoviesTimer)
   }

@@ -105,7 +105,7 @@ import AttachmentsDialog from '@/components/AttachmentsDialog'
 import { loadAndOpenImg } from '@/utils/utils'
 export default {
   components: {
-    AttachmentsDialog,
+    AttachmentsDialog
   },
   setup() {
     const router = useRouter()
@@ -119,7 +119,7 @@ export default {
       password: '',
       cover: null,
       disabled: false,
-      __v: 0,
+      __v: 0
     })
     const rules = computed(() => {
       const rules = {
@@ -128,9 +128,9 @@ export default {
           {
             type: 'email',
             message: '请输入正确的邮箱地址',
-            trigger: 'blur',
-          },
-        ],
+            trigger: 'blur'
+          }
+        ]
       }
       rules.password = [
         // { required: true, message: '请输入密码', trigger: 'blur' },
@@ -138,19 +138,19 @@ export default {
           pattern:
             /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*])[a-zA-Z\d!@#$%^&*]{4,}$/,
           message: '密码必须包含大小写字母、数字、特殊字符（!@#$%^&*）',
-          trigger: 'blur',
-        },
+          trigger: 'blur'
+        }
       ]
       return rules
     })
     const formRef = ref(null)
     const submit = () => {
-      formRef.value.validate(async (valid) => {
+      formRef.value.validate(async valid => {
         if (!valid) {
           return false
         }
         const data = {
-          ...form,
+          ...form
         }
         if (coverData.value) {
           data.cover = coverData.value._id
@@ -163,7 +163,7 @@ export default {
             .then(() => {
               ElMessage.success('修改成功')
               router.push({
-                name: 'UserList',
+                name: 'UserList'
               })
             })
             .catch(() => {})
@@ -173,11 +173,11 @@ export default {
 
     const getUserDetail = () => {
       const params = {
-        id: id.value,
+        id: id.value
       }
       authApi
         .getUserDetail(params)
-        .then((res) => {
+        .then(res => {
           const data = res.data.data
           form.nickname = data.nickname
           form.email = data.email
@@ -193,7 +193,7 @@ export default {
     }
 
     const coverData = ref(null)
-    const setPhoto = (base64) => {
+    const setPhoto = base64 => {
       form.photo = base64
     }
     // 附件
@@ -204,7 +204,7 @@ export default {
     const openAttachmentsDialog = () => {
       attachmentsDialogRef.value.open()
     }
-    const selectAttachments = (attachments) => {
+    const selectAttachments = attachments => {
       console.log(attachments)
       coverData.value = attachments[0]
     }
@@ -217,8 +217,8 @@ export default {
           src: `${siteUrl.value}${filepath}`,
           width,
           height,
-          mimetype,
-        },
+          mimetype
+        }
       ])
     }
     onMounted(() => {
@@ -238,9 +238,9 @@ export default {
       attachmentsDialogRef,
       openAttachmentsDialog,
       selectAttachments,
-      openPreviewer,
+      openPreviewer
     }
-  },
+  }
 }
 </script>
 <style scoped></style>

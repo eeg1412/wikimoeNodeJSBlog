@@ -51,7 +51,7 @@
                           :width="1320"
                           :height="525"
                           :src="element.img"
-                          @crop="(crop) => setBanner(crop, element)"
+                          @crop="crop => setBanner(crop, element)"
                         ></Cropper>
                       </div>
                     </div>
@@ -137,7 +137,7 @@ export default {
   components: {
     RichEditor5,
     draggable,
-    Cropper,
+    Cropper
   },
   setup() {
     const route = useRoute()
@@ -147,32 +147,32 @@ export default {
     const bannerSettingsForm = ref([])
 
     const getBannerList = () => {
-      authApi.getBannerList().then((res) => {
+      authApi.getBannerList().then(res => {
         bannerSettingsForm.value = res.data.list
       })
     }
     const handleBanner = () => {
       authApi
         .createBanner({})
-        .then((res) => {
+        .then(res => {
           // 在前面插入
           bannerSettingsForm.value.unshift(res.data.data)
         })
-        .catch((err) => {
+        .catch(err => {
           console.log(err)
         })
     }
-    const bannerSettingsSubmit = (item) => {
+    const bannerSettingsSubmit = item => {
       authApi
         .updateBanner(item)
-        .then((res) => {
+        .then(res => {
           ElMessage.success('更新成功')
         })
-        .catch((err) => {
+        .catch(err => {
           console.log(err)
         })
     }
-    const bannerSettingsDelete = (row) => {
+    const bannerSettingsDelete = row => {
       const id = row._id
       const title = escapeHtml(row.title) || '未命名'
 
@@ -183,13 +183,13 @@ export default {
           return authApi.deleteBanner({ id }).then(() => {
             ElMessage.success('删除成功')
             bannerSettingsForm.value = bannerSettingsForm.value.filter(
-              (item) => item._id !== id
+              item => item._id !== id
             )
           })
-        },
+        }
       })
         .then(() => {})
-        .catch((error) => {
+        .catch(error => {
           console.log('Dialog closed:', error)
         })
     }
@@ -202,12 +202,12 @@ export default {
         const params = bannerSettingsForm.value.map((item, index) => {
           return {
             _id: item._id,
-            taxis: index,
+            taxis: index
           }
         })
         updateBannerTaxis({
-          bannerList: params,
-        }).then((res) => {
+          bannerList: params
+        }).then(res => {
           canDrag.value = false
           getBannerList()
         })
@@ -215,8 +215,8 @@ export default {
         canDrag.value = true
       }
     }
-    const updateBannerTaxis = (params) => {
-      return authApi.updateBannerTaxis(params).then((res) => {
+    const updateBannerTaxis = params => {
+      return authApi.updateBannerTaxis(params).then(res => {
         ElMessage.success('更新成功')
       })
     }
@@ -238,9 +238,9 @@ export default {
       showIdList,
       canDrag,
       onDragBtnClick,
-      setBanner,
+      setBanner
     }
-  },
+  }
 }
 </script>
 <style scoped>

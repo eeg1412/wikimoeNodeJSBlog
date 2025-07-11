@@ -7,18 +7,18 @@
       :mousewheel="true"
       :autoplay="{
         delay: siteTopSlideTime,
-        disableOnInteraction: false,
+        disableOnInteraction: false
       }"
       :pagination="{
         type: 'progressbar',
-        clickable: true,
+        clickable: true
       }"
     >
       <SwiperSlide v-for="(item, index) in bannerListData" :key="item._id">
         <div
           class="top-banner-list-item"
           :class="{
-            pointer: item.link,
+            pointer: item.link
           }"
           @click="openLink(item)"
           @click.middle="openLink(item, true)"

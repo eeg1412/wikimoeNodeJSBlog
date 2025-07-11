@@ -81,7 +81,7 @@
                 <span
                   class="page-event-block"
                   :style="{
-                    backgroundColor: item.eventtype?.color,
+                    backgroundColor: item.eventtype?.color
                   }"
                   v-if="item.eventtype"
                   >{{ item.eventtype?.name }}</span
@@ -134,11 +134,11 @@ const router = useRouter()
 const route = useRoute()
 const onlyRouteChange = ref(false)
 let hash = route.hash
-const setRouterQuery = (query) => {
+const setRouterQuery = query => {
   const nowQuery = route.query
   router.replace({
     query: { ...nowQuery, ...query },
-    hash: hash,
+    hash: hash
   })
 }
 const now = new Date()
@@ -148,18 +148,18 @@ const toast = useToast()
 const eventList = ref([])
 const rawQuery = {
   year: undefined,
-  month: undefined,
+  month: undefined
 }
 const params = computed(() => {
   const routeQuery = JSON.parse(JSON.stringify(route.query))
   const numberKey = ['year', 'month']
   const newParams = { ...rawQuery }
-  Object.keys(newParams).forEach((key) => {
+  Object.keys(newParams).forEach(key => {
     if (routeQuery[key]) {
       newParams[key] = routeQuery[key]
     }
   })
-  numberKey.forEach((key) => {
+  numberKey.forEach(key => {
     if (newParams[key]) {
       const num = Number(newParams[key])
       if (!isNaN(num)) {
@@ -208,12 +208,12 @@ const getList = async () => {
   eventList.value = []
   const res = await getEventListApiFetch({
     startTime: new Date(startTime.value).toISOString(),
-    endTime: new Date(endTime.value).toISOString(),
+    endTime: new Date(endTime.value).toISOString()
   })
-    .then((res) => {
+    .then(res => {
       return res
     })
-    .catch((err) => {
+    .catch(err => {
       console.log(err)
     })
   eventList.value = res?.list || []
@@ -275,7 +275,7 @@ const nextMonth = () => {
 
 const eventOpen = ref(false)
 const currentData = ref(null)
-const tryOpenEvent = (data) => {
+const tryOpenEvent = data => {
   currentData.value = data
   eventOpen.value = true
   // 路由添加eventid
@@ -289,22 +289,22 @@ const getEventDetail = async () => {
   eventLoading.value = true
   const id = route.query.eventid
   getEventDetailApiFetch({
-    id,
+    id
   })
-    .then((res) => {
+    .then(res => {
       currentData.value = res.data
       eventOpen.value = true
     })
-    .catch((err) => {
+    .catch(err => {
       console.log(err)
       const errors = err.response?._data?.errors
       if (errors) {
-        errors.forEach((item) => {
+        errors.forEach(item => {
           const message = item.message
           toast.add({
             title: message,
             icon: 'i-heroicons-x-circle',
-            color: 'red',
+            color: 'red'
           })
         })
       }
@@ -322,7 +322,7 @@ watch(
   () => route.query,
   (newQuery, oldQuery) => {
     if (newQuery.eventid) {
-      const data = eventList.value.find((item) => item._id === newQuery.eventid)
+      const data = eventList.value.find(item => item._id === newQuery.eventid)
       if (data) {
         currentData.value = data
         eventOpen.value = true
@@ -349,14 +349,14 @@ watch(
       const compareKeys = Object.keys(rawQuery)
       // 拾取newQuery中的compareKeys
       const newQueryCompareObj = {}
-      compareKeys.forEach((key) => {
+      compareKeys.forEach(key => {
         if (newQuery[key]) {
           newQueryCompareObj[key] = newQuery[key]
         }
       })
       // 拾取oldQuery中的compareKeys
       const oldQueryCompareObj = {}
-      compareKeys.forEach((key) => {
+      compareKeys.forEach(key => {
         if (oldQuery[key]) {
           oldQueryCompareObj[key] = oldQuery[key]
         }
@@ -372,7 +372,7 @@ watch(
 
 watch(
   () => eventOpen.value,
-  (newVal) => {
+  newVal => {
     if (!newVal && route.query.eventid) {
       setRouterQuery({ eventid: undefined })
     }
@@ -391,9 +391,7 @@ const dayEventTitle = computed(() => {
 
 const dayClick = (day, dayEventIdMap) => {
   const idList = dayEventIdMap[day.monthDay] || []
-  dayEventList.value = eventList.value.filter((item) =>
-    idList.includes(item._id)
-  )
+  dayEventList.value = eventList.value.filter(item => idList.includes(item._id))
   const year = startTime.value.getFullYear()
   const month = startTime.value.getMonth() + 1
   onlyRouteChange.value = true
@@ -402,7 +400,7 @@ const dayClick = (day, dayEventIdMap) => {
 
 watch(
   () => dayEventListOpen.value,
-  (newVal) => {
+  newVal => {
     if (!newVal) {
       const query = route.query
       if (query.daydetail) {
@@ -416,7 +414,7 @@ const getEventListByDay = () => {
   const dateYYYYMMDD = route.query.daydetail
   const momentDate = moment(dateYYYYMMDD, 'YYYY-MM-DD')
   // 将eventList中开始和结束时间转换成YYYY-MM-DD
-  dayEventList.value = eventList.value.filter((item) => {
+  dayEventList.value = eventList.value.filter(item => {
     const startTime = moment(item.startTime).format('YYYY-MM-DD')
     const endTime = moment(item.endTime).format('YYYY-MM-DD')
     return (

@@ -99,7 +99,7 @@
                     :rules="{
                       required: true,
                       message: '请输入链接名称',
-                      trigger: 'blur',
+                      trigger: 'blur'
                     }"
                   >
                     <el-input
@@ -116,7 +116,7 @@
                     :rules="{
                       required: true,
                       message: '请输入链接名称',
-                      trigger: 'blur',
+                      trigger: 'blur'
                     }"
                   >
                     <el-input
@@ -180,7 +180,7 @@ export default {
       urlList: [],
       giveUp: false,
       status: 0,
-      __v: null,
+      __v: null
     })
     // 获取今年
     const year = new Date().getFullYear()
@@ -192,12 +192,12 @@ export default {
     const rules = reactive({})
     const formRef = ref(null)
     const submit = () => {
-      formRef.value.validate(async (valid) => {
+      formRef.value.validate(async valid => {
         if (!valid) {
           return false
         }
         const data = {
-          ...form,
+          ...form
         }
         if (id.value) {
           // 编辑
@@ -206,7 +206,7 @@ export default {
             .updateBangumi(data)
             .then(() => {
               router.push({
-                name: 'BangumiList',
+                name: 'BangumiList'
               })
             })
             .catch(() => {})
@@ -216,7 +216,7 @@ export default {
             .createBangumi(data)
             .then(() => {
               router.push({
-                name: 'BangumiList',
+                name: 'BangumiList'
               })
             })
             .catch(() => {})
@@ -226,12 +226,12 @@ export default {
 
     const getBangumiDetail = () => {
       const params = {
-        id: id.value,
+        id: id.value
       }
       authApi
         .getBangumiDetail(params)
-        .then((res) => {
-          Object.keys(form).forEach((key) => {
+        .then(res => {
+          Object.keys(form).forEach(key => {
             form[key] = res.data.data[key]
           })
         })
@@ -239,7 +239,7 @@ export default {
     }
     // tag
     const inputValue = ref('')
-    const handleClose = (tag) => {
+    const handleClose = tag => {
       form.label.splice(form.label.indexOf(tag), 1)
     }
     const handleInputConfirm = () => {
@@ -248,7 +248,7 @@ export default {
       }
       inputValue.value = ''
     }
-    const setCover = (data) => {
+    const setCover = data => {
       form.cover = data
     }
 
@@ -266,9 +266,9 @@ export default {
       inputValue,
       handleClose,
       handleInputConfirm,
-      setCover,
+      setCover
     }
-  },
+  }
 }
 </script>
 <style scoped>

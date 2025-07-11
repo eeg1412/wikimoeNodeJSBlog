@@ -9,7 +9,7 @@
         <NuxtLink
           :to="{
             name: 'postListArchive',
-            params: { year: item.year, month: item.month, page: 1 },
+            params: { year: item.year, month: item.month, page: 1 }
           }"
           class="archive-list-item-link common-a"
         >
@@ -38,7 +38,7 @@ const archiveList = computed(() => {
       newList.push({
         year: item._id.year,
         month: month,
-        count: item.count,
+        count: item.count
       })
     }
   }
@@ -46,7 +46,7 @@ const archiveList = computed(() => {
   return newList
 })
 
-const formatCount = (count) => {
+const formatCount = count => {
   return count > 999 ? '999+' : count
 }
 </script>

@@ -19,14 +19,14 @@ const page = route.params.page
 if (!/^\d+$/.test(page)) {
   showError({
     statusCode: 404,
-    message: '页面不存在',
+    message: '页面不存在'
   })
   throw new Error('页面不存在')
 }
 const sortid = route.params.sortid
 
 const { data } = await getSortDetailApi({
-  id: sortid,
+  id: sortid
 })
 useSeoMeta({
   title: data.value.sortname,
@@ -34,13 +34,13 @@ useSeoMeta({
   description: data.value.description,
   // twitter
   twitterTitle: data.value.sortname,
-  twitterDescription: data.value.description,
+  twitterDescription: data.value.description
 })
 onMounted(() => {
   postLogCreateApi({
     action: 'postListSort',
     sortid: data.value._id,
-    sortname: data.value.sortname,
+    sortname: data.value.sortname
   })
 })
 </script>

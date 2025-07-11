@@ -17,7 +17,7 @@
           :disabled-date="timeRangeDisabledDate"
           :default-time="[
             new Date().setHours(0, 0, 0, 0),
-            new Date().setHours(23, 59, 59, 999),
+            new Date().setHours(23, 59, 59, 999)
           ]"
           @change="getStatistics(true)"
         />
@@ -418,7 +418,7 @@ export default {
           const start = new Date()
           start.setHours(0, 0, 0, 0)
           return [start, end]
-        },
+        }
       },
       // 昨天
       {
@@ -431,7 +431,7 @@ export default {
           start.setHours(0, 0, 0, 0)
           start.setTime(start.getTime() - 3600 * 1000 * 24)
           return [start, end]
-        },
+        }
       },
       {
         text: '过去3天',
@@ -442,7 +442,7 @@ export default {
           start.setDate(start.getDate() - 2) // 减去2天
           start.setHours(0, 0, 0, 0)
           return [start, end]
-        },
+        }
       },
       {
         text: '过去7天',
@@ -453,7 +453,7 @@ export default {
           start.setDate(start.getDate() - 6) // 减去6天
           start.setHours(0, 0, 0, 0)
           return [start, end]
-        },
+        }
       },
       {
         text: '过去1个月',
@@ -464,7 +464,7 @@ export default {
           start.setMonth(start.getMonth() - 1)
           start.setHours(0, 0, 0, 0)
           return [start, end]
-        },
+        }
       },
       {
         text: '过去3个月',
@@ -475,7 +475,7 @@ export default {
           start.setMonth(start.getMonth() - 3)
           start.setHours(0, 0, 0, 0)
           return [start, end]
-        },
+        }
       },
       {
         text: '过去一年',
@@ -486,11 +486,11 @@ export default {
           start.setFullYear(start.getFullYear() - 1)
           start.setHours(0, 0, 0, 0)
           return [start, end]
-        },
-      },
+        }
+      }
     ]
 
-    const timeRangeDisabledDate = (time) => {
+    const timeRangeDisabledDate = time => {
       const today = new Date()
       const past370Days = new Date()
       past370Days.setDate(today.getDate() - 370)
@@ -501,7 +501,7 @@ export default {
     }
 
     const rankData = ref(null)
-    const getStatistics = (resetPage) => {
+    const getStatistics = resetPage => {
       const startTime = new Date(timeRange.value[0])
       const endTime = new Date(timeRange.value[1])
       // 如果endTime是当天，则时间是当前时间
@@ -511,9 +511,9 @@ export default {
       authApi
         .getStatistics({
           startTime: startTime,
-          endTime: endTime,
+          endTime: endTime
         })
-        .then((res) => {
+        .then(res => {
           if (resetPage) {
             readPostViewPagination.currentPage = 1
             readPostLikePagination.currentPage = 1
@@ -528,18 +528,18 @@ export default {
             botStatsPagination.currentPage = 1 // 新增: 重置爬虫统计分页
           }
           // 遍历browserStats 和 osStats 的children 并定义一个 _id + version 的新_id
-          res.data.browserStats.forEach((item) => {
+          res.data.browserStats.forEach(item => {
             if (item.children && item.children.length) {
-              item.children.forEach((child) => {
+              item.children.forEach(child => {
                 child._id = `${item._id}-${
                   child.version || ''
                 }-${generateRandomAlphabetString(6)}`
               })
             }
           })
-          res.data.osStats.forEach((item) => {
+          res.data.osStats.forEach(item => {
             if (item.children && item.children.length) {
-              item.children.forEach((child) => {
+              item.children.forEach(child => {
                 child._id = `${item._id}-${
                   child.version || ''
                 }-${generateRandomAlphabetString(6)}`
@@ -553,7 +553,7 @@ export default {
     }
 
     // 缩减文字到20字的方法
-    const reduceText = (text) => {
+    const reduceText = text => {
       if (text.length > 20) {
         return text.substring(0, 20) + '...'
       }
@@ -564,12 +564,12 @@ export default {
       return store.getters.siteUrl
     })
 
-    const openPage = (row) => {
+    const openPage = row => {
       const path = getPostPagePath(row)
       // 使用 window.open 方法在新窗口中打开 URL
       window.open(path, '_blank')
     }
-    const getPostPagePath = (row) => {
+    const getPostPagePath = row => {
       // 先判断type是1，2还是3，1和2跳转到/post/id，3跳转到/page/id
       // 如果有别名，就跳转到别名，没有别名就跳转到id
       let path
@@ -593,7 +593,7 @@ export default {
     // readPostView的翻页对象
     const readPostViewPagination = reactive({
       currentPage: 1,
-      pageSize: 10,
+      pageSize: 10
     })
     // readPostView的computed
     const readPostViewData = computed(() => {
@@ -609,7 +609,7 @@ export default {
     // readPostLike 的翻页对象
     const readPostLikePagination = reactive({
       currentPage: 1,
-      pageSize: 10,
+      pageSize: 10
     })
     // readPostLike 的computed
     const readPostLikeData = computed(() => {
@@ -625,7 +625,7 @@ export default {
     // readReferrer 的翻页对象
     const readReferrerPagination = reactive({
       currentPage: 1,
-      pageSize: 10,
+      pageSize: 10
     })
     // readReferrer 的computed
     const readReferrerData = computed(() => {
@@ -641,7 +641,7 @@ export default {
     // readPostListSort
     const readPostListSortPagination = reactive({
       currentPage: 1,
-      pageSize: 10,
+      pageSize: 10
     })
     // readPostListSort 的computed
     const readPostListSortData = computed(() => {
@@ -658,7 +658,7 @@ export default {
     // readPostListTag
     const readPostListTagPagination = reactive({
       currentPage: 1,
-      pageSize: 10,
+      pageSize: 10
     })
     // readPostListTag 的computed
     const readPostListTagData = computed(() => {
@@ -675,7 +675,7 @@ export default {
     // readPostListKeyword
     const readPostListKeywordPagination = reactive({
       currentPage: 1,
-      pageSize: 10,
+      pageSize: 10
     })
     // readPostListKeyword 的computed
     const readPostListKeywordData = computed(() => {
@@ -693,7 +693,7 @@ export default {
     // 浏览器统计分页对象
     const browserStatsPagination = reactive({
       currentPage: 1,
-      pageSize: 10,
+      pageSize: 10
     })
     // 浏览器统计数据计算属性
     const browserStatsData = computed(() => {
@@ -710,7 +710,7 @@ export default {
     // 操作系统统计分页对象
     const osStatsPagination = reactive({
       currentPage: 1,
-      pageSize: 10,
+      pageSize: 10
     })
     // 操作系统统计数据计算属性
     const osStatsData = computed(() => {
@@ -726,7 +726,7 @@ export default {
     // 国家统计分页对象
     const countryStatsPagination = reactive({
       currentPage: 1,
-      pageSize: 10,
+      pageSize: 10
     })
     // 国家统计数据计算属性
     const countryStatsData = computed(() => {
@@ -743,7 +743,7 @@ export default {
     // 地区统计分页对象
     const regionStatsPagination = reactive({
       currentPage: 1,
-      pageSize: 10,
+      pageSize: 10
     })
     // 地区统计数据计算属性
     const regionStatsData = computed(() => {
@@ -760,7 +760,7 @@ export default {
     // 新增: 爬虫统计分页对象
     const botStatsPagination = reactive({
       currentPage: 1,
-      pageSize: 10,
+      pageSize: 10
     })
     // 新增: 爬虫统计数据计算属性
     const botStatsData = computed(() => {
@@ -825,9 +825,9 @@ export default {
       botStatsData,
 
       showData,
-      tryShowData,
+      tryShowData
     }
-  },
+  }
 }
 </script>
 <style scoped>

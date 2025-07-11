@@ -169,30 +169,30 @@ export default {
       keyword: '',
       year: null,
       season: null,
-      status: null,
+      status: null
     })
     const total = ref(0)
     const tableRef = ref(null)
-    const getMovieList = (resetPage) => {
+    const getMovieList = resetPage => {
       if (resetPage === true && params.page !== 1) {
         params.page = 1
         return
       }
       authApi
         .getMovieList(params)
-        .then((res) => {
+        .then(res => {
           movieList.value = res.data.list
           total.value = res.data.total
           tableRef.value.scrollTo({ top: 0 })
           setSessionParams(route.name, params)
         })
-        .catch((err) => {
+        .catch(err => {
           console.log(err)
         })
     }
     const handleAdd = () => {
       router.push({
-        name: 'MovieAdd',
+        name: 'MovieAdd'
       })
     }
     // 监听 params.page 的变化
@@ -203,15 +203,15 @@ export default {
       }
     )
 
-    const goEdit = (id) => {
+    const goEdit = id => {
       router.push({
         name: 'MovieEdit',
         params: {
-          id,
-        },
+          id
+        }
       })
     }
-    const deleteMovie = (row) => {
+    const deleteMovie = row => {
       const id = row._id
       const title = escapeHtml(row.title) || '未命名'
 
@@ -223,10 +223,10 @@ export default {
             ElMessage.success('删除成功')
             getMovieList()
           })
-        },
+        }
       })
         .then(() => {})
-        .catch((error) => {
+        .catch(error => {
           console.log('Dialog closed:', error)
         })
     }
@@ -254,9 +254,9 @@ export default {
       getMovieList,
       handleAdd,
       goEdit,
-      deleteMovie,
+      deleteMovie
     }
-  },
+  }
 }
 </script>
 <style lang=""></style>

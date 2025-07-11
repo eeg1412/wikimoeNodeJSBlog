@@ -90,22 +90,22 @@ export default {
       description: '',
       taxis: 0,
       status: 0,
-      __v: null,
+      __v: null
     })
     const rules = reactive({
       sitename: [
-        { required: true, message: '请输入网站名称', trigger: 'blur' },
+        { required: true, message: '请输入网站名称', trigger: 'blur' }
       ],
-      siteurl: [{ required: true, message: '请输入网站URL', trigger: 'blur' }],
+      siteurl: [{ required: true, message: '请输入网站URL', trigger: 'blur' }]
     })
     const formRef = ref(null)
     const submit = () => {
-      formRef.value.validate(async (valid) => {
+      formRef.value.validate(async valid => {
         if (!valid) {
           return false
         }
         const data = {
-          ...form,
+          ...form
         }
         if (id.value) {
           // 编辑
@@ -115,7 +115,7 @@ export default {
             .updateLink(data)
             .then(() => {
               router.push({
-                name: 'LinkList',
+                name: 'LinkList'
               })
             })
             .catch(() => {})
@@ -125,7 +125,7 @@ export default {
             .createLink(data)
             .then(() => {
               router.push({
-                name: 'LinkList',
+                name: 'LinkList'
               })
             })
             .catch(() => {})
@@ -135,11 +135,11 @@ export default {
 
     const getLinkDetail = () => {
       const params = {
-        id: id.value,
+        id: id.value
       }
       authApi
         .getLinkDetail(params)
-        .then((res) => {
+        .then(res => {
           form.__v = res.data.data.__v
           form.icon = res.data.data.icon
           form.sitename = res.data.data.sitename
@@ -151,7 +151,7 @@ export default {
         })
         .catch(() => {})
     }
-    const setIcon = (base64) => {
+    const setIcon = base64 => {
       form.icon = base64
     }
     onMounted(() => {
@@ -165,9 +165,9 @@ export default {
       rules,
       formRef,
       submit,
-      setIcon,
+      setIcon
     }
-  },
+  }
 }
 </script>
 <style scoped></style>

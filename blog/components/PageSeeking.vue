@@ -68,7 +68,7 @@ const items = ref([
   { class: '', event: '200', text: '测试' },
   { class: '', event: '300', text: '修复BUG' },
   { class: '', event: '400', text: '提交代码' },
-  { class: '', event: '500', text: '其他' },
+  { class: '', event: '500', text: '其他' }
 ])
 
 // 从数组中随机挑选 size 个
@@ -115,7 +115,7 @@ var results = [
   '小凶',
   '凶',
   '大凶',
-  '超大凶',
+  '超大凶'
 ]
 var descriptions = ['', '', '', '', '', '', '', '', '']
 var luck_rate = [10, 100, 500, 800, 300, 800, 500, 100, 10] // 吉凶概率分布，总数为 3120
@@ -137,10 +137,10 @@ function pickRandomWithRate(seed1, seed2) {
 var selectedEvent = null
 
 const showQiu = ref(false)
-const eventClik = (item) => {
+const eventClik = item => {
   clearTimeout(slideTimer)
   // items
-  items.value.forEach((element) => {
+  items.value.forEach(element => {
     element.class = ''
   })
   item.class = 'selected'
@@ -173,14 +173,14 @@ function slide() {
     slidecount > 33
       ? 1500
       : slidecount > 32
-      ? 800
-      : slidecount > 25
-      ? 400
-      : slidecount > 20
-      ? 200
-      : slidecount > 15
-      ? 150
-      : 100
+        ? 800
+        : slidecount > 25
+          ? 400
+          : slidecount > 20
+            ? 200
+            : slidecount > 15
+              ? 150
+              : 100
 
   var cardInfo = getNextCardText()
   cardList.value.push(cardInfo)

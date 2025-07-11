@@ -60,7 +60,7 @@
 import {
   formatResToForm,
   formatResToObj,
-  fieldErrorNotice,
+  fieldErrorNotice
 } from '@/utils/utils'
 import { ref, reactive, onMounted, computed } from 'vue'
 import { authApi } from '@/api'
@@ -81,22 +81,22 @@ export default {
       // 排名统计来源忽略域名
       siteRankIgnoreReferrerDomainList: '',
       // 是否统计爬虫的文章查看数
-      siteSpiderPostVisitEnabled: true,
+      siteSpiderPostVisitEnabled: true
     })
     const otherSettingsRules = {}
     const otherSettingsSubmit = () => {
       otherSettingsFormRef.value.validate((valid, fields) => {
         if (valid) {
           const params = []
-          Object.keys(otherSettingsForm).forEach((key) => {
+          Object.keys(otherSettingsForm).forEach(key => {
             params.push({
               name: key,
-              value: otherSettingsForm[key],
+              value: otherSettingsForm[key]
             })
           })
           authApi
             .updateOption({ optionList: params })
-            .then((res) => {
+            .then(res => {
               const obj = formatResToObj(res.data.data)
               formatResToForm(otherSettingsForm, obj)
               store.dispatch('setOptions')
@@ -104,7 +104,7 @@ export default {
 
               ElMessage.success('更新成功')
             })
-            .catch((err) => {
+            .catch(err => {
               console.log(err)
             })
         } else {
@@ -118,14 +118,14 @@ export default {
     const getOptionList = () => {
       // 将otherSettingsForm的key转换为数组
       const params = {
-        nameList: [],
+        nameList: []
       }
-      Object.keys(otherSettingsForm).forEach((key) => {
+      Object.keys(otherSettingsForm).forEach(key => {
         params.nameList.push(key)
       })
       authApi
         .getOptionList(params)
-        .then((res) => {
+        .then(res => {
           // res.data.data是数组，需要转换为对象
           const obj = formatResToObj(res.data.data)
           formatResToForm(otherSettingsForm, obj)
@@ -136,7 +136,7 @@ export default {
     }
     const logout = () => {
       router.replace({
-        name: 'Login',
+        name: 'Login'
       })
       // 清除token
       localStorage.removeItem('adminToken')
@@ -149,7 +149,7 @@ export default {
         {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
-          type: 'warning',
+          type: 'warning'
         }
       )
         .then(() => {
@@ -164,7 +164,7 @@ export default {
       ElMessageBox.confirm('确定要刷新博客端密钥吗？', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
-        type: 'warning',
+        type: 'warning'
       })
         .then(() => {
           authApi.flushJWTSecretBlog().then(() => {
@@ -189,8 +189,8 @@ export default {
       inited,
       handleFlushSecret,
       handleFlushSecretBlog,
-      adminInfo,
+      adminInfo
     }
-  },
+  }
 }
 </script>

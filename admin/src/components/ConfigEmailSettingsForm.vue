@@ -123,7 +123,7 @@ import RichEditor5Switch from '@/components/RichEditor5Switch'
 import {
   formatResToForm,
   formatResToObj,
-  fieldErrorNotice,
+  fieldErrorNotice
 } from '@/utils/utils'
 import { ref, reactive, onMounted, computed } from 'vue'
 import { authApi } from '@/api'
@@ -132,7 +132,7 @@ import { ElMessage, ElMessageBox } from 'element-plus'
 
 export default {
   components: {
-    RichEditor5Switch,
+    RichEditor5Switch
   },
   setup(props, { emit }) {
     // 邮件设置
@@ -163,31 +163,31 @@ export default {
       emailSendToCommenterTemplateIsRichMode: true,
       // 撤回评论时通知自己模板
       emailRetractCommentTemplate: '',
-      emailRetractCommentTemplateIsRichMode: true,
+      emailRetractCommentTemplateIsRichMode: true
     })
     const emailSendOptions = ref([
       {
         label: '收到评论时通知自己',
-        value: 'receiveComment',
+        value: 'receiveComment'
       },
       {
         label: '回复评论时通知评论者',
-        value: 'replyComment',
+        value: 'replyComment'
       },
       // 撤回时通知自己
       {
         label: '撤回评论时通知自己',
-        value: 'retractComment',
-      },
+        value: 'retractComment'
+      }
     ])
     const emailSettingsRules = computed(() => {
       if (emailSettingsForm.emailEnable) {
         return {
           emailSmtpHost: [
-            { required: true, message: '请输入smtp服务器', trigger: 'blur' },
+            { required: true, message: '请输入smtp服务器', trigger: 'blur' }
           ],
           emailSmtpPort: [
-            { required: true, message: '请输入smtp端口', trigger: 'blur' },
+            { required: true, message: '请输入smtp端口', trigger: 'blur' }
           ],
           emailSender: [
             { required: true, message: '请输入发信邮箱', trigger: 'blur' },
@@ -195,11 +195,11 @@ export default {
             {
               type: 'email',
               message: '请输入正确的邮箱格式',
-              trigger: ['blur', 'change'],
-            },
+              trigger: ['blur', 'change']
+            }
           ],
           emailPassword: [
-            { required: true, message: '请输入发信密码', trigger: 'blur' },
+            { required: true, message: '请输入发信密码', trigger: 'blur' }
           ],
           emailReceiver: [
             { required: true, message: '请输入收信邮箱', trigger: 'blur' },
@@ -212,7 +212,7 @@ export default {
                   const emailRegex =
                     /^[a-zA-Z0-9_.+-]+@([a-zA-Z0-9][a-zA-Z0-9-]*[a-zA-Z0-9]*\.)+[a-zA-Z]{2,}$/ // 简单的邮箱正则表达式
                   const invalidEmails = emails.filter(
-                    (email) => !emailRegex.test(email)
+                    email => !emailRegex.test(email)
                   ) // 筛选出不符合格式的邮箱
                   if (invalidEmails.length > 0) {
                     callback(
@@ -227,9 +227,9 @@ export default {
                   callback(new Error('请输入收信邮箱'))
                 }
               },
-              trigger: 'blur',
-            },
-          ],
+              trigger: 'blur'
+            }
+          ]
         }
       } else {
         return {}
@@ -239,24 +239,24 @@ export default {
       emailSettingsFormRef.value.validate((valid, fields) => {
         if (valid) {
           const params = []
-          Object.keys(emailSettingsForm).forEach((key) => {
+          Object.keys(emailSettingsForm).forEach(key => {
             if (key === 'emailSendOptions') {
               // emailSendOptions 为数组，需要转换为字符串，以逗号分隔
               params.push({
                 name: key,
-                value: emailSettingsForm[key].join(','),
+                value: emailSettingsForm[key].join(',')
               })
             } else {
               params.push({
                 name: key,
-                value: emailSettingsForm[key],
+                value: emailSettingsForm[key]
               })
             }
           })
 
           authApi
             .updateOption({ optionList: params })
-            .then((res) => {
+            .then(res => {
               const obj = formatResToObj(res.data.data)
               formatResToForm(emailSettingsForm, obj)
               store.dispatch('setOptions')
@@ -264,7 +264,7 @@ export default {
 
               ElMessage.success('更新成功')
             })
-            .catch((err) => {
+            .catch(err => {
               console.log(err)
             })
         } else {
@@ -278,14 +278,14 @@ export default {
     const getOptionList = () => {
       // 将emailSettingsForm的key转换为数组
       const params = {
-        nameList: [],
+        nameList: []
       }
-      Object.keys(emailSettingsForm).forEach((key) => {
+      Object.keys(emailSettingsForm).forEach(key => {
         params.nameList.push(key)
       })
       authApi
         .getOptionList(params)
-        .then((res) => {
+        .then(res => {
           // res.data.data是数组，需要转换为对象
           const obj = formatResToObj(res.data.data)
           formatResToForm(emailSettingsForm, obj)
@@ -303,8 +303,8 @@ export default {
       emailSettingsRules,
       emailSendOptions,
       emailSettingsSubmit,
-      inited,
+      inited
     }
-  },
+  }
 }
 </script>

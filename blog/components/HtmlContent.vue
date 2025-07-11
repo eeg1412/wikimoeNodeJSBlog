@@ -2,7 +2,7 @@
   <div
     class="html-content-body"
     :class="{
-      'is-loading': !initFlag,
+      'is-loading': !initFlag
     }"
   >
     <div
@@ -36,8 +36,8 @@ const props = defineProps({
   // content
   content: {
     type: String,
-    default: '',
-  },
+    default: ''
+  }
 })
 // img标签自动添加loading="lazy"
 // let htmlContent = '你的HTML内容'
@@ -72,7 +72,7 @@ const contentCom = computed(() => {
   return content
 })
 
-const getImgHref = (e) => {
+const getImgHref = e => {
   const target = e.target
   // 检查是否为 img 标签
   if (target.tagName === 'IMG') {
@@ -85,7 +85,7 @@ const getImgHref = (e) => {
   }
   return ''
 }
-const getImgWidAndHeight = (e) => {
+const getImgWidAndHeight = e => {
   const target = e.target
   // 检查是否为 img 标签
   if (target.tagName === 'IMG') {
@@ -99,17 +99,17 @@ const getImgWidAndHeight = (e) => {
         // 如果是数字，返回宽高的number
         return {
           width: Number(width),
-          height: Number(height),
+          height: Number(height)
         }
       }
     }
   }
   return {
     width: null,
-    height: null,
+    height: null
   }
 }
-const findATag = (e) => {
+const findATag = e => {
   let target = e.target
   while (target) {
     if (target.tagName === 'A') {
@@ -122,7 +122,7 @@ const findATag = (e) => {
 const contentIsLoading = ref(false)
 
 // 点击事件
-const onClick = async (e) => {
+const onClick = async e => {
   const tag = e.target.tagName
   const aTag = findATag(e)
   if (!aTag) {
@@ -140,7 +140,7 @@ const onClick = async (e) => {
     }
   }
 }
-const clickOnSpan = (e) => {
+const clickOnSpan = e => {
   // 获取span标签的data-w-e-type属性
   const dataWType = e.target.getAttribute('data-w-e-type') || ''
   switch (dataWType) {
@@ -152,7 +152,7 @@ const clickOnSpan = (e) => {
       break
   }
 }
-const clickOnImg = (e) => {
+const clickOnImg = e => {
   const dataHref = getImgHref(e) || e.target?.src || ''
   const imageRegex = /\.(jpe?g|png|gif|bmp|svg|webp)$/i
   // 去掉dataHref的?后面的参数
@@ -163,13 +163,13 @@ const clickOnImg = (e) => {
       htmlContent.value.querySelectorAll('img, video')
     )
     // 获取当前点击的img标签在mediaList中的索引
-    const index = mediaList.findIndex((media) => {
+    const index = mediaList.findIndex(media => {
       return media === e.target
     })
 
     const imgList = []
 
-    mediaList.forEach((media) => {
+    mediaList.forEach(media => {
       let src = ''
       let width = null
       let height = null
@@ -178,7 +178,7 @@ const clickOnImg = (e) => {
       let is360Panorama = false
       if (media.tagName === 'IMG') {
         const imgE = {
-          target: media,
+          target: media
         }
         const imgWidAndHeight = getImgWidAndHeight(imgE)
         is360Panorama =
@@ -203,7 +203,7 @@ const clickOnImg = (e) => {
         height,
         mimetype,
         thumfor,
-        is360Panorama,
+        is360Panorama
       })
     })
     openPhotoSwipe(imgList, index)
@@ -215,7 +215,7 @@ const clickOnImg = (e) => {
   }
 }
 // 中键点击事件
-const onMidClick = (e) => {
+const onMidClick = e => {
   const tag = e.target.tagName
   const aTag = findATag(e)
   if (tag === 'IMG' && !aTag) {
@@ -229,26 +229,26 @@ const onMidClick = (e) => {
 
 const eventOpen = ref(false)
 const currentEventData = ref(null)
-const getEventDetail = async (e) => {
+const getEventDetail = async e => {
   contentIsLoading.value = true
   const id = e.target.getAttribute('data-id')
   getEventDetailApiFetch({
-    id,
+    id
   })
-    .then((res) => {
+    .then(res => {
       currentEventData.value = res.data
       eventOpen.value = true
     })
-    .catch((err) => {
+    .catch(err => {
       console.log(err)
       const errors = err.response?._data?.errors
       if (errors) {
-        errors.forEach((item) => {
+        errors.forEach(item => {
           const message = item.message
           toast.add({
             title: message,
             icon: 'i-heroicons-x-circle',
-            color: 'red',
+            color: 'red'
           })
         })
       }
@@ -273,7 +273,7 @@ const initHljs = async () => {
 
   await loadhljs()
 
-  preList.forEach((pre) => {
+  preList.forEach(pre => {
     let codeBlock = pre.querySelector('code')
     if (!codeBlock) {
       // 在pre标签中没有找到code标签，将pre标签的内容用code标签包裹
@@ -320,13 +320,13 @@ const initHljs = async () => {
         toast.add({
           title: '复制成功',
           icon: 'i-heroicons-check-circle',
-          color: 'green',
+          color: 'green'
         })
       } catch (error) {
         toast.add({
           title: '复制失败',
           icon: 'i-heroicons-x-circle',
-          color: 'red',
+          color: 'red'
         })
       }
     }
@@ -346,7 +346,7 @@ const initHljs = async () => {
 
 const initImgs = () => {
   const imgList = htmlContent.value.querySelectorAll('img')
-  imgList.forEach((img) => {
+  imgList.forEach(img => {
     // 如果没有 data-href 属性，删除 href 属性
     if (!img.getAttribute('data-href')) {
       img.removeAttribute('data-href')

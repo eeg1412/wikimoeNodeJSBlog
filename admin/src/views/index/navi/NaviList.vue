@@ -86,17 +86,17 @@ export default {
     const getNaviList = () => {
       authApi
         .getNaviList(params)
-        .then((res) => {
+        .then(res => {
           naviList.value = res.data.data
           setSessionParams(route.name, params)
         })
-        .catch((err) => {
+        .catch(err => {
           console.log(err)
         })
     }
     const handleAdd = () => {
       router.push({
-        name: 'NaviAdd',
+        name: 'NaviAdd'
       })
     }
     // 监听 params.page 的变化
@@ -107,15 +107,15 @@ export default {
       }
     )
 
-    const goEdit = (id) => {
+    const goEdit = id => {
       router.push({
         name: 'NaviEdit',
         params: {
-          id,
-        },
+          id
+        }
       })
     }
-    const deleteNavi = (row) => {
+    const deleteNavi = row => {
       const id = row._id
       const title = escapeHtml(row.naviname)
 
@@ -127,10 +127,10 @@ export default {
             ElMessage.success('删除成功')
             getNaviList()
           })
-        },
+        }
       })
         .then(() => {})
-        .catch((error) => {
+        .catch(error => {
           console.log('Dialog closed:', error)
         })
     }
@@ -154,9 +154,9 @@ export default {
       getNaviList,
       handleAdd,
       goEdit,
-      deleteNavi,
+      deleteNavi
     }
-  },
+  }
 }
 </script>
 <style lang=""></style>

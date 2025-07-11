@@ -31,7 +31,7 @@
                       :rules="{
                         required: true,
                         message: '请输入选项内容',
-                        trigger: 'blur',
+                        trigger: 'blur'
                       }"
                     >
                       <div class="w_10 required">内容</div>
@@ -50,7 +50,7 @@
                       :rules="{
                         required: true,
                         message: '请输入排序',
-                        trigger: 'blur',
+                        trigger: 'blur'
                       }"
                     >
                       <div class="w_10 required">排序</div>
@@ -144,7 +144,7 @@ export default {
       endTime: null,
       options: [],
       status: 0,
-      __v: null,
+      __v: null
     })
     const rules = reactive({
       title: [{ required: true, message: '请输入标题', trigger: 'blur' }],
@@ -152,12 +152,12 @@ export default {
         {
           required: true,
           message: '请输入最多可选择的选项数',
-          trigger: 'blur',
+          trigger: 'blur'
         },
         // maxSelect 不能大于 options.length
         {
           validator: (rule, value) => {
-            const notDeleteOptions = form.options.filter((item) => {
+            const notDeleteOptions = form.options.filter(item => {
               return item.action !== 'delete'
             })
             if (notDeleteOptions.length < 2) {
@@ -167,14 +167,14 @@ export default {
             }
             return Promise.resolve()
           },
-          trigger: 'blur',
-        },
+          trigger: 'blur'
+        }
       ],
       // options 检查 options.value.length 是否大于等于 2
       options: [
         {
           validator: (rule, value) => {
-            const notDeleteOptions = value.filter((item) => {
+            const notDeleteOptions = value.filter(item => {
               return item.action !== 'delete'
             })
             if (notDeleteOptions.length < 2) {
@@ -182,24 +182,24 @@ export default {
             }
             return Promise.resolve()
           },
-          trigger: 'blur',
-        },
-      ],
+          trigger: 'blur'
+        }
+      ]
     })
     const formRef = ref(null)
     const submit = () => {
-      formRef.value.validate(async (valid) => {
+      formRef.value.validate(async valid => {
         if (!valid) {
           return false
         }
         const data = {
-          ...form,
+          ...form
         }
         if (id.value) {
           // 编辑
           data.id = id.value
           const actionArr = ['add', 'delete', 'update']
-          data.options = data.options.filter((item) => {
+          data.options = data.options.filter(item => {
             return actionArr.includes(item.action)
           })
 
@@ -207,7 +207,7 @@ export default {
             .updateVote(data)
             .then(() => {
               router.push({
-                name: 'VoteList',
+                name: 'VoteList'
               })
             })
             .catch(() => {})
@@ -217,7 +217,7 @@ export default {
             .createVote(data)
             .then(() => {
               router.push({
-                name: 'VoteList',
+                name: 'VoteList'
               })
             })
             .catch(() => {})
@@ -227,11 +227,11 @@ export default {
 
     const getVoteDetail = () => {
       const params = {
-        id: id.value,
+        id: id.value
       }
       authApi
         .getVoteDetail(params)
-        .then((res) => {
+        .then(res => {
           form.__v = res.data.data.__v
           form.title = res.data.data.title
           form.maxSelect = res.data.data.maxSelect
@@ -246,10 +246,10 @@ export default {
       form.options.push({
         title: '',
         sort: form.options.length + 1,
-        action: 'add',
+        action: 'add'
       })
     }
-    const removeOption = (index) => {
+    const removeOption = index => {
       // 如果action为add，则直接删除
       if (form.options[index].action === 'add') {
         form.options.splice(index, 1)
@@ -258,7 +258,7 @@ export default {
         form.options[index].action = 'delete'
       }
     }
-    const changeOption = (index) => {
+    const changeOption = index => {
       if (form.options[index].action !== 'add') {
         form.options[index].action = 'update'
       }
@@ -279,9 +279,9 @@ export default {
       submit,
       addOption,
       removeOption,
-      changeOption,
+      changeOption
     }
-  },
+  }
 }
 </script>
 <style scoped>

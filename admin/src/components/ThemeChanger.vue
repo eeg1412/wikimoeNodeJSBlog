@@ -48,14 +48,14 @@ export default {
       followSystem,
       systemPreferenceSupported,
       setTheme,
-      toggleFollowSystem,
+      toggleFollowSystem
     } = useTheme()
 
     const themeIcon = computed(() => {
       return theme.value === 'dark' ? 'fas fa-moon' : 'fas fa-sun'
     })
 
-    const handleCommand = (command) => {
+    const handleCommand = command => {
       if (command === 'system') {
         toggleFollowSystem(true)
         return
@@ -71,9 +71,9 @@ export default {
       setTheme,
       toggleFollowSystem,
       themeIcon,
-      handleCommand,
+      handleCommand
     }
-  },
+  }
 }
 </script>
 

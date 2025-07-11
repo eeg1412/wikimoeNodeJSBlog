@@ -81,16 +81,14 @@ export default {
       taxis: 0,
       parent: null,
       description: '',
-      __v: null,
+      __v: null
     })
     const rules = reactive({
-      sortname: [
-        { required: true, message: '请输入分类名称', trigger: 'blur' },
-      ],
+      sortname: [{ required: true, message: '请输入分类名称', trigger: 'blur' }]
     })
     const formRef = ref(null)
     const submit = () => {
-      formRef.value.validate(async (valid) => {
+      formRef.value.validate(async valid => {
         if (!valid) {
           return false
         }
@@ -99,7 +97,7 @@ export default {
           alias: form.alias,
           taxis: form.taxis,
           parent: form.parent,
-          description: form.description,
+          description: form.description
         }
         if (id.value) {
           // 编辑
@@ -109,7 +107,7 @@ export default {
             .updateSort(data)
             .then(() => {
               router.push({
-                name: 'SortList',
+                name: 'SortList'
               })
             })
             .catch(() => {})
@@ -119,7 +117,7 @@ export default {
             .createSort(data)
             .then(() => {
               router.push({
-                name: 'SortList',
+                name: 'SortList'
               })
             })
             .catch(() => {})
@@ -131,18 +129,18 @@ export default {
     const getSortList = () => {
       authApi
         .getSortList()
-        .then((res) => {
+        .then(res => {
           parentSortList.value = res.data.data
         })
         .catch(() => {})
     }
     const getSortDetail = () => {
       const params = {
-        id: id.value,
+        id: id.value
       }
       authApi
         .getSortDetail(params)
-        .then((res) => {
+        .then(res => {
           form.sortname = res.data.data.sortname
           form.alias = res.data.data.alias
           form.taxis = res.data.data.taxis
@@ -164,9 +162,9 @@ export default {
       rules,
       formRef,
       submit,
-      parentSortList,
+      parentSortList
     }
-  },
+  }
 }
 </script>
 <style scoped></style>

@@ -44,7 +44,7 @@
     <div
       class="attachment-selector-body pointer"
       :class="{
-        'is-selected': isSelected,
+        'is-selected': isSelected
       }"
       @click="onSelectorClick"
     >
@@ -139,16 +139,16 @@ export default {
       type: Object,
       default: () => {
         return {}
-      },
+      }
     },
     isSelected: {
       type: Boolean,
-      default: false,
+      default: false
     },
     selectIndex: {
       type: Number,
-      default: null,
-    },
+      default: null
+    }
   },
   emits: ['onSelectorClick', 'onUpdateName'],
   setup(props, { emit }) {
@@ -162,13 +162,13 @@ export default {
       videoCover: '',
       name: '',
       is360Panorama: false,
-      description: '',
+      description: ''
     })
     const rulesName = reactive({
-      name: [{ required: true, message: '请输入媒体名称', trigger: 'blur' }],
+      name: [{ required: true, message: '请输入媒体名称', trigger: 'blur' }]
     })
     const submitName = () => {
-      formNameRef.value.validate(async (valid) => {
+      formNameRef.value.validate(async valid => {
         if (!valid) {
           return false
         }
@@ -178,7 +178,7 @@ export default {
           videoCover: formName.videoCover,
           description: formName.description,
           is360Panorama: formName.is360Panorama,
-          __v: props.item.__v,
+          __v: props.item.__v
         }
         authApi.updateAttachmentInfo(params).then(() => {
           showNameDialog.value = false
@@ -198,7 +198,7 @@ export default {
       return store.getters.siteUrl
     })
 
-    const openPreviewer = (item) => {
+    const openPreviewer = item => {
       const mimetype = item.mimetype
       const { filepath, width, height, is360Panorama } = item
       loadAndOpenImg(0, [
@@ -207,8 +207,8 @@ export default {
           width,
           height,
           mimetype,
-          is360Panorama,
-        },
+          is360Panorama
+        }
       ])
     }
     const isVideo = computed(() => {
@@ -218,7 +218,7 @@ export default {
       return props.item.mimetype.includes('image')
     })
 
-    const setVideoCover = (data) => {
+    const setVideoCover = data => {
       formName.videoCover = data
     }
 
@@ -226,7 +226,7 @@ export default {
       return props.selectIndex + 1
     })
 
-    const formatSize = (bytes) => {
+    const formatSize = bytes => {
       if (!bytes || isNaN(bytes)) return '0 KB'
 
       if (bytes < 1024) {
@@ -255,9 +255,9 @@ export default {
       isImage,
       setVideoCover,
       selectCount,
-      formatSize,
+      formatSize
     }
-  },
+  }
 }
 </script>
 <style scoped>

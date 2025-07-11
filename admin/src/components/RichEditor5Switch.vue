@@ -30,18 +30,18 @@ export default {
   props: {
     content: {
       type: String,
-      default: '',
+      default: ''
     },
     isRichMode: {
       type: Boolean,
-      default: true,
-    },
+      default: true
+    }
   },
   components: {
-    RichEditor5,
+    RichEditor5
   },
   setup(props, { emit }) {
-    const changeMode = (val) => {
+    const changeMode = val => {
       if (val) {
         ElMessageBox.confirm(
           '自定义HTML可能会导致富文本编辑器出错或者内容丢失，如果是自定义HTML内容，请清空内容！',
@@ -50,14 +50,14 @@ export default {
             confirmButtonText: '清空',
             cancelButtonText: '保留',
             type: 'warning',
-            distinguishCancelAndClose: true,
+            distinguishCancelAndClose: true
           }
         )
           .then(() => {
             emit('update:content', '')
             emit('update:isRichMode', val)
           })
-          .catch((action) => {
+          .catch(action => {
             if (action === 'cancel') {
               emit('update:isRichMode', val)
             }
@@ -72,13 +72,13 @@ export default {
       },
       set(val) {
         emit('update:content', val)
-      },
+      }
     })
     return {
       changeMode,
-      valueHtml,
+      valueHtml
     }
-  },
+  }
 }
 </script>
 <style scoped></style>

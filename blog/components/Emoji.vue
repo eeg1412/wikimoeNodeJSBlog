@@ -51,7 +51,7 @@ const emojiCom = computed(() => {
   let emojiAll = []
   const base = {
     groupName: '常用',
-    emojis: [],
+    emojis: []
   }
   if (usedEmoji.value.length > 0) {
     base.emojis = usedEmoji.value
@@ -59,7 +59,7 @@ const emojiCom = computed(() => {
   emojiAll.push(base)
   emojiAll = emojiAll.concat(JSON.parse(JSON.stringify(emoji)))
   // 将groupName 转换成 label
-  emojiAll.forEach((item) => {
+  emojiAll.forEach(item => {
     item.label = item.groupName
     delete item.groupName
   })
@@ -81,8 +81,8 @@ const getUsedEmoji = () => {
     }
   }
 }
-const setUsedEmoji = (item) => {
-  const index = usedEmoji.value.findIndex((i) => i === item)
+const setUsedEmoji = item => {
+  const index = usedEmoji.value.findIndex(i => i === item)
   if (index !== -1) {
     usedEmoji.value.splice(index, 1)
   }

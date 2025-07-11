@@ -17,7 +17,7 @@
           :disabled-date="timeRangeDisabledDate"
           :default-time="[
             new Date().setHours(0, 0, 0, 0),
-            new Date().setHours(23, 59, 59, 999),
+            new Date().setHours(23, 59, 59, 999)
           ]"
           @change="getLoadingTimeData(true)"
         />
@@ -534,7 +534,7 @@ import {
   PointElement,
   LineElement,
   Title,
-  Tooltip,
+  Tooltip
 } from 'chart.js'
 import { Line } from 'vue-chartjs'
 
@@ -550,7 +550,7 @@ ChartJS.register(
 export default {
   components: {
     IpInfoDisplay,
-    Line,
+    Line
   },
   setup() {
     const pickerClass = ref(generateRandomAlphabetString(12))
@@ -571,7 +571,7 @@ export default {
           const start = new Date()
           start.setHours(0, 0, 0, 0)
           return [start, end]
-        },
+        }
       },
       // 昨天
       {
@@ -584,7 +584,7 @@ export default {
           start.setHours(0, 0, 0, 0)
           start.setTime(start.getTime() - 3600 * 1000 * 24)
           return [start, end]
-        },
+        }
       },
       {
         text: '过去3天',
@@ -595,7 +595,7 @@ export default {
           start.setDate(start.getDate() - 2) // 减去2天
           start.setHours(0, 0, 0, 0)
           return [start, end]
-        },
+        }
       },
       {
         text: '过去7天',
@@ -606,7 +606,7 @@ export default {
           start.setDate(start.getDate() - 6) // 减去6天
           start.setHours(0, 0, 0, 0)
           return [start, end]
-        },
+        }
       },
       {
         text: '过去1个月',
@@ -617,7 +617,7 @@ export default {
           start.setMonth(start.getMonth() - 1)
           start.setHours(0, 0, 0, 0)
           return [start, end]
-        },
+        }
       },
       {
         text: '过去3个月',
@@ -628,7 +628,7 @@ export default {
           start.setMonth(start.getMonth() - 3)
           start.setHours(0, 0, 0, 0)
           return [start, end]
-        },
+        }
       },
       {
         text: '过去一年',
@@ -639,11 +639,11 @@ export default {
           start.setFullYear(start.getFullYear() - 1)
           start.setHours(0, 0, 0, 0)
           return [start, end]
-        },
-      },
+        }
+      }
     ]
 
-    const timeRangeDisabledDate = (time) => {
+    const timeRangeDisabledDate = time => {
       const today = new Date()
       const past370Days = new Date()
       past370Days.setDate(today.getDate() - 370)
@@ -659,33 +659,33 @@ export default {
     // 分页相关
     const fastestPagination = reactive({
       currentPage: 1,
-      pageSize: 10,
+      pageSize: 10
     })
 
     const slowestPagination = reactive({
       currentPage: 1,
-      pageSize: 10,
+      pageSize: 10
     })
 
     // 新增国家和地区统计分页配置
     const countrySlowPagination = reactive({
       currentPage: 1,
-      pageSize: 10,
+      pageSize: 10
     })
 
     const countryFastPagination = reactive({
       currentPage: 1,
-      pageSize: 10,
+      pageSize: 10
     })
 
     const regionSlowPagination = reactive({
       currentPage: 1,
-      pageSize: 10,
+      pageSize: 10
     })
 
     const regionFastPagination = reactive({
       currentPage: 1,
-      pageSize: 10,
+      pageSize: 10
     })
 
     // 计算属性 - 分页后的数据
@@ -766,7 +766,7 @@ export default {
         const counts = []
         const isOverDays = loadingTimeData.value.isOverDays
 
-        data.forEach((item) => {
+        data.forEach(item => {
           let f = moment(item.time).format(
             `YYYY/MM/DD dddd${isOverDays ? '' : ' HH:mm'}`
           )
@@ -793,7 +793,7 @@ export default {
               backgroundColor: 'rgba(64, 158, 255, 0.2)',
               yAxisID: 'y-duration',
               tension: 0.2,
-              borderWidth: 2,
+              borderWidth: 2
             },
             {
               label: '样本数量',
@@ -802,9 +802,9 @@ export default {
               backgroundColor: 'rgba(103, 194, 58, 0.2)',
               yAxisID: 'y-count',
               tension: 0.2,
-              borderWidth: 2,
-            },
-          ],
+              borderWidth: 2
+            }
+          ]
         }
       }
       return { labels: [], datasets: [] }
@@ -816,7 +816,7 @@ export default {
       maintainAspectRatio: false,
       interaction: {
         mode: 'index',
-        intersect: false,
+        intersect: false
       },
       scales: {
         'y-duration': {
@@ -825,15 +825,15 @@ export default {
           position: 'left',
           title: {
             display: true,
-            text: '加载时间(秒)',
+            text: '加载时间(秒)'
           },
           grid: {
-            color: 'rgba(155, 155, 155, 0.2)',
+            color: 'rgba(155, 155, 155, 0.2)'
           },
           ticks: {
             beginAtZero: true,
-            precision: 2,
-          },
+            precision: 2
+          }
         },
         'y-count': {
           type: 'linear',
@@ -841,28 +841,28 @@ export default {
           position: 'right',
           title: {
             display: true,
-            text: '样本数量',
+            text: '样本数量'
           },
           grid: {
-            drawOnChartArea: false, // 只显示左侧Y轴的网格线
+            drawOnChartArea: false // 只显示左侧Y轴的网格线
           },
           ticks: {
             beginAtZero: true,
-            precision: 0,
-          },
+            precision: 0
+          }
         },
         x: {
           grid: {
-            color: 'rgba(155, 155, 155, 0.2)',
+            color: 'rgba(155, 155, 155, 0.2)'
           },
           ticks: {
-            maxRotation: 0,
-          },
-        },
-      },
+            maxRotation: 0
+          }
+        }
+      }
     }
 
-    const getLoadingTimeData = (resetPage) => {
+    const getLoadingTimeData = resetPage => {
       const startTime = new Date(timeRange.value[0])
       const endTime = new Date(timeRange.value[1])
       // 如果endTime是当天，则时间是当前时间
@@ -874,9 +874,9 @@ export default {
         .getLoadingTime({
           startTime: startTime,
           endTime: endTime,
-          timeZone: timeZone,
+          timeZone: timeZone
         })
-        .then((res) => {
+        .then(res => {
           if (resetPage) {
             fastestPagination.currentPage = 1
             slowestPagination.currentPage = 1
@@ -895,18 +895,18 @@ export default {
     }
 
     // 格式化持续时间，毫秒转为秒并保留两位小数
-    const formatDuration = (duration) => {
+    const formatDuration = duration => {
       if (duration === null || duration === undefined) return '-'
       return (duration / 1000).toFixed(2)
     }
 
     // 格式化日期时间
-    const formatDateTime = (dateStr) => {
+    const formatDateTime = dateStr => {
       if (!dateStr) return '-'
       return moment(dateStr).format('YYYY-MM-DD HH:mm:ss')
     }
 
-    const roundDuration = (duration) => {
+    const roundDuration = duration => {
       if (duration === null || duration === undefined) return 0
       return Math.round((duration / 1000) * 100) / 100
     }
@@ -945,9 +945,9 @@ export default {
       countrySlowStatsPaginated,
       countryFastStatsPaginated,
       regionSlowStatsPaginated,
-      regionFastStatsPaginated,
+      regionFastStatsPaginated
     }
-  },
+  }
 }
 </script>
 

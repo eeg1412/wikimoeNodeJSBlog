@@ -32,8 +32,8 @@
                 name: 'postListSort',
                 params: {
                   sortid: postData.data.sort.alias || postData.data.sort._id,
-                  page: 1,
-                },
+                  page: 1
+                }
               }"
             >
               {{ postData.data.sort.sortname }}
@@ -117,7 +117,7 @@
             class="post-detail-tag-item"
             :to="{
               name: 'postListTag',
-              params: { tagid: tag._id, page: 1 },
+              params: { tagid: tag._id, page: 1 }
             }"
             >#{{ tag.tagname }}</NuxtLink
           >
@@ -469,30 +469,30 @@
               :inactiveButton="{
                 variant: 'ghost',
                 color: 'gray',
-                size: 'xs',
+                size: 'xs'
               }"
               :activeButton="{
-                size: 'xs',
+                size: 'xs'
               }"
               :firstButton="{
                 variant: 'ghost',
                 color: 'gray',
-                size: 'xs',
+                size: 'xs'
               }"
               :lastButton="{
                 variant: 'ghost',
                 color: 'gray',
-                size: 'xs',
+                size: 'xs'
               }"
               :prevButton="{
                 variant: 'ghost',
                 color: 'gray',
-                size: 'xs',
+                size: 'xs'
               }"
               :nextButton="{
                 variant: 'ghost',
                 color: 'gray',
-                size: 'xs',
+                size: 'xs'
               }"
               :showFirst="true"
               :showLast="true"
@@ -556,12 +556,12 @@ import {
   getDetailApi,
   putViewCountApi,
   postLikeLogListApi,
-  postLikeLogApi,
+  postLikeLogApi
 } from '@/api/post'
 import {
   getCommentListApi,
   postCommentLikeLogApi,
-  postCommentLikeLogListApi,
+  postCommentLikeLogListApi
 } from '@/api/comment'
 import { storeToRefs } from 'pinia'
 import { useOptionStore } from '@/store/options'
@@ -589,8 +589,8 @@ const [postDataResponse] = await Promise.all([
   getDetailApi({
     id,
     type,
-    randompost: routeName === 'postDetail' ? 1 : 0,
-  }),
+    randompost: routeName === 'postDetail' ? 1 : 0
+  })
 ])
 const { data: postData } = postDataResponse
 const pageTemplate = computed(() => {
@@ -611,7 +611,7 @@ const commentPage = ref(1)
 const commentData = ref({
   list: [],
   total: 0,
-  size: 1,
+  size: 1
 })
 const commentList = computed(() => {
   return commentData.value.list
@@ -625,21 +625,21 @@ const commentSize = computed(() => {
 const commentLoading = ref(true)
 const postDetailBody = ref(null)
 const commentSortType = ref('date')
-const changeCommentSort = (type) => {
+const changeCommentSort = type => {
   if (commentLoading.value) {
     return
   }
   commentSortType.value = type
   getCommentList()
 }
-const getCommentList = async (goToCommentListRef) => {
+const getCommentList = async goToCommentListRef => {
   commentLoading.value = true
   await getCommentListApi({
     id: postid,
     sorttype: commentSortType.value,
-    page: commentPage.value,
+    page: commentPage.value
   })
-    .then((res) => {
+    .then(res => {
       console.log(res)
       commentData.value = res
       commentLikeLogList()
@@ -650,7 +650,7 @@ const getCommentList = async (goToCommentListRef) => {
         const distanceToParentTop = elementRect.top - parentRect.top
         window.scrollTo({
           top: distanceToParentTop - 100,
-          behavior: 'smooth',
+          behavior: 'smooth'
         })
       }
     })
@@ -661,7 +661,7 @@ const getCommentList = async (goToCommentListRef) => {
 const commentListRef = ref(null)
 
 const commentid = ref('')
-const openComment = (id) => {
+const openComment = id => {
   commentid.value = id
   nextTick(() => {
     // 根据id找textarea
@@ -694,10 +694,10 @@ const commentLikeListInited = ref(false)
 const commentLikeListLoading = ref(false)
 const commentLikeList = ref([])
 const commentLikeLogList = () => {
-  const commentIdList = commentData.value.list.map((item) => item._id)
+  const commentIdList = commentData.value.list.map(item => item._id)
   commentLikeListLoading.value = true
   postCommentLikeLogListApi({ commentIdList })
-    .then((res) => {
+    .then(res => {
       commentLikeList.value = res.list
     })
     .finally(() => {
@@ -705,9 +705,9 @@ const commentLikeLogList = () => {
       commentLikeListLoading.value = false
     })
 }
-const checkIsCommentLike = (commentId) => {
+const checkIsCommentLike = commentId => {
   const likeData = commentLikeList.value.find(
-    (item) => item.comment === commentId
+    item => item.comment === commentId
   )
   if (likeData) {
     return likeData.like
@@ -715,9 +715,9 @@ const checkIsCommentLike = (commentId) => {
     return false
   }
 }
-const getLikeDataByCommentId = (commentId) => {
+const getLikeDataByCommentId = commentId => {
   const likeData = commentLikeList.value.find(
-    (item) => item.comment === commentId
+    item => item.comment === commentId
   )
   if (likeData) {
     return likeData
@@ -727,7 +727,7 @@ const getLikeDataByCommentId = (commentId) => {
 }
 
 const likeCommentIsLoading = reactive({})
-const likeComment = (commentId) => {
+const likeComment = commentId => {
   if (likeCommentIsLoading[commentId]) {
     return
   }
@@ -737,10 +737,10 @@ const likeComment = (commentId) => {
   likeCommentIsLoading[commentId] = true
 
   postCommentLikeLogApi({ id: commentId, like: !like, __v })
-    .then((res) => {
+    .then(res => {
       // 将对应的likeList里的commentId替换为res.data
       const index = commentLikeList.value.findIndex(
-        (item) => item.comment === commentId
+        item => item.comment === commentId
       )
       if (index > -1) {
         commentLikeList.value[index] = res.data
@@ -750,23 +750,23 @@ const likeComment = (commentId) => {
       const newLike = res.data.like
       // commentData.value.list 找到对应的commentId，将likes数量根据newLike加减
       const commentIndex = commentData.value.list.findIndex(
-        (item) => item._id === commentId
+        item => item._id === commentId
       )
 
       const comment = commentData.value.list[commentIndex]
       const newLikeCount = newLike ? comment.likes + 1 : comment.likes - 1
       commentData.value.list[commentIndex].likes = newLikeCount
     })
-    .catch((err) => {
+    .catch(err => {
       console.log(err)
       const errors = err.response?._data?.errors
       if (errors) {
-        errors.forEach((item) => {
+        errors.forEach(item => {
           const message = item.message
           toast.add({
             title: message,
             icon: 'i-heroicons-x-circle',
-            color: 'red',
+            color: 'red'
           })
         })
       }
@@ -779,7 +779,7 @@ const likeComment = (commentId) => {
 // viewCount
 const putViewCount = () => {
   putViewCountApi({
-    id: postid,
+    id: postid
   })
 }
 
@@ -791,7 +791,7 @@ const postLikeLogList = () => {
   const postIdList = [postid]
   likeListLoading.value = true
   postLikeLogListApi({ postIdList })
-    .then((res) => {
+    .then(res => {
       likeList.value = res.list
       checkIsLike()
     })
@@ -801,7 +801,7 @@ const postLikeLogList = () => {
     })
 }
 const checkIsLike = () => {
-  const likeData = likeList.value.find((item) => item.post === postid)
+  const likeData = likeList.value.find(item => item.post === postid)
   if (likeData) {
     postData.value.data.isLike = likeData.like
     if (likeData.like && postData.value.data.likes === 0) {
@@ -811,7 +811,7 @@ const checkIsLike = () => {
   }
 }
 const getLikeDataByPostId = () => {
-  const likeData = likeList.value.find((item) => item.post === postid)
+  const likeData = likeList.value.find(item => item.post === postid)
   if (likeData) {
     return likeData
   } else {
@@ -830,9 +830,9 @@ const likePost = () => {
   likePostIsLoading.value = true
 
   postLikeLogApi({ id: postid, like: !like, __v })
-    .then((res) => {
+    .then(res => {
       // 将对应的likeList里的postId替换为res.data
-      const index = likeList.value.findIndex((item) => item.post === postid)
+      const index = likeList.value.findIndex(item => item.post === postid)
       if (index > -1) {
         likeList.value[index] = res.data
       } else {
@@ -845,16 +845,16 @@ const likePost = () => {
       postData.value.data.likes = newLikeCount
       postData.value.data.isLike = newLike
     })
-    .catch((err) => {
+    .catch(err => {
       console.log(err)
       const errors = err.response?._data?.errors
       if (errors) {
-        errors.forEach((item) => {
+        errors.forEach(item => {
           const message = item.message
           toast.add({
             title: message,
             icon: 'i-heroicons-x-circle',
-            color: 'red',
+            color: 'red'
           })
         })
       }
@@ -865,7 +865,7 @@ const likePost = () => {
 }
 
 // 过滤HTML标签
-const filterHtmlTag = (str) => {
+const filterHtmlTag = str => {
   if (!str) {
     return ''
   }
@@ -912,7 +912,7 @@ const seoDescriptionSet = () => {
 const seoKeywordsSet = () => {
   // 先判断 postData.value?.data?.tags 是否存在，存在就用，不存在就用 options.value.siteKeywords
   if (postData.value?.data?.tags?.length > 0) {
-    return postData.value?.data?.tags.map((item) => item.tagname).join(',')
+    return postData.value?.data?.tags.map(item => item.tagname).join(',')
   } else {
     return options.value.siteKeywords
   }
@@ -932,7 +932,7 @@ useSeoMeta({
   // twitter
   twitterTitle: seoTitle,
   twitterDescription: seoDescription,
-  twitterImage: seoImage,
+  twitterImage: seoImage
 })
 
 // 文章导航
@@ -946,7 +946,7 @@ const switchShowHeaderListMenu = () => {
     }, 'showHeaderListMenu')
   }
 }
-watch(showHeaderListMenu, (val) => {
+watch(showHeaderListMenu, val => {
   if (!val) {
     clearRightMenuCloseFn('showHeaderListMenu')
   }
@@ -960,13 +960,13 @@ const parseHeaders = () => {
   const result = []
   let currentHeader = null
 
-  headers.forEach((header) => {
+  headers.forEach(header => {
     const level = parseInt(header.tagName.slice(1))
     const headerObj = {
       tag: header.tagName,
       text: header.textContent,
       dom: header,
-      children: [],
+      children: []
     }
 
     if (currentHeader === null) {
@@ -1024,7 +1024,7 @@ const getActiveHeader = () => {
   let closest = null
   let closestDistance = Infinity
   const threshold = window.innerHeight / 2 // 设置阈值为窗口高度的一半
-  headers.forEach((header) => {
+  headers.forEach(header => {
     const rect = header.getBoundingClientRect()
     const distance = Math.abs(rect.top)
     if (distance < closestDistance && distance <= threshold) {
@@ -1079,7 +1079,7 @@ const checkCommentScroll = () => {
         toast.add({
           title: title,
           icon: 'i-heroicons-x-circle',
-          color: 'red',
+          color: 'red'
         })
       }
     }

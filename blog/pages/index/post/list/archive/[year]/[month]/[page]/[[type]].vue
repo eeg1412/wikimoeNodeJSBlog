@@ -3,7 +3,7 @@
 </template>
 <script setup>
 definePageMeta({
-  name: 'postListArchive',
+  name: 'postListArchive'
 })
 </script>
 <style scoped></style>

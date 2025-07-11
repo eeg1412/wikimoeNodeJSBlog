@@ -38,8 +38,8 @@ import { storeToRefs } from 'pinia'
 const props = defineProps({
   post: {
     type: Object,
-    required: true,
-  },
+    required: true
+  }
 })
 const optionStore = useOptionStore()
 const { options } = storeToRefs(optionStore)

@@ -24,8 +24,8 @@
 const props = defineProps({
   show: {
     type: Boolean,
-    default: false,
-  },
+    default: false
+  }
 })
 const emits = defineEmits()
 const commonDialogOpen = computed({
@@ -40,9 +40,9 @@ const commonDialogOpen = computed({
 
     return props.show
   },
-  set: (val) => {
+  set: val => {
     emits('update:show', val)
-  },
+  }
 })
 
 const styleId = generateRandomString(8)

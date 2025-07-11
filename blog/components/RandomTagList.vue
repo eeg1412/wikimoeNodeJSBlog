@@ -24,13 +24,13 @@ import { getRandomTagListApi } from '@/api/tag'
 const { data: randomTagListData } = await getRandomTagListApi()
 const randomTagList = ref(randomTagListData.value.list)
 
-const getLinkObj = (item) => {
+const getLinkObj = item => {
   return {
     name: 'postListTag',
     params: {
       tagid: item._id,
-      page: 1,
-    },
+      page: 1
+    }
   }
 }
 </script>

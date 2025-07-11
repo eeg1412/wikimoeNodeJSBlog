@@ -470,7 +470,7 @@ import {
   getSessionParams,
   copyToClipboard,
   seasonToStr,
-  escapeHtml,
+  escapeHtml
 } from '@/utils/utils'
 import store from '@/store'
 import CheckDialogService from '@/services/CheckDialogService'
@@ -480,7 +480,7 @@ export default {
     EmojiTextarea,
     TagSelector,
     SortSelector,
-    PostBatchForm,
+    PostBatchForm
   },
   setup() {
     const router = useRouter()
@@ -500,7 +500,7 @@ export default {
       status: null,
       sorttype: null,
       sort: null,
-      tags: [],
+      tags: []
     })
     const total = ref(0)
     const initParams = () => {
@@ -517,15 +517,15 @@ export default {
       }
     }
     const list = ref([])
-    const goEdit = (id) => {
+    const goEdit = id => {
       router.push({
         name: 'PostEdit',
         params: {
-          id,
-        },
+          id
+        }
       })
     }
-    const deletePost = (row) => {
+    const deletePost = row => {
       const id = row._id
       let title = row.title || row.excerpt
       if (title.length > 20) {
@@ -554,14 +554,14 @@ export default {
         correctAnswer: '是',
         content: `此操作将<span class="cRed">永久删除【${type}】《${title}》</span>, 是否继续?`,
         success: () => {
-          return authApi.deletePost({ id }).then((res) => {
+          return authApi.deletePost({ id }).then(res => {
             ElMessage.success('删除成功')
             getPostList()
           })
-        },
+        }
       })
         .then(() => {})
-        .catch((error) => {
+        .catch(error => {
           console.log('Dialog closed:', error)
         })
     }
@@ -574,9 +574,9 @@ export default {
         params.page = 1
         return
       }
-      authApi.getPostList(params).then((res) => {
+      authApi.getPostList(params).then(res => {
         const dataList = res.data.list
-        dataList.forEach((item) => {
+        dataList.forEach(item => {
           const seriesSortList = item.seriesSortList
           const contentSeriesSortList = item.contentSeriesSortList
           if (seriesSortList && seriesSortList.length) {
@@ -609,21 +609,21 @@ export default {
         setSessionParams(route.name, params)
       })
     }
-    const handleAdd = (type) => {
-      authApi.createPost({ type }).then((res) => {
+    const handleAdd = type => {
+      authApi.createPost({ type }).then(res => {
         router.push({
           name: 'PostEdit',
           params: {
-            id: res.data.data._id,
+            id: res.data.data._id
           },
           query: {
-            new: '1',
-          },
+            new: '1'
+          }
         })
       })
     }
 
-    const handlePostCommand = (command) => {
+    const handlePostCommand = command => {
       handleAdd(command)
     }
 
@@ -638,7 +638,7 @@ export default {
     }
     const defaultSort = { prop: 'date', order: 'descending' }
 
-    const titleLimit = (title) => {
+    const titleLimit = title => {
       let title_ = Array.from(title || '')
       if (title_.length > 20) {
         title_ = title_.slice(0, 20).join('') + '...'
@@ -651,27 +651,27 @@ export default {
     const typeOptions = [
       {
         value: 1,
-        label: '博文',
+        label: '博文'
       },
       {
         value: 2,
-        label: '推文',
+        label: '推文'
       },
       {
         value: 3,
-        label: '页面',
-      },
+        label: '页面'
+      }
     ]
 
     // 添加评论
     const commentForm = reactive({
       post: '',
       content: '',
-      top: false,
+      top: false
     })
     const commentFormRef = ref(null)
     const commentFormRules = {
-      content: [{ required: true, message: '请输入评论内容', trigger: 'blur' }],
+      content: [{ required: true, message: '请输入评论内容', trigger: 'blur' }]
     }
     const commentFormVisible = ref(false)
     const commentFormTitle = ref('添加评论')
@@ -691,9 +691,9 @@ export default {
       commentFormVisible.value = false
     }
     const submitCommentForm = () => {
-      commentFormRef.value.validate((valid) => {
+      commentFormRef.value.validate(valid => {
         if (valid) {
-          authApi.createComment(commentForm).then((res) => {
+          authApi.createComment(commentForm).then(res => {
             ElMessage.success('评论成功')
             closeCommentForm()
             // 重新获取文章列表
@@ -709,16 +709,16 @@ export default {
       return store.getters.siteUrl
     })
 
-    const openPage = (row) => {
+    const openPage = row => {
       const path = getPostPagePath(row)
       // 使用 window.open 方法在新窗口中打开 URL
       window.open(path, '_blank')
     }
-    const copyPage = (row) => {
+    const copyPage = row => {
       const path = getPostPagePath(row)
       copyToClipboard(path)
     }
-    const getPostPagePath = (row) => {
+    const getPostPagePath = row => {
       // 先判断type是1，2还是3，1和2跳转到/post/id，3跳转到/page/id
       // 如果有别名，就跳转到别名，没有别名就跳转到id
       let path
@@ -756,7 +756,7 @@ export default {
         contentGameList,
         contentPostList,
         contentEventList,
-        contentVoteList,
+        contentVoteList
       } = row
 
       // 根据type参数选择适当的列表
@@ -775,50 +775,50 @@ export default {
       if (!sort || sort.length <= 0) {
         sort = ['event', 'vote', 'post', 'acgn']
       }
-      sort.forEach((item) => {
+      sort.forEach(item => {
         if (item === 'event') {
           if (eventList && eventList.length) {
             const type = 'event'
-            eventList.forEach((item) => {
+            eventList.forEach(item => {
               contentList.push({ ...item, type })
             })
           }
         } else if (item === 'vote') {
           if (voteList && voteList.length) {
             const type = 'vote'
-            voteList.forEach((item) => {
+            voteList.forEach(item => {
               contentList.push({ ...item, type })
             })
           }
         } else if (item === 'post') {
           if (postList && postList.length) {
             const type = 'post'
-            postList.forEach((item) => {
+            postList.forEach(item => {
               contentList.push({ ...item, type })
             })
           }
         } else if (item === 'acgn') {
           if (bangumiList && bangumiList.length) {
             const type = 'bangumi'
-            bangumiList.forEach((item) => {
+            bangumiList.forEach(item => {
               contentList.push({ ...item, type })
             })
           }
           if (movieList && movieList.length) {
             const type = 'movie'
-            movieList.forEach((item) => {
+            movieList.forEach(item => {
               contentList.push({ ...item, type })
             })
           }
           if (bookList && bookList.length) {
             const type = 'book'
-            bookList.forEach((item) => {
+            bookList.forEach(item => {
               contentList.push({ ...item, type })
             })
           }
           if (gameList && gameList.length) {
             const type = 'game'
-            gameList.forEach((item) => {
+            gameList.forEach(item => {
               contentList.push({ ...item, type })
             })
           }
@@ -829,7 +829,7 @@ export default {
     }
 
     const selectedRows = ref([])
-    const handleSelectionChange = (rows) => {
+    const handleSelectionChange = rows => {
       console.log(rows)
       selectedRows.value = rows
     }
@@ -841,7 +841,7 @@ export default {
       getPostList(false, false, false)
     }
 
-    const checkShowText = (item) => {
+    const checkShowText = item => {
       if (item.status === 0) {
         return '【状态:不显示】'
       }
@@ -858,7 +858,7 @@ export default {
 
     const SearchTagSelectorRef = ref(null)
 
-    const setMovieTitle = (item) => {
+    const setMovieTitle = item => {
       const year = item.year
       const month = item.month
       const day = item.day
@@ -874,7 +874,7 @@ export default {
       if (params.tags.length) {
         SearchTagSelectorRef.value.getTagList(null, {
           idList: params.tags,
-          size: 999999,
+          size: 999999
         })
       }
     })
@@ -913,9 +913,9 @@ export default {
       // 搜索标签
       SearchTagSelectorRef,
       checkShowText,
-      setMovieTitle,
+      setMovieTitle
     }
-  },
+  }
 }
 </script>
 <style scoped>

@@ -15,9 +15,9 @@ export default {
   props: {
     ipInfo: {
       type: Object,
-      default: null,
-    },
+      default: null
+    }
   },
-  setup() {},
+  setup() {}
 }
 </script>

@@ -76,7 +76,7 @@
 import {
   formatResToForm,
   formatResToObj,
-  fieldErrorNotice,
+  fieldErrorNotice
 } from '@/utils/utils'
 import { ref, reactive, onMounted } from 'vue'
 import { authApi } from '@/api'
@@ -99,29 +99,29 @@ export default {
       // 评论分页
       siteCommentPageSize: 10,
       // 当日撤回限制
-      siteCommentRetractLimit: 3,
+      siteCommentRetractLimit: 3
     })
     const commentSettingsRules = {
       siteCommentInterval: [
-        { required: true, message: '请输入发表评论间隔', trigger: 'blur' },
+        { required: true, message: '请输入发表评论间隔', trigger: 'blur' }
       ],
       siteCommentPageSize: [
-        { required: true, message: '请输入评论分页', trigger: 'blur' },
-      ],
+        { required: true, message: '请输入评论分页', trigger: 'blur' }
+      ]
     }
     const commentSettingsSubmit = () => {
       commentSettingsFormRef.value.validate((valid, fields) => {
         if (valid) {
           const params = []
-          Object.keys(commentSettingsForm).forEach((key) => {
+          Object.keys(commentSettingsForm).forEach(key => {
             params.push({
               name: key,
-              value: commentSettingsForm[key],
+              value: commentSettingsForm[key]
             })
           })
           authApi
             .updateOption({ optionList: params })
-            .then((res) => {
+            .then(res => {
               const obj = formatResToObj(res.data.data)
               formatResToForm(commentSettingsForm, obj)
               store.dispatch('setOptions')
@@ -130,7 +130,7 @@ export default {
 
               ElMessage.success('更新成功')
             })
-            .catch((err) => {
+            .catch(err => {
               console.log(err)
             })
         } else {
@@ -144,14 +144,14 @@ export default {
     const getOptionList = () => {
       // 将commentSettingsForm的key转换为数组
       const params = {
-        nameList: [],
+        nameList: []
       }
-      Object.keys(commentSettingsForm).forEach((key) => {
+      Object.keys(commentSettingsForm).forEach(key => {
         params.nameList.push(key)
       })
       authApi
         .getOptionList(params)
-        .then((res) => {
+        .then(res => {
           // res.data.data是数组，需要转换为对象
           const obj = formatResToObj(res.data.data)
           formatResToForm(commentSettingsForm, obj)
@@ -169,9 +169,9 @@ export default {
       commentSettingsForm,
       commentSettingsRules,
       commentSettingsSubmit,
-      inited,
+      inited
     }
-  },
+  }
 }
 </script>
 <style></style>

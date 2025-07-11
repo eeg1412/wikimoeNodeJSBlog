@@ -185,7 +185,7 @@
           variant="outline"
           class="mr-1"
           :ui="{
-            base: 'focus:outline-none focus-visible:outline-0 disabled:cursor-not-allowed disabled:opacity-40 flex-shrink-0',
+            base: 'focus:outline-none focus-visible:outline-0 disabled:cursor-not-allowed disabled:opacity-40 flex-shrink-0'
           }"
           :disabled="!hasPrev"
           @click="toPrev"
@@ -197,7 +197,7 @@
           square
           variant="outline"
           :ui="{
-            base: 'focus:outline-none focus-visible:outline-0 disabled:cursor-not-allowed disabled:opacity-40 flex-shrink-0',
+            base: 'focus:outline-none focus-visible:outline-0 disabled:cursor-not-allowed disabled:opacity-40 flex-shrink-0'
           }"
           :disabled="!hasNext"
           @click="toNext"
@@ -210,17 +210,17 @@
 import {
   getBookListApi,
   getBookListApiFetch,
-  getBooktypeListApi,
+  getBooktypeListApi
 } from '@/api/book'
 const route = useRoute()
 const router = useRouter()
 const onlyRouteChange = ref(false)
 let hash = route.hash
-const setRouterQuery = (query) => {
+const setRouterQuery = query => {
   const nowQuery = route.query
   router.replace({
     query: { ...nowQuery, ...query },
-    hash: hash,
+    hash: hash
   })
 }
 
@@ -228,10 +228,10 @@ const setRouterQuery = (query) => {
 const booktypeList = ref([])
 const selectBooktypeData = ref({
   name: '全部类型',
-  _id: undefined,
+  _id: undefined
 })
 
-await getBooktypeListApi().then((res) => {
+await getBooktypeListApi().then(res => {
   booktypeList.value = res.data.value.data
 })
 
@@ -242,18 +242,18 @@ const rawQuery = {
   sortType: 'startTime',
   booktypeId: undefined,
   status: undefined,
-  keyword: undefined,
+  keyword: undefined
 }
 const params = computed(() => {
   const routeQuery = JSON.parse(JSON.stringify(route.query))
   const numberKey = ['page', 'status']
   const newParams = { ...rawQuery }
-  Object.keys(newParams).forEach((key) => {
+  Object.keys(newParams).forEach(key => {
     if (routeQuery[key]) {
       newParams[key] = routeQuery[key]
     }
   })
-  numberKey.forEach((key) => {
+  numberKey.forEach(key => {
     if (newParams[key]) {
       const num = Number(newParams[key])
       if (!isNaN(num)) {
@@ -269,52 +269,52 @@ const params = computed(() => {
 const statusList = [
   {
     label: '全部',
-    value: undefined,
+    value: undefined
   },
   // 1 尚未阅读
   {
     label: '尚未阅读',
-    value: 1,
+    value: 1
   },
   {
     label: '阅读中',
-    value: 2,
+    value: 2
   },
   // 2已读完
   {
     label: '已读完',
-    value: 3,
+    value: 3
   },
   {
     label: '弃坑',
-    value: 99,
-  },
+    value: 99
+  }
 ]
 
 const sortTypeMap = {
   startTime: '按开始时间排序',
-  rating: '按评分排序',
+  rating: '按评分排序'
 }
 const sortTypeList = [
   {
     label: '按开始时间排序',
-    value: 'startTime',
+    value: 'startTime'
   },
   {
     label: '按评分排序',
-    value: 'rating',
-  },
+    value: 'rating'
+  }
 ]
 const selectType = (type, close) => {
   if (bookLoading.value) return
   setRouterQuery({
-    sortType: type,
+    sortType: type
   })
   close()
 }
 
 const checkedParams = {
-  ...rawQuery,
+  ...rawQuery
 }
 const initParams = () => {
   // page必须是数字，sortType必须是sortTypeList，booktypeId必须是isObjectId
@@ -332,14 +332,14 @@ const initParams = () => {
     checkedParams.page = Number(queryPage)
   }
   // sortType必须是sortTypeList里的
-  if (sortTypeList.find((item) => item.value === querySortType)) {
+  if (sortTypeList.find(item => item.value === querySortType)) {
     checkedParams.sortType = querySortType
   }
   // booktypeId必须是isObjectId
   if (queryBooktypeId && isObjectId(queryBooktypeId)) {
     // 检查queryBooktypeId是否在booktypeList里
     const booktype = booktypeList.value.find(
-      (item) => item._id === queryBooktypeId
+      item => item._id === queryBooktypeId
     )
     if (booktype) {
       selectBooktypeData.value = booktype
@@ -347,7 +347,7 @@ const initParams = () => {
     }
   }
 
-  if (queryStatus && statusList.some((item) => item.value === queryStatus)) {
+  if (queryStatus && statusList.some(item => item.value === queryStatus)) {
     checkedParams.status = queryStatus
   }
 
@@ -369,7 +369,7 @@ const bookList = ref([])
 const total = ref(0)
 
 // 获取数据
-await getBookListApi(checkedParams).then((res) => {
+await getBookListApi(checkedParams).then(res => {
   bookList.value = res.data.value.list
   total.value = res.data.value.total
 })
@@ -381,7 +381,7 @@ const listRef = ref(null)
 const fetchBookList = async () => {
   bookLoading.value = true
   const newParams = {
-    ...params.value,
+    ...params.value
   }
   const res = await getBookListApiFetch(newParams)
   bookList.value = res?.list || []
@@ -392,7 +392,7 @@ const fetchBookList = async () => {
       // const rect = listRef.value.getBoundingClientRect()
       window.scrollTo({
         top: 0,
-        behavior: 'smooth',
+        behavior: 'smooth'
       })
     }
   })
@@ -410,7 +410,7 @@ const toNext = () => {
   }
 }
 
-const selectBooktype = (item) => {
+const selectBooktype = item => {
   filterCache.booktypeId = item?._id
 }
 
@@ -418,7 +418,7 @@ const filterOpen = ref(false)
 const filterCache = reactive({
   booktypeId: params.value.booktypeId,
   status: params.value.status,
-  keyword: params.value.keyword,
+  keyword: params.value.keyword
 })
 const filterCount = computed(() => {
   let count = 0
@@ -440,7 +440,7 @@ const filterText = computed(() => {
   return '所有内容'
 })
 // watch filterOpen
-watch(filterOpen, (val) => {
+watch(filterOpen, val => {
   console.log('filterOpen', val)
   if (val) {
     // 还原filterCache
@@ -450,13 +450,13 @@ watch(filterOpen, (val) => {
   }
 })
 // 添加一个方法，用于同时应用年份和季度筛选
-const applyFilters = async (close) => {
+const applyFilters = async close => {
   if (close) close()
   setRouterQuery({
     booktypeId: filterCache.booktypeId,
     status: filterCache.status,
     keyword: filterCache.keyword,
-    page: 1,
+    page: 1
   })
 }
 
@@ -474,14 +474,14 @@ watch(
     const compareKeys = Object.keys(rawQuery)
     // 拾取newQuery中的compareKeys
     const newQueryCompareObj = {}
-    compareKeys.forEach((key) => {
+    compareKeys.forEach(key => {
       if (newQuery[key]) {
         newQueryCompareObj[key] = newQuery[key]
       }
     })
     // 拾取oldQuery中的compareKeys
     const oldQueryCompareObj = {}
-    compareKeys.forEach((key) => {
+    compareKeys.forEach(key => {
       if (oldQuery[key]) {
         oldQueryCompareObj[key] = oldQuery[key]
       }
@@ -499,7 +499,7 @@ onMounted(() => {
     // 如果bookList为0，且page不为1，则重新获取数据
     if (bookList.value.length === 0 && params.value.page > 1) {
       setRouterQuery({
-        page: 1,
+        page: 1
       })
     }
     hash = undefined

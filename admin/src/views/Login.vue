@@ -45,7 +45,7 @@ import ThemeChanger from '@/components/ThemeChanger.vue'
 
 export default {
   components: {
-    ThemeChanger,
+    ThemeChanger
   },
   setup() {
     const route = useRoute()
@@ -54,7 +54,7 @@ export default {
     const form = reactive({
       username: '',
       password: '',
-      remember: false,
+      remember: false
     })
     const login = () => {
       if (!form.username) {
@@ -67,7 +67,7 @@ export default {
       }
       authApi
         .login(form)
-        .then((res) => {
+        .then(res => {
           const { token } = res.data
           store.dispatch('setAdminToken', token)
           // 读取sessionStorage中的lastRoute,如果有信息则尝试跳转到lastRoute中的页面
@@ -78,31 +78,31 @@ export default {
               router.push({
                 name: lastRouteObj.name,
                 params: lastRouteObj.params,
-                query: lastRouteObj.query,
+                query: lastRouteObj.query
               })
             } else {
               // 需要一个默认跳转的页面
               router.push({
-                name: 'Home',
+                name: 'Home'
               })
             }
           } catch (error) {
             // 需要一个默认跳转的页面
             console.warn(error)
             router.push({
-              name: 'Home',
+              name: 'Home'
             })
           }
         })
-        .catch((err) => {
+        .catch(err => {
           console.log(err)
         })
     }
     return {
       form,
-      login,
+      login
     }
-  },
+  }
 }
 </script>
 <style scoped>

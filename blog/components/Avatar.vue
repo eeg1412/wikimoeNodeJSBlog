@@ -22,16 +22,16 @@ import { storeToRefs } from 'pinia'
 const props = defineProps({
   avatar: {
     type: String,
-    default: '',
+    default: ''
   },
   alt: {
     type: String,
-    required: true,
+    required: true
   },
   size: {
     type: Number,
-    default: 50,
-  },
+    default: 50
+  }
 })
 const optionStore = useOptionStore()
 const { options } = storeToRefs(optionStore)
@@ -39,7 +39,7 @@ const siteGravatarSource = options.value.siteGravatarSource
 const imgStyle = computed(() => {
   return {
     width: `${props.size}px`,
-    height: `${props.size}px`,
+    height: `${props.size}px`
   }
 })
 const loadErrorFlag = ref(false)

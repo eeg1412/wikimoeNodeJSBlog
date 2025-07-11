@@ -1,7 +1,7 @@
 <template>
   <div
     :class="{
-      'page-loading': pageLoading,
+      'page-loading': pageLoading
     }"
   >
     <Transition name="fade">
@@ -51,7 +51,7 @@
       <div
         class="blog-layout-left-body"
         :class="{
-          active: leftMenuActive,
+          active: leftMenuActive
         }"
       >
         <!-- 关闭按钮 -->
@@ -96,7 +96,7 @@
             <div
               class="blog-layout-info-menu-bg blog-layout-info-menu-bt-img"
               :class="{
-                pageloaded: !pageLoading,
+                pageloaded: !pageLoading
               }"
             ></div>
           </transition>
@@ -106,7 +106,7 @@
       <div
         class="blog-layout-right-body custom-scroll blog-layout-right-body-full-height"
         :class="{
-          active: rightSidebarActive,
+          active: rightSidebarActive
         }"
       >
         <div class="blog-layout-right-top-body">
@@ -196,7 +196,7 @@
         ref="layoutContentBody"
         :class="{
           'page-leave-active': pageTransition,
-          'page-enter-active': !pageTransition,
+          'page-enter-active': !pageTransition
         }"
         :style="layoutContentBodyMinHeightStyle"
       >
@@ -266,7 +266,7 @@ const layoutContentBodyMinHeight = ref(null)
 const layoutContentBodyMinHeightStyle = computed(() => {
   if (layoutContentBodyMinHeight.value) {
     return {
-      minHeight: `${layoutContentBodyMinHeight.value}px`,
+      minHeight: `${layoutContentBodyMinHeight.value}px`
     }
   }
   return {}
@@ -326,7 +326,7 @@ const showLoading = siteShowLoading
 // ])
 const [naviData, sidebarData] = await Promise.all([
   getNaviListApi(),
-  getSidebarListApi(),
+  getSidebarListApi()
 ])
 
 const { data: naviListData } = naviData
@@ -337,23 +337,23 @@ const naviList = computed(() => {
     {
       naviname: '首页',
       url: '/',
-      isdefault: true,
+      isdefault: true
     },
-    ...list,
+    ...list
   ]
   // console.log(newList)
   return newList
 })
 
 const keyword = ref('')
-const escapeRegExp = (string) => {
+const escapeRegExp = string => {
   return string.replace(/[.*+?^${}()|[\]\\/]/g, '') // $& means the whole matched string
 }
 const goSearch = () => {
   const keywordValue = escapeRegExp(keyword.value.trim())
   if (keyword.value) {
     router.push({
-      path: `/post/list/keyword/${keywordValue}/1`,
+      path: `/post/list/keyword/${keywordValue}/1`
     })
     keyword.value = ''
     // 释放焦点

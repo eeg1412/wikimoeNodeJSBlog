@@ -57,10 +57,10 @@
                   'border-2 border-solid border-primary-500':
                     currentAttachmentId === item._id,
                   'border-2 border-solid border-primary-100':
-                    currentAttachmentId !== item._id,
+                    currentAttachmentId !== item._id
                 }"
                 :style="{
-                  backgroundImage: `url(${item.thumfor || item.filepath})`,
+                  backgroundImage: `url(${item.thumfor || item.filepath})`
                 }"
                 @click="goTo(index + groupPage * 9, close)"
               >
@@ -233,7 +233,7 @@ const clearPanoramaListMap = () => {
     }
   }
 }
-const clearPanoramaListMapByKey = (key) => {
+const clearPanoramaListMapByKey = key => {
   if (panoramaListMap[key]) {
     panoramaListMap[key].destroy()
     delete panoramaListMap[key]
@@ -259,7 +259,7 @@ const panoramaLang = {
   twoFingers: '使用双指导航',
   ctrlZoom: '使用Ctrl+滚轮缩放图片',
   loadError: '全景图无法加载',
-  webglError: '您的浏览器似乎不支持WebGL',
+  webglError: '您的浏览器似乎不支持WebGL'
 }
 
 const is360PanoramaActive = ref(false)
@@ -328,7 +328,7 @@ const toggleFisheye = () => {
     fisheyeMode.value = !fisheyeMode.value
     viewer.setOptions({
       fisheye: fisheyeMode.value ? 2 : 0,
-      maxFov: fisheyeMode.value ? 130 : 100,
+      maxFov: fisheyeMode.value ? 130 : 100
     })
     // 如果fisheyeMode为false，且视角大于100，重置视角为100
     if (!fisheyeMode.value) {
@@ -355,7 +355,7 @@ const componentId = generateRandomString(8)
 const attachmentList = ref([])
 const loading = ref(false)
 let loadingTimer = null
-const loadImageDimensions = async (list) => {
+const loadImageDimensions = async list => {
   if (loadingTimer) {
     clearTimeout(loadingTimer)
     loadingTimer = null
@@ -433,11 +433,11 @@ const loadNoSizeImage = (src, index) => {
     }
   })
   promise
-    .then((img) => {
+    .then(img => {
       attachmentList.value[index].width = img.width
       attachmentList.value[index].height = img.height
     })
-    .catch((err) => {
+    .catch(err => {
       console.error(err)
       attachmentList.value[index].loadFailed = true
     })
@@ -449,7 +449,7 @@ const loadNoSizeImage = (src, index) => {
         lightbox.pswp.refreshSlideContent(index)
       }
       // 移除加载中的index
-      loadingImageIndexList = loadingImageIndexList.filter((item) => {
+      loadingImageIndexList = loadingImageIndexList.filter(item => {
         return item !== index
       })
     })
@@ -460,7 +460,7 @@ const open = async (list = [], showIndex = 0, closeCallback_) => {
   }
   closeCallback = closeCallback_ || null
   await loadImageDimensions(list)
-  photoswipeInitialLayoutPromise = new Promise((resolve) => {
+  photoswipeInitialLayoutPromise = new Promise(resolve => {
     photoswipeInitialLayoutPromiseResolve = resolve
   })
   itemIndex.value = showIndex
@@ -469,22 +469,22 @@ const open = async (list = [], showIndex = 0, closeCallback_) => {
     toast.add({
       title: '暂无相关内容',
       icon: 'i-heroicons-x-circle',
-      color: 'red',
+      color: 'red'
     })
     return
   }
-  lightbox.addFilter('numItems', (numItems) => {
+  lightbox.addFilter('numItems', numItems => {
     return attachmentList.value.length
   })
 
-  const shouldPreventDefault = (target) => {
+  const shouldPreventDefault = target => {
     return (
       isAllPreventDefault ||
       target.tagName === 'VIDEO' ||
       target.tagName === 'CANVAS'
     )
   }
-  lightbox.on('pointerDown', (e) => {
+  lightbox.on('pointerDown', e => {
     // console.log(e)
     const target = e.originalEvent.target
     // 如果是video元素或者canvas元素，阻止事件冒泡
@@ -525,7 +525,7 @@ const open = async (list = [], showIndex = 0, closeCallback_) => {
           }</div>`,
           shouldLoadImageItem: true,
           imageSrc: src,
-          loadFailed: loadFailed,
+          loadFailed: loadFailed
         }
       }
     }
@@ -548,7 +548,7 @@ const open = async (list = [], showIndex = 0, closeCallback_) => {
                       type="video/mp4"
                     />
                     </video>
-                  </div>`,
+                  </div>`
       }
     }
     if (is360Panorama && mimetype.indexOf('image') > -1) {
@@ -557,13 +557,13 @@ const open = async (list = [], showIndex = 0, closeCallback_) => {
       return {
         html: `<div class="content-360panorama-body"><div class="content-360panorama-content" style="max-width:${maxWidth}px;max-height:${maxHeight}px;" id="lightbox-360panorama-${index}">加载中...</div></div>`,
         is360Panorama: true,
-        imageSrc: src,
+        imageSrc: src
       }
     }
     return {
       src: src,
       width: attachmentList.value[index].width,
-      height: attachmentList.value[index].height,
+      height: attachmentList.value[index].height
     }
   })
   lightbox.loadAndOpen(showIndex)
@@ -612,7 +612,7 @@ const initLightbox = async () => {
     closeTitle: '关闭', // TODO strings from text properties
     zoomTitle: '缩放',
     arrowPrevTitle: '上一张',
-    arrowNextTitle: '下一张',
+    arrowNextTitle: '下一张'
   })
   lightbox.init()
   // window.lightbox = lightbox
@@ -701,7 +701,7 @@ const initLightbox = async () => {
             lang: panoramaLang,
             moveSpeed: 1.5,
             // 设置鱼眼默认为0
-            fisheye: 0,
+            fisheye: 0
           })
           panoramaListMap[currIndex] = viewer
           // 更新是否为360全景的状态
@@ -734,7 +734,7 @@ const initLightbox = async () => {
         const videoList = document.querySelectorAll(
           '.previewer-video-body video'
         )
-        videoList.forEach((video) => {
+        videoList.forEach(video => {
           video.pause()
         })
         // 当前video播放
@@ -765,7 +765,7 @@ const initLightbox = async () => {
       html: `<div id="caption-${componentId}"></div>`,
       onInit: (el, pswp) => {
         console.log(el)
-      },
+      }
     })
     // 注册360度全景截图按钮
     lightbox.pswp.ui.registerElement({
@@ -773,7 +773,7 @@ const initLightbox = async () => {
       title: '截图',
       order: 9,
       isButton: true,
-      html: `<div id="photo-swipe-screenshot-${componentId}"></div>`,
+      html: `<div id="photo-swipe-screenshot-${componentId}"></div>`
     })
 
     // 注册360度全景鱼眼切换按钮
@@ -782,21 +782,21 @@ const initLightbox = async () => {
       title: '切换镜头模式',
       order: 9,
       isButton: true,
-      html: `<div id="photo-swipe-fisheye-${componentId}"></div>`,
+      html: `<div id="photo-swipe-fisheye-${componentId}"></div>`
     })
     lightbox.pswp.ui.registerElement({
       name: `photo-swipe-caption-button-${componentId}`,
       title: '描述开关',
       order: 9,
       isButton: true,
-      html: `<div id="photo-swipe-caption-${componentId}"></div>`,
+      html: `<div id="photo-swipe-caption-${componentId}"></div>`
     })
     if (attachmentList.value.length > 1) {
       lightbox.pswp.ui.registerElement({
         name: 'photo-swipe-button',
         order: 9,
         isButton: true,
-        html: `<div id="photo-swipe-${componentId}"></div>`,
+        html: `<div id="photo-swipe-${componentId}"></div>`
       })
     }
   })

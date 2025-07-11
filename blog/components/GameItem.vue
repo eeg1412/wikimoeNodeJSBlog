@@ -33,7 +33,7 @@
           <span
             class="games-platform-block"
             :style="{
-              backgroundColor: game.gamePlatform.color,
+              backgroundColor: game.gamePlatform.color
             }"
             v-if="game.gamePlatform"
             >{{ game.gamePlatform.name }}</span
@@ -137,19 +137,19 @@
 const props = defineProps({
   game: {
     type: Object,
-    required: true,
+    required: true
   },
   showAnimeDot: {
     type: Boolean,
-    default: true,
-  },
+    default: true
+  }
 })
 
-const setDataHrefList = (cover) => {
+const setDataHrefList = cover => {
   return [
     {
-      filepath: cover,
-    },
+      filepath: cover
+    }
   ]
 }
 
@@ -157,7 +157,7 @@ const setDataHrefList = (cover) => {
 const activeAlbumId = ref('')
 const AlbumPhotoSwipeRef = ref(null)
 
-const showAlbum = (id) => {
+const showAlbum = id => {
   activeAlbumId.value = id
   nextTick(() => {
     AlbumPhotoSwipeRef.value.open()

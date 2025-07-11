@@ -16,12 +16,12 @@
 const props = defineProps({
   loading: {
     type: Boolean,
-    default: false,
+    default: false
   },
   text: {
     type: String,
-    default: '',
-  },
+    default: ''
+  }
 })
 </script>
 <style scoped></style>

@@ -226,30 +226,30 @@ export default {
       keyword: '',
       gamePlatform: '',
       status: '',
-      playStatus: null,
+      playStatus: null
     })
     const total = ref(0)
     const tableRef = ref(null)
-    const getGameList = (resetPage) => {
+    const getGameList = resetPage => {
       if (resetPage === true && params.page !== 1) {
         params.page = 1
         return
       }
       authApi
         .getGameList(params)
-        .then((res) => {
+        .then(res => {
           gameList.value = res.data.list
           total.value = res.data.total
           tableRef.value.scrollTo({ top: 0 })
           setSessionParams(route.name, params)
         })
-        .catch((err) => {
+        .catch(err => {
           console.log(err)
         })
     }
     const handleAdd = () => {
       router.push({
-        name: 'GameAdd',
+        name: 'GameAdd'
       })
     }
     // 监听 params.page 的变化
@@ -260,15 +260,15 @@ export default {
       }
     )
 
-    const goEdit = (id) => {
+    const goEdit = id => {
       router.push({
         name: 'GameEdit',
         params: {
-          id,
-        },
+          id
+        }
       })
     }
-    const deleteGame = (row) => {
+    const deleteGame = row => {
       const id = row._id
       const title = escapeHtml(row.title) || '未命名'
 
@@ -280,10 +280,10 @@ export default {
             ElMessage.success('删除成功')
             getGameList()
           })
-        },
+        }
       })
         .then(() => {})
-        .catch((error) => {
+        .catch(error => {
           console.log('Dialog closed:', error)
         })
     }
@@ -300,7 +300,7 @@ export default {
         if (params.gamePlatform) {
           queryGamePlatformList(null, {
             idList: params.gamePlatform,
-            size: 999999,
+            size: 999999
           })
         }
       }
@@ -320,11 +320,11 @@ export default {
           keyword: query,
           page: 1,
           size: 50,
-          ...options,
+          ...options
         }
         authApi
           .getGamePlatformList(params, { noLoading: true })
-          .then((res) => {
+          .then(res => {
             gamePlatformList.value = res.data.list
           })
           .catch(() => {})
@@ -338,20 +338,20 @@ export default {
     const playStatusList = [
       {
         label: '尚未攻略',
-        value: 1,
+        value: 1
       },
       {
         label: '攻略中',
-        value: 2,
+        value: 2
       },
       {
         label: '已通关',
-        value: 3,
+        value: 3
       },
       {
         label: '弃坑',
-        value: 99,
-      },
+        value: 99
+      }
     ]
 
     onMounted(() => {
@@ -370,9 +370,9 @@ export default {
       gamePlatformList,
       gamePlatformListIsLoading,
       queryGamePlatformList,
-      playStatusList,
+      playStatusList
     }
-  },
+  }
 }
 </script>
 <style scoped>

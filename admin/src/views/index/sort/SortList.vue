@@ -97,21 +97,21 @@ export default {
     const router = useRouter()
     const handleAdd = () => {
       router.push({
-        name: 'SortAdd',
+        name: 'SortAdd'
       })
     }
     const list = ref([])
     const getSortList = () => {
       authApi
         .getSortList({ shouldCount: '1' })
-        .then((res) => {
+        .then(res => {
           const data = res.data.data
           // 遍历数据
           data.forEach((item, index) => {
             if (item.children && item.children.length > 0) {
               let childrenPublicPostCount = 0
               let childrenTotalPostCount = 0
-              item.children.forEach((child) => {
+              item.children.forEach(child => {
                 childrenPublicPostCount += child.publicPostCount
                 childrenTotalPostCount += child.totalPostCount
               })
@@ -123,15 +123,15 @@ export default {
         })
         .catch(() => {})
     }
-    const goEdit = (id) => {
+    const goEdit = id => {
       router.push({
         name: 'SortEdit',
         params: {
-          id,
-        },
+          id
+        }
       })
     }
-    const deleteSort = (row) => {
+    const deleteSort = row => {
       const id = row._id
       const title = escapeHtml(row.sortname)
 
@@ -143,10 +143,10 @@ export default {
             ElMessage.success('删除成功')
             getSortList()
           })
-        },
+        }
       })
         .then(() => {})
-        .catch((error) => {
+        .catch(error => {
           console.log('Dialog closed:', error)
         })
     }
@@ -154,18 +154,18 @@ export default {
       return store.getters.siteUrl
     })
 
-    const getPath = (row) => {
+    const getPath = row => {
       if (!siteUrl.value) {
         ElMessage.error('请先设置站点地址')
         return
       }
       return `${siteUrl.value}/post/list/sort/${row.alias || row._id}/1`
     }
-    const goToBlog = (row) => {
+    const goToBlog = row => {
       const url = getPath(row)
       window.open(url, '_blank')
     }
-    const copyPage = (row) => {
+    const copyPage = row => {
       const url = getPath(row)
       copyToClipboard(url)
     }
@@ -179,8 +179,8 @@ export default {
       goEdit,
       deleteSort,
       goToBlog,
-      copyPage,
+      copyPage
     }
-  },
+  }
 }
 </script>

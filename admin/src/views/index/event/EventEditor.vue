@@ -53,7 +53,7 @@
                     :rules="{
                       required: true,
                       message: '请输入链接名称',
-                      trigger: 'blur',
+                      trigger: 'blur'
                     }"
                   >
                     <el-input
@@ -70,7 +70,7 @@
                     :rules="{
                       required: true,
                       message: '请输入链接名称',
-                      trigger: 'blur',
+                      trigger: 'blur'
                     }"
                   >
                     <el-input
@@ -143,7 +143,7 @@ import RichEditor5 from '@/components/RichEditor5'
 export default {
   components: {
     EventtypeEditor,
-    RichEditor5,
+    RichEditor5
   },
   setup() {
     const router = useRouter()
@@ -199,11 +199,11 @@ export default {
       startTime: null,
       endTime: null,
       status: 0,
-      __v: null,
+      __v: null
     })
     const rules = reactive({
       eventtype: [
-        { required: true, message: '请选择活动类型', trigger: 'blur' },
+        { required: true, message: '请选择活动类型', trigger: 'blur' }
       ],
       title: [{ required: true, message: '请输入标题', trigger: 'blur' }],
       startTime: [
@@ -221,8 +221,8 @@ export default {
               callback()
             }
           },
-          trigger: 'blur',
-        },
+          trigger: 'blur'
+        }
       ],
       endTime: [
         { required: true, message: '请选择结束时间', trigger: 'blur' },
@@ -239,18 +239,18 @@ export default {
               callback()
             }
           },
-          trigger: 'blur',
-        },
-      ],
+          trigger: 'blur'
+        }
+      ]
     })
     const formRef = ref(null)
     const submit = () => {
-      formRef.value.validate(async (valid) => {
+      formRef.value.validate(async valid => {
         if (!valid) {
           return false
         }
         const data = {
-          ...form,
+          ...form
         }
         if (id.value) {
           // 编辑
@@ -260,7 +260,7 @@ export default {
             .updateEvent(data)
             .then(() => {
               router.push({
-                name: 'EventList',
+                name: 'EventList'
               })
             })
             .catch(() => {})
@@ -270,7 +270,7 @@ export default {
             .createEvent(data)
             .then(() => {
               router.push({
-                name: 'EventList',
+                name: 'EventList'
               })
             })
             .catch(() => {})
@@ -280,11 +280,11 @@ export default {
 
     const getEventDetail = () => {
       const params = {
-        id: id.value,
+        id: id.value
       }
       authApi
         .getEventDetail(params)
-        .then((res) => {
+        .then(res => {
           form.__v = res.data.data.__v
           // form.eventtype = res.data.data.eventtype?._id || null
           if (res.data.data.eventtype) {
@@ -306,7 +306,7 @@ export default {
     const eventtypeList = ref([])
     const eventtypeListIsLoading = ref(false)
     const eventtypeListTimer = null
-    const queryEventtypeList = (query) => {
+    const queryEventtypeList = query => {
       if (eventtypeListTimer) {
         clearTimeout(eventtypeListTimer)
       }
@@ -315,11 +315,11 @@ export default {
         const params = {
           keyword: query,
           page: 1,
-          size: 50,
+          size: 50
         }
         authApi
           .getEventtypeList(params, { noLoading: true })
-          .then((res) => {
+          .then(res => {
             eventtypeList.value = res.data.list
           })
           .catch(() => {})
@@ -347,9 +347,9 @@ export default {
       eventtypeList,
       eventtypeListIsLoading,
       EventtypeEditorRef,
-      open,
+      open
     }
-  },
+  }
 }
 </script>
 <style scoped>

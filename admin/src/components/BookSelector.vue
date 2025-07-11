@@ -30,16 +30,16 @@ import { authApi } from '@/api'
 const props = defineProps({
   modelValue: {
     type: Array,
-    default: () => [],
+    default: () => []
   },
   bookList: {
     type: Array,
-    default: () => [],
+    default: () => []
   },
   placeholder: {
     type: String,
-    default: '请选择书籍',
-  },
+    default: '请选择书籍'
+  }
 })
 
 const emit = defineEmits(['update:modelValue', 'update:bookList'])
@@ -53,11 +53,11 @@ const selectedBooks = computed({
   },
   set(value) {
     emit('update:modelValue', value)
-  },
+  }
 })
 
 // 检查显示文本
-const checkShowText = (item) => {
+const checkShowText = item => {
   if (item.status === 0) {
     return '【状态:不显示】'
   }
@@ -72,7 +72,7 @@ const getBookList = (keyword = null) => {
   loading.value = true
   authApi
     .getBookList({ keyword, status: 1, size: 50, page: 1 }, true)
-    .then((res) => {
+    .then(res => {
       emit('update:bookList', res.data.list)
     })
     .finally(() => {
@@ -82,7 +82,7 @@ const getBookList = (keyword = null) => {
 
 // 搜索书籍
 let queryBooksTimer = null
-const queryBooks = (query) => {
+const queryBooks = query => {
   if (queryBooksTimer) {
     clearTimeout(queryBooksTimer)
   }

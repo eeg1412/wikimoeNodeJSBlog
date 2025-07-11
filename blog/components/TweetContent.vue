@@ -16,7 +16,7 @@
         class="post-detail-tag-item hover:underline"
         :to="{
           name: 'postListTag',
-          params: { tagid: tag._id, page: 1 },
+          params: { tagid: tag._id, page: 1 }
         }"
         >#{{ tag.tagname }}</NuxtLink
       >
@@ -104,62 +104,62 @@ import { nextTick, onMounted, onUnmounted, ref } from 'vue'
 const props = defineProps({
   content: {
     type: String,
-    default: '',
+    default: ''
   },
   tags: {
     // 数组
     type: Array,
-    default: () => [],
+    default: () => []
   },
   contentEventList: {
     // 数组
     type: Array,
-    default: () => [],
+    default: () => []
   },
   contentVoteList: {
     // 数组
     type: Array,
-    default: () => [],
+    default: () => []
   },
   contentPostList: {
     // 数组
     type: Array,
-    default: () => [],
+    default: () => []
   },
   contentBangumiList: {
     // 数组
     type: Array,
-    default: () => [],
+    default: () => []
   },
   contentGameList: {
     // 数组
     type: Array,
-    default: () => [],
+    default: () => []
   },
   contentBookList: {
     // 数组
     type: Array,
-    default: () => [],
+    default: () => []
   },
   contentMovieList: {
     // 数组
     type: Array,
-    default: () => [],
+    default: () => []
   },
   coverImages: {
     // 数组
     type: Array,
-    default: () => [],
+    default: () => []
   },
   contentSeriesSortList: {
     // 数组
     type: Array,
-    default: () => [],
+    default: () => []
   },
   postId: {
     type: String,
-    default: null,
-  },
+    default: null
+  }
 })
 
 const contentSeriesSortListCom = computed(() => {
@@ -178,7 +178,7 @@ const contentJson = computed(() => {
     {
       url: 'https://www.bilibili.com/video/',
       linkTypeName: 'bilibili-video',
-      getContent: (link) => {
+      getContent: link => {
         const url = new URL(link)
         const videoId = url.pathname.split('/')[2]
         const p = url.searchParams.get('p') || ''
@@ -186,10 +186,10 @@ const contentJson = computed(() => {
         return {
           text: `哔哩哔哩视频-${videoId}`,
           id: videoId,
-          ext: { p },
+          ext: { p }
         }
-      },
-    },
+      }
+    }
   ]
   // 对content做处理
   const contentJsonArray = []
@@ -205,28 +205,28 @@ const contentJson = computed(() => {
     return [
       {
         type: 'text',
-        text: excerpt,
-      },
+        text: excerpt
+      }
     ]
   } else {
     // 遍历linkList数组
-    linkList.forEach((link) => {
+    linkList.forEach(link => {
       // 将excerpt字符串按照link进行分割
       const split = excerpt.split(link, 2)
       // 将分割后的字符串放入数组
       if (split[0]) {
         contentJsonArray.push({
           type: 'text',
-          text: split[0],
+          text: split[0]
         })
       }
       // 解析link类型
-      const linkTypeItem = linkType.find((item) => link.includes(item.url))
+      const linkTypeItem = linkType.find(item => link.includes(item.url))
       const linkObj = {
         type: 'link',
         url: link,
         text: link,
-        ext: {},
+        ext: {}
       }
       if (linkTypeItem) {
         const { text, id, ext } = linkTypeItem.getContent(link)
@@ -242,7 +242,7 @@ const contentJson = computed(() => {
       if (link === linkList[linkList.length - 1]) {
         contentJsonArray.push({
           type: 'text',
-          text: excerpt,
+          text: excerpt
         })
       }
     })
@@ -258,15 +258,15 @@ const linkCover = computed(() => {
         linkTypeName: 'bilibili-video',
         getCover: (id, ext) => {
           return `<iframe src="https://www.bilibili.com/blackboard/html5mobileplayer.html?bvid=${id}&p=${ext.p}&as_wide=1&danmaku=0&hasMuteButton=1" scrolling="no" border="0" frameborder="no" framespacing="0" allowfullscreen="true"> </iframe>`
-        },
-      },
+        }
+      }
     ]
     // 找到contentJson.value数组中有linkTypeName的第一个元素
-    const linkCoverItem = contentJson.value.find((item) => item.linkTypeName)
+    const linkCoverItem = contentJson.value.find(item => item.linkTypeName)
     if (linkCoverItem) {
       // 用linkCoverItem 去匹配coverDatabase数组中的linkTypeName
       const coverItem = coverDatabase.find(
-        (item) => item.linkTypeName === linkCoverItem.linkTypeName
+        item => item.linkTypeName === linkCoverItem.linkTypeName
       )
       if (coverItem) {
         return coverItem.getCover(linkCoverItem.id, linkCoverItem.ext)
@@ -284,7 +284,7 @@ onMounted(() => {
     timer = setTimeout(() => {
       if (linkCover.value && observee.value && observee.value.length > 0) {
         // 如果元素不在视口内，创建 IntersectionObserver
-        observer = new IntersectionObserver((entries) => {
+        observer = new IntersectionObserver(entries => {
           if (entries[0].isIntersecting) {
             linkCoverShow.value = true
             observer.disconnect()

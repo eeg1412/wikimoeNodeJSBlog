@@ -88,16 +88,16 @@ export default {
   props: {
     show: {
       type: Boolean,
-      default: false,
+      default: false
     },
     id: {
       type: String,
-      default: '',
+      default: ''
     },
     username: {
       type: String,
-      default: '',
-    },
+      default: ''
+    }
   },
   emits: ['update:show', 'deleteSuccess'],
   setup(props, { emit }) {
@@ -107,7 +107,7 @@ export default {
       },
       set(val) {
         emit('update:show', val)
-      },
+      }
     })
 
     const submit = () => {
@@ -116,7 +116,7 @@ export default {
           .deleteUser({
             id: props.id,
             changeType: form.changeType,
-            toUserId: form.toUserId,
+            toUserId: form.toUserId
           })
           .then(() => {
             ElMessage.success('删除成功')
@@ -133,7 +133,7 @@ export default {
       step: 1,
       username: '',
       changeType: null,
-      toUserId: null,
+      toUserId: null
     })
 
     const resetForm = () => {
@@ -200,7 +200,7 @@ export default {
           { keyword: userKeyword, status: 1, size: 10, page: 1 },
           true
         )
-        .then((res) => {
+        .then(res => {
           userList.value = res.data.list
         })
         .finally(() => {
@@ -208,7 +208,7 @@ export default {
         })
     }
     let queryUsersTimer = null
-    const queryUsers = (query) => {
+    const queryUsers = query => {
       if (queryUsersTimer) {
         clearTimeout(queryUsersTimer)
       }
@@ -218,8 +218,8 @@ export default {
     }
 
     const userData = ref(null)
-    const changeToUser = (val) => {
-      userData.value = userList.value.find((item) => item._id === val)
+    const changeToUser = val => {
+      userData.value = userList.value.find(item => item._id === val)
     }
 
     // watch show
@@ -242,9 +242,9 @@ export default {
       userIsLoading,
       queryUsers,
       userData,
-      changeToUser,
+      changeToUser
     }
-  },
+  }
 }
 </script>
 <style lang=""></style>

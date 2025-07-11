@@ -141,7 +141,7 @@ import { loadAndOpenImg } from '@/utils/utils'
 
 export default {
   components: {
-    AttachmentsDialog,
+    AttachmentsDialog
   },
   setup() {
     const route = useRoute()
@@ -156,12 +156,12 @@ export default {
       email: '',
       photo: '',
       description: '',
-      cover: null,
+      cover: null
     })
     const formPassword = reactive({
       currentPassword: '',
       password: '',
-      confirmPassword: '',
+      confirmPassword: ''
     })
     const rules = computed(() => {
       const rules = {
@@ -170,9 +170,9 @@ export default {
           {
             type: 'email',
             message: '请输入正确的邮箱地址',
-            trigger: 'blur',
-          },
-        ],
+            trigger: 'blur'
+          }
+        ]
       }
       return rules
     })
@@ -181,15 +181,15 @@ export default {
         /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*])[a-zA-Z\d!@#$%^&*]{4,}$/
       const rules = {
         currentPassword: [
-          { required: true, message: '请输入原密码', trigger: 'blur' },
+          { required: true, message: '请输入原密码', trigger: 'blur' }
         ],
         password: [
           { required: true, message: '请输入密码', trigger: 'blur' },
           {
             pattern: passwordReg,
             message: '密码必须包含大小写字母、数字、特殊字符',
-            trigger: 'blur',
-          },
+            trigger: 'blur'
+          }
         ],
         confirmPassword: [
           { required: true, message: '请再次输入新密码', trigger: 'blur' },
@@ -201,9 +201,9 @@ export default {
                 callback()
               }
             },
-            trigger: 'blur',
-          },
-        ],
+            trigger: 'blur'
+          }
+        ]
       }
       return rules
     })
@@ -211,7 +211,7 @@ export default {
     const setForm = () => {
       authApi
         .loginuserinfo()
-        .then((res) => {
+        .then(res => {
           const data = res.data.data
           form.nickname = data.nickname
           form.email = data.email
@@ -221,13 +221,13 @@ export default {
             coverData.value = data.cover
           }
         })
-        .catch((err) => {
+        .catch(err => {
           console.log(err)
         })
     }
 
     const submit = () => {
-      formRef.value.validate((valid) => {
+      formRef.value.validate(valid => {
         if (valid) {
           const newForm = { ...form }
           if (coverData.value) {
@@ -235,7 +235,7 @@ export default {
           }
           authApi
             .updateLoginUserInfo(newForm)
-            .then((res) => {
+            .then(res => {
               setForm()
               ElMessage.success('资料修改成功')
               store.dispatch('setAdminInfo')
@@ -244,16 +244,16 @@ export default {
               if (from) {
                 try {
                   router.push({
-                    name: from,
+                    name: from
                   })
                 } catch (error) {
                   router.push({
-                    name: 'Home',
+                    name: 'Home'
                   })
                 }
               }
             })
-            .catch((err) => {
+            .catch(err => {
               console.log(err)
             })
         } else {
@@ -263,11 +263,11 @@ export default {
     }
 
     const submitPassword = () => {
-      formRefPassword.value.validate((valid) => {
+      formRefPassword.value.validate(valid => {
         if (valid) {
           authApi
             .updateLoginUserInfo(formPassword)
-            .then((res) => {
+            .then(res => {
               // 清空密码
               formPassword.currentPassword = ''
               formPassword.password = ''
@@ -277,12 +277,12 @@ export default {
               store.dispatch('setAdminToken', '')
               // 登出
               router.replace({
-                name: 'Login',
+                name: 'Login'
               })
               // 提示
               ElMessage.success('密码修改成功，请重新登录')
             })
-            .catch((err) => {
+            .catch(err => {
               console.log(err)
             })
         } else {
@@ -291,7 +291,7 @@ export default {
       })
     }
 
-    const setPhoto = (base64) => {
+    const setPhoto = base64 => {
       form.photo = base64
     }
 
@@ -303,7 +303,7 @@ export default {
     const openAttachmentsDialog = () => {
       attachmentsDialogRef.value.open()
     }
-    const selectAttachments = (attachments) => {
+    const selectAttachments = attachments => {
       console.log(attachments)
       coverData.value = attachments[0]
     }
@@ -316,8 +316,8 @@ export default {
           src: `${siteUrl.value}${filepath}`,
           width,
           height,
-          mimetype,
-        },
+          mimetype
+        }
       ])
     }
 
@@ -340,9 +340,9 @@ export default {
       attachmentsDialogRef,
       openAttachmentsDialog,
       selectAttachments,
-      openPreviewer,
+      openPreviewer
     }
-  },
+  }
 }
 </script>
 <style lang="less" scoped></style>

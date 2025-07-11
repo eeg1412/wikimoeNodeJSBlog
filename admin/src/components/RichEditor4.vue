@@ -17,7 +17,7 @@ import {
   shallowRef,
   onMounted,
   computed,
-  watch,
+  watch
 } from 'vue'
 import AttachmentsDialog from '@/components/AttachmentsDialog'
 import E from 'wangeditor'
@@ -27,8 +27,8 @@ export default {
   props: {
     content: {
       type: String,
-      default: '',
-    },
+      default: ''
+    }
   },
   components: { AttachmentsDialog },
   setup(props, { emit }) {
@@ -42,9 +42,9 @@ export default {
     const siteUrl = computed(() => {
       return store.state.siteUrl
     })
-    const selectAttachments = (attachments) => {
+    const selectAttachments = attachments => {
       console.log(attachments)
-      attachments.forEach((item) => {
+      attachments.forEach(item => {
         // v4版本的data-href需要uri解码
         editor.cmd.do(
           'insertHTML',
@@ -67,7 +67,7 @@ export default {
       editor.create()
       editor.txt.html(props.content)
       let sendHtmlTimeout = null
-      editor.config.onchange = (newHtml) => {
+      editor.config.onchange = newHtml => {
         if (sendHtmlTimeout) {
           clearTimeout(sendHtmlTimeout)
         }
@@ -100,9 +100,9 @@ export default {
       attachmentsDialogRef,
       openAttachmentsDialog,
       selectAttachments,
-      resetContent,
+      resetContent
     }
-  },
+  }
 }
 </script>
 <style scoped>

@@ -169,7 +169,7 @@
 import {
   formatResToForm,
   formatResToObj,
-  fieldErrorNotice,
+  fieldErrorNotice
 } from '@/utils/utils'
 import { ref, reactive, onMounted } from 'vue'
 import { authApi } from '@/api'
@@ -178,7 +178,7 @@ import { ElMessage, ElMessageBox } from 'element-plus'
 import RichEditor5Switch from '@/components/RichEditor5Switch'
 export default {
   components: {
-    RichEditor5Switch,
+    RichEditor5Switch
   },
   setup(props, { emit }) {
     // 网站设置
@@ -227,7 +227,7 @@ export default {
       // 加载动画文案
       siteShowLoadingText: '',
       // 显示版本号
-      siteShowBlogVersion: false,
+      siteShowBlogVersion: false
     })
     const onSiteUrlBlur = () => {
       // 去掉最末尾的斜杠
@@ -240,22 +240,22 @@ export default {
     }
     const siteSettingsRules = {
       siteTitle: [
-        { required: true, message: '请输入站点标题', trigger: 'blur' },
+        { required: true, message: '请输入站点标题', trigger: 'blur' }
       ],
       // logo
       siteLogo: [
-        { required: true, message: '请上传站点LOGO', trigger: 'blur' },
+        { required: true, message: '请上传站点LOGO', trigger: 'blur' }
       ],
       // siteDarkLogo
       siteDarkLogo: [
-        { required: true, message: '请上传深色模式站点LOGO', trigger: 'blur' },
+        { required: true, message: '请上传深色模式站点LOGO', trigger: 'blur' }
       ],
       siteFavicon: [
-        { required: true, message: '请上传站点图标', trigger: 'blur' },
+        { required: true, message: '请上传站点图标', trigger: 'blur' }
       ],
       // siteDefaultCover
       siteDefaultCover: [
-        { required: true, message: '请上传默认封面图', trigger: 'blur' },
+        { required: true, message: '请上传默认封面图', trigger: 'blur' }
       ],
       siteUrl: [
         { required: true, message: '请输入站点地址', trigger: 'blur' },
@@ -267,52 +267,52 @@ export default {
               callback()
             }
           },
-          trigger: 'blur',
-        },
+          trigger: 'blur'
+        }
       ],
       sitePageSize: [
-        { required: true, message: '请输入每页显示', trigger: 'blur' },
+        { required: true, message: '请输入每页显示', trigger: 'blur' }
       ],
       siteTopSlideTime: [
-        { required: true, message: '请输入轮播图切换时间', trigger: 'blur' },
+        { required: true, message: '请输入轮播图切换时间', trigger: 'blur' }
       ],
       siteTimeZone: [
-        { required: true, message: '请选择你所在时区', trigger: 'blur' },
-      ],
+        { required: true, message: '请选择你所在时区', trigger: 'blur' }
+      ]
     }
-    const setSiteLogo = (crop) => {
+    const setSiteLogo = crop => {
       // file to base64
       siteSettingsForm.siteLogo = crop
     }
-    const setSiteDarkLogo = (crop) => {
+    const setSiteDarkLogo = crop => {
       siteSettingsForm.siteDarkLogo = crop
     }
-    const setSiteDefaultCover = (crop) => {
+    const setSiteDefaultCover = crop => {
       siteSettingsForm.siteDefaultCover = crop
     }
-    const setSiteFavicon = (crop) => {
+    const setSiteFavicon = crop => {
       siteSettingsForm.siteFavicon = crop
     }
     const siteSettingsSubmit = () => {
       siteSettingsFormRef.value.validate((valid, fields) => {
         if (valid) {
           const params = []
-          Object.keys(siteSettingsForm).forEach((key) => {
+          Object.keys(siteSettingsForm).forEach(key => {
             params.push({
               name: key,
-              value: siteSettingsForm[key],
+              value: siteSettingsForm[key]
             })
           })
           authApi
             .updateOption({ optionList: params })
-            .then((res) => {
+            .then(res => {
               const obj = formatResToObj(res.data.data)
               formatResToForm(siteSettingsForm, obj)
               store.dispatch('setOptions')
               emit('submitSuccess')
               ElMessage.success('更新成功')
             })
-            .catch((err) => {
+            .catch(err => {
               console.log(err)
             })
         } else {
@@ -327,14 +327,14 @@ export default {
     const getOptionList = () => {
       // 将siteSettingsForm的key转换为数组
       const params = {
-        nameList: [],
+        nameList: []
       }
-      Object.keys(siteSettingsForm).forEach((key) => {
+      Object.keys(siteSettingsForm).forEach(key => {
         params.nameList.push(key)
       })
       authApi
         .getOptionList(params)
-        .then((res) => {
+        .then(res => {
           // res.data.data是数组，需要转换为对象
           const obj = formatResToObj(res.data.data)
           formatResToForm(siteSettingsForm, obj)
@@ -348,104 +348,104 @@ export default {
       // 时区列表
       {
         label: 'UTC-12:00 国际日期变更线西',
-        value: 'Etc/GMT+12',
+        value: 'Etc/GMT+12'
       },
       {
         label: 'UTC-11:00 美国萨摩亚群岛',
-        value: 'Pacific/Pago_Pago',
+        value: 'Pacific/Pago_Pago'
       },
       {
         label: 'UTC-10:00 夏威夷',
-        value: 'Pacific/Honolulu',
+        value: 'Pacific/Honolulu'
       },
       {
         label: 'UTC-09:00 美国阿拉斯加州',
-        value: 'America/Anchorage',
+        value: 'America/Anchorage'
       },
       {
         label: 'UTC-08:00 美国加利福尼亚州',
-        value: 'America/Los_Angeles',
+        value: 'America/Los_Angeles'
       },
       {
         label: 'UTC-07:00 美国科罗拉多州',
-        value: 'America/Denver',
+        value: 'America/Denver'
       },
       {
         label: 'UTC-06:00 美国德克萨斯州',
-        value: 'America/Chicago',
+        value: 'America/Chicago'
       },
       {
         label: 'UTC-05:00 美国纽约州',
-        value: 'America/New_York',
+        value: 'America/New_York'
       },
       {
         label: 'UTC-04:00 加拿大魁北克省',
-        value: 'America/Halifax',
+        value: 'America/Halifax'
       },
       {
         label: 'UTC-03:00 巴西利亚',
-        value: 'America/Sao_Paulo',
+        value: 'America/Sao_Paulo'
       },
       {
         label: 'UTC-02:00 大西洋中部',
-        value: 'Atlantic/South_Georgia',
+        value: 'Atlantic/South_Georgia'
       },
       {
         label: 'UTC-01:00 佛得角群岛',
-        value: 'Atlantic/Cape_Verde',
+        value: 'Atlantic/Cape_Verde'
       },
       {
         label: 'UTC+00:00 英国伦敦',
-        value: 'Europe/London',
+        value: 'Europe/London'
       },
       {
         label: 'UTC+01:00 德国柏林',
-        value: 'Europe/Berlin',
+        value: 'Europe/Berlin'
       },
       {
         label: 'UTC+02:00 乌克兰基辅',
-        value: 'Europe/Kiev',
+        value: 'Europe/Kiev'
       },
       {
         label: 'UTC+03:00 俄罗斯莫斯科',
-        value: 'Europe/Moscow',
+        value: 'Europe/Moscow'
       },
       {
         label: 'UTC+04:00 亚美尼亚埃里温',
-        value: 'Asia/Yerevan',
+        value: 'Asia/Yerevan'
       },
       {
         label: 'UTC+05:00 乌兹别克斯坦塔什干',
-        value: 'Asia/Tashkent',
+        value: 'Asia/Tashkent'
       },
       {
         label: 'UTC+06:00 哈萨克斯坦阿拉木图',
-        value: 'Asia/Almaty',
+        value: 'Asia/Almaty'
       },
       {
         label: 'UTC+07:00 越南河内',
-        value: 'Asia/Bangkok',
+        value: 'Asia/Bangkok'
       },
       {
         label: 'UTC+08:00 中国北京',
-        value: 'Asia/Shanghai',
+        value: 'Asia/Shanghai'
       },
       {
         label: 'UTC+09:00 日本东京',
-        value: 'Asia/Tokyo',
+        value: 'Asia/Tokyo'
       },
       {
         label: 'UTC+10:00 澳大利亚悉尼',
-        value: 'Australia/Sydney',
+        value: 'Australia/Sydney'
       },
       {
         label: 'UTC+11:00 纽埃阿洛菲',
-        value: 'Pacific/Niue',
+        value: 'Pacific/Niue'
       },
       {
         label: 'UTC+12:00 新西兰惠灵顿',
-        value: 'Pacific/Auckland',
-      },
+        value: 'Pacific/Auckland'
+      }
     ])
 
     onMounted(() => {
@@ -464,9 +464,9 @@ export default {
       onSiteUrlBlur,
       onGravatarSourceBlur,
       inited,
-      timeZones,
+      timeZones
     }
-  },
+  }
 }
 </script>
 <style lang=""></style>

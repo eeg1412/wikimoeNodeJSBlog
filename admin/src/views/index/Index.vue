@@ -406,7 +406,7 @@ import {
   DArrowLeft,
   Grid,
   Close,
-  HomeFilled,
+  HomeFilled
 } from '@element-plus/icons-vue'
 import { authApi } from '@/api'
 import store from '@/store'
@@ -415,7 +415,7 @@ import ThemeChanger from '@/components/ThemeChanger.vue'
 
 export default {
   components: {
-    ThemeChanger,
+    ThemeChanger
   },
   setup() {
     const route = useRoute()
@@ -425,7 +425,7 @@ export default {
       return route.name
     })
 
-    const removeParam = (key) => {
+    const removeParam = key => {
       if (key) {
         sessionStorage.removeItem(key)
       }
@@ -433,7 +433,7 @@ export default {
     }
     const logout = () => {
       router.replace({
-        name: 'Login',
+        name: 'Login'
       })
       // 清除token
       localStorage.removeItem('adminToken')
@@ -459,7 +459,7 @@ export default {
     const goLoginUserEditor = () => {
       sessionStorage.setItem('LoginUserEditor-from', route.name)
       router.push({
-        name: 'LoginUserEditor',
+        name: 'LoginUserEditor'
       })
     }
 
@@ -472,9 +472,9 @@ export default {
       phoneMenuOpen.value = !phoneMenuOpen.value
     }
 
-    const openNewTab = (name) => {
+    const openNewTab = name => {
       const routeData = router.resolve({
-        name: name,
+        name: name
       })
       window.open(routeData.href, '_blank')
     }
@@ -504,9 +504,9 @@ export default {
       switchCollapse,
       phoneMenuOpen,
       switchOpenMenu,
-      openNewTab,
+      openNewTab
     }
-  },
+  }
 }
 </script>
 <style>

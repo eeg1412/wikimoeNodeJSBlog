@@ -100,7 +100,7 @@ import CheckDialogService from '@/services/CheckDialogService'
 export default {
   components: {
     AlbumEditorDialog,
-    AttachmentsDialog,
+    AttachmentsDialog
   },
   props: {
     // params
@@ -110,10 +110,10 @@ export default {
         return {
           page: 1,
           size: 50,
-          keyword: '',
+          keyword: ''
         }
-      },
-    },
+      }
+    }
   },
   emits: ['paramsChange'],
   setup(props, { emit }) {
@@ -124,7 +124,7 @@ export default {
     const params = reactive({
       page: 1,
       size: 50,
-      keyword: '',
+      keyword: ''
     })
     const total = ref(0)
     const tableRef = ref(null)
@@ -135,7 +135,7 @@ export default {
       }
       authApi
         .getAlbumList(params)
-        .then((res) => {
+        .then(res => {
           albumList.value = res.data.list
           total.value = res.data.total
           if (top) {
@@ -143,7 +143,7 @@ export default {
           }
           emit('paramsChange', params)
         })
-        .catch((err) => {
+        .catch(err => {
           console.log(err)
         })
     }
@@ -160,11 +160,11 @@ export default {
       }
     )
 
-    const goEdit = (_id) => {
+    const goEdit = _id => {
       id.value = _id
       editorShow.value = true
     }
-    const deleteAlbum = (row) => {
+    const deleteAlbum = row => {
       const id = row._id
       const title = escapeHtml(row.name)
 
@@ -176,10 +176,10 @@ export default {
             ElMessage.success('删除成功')
             getAlbumList()
           })
-        },
+        }
       })
         .then(() => {})
-        .catch((error) => {
+        .catch(error => {
           console.log('Dialog closed:', error)
         })
     }
@@ -198,7 +198,7 @@ export default {
 
     const attachmentsDialogRef = ref(null)
     const attachmentsAlbumId = ref(null)
-    const openAttachementDialog = (_id) => {
+    const openAttachementDialog = _id => {
       attachmentsAlbumId.value = _id
       nextTick(() => {
         attachmentsDialogRef.value.open()
@@ -234,9 +234,9 @@ export default {
       attachmentsDialogRef,
       attachmentsAlbumId,
       openAttachementDialog,
-      attachmentUploadSuccess,
+      attachmentUploadSuccess
     }
-  },
+  }
 }
 </script>
 <style scoped></style>

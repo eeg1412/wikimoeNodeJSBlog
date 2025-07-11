@@ -92,7 +92,7 @@
                     :rules="{
                       required: true,
                       message: '请输入链接名称',
-                      trigger: 'blur',
+                      trigger: 'blur'
                     }"
                   >
                     <el-input
@@ -109,7 +109,7 @@
                     :rules="{
                       required: true,
                       message: '请输入链接名称',
-                      trigger: 'blur',
+                      trigger: 'blur'
                     }"
                   >
                     <el-input
@@ -167,17 +167,17 @@ export default {
       label: [],
       urlList: [],
       status: 0,
-      __v: null,
+      __v: null
     })
     const rules = reactive({})
     const formRef = ref(null)
     const submit = () => {
-      formRef.value.validate(async (valid) => {
+      formRef.value.validate(async valid => {
         if (!valid) {
           return false
         }
         const data = {
-          ...form,
+          ...form
         }
         if (data.date) {
           const date = data.date.split('-')
@@ -192,7 +192,7 @@ export default {
             .updateMovie(data)
             .then(() => {
               router.push({
-                name: 'MovieList',
+                name: 'MovieList'
               })
             })
             .catch(() => {})
@@ -202,7 +202,7 @@ export default {
             .createMovie(data)
             .then(() => {
               router.push({
-                name: 'MovieList',
+                name: 'MovieList'
               })
             })
             .catch(() => {})
@@ -212,12 +212,12 @@ export default {
 
     const getMovieDetail = () => {
       const params = {
-        id: id.value,
+        id: id.value
       }
       authApi
         .getMovieDetail(params)
-        .then((res) => {
-          Object.keys(form).forEach((key) => {
+        .then(res => {
+          Object.keys(form).forEach(key => {
             if (key === 'date') {
               if (
                 res.data.data.year &&
@@ -237,7 +237,7 @@ export default {
     }
     // tag
     const inputValue = ref('')
-    const handleClose = (tag) => {
+    const handleClose = tag => {
       form.label.splice(form.label.indexOf(tag), 1)
     }
     const handleInputConfirm = () => {
@@ -246,7 +246,7 @@ export default {
       }
       inputValue.value = ''
     }
-    const setCover = (data) => {
+    const setCover = data => {
       form.cover = data
     }
 
@@ -264,9 +264,9 @@ export default {
       inputValue,
       handleClose,
       handleInputConfirm,
-      setCover,
+      setCover
     }
-  },
+  }
 }
 </script>
 <style scoped>

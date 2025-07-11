@@ -6,7 +6,7 @@
         :style="{ paddingLeft }"
         @click="goToHeader(item.dom)"
         :class="{
-          active: activeHeaderDom === item.dom,
+          active: activeHeaderDom === item.dom
         }"
       >
         {{ item.text }}
@@ -27,32 +27,32 @@ const props = defineProps({
     type: Array,
     default() {
       return []
-    },
+    }
   },
   deepLevel: {
     type: Number,
-    default: 1,
+    default: 1
   },
   activeHeaderDom: {
     type: Object,
-    default: null,
-  },
+    default: null
+  }
 })
 const paddingLeft = computed(() => {
   return `${props.deepLevel * 0.75}rem`
 })
-const goToHeader = (dom) => {
+const goToHeader = dom => {
   const header = dom
 
   if (header) {
     window.scroll({
       top: header.offsetTop,
-      behavior: 'smooth',
+      behavior: 'smooth'
     })
     emitGoToHeader(header)
   }
 }
-const emitGoToHeader = (dom) => {
+const emitGoToHeader = dom => {
   emits('goToHeader', dom)
 }
 </script>

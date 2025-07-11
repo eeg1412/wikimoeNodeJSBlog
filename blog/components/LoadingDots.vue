@@ -8,8 +8,8 @@ import { ref, onMounted, onBeforeUnmount } from 'vue'
 const props = defineProps({
   showAnimeDot: {
     type: Boolean,
-    default: true,
-  },
+    default: true
+  }
 })
 
 const dots = ref(props.showAnimeDot ? '' : '...')

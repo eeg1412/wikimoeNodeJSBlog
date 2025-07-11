@@ -16,22 +16,22 @@ import { ref, nextTick, computed } from 'vue'
 import Emoji from './Emoji.vue'
 export default {
   components: {
-    Emoji,
+    Emoji
   },
   props: {
     // value
     value: {
       type: String,
-      default: '',
+      default: ''
     },
     placeholder: {
       type: String,
-      default: '',
+      default: ''
     },
     rows: {
       type: Number,
-      default: 5,
-    },
+      default: 5
+    }
   },
   setup(props, { emit }) {
     const textAreacontent = computed({
@@ -40,10 +40,10 @@ export default {
       },
       set(val) {
         emit('update:value', val)
-      },
+      }
     })
     const contentRef = ref(null)
-    const emojiClick = (item) => {
+    const emojiClick = item => {
       console.log(contentRef.value)
       const content = textAreacontent.value
       const start = contentRef.value.textarea.selectionStart
@@ -65,9 +65,9 @@ export default {
       textAreacontent,
       contentRef,
       emojiClick,
-      emojiBtnClick,
+      emojiBtnClick
     }
-  },
+  }
 }
 </script>
 <style lang=""></style>

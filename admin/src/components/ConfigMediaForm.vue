@@ -163,7 +163,7 @@ import {
   installFFmpeg,
   uninstallFFmpeg,
   getFFmpegInstalled,
-  fieldErrorNotice,
+  fieldErrorNotice
 } from '@/utils/utils'
 import { ref, reactive, onMounted } from 'vue'
 import { authApi } from '@/api'
@@ -200,44 +200,44 @@ export default {
       // 视频压缩码率
       videoSettingCompressBitrate: 500,
       // 视频压缩帧率
-      videoSettingCompressFps: 30,
+      videoSettingCompressFps: 30
     })
     const mediaRules = {
       imgSettingCompressQuality: [
-        { required: true, message: '请输入图片压缩质量', trigger: 'blur' },
+        { required: true, message: '请输入图片压缩质量', trigger: 'blur' }
       ],
       imgSettingCompressMaxSize: [
-        { required: true, message: '请输入图片压缩最长边', trigger: 'blur' },
+        { required: true, message: '请输入图片压缩最长边', trigger: 'blur' }
       ],
       imgSettingThumbnailQuality: [
         {
           required: true,
           message: '请输入图片缩略图质量',
-          trigger: 'blur',
-        },
+          trigger: 'blur'
+        }
       ],
       imgSettingThumbnailMaxSize: [
         {
           required: true,
           message: '请输入图片缩略图最长边',
-          trigger: 'blur',
-        },
-      ],
+          trigger: 'blur'
+        }
+      ]
     }
 
     const mediaSubmit = () => {
       mediaFormRef.value.validate((valid, fields) => {
         if (valid) {
           const params = []
-          Object.keys(mediaForm).forEach((key) => {
+          Object.keys(mediaForm).forEach(key => {
             params.push({
               name: key,
-              value: mediaForm[key],
+              value: mediaForm[key]
             })
           })
           authApi
             .updateOption({ optionList: params })
-            .then((res) => {
+            .then(res => {
               const obj = formatResToObj(res.data.data)
               formatResToForm(mediaForm, obj)
               store.dispatch('setOptions')
@@ -245,7 +245,7 @@ export default {
 
               ElMessage.success('更新成功')
             })
-            .catch((err) => {
+            .catch(err => {
               console.log(err)
             })
         } else {
@@ -259,14 +259,14 @@ export default {
     const getOptionList = () => {
       // 将mediaForm的key转换为数组
       const params = {
-        nameList: [],
+        nameList: []
       }
-      Object.keys(mediaForm).forEach((key) => {
+      Object.keys(mediaForm).forEach(key => {
         params.nameList.push(key)
       })
       authApi
         .getOptionList(params)
-        .then((res) => {
+        .then(res => {
           // res.data.data是数组，需要转换为对象
           const obj = formatResToObj(res.data.data)
           formatResToForm(mediaForm, obj)
@@ -287,14 +287,14 @@ export default {
       }
       installLoading.value = true
       installFFmpeg(installBaseUrl.value)
-        .then((res) => {
+        .then(res => {
           installLoading.value = false
-          getFFmpegInstalled().then((res) => {
+          getFFmpegInstalled().then(res => {
             ffmpegInstalled.value = res
           })
           ElMessage.success('安装成功')
         })
-        .catch((err) => {
+        .catch(err => {
           installLoading.value = false
           ElMessage.error('安装失败')
         })
@@ -303,12 +303,12 @@ export default {
       ElMessageBox.confirm('确定要卸载吗？', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
-        type: 'warning',
+        type: 'warning'
       })
         .then(() => {
           uninstallFFmpeg()
-            .then((res) => {
-              getFFmpegInstalled().then((res) => {
+            .then(res => {
+              getFFmpegInstalled().then(res => {
                 ffmpegInstalled.value = res
               })
               ElMessage.success('卸载成功')
@@ -322,7 +322,7 @@ export default {
 
     onMounted(() => {
       getOptionList()
-      getFFmpegInstalled().then((res) => {
+      getFFmpegInstalled().then(res => {
         ffmpegInstalled.value = res
       })
     })
@@ -336,8 +336,8 @@ export default {
       installLoading,
       installBaseUrl,
       tryInstallFFmpeg,
-      tryUninstallFFmpeg,
+      tryUninstallFFmpeg
     }
-  },
+  }
 }
 </script>

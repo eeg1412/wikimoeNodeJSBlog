@@ -27,16 +27,16 @@ import draggable from 'vuedraggable'
 const props = defineProps({
   modelValue: {
     type: Array,
-    default: () => [],
+    default: () => []
   },
   map: {
     type: Object,
-    default: () => ({}),
+    default: () => ({})
   },
   maxWidth: {
     type: String,
-    default: '100%',
-  },
+    default: '100%'
+  }
 })
 
 const emit = defineEmits(['update:modelValue'])
@@ -46,19 +46,19 @@ const innerList = computed({
   get: () => {
     return props.modelValue.map((text, index) => ({
       id: index.toString(),
-      text,
+      text
     }))
   },
-  set: (val) => {
+  set: val => {
     emit(
       'update:modelValue',
-      val.map((item) => item.text)
+      val.map(item => item.text)
     )
-  },
+  }
 })
 
 // 根据 map 获取显示文本
-const getDisplayText = (text) => {
+const getDisplayText = text => {
   return props.map && props.map[text] !== undefined ? props.map[text] : text
 }
 </script>

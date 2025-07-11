@@ -98,7 +98,7 @@ import { authApi } from '@/api'
 import EmojiTextarea from '@/components/EmojiTextarea.vue'
 export default {
   components: {
-    EmojiTextarea,
+    EmojiTextarea
   },
   setup() {
     const router = useRouter()
@@ -116,9 +116,9 @@ export default {
         post: '',
         content: '',
         parent: '',
-        top: false,
+        top: false
       },
-      __v: null,
+      __v: null
     })
     // 回复Flag
     const replyFlag = ref(false)
@@ -127,32 +127,32 @@ export default {
     const rules = computed(() => {
       const ruleList = {
         content: [
-          { required: true, message: '请输入评论内容', trigger: 'blur' },
-        ],
+          { required: true, message: '请输入评论内容', trigger: 'blur' }
+        ]
       }
       if (!detailData.user) {
         ruleList.nickname = [
-          { required: true, message: '请输入昵称', trigger: 'blur' },
+          { required: true, message: '请输入昵称', trigger: 'blur' }
         ]
         // 校验邮箱
         ruleList.email = [
           {
             type: 'email',
             message: '请输入正确的邮箱地址',
-            trigger: ['blur', 'change'],
-          },
+            trigger: ['blur', 'change']
+          }
         ]
       }
       if (replyFlag.value) {
         ruleList['reply.content'] = [
-          { required: true, message: '请输入回复内容', trigger: 'blur' },
+          { required: true, message: '请输入回复内容', trigger: 'blur' }
         ]
       }
       return ruleList
     })
     const formRef = ref(null)
     const submit = () => {
-      formRef.value.validate(async (valid) => {
+      formRef.value.validate(async valid => {
         if (!valid) {
           return false
         }
@@ -173,15 +173,15 @@ export default {
             if (replyFlag.value && data.status === 1) {
               // 回复
               const replyData = JSON.parse(JSON.stringify(form.reply))
-              authApi.createComment(replyData).then((res) => {
+              authApi.createComment(replyData).then(res => {
                 router.push({
-                  name: 'CommentList',
+                  name: 'CommentList'
                 })
               })
               return
             }
             router.push({
-              name: 'CommentList',
+              name: 'CommentList'
             })
           })
           .catch(() => {})
@@ -190,11 +190,11 @@ export default {
 
     const getCommentDetail = () => {
       const params = {
-        id: id.value,
+        id: id.value
       }
       authApi
         .getCommentDetail(params)
-        .then((res) => {
+        .then(res => {
           detailData.value = res.data.data
           form.content = res.data.data.content
           form.top = res.data.data.top
@@ -231,9 +231,9 @@ export default {
       showForm,
       rules,
       formRef,
-      submit,
+      submit
     }
-  },
+  }
 }
 </script>
 <style scoped>

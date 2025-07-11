@@ -21,7 +21,7 @@
             class="calendar-day"
             :class="{
               'is-now': day.month === nowMonth && day.day === nowDay,
-              pointer: dayHaveEvent(day),
+              pointer: dayHaveEvent(day)
             }"
             @click="dayClick(day)"
           >
@@ -53,12 +53,12 @@ import moment from 'moment'
 const props = defineProps({
   events: {
     type: Array,
-    default: () => [],
+    default: () => []
   },
   startTime: {
     type: Object,
-    default: moment(),
-  },
+    default: moment()
+  }
 })
 
 // 今天的日子
@@ -72,7 +72,7 @@ const currentDate = computed(() => {
 
 const emits = defineEmits(['eventClick', 'dayClick'])
 
-const eventClick = (event) => {
+const eventClick = event => {
   emits('eventClick', event)
 }
 
@@ -114,7 +114,7 @@ const getCalendar = () => {
         day: calendarDate.get('date'),
         month: calendarDate.format('YYYY-MM'),
         monthDay: calendarDate.format('YYYY-MM-DD'),
-        dayEvents,
+        dayEvents
       })
       calendarDate.add(1, 'days')
     }
@@ -138,7 +138,7 @@ const getStackEvents = (
   )
   let width = getEventWidth(start, event.endTime, day)
   Object.assign(event, {
-    stackIndex,
+    stackIndex
   })
   dayEvents.push({ ...event, width })
   stackIndex++
@@ -147,9 +147,7 @@ const getStackEvents = (
 const getStartedEvents = (stackIndex, startedEvents, dayEvents) => {
   let startedEvent
   do {
-    startedEvent = startedEvents.find(
-      (event) => event.stackIndex === stackIndex
-    )
+    startedEvent = startedEvents.find(event => event.stackIndex === stackIndex)
     if (startedEvent) {
       dayEvents.push(startedEvent) //ダミー領域として利用するため
       stackIndex++
@@ -162,7 +160,7 @@ const getDayEvents = (date, day) => {
   let stackIndex = 0
   let dayEvents = []
   let startedEvents = []
-  sortedEvents.value.forEach((event) => {
+  sortedEvents.value.forEach(event => {
     let startDate = moment(event.startTime).format('YYYY-MM-DD')
     let endDate = moment(event.endTime).format('YYYY-MM-DD')
     let Date = date.format('YYYY-MM-DD')
@@ -193,7 +191,7 @@ const getDayEvents = (date, day) => {
   return dayEvents
 }
 
-const youbi = (dayIndex) => {
+const youbi = dayIndex => {
   const week = ['日', '一', '二', '三', '四', '五', '六']
   return week[dayIndex]
 }
@@ -206,7 +204,7 @@ const calendars = computed(() => {
 let dayEventIdMap = {}
 const getDayEventCountMap = () => {
   dayEventIdMap = {}
-  sortedEvents.value.forEach((event) => {
+  sortedEvents.value.forEach(event => {
     const startDate = moment(event.startTime).format('YYYY-MM-DD')
     const endDate = moment(event.endTime).format('YYYY-MM-DD')
     const betweenDays = moment(endDate).diff(moment(startDate), 'days')
@@ -236,11 +234,11 @@ const sortedEvents = computed(() => {
   })
 })
 
-const dayHaveEvent = (day) => {
+const dayHaveEvent = day => {
   const { monthDay } = day
   return dayEventIdMap[monthDay]
 }
-const dayClick = (day) => {
+const dayClick = day => {
   console.log(day, dayEventIdMap)
   if (!dayHaveEvent(day)) return
   emits('dayClick', day, dayEventIdMap)

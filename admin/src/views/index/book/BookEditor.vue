@@ -98,7 +98,7 @@
                     :rules="{
                       required: true,
                       message: '请输入链接名称',
-                      trigger: 'blur',
+                      trigger: 'blur'
                     }"
                   >
                     <el-input
@@ -115,7 +115,7 @@
                     :rules="{
                       required: true,
                       message: '请输入链接名称',
-                      trigger: 'blur',
+                      trigger: 'blur'
                     }"
                   >
                     <el-input
@@ -192,7 +192,7 @@ import { authApi } from '@/api'
 import BooktypeEditor from '@/components/BooktypeEditor.vue'
 export default {
   components: {
-    BooktypeEditor,
+    BooktypeEditor
   },
   setup() {
     const router = useRouter()
@@ -210,7 +210,7 @@ export default {
       startTime: null,
       endTime: null,
       giveUp: false,
-      status: 0,
+      status: 0
     })
     const rules = reactive({
       booktype: [{ required: true, message: '请选择类型', trigger: 'blur' }],
@@ -225,8 +225,8 @@ export default {
               callback()
             }
           },
-          trigger: 'blur',
-        },
+          trigger: 'blur'
+        }
       ],
       endTime: [
         {
@@ -241,18 +241,18 @@ export default {
               callback()
             }
           },
-          trigger: 'blur',
-        },
-      ],
+          trigger: 'blur'
+        }
+      ]
     })
     const formRef = ref(null)
     const submit = () => {
-      formRef.value.validate(async (valid) => {
+      formRef.value.validate(async valid => {
         if (!valid) {
           return false
         }
         const data = {
-          ...form,
+          ...form
         }
         if (!data.booktype) {
           data.booktype = null
@@ -265,7 +265,7 @@ export default {
             .updateBook(data)
             .then(() => {
               router.push({
-                name: 'BookList',
+                name: 'BookList'
               })
             })
             .catch(() => {})
@@ -275,7 +275,7 @@ export default {
             .createBook(data)
             .then(() => {
               router.push({
-                name: 'BookList',
+                name: 'BookList'
               })
             })
             .catch(() => {})
@@ -285,11 +285,11 @@ export default {
 
     const getBookDetail = () => {
       const params = {
-        id: id.value,
+        id: id.value
       }
       authApi
         .getBookDetail(params)
-        .then((res) => {
+        .then(res => {
           form.__v = res.data.data.__v
           if (res.data.data.booktype) {
             form.booktype = res.data.data.booktype._id
@@ -312,7 +312,7 @@ export default {
 
     // tag
     const inputValue = ref('')
-    const handleClose = (tag) => {
+    const handleClose = tag => {
       form.label.splice(form.label.indexOf(tag), 1)
     }
     const handleInputConfirm = () => {
@@ -321,7 +321,7 @@ export default {
       }
       inputValue.value = ''
     }
-    const setCover = (data) => {
+    const setCover = data => {
       form.cover = data
     }
 
@@ -329,7 +329,7 @@ export default {
     const booktypeList = ref([])
     const booktypeListIsLoading = ref(false)
     const booktypeListTimer = null
-    const queryBooktypeList = (query) => {
+    const queryBooktypeList = query => {
       if (booktypeListTimer) {
         clearTimeout(booktypeListTimer)
       }
@@ -338,11 +338,11 @@ export default {
         const params = {
           keyword: query,
           page: 1,
-          size: 50,
+          size: 50
         }
         authApi
           .getBooktypeList(params, { noLoading: true })
-          .then((res) => {
+          .then(res => {
             booktypeList.value = res.data.list
           })
           .catch(() => {})
@@ -396,9 +396,9 @@ export default {
       queryBooktypeList,
       BooktypeEditorRef,
       open,
-      readStatus,
+      readStatus
     }
-  },
+  }
 }
 </script>
 <style scoped>

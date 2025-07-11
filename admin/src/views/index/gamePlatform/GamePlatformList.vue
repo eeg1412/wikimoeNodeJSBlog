@@ -103,7 +103,7 @@ import CheckDialogService from '@/services/CheckDialogService'
 
 export default {
   components: {
-    GamePlatformEditor,
+    GamePlatformEditor
   },
   setup() {
     const route = useRoute()
@@ -112,24 +112,24 @@ export default {
     const params = reactive({
       page: 1,
       size: 50,
-      keyword: '',
+      keyword: ''
     })
     const total = ref(0)
     const tableRef = ref(null)
-    const getGamePlatformList = (resetPage) => {
+    const getGamePlatformList = resetPage => {
       if (resetPage === true && params.page !== 1) {
         params.page = 1
         return
       }
       authApi
         .getGamePlatformList(params)
-        .then((res) => {
+        .then(res => {
           gamePlatformList.value = res.data.list
           total.value = res.data.total
           tableRef.value.scrollTo({ top: 0 })
           setSessionParams(route.name, params)
         })
-        .catch((err) => {
+        .catch(err => {
           console.log(err)
         })
     }
@@ -149,13 +149,13 @@ export default {
       }
     )
 
-    const goEdit = (id) => {
+    const goEdit = id => {
       activeId.value = id
       nextTick(() => {
         GamePlatformEditorRef.value.open()
       })
     }
-    const deleteGamePlatform = (row) => {
+    const deleteGamePlatform = row => {
       const id = row._id
       const title = escapeHtml(row.name) || '未命名'
 
@@ -167,10 +167,10 @@ export default {
             ElMessage.success('删除成功')
             getGamePlatformList()
           })
-        },
+        }
       })
         .then(() => {})
-        .catch((error) => {
+        .catch(error => {
           console.log('Dialog closed:', error)
         })
     }
@@ -197,9 +197,9 @@ export default {
       activeId,
       handleAdd,
       goEdit,
-      deleteGamePlatform,
+      deleteGamePlatform
     }
-  },
+  }
 }
 </script>
 <style scoped>

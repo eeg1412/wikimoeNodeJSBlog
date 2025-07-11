@@ -28,16 +28,16 @@ import { authApi } from '@/api'
 const props = defineProps({
   modelValue: {
     type: Array,
-    default: () => [],
+    default: () => []
   },
   voteList: {
     type: Array,
-    default: () => [],
+    default: () => []
   },
   placeholder: {
     type: String,
-    default: '请选择投票',
-  },
+    default: '请选择投票'
+  }
 })
 
 const emit = defineEmits(['update:modelValue', 'update:voteList'])
@@ -51,7 +51,7 @@ const selectedVotes = computed({
   },
   set(value) {
     emit('update:modelValue', value)
-  },
+  }
 })
 
 // 获取投票列表
@@ -62,7 +62,7 @@ const getVoteList = (keyword = null) => {
   loading.value = true
   authApi
     .getVoteList({ keyword, status: 1, size: 50, page: 1 }, true)
-    .then((res) => {
+    .then(res => {
       emit('update:voteList', res.data.list)
     })
     .finally(() => {
@@ -72,7 +72,7 @@ const getVoteList = (keyword = null) => {
 
 // 搜索投票
 let queryVotesTimer = null
-const queryVotes = (query) => {
+const queryVotes = query => {
   if (queryVotesTimer) {
     clearTimeout(queryVotesTimer)
   }
@@ -82,7 +82,7 @@ const queryVotes = (query) => {
 }
 
 // 检查显示文本
-const checkShowText = (item) => {
+const checkShowText = item => {
   if (item.status === 0) {
     return '【状态:不显示】'
   }

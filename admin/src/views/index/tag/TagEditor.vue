@@ -40,19 +40,19 @@ export default {
     // // tagname	String	是	否	无	标签名称
     const form = reactive({
       tagname: '',
-      __v: null,
+      __v: null
     })
     const rules = reactive({
-      tagname: [{ required: true, message: '请输入标签名称', trigger: 'blur' }],
+      tagname: [{ required: true, message: '请输入标签名称', trigger: 'blur' }]
     })
     const formRef = ref(null)
     const submit = () => {
-      formRef.value.validate(async (valid) => {
+      formRef.value.validate(async valid => {
         if (!valid) {
           return false
         }
         const data = {
-          tagname: form.tagname,
+          tagname: form.tagname
         }
         if (id.value) {
           // 编辑
@@ -62,7 +62,7 @@ export default {
             .updateTag(data)
             .then(() => {
               router.push({
-                name: 'TagList',
+                name: 'TagList'
               })
             })
             .catch(() => {})
@@ -72,7 +72,7 @@ export default {
             .createTag(data)
             .then(() => {
               router.push({
-                name: 'TagList',
+                name: 'TagList'
               })
             })
             .catch(() => {})
@@ -82,11 +82,11 @@ export default {
 
     const getTagDetail = () => {
       const params = {
-        id: id.value,
+        id: id.value
       }
       authApi
         .getTagDetail(params)
-        .then((res) => {
+        .then(res => {
           form.tagname = res.data.data.tagname
           form.__v = res.data.data.__v
         })
@@ -103,9 +103,9 @@ export default {
       form,
       rules,
       formRef,
-      submit,
+      submit
     }
-  },
+  }
 }
 </script>
 <style scoped></style>

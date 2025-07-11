@@ -18,25 +18,25 @@ const page = route.params.page
 if (!/^\d+$/.test(page)) {
   showError({
     statusCode: 404,
-    message: '页面不存在',
+    message: '页面不存在'
   })
   throw new Error('页面不存在')
 }
 const tagid = route.params.tagid
 const { data } = await getTagDetailApi({
-  id: tagid,
+  id: tagid
 })
 useSeoMeta({
   title: data.value.data.tagname,
   ogTitle: data.value.data.tagname,
   // twitter
-  twitterTitle: data.value.data.tagname,
+  twitterTitle: data.value.data.tagname
 })
 onMounted(() => {
   postLogCreateApi({
     action: 'postListTag',
     tagid: tagid,
-    tagname: data.value.data.tagname,
+    tagname: data.value.data.tagname
   })
 })
 </script>

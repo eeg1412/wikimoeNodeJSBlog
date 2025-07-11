@@ -158,7 +158,7 @@ import { onMounted, reactive, ref, watch } from 'vue'
 import {
   setSessionParams,
   getSessionParams,
-  copyToClipboard,
+  copyToClipboard
 } from '@/utils/utils'
 export default {
   setup() {
@@ -170,24 +170,24 @@ export default {
       ip: '',
       rssPath: '',
       reader: '',
-      keyword: '',
+      keyword: ''
     })
     const total = ref(0)
     const tableRef = ref(null)
-    const getRsslogList = (resetPage) => {
+    const getRsslogList = resetPage => {
       if (resetPage === true && params.page !== 1) {
         params.page = 1
         return
       }
       authApi
         .getRsslogList(params)
-        .then((res) => {
+        .then(res => {
           rsslogList.value = res.data.list
           total.value = res.data.total
           tableRef.value.scrollTo({ top: 0 })
           setSessionParams(route.name, params)
         })
-        .catch((err) => {
+        .catch(err => {
           console.log(err)
         })
     }
@@ -228,9 +228,9 @@ export default {
       tableRef,
       getRsslogList,
       // 搜索
-      addParamsAndSearch,
+      addParamsAndSearch
     }
-  },
+  }
 }
 </script>
 <style lang=""></style>

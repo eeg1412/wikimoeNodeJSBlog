@@ -21,7 +21,7 @@
               v-model="params.actionList"
               placeholder="动作"
               :style="{
-                minWidth: '180px',
+                minWidth: '180px'
               }"
               clearable
               multiple
@@ -309,7 +309,7 @@ import {
   setSessionParams,
   getSessionParams,
   copyToClipboard,
-  formatDate,
+  formatDate
 } from '@/utils/utils'
 import store from '@/store'
 import CheckDialogService from '@/services/CheckDialogService'
@@ -330,12 +330,12 @@ export default {
       postDislike: '取消文章点赞',
       commentLike: '评论点赞',
       commentDislike: '取消评论点赞',
-      commentRetract: '撤回评论',
+      commentRetract: '撤回评论'
     }
     const actionList = ref(
-      Object.keys(actionMap).map((key) => ({
+      Object.keys(actionMap).map(key => ({
         value: key,
-        label: actionMap[key],
+        label: actionMap[key]
       }))
     )
     const readerlogList = ref([])
@@ -346,21 +346,21 @@ export default {
       ip: '',
       uuid: '',
       keyword: '',
-      isBot: null,
+      isBot: null
     })
     const total = ref(0)
     const tableRef = ref(null)
-    const getReaderlogList = (resetPage) => {
+    const getReaderlogList = resetPage => {
       if (resetPage === true && params.page !== 1) {
         params.page = 1
         return
       }
       authApi
         .getReaderlogList(params)
-        .then((res) => {
+        .then(res => {
           const list = res.data.list
           // 查询action是postListArchive 时，将title中的年月提取出来，放到targetId中
-          list.forEach((item) => {
+          list.forEach(item => {
             if (item.action === 'postListArchive' && item.data.content) {
               const title = item.data.content
               const year = title.slice(2, 6)
@@ -373,7 +373,7 @@ export default {
           tableRef.value.scrollTo({ top: 0 })
           setSessionParams(route.name, params)
         })
-        .catch((err) => {
+        .catch(err => {
           console.log(err)
         })
     }
@@ -401,14 +401,14 @@ export default {
         params.isBot = sessionParams.isBot
       }
     }
-    const targetToPath = (target) => {
+    const targetToPath = target => {
       const targetMap = {
         blog: '/post/{id}',
         tweet: '/post/{id}',
         page: '/page/{id}',
         sort: '/post/list/sort/{id}/1',
         tag: '/post/list/tag/{id}/1',
-        archive: '/post/list/archive/{id}/1',
+        archive: '/post/list/archive/{id}/1'
       }
       if (targetMap[target]) {
         return targetMap[target]
@@ -421,7 +421,7 @@ export default {
       return store.getters.siteUrl
     })
 
-    const getPath = (row) => {
+    const getPath = row => {
       if (!siteUrl.value) {
         ElMessage.error('请先设置站点地址')
         return
@@ -435,7 +435,7 @@ export default {
 
       return siteUrl.value + path
     }
-    const goToBlog = (row) => {
+    const goToBlog = row => {
       const url = getPath(row)
       window.open(url, '_blank')
     }
@@ -443,7 +443,7 @@ export default {
     const stats = ref({
       isExceedMaxSize: 0,
       maxReaderlogsSize: 0,
-      size: 0,
+      size: 0
     })
     const maxlogsSizeMB = computed(() => {
       let size = (stats.value.maxReaderlogsSize / 1024 / 1024).toFixed(3)
@@ -455,7 +455,7 @@ export default {
       return Number(size)
     })
     const getlogStats = () => {
-      authApi.getReaderlogStats().then((res) => {
+      authApi.getReaderlogStats().then(res => {
         stats.value = res.data.stats
       })
     }
@@ -470,21 +470,21 @@ export default {
     const deleteForm = reactive({
       // 开始结束时间
       startTime: null,
-      endTime: null,
+      endTime: null
     })
     const deleteRules = {
       startTime: [
         {
           required: true,
           message: '请选择开始时间',
-          trigger: 'blur',
-        },
+          trigger: 'blur'
+        }
       ],
       endTime: [
         {
           required: true,
           message: '请选择结束时间',
-          trigger: 'blur',
+          trigger: 'blur'
         },
         {
           validator: (rule, value, callback) => {
@@ -494,13 +494,13 @@ export default {
               callback()
             }
           },
-          trigger: 'blur',
-        },
-      ],
+          trigger: 'blur'
+        }
+      ]
     }
     const deleteDialogRef = ref(null)
     const deletelog = () => {
-      deleteDialogRef.value.validate((valid) => {
+      deleteDialogRef.value.validate(valid => {
         if (valid) {
           // 确认删除
           const text = `${formatDate(deleteForm.startTime)} 到 ${formatDate(
@@ -514,9 +514,9 @@ export default {
               return authApi
                 .deleteReaderlog({
                   startTime: deleteForm.startTime,
-                  endTime: deleteForm.endTime,
+                  endTime: deleteForm.endTime
                 })
-                .then((res) => {
+                .then(res => {
                   const deletedCount = res.data.data.deletedCount
                   ElMessage.success(
                     '删除成功，共删除' + deletedCount + '条日志'
@@ -525,20 +525,20 @@ export default {
                   getlogStats()
                   deleteDialogVisible.value = false
                 })
-                .catch((err) => {
+                .catch(err => {
                   console.log(err)
                 })
-            },
+            }
           })
             .then(() => {})
-            .catch((error) => {
+            .catch(error => {
               console.log('Dialog closed:', error)
             })
         }
       })
     }
 
-    const msToSec = (ms) => {
+    const msToSec = ms => {
       if (!ms && ms !== 0) {
         return ''
       }
@@ -573,9 +573,9 @@ export default {
       openDeleteDialog,
       deleteDialogRef,
       deletelog,
-      msToSec,
+      msToSec
     }
-  },
+  }
 }
 </script>
 <style scoped></style>

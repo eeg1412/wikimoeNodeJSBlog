@@ -118,7 +118,7 @@
                     :rules="{
                       required: true,
                       message: '请输入链接名称',
-                      trigger: 'blur',
+                      trigger: 'blur'
                     }"
                   >
                     <el-input
@@ -135,7 +135,7 @@
                     :rules="{
                       required: true,
                       message: '请输入链接名称',
-                      trigger: 'blur',
+                      trigger: 'blur'
                     }"
                   >
                     <el-input
@@ -212,7 +212,7 @@ import { authApi } from '@/api'
 import GamePlatformEditor from '@/components/GamePlatformEditor.vue'
 export default {
   components: {
-    GamePlatformEditor,
+    GamePlatformEditor
   },
   setup() {
     const router = useRouter()
@@ -231,7 +231,7 @@ export default {
       startTime: null,
       endTime: null,
       giveUp: false,
-      status: 0,
+      status: 0
     })
     const rules = reactive({
       // title
@@ -245,8 +245,8 @@ export default {
               callback()
             }
           },
-          trigger: 'blur',
-        },
+          trigger: 'blur'
+        }
       ],
       endTime: [
         {
@@ -261,18 +261,18 @@ export default {
               callback()
             }
           },
-          trigger: 'blur',
-        },
-      ],
+          trigger: 'blur'
+        }
+      ]
     })
     const formRef = ref(null)
     const submit = () => {
-      formRef.value.validate(async (valid) => {
+      formRef.value.validate(async valid => {
         if (!valid) {
           return false
         }
         const data = {
-          ...form,
+          ...form
         }
         // 如果平台和相册为空则改为null
         if (!data.gamePlatform) {
@@ -289,7 +289,7 @@ export default {
             .updateGame(data)
             .then(() => {
               router.push({
-                name: 'GameList',
+                name: 'GameList'
               })
             })
             .catch(() => {})
@@ -299,7 +299,7 @@ export default {
             .createGame(data)
             .then(() => {
               router.push({
-                name: 'GameList',
+                name: 'GameList'
               })
             })
             .catch(() => {})
@@ -309,11 +309,11 @@ export default {
 
     const getGameDetail = () => {
       const params = {
-        id: id.value,
+        id: id.value
       }
       authApi
         .getGameDetail(params)
-        .then((res) => {
+        .then(res => {
           form.__v = res.data.data.__v
           if (res.data.data.gamePlatform) {
             form.gamePlatform = res.data.data.gamePlatform._id
@@ -340,7 +340,7 @@ export default {
 
     // tag
     const inputValue = ref('')
-    const handleClose = (tag) => {
+    const handleClose = tag => {
       form.label.splice(form.label.indexOf(tag), 1)
     }
     const handleInputConfirm = () => {
@@ -349,7 +349,7 @@ export default {
       }
       inputValue.value = ''
     }
-    const setCover = (data) => {
+    const setCover = data => {
       form.cover = data
     }
 
@@ -357,7 +357,7 @@ export default {
     const gamePlatformList = ref([])
     const gamePlatformListIsLoading = ref(false)
     const gamePlatformListTimer = null
-    const queryGamePlatformList = (query) => {
+    const queryGamePlatformList = query => {
       if (gamePlatformListTimer) {
         clearTimeout(gamePlatformListTimer)
       }
@@ -366,11 +366,11 @@ export default {
         const params = {
           keyword: query,
           page: 1,
-          size: 50,
+          size: 50
         }
         authApi
           .getGamePlatformList(params, { noLoading: true })
-          .then((res) => {
+          .then(res => {
             gamePlatformList.value = res.data.list
           })
           .catch(() => {})
@@ -383,7 +383,7 @@ export default {
     const screenshotAlbumList = ref([])
     const screenshotAlbumListIsLoading = ref(false)
     const screenshotAlbumListTimer = null
-    const queryScreenshotAlbumList = (query) => {
+    const queryScreenshotAlbumList = query => {
       if (screenshotAlbumListTimer) {
         clearTimeout(screenshotAlbumListTimer)
       }
@@ -392,11 +392,11 @@ export default {
         const params = {
           keyword: query,
           page: 1,
-          size: 50,
+          size: 50
         }
         authApi
           .getAlbumList(params, { noLoading: true })
-          .then((res) => {
+          .then(res => {
             screenshotAlbumList.value = res.data.list
           })
           .catch(() => {})
@@ -454,9 +454,9 @@ export default {
       queryScreenshotAlbumList,
       GamePlatformEditorRef,
       open,
-      playStatus,
+      playStatus
     }
-  },
+  }
 }
 </script>
 <style scoped>

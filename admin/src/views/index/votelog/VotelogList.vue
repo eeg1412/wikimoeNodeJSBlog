@@ -214,7 +214,7 @@ import {
   setSessionParams,
   getSessionParams,
   copyToClipboard,
-  formatDate,
+  formatDate
 } from '@/utils/utils'
 import store from '@/store'
 import CheckDialogService from '@/services/CheckDialogService'
@@ -222,7 +222,7 @@ import CheckOption from '@/components/CheckOption.vue'
 
 export default {
   components: {
-    CheckOption,
+    CheckOption
   },
   setup() {
     const route = useRoute()
@@ -233,24 +233,24 @@ export default {
       size: 50,
       ip: '',
       uuid: '',
-      keyword: '',
+      keyword: ''
     })
     const total = ref(0)
     const tableRef = ref(null)
-    const getVoteLogList = (resetPage) => {
+    const getVoteLogList = resetPage => {
       if (resetPage === true && params.page !== 1) {
         params.page = 1
         return
       }
       authApi
         .getVoteLogList(params)
-        .then((res) => {
+        .then(res => {
           voteLogList.value = res.data.list
           total.value = res.data.total
           tableRef.value.scrollTo({ top: 0 })
           setSessionParams(route.name, params)
         })
-        .catch((err) => {
+        .catch(err => {
           console.log(err)
         })
     }
@@ -276,7 +276,7 @@ export default {
         params.uuid = sessionParams.uuid
       }
     }
-    const titleLimit = (title) => {
+    const titleLimit = title => {
       let title_ = Array.from(title || '')
       if (title_.length > 20) {
         title_ = title_.slice(0, 20).join('') + '...'
@@ -290,7 +290,7 @@ export default {
       return store.getters.siteUrl
     })
 
-    const getPath = (row) => {
+    const getPath = row => {
       if (!siteUrl.value) {
         ElMessage.error('请先设置站点地址')
         return
@@ -313,7 +313,7 @@ export default {
       }
       return siteUrl.value + path
     }
-    const goToBlog = (row) => {
+    const goToBlog = row => {
       const url = getPath(row)
       window.open(url, '_blank')
     }
@@ -321,7 +321,7 @@ export default {
     const stats = ref({
       isExceedMaxSize: 0,
       maxVoteLogsSize: 0,
-      size: 0,
+      size: 0
     })
     const maxlogsSizeMB = computed(() => {
       let size = (stats.value.maxVoteLogsSize / 1024 / 1024).toFixed(3)
@@ -333,7 +333,7 @@ export default {
       return Number(size)
     })
     const getlogStats = () => {
-      authApi.getVoteLogStats().then((res) => {
+      authApi.getVoteLogStats().then(res => {
         stats.value = res.data.stats
       })
     }
@@ -348,21 +348,21 @@ export default {
     const deleteForm = reactive({
       // 开始结束时间
       startTime: null,
-      endTime: null,
+      endTime: null
     })
     const deleteRules = {
       startTime: [
         {
           required: true,
           message: '请选择开始时间',
-          trigger: 'blur',
-        },
+          trigger: 'blur'
+        }
       ],
       endTime: [
         {
           required: true,
           message: '请选择结束时间',
-          trigger: 'blur',
+          trigger: 'blur'
         },
         {
           validator: (rule, value, callback) => {
@@ -372,13 +372,13 @@ export default {
               callback()
             }
           },
-          trigger: 'blur',
-        },
-      ],
+          trigger: 'blur'
+        }
+      ]
     }
     const deleteDialogRef = ref(null)
     const deletelog = () => {
-      deleteDialogRef.value.validate((valid) => {
+      deleteDialogRef.value.validate(valid => {
         if (valid) {
           const text = `${formatDate(deleteForm.startTime)} 到 ${formatDate(
             deleteForm.endTime
@@ -391,9 +391,9 @@ export default {
               return authApi
                 .deleteVoteLog({
                   startTime: deleteForm.startTime,
-                  endTime: deleteForm.endTime,
+                  endTime: deleteForm.endTime
                 })
-                .then((res) => {
+                .then(res => {
                   const deletedCount = res.data.data.deletedCount
                   ElMessage.success(
                     '删除成功，共删除' + deletedCount + '条日志'
@@ -402,13 +402,13 @@ export default {
                   getlogStats()
                   deleteDialogVisible.value = false
                 })
-                .catch((err) => {
+                .catch(err => {
                   console.log(err)
                 })
-            },
+            }
           })
             .then(() => {})
-            .catch((error) => {
+            .catch(error => {
               console.log('Dialog closed:', error)
             })
         }
@@ -419,7 +419,7 @@ export default {
       const vote = row.vote
       const voteOptions = vote.options
       // 查询_id 是否在选项中
-      const option = voteOptions.find((item) => {
+      const option = voteOptions.find(item => {
         return item._id === optionId
       })
     }
@@ -448,9 +448,9 @@ export default {
       deleteRules,
       openDeleteDialog,
       deleteDialogRef,
-      deletelog,
+      deletelog
     }
-  },
+  }
 }
 </script>
 <style lang=""></style>

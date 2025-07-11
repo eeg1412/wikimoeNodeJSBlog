@@ -16,7 +16,7 @@
         <NuxtLink
           :to="{
             name: 'postDetail',
-            params: { id: item.alias || item._id },
+            params: { id: item.alias || item._id }
           }"
           target="_blank"
         >
@@ -32,20 +32,20 @@ const props = defineProps({
     type: Array,
     default() {
       return []
-    },
+    }
   },
   showTitle: {
     type: Boolean,
-    default: true,
+    default: true
   },
   idPrefix: {
     type: String,
-    default: '',
+    default: ''
   },
   postId: {
     type: String,
-    default: '',
-  },
+    default: ''
+  }
 })
 </script>
 <style scoped></style>

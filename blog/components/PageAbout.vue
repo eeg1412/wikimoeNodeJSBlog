@@ -44,8 +44,8 @@
 const props = defineProps({
   author: {
     type: Object,
-    required: true,
-  },
+    required: true
+  }
 })
 </script>
 <style scoped>

@@ -31,7 +31,7 @@
           :class="{
             disabled: btnDisabled,
             active: optionIdList.includes(option._id),
-            'max-vote': maxVoteIdList.includes(option._id),
+            'max-vote': maxVoteIdList.includes(option._id)
           }"
           @click="handleSelect(option)"
         >
@@ -64,7 +64,7 @@
               :style="{
                 width: option.votes
                   ? (option.votes / itemCom.votes) * 100 + '%'
-                  : '0%',
+                  : '0%'
               }"
             ></div>
           </div>
@@ -89,12 +89,12 @@ import { getVoteDetailApi, postVoteApi } from '@/api/vote'
 const props = defineProps({
   item: {
     type: Object,
-    required: true,
+    required: true
   },
   postId: {
     type: String,
-    default: null,
-  },
+    default: null
+  }
 })
 const toast = useToast()
 
@@ -102,7 +102,7 @@ const voteItemRef = ref(null)
 const itemRes = ref(null)
 const getVoteDetail = async () => {
   const res = await getVoteDetailApi({
-    id: props.item._id,
+    id: props.item._id
   })
   if (res) {
     itemRes.value = res.data
@@ -118,7 +118,7 @@ const getVoteDetail = async () => {
 const itemCom = computed(() => {
   return {
     ...props.item,
-    ...itemRes.value,
+    ...itemRes.value
   }
 })
 
@@ -172,7 +172,7 @@ const btnText = computed(() => {
 const isLoading = ref(true)
 
 const optionIdList = ref([])
-const handleSelect = (option) => {
+const handleSelect = option => {
   if (voted.value || isExpired.value || isLoading.value || isVoting.value)
     return
   const maxSelect = itemCom.value.maxSelect
@@ -193,7 +193,7 @@ const handleSelect = (option) => {
         toast.add({
           title: '最多只能选择' + maxSelect + '项',
           icon: 'i-heroicons-x-circle',
-          color: 'red',
+          color: 'red'
         })
       }
     }
@@ -205,7 +205,7 @@ const doVote = async () => {
     toast.add({
       title: '请选择选项',
       icon: 'i-heroicons-x-circle',
-      color: 'red',
+      color: 'red'
     })
     return
   }
@@ -214,15 +214,15 @@ const doVote = async () => {
   postVoteApi({
     voteId: itemCom.value._id,
     postId: props.postId,
-    optionIdList: optionIdList.value,
+    optionIdList: optionIdList.value
   })
-    .then((res) => {
+    .then(res => {
       if (res) {
         toast.add({
           title: '投票成功',
           icon: 'i-heroicons-check-circle',
           color: 'green',
-          timeout: 10000,
+          timeout: 10000
         })
         getVoteDetail()
         voted.value = true
@@ -230,17 +230,17 @@ const doVote = async () => {
         bothUUID.value = true
       }
     })
-    .catch((err) => {
+    .catch(err => {
       console.log(err)
       const errors = err.response?._data?.errors
       if (errors) {
-        errors.forEach((item) => {
+        errors.forEach(item => {
           const message = item.message
           toast.add({
             title: message,
             icon: 'i-heroicons-x-circle',
             color: 'red',
-            timeout: 10000,
+            timeout: 10000
           })
         })
       }
@@ -257,7 +257,7 @@ onMounted(() => {
     timer = setTimeout(() => {
       if (voteItemRef.value) {
         // 如果元素不在视口内，创建 IntersectionObserver
-        observer = new IntersectionObserver((entries) => {
+        observer = new IntersectionObserver(entries => {
           if (entries[0].isIntersecting) {
             getVoteDetail()
             observer.disconnect()

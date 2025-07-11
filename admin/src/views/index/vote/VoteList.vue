@@ -152,9 +152,9 @@ export default {
     const voteList = ref([])
     const listCom = computed(() => {
       // 将options转换为children
-      return voteList.value.map((item) => {
+      return voteList.value.map(item => {
         const votes = item.votes || 0
-        item.options.forEach((option) => {
+        item.options.forEach(option => {
           const optionVotes = option.votes || 0
           // 计算百分比
           option.percent =
@@ -163,37 +163,37 @@ export default {
         return {
           isParent: true,
           ...item,
-          children: item.options,
+          children: item.options
         }
       })
     })
     const params = reactive({
       page: 1,
       size: 50,
-      keyword: '',
+      keyword: ''
     })
     const total = ref(0)
     const tableRef = ref(null)
-    const getVoteList = (resetPage) => {
+    const getVoteList = resetPage => {
       if (resetPage === true && params.page !== 1) {
         params.page = 1
         return
       }
       authApi
         .getVoteList(params)
-        .then((res) => {
+        .then(res => {
           voteList.value = res.data.list
           total.value = res.data.total
           tableRef.value.scrollTo({ top: 0 })
           setSessionParams(route.name, params)
         })
-        .catch((err) => {
+        .catch(err => {
           console.log(err)
         })
     }
     const handleAdd = () => {
       router.push({
-        name: 'VoteAdd',
+        name: 'VoteAdd'
       })
     }
     // 监听 params.page 的变化
@@ -204,15 +204,15 @@ export default {
       }
     )
 
-    const goEdit = (id) => {
+    const goEdit = id => {
       router.push({
         name: 'VoteEdit',
         params: {
-          id,
-        },
+          id
+        }
       })
     }
-    const deleteVote = (row) => {
+    const deleteVote = row => {
       const id = row._id
       const title = escapeHtml(row.title || '') || '未命名'
 
@@ -224,10 +224,10 @@ export default {
             ElMessage.success('删除成功')
             getVoteList()
           })
-        },
+        }
       })
         .then(() => {})
-        .catch((error) => {
+        .catch(error => {
           console.log('Dialog closed:', error)
         })
     }
@@ -253,9 +253,9 @@ export default {
       getVoteList,
       handleAdd,
       goEdit,
-      deleteVote,
+      deleteVote
     }
-  },
+  }
 }
 </script>
 <style scoped>
