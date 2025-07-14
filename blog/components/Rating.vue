@@ -2,14 +2,14 @@
   <div class="rating-body">
     <div
       v-if="rating"
-      class="text-sm text-primary border border-solid border-gray-200 dark:border-gray-600 text-center rounded flex items-center justify-center rating-item"
+      class="text-sm text-primary text-center rounded flex items-center justify-center rating-item"
     >
       <span>{{ rating }}分</span><span class="rating-bar"></span
       ><span>{{ ratingToText(rating) }}</span>
     </div>
     <div
       v-else
-      class="text-sm text-gray-300 dark:text-gray-500 border border-solid border-gray-200 dark:border-gray-600 text-center rounded flex items-center justify-center rating-item rating-item-no-rating"
+      class="text-sm text-gray-300 dark:text-gray-500 text-center rounded flex items-center justify-center rating-item rating-item-no-rating"
     >
       <div class="rating-item-no-rating-inner flex items-center justify-center">
         暂无评分
@@ -42,16 +42,13 @@ const percent = computed(() => {
   overflow: hidden;
 }
 .rating-item {
-  border-top-left-radius: 0;
-  border-top-right-radius: 0;
-  border-top: 0;
-  padding: 0.25rem;
+  @apply py-1;
   z-index: 2;
   position: relative;
   height: 35px;
 }
 .rating-item-no-rating {
-  padding: 0.25rem;
+  @apply py-1;
 }
 .rating-item-no-rating-inner {
   @apply bg-gray-100/50 dark:bg-gray-700/40 rounded;
@@ -66,7 +63,7 @@ const percent = computed(() => {
   margin: 0 0.36rem;
 }
 .rating-p-bar {
-  @apply p-1;
+  @apply py-1;
   height: calc(100% - 2px);
   position: absolute;
   z-index: 1;

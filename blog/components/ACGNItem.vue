@@ -116,12 +116,12 @@ const showAlbum = id => {
 }
 </script>
 <style scoped>
-.acgn-item-cover-body {
+/* .acgn-item-cover-body {
   border-bottom-left-radius: 0;
   border-bottom-right-radius: 0;
   border-bottom: 0;
   padding-bottom: 0;
-}
+} */
 .acgn-left-content {
   width: 100px;
 }
