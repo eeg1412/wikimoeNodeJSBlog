@@ -42,13 +42,10 @@ const percent = computed(() => {
   overflow: hidden;
 }
 .rating-item {
-  @apply py-1;
+  @apply pt-2;
   z-index: 2;
   position: relative;
-  height: 35px;
-}
-.rating-item-no-rating {
-  @apply py-1;
+  height: 33px;
 }
 .rating-item-no-rating-inner {
   @apply bg-gray-100/50 dark:bg-gray-700/40 rounded;
@@ -63,13 +60,13 @@ const percent = computed(() => {
   margin: 0 0.36rem;
 }
 .rating-p-bar {
-  @apply py-1;
-  height: calc(100% - 2px);
+  @apply pt-2;
+  height: 100%;
   position: absolute;
   z-index: 1;
-  width: calc(100% - 2px);
-  top: 1px;
-  left: 1px;
+  width: 100%;
+  top: 0px;
+  left: 0px;
 
   box-sizing: border-box;
 }
