@@ -63,11 +63,11 @@ const percent = computed(() => {
 }
 .rating-p-bar {
   @apply p-1;
-  height: 100%;
+  height: calc(100% - 2px);
   position: absolute;
   z-index: 1;
   width: calc(100% - 2px);
-  top: 0;
+  top: 1px;
   left: 1px;
 
   box-sizing: border-box;
