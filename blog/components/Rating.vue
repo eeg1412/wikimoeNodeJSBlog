@@ -11,7 +11,9 @@
       v-else
       class="text-sm text-gray-300 dark:text-gray-500 border border-solid border-gray-200 dark:border-gray-600 text-center rounded flex items-center justify-center rating-item rating-item-no-rating"
     >
-      <div class="rating-item-no-rating-inner">暂无评分</div>
+      <div class="rating-item-no-rating-inner flex items-center justify-center">
+        暂无评分
+      </div>
     </div>
     <div class="rating-p-bar" v-if="rating && rating > 0">
       <div class="rating-p-bar-inner-parent">
@@ -46,6 +48,7 @@ const percent = computed(() => {
   padding: 0.25rem;
   z-index: 2;
   position: relative;
+  height: 35px;
 }
 .rating-item-no-rating {
   padding: 0.25rem;
@@ -53,6 +56,7 @@ const percent = computed(() => {
 .rating-item-no-rating-inner {
   @apply bg-gray-100/50 dark:bg-gray-700/40 rounded;
   width: 100%;
+  height: 100%;
 }
 .rating-bar {
   @apply bg-primary-400;
@@ -73,13 +77,14 @@ const percent = computed(() => {
   box-sizing: border-box;
 }
 .rating-p-bar-inner-parent {
-  @apply border border-solid border-primary-200 dark:border-primary-600/60 rounded;
+  @apply border border-solid border-primary-400/20 rounded;
   width: 100%;
   height: 100%;
   box-sizing: border-box;
+  overflow: hidden;
 }
 .rating-p-bar-inner {
-  @apply bg-primary-400/20 rounded;
+  @apply bg-primary-400/20;
   height: 100%;
 }
 </style>
