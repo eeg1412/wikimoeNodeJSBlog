@@ -628,18 +628,9 @@ html,
 body {
   font-size: 16px;
   font-weight: 400;
-  font-family:
-    'Noto Sans SC',
-    'PingFang SC',
-    'Source Han Sans SC',
-    'Microsoft YaHei',
-    sans-serif,
-    system-ui,
-    -apple-system,
-    BlinkMacSystemFont,
-    'Segoe UI Emoji',
-    'Noto Color Emoji',
-    emoji;
+  font-family: 'Noto Sans SC', 'PingFang SC', 'Source Han Sans SC',
+    'Microsoft YaHei', sans-serif, system-ui, -apple-system, BlinkMacSystemFont,
+    'Segoe UI Emoji', 'Noto Color Emoji', emoji;
   color: #171717;
   width: 100%;
   height: 100%;
@@ -664,15 +655,8 @@ body {
 }
 /*-- 按钮 --*/
 input {
-  font-family:
-    -apple-system,
-    BlinkMacSystemFont,
-    Helvetica Neue,
-    PingFang SC,
-    Microsoft YaHei,
-    Source Han Sans SC,
-    Noto Sans CJK SC,
-    WenQuanYi Micro Hei,
+  font-family: -apple-system, BlinkMacSystemFont, Helvetica Neue, PingFang SC,
+    Microsoft YaHei, Source Han Sans SC, Noto Sans CJK SC, WenQuanYi Micro Hei,
     sans-serif;
 }
 input[type='button'],
@@ -980,24 +964,26 @@ ins.adsbygoogle[data-ad-status='unfilled'] {
 .pswp:not(.pswp--ui-visible) .pswp__button {
   opacity: 0 !important;
 }
-.content-h-139 {
-  height: 139px;
+.content-h-131 {
+  height: 131px;
 }
 .content-h-170 {
   height: 170px;
 }
+.acgn-item-body {
+  @apply border border-solid border-gray-300;
+  border-radius: 6px;
+  background-color: #ffffff;
+  padding: 8px;
+}
 .acg-summary {
-  border-top: 1px solid rgb(209, 213, 219);
+  @apply border-t border-solid border-gray-200;
   padding: 5px 0px;
 }
 .acgn-right-content {
-  border: 1px solid rgb(209, 213, 219);
-  padding: 5px 8px;
-  border-radius: 4px;
   flex: 1;
-  margin-left: 8px;
+  margin-left: 10px;
   box-sizing: border-box;
-  overflow: auto;
   width: 100%;
 }
 .page-event-block {
@@ -1112,7 +1098,7 @@ ins.adsbygoogle[data-ad-status='unfilled'] {
   font-family: 'system-ui';
 }
 .acgn-time {
-  font-size: 0.52rem;
+  font-size: 0.6rem;
   /* 不换行 */
   white-space: nowrap;
 }
@@ -1145,17 +1131,9 @@ ins.adsbygoogle[data-ad-status='unfilled'] {
 @media (min-width: 769px) {
   .acgn-sidebar-item-body {
     width: 100%;
-    height: 135.57px;
-    position: relative;
   }
   .acgn-sidebar-item {
-    width: 326px;
-    transform: scale(0.7975);
-    transform-origin: top left;
-    position: absolute;
-    top: 0;
-    left: 0;
-    z-index: 1;
+    zoom: 0.7975;
   }
 
   .acgn-sidebar-item .acgn-time {
@@ -1164,11 +1142,6 @@ ins.adsbygoogle[data-ad-status='unfilled'] {
 }
 .div-loading-body {
   z-index: 9;
-}
-.acgn-item-cover-body,
-.rating-body,
-.acgn-right-content {
-  @apply bg-white;
 }
 
 .post-detail-tag-item {
@@ -1401,9 +1374,7 @@ ins.adsbygoogle[data-ad-status='unfilled'] {
   --wikimoe-dark-bg: rgba(17, 17, 17, 1);
   --wikimoe-dark-panel-bg: rgba(20, 20, 20, 1);
 }
-html.dark .acgn-item-cover-body,
-html.dark .rating-body,
-html.dark .acgn-right-content {
+html.dark .acgn-item-body {
   background-color: var(--wikimoe-dark-bg);
 }
 html.dark body {
@@ -1470,7 +1441,7 @@ html.dark .layout-mobile-navi-btn-body {
     box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.4);
   }
 }
-html.dark .acgn-right-content,
+html.dark .acgn-item-body,
 html.dark .acgn-item-cover-body,
 html.dark .acg-summary {
   @apply dark:border-gray-600;

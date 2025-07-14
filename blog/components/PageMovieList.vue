@@ -133,7 +133,7 @@
     <div class="relative" ref="listRef">
       <!-- 列表 -->
       <div v-if="movieList.length > 0" class="mt-5">
-        <div class="grid gap-4 xl:grid-cols-2">
+        <div class="grid gap-2">
           <div v-for="movie in movieList" :key="movie._id" class="mb-1">
             <MovieItem :movie="movie" />
           </div>

@@ -6,12 +6,7 @@
     >
       相关作品：
     </div>
-    <div
-      class="grid gap-3 post-acg-grid"
-      :class="{
-        odd: contentCount % 2 === 1
-      }"
-    >
+    <div class="grid gap-2 post-acg-grid">
       <div
         v-for="bangumi in bangumiList"
         :key="bangumi._id"
@@ -19,7 +14,7 @@
         :id="`ent-title-${idPrefix}-${bangumi._id}-${postId}`"
         @click.stop
       >
-        <LazyBangumiItem :bangumi="bangumi" showType />
+        <LazyBangumiItem :bangumi="bangumi" />
       </div>
       <div
         v-for="movie in movieList"
@@ -28,7 +23,7 @@
         :id="`ent-title-${idPrefix}-${movie._id}-${postId}`"
         @click.stop
       >
-        <LazyMovieItem :movie="movie" showType />
+        <LazyMovieItem :movie="movie" />
       </div>
       <div
         v-for="book in bookList"
@@ -102,13 +97,5 @@ const contentCount = computed(() => {
 <style scoped>
 .post-acg-grid {
   grid-template-columns: repeat(1, minmax(0, 1fr));
-}
-@media (min-width: 1280px) {
-  .post-acg-grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-  .post-acg-grid.odd .post-acg-item:last-child {
-    grid-column: span 2;
-  }
 }
 </style>

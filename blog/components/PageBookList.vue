@@ -160,7 +160,7 @@
     <div class="relative" ref="listRef">
       <!-- 列表 -->
       <div v-if="bookList.length > 0" class="mt-5">
-        <div class="grid gap-4 xl:grid-cols-2">
+        <div class="grid gap-2">
           <div v-for="book in bookList" :key="book._id" class="mb-1">
             <BookItem :book="book" />
           </div>
