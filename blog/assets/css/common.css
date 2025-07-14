@@ -971,7 +971,7 @@ ins.adsbygoogle[data-ad-status='unfilled'] {
   height: 170px;
 }
 .acgn-item-body {
-  @apply border border-solid border-gray-300;
+  @apply border border-solid border-gray-200;
   border-radius: 6px;
   background-color: #ffffff;
   padding: 8px;
@@ -1444,7 +1444,7 @@ html.dark .layout-mobile-navi-btn-body {
 html.dark .acgn-item-body,
 html.dark .acgn-item-cover-body,
 html.dark .acg-summary {
-  @apply dark:border-gray-600;
+  @apply dark:border-gray-700;
 }
 html.dark .comment-list-item-parent-content {
   @apply dark:text-gray-300;
