@@ -985,6 +985,7 @@ ins.adsbygoogle[data-ad-status='unfilled'] {
   margin-left: 10px;
   box-sizing: border-box;
   width: 100%;
+  padding: 0.25rem 0;
 }
 .page-event-block {
   color: #fff;
