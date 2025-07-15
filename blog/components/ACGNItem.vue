@@ -67,14 +67,10 @@
             class="text-sm whitespace-pre-line text-gray-400 flex-grow"
             v-if="item.label?.length > 0"
           >
-            标记：<UBadge
-              v-for="(label, index) in item.label"
-              :key="index"
-              size="xs"
-              class="mr-1 mt-1"
+            标记：<span v-for="(label, index) in item.label" :key="index"
+              ><span>{{ label }}</span
+              ><span v-if="index !== item.label.length - 1">、</span></span
             >
-              {{ label }}
-            </UBadge>
           </div>
         </div>
       </div>
