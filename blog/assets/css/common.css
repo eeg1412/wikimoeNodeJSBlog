@@ -978,14 +978,14 @@ ins.adsbygoogle[data-ad-status='unfilled'] {
 }
 .acg-summary {
   @apply border-t border-solid border-gray-200;
-  padding: 5px 0px;
+  padding: 0.25rem 0px;
 }
 .acgn-right-content {
   flex: 1;
   margin-left: 10px;
   box-sizing: border-box;
   width: 100%;
-  padding: 0.25rem 0;
+  padding-top: 0.25rem;
 }
 .page-event-block {
   color: #fff;

@@ -64,7 +64,7 @@
           <div v-else class="text-sm text-gray-400">暂无内容</div>
 
           <div
-            class="text-sm whitespace-pre-line text-gray-500 flex-grow dark:text-gray-300 mt-1"
+            class="text-sm whitespace-pre-line text-gray-500 flex-grow dark:text-gray-300"
             v-if="item.label?.length > 0"
           >
             标记：<UBadge
