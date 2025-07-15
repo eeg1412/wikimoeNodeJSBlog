@@ -67,10 +67,23 @@
             class="text-sm whitespace-pre-line text-gray-400 flex-grow"
             v-if="item.label?.length > 0"
           >
-            标记：<span v-for="(label, index) in item.label" :key="index"
-              ><span>{{ label }}</span
-              ><span v-if="index !== item.label.length - 1">、</span></span
+            标记：<UBadge
+              v-for="(label, index) in item.label"
+              :key="index"
+              color="white"
+              size="xs"
+              :ui="{
+                color: {
+                  white: {
+                    solid:
+                      'ring-1 ring-inset ring-gray-300 dark:ring-gray-700 text-gray-500 dark:text-white bg-white dark:text-gray-300'
+                  }
+                }
+              }"
+              class="mr-1 mt-1"
             >
+              {{ label }}
+            </UBadge>
           </div>
         </div>
       </div>
