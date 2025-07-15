@@ -14,10 +14,10 @@
 
 ### 记录自己追过的 ACGN
 
-![image](https://github.com/user-attachments/assets/78cc341f-4a69-4a79-8318-66153415818b)
-![image](https://github.com/user-attachments/assets/78e604ac-d6b7-4a8c-9a2c-010328f759a0)
-![image](https://github.com/user-attachments/assets/3b1a311b-69a9-4c76-bd0c-28a4530ed86e)
-![image](https://github.com/user-attachments/assets/06d6f36d-2e44-455b-8e8b-4cc9e53f37fa)
+![image](https://github.com/user-attachments/assets/1977835c-370b-4cb1-acbb-59d33b9e1136)  
+![image](https://github.com/user-attachments/assets/d4ecea17-fa94-4489-bb7e-4bbfcc060621)  
+![image](https://github.com/user-attachments/assets/96ac6f02-3b35-4755-ab4f-31b2c97df597)  
+![image](https://github.com/user-attachments/assets/2032f613-85f7-47e7-9210-670240968927)  
 
 ### 管理与分享自己的日程
 
