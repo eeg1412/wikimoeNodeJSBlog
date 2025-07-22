@@ -1368,6 +1368,38 @@ ins.adsbygoogle[data-ad-status='unfilled'] {
   @apply rounded px-1 py-0.5 bg-primary-500 text-white dark:text-gray-900 bg-opacity-80 text-xs flex align-middle justify-center pointer mr-1 whitespace-nowrap;
 }
 
+.content-grid-list-2-1 {
+  /* grid 布局 2列 */
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.5rem;
+}
+.content-grid-list-2-1.is-odd .content-grid-list-2-1-item:last-child {
+  grid-column: span 2;
+}
+
+/* 单列 */
+/* 0-640 */
+/* 769 - 950 */
+/* 1025 - 1240 */
+@media (max-width: 640px),
+  (min-width: 769px) and (max-width: 950px),
+  (min-width: 1025px) and (max-width: 1240px) {
+  .content-grid-list-2-1 {
+    grid-template-columns: 1fr;
+  }
+  .content-grid-list-2-1.is-odd .content-grid-list-2-1-item:last-child {
+    grid-column: span 1;
+  }
+}
+
+.transition-border-color {
+  transition-property: border-color;
+}
+.gap-1px {
+  gap: 1px;
+}
+
 /* 暗模式 */
 :root {
   /* --wikimoe-dark-bg: rgba(20, 20, 20, 1);
@@ -1450,8 +1482,9 @@ html.dark .acg-summary {
 html.dark .comment-list-item-parent-content {
   @apply dark:text-gray-300;
 }
-html.dark .random-post-item-body {
-  @apply dark:border-gray-600 hover:dark:border-primary-400;
+html.dark .random-post-item-body,
+html.dark .tweet-content-lite-item-body {
+  @apply dark:border-gray-700 hover:dark:border-primary-400;
 }
 html.dark .selecttable td {
   @apply dark:bg-gray-500;

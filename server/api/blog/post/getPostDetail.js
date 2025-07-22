@@ -140,6 +140,30 @@ module.exports = async function (req, res, next) {
             })
           }
 
+          // 如果存在tweetList，则将tweetList的id加入nePostIdList
+          if (jsonData.tweetList && jsonData.tweetList.length > 0) {
+            jsonData.tweetList.forEach(tweet => {
+              const strId = tweet._id.toString()
+              if (!idSet.has(strId)) {
+                idSet.add(strId)
+                nePostIdList.push(tweet._id)
+              }
+            })
+          }
+          // 如果存在contentTweetList，则将contentTweetList的id加入nePostIdList
+          if (
+            jsonData.contentTweetList &&
+            jsonData.contentTweetList.length > 0
+          ) {
+            jsonData.contentTweetList.forEach(tweet => {
+              const strId = tweet._id.toString()
+              if (!idSet.has(strId)) {
+                idSet.add(strId)
+                nePostIdList.push(tweet._id)
+              }
+            })
+          }
+
           // 开始聚合查询
           const randomPostList = await postUtils.aggregate([
             {

@@ -526,3 +526,11 @@ export const fieldErrorNotice = fields => {
     }
   }
 }
+
+export const limitStr = (str = '', len = 20) => {
+  const strArray = Array.from(str || '')
+  if (strArray.length > len) {
+    return strArray.slice(0, len).join('') + '...'
+  }
+  return str
+}

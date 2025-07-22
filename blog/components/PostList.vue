@@ -90,6 +90,7 @@
                 :contentEventList="item.contentEventList"
                 :contentVoteList="item.contentVoteList"
                 :contentPostList="item.contentPostList"
+                :contentTweetList="item.contentTweetList"
                 :contentBangumiList="item.contentBangumiList"
                 :contentGameList="item.contentGameList"
                 :contentBookList="item.contentBookList"

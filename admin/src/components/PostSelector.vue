@@ -17,7 +17,7 @@
       :key="item._id"
       :label="`${checkShowText(item)}${
         item.date ? $formatDate(item.date, '【YYYY年MM月DD日】') : ''
-      }${item.title}`"
+      }${type === 2 ? $limitStr(item.excerpt, 50) : item.title}`"
       :value="item._id"
       :disabled="item._id === currentPostId"
     ></el-option>
@@ -44,6 +44,10 @@ const props = defineProps({
   currentPostId: {
     type: String,
     default: ''
+  },
+  type: {
+    type: String,
+    default: 1
   }
 })
 
@@ -76,7 +80,10 @@ const getPostList = (keyword = null) => {
   }
   loading.value = true
   authApi
-    .getPostList({ keyword, status: 1, type: 1, size: 50, page: 1 }, true)
+    .getPostList(
+      { keyword, status: 1, type: props.type, size: 50, page: 1 },
+      true
+    )
     .then(res => {
       emit('update:postList', res.data.list)
     })

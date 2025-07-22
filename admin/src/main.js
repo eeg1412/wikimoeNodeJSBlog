@@ -12,7 +12,7 @@ import 'photoswipe/style.css'
 import * as ElementPlusIconsVue from '@element-plus/icons-vue'
 import Cropper from '@/components/Cropper.vue'
 import IpInfoDisplay from '@/components/IpInfoDisplay.vue'
-import { formatDate } from '@/utils/utils'
+import { formatDate, limitStr } from '@/utils/utils'
 import { initRichEditor } from '@/utils/richEditor'
 import zhCn from 'element-plus/dist/locale/zh-cn.mjs'
 import { applyThemeToDom } from '@/utils/theme.js'
@@ -48,13 +48,6 @@ const formatTimestamp = time => {
   return new Date(time).getTime()
 }
 
-const limitStr = (str = '', len = 20) => {
-  const strArray = Array.from(str || '')
-  if (strArray.length > len) {
-    return strArray.slice(0, len).join('') + '...'
-  }
-  return str
-}
 app.config.globalProperties.$formatDate = formatDate
 app.config.globalProperties.$formatTimestamp = formatTimestamp
 app.config.globalProperties.$limitStr = limitStr

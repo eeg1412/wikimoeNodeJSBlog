@@ -154,6 +154,17 @@ exports.updateRSS = async type => {
                 post.alias || post._id
               }" target="_blank">博文：${post.title}</a></p>`
             })
+          } else if (typeName === 'tweet') {
+            // 遍历contentTweetList，以链接形式展示
+            const contentTweetList = item.contentTweetList || []
+            contentTweetList.forEach(tweet => {
+              newContent += `<p><a href="${siteUrl}/post/${
+                tweet.alias || tweet._id
+              }" target="_blank">推文：${utils.limitStr(
+                tweet.excerpt,
+                20
+              )}</a></p>`
+            })
           } else if (typeName === 'acgn') {
             // 遍历contentBangumiList，以链接形式展示
             const contentBangumiList = item.contentBangumiList || []

@@ -123,6 +123,7 @@ var posts = new Schema(
     gameList: [{ type: Schema.ObjectId, ref: 'games', default: [] }],
     bookList: [{ type: Schema.ObjectId, ref: 'books', default: [] }],
     postList: [{ type: Schema.ObjectId, ref: 'posts', default: [] }],
+    tweetList: [{ type: Schema.ObjectId, ref: 'posts', default: [] }],
     eventList: [{ type: Schema.ObjectId, ref: 'events', default: [] }],
     voteList: [{ type: Schema.ObjectId, ref: 'votes', default: [] }],
     // 列表排序 String 数组
@@ -136,6 +137,7 @@ var posts = new Schema(
     contentGameList: [{ type: Schema.ObjectId, ref: 'games', default: [] }],
     contentBookList: [{ type: Schema.ObjectId, ref: 'books', default: [] }],
     contentPostList: [{ type: Schema.ObjectId, ref: 'posts', default: [] }],
+    contentTweetList: [{ type: Schema.ObjectId, ref: 'posts', default: [] }],
     contentEventList: [{ type: Schema.ObjectId, ref: 'events', default: [] }],
     contentVoteList: [{ type: Schema.ObjectId, ref: 'votes', default: [] }],
     // 列表排序 String 数组
@@ -143,5 +145,16 @@ var posts = new Schema(
   },
   { timestamps: true }
 )
+
+// posts.virtual('firstCoverImage', {
+//   ref: 'attachments',
+//   localField: 'coverImages',
+//   foreignField: '_id',
+//   justOne: true // 只返回第一个
+// })
+
+// 设置虚拟字段在JSON序列化时包含
+// posts.set('toJSON', { virtuals: true })
+// posts.set('toObject', { virtuals: true })
 
 module.exports = mongoose.model('posts', posts)

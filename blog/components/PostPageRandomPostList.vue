@@ -6,7 +6,7 @@
       {{ options.sitePostRandomSimilarTitle }}：
     </div>
     <div
-      class="random-post-list-body mt-3"
+      class="random-post-list-body content-grid-list-2-1 mt-3"
       :class="{
         'is-odd': randomPostList.length % 2 !== 0
       }"
@@ -17,7 +17,7 @@
         :to="getLinkObj(item)"
         v-for="(item, index) in randomPostList"
         :key="index"
-        class="random-post-item-body flex border border-solid cursor-pointer rounded-md overflow-hidden transition duration-500"
+        class="random-post-item-body content-grid-list-2-1-item flex border border-solid cursor-pointer rounded-md overflow-hidden transition duration-500"
         :class="`random-post-item-type-${item.type}`"
         target="_blank"
       >
@@ -144,33 +144,8 @@ const getBackgroundImage = item => {
 }
 </script>
 <style scoped>
-.random-post-list-body {
-  /* grid 布局 2列 */
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 0.5rem;
-}
-.random-post-list-body.is-odd .random-post-item-body:last-child {
-  grid-column: span 2;
-}
-
-/* 单列 */
-/* 0-640 */
-/* 769 - 950 */
-/* 1025 - 1240 */
-@media (max-width: 640px),
-  (min-width: 769px) and (max-width: 950px),
-  (min-width: 1025px) and (max-width: 1240px) {
-  .random-post-list-body {
-    grid-template-columns: 1fr;
-  }
-  .random-post-list-body.is-odd .random-post-item-body:last-child {
-    grid-column: span 1;
-  }
-}
-
 .random-post-item-body {
-  border-color: #e2e2e2;
+  @apply border-gray-200;
   height: 6.5rem;
 }
 .random-post-item-left {

@@ -254,6 +254,17 @@
               placeholder="请选择博文"
             />
           </el-form-item>
+          <!-- tweet -->
+          <el-form-item label="关联推文" prop="tweet">
+            <post-selector
+              v-model="form.contentTweetList"
+              v-model:postList="contentTweetList"
+              :current-post-id="id"
+              :format-date="$formatDate"
+              :type="2"
+              placeholder="请选择推文"
+            />
+          </el-form-item>
           <!-- bangumi -->
           <el-form-item label="关联番剧" prop="bangumi">
             <bangumi-selector
@@ -332,6 +343,17 @@
               :current-post-id="id"
               :format-date="$formatDate"
               placeholder="请选择博文"
+            />
+          </el-form-item>
+          <!-- tweet -->
+          <el-form-item label="相关推文" prop="tweet">
+            <post-selector
+              v-model="form.tweetList"
+              v-model:postList="tweetList"
+              :current-post-id="id"
+              :format-date="$formatDate"
+              :type="2"
+              placeholder="请选择推文"
             />
           </el-form-item>
           <!-- bangumi -->
@@ -602,6 +624,10 @@ export default {
                 form[key] = res.data.data[key].map(item => item._id)
                 postList.value = res.data.data[key]
                 break
+              case 'tweetList':
+                form[key] = res.data.data[key].map(item => item._id)
+                tweetList.value = res.data.data[key]
+                break
               case 'eventList':
                 form[key] = res.data.data[key].map(item => item._id)
                 eventList.value = res.data.data[key]
@@ -644,6 +670,10 @@ export default {
               case 'contentPostList':
                 form[key] = res.data.data[key].map(item => item._id)
                 contentPostList.value = res.data.data[key]
+                break
+              case 'contentTweetList':
+                form[key] = res.data.data[key].map(item => item._id)
+                contentTweetList.value = res.data.data[key]
                 break
               case 'contentEventList':
                 form[key] = res.data.data[key].map(item => item._id)
@@ -731,6 +761,7 @@ export default {
       event: '活动',
       vote: '投票',
       post: '博文',
+      tweet: '推文',
       acgn: '番剧/电影/游戏/书籍'
     }
     const form = reactive({
@@ -763,6 +794,7 @@ export default {
       gameList: [],
       bookList: [],
       postList: [],
+      tweetList: [],
       eventList: [],
       voteList: [],
       seriesSortListTurnOn: false,
@@ -773,6 +805,7 @@ export default {
       contentGameList: [],
       contentBookList: [],
       contentPostList: [],
+      contentTweetList: [],
       contentEventList: [],
       contentVoteList: [],
 
@@ -822,6 +855,11 @@ export default {
       // 检查博文
       if (form.contentPostList.length > 0) {
         shouldExistTypes.push('post')
+      }
+
+      // 检查推文
+      if (form.contentTweetList.length > 0) {
+        shouldExistTypes.push('tweet')
       }
 
       // 检查番剧/电影/游戏/书籍，只要有一个不为空就添加acgn
@@ -885,6 +923,11 @@ export default {
       // 检查博文
       if (form.postList.length > 0) {
         shouldExistTypes.push('post')
+      }
+
+      // 检查推文
+      if (form.tweetList.length > 0) {
+        shouldExistTypes.push('tweet')
       }
 
       // 检查番剧/电影/游戏/书籍，只要有一个不为空就添加acgn
@@ -1037,6 +1080,8 @@ export default {
 
     // post
     const postList = ref([])
+    // tweet
+    const tweetList = ref([])
     // event
     const eventList = ref([])
 
@@ -1055,6 +1100,8 @@ export default {
 
     // post
     const contentPostList = ref([])
+    // tweet
+    const contentTweetList = ref([])
     // event
     const contentEventList = ref([])
 
@@ -1185,12 +1232,9 @@ export default {
 
     let autoSaveTimer = null
     const setAutoSaveTimer = () => {
-      autoSaveTimer = setInterval(
-        () => {
-          autoSave()
-        },
-        1000 * 60 * 2
-      )
+      autoSaveTimer = setInterval(() => {
+        autoSave()
+      }, 1000 * 60 * 2)
     }
 
     // 升级编辑器版本
@@ -1327,6 +1371,7 @@ export default {
         () => form.contentEventList,
         () => form.contentVoteList,
         () => form.contentPostList,
+        () => form.contentTweetList,
         () => form.contentBangumiList,
         () => form.contentMovieList,
         () => form.contentGameList,
@@ -1352,6 +1397,7 @@ export default {
         () => form.eventList,
         () => form.voteList,
         () => form.postList,
+        () => form.tweetList,
         () => form.bangumiList,
         () => form.movieList,
         () => form.gameList,
@@ -1411,6 +1457,8 @@ export default {
       bookList,
       // post
       postList,
+      // tweet
+      tweetList,
       // event
       eventList,
       // vote
@@ -1426,6 +1474,8 @@ export default {
       contentBookList,
       // post
       contentPostList,
+      // tweet
+      contentTweetList,
       // event
       contentEventList,
       // vote

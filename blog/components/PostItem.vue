@@ -2,7 +2,7 @@
   <div class="post-list-blog-panel group">
     <div class="post-list-blog-cover-body">
       <WikimoeImage
-        class="post-list-blog-cover-img border-t border-l border-r border-gray-200 dark:border-gray-700 border-solid group-hover:border-primary-500/60"
+        class="post-list-blog-cover-img border-t border-l border-r border-gray-200 dark:border-gray-700 border-solid group-hover:border-primary-500/60 transition-border-color duration-500"
         :src="post.coverImages[0].thumfor || post.coverImages[0].filepath"
         :alt="post.coverImages[0].filename"
         :width="post.coverImages[0].thumWidth || post.coverImages[0].width"
@@ -12,7 +12,7 @@
       />
       <!-- 默认封面图 defaultCover -->
       <WikimoeImage
-        class="post-list-blog-cover-img border-t border-l border-r border-gray-200 dark:border-gray-700 border-solid group-hover:border-primary-500/60"
+        class="post-list-blog-cover-img border-t border-l border-r border-gray-200 dark:border-gray-700 border-solid group-hover:border-primary-500/60 transition-border-color duration-500"
         :src="defaultCover"
         :alt="post.title"
         :width="1344"
@@ -23,9 +23,9 @@
     </div>
     <!-- title -->
     <div
-      class="post-list-title-body border border-gray-200 border-solid group-hover:border-primary-500/60 bg-white dark:bg-gray-800/40 dark:border-gray-700"
+      class="post-list-title-body border border-gray-200 border-solid group-hover:border-primary-500/60 bg-white dark:bg-gray-800/40 dark:border-gray-700 transition-border-color duration-500"
     >
-      <div class="group-hover:text-primary-500">
+      <div class="group-hover:text-primary-500 transition duration-500">
         {{ post.title || '暂无标题' }}
       </div>
     </div>

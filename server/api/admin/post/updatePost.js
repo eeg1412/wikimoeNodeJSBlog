@@ -47,6 +47,7 @@ module.exports = async function (req, res, next) {
     gameList,
     bookList,
     postList,
+    tweetList,
     eventList,
     voteList,
     contentBangumiList,
@@ -54,6 +55,7 @@ module.exports = async function (req, res, next) {
     contentGameList,
     contentBookList,
     contentPostList,
+    contentTweetList,
     contentEventList,
     contentVoteList,
     seriesSortList,
@@ -167,6 +169,18 @@ module.exports = async function (req, res, next) {
       return
     }
   }
+  for (let i = 0; i < tweetList.length; i++) {
+    if (!validator.isMongoId(tweetList[i])) {
+      res.status(400).json({
+        errors: [
+          {
+            message: 'tweetList格式错误'
+          }
+        ]
+      })
+      return
+    }
+  }
   for (let i = 0; i < eventList.length; i++) {
     if (!validator.isMongoId(eventList[i])) {
       res.status(400).json({
@@ -253,6 +267,18 @@ module.exports = async function (req, res, next) {
       return
     }
   }
+  for (let i = 0; i < contentTweetList.length; i++) {
+    if (!validator.isMongoId(contentTweetList[i])) {
+      res.status(400).json({
+        errors: [
+          {
+            message: 'contentTweetList格式错误'
+          }
+        ]
+      })
+      return
+    }
+  }
   for (let i = 0; i < contentEventList.length; i++) {
     if (!validator.isMongoId(contentEventList[i])) {
       res.status(400).json({
@@ -317,7 +343,7 @@ module.exports = async function (req, res, next) {
     return
   }
 
-  const listSortList = ['media', 'event', 'vote', 'post', 'acgn']
+  const listSortList = ['media', 'event', 'vote', 'post', 'tweet', 'acgn']
   // seriesSortList 和 contentSeriesSortList 必须为数组且只能包含listSortList里面的值
   if (
     !Array.isArray(seriesSortList) ||
@@ -368,6 +394,7 @@ module.exports = async function (req, res, next) {
     gameList: gameList,
     bookList: bookList,
     postList: postList,
+    tweetList: tweetList,
     eventList: eventList,
     voteList: voteList,
     seriesSortList: seriesSortList,
@@ -376,6 +403,7 @@ module.exports = async function (req, res, next) {
     contentGameList: contentGameList,
     contentBookList: contentBookList,
     contentPostList: contentPostList,
+    contentTweetList: contentTweetList,
     contentEventList: contentEventList,
     contentVoteList: contentVoteList,
     contentSeriesSortList: contentSeriesSortList,

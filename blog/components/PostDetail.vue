@@ -136,6 +136,7 @@
           :contentEventList="postData.data.contentEventList"
           :contentVoteList="postData.data.contentVoteList"
           :contentPostList="postData.data.contentPostList"
+          :contentTweetList="postData.data.contentTweetList"
           :contentBangumiList="postData.data.contentBangumiList"
           :contentGameList="postData.data.contentGameList"
           :contentBookList="postData.data.contentBookList"
@@ -214,6 +215,13 @@
           :postList="postData.data.postList"
           :postId="postData.data._id"
           v-if="postData.data.postList.length > 0"
+        />
+      </template>
+      <template v-else-if="item === 'tweet'">
+        <LazyTweetAbout
+          :tweetList="postData.data.tweetList"
+          :postId="postData.data._id"
+          v-if="postData.data.tweetList.length > 0"
         />
       </template>
       <template v-else-if="item === 'acgn'">
@@ -1091,7 +1099,7 @@ const seriesSortListCom = computed(() => {
     !postData.value?.data?.seriesSortList ||
     postData.value.data.seriesSortList.length === 0
   ) {
-    return ['media', 'event', 'vote', 'post', 'acgn']
+    return ['media', 'event', 'vote', 'post', 'tweet', 'acgn']
   }
   return postData.value.data.seriesSortList
 })

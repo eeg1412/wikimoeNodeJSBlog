@@ -42,10 +42,23 @@ module.exports = async function (req, res, next) {
               },
               {
                 contentPostList: id
+              },
+              {
+                tweetList: id
+              },
+              {
+                contentTweetList: id
               }
             ]
           },
-          { $pull: { postList: id, contentPostList: id } }
+          {
+            $pull: {
+              postList: id,
+              contentPostList: id,
+              tweetList: id,
+              contentTweetList: id
+            }
+          }
         )
         .then(postData => {
           // console.log(postData)

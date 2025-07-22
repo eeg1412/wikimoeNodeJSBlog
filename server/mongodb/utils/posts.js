@@ -67,6 +67,16 @@ exports.findOne = async function (parmas, projection, options = {}) {
       match: { status: matchStatus, type: 1 },
       select: 'title _id coverImages alias date status',
       populate: {
+        select: 'filepath thumfor width height thumWidth thumHeight mimetype',
+        path: 'coverImages'
+      }
+    })
+    .populate({
+      path: 'tweetList',
+      match: { status: matchStatus, type: 2 },
+      select: 'title _id coverImages excerpt alias date status',
+      populate: {
+        select: 'filepath thumfor width height thumWidth thumHeight mimetype',
         path: 'coverImages'
       }
     })
@@ -124,6 +134,16 @@ exports.findOne = async function (parmas, projection, options = {}) {
       match: { status: matchStatus, type: 1 },
       select: 'title _id coverImages alias date status',
       populate: {
+        select: 'filepath thumfor width height thumWidth thumHeight mimetype',
+        path: 'coverImages'
+      }
+    })
+    .populate({
+      path: 'contentTweetList',
+      match: { status: matchStatus, type: 2 },
+      select: 'title _id coverImages excerpt alias date status',
+      populate: {
+        select: 'filepath thumfor width height thumWidth thumHeight mimetype',
         path: 'coverImages'
       }
     })
@@ -224,6 +244,14 @@ exports.findPage = async function (
     })
   }
 
+  if (projection && !projection.includes('-tweetList')) {
+    query = query.populate({
+      path: 'tweetList',
+      match: { status: matchStatus, type: 2 },
+      select: 'title _id excerpt alias date status'
+    })
+  }
+
   if (projection && !projection.includes('-eventList')) {
     query = query.populate({
       path: 'eventList',
@@ -293,6 +321,19 @@ exports.findPage = async function (
       match: { status: matchStatus, type: 1 },
       select: 'title _id coverImages alias date status',
       populate: {
+        select: 'filepath thumfor width height thumWidth thumHeight mimetype',
+        path: 'coverImages'
+      }
+    })
+  }
+
+  if (projection && !projection.includes('-contentTweetList')) {
+    query = query.populate({
+      path: 'contentTweetList',
+      match: { status: matchStatus, type: 2 },
+      select: 'title _id coverImages excerpt alias date status',
+      populate: {
+        select: 'filepath thumfor width height thumWidth thumHeight mimetype',
         path: 'coverImages'
       }
     })

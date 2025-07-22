@@ -248,9 +248,20 @@
                   }}
                 </template>
                 <template v-else-if="content.type === 'post'">
-                  <i class="fas fa-fw fa-newspaper"></i
-                  >{{ `${checkShowText(content)}`
-                  }}{{
+                  <i class="fas fa-fw fa-newspaper"></i>
+                  {{ `${checkShowText(content)}` }}
+                  {{
+                    `${
+                      content.date
+                        ? $formatDate(content.date, '【YYYY年MM月DD日】')
+                        : ''
+                    }`
+                  }}
+                </template>
+                <template v-else-if="content.type === 'tweet'">
+                  <i class="fas fa-fw fa-align-left"></i>
+                  {{ `${checkShowText(content)}` }}
+                  {{
                     `${
                       content.date
                         ? $formatDate(content.date, '【YYYY年MM月DD日】')
@@ -315,6 +326,17 @@
                 </template>
                 <template v-else-if="content.type === 'post'">
                   <i class="fas fa-fw fa-newspaper"></i
+                  >{{ `${checkShowText(content)}`
+                  }}{{
+                    `${
+                      content.date
+                        ? $formatDate(content.date, '【YYYY年MM月DD日】')
+                        : ''
+                    }`
+                  }}
+                </template>
+                <template v-else-if="content.type === 'tweet'">
+                  <i class="fas fa-fw fa-align-left"></i
                   >{{ `${checkShowText(content)}`
                   }}{{
                     `${
@@ -470,7 +492,8 @@ import {
   getSessionParams,
   copyToClipboard,
   seasonToStr,
-  escapeHtml
+  escapeHtml,
+  limitStr
 } from '@/utils/utils'
 import store from '@/store'
 import CheckDialogService from '@/services/CheckDialogService'
@@ -529,7 +552,7 @@ export default {
       const id = row._id
       let title = row.title || row.excerpt
       if (title.length > 20) {
-        title = title.slice(0, 20) + '...'
+        title = limitStr(title, 20)
       }
       if (!title) {
         title = '未定义标题或内容'
@@ -748,6 +771,7 @@ export default {
         movieList: originalMovieList,
         gameList: originalGameList,
         postList: originalPostList,
+        tweetList: originalTweetList,
         eventList: originalEventList,
         voteList: originalVoteList,
         contentBookList,
@@ -755,6 +779,7 @@ export default {
         contentMovieList,
         contentGameList,
         contentPostList,
+        contentTweetList,
         contentEventList,
         contentVoteList
       } = row
@@ -767,13 +792,15 @@ export default {
         type === 'content' ? contentMovieList : originalMovieList
       const gameList = type === 'content' ? contentGameList : originalGameList
       const postList = type === 'content' ? contentPostList : originalPostList
+      const tweetList =
+        type === 'content' ? contentTweetList : originalTweetList
       const eventList =
         type === 'content' ? contentEventList : originalEventList
       const voteList = type === 'content' ? contentVoteList : originalVoteList
 
       const contentList = []
       if (!sort || sort.length <= 0) {
-        sort = ['event', 'vote', 'post', 'acgn']
+        sort = ['event', 'vote', 'post', 'tweet', 'acgn']
       }
       sort.forEach(item => {
         if (item === 'event') {
@@ -794,6 +821,16 @@ export default {
           if (postList && postList.length) {
             const type = 'post'
             postList.forEach(item => {
+              contentList.push({ ...item, type })
+            })
+          }
+        } else if (item === 'tweet') {
+          if (tweetList && tweetList.length) {
+            const type = 'tweet'
+            tweetList.forEach(item => {
+              const title = limitStr(item.excerpt, 20)
+              item.title = title
+              delete item.excerpt
               contentList.push({ ...item, type })
             })
           }

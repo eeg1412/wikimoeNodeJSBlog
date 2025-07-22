@@ -22,7 +22,10 @@
       >
     </template>
   </div>
-  <div class="mb-2 mt-3" v-if="contentSeriesSortListCom.length > 0">
+  <div
+    class="mb-2 mt-3 whitespace-normal"
+    v-if="contentSeriesSortListCom.length > 0"
+  >
     <!-- 遍历contentSeriesSortListCom -->
     <template v-for="(item, index) in contentSeriesSortListCom" :key="index">
       <template v-if="item === 'media'">
@@ -78,6 +81,15 @@
           v-if="contentPostList.length > 0"
         />
       </template>
+      <template v-else-if="item === 'tweet'">
+        <LazyTweetAbout
+          :tweetList="contentTweetList"
+          :showTitle="false"
+          :postId="postId"
+          idPrefix="content"
+          v-if="contentTweetList.length > 0"
+        />
+      </template>
       <template v-else-if="item === 'acgn'">
         <LazyPostACG
           :bangumiList="contentBangumiList"
@@ -126,6 +138,11 @@ const props = defineProps({
     type: Array,
     default: () => []
   },
+  contentTweetList: {
+    // 数组
+    type: Array,
+    default: () => []
+  },
   contentBangumiList: {
     // 数组
     type: Array,
@@ -168,7 +185,7 @@ const contentSeriesSortListCom = computed(() => {
     !props.contentSeriesSortList ||
     props.contentSeriesSortList.length === 0
   ) {
-    return ['media', 'event', 'vote', 'post', 'acgn']
+    return ['media', 'event', 'vote', 'post', 'tweet', 'acgn']
   }
   return props.contentSeriesSortList
 })
