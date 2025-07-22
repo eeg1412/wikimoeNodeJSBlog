@@ -971,9 +971,8 @@ ins.adsbygoogle[data-ad-status='unfilled'] {
   height: 170px;
 }
 .acgn-item-body {
-  @apply border border-solid border-gray-200;
+  @apply border border-solid border-gray-200 bg-white dark:bg-gray-800/40;
   border-radius: 6px;
-  background-color: #ffffff;
   padding: 8px;
 }
 .acg-summary {
@@ -1406,9 +1405,6 @@ ins.adsbygoogle[data-ad-status='unfilled'] {
   --wikimoe-dark-panel-bg: rgba(17, 17, 17, 1); */
   --wikimoe-dark-bg: rgba(17, 17, 17, 1);
   --wikimoe-dark-panel-bg: rgba(20, 20, 20, 1);
-}
-html.dark .acgn-item-body {
-  background-color: var(--wikimoe-dark-bg);
 }
 html.dark body {
   @apply dark:text-gray-200;

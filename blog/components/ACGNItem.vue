@@ -3,7 +3,7 @@
     <div class="flex-shrink-0 relative">
       <div class="acgn-left-content">
         <div
-          class="acgn-item-cover-body content-h-131 relative flex justify-center items-center border border-solid border-gray-200 rounded-md p-1"
+          class="acgn-item-cover-body content-h-131 relative flex justify-center items-center border border-solid border-gray-200 rounded-md p-1 bg-white dark:bg-black/30"
         >
           <WikimoeImage
             class="max-image rounded item-cover"

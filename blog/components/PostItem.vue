@@ -4,7 +4,7 @@
       <WikimoeImage
         class="post-list-blog-cover-img border-t border-l border-r border-gray-200 dark:border-gray-700 border-solid group-hover:border-primary-500/60 transition-border-color duration-500"
         :src="post.coverImages[0].thumfor || post.coverImages[0].filepath"
-        :alt="post.coverImages[0].filename"
+        :alt="post.title || ''"
         :width="post.coverImages[0].thumWidth || post.coverImages[0].width"
         :height="post.coverImages[0].thumHeight || post.coverImages[0].height"
         loading="lazy"
@@ -14,7 +14,7 @@
       <WikimoeImage
         class="post-list-blog-cover-img border-t border-l border-r border-gray-200 dark:border-gray-700 border-solid group-hover:border-primary-500/60 transition-border-color duration-500"
         :src="defaultCover"
-        :alt="post.title"
+        :alt="post.title || ''"
         :width="1344"
         :height="648"
         loading="lazy"

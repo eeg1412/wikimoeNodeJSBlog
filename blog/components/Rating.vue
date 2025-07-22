@@ -71,7 +71,7 @@ const percent = computed(() => {
   box-sizing: border-box;
 }
 .rating-p-bar-inner-parent {
-  @apply border border-solid border-primary-400/20 rounded;
+  @apply border border-solid border-primary-400/20 rounded bg-white dark:bg-black/20;
   width: 100%;
   height: 100%;
   box-sizing: border-box;
