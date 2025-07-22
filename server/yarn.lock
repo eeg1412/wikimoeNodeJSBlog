@@ -1049,10 +1049,10 @@ mongodb@5.9.2:
   optionalDependencies:
     "@mongodb-js/saslprep" "^1.1.0"
 
-mongoose@7.8.4:
-  version "7.8.4"
-  resolved "https://registry.yarnpkg.com/mongoose/-/mongoose-7.8.4.tgz#d6f123bf88ceba528f79d74a1e9fbba3beb20f11"
-  integrity sha512-qqQ7imsb9lyrW1jmYj6/wDiSewRtd/gpOU2Vdy1AMRBT7jrghKnoDMbC3keFUzZ0iyo3ZcYumisPKFnap5R4zQ==
+mongoose@7.8.7:
+  version "7.8.7"
+  resolved "https://registry.yarnpkg.com/mongoose/-/mongoose-7.8.7.tgz#7a7ccbfd3da25990c88a8c41cd5b5abc30b913c7"
+  integrity sha512-5Bo4CrUxrPITrhMKsqUTOkXXo2CoRC5tXxVQhnddCzqDMwRXfyStrxj1oY865g8gaekSBhxAeNkYyUSJvGm9Hw==
   dependencies:
     bson "^5.5.0"
     kareem "2.5.1"
@@ -1534,8 +1534,16 @@ streamx@^2.15.0:
     fast-fifo "^1.1.0"
     queue-tick "^1.0.1"
 
-"string-width-cjs@npm:string-width@^4.2.0", string-width@^4.1.0:
-  name string-width-cjs
+"string-width-cjs@npm:string-width@^4.2.0":
+  version "4.2.3"
+  resolved "https://registry.yarnpkg.com/string-width/-/string-width-4.2.3.tgz#269c7117d27b05ad2e536830a8ec895ef9c6d010"
+  integrity sha512-wKyQRQpjJ0sIp62ErSZdGsjMJWsap5oRNihHhu6G7JVO/9jIB6UyevL+tXuOqrng8j/cxKTWyWUwvSTriiZz/g==
+  dependencies:
+    emoji-regex "^8.0.0"
+    is-fullwidth-code-point "^3.0.0"
+    strip-ansi "^6.0.1"
+
+string-width@^4.1.0:
   version "4.2.3"
   resolved "https://registry.yarnpkg.com/string-width/-/string-width-4.2.3.tgz#269c7117d27b05ad2e536830a8ec895ef9c6d010"
   integrity sha512-wKyQRQpjJ0sIp62ErSZdGsjMJWsap5oRNihHhu6G7JVO/9jIB6UyevL+tXuOqrng8j/cxKTWyWUwvSTriiZz/g==
