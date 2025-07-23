@@ -3,68 +3,25 @@
     class="tweet-content-lite-item-body flex border border-solid cursor-pointer rounded-md overflow-hidden transition-border-color duration-500 bg-white dark:bg-gray-800/40"
   >
     <!-- 图片区域 -->
-    <div class="tweet-content-lite-item-images" v-if="images.length > 0">
-      <!-- 1张图片 -->
-      <div v-if="images.length === 1" class="w-full h-full">
-        <img
-          loading="lazy"
-          class="w-full h-full object-cover"
-          :src="images[0]"
-        />
-      </div>
-
-      <!-- 2张图片 -->
-      <div v-else-if="images.length === 2" class="flex w-full h-full">
-        <img
-          v-for="(image, index) in images"
-          :key="index"
-          loading="lazy"
-          class="flex-1 h-full object-cover"
-          :class="{ 'border-r border-gray-200': index === 0 }"
-          :src="image"
-        />
-      </div>
-
-      <!-- 3张图片 -->
-      <div v-else-if="images.length === 3" class="flex w-full h-full">
-        <img
-          loading="lazy"
-          class="flex-1 h-full object-cover border-r border-gray-200"
-          :src="images[0]"
-        />
-        <div class="flex-1 flex flex-col">
-          <img
-            loading="lazy"
-            class="flex-1 object-cover border-b border-gray-200"
-            :src="images[1]"
-          />
-          <img loading="lazy" class="flex-1 object-cover" :src="images[2]" />
-        </div>
-      </div>
-
-      <!-- 4张或更多图片 -->
-      <div v-else class="grid grid-cols-2 grid-rows-2 w-full h-full gap-1px">
-        <img
-          v-for="(image, index) in images.slice(0, 3)"
-          :key="index"
-          loading="lazy"
-          class="w-full h-full object-cover"
-          :src="image"
-        />
-        <div class="relative w-full h-full">
-          <img
-            loading="lazy"
-            class="w-full h-full object-cover"
-            :src="images[3]"
-          />
+    <div
+      class="tweet-content-lite-item-images"
+      v-if="images.length > 0"
+      :class="gridClass"
+    >
+      <template v-for="(image, index) in displayImages" :key="index">
+        <div
+          class="tweet-content-lite-image-item relative w-full h-full overflow-hidden"
+        >
+          <img loading="lazy" class="w-full h-full object-cover" :src="image" />
+          <!-- 显示更多图片数量 -->
           <div
-            v-if="images.length > 4"
-            class="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center text-white font-semibold"
+            v-if="index === 3 && images.length > 4"
+            class="tweet-content-lite-more-count absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center text-white font-semibold"
           >
             +{{ images.length - 4 }}
           </div>
         </div>
-      </div>
+      </template>
     </div>
 
     <!-- 默认图片 -->
@@ -133,6 +90,20 @@ const images = computed(() => {
   }
   return imageList
 })
+
+// 获取 grid 布局的 CSS 类
+const gridClass = computed(() => {
+  const count = images.value.length
+  if (count === 1) return 'tweet-content-lite-grid-1'
+  if (count === 2) return 'tweet-content-lite-grid-2'
+  if (count === 3) return 'tweet-content-lite-grid-3'
+  return 'tweet-content-lite-grid-4'
+})
+
+// 获取要显示的图片（最多4张）
+const displayImages = computed(() => {
+  return images.value.slice(0, 4)
+})
 </script>
 <style scoped>
 .tweet-content-lite-item-body {
@@ -151,9 +122,64 @@ const images = computed(() => {
 }
 
 .tweet-content-lite-item-images {
-  display: block;
+  display: grid;
+  gap: 1px;
   width: 6.5rem;
   height: 100%;
+}
+
+.tweet-content-lite-image-item {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+.tweet-content-lite-more-count {
+  position: absolute;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-weight: 600;
+}
+
+/* Grid 布局类 */
+.tweet-content-lite-grid-1 {
+  grid-template-columns: 1fr;
+  grid-template-rows: 1fr;
+}
+
+.tweet-content-lite-grid-2 {
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr;
+}
+
+.tweet-content-lite-grid-3 {
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr 1fr;
+  grid-template-areas:
+    'img1 img2'
+    'img1 img3';
+}
+
+.tweet-content-lite-grid-3 .tweet-content-lite-image-item:nth-child(1) {
+  grid-area: img1;
+}
+
+.tweet-content-lite-grid-3 .tweet-content-lite-image-item:nth-child(2) {
+  grid-area: img2;
+}
+
+.tweet-content-lite-grid-3 .tweet-content-lite-image-item:nth-child(3) {
+  grid-area: img3;
+}
+
+.tweet-content-lite-grid-4 {
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr 1fr;
 }
 
 .tweet-content-lite-item-body:hover,
