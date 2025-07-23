@@ -160,21 +160,10 @@ const displayImages = computed(() => {
 .tweet-content-lite-grid-3 {
   grid-template-columns: 1fr 1fr;
   grid-template-rows: 1fr 1fr;
-  grid-template-areas:
-    'img1 img2'
-    'img1 img3';
 }
 
 .tweet-content-lite-grid-3 .tweet-content-lite-image-item:nth-child(1) {
-  grid-area: img1;
-}
-
-.tweet-content-lite-grid-3 .tweet-content-lite-image-item:nth-child(2) {
-  grid-area: img2;
-}
-
-.tweet-content-lite-grid-3 .tweet-content-lite-image-item:nth-child(3) {
-  grid-area: img3;
+  grid-row: span 2;
 }
 
 .tweet-content-lite-grid-4 {
