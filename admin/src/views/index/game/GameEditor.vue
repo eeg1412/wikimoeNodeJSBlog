@@ -159,6 +159,10 @@
             </el-button>
           </div>
         </el-form-item>
+        <!-- postLinkOpen 文章链接开关 -->
+        <el-form-item label="文章链接开关" prop="postLinkOpen">
+          <el-switch v-model="form.postLinkOpen"></el-switch>
+        </el-form-item>
         <!-- 游戏开始时间 -->
         <el-form-item label="游戏开始时间" prop="startTime">
           <el-date-picker
@@ -231,6 +235,7 @@ export default {
       startTime: null,
       endTime: null,
       giveUp: false,
+      postLinkOpen: false,
       status: 0
     })
     const rules = reactive({
@@ -333,6 +338,7 @@ export default {
           form.startTime = res.data.data.startTime
           form.endTime = res.data.data.endTime
           form.giveUp = res.data.data.giveUp
+          form.postLinkOpen = res.data.data.postLinkOpen
           form.status = res.data.data.status
         })
         .catch(() => {})

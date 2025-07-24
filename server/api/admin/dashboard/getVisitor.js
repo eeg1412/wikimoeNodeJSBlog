@@ -65,6 +65,10 @@ module.exports = async function (req, res, next) {
     'postListKeyword',
     'postListSort',
     'postListTag',
+    'postListBangumi',
+    'postListMovie',
+    'postListBook',
+    'postListGame',
     'postView'
   ]
   // 根据 timeRangeType 计算开始日期和结束日期

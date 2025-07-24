@@ -20,6 +20,7 @@ module.exports = async function (req, res, next) {
     status,
     id,
     urlList,
+    postLinkOpen,
     __v
   } = req.body
   if (!id) {
@@ -65,6 +66,7 @@ module.exports = async function (req, res, next) {
     day,
     label,
     urlList,
+    postLinkOpen,
     status
   }
 

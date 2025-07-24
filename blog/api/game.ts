@@ -14,6 +14,15 @@ const getGameListApiFetch = (params: any) => {
   return httpRequest.getFetch(URL, params)
 }
 
+// detail
+const URL_DETAIL = `/game/detail`
+const getGameDetailApi = (params: any) => {
+  return httpRequest.get(URL_DETAIL, params, { watch: false })
+}
+const getGameDetailApiFetch = (params: any) => {
+  return httpRequest.getFetch(URL_DETAIL, params)
+}
+
 const URL2 = `/game/platform/list`
 const getGamePlatformListApi = (params: any) => {
   return httpRequest.get(URL2, params, { watch: false })
@@ -28,6 +37,8 @@ const getGamePlayingListApi = (params: any) => {
 export {
   getGameListApi,
   getGameListApiFetch,
+  getGameDetailApi,
+  getGameDetailApiFetch,
   getGamePlatformListApi,
   getGamePlayingListApi
 }

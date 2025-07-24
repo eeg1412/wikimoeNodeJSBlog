@@ -135,15 +135,41 @@
         <!-- 标记 字符串数组 label -->
         <el-table-column prop="label" label="标记">
           <template #default="{ row }">
-            <el-tag v-for="item in row.label" :key="item" type="success">{{
-              item
-            }}</el-tag>
+            <div class="list-table-label">
+              <el-tag v-for="item in row.label" :key="item" type="success">{{
+                item
+              }}</el-tag>
+            </div>
           </template>
         </el-table-column>
         <!-- giveUp 已弃坑 -->
         <el-table-column label="弃坑" width="100px">
           <template #default="{ row }">
             <el-tag v-if="row.giveUp" type="danger">已弃坑</el-tag>
+          </template>
+        </el-table-column>
+        <!-- 文章统计 -->
+        <el-table-column label="相关文章数" width="120px">
+          <template #default="{ row }">
+            <div v-if="row.totalNormalPostCount !== undefined">
+              <div>总计: {{ row.totalNormalPostCount }}</div>
+              <div>公开: {{ row.publicNormalPostCount }}</div>
+            </div>
+          </template>
+        </el-table-column>
+        <el-table-column label="推文内容数" width="120px">
+          <template #default="{ row }">
+            <div v-if="row.totalContentPostCount !== undefined">
+              <div>总计: {{ row.totalContentPostCount }}</div>
+              <div>公开: {{ row.publicContentPostCount }}</div>
+            </div>
+          </template>
+        </el-table-column>
+        <!-- postLinkOpen 是否开启文章链接 -->
+        <el-table-column prop="postLinkOpen" label="文章链接开关" width="120px">
+          <template #default="{ row }">
+            <el-tag v-if="row.postLinkOpen" type="success">开启</el-tag>
+            <el-tag v-else type="danger">关闭</el-tag>
           </template>
         </el-table-column>
         <!-- 状态 -->
@@ -198,6 +224,7 @@ export default {
       page: 1,
       size: 50,
       keyword: '',
+      shouldCount: '1',
       year: null,
       season: null,
       status: null

@@ -14,6 +14,15 @@ const getBangumiListApiFetch = (params: any) => {
   return httpRequest.getFetch(URL, params)
 }
 
+// detail
+const URL1 = `/bangumi/detail`
+const getBangumiDetailApi = (params: any) => {
+  return httpRequest.get(URL1, params, { watch: false })
+}
+const getBangumiDetailApiFetch = (params: any) => {
+  return httpRequest.getFetch(URL1, params)
+}
+
 // /bangumi/year/list
 const URL2 = `/bangumi/year/list`
 const getBangumiYearListApi = (params: any) => {
@@ -29,6 +38,8 @@ const getBangumiSeasonListApi = (params: any) => {
 export {
   getBangumiListApi,
   getBangumiListApiFetch,
+  getBangumiDetailApi,
+  getBangumiDetailApiFetch,
   getBangumiYearListApi,
   getBangumiSeasonListApi
 }

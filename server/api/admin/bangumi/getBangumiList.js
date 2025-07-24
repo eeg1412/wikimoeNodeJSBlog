@@ -4,7 +4,7 @@ const log4js = require('log4js')
 const adminApiLog = log4js.getLogger('adminApi')
 
 module.exports = async function (req, res, next) {
-  let { page, size, keyword, year, season, status } = req.query
+  let { page, size, keyword, year, season, status, shouldCount } = req.query
   page = parseInt(page)
   size = parseInt(size)
   // 判断page和size是否为数字
@@ -42,28 +42,125 @@ module.exports = async function (req, res, next) {
   }
   // 如果year存在，就加入查询条件
   if (year) {
-    params.year = year
+    params.year = Number(year)
   }
   // 如果season存在，就加入查询条件
   if (season) {
-    params.season = season
+    params.season = Number(season)
   }
   // 如果status存在，就加入查询条件
   if (status) {
-    params.status = status
+    params.status = Number(status)
   }
 
   const sort = {
     _id: -1
   }
+
+  // 构建聚合管道
+  const pipeline = [
+    // 条件过滤
+    {
+      $match: params
+    }
+  ]
+
+  if (shouldCount === '1') {
+    pipeline.push(
+      // 查找普通引用的文章
+      {
+        $lookup: {
+          from: 'posts',
+          localField: '_id',
+          foreignField: 'bangumiList',
+          as: 'normalPosts'
+        }
+      },
+      // 查找内容引用的文章
+      {
+        $lookup: {
+          from: 'posts',
+          localField: '_id',
+          foreignField: 'contentBangumiList',
+          as: 'contentPosts'
+        }
+      },
+      // 添加统计字段
+      {
+        $addFields: {
+          totalNormalPostCount: { $size: '$normalPosts' },
+          publicNormalPostCount: {
+            $size: {
+              $filter: {
+                input: '$normalPosts',
+                as: 'post',
+                cond: { $eq: ['$$post.status', 1] }
+              }
+            }
+          },
+          totalContentPostCount: { $size: '$contentPosts' },
+          publicContentPostCount: {
+            $size: {
+              $filter: {
+                input: '$contentPosts',
+                as: 'post',
+                cond: { $eq: ['$$post.status', 1] }
+              }
+            }
+          }
+        }
+      },
+      // 移除posts字段
+      {
+        $project: {
+          normalPosts: 0,
+          contentPosts: 0
+        }
+      }
+    )
+  }
+
+  pipeline.push(
+    // 排序
+    {
+      $sort: sort
+    },
+    // 分页
+    {
+      $skip: (page - 1) * size
+    },
+    {
+      $limit: size
+    }
+  )
+
+  // 使用facet实现分页
+  const aggregatePipeline = [
+    {
+      $facet: {
+        // 获取分页数据
+        list: pipeline,
+        // 获取总数
+        total: [
+          {
+            $match: params
+          },
+          {
+            $count: 'count'
+          }
+        ]
+      }
+    }
+  ]
+
   bangumiUtils
-    .findPage(params, sort, page, size)
-    .then(data => {
-      // 返回格式list,total
-      res.send({
-        list: data.list,
-        total: data.total
-      })
+    .aggregate(aggregatePipeline)
+    .then(result => {
+      const data = {
+        list: result[0].list,
+        total: result[0].total[0]?.count || 0
+      }
+      res.send(data)
     })
     .catch(err => {
       res.status(400).json({
@@ -73,6 +170,6 @@ module.exports = async function (req, res, next) {
           }
         ]
       })
-      adminApiLog.error(`bangumi list get fail, ${JSON.stringify(err)}`)
+      adminApiLog.error(`bangumi list get fail, ${logErrorToText(err)}`)
     })
 }

@@ -35,8 +35,35 @@
         <slot name="options"></slot>
         <div
           class="text-sm mb-1 text-gray-500 flex-shrink-0"
-          v-if="item.urlList.length > 0 || item.screenshotAlbum"
+          v-if="
+            item.urlList.length > 0 || item.screenshotAlbum || item.postLinkOpen
+          "
         >
+          <!-- postLinkOpen 相关文章链接 nuxt link -->
+          <NuxtLink
+            v-if="item.postLinkOpen"
+            class="inline-flex items-center text-primary mr-2"
+            target="_blank"
+            :to="{
+              name: postLinkName,
+              params: {
+                ...postLinkParams,
+                page: 1
+              }
+            }"
+          >
+            <UIcon name="i-heroicons-newspaper" class="align-middle mr-1" />
+            相关文章
+          </NuxtLink>
+          <a
+            href="javascript:;"
+            class="inline-flex items-center text-primary mr-2"
+            v-if="item.screenshotAlbum"
+            @click="showAlbum(item.screenshotAlbum._id)"
+          >
+            <UIcon name="i-heroicons-photo" class="align-middle mr-1" />
+            相关截图
+          </a>
           <a
             :href="url.url"
             target="_blank"
@@ -46,15 +73,6 @@
           >
             <UIcon name="i-heroicons-link" class="align-middle mr-1" />
             {{ url.text }}
-          </a>
-          <a
-            href="javascript:;"
-            class="inline-flex items-center text-primary mr-2"
-            v-if="item.screenshotAlbum"
-            @click="showAlbum(item.screenshotAlbum._id)"
-          >
-            <UIcon name="i-heroicons-photo" class="align-middle mr-1" />
-            相关截图
           </a>
         </div>
 
@@ -102,6 +120,10 @@ const props = defineProps({
   badge: {
     type: Object,
     default: null
+  },
+  type: {
+    type: String,
+    default: ''
   }
 })
 
@@ -123,6 +145,36 @@ const showAlbum = id => {
     AlbumPhotoSwipeRef.value.open()
   })
 }
+
+// postLinkName
+const postLinkName = computed(() => {
+  switch (props.type) {
+    case 'game':
+      return 'postListGame'
+    case 'movie':
+      return 'postListMovie'
+    case 'book':
+      return 'postListBook'
+    case 'bangumi':
+      return 'postListBangumi'
+    default:
+      return ''
+  }
+})
+const postLinkParams = computed(() => {
+  switch (props.type) {
+    case 'game':
+      return { gameid: props.item._id }
+    case 'movie':
+      return { movieid: props.item._id }
+    case 'book':
+      return { bookid: props.item._id }
+    case 'bangumi':
+      return { bangumiid: props.item._id }
+    default:
+      return {}
+  }
+})
 </script>
 <style scoped>
 /* .acgn-item-cover-body {

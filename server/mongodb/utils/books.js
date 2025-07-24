@@ -75,3 +75,9 @@ exports.count = async function (filters) {
   // document查询
   return await booksModel.countDocuments(filters)
 }
+
+// 聚合
+exports.aggregate = async function (pipeline) {
+  // document查询
+  return await booksModel.aggregate(pipeline)
+}

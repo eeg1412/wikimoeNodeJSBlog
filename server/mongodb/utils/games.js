@@ -77,3 +77,9 @@ exports.count = async function (filters) {
   // document查询
   return await gamesModel.countDocuments(filters)
 }
+
+// 聚合
+exports.aggregate = async function (pipeline) {
+  // document查询
+  return await gamesModel.aggregate(pipeline)
+}

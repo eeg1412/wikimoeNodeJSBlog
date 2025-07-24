@@ -57,6 +57,10 @@ var movies = new Schema(
       type: [String],
       default: []
     },
+    postLinkOpen: {
+      type: Boolean,
+      default: false
+    },
     // 状态 0: 不显示 1: 显示
     status: {
       type: Number,

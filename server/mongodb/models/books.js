@@ -67,6 +67,10 @@ var books = new Schema(
       default: false,
       index: true
     },
+    postLinkOpen: {
+      type: Boolean,
+      default: false
+    },
     // 状态 0: 不显示 1: 显示
     status: {
       type: Number,

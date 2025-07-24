@@ -17,6 +17,7 @@ module.exports = async function (req, res, next) {
     label,
     urlList,
     giveUp,
+    postLinkOpen,
     status
   } = req.body
   // 校验格式
@@ -30,6 +31,7 @@ module.exports = async function (req, res, next) {
     label,
     urlList,
     giveUp,
+    postLinkOpen,
     status
   }
   // 根据当前年份生成16进制文件夹
@@ -50,8 +52,9 @@ module.exports = async function (req, res, next) {
       const imgRes = utils.base64ToFile(cover, path, fileName, {
         createDir: true
       })
-      params['cover'] =
-        `/upload/bangumi/${coverYear16}/${imgRes.fileNameAll}?v=${Date.now()}`
+      params['cover'] = `/upload/bangumi/${coverYear16}/${
+        imgRes.fileNameAll
+      }?v=${Date.now()}`
       params['coverFileName'] = imgRes.fileNameAll
     } catch (error) {
       res.status(400).json({

@@ -113,7 +113,7 @@ module.exports = async function (req, res, next) {
       sort,
       page,
       size,
-      '_id cover label rating season status summary title year giveUp urlList'
+      '_id cover label rating season status summary title year giveUp urlList postLinkOpen'
     )
     .then(data => {
       // 返回格式list,total

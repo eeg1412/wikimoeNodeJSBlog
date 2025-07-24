@@ -14,6 +14,15 @@ const getBookListApiFetch = (params: any) => {
   return httpRequest.getFetch(URL, params)
 }
 
+// detail
+const URL_DETAIL = `/book/detail`
+const getBookDetailApi = (params: any) => {
+  return httpRequest.get(URL_DETAIL, params, { watch: false })
+}
+const getBookDetailApiFetch = (params: any) => {
+  return httpRequest.getFetch(URL_DETAIL, params)
+}
+
 const URL2 = `/booktype/list`
 const getBooktypeListApi = (params: any) => {
   return httpRequest.get(URL2, params, { watch: false })
@@ -28,6 +37,8 @@ const getBookReadingListApi = (params: any) => {
 export {
   getBookListApi,
   getBookListApiFetch,
+  getBookDetailApi,
+  getBookDetailApiFetch,
   getBooktypeListApi,
   getBookReadingListApi
 }

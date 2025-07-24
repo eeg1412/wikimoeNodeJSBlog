@@ -92,7 +92,7 @@ module.exports = async function (req, res, next) {
       sort,
       page,
       size,
-      '_id cover label rating status summary title year month day urlList'
+      '_id cover label rating status summary title year month day urlList postLinkOpen'
     )
     .then(data => {
       // 返回格式list,total

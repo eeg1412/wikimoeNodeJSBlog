@@ -185,6 +185,13 @@ const blogRouteSetting = [
     middleware: [],
     controller: require('../api/blog/bangumi/getBangumiYearList')
   },
+  // getBangumiDetail
+  {
+    path: '/bangumi/detail',
+    method: 'get',
+    middleware: [],
+    controller: require('../api/blog/bangumi/getBangumiDetail')
+  },
   // getMovieList
   {
     path: '/movie/list',
@@ -198,6 +205,13 @@ const blogRouteSetting = [
     method: 'get',
     middleware: [],
     controller: require('../api/blog/movie/getMovieYearList')
+  },
+  // getMovieDetail
+  {
+    path: '/movie/detail',
+    method: 'get',
+    middleware: [],
+    controller: require('../api/blog/movie/getMovieDetail')
   },
   // getSortDetail
   {
@@ -241,6 +255,13 @@ const blogRouteSetting = [
     middleware: [],
     controller: require('../api/blog/game/getGamePlatformList')
   },
+  // getGameDetail
+  {
+    path: '/game/detail',
+    method: 'get',
+    middleware: [],
+    controller: require('../api/blog/game/getGameDetail')
+  },
   // getBookList
   {
     path: '/book/list',
@@ -261,6 +282,13 @@ const blogRouteSetting = [
     method: 'get',
     middleware: [],
     controller: require('../api/blog/book/getBooktypeList')
+  },
+  // getBookDetail
+  {
+    path: '/book/detail',
+    method: 'get',
+    middleware: [],
+    controller: require('../api/blog/book/getBookDetail')
   },
   // getAttachmentList
   {

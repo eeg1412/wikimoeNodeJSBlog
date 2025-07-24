@@ -140,6 +140,10 @@
             </el-button>
           </div>
         </el-form-item>
+        <!-- postLinkOpen 文章链接开关 -->
+        <el-form-item label="文章链接开关" prop="postLinkOpen">
+          <el-switch v-model="form.postLinkOpen"></el-switch>
+        </el-form-item>
         <!-- giveUp -->
         <el-form-item label="弃坑" prop="giveUp">
           <el-switch v-model="form.giveUp"></el-switch>
@@ -180,6 +184,7 @@ export default {
       urlList: [],
       giveUp: false,
       status: 0,
+      postLinkOpen: false,
       __v: null
     })
     // 获取今年

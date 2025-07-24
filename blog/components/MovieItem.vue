@@ -6,6 +6,7 @@
       name: '电影',
       color: '#fb923c'
     }"
+    type="movie"
   >
     <template #options>
       <div

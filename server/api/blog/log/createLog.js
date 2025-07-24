@@ -20,7 +20,11 @@ module.exports = async function (req, res, next) {
     'postListArchive',
     'postListKeyword',
     'postListSort',
-    'postListTag'
+    'postListTag',
+    'postListBangumi',
+    'postListMovie',
+    'postListBook',
+    'postListGame'
   ]
   let id = null
   let target = null
@@ -143,7 +147,46 @@ module.exports = async function (req, res, next) {
       content = tagname
       target = 'tag'
       break
-
+    case 'postListBangumi':
+      id = req.body.bangumiid
+      const banguminame = req.body.banguminame
+      // banguminame 必须
+      if (!banguminame) {
+        return
+      }
+      content = banguminame
+      target = 'bangumi'
+      break
+    case 'postListMovie':
+      id = req.body.movieid
+      const moviename = req.body.moviename
+      // moviename 必须
+      if (!moviename) {
+        return
+      }
+      content = moviename
+      target = 'movie'
+      break
+    case 'postListBook':
+      id = req.body.bookid
+      const bookname = req.body.bookname
+      // bookname 必须
+      if (!bookname) {
+        return
+      }
+      content = bookname
+      target = 'book'
+      break
+    case 'postListGame':
+      id = req.body.gameid
+      const gamename = req.body.gamename
+      // gamename 必须
+      if (!gamename) {
+        return
+      }
+      content = gamename
+      target = 'game'
+      break
     default:
       break
   }

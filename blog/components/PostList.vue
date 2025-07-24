@@ -321,6 +321,10 @@ const sortid = route.params.sortid || ''
 const year = route.params.year || ''
 const month = route.params.month || ''
 const tagid = route.params.tagid || ''
+const bangumiid = route.params.bangumiid || ''
+const movieid = route.params.movieid || ''
+const bookid = route.params.bookid || ''
+const gameid = route.params.gameid || ''
 const apiType = computed(() => {
   switch (routeName.value) {
     case 'postList':
@@ -333,6 +337,14 @@ const apiType = computed(() => {
       return 'archive'
     case 'postListTag':
       return 'tag'
+    case 'postListBangumi':
+      return 'bangumi'
+    case 'postListMovie':
+      return 'movie'
+    case 'postListBook':
+      return 'book'
+    case 'postListGame':
+      return 'game'
     default:
       break
   }
@@ -355,6 +367,10 @@ const routePagination = computed(() => {
     case 'postListSort':
     case 'postListArchive':
     case 'postListTag':
+    case 'postListBangumi':
+    case 'postListMovie':
+    case 'postListBook':
+    case 'postListGame':
       to.firstRoute = {
         name: routeName.value,
         params: {
@@ -407,6 +423,10 @@ const [postsDataResponse] = await Promise.all([
     year,
     month,
     tags: tagid ? [tagid] : null,
+    bangumiId: bangumiid || null,
+    movieId: movieid || null,
+    bookId: bookid || null,
+    gameId: gameid || null,
     type: postType.value ? postType.value : null
   })
 ])

@@ -99,7 +99,7 @@ module.exports = async function (req, res, next) {
       sort,
       page,
       size,
-      '_id cover endTime gamePlatform label rating screenshotAlbum startTime status summary title urlList giveUp'
+      '_id cover endTime gamePlatform label rating screenshotAlbum startTime status summary title urlList giveUp postLinkOpen'
     )
     .then(data => {
       // 返回格式list,total

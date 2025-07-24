@@ -6,6 +6,7 @@
       name: '番剧',
       color: '#f472b6'
     }"
+    type="bangumi"
   >
     <template #options>
       <div

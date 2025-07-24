@@ -2,9 +2,11 @@ const bookUtils = require('../../../mongodb/utils/books')
 const utils = require('../../../utils/utils')
 const log4js = require('log4js')
 const adminApiLog = log4js.getLogger('adminApi')
+const mongoose = require('mongoose')
 
 module.exports = async function (req, res, next) {
-  let { page, size, keyword, booktype, status, readStatus } = req.query
+  let { page, size, keyword, booktype, status, readStatus, shouldCount } =
+    req.query
   page = parseInt(page)
   size = parseInt(size)
   // 判断page和size是否为数字
@@ -26,12 +28,20 @@ module.exports = async function (req, res, next) {
   }
   // 如果booktype存在，就加入查询条件
   if (booktype) {
-    // booktype 是数组
-    params.booktype = { $in: booktype }
+    // booktype 是数组，需要转换为ObjectId
+    const booktypeIds = []
+    for (let i = 0; i < booktype.length; i++) {
+      if (utils.isObjectId(booktype[i])) {
+        booktypeIds.push(new mongoose.Types.ObjectId(booktype[i]))
+      }
+    }
+    if (booktypeIds.length > 0) {
+      params.booktype = { $in: booktypeIds }
+    }
   }
   // 如果status存在，就加入查询条件
   if (status) {
-    params.status = status
+    params.status = Number(status)
   }
 
   if (readStatus) {
@@ -92,14 +102,126 @@ module.exports = async function (req, res, next) {
   const sort = {
     _id: -1
   }
+
+  // 构建聚合管道
+  const pipeline = [
+    // 条件过滤
+    {
+      $match: params
+    },
+    // 查找 booktype
+    {
+      $lookup: {
+        from: 'booktypes',
+        localField: 'booktype',
+        foreignField: '_id',
+        as: 'booktype'
+      }
+    },
+    {
+      $unwind: {
+        path: '$booktype',
+        preserveNullAndEmptyArrays: true
+      }
+    }
+  ]
+
+  if (shouldCount === '1') {
+    pipeline.push(
+      // 查找普通引用的文章
+      {
+        $lookup: {
+          from: 'posts',
+          localField: '_id',
+          foreignField: 'bookList',
+          as: 'normalPosts'
+        }
+      },
+      // 查找内容引用的文章
+      {
+        $lookup: {
+          from: 'posts',
+          localField: '_id',
+          foreignField: 'contentBookList',
+          as: 'contentPosts'
+        }
+      },
+      // 添加统计字段
+      {
+        $addFields: {
+          totalNormalPostCount: { $size: '$normalPosts' },
+          publicNormalPostCount: {
+            $size: {
+              $filter: {
+                input: '$normalPosts',
+                as: 'post',
+                cond: { $eq: ['$$post.status', 1] }
+              }
+            }
+          },
+          totalContentPostCount: { $size: '$contentPosts' },
+          publicContentPostCount: {
+            $size: {
+              $filter: {
+                input: '$contentPosts',
+                as: 'post',
+                cond: { $eq: ['$$post.status', 1] }
+              }
+            }
+          }
+        }
+      },
+      // 移除posts字段
+      {
+        $project: {
+          normalPosts: 0,
+          contentPosts: 0
+        }
+      }
+    )
+  }
+
+  pipeline.push(
+    // 排序
+    {
+      $sort: sort
+    },
+    // 分页
+    {
+      $skip: (page - 1) * size
+    },
+    {
+      $limit: size
+    }
+  )
+
+  // 使用facet实现分页
+  const aggregatePipeline = [
+    {
+      $facet: {
+        // 获取分页数据
+        list: pipeline,
+        // 获取总数
+        total: [
+          {
+            $match: params
+          },
+          {
+            $count: 'count'
+          }
+        ]
+      }
+    }
+  ]
+
   bookUtils
-    .findPage(params, sort, page, size)
-    .then(data => {
-      // 返回格式list,total
-      res.send({
-        list: data.list,
-        total: data.total
-      })
+    .aggregate(aggregatePipeline)
+    .then(result => {
+      const data = {
+        list: result[0].list,
+        total: result[0].total[0]?.count || 0
+      }
+      res.send(data)
     })
     .catch(err => {
       res.status(400).json({
@@ -109,6 +231,6 @@ module.exports = async function (req, res, next) {
           }
         ]
       })
-      adminApiLog.error(`book list get fail, ${JSON.stringify(err)}`)
+      adminApiLog.error(`book list get fail, ${logErrorToText(err)}`)
     })
 }

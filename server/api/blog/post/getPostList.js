@@ -7,8 +7,21 @@ const userApiLog = log4js.getLogger('userApi')
 const moment = require('moment-timezone')
 
 module.exports = async function (req, res, next) {
-  let { page, keyword, type, sorttype, sortid, tags, pageType, year, month } =
-    req.query
+  let {
+    page,
+    keyword,
+    type,
+    sorttype,
+    sortid,
+    tags,
+    bangumiId,
+    movieId,
+    bookId,
+    gameId,
+    pageType,
+    year,
+    month
+  } = req.query
   page = parseInt(page)
   const size = global.$globalConfig?.siteSettings?.sitePageSize || 1
   // 判断page和size是否为数字
@@ -145,10 +158,112 @@ module.exports = async function (req, res, next) {
   }
   // 如果tags存在，就加入查询条件
   if (tags) {
-    // tags是数组
+    // tags是数组,需要校验是否为数组且每个元素都是ObjectId
+    if (!Array.isArray(tags)) {
+      res.status(400).json({
+        errors: [
+          {
+            message: 'tags参数错误'
+          }
+        ]
+      })
+      return
+    }
+    if (tags.some(tag => !utils.isObjectId(tag))) {
+      res.status(400).json({
+        errors: [
+          {
+            message: 'tags参数错误'
+          }
+        ]
+      })
+      return
+    }
     params.tags = {
       $in: tags
     }
+  }
+
+  // 如果bangumiId存在，就加入查询条件
+  if (bangumiId) {
+    // 校验bangumiId是否为ObjectId
+    if (!utils.isObjectId(bangumiId)) {
+      res.status(400).json({
+        errors: [
+          {
+            message: 'bangumiId参数错误'
+          }
+        ]
+      })
+      return
+    }
+    // 注意：如果同时存在关键词搜索和ID检索，会合并到同一个$or条件中
+    // 这意味着只要满足关键词搜索OR包含指定ID的任一条件即可
+    params.$or = params.$or || []
+    params.$or.push(
+      { contentBangumiList: { $in: [bangumiId] } },
+      { bangumiList: { $in: [bangumiId] } }
+    )
+  }
+
+  // 如果movieId存在，就加入查询条件
+  if (movieId) {
+    // 校验movieId是否为ObjectId
+    if (!utils.isObjectId(movieId)) {
+      res.status(400).json({
+        errors: [
+          {
+            message: 'movieId参数错误'
+          }
+        ]
+      })
+      return
+    }
+    params.$or = params.$or || []
+    params.$or.push(
+      { contentMovieList: { $in: [movieId] } },
+      { movieList: { $in: [movieId] } }
+    )
+  }
+
+  // 如果bookId存在，就加入查询条件
+  if (bookId) {
+    // 校验bookId是否为ObjectId
+    if (!utils.isObjectId(bookId)) {
+      res.status(400).json({
+        errors: [
+          {
+            message: 'bookId参数错误'
+          }
+        ]
+      })
+      return
+    }
+    params.$or = params.$or || []
+    params.$or.push(
+      { contentBookList: { $in: [bookId] } },
+      { bookList: { $in: [bookId] } }
+    )
+  }
+
+  // 如果gameId存在，就加入查询条件
+  if (gameId) {
+    // 校验gameId是否为ObjectId
+    if (!utils.isObjectId(gameId)) {
+      res.status(400).json({
+        errors: [
+          {
+            message: 'gameId参数错误'
+          }
+        ]
+      })
+      return
+    }
+    params.$or = params.$or || []
+    params.$or.push(
+      { contentGameList: { $in: [gameId] } },
+      { gameList: { $in: [gameId] } }
+    )
   }
 
   // 如果存在年和月

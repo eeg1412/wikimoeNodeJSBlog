@@ -133,6 +133,10 @@
             </el-button>
           </div>
         </el-form-item>
+        <!-- postLinkOpen 文章链接开关 -->
+        <el-form-item label="文章链接开关" prop="postLinkOpen">
+          <el-switch v-model="form.postLinkOpen"></el-switch>
+        </el-form-item>
         <el-form-item label="状态" prop="status">
           <!-- radio 分别对应 0 1 不显示 显示 -->
           <el-radio-group v-model="form.status">
@@ -167,6 +171,7 @@ export default {
       label: [],
       urlList: [],
       status: 0,
+      postLinkOpen: false,
       __v: null
     })
     const rules = reactive({})
