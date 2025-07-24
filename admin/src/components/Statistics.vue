@@ -238,6 +238,138 @@
           </div>
         </div>
       </el-col>
+      <!-- 番剧文章统计 -->
+      <el-col :span="12" :xs="24" class="p10">
+        <div class="mb10 fb statistics-title">番剧文章列表</div>
+        <div class="mb10 statistics-panel">
+          <el-table
+            :data="readPostListBangumiData"
+            row-key="_id"
+            style="width: 100%"
+            height="440px"
+          >
+            <el-table-column prop="title" label="番剧名称">
+              <template #default="{ row }">
+                <div>{{ reduceText(row.title) }}</div>
+              </template>
+            </el-table-column>
+            <el-table-column
+              prop="count"
+              label="访问量"
+              width="80px"
+            ></el-table-column>
+          </el-table>
+          <div class="dflex flexCenter mt10">
+            <el-pagination
+              layout="prev, pager, next"
+              :total="rankData.readPostListBangumiData.length"
+              :pager-count="5"
+              small
+              v-model:current-page="readPostListBangumiPagination.currentPage"
+              v-model:page-size="readPostListBangumiPagination.pageSize"
+            />
+          </div>
+        </div>
+      </el-col>
+      <!-- 电影访问统计 -->
+      <el-col :span="12" :xs="24" class="p10">
+        <div class="mb10 fb statistics-title">电影文章列表</div>
+        <div class="mb10 statistics-panel">
+          <el-table
+            :data="readPostListMovieData"
+            row-key="_id"
+            style="width: 100%"
+            height="440px"
+          >
+            <el-table-column prop="title" label="电影名称">
+              <template #default="{ row }">
+                <div>{{ reduceText(row.title) }}</div>
+              </template>
+            </el-table-column>
+            <el-table-column
+              prop="count"
+              label="访问量"
+              width="80px"
+            ></el-table-column>
+          </el-table>
+          <div class="dflex flexCenter mt10">
+            <el-pagination
+              layout="prev, pager, next"
+              :total="rankData.readPostListMovieData.length"
+              :pager-count="5"
+              small
+              v-model:current-page="readPostListMoviePagination.currentPage"
+              v-model:page-size="readPostListMoviePagination.pageSize"
+            />
+          </div>
+        </div>
+      </el-col>
+      <!-- 书籍访问统计 -->
+      <el-col :span="12" :xs="24" class="p10">
+        <div class="mb10 fb statistics-title">书籍文章列表</div>
+        <div class="mb10 statistics-panel">
+          <el-table
+            :data="readPostListBookData"
+            row-key="_id"
+            style="width: 100%"
+            height="440px"
+          >
+            <el-table-column prop="title" label="书籍名称">
+              <template #default="{ row }">
+                <div>{{ reduceText(row.title) }}</div>
+              </template>
+            </el-table-column>
+            <el-table-column
+              prop="count"
+              label="访问量"
+              width="80px"
+            ></el-table-column>
+          </el-table>
+          <div class="dflex flexCenter mt10">
+            <el-pagination
+              layout="prev, pager, next"
+              :total="rankData.readPostListBookData.length"
+              :pager-count="5"
+              small
+              v-model:current-page="readPostListBookPagination.currentPage"
+              v-model:page-size="readPostListBookPagination.pageSize"
+            />
+          </div>
+        </div>
+      </el-col>
+      <!-- 游戏访问统计 -->
+      <el-col :span="12" :xs="24" class="p10">
+        <div class="mb10 fb statistics-title">游戏文章列表</div>
+        <div class="mb10 statistics-panel">
+          <el-table
+            :data="readPostListGameData"
+            row-key="_id"
+            style="width: 100%"
+            height="440px"
+          >
+            <el-table-column prop="title" label="游戏名称">
+              <template #default="{ row }">
+                <div>{{ reduceText(row.title) }}</div>
+              </template>
+            </el-table-column>
+            <el-table-column
+              prop="count"
+              label="访问量"
+              width="80px"
+            ></el-table-column>
+          </el-table>
+          <div class="dflex flexCenter mt10">
+            <el-pagination
+              layout="prev, pager, next"
+              :total="rankData.readPostListGameData.length"
+              :pager-count="5"
+              small
+              v-model:current-page="readPostListGamePagination.currentPage"
+              v-model:page-size="readPostListGamePagination.pageSize"
+            />
+          </div>
+        </div>
+      </el-col>
 
       <!-- 浏览器统计 rankData.browserStats -->
       <el-col :span="12" :xs="24" class="p10">
@@ -521,6 +653,10 @@ export default {
             readPostListSortPagination.currentPage = 1
             readPostListTagPagination.currentPage = 1
             readPostListKeywordPagination.currentPage = 1
+            readPostListBangumiPagination.currentPage = 1
+            readPostListMoviePagination.currentPage = 1
+            readPostListBookPagination.currentPage = 1
+            readPostListGamePagination.currentPage = 1
             browserStatsPagination.currentPage = 1
             osStatsPagination.currentPage = 1
             countryStatsPagination.currentPage = 1
@@ -757,6 +893,78 @@ export default {
       return []
     })
 
+    // 番剧访问统计分页对象
+    const readPostListBangumiPagination = reactive({
+      currentPage: 1,
+      pageSize: 10
+    })
+    // 番剧访问统计数据计算属性
+    const readPostListBangumiData = computed(() => {
+      if (rankData.value && rankData.value.readPostListBangumiData) {
+        return rankData.value.readPostListBangumiData.slice(
+          (readPostListBangumiPagination.currentPage - 1) *
+            readPostListBangumiPagination.pageSize,
+          readPostListBangumiPagination.currentPage *
+            readPostListBangumiPagination.pageSize
+        )
+      }
+      return []
+    })
+
+    // 电影访问统计分页对象
+    const readPostListMoviePagination = reactive({
+      currentPage: 1,
+      pageSize: 10
+    })
+    // 电影访问统计数据计算属性
+    const readPostListMovieData = computed(() => {
+      if (rankData.value && rankData.value.readPostListMovieData) {
+        return rankData.value.readPostListMovieData.slice(
+          (readPostListMoviePagination.currentPage - 1) *
+            readPostListMoviePagination.pageSize,
+          readPostListMoviePagination.currentPage *
+            readPostListMoviePagination.pageSize
+        )
+      }
+      return []
+    })
+
+    // 书籍访问统计分页对象
+    const readPostListBookPagination = reactive({
+      currentPage: 1,
+      pageSize: 10
+    })
+    // 书籍访问统计数据计算属性
+    const readPostListBookData = computed(() => {
+      if (rankData.value && rankData.value.readPostListBookData) {
+        return rankData.value.readPostListBookData.slice(
+          (readPostListBookPagination.currentPage - 1) *
+            readPostListBookPagination.pageSize,
+          readPostListBookPagination.currentPage *
+            readPostListBookPagination.pageSize
+        )
+      }
+      return []
+    })
+
+    // 游戏访问统计分页对象
+    const readPostListGamePagination = reactive({
+      currentPage: 1,
+      pageSize: 10
+    })
+    // 游戏访问统计数据计算属性
+    const readPostListGameData = computed(() => {
+      if (rankData.value && rankData.value.readPostListGameData) {
+        return rankData.value.readPostListGameData.slice(
+          (readPostListGamePagination.currentPage - 1) *
+            readPostListGamePagination.pageSize,
+          readPostListGamePagination.currentPage *
+            readPostListGamePagination.pageSize
+        )
+      }
+      return []
+    })
+
     // 新增: 爬虫统计分页对象
     const botStatsPagination = reactive({
       currentPage: 1,
@@ -810,6 +1018,16 @@ export default {
       readPostListTagData,
       readPostListKeywordPagination,
       readPostListKeywordData,
+
+      // 新增的四个统计面板相关变量
+      readPostListBangumiPagination,
+      readPostListBangumiData,
+      readPostListMoviePagination,
+      readPostListMovieData,
+      readPostListBookPagination,
+      readPostListBookData,
+      readPostListGamePagination,
+      readPostListGameData,
 
       browserStatsPagination,
       browserStatsData,

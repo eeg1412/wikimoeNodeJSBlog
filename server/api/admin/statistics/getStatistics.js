@@ -359,6 +359,214 @@ module.exports = async function (req, res, next) {
 
   promiseArray.push(readPostListKeywordData)
 
+  // 单位时间番剧列表访问排行 postListBangumi
+  const readPostListBangumiPipeline = [
+    {
+      $match: {
+        createdAt: { $gte: startDate.toDate(), $lte: endDate.toDate() },
+        action: { $in: ['postListBangumi'] },
+        isBot: false
+      }
+    },
+    {
+      $group: {
+        _id: '$data.targetId',
+        count: { $sum: 1 }
+      }
+    },
+    {
+      $sort: {
+        count: -1,
+        _id: -1
+      }
+    },
+    {
+      $limit: limit
+    },
+    {
+      $lookup: {
+        from: 'bangumis',
+        localField: '_id',
+        foreignField: '_id',
+        as: 'bangumi'
+      }
+    },
+    {
+      $unwind: '$bangumi'
+    },
+    {
+      $project: {
+        _id: 1,
+        count: 1,
+        title: '$bangumi.title'
+      }
+    }
+  ]
+  const readPostListBangumiData = readerlogUtils
+    .aggregate(readPostListBangumiPipeline)
+    .catch(err => {
+      adminApiLog.error(err)
+      return false
+    })
+
+  promiseArray.push(readPostListBangumiData)
+
+  // 单位时间电影列表访问排行 postListMovie
+  const readPostListMoviePipeline = [
+    {
+      $match: {
+        createdAt: { $gte: startDate.toDate(), $lte: endDate.toDate() },
+        action: { $in: ['postListMovie'] },
+        isBot: false
+      }
+    },
+    {
+      $group: {
+        _id: '$data.targetId',
+        count: { $sum: 1 }
+      }
+    },
+    {
+      $sort: {
+        count: -1,
+        _id: -1
+      }
+    },
+    {
+      $limit: limit
+    },
+    {
+      $lookup: {
+        from: 'movies',
+        localField: '_id',
+        foreignField: '_id',
+        as: 'movie'
+      }
+    },
+    {
+      $unwind: '$movie'
+    },
+    {
+      $project: {
+        _id: 1,
+        count: 1,
+        title: '$movie.title'
+      }
+    }
+  ]
+  const readPostListMovieData = readerlogUtils
+    .aggregate(readPostListMoviePipeline)
+    .catch(err => {
+      adminApiLog.error(err)
+      return false
+    })
+
+  promiseArray.push(readPostListMovieData)
+
+  // 单位时间书籍列表访问排行 postListBook
+  const readPostListBookPipeline = [
+    {
+      $match: {
+        createdAt: { $gte: startDate.toDate(), $lte: endDate.toDate() },
+        action: { $in: ['postListBook'] },
+        isBot: false
+      }
+    },
+    {
+      $group: {
+        _id: '$data.targetId',
+        count: { $sum: 1 }
+      }
+    },
+    {
+      $sort: {
+        count: -1,
+        _id: -1
+      }
+    },
+    {
+      $limit: limit
+    },
+    {
+      $lookup: {
+        from: 'books',
+        localField: '_id',
+        foreignField: '_id',
+        as: 'book'
+      }
+    },
+    {
+      $unwind: '$book'
+    },
+    {
+      $project: {
+        _id: 1,
+        count: 1,
+        title: '$book.title'
+      }
+    }
+  ]
+  const readPostListBookData = readerlogUtils
+    .aggregate(readPostListBookPipeline)
+    .catch(err => {
+      adminApiLog.error(err)
+      return false
+    })
+
+  promiseArray.push(readPostListBookData)
+
+  // 单位时间游戏列表访问排行 postListGame
+  const readPostListGamePipeline = [
+    {
+      $match: {
+        createdAt: { $gte: startDate.toDate(), $lte: endDate.toDate() },
+        action: { $in: ['postListGame'] },
+        isBot: false
+      }
+    },
+    {
+      $group: {
+        _id: '$data.targetId',
+        count: { $sum: 1 }
+      }
+    },
+    {
+      $sort: {
+        count: -1,
+        _id: -1
+      }
+    },
+    {
+      $limit: limit
+    },
+    {
+      $lookup: {
+        from: 'games',
+        localField: '_id',
+        foreignField: '_id',
+        as: 'game'
+      }
+    },
+    {
+      $unwind: '$game'
+    },
+    {
+      $project: {
+        _id: 1,
+        count: 1,
+        title: '$game.title'
+      }
+    }
+  ]
+  const readPostListGameData = readerlogUtils
+    .aggregate(readPostListGamePipeline)
+    .catch(err => {
+      adminApiLog.error(err)
+      return false
+    })
+
+  promiseArray.push(readPostListGameData)
+
   // 设备和地理位置统计 - 合并在一个聚合查询中以减少查询次数
   const deviceAndLocationPipeline = [
     {
@@ -719,6 +927,10 @@ module.exports = async function (req, res, next) {
       readPostListSortData,
       readPostListTagData,
       readPostListKeywordData,
+      readPostListBangumiData,
+      readPostListMovieData,
+      readPostListBookData,
+      readPostListGameData,
       deviceAndLocationData,
       botStatsData // 新增的爬虫统计数据
     ] = await Promise.all(promiseArray)
@@ -730,6 +942,10 @@ module.exports = async function (req, res, next) {
       !readPostListSortData ||
       !readPostListTagData ||
       !readPostListKeywordData ||
+      !readPostListBangumiData ||
+      !readPostListMovieData ||
+      !readPostListBookData ||
+      !readPostListGameData ||
       !deviceAndLocationData ||
       !botStatsData
     ) {
@@ -750,6 +966,10 @@ module.exports = async function (req, res, next) {
       readPostListSortData: readPostListSortData,
       readPostListTagData: readPostListTagData,
       readPostListKeywordData: readPostListKeywordData,
+      readPostListBangumiData: readPostListBangumiData,
+      readPostListMovieData: readPostListMovieData,
+      readPostListBookData: readPostListBookData,
+      readPostListGameData: readPostListGameData,
       // 设备和地理位置统计数据
       browserStats: deviceAndLocationData[0].browserStats,
       osStats: deviceAndLocationData[0].osStats,
