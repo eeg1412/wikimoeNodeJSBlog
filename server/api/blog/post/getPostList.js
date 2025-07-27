@@ -157,7 +157,7 @@ module.exports = async function (req, res, next) {
     }
   }
   // 如果tags存在，就加入查询条件
-  if (tags) {
+  if (tags && tags.length > 0) {
     // tags是数组,需要校验是否为数组且每个元素都是ObjectId
     if (!Array.isArray(tags)) {
       res.status(400).json({

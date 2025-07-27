@@ -11,8 +11,8 @@ interface GetPostsParams {
   sortid?: string
   year?: string
   month?: string
-  tags?: string
-  type?: Array<number>
+  tags?: Array<string>
+  type?: number
 }
 const URL = `/post/list`
 const getPostsApi = (params: GetPostsParams) => {

@@ -416,18 +416,18 @@ if (!/^\d+$/.test(page)) {
 }
 const [postsDataResponse] = await Promise.all([
   getPostsApi({
-    page,
-    keyword,
+    page: page,
+    keyword: keyword || undefined,
     pageType: apiType.value,
-    sortid: sortid,
-    year,
-    month,
-    tags: tagid ? [tagid] : null,
-    bangumiId: bangumiid || null,
-    movieId: movieid || null,
-    bookId: bookid || null,
-    gameId: gameid || null,
-    type: postType.value ? postType.value : null
+    sortid: sortid || undefined,
+    year: year || undefined,
+    month: month || undefined,
+    'tags[]': tagid ? [tagid] : undefined,
+    bangumiId: bangumiid || undefined,
+    movieId: movieid || undefined,
+    bookId: bookid || undefined,
+    gameId: gameid || undefined,
+    type: postType.value || undefined
   })
 ])
 
