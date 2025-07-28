@@ -1377,6 +1377,10 @@ ins.adsbygoogle[data-ad-status='unfilled'] {
   grid-column: span 2;
 }
 
+.nuxt-loading-indicator {
+  background: rgb(var(--color-primary-400) / 1) !important;
+}
+
 /* 单列 */
 /* 0-640 */
 /* 769 - 950 */

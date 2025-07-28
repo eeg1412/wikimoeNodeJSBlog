@@ -448,14 +448,14 @@ onUnmounted(() => {
   margin: 0 auto;
   margin-bottom: 20px;
   margin-top: 15px;
-  box-shadow: 0px 0px 10px 0px rgba(239, 144, 167, 0.08);
+  box-shadow: 0px 0px 10px 0px rgb(var(--color-primary-400) / 0.08);
   border-radius: 20px;
 }
 .blog-layout-left-body {
+  @apply border-primary-100/20 border-r-2 border-solid;
   width: 298px;
   box-sizing: border-box;
   flex: 0 0 298px;
-  border-right: 2px solid #fff7f9;
   order: 0;
 }
 .blog-layout-content-body {
@@ -467,10 +467,10 @@ onUnmounted(() => {
   order: 1;
 }
 .blog-layout-right-body {
+  @apply border-primary-100/20 border-l-2 border-solid;
   width: 298px;
   box-sizing: border-box;
   flex: 0 0 298px;
-  border-left: 2px solid #fff7f9;
   align-self: flex-end;
   position: sticky;
   bottom: 0px;
@@ -519,9 +519,9 @@ onUnmounted(() => {
   background-image: none;
 }
 .blog-layout-sticky {
+  @apply bg-primary-50/10;
   position: sticky;
   top: 0px;
-  background-color: #fffdfd;
   /* 左上角,左下角20px 圆角 */
   border-top-left-radius: 20px;
   border-bottom-left-radius: 20px;
@@ -735,7 +735,7 @@ onUnmounted(() => {
     z-index: 21;
     width: 100%;
     height: 100%;
-    border-right: 0px solid #fff7f9;
+    border-right: 0px solid;
     background-color: #fffdfd;
     display: block;
     overflow: auto;
