@@ -278,18 +278,3 @@ export const changedParams = (
   console.log(list)
   return list
 }
-
-let rightMenuCloseFnMap: Map<string, () => void> = new Map()
-export const setRightMenuCloseFn = (fn: () => void, key: string) => {
-  rightMenuCloseFnMap.set(key, fn)
-}
-export const clearRightMenuCloseFn = (key: string) => {
-  rightMenuCloseFnMap.delete(key)
-}
-export const tryCloseRightMenu = (notkey: string) => {
-  rightMenuCloseFnMap.forEach((fn, key) => {
-    if (key !== notkey) {
-      fn()
-    }
-  })
-}

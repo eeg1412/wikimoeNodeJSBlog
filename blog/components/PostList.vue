@@ -236,11 +236,18 @@
     </div>
     <ClientOnly>
       <Teleport to="#rightToolBar">
-        <LazyPostListFilterBtn @btnClick="switchFilterMenu" />
+        <LazyPostListFilterBtn
+          @btnClick="switchFilterMenu"
+          ref="filterTriggerRef"
+        />
       </Teleport>
       <Teleport to="#rightToolBarMenu">
         <transition name="fade">
-          <div class="common-right-tool-menu-body" v-show="showFilterMenu">
+          <div
+            class="common-right-tool-menu-body"
+            v-show="showFilterMenu"
+            ref="filterMenuRef"
+          >
             <div class="common-right-tool-menu-box">
               <div
                 class="flex justify-between items-center bg-white dark:bg-gray-900 border-b border-solid border-gray-200 dark:border-gray-700 text-base px-4 py-3"
@@ -605,20 +612,26 @@ const likePost = postId => {
 
 // 文章筛选
 const showFilterMenu = ref(false)
-const switchFilterMenu = () => {
-  showFilterMenu.value = !showFilterMenu.value
-  if (showFilterMenu.value) {
-    tryCloseRightMenu()
-    setRightMenuCloseFn(() => {
+const filterMenuRef = ref(null)
+const filterTriggerRef = ref(null)
+
+// 使用 useOutsideClick 监听外部点击
+useOutsideClick(
+  filterMenuRef,
+  () => {
+    if (showFilterMenu.value) {
       showFilterMenu.value = false
-    }, 'postListFilter')
+    }
+  },
+  {
+    ignore: [() => filterTriggerRef.value?.$el]
   }
+)
+
+const switchFilterMenu = () => {
+  console.log(filterTriggerRef.value, '外部点击，关闭菜单')
+  showFilterMenu.value = !showFilterMenu.value
 }
-watch(showFilterMenu, val => {
-  if (!val) {
-    clearRightMenuCloseFn('postListFilter')
-  }
-})
 const switchPostType = type => {
   if (type === postType.value) {
     return
@@ -637,9 +650,6 @@ const isHydrated = ref(false)
 onMounted(() => {
   postLikeLogList()
   isHydrated.value = true
-})
-onUnmounted(() => {
-  clearRightMenuCloseFn('postListFilter')
 })
 </script>
 <style scoped>

@@ -1,6 +1,7 @@
 <template>
   <!-- 主题切换按钮 -->
   <div
+    ref="triggerRef"
     class="themeBtn common-right-tool-btn opacity-70 text-white"
     @click="switchFilterMenu"
   >
@@ -8,7 +9,11 @@
     <UIcon v-else-if="colorMode.value === 'dark'" name="i-heroicons-moon" />
   </div>
   <transition name="fade">
-    <div class="common-right-tool-menu-body" v-show="showFilterMenu">
+    <div
+      class="common-right-tool-menu-body"
+      v-show="showFilterMenu"
+      ref="menuRef"
+    >
       <div class="common-right-tool-menu-box">
         <div
           class="flex justify-between items-center bg-white dark:bg-gray-900 border-b border-solid border-gray-200 dark:border-gray-700 text-base px-4 py-3"
@@ -63,6 +68,23 @@
 // 使用Nuxt 3的colorMode组合式API
 const colorMode = useColorMode()
 const showFilterMenu = ref(false)
+const menuRef = ref(null)
+const triggerRef = ref(null)
+
+// 使用 useOutsideClick 监听外部点击，忽略触发按钮
+useOutsideClick(
+  menuRef,
+  () => {
+    console.log('外部点击，关闭菜单')
+    if (showFilterMenu.value) {
+      console.log('关闭主题切换菜单')
+      showFilterMenu.value = false
+    }
+  },
+  {
+    ignore: [triggerRef]
+  }
+)
 
 // 切换主题
 const setColorMode = mode => {
@@ -73,22 +95,7 @@ const setColorMode = mode => {
 // 切换菜单显示状态
 const switchFilterMenu = () => {
   showFilterMenu.value = !showFilterMenu.value
-  if (showFilterMenu.value) {
-    tryCloseRightMenu()
-    setRightMenuCloseFn(() => {
-      showFilterMenu.value = false
-    }, 'themeChanger')
-  }
 }
-// watch showFilterMenu
-watch(showFilterMenu, val => {
-  if (!val) {
-    clearRightMenuCloseFn('themeChanger')
-  }
-})
-onUnmounted(() => {
-  clearRightMenuCloseFn('themeChanger')
-})
 </script>
 
 <style scoped></style>

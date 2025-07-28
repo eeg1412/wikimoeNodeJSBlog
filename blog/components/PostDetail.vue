@@ -534,7 +534,11 @@
       <!-- headerList -->
       <Teleport to="#rightToolBarMenu">
         <transition name="fade">
-          <div class="common-right-tool-menu-body" v-show="showHeaderListMenu">
+          <div
+            class="common-right-tool-menu-body"
+            v-show="showHeaderListMenu"
+            ref="headerListMenuRef"
+          >
             <div class="common-right-tool-menu-box">
               <div
                 class="flex justify-between items-center bg-white dark:bg-gray-900 border-b border-solid border-gray-200 dark:border-gray-700 text-base px-4 py-3"
@@ -561,6 +565,7 @@
       <Teleport to="#rightToolBar">
         <LazyPostShowHeaderListBtn
           @btnClick="switchShowHeaderListMenu"
+          ref="headerListTriggerRef"
           v-if="headerList.length > 0"
         />
       </Teleport>
@@ -953,20 +958,25 @@ useSeoMeta({
 
 // 文章导航
 const showHeaderListMenu = ref(false)
+const headerListMenuRef = ref(null)
+const headerListTriggerRef = ref(null)
+
+// 使用 useOutsideClick 监听外部点击
+useOutsideClick(
+  headerListMenuRef,
+  () => {
+    if (showHeaderListMenu.value) {
+      showHeaderListMenu.value = false
+    }
+  },
+  {
+    ignore: [() => headerListTriggerRef.value?.$el]
+  }
+)
+
 const switchShowHeaderListMenu = () => {
   showHeaderListMenu.value = !showHeaderListMenu.value
-  if (showHeaderListMenu.value) {
-    tryCloseRightMenu()
-    setRightMenuCloseFn(() => {
-      showHeaderListMenu.value = false
-    }, 'showHeaderListMenu')
-  }
 }
-watch(showHeaderListMenu, val => {
-  if (!val) {
-    clearRightMenuCloseFn('showHeaderListMenu')
-  }
-})
 const activeHeaderDom = ref(null)
 const parseHeaders = () => {
   const parentElement = document.querySelector(
@@ -1127,7 +1137,6 @@ onUnmounted(() => {
   if (alertCommentTimer) {
     clearTimeout(alertCommentTimer)
   }
-  clearRightMenuCloseFn('showHeaderListMenu')
 })
 </script>
 <style scoped>
