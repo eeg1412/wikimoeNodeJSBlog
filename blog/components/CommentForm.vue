@@ -32,7 +32,7 @@
                     <UCheckbox
                       v-model="commentSetting.commentSaveUserInfo"
                       :label="`提交后保存此个人信息`"
-                      :ui="{ inner: 'ms-0 flex flex-col' }"
+                      :ui="{ inner: 'ms-1 flex flex-col' }"
                     />
                   </div>
                   <div class="mt-2 flex justify-center items-center">
