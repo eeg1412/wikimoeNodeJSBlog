@@ -186,8 +186,16 @@
         @click="likePost"
       />
     </div>
-    <div class="post-detail-like-body dflex flexCenter" v-else>
-      <USkeleton class="h-9 w-[90px]" />
+    <div class="post-detail-like-body dflex flexCenter opacity-20" v-else>
+      <UButton
+        icon="i-heroicons-heart"
+        size="md"
+        color="primary"
+        variant="outline"
+        disabled
+        :label="`${formatNumber(postData.data.likes)}点赞`"
+        :trailing="false"
+      />
     </div>
     <!-- 文章通用底部内容 -->
     <LazyPostCommonFooter

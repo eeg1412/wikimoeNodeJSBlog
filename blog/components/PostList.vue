@@ -178,8 +178,11 @@
 
               <span>{{ formatNumber(item.likes) }} 点赞</span>
             </div>
-            <div class="dflex flexCenter" v-else>
-              <USkeleton class="h-2 w-[50px]" />
+            <div class="dflex flexCenter opacity-20" v-else>
+              <!-- heart -->
+              <UIcon class="mr5 f15" name="i-heroicons-heart" />
+
+              <span>{{ formatNumber(item.likes) }} 点赞</span>
             </div>
           </div>
         </div>
