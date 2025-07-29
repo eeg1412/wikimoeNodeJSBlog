@@ -56,7 +56,7 @@
             <div class="fr">
               <!-- 置顶图标 -->
               <UIcon
-                class="cPink f18"
+                class="text-primary-500 f18"
                 name="i-heroicons-bars-arrow-up"
                 title="置顶"
                 v-if="item.showTopIcon"

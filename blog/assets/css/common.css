@@ -816,6 +816,9 @@ input[type='password'] {
   cursor: zoom-in;
 }
 
+.nuxt-loading-indicator {
+  background-color: rgb(var(--color-primary-500) / 1) !important;
+}
 .common-right-panel-form.common-limit-width {
   max-width: 700px;
 }

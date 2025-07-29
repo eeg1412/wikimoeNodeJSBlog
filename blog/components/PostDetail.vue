@@ -350,7 +350,7 @@
                       <div>
                         <!-- 置顶图标 -->
                         <UIcon
-                          class="cPink f18"
+                          class="text-primary-500 f18"
                           name="i-heroicons-bars-arrow-up"
                           v-if="item.top"
                         />
