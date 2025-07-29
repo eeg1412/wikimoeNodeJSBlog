@@ -65,6 +65,8 @@ const initGlobalConfig = async () => {
     siteFooterInfo: '',
     // 额外CSS样式
     siteExtraCss: '',
+    // 额外JS脚本
+    siteExtraJs: '',
     // Gravatar头像图源
     siteGravatarSource: '',
     // 页面加载动画

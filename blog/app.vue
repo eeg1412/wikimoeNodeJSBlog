@@ -240,6 +240,21 @@ const setStyle = () => {
 }
 setStyle()
 
+const setJs = () => {
+  // 如果存在 options.siteExtraJs
+  if (options.value.siteExtraJs) {
+    useHead({
+      script: [
+        {
+          innerHTML: options.value.siteExtraJs,
+          type: 'text/javascript'
+        }
+      ]
+    })
+  }
+}
+setJs()
+
 // useIsFullscreenStore
 const isFullscreenStore = useIsFullscreenStore()
 const { setFullscreen } = isFullscreenStore

@@ -135,6 +135,15 @@
         placeholder="自定义CSS样式，会插入到head标签内，覆盖时可能需要添加!important。"
       ></el-input>
     </el-form-item>
+    <!-- siteExtraJs -->
+    <el-form-item label="额外JS脚本" prop="siteExtraJs">
+      <el-input
+        type="textarea"
+        v-model="siteSettingsForm.siteExtraJs"
+        :rows="6"
+        placeholder="自定义JS脚本，会插入到head标签内。"
+      ></el-input>
+    </el-form-item>
     <!-- 显示版本号 -->
     <el-form-item label="底部显示版本号" prop="siteShowBlogVersion">
       <el-switch v-model="siteSettingsForm.siteShowBlogVersion"></el-switch>
@@ -216,6 +225,8 @@ export default {
       siteFooterInfo: '',
       // 额外CSS样式
       siteExtraCss: '',
+      // 额外JS脚本
+      siteExtraJs: '',
       // 显示站点地图
       siteEnableSitemap: false,
       // 底部站点地图
