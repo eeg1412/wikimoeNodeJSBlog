@@ -829,6 +829,12 @@ export default function (api) {
         shouldAdminJWT: true
       })
     },
+    // put /backup/mark/delete
+    markBackupFileDelete(data) {
+      return api.put('/backup/mark/delete', data, {
+        shouldAdminJWT: true
+      })
+    },
     // /backup/download/token
     getDownloadBackupToken(data) {
       return api.get('/backup/download/token', {

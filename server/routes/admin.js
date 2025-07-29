@@ -1221,6 +1221,15 @@ const adminRouteSetting = [
     roleType: null,
     role: null
   },
+  // markBackupFileDelete
+  {
+    path: '/backup/mark/delete',
+    method: 'put',
+    middleware: [checkAuth],
+    controller: require('../api/admin/backup/markBackupFileDelete'),
+    roleType: null,
+    role: null
+  },
   // getBackupDetail
   {
     path: '/backup/detail',

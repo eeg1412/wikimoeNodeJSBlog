@@ -1,5 +1,7 @@
 const backupUtils = require('../../../mongodb/utils/backups')
 const utils = require('../../../utils/utils')
+const fsEX = require('fs-extra')
+const path = require('path')
 const log4js = require('log4js')
 const adminApiLog = log4js.getLogger('adminApi')
 
@@ -31,10 +33,34 @@ module.exports = async function (req, res, next) {
   }
   backupUtils
     .findPage(params, sort, page, size)
-    .then(data => {
+    .then(async data => {
+      const list = data.list
+      // 查找list中fileStatus为1且存在filename的数据，然后根据filename去查找文件是否存在
+      const basePath = './backups/'
+
+      // 检查文件是否存在，如果不存在则在返回数据中修改fileStatus为99
+      for (const item of list) {
+        if (item.fileStatus === 1 && item.filename) {
+          const filePath = path.join(basePath, item.filename)
+          try {
+            const fileExists = await fsEX.pathExists(filePath)
+            if (!fileExists) {
+              // 文件不存在，只修改返回数据中的fileStatus为99
+              item.fileStatus = 99
+            }
+          } catch (error) {
+            adminApiLog.error(
+              `check ${filePath} error: ${logErrorToText(error)}`
+            )
+            // 出错时也标记为文件不存在
+            item.fileStatus = 98
+          }
+        }
+      }
+
       // 返回格式list,total
       res.send({
-        list: data.list,
+        list: list,
         total: data.total
       })
     })

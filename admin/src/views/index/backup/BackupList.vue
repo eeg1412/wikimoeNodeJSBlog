@@ -181,6 +181,16 @@
                   >还原</el-button
                 >
               </div>
+              <!-- 标记删除 -->
+              <div>
+                <el-button
+                  type="danger"
+                  size="small"
+                  @click="markBackupFileDelete(row.name, row._id, row.__v)"
+                  v-if="row.type === 1 && row.fileStatus === 99"
+                  >将备份文件标记为已删除</el-button
+                >
+              </div>
             </div>
           </template>
         </el-table-column>
@@ -422,6 +432,10 @@ export default {
           return { text: '已删除', tagType: 'danger' }
         case 3:
           return { text: '上传尚未完成', tagType: 'warning' }
+        case 99:
+          return { text: '文件已丢失', tagType: 'warning' }
+        case 98:
+          return { text: '查询文件出错', tagType: 'warning' }
         default:
           return { text: '', tagType: '' }
       }
@@ -641,6 +655,30 @@ export default {
       }
     }
 
+    // 标记备份文件删除
+    const markBackupFileDelete = (name, id, __v) => {
+      // 二次确认
+      CheckDialogService.open({
+        correctAnswer: '是',
+        content: `确定要将<span class="cRed">【${name}】</span>的<span class="cRed">备份文件标记为删除</span>吗？`,
+        success: () => {
+          return authApi
+            .markBackupFileDelete({ id, __v })
+            .then(() => {
+              ElMessage.success('标记成功')
+              getBackupList()
+            })
+            .catch(err => {
+              console.error(err)
+            })
+        }
+      })
+        .then(() => {})
+        .catch(error => {
+          console.log('Dialog closed:', error)
+        })
+    }
+
     onMounted(() => {
       initParams()
       getBackupList()
@@ -676,7 +714,8 @@ export default {
       continueUploadId,
       continueUploadBackup,
       backupFileUploading,
-      uploadProgress
+      uploadProgress,
+      markBackupFileDelete
     }
   }
 }
