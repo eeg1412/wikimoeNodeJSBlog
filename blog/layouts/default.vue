@@ -563,7 +563,7 @@ onUnmounted(() => {
   display: none;
 }
 .layout-mobile-navi-btn-body {
-  @apply bg-primary-50/10;
+  background: #ffffff;
   padding: 20px;
   position: sticky;
   top: 0px;
@@ -724,6 +724,7 @@ onUnmounted(() => {
   }
   .blog-layout-info-menu {
     min-height: calc(100dvh - 68px);
+    background: #ffffff;
     height: auto;
   }
   .blog-layout-left-body {
