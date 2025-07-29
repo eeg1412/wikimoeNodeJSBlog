@@ -117,15 +117,6 @@
         ></el-option>
       </el-select>
     </el-form-item>
-    <!-- 页面底部信息 -->
-    <el-form-item label="页面底部信息" prop="siteFooterInfo">
-      <el-input
-        type="textarea"
-        v-model="siteSettingsForm.siteFooterInfo"
-        :rows="6"
-        placeholder="显示在页面底部，可以填写备案信息，支持HTML。"
-      ></el-input>
-    </el-form-item>
     <!-- siteExtraCss -->
     <el-form-item label="额外CSS样式" prop="siteExtraCss">
       <el-input
@@ -142,6 +133,15 @@
         v-model="siteSettingsForm.siteExtraJs"
         :rows="6"
         placeholder="自定义JS脚本，会插入到head标签内。"
+      ></el-input>
+    </el-form-item>
+    <!-- 页面底部信息 -->
+    <el-form-item label="页面底部信息" prop="siteFooterInfo">
+      <el-input
+        type="textarea"
+        v-model="siteSettingsForm.siteFooterInfo"
+        :rows="6"
+        placeholder="显示在页面底部，可以填写备案信息，支持HTML。"
       ></el-input>
     </el-form-item>
     <!-- 显示版本号 -->
