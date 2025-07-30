@@ -11,7 +11,6 @@
           :name="
             showChildren ? 'i-heroicons-chevron-up' : 'i-heroicons-chevron-down'
           "
-          v-if="!item.isdefault"
         />
       </div>
       <Transition
