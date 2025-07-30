@@ -109,6 +109,20 @@ export const limitStr = (str: string, len: number) => {
   return str
 }
 
+export const getTitleFromText = (text: string): string => {
+  if (!text) return ''
+  const arr = Array.from(text)
+  const firstIdx = text.search(/[\n\r。\.？\?！!；;…]/)
+  let endIdx = firstIdx === -1 ? arr.length : firstIdx
+  let titleArr = arr.slice(0, endIdx)
+  let title = titleArr.join('')
+  const limit = 20
+  if (titleArr.length > limit) {
+    title = limitStr(title, limit)
+  }
+  return title
+}
+
 // 生成uuid
 export const uuid = (): string => {
   return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {

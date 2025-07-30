@@ -913,9 +913,9 @@ const seoImageSet = () => {
 const seoTitleSet = () => {
   let newTitle =
     postData.value?.data?.title || postData.value?.data?.excerpt || ''
-  // 超过60个字符，截取
-  if (newTitle.length > 60) {
-    newTitle = limitStr(newTitle, 60)
+  const type = postData.value?.data?.type
+  if (type === 2) {
+    newTitle = getTitleFromText(newTitle)
   }
   return newTitle
 }

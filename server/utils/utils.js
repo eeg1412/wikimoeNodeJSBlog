@@ -125,6 +125,26 @@ exports.limitStr = (str, len) => {
   return str
 }
 
+/**
+ * 获取文本的第一个换行符或句号前面的内容作为标题，
+ * 如果最终字数超过50字，则用limitStr裁切
+ * @param {string} text
+ * @returns {string}
+ */
+exports.getTitleFromText = function (text) {
+  if (!text) return ''
+  const arr = Array.from(text)
+  const firstIdx = text.search(/[\n\r。\.？\?！!；;…]/)
+  let endIdx = firstIdx === -1 ? arr.length : firstIdx
+  let titleArr = arr.slice(0, endIdx)
+  let title = titleArr.join('')
+  const limit = 20
+  if (titleArr.length > limit) {
+    title = this.limitStr(title, limit)
+  }
+  return title
+}
+
 exports.creatJWT = function (payload, exp) {
   const secret = global.$secret.JWTSecretAdmin
   if (!secret) {

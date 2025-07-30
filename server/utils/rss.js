@@ -102,10 +102,7 @@ exports.updateRSS = async type => {
           newTitle = `发布于 ${dateStr} 的推文`
         } else {
           // 将excerpt去掉换行符设定为newTitle，最大长度为50，超过50的部分用...代替
-          newTitle = excerpt.replace(/\n/g, '')
-          if (newTitle.length > 50) {
-            newTitle = Array.from(newTitle).slice(0, 50).join('') + '...'
-          }
+          newTitle = utils.getTitleFromText(excerpt)
         }
 
         newContent = `<p>${excerpt}</p>`
