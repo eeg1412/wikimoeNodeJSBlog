@@ -116,7 +116,7 @@ export const getTitleFromText = (text: string): string => {
   let endIdx = firstIdx === -1 ? arr.length : firstIdx
   let titleArr = arr.slice(0, endIdx)
   let title = titleArr.join('')
-  const limit = 20
+  const limit = 50
   if (titleArr.length > limit) {
     title = limitStr(title, limit)
   }
