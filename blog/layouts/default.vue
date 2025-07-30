@@ -842,6 +842,9 @@ onUnmounted(() => {
   .blog-layout-body {
     flex-direction: column;
   }
+  .blog-footer-body {
+    padding: 45px 0;
+  }
   .blog-layout-right-body {
     /* display: none; */
     transform: translateX(100%);
