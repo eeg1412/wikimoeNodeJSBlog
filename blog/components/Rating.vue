@@ -4,8 +4,10 @@
       v-if="rating"
       class="text-sm text-primary text-center rounded flex items-center justify-center rating-item"
     >
-      <span>{{ rating }}分</span><span class="rating-bar"></span
-      ><span>{{ ratingToText(rating) }}</span>
+      <UIcon name="i-heroicons-users-solid" class="align-middle mr-0.5" /><span
+        >{{ rating }}分</span
+      ><span class="text-xs px-0.5">/</span
+      ><span class="text-xs">{{ ratingToText(rating) }}</span>
     </div>
     <div
       v-else
