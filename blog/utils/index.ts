@@ -112,8 +112,29 @@ export const limitStr = (str: string, len: number) => {
 export const getTitleFromText = (text: string): string => {
   if (!text) return ''
   const arr = Array.from(text)
-  const firstIdx = text.search(/[\n\r。\.？\?！!；;…]/)
-  let endIdx = firstIdx === -1 ? arr.length : firstIdx
+
+  // 标点（换行、中文标点，或 '.' 且后面不是数字）
+  const punctRegex = /[\n\r。？\?！!；;…]|\.(?!\d)/
+  const punctIdx = text.search(punctRegex)
+
+  // 简单的 URL 匹配（支持 http(s):// 和 www. 开头）
+  const urlRegex = /\b(?:https?:\/\/|www\.)[^\s]+/i
+  const urlMatch = urlRegex.exec(text)
+
+  let endIdx
+  if (urlMatch) {
+    const urlStart = urlMatch.index
+    const urlEnd = urlStart + urlMatch[0].length
+    // 如果没有标点，或 URL 在标点之前，则截断到 URL 末尾；否则按标点截断
+    if (punctIdx === -1 || urlStart <= punctIdx) {
+      endIdx = urlEnd
+    } else {
+      endIdx = punctIdx
+    }
+  } else {
+    endIdx = punctIdx === -1 ? arr.length : punctIdx
+  }
+
   let titleArr = arr.slice(0, endIdx)
   let title = titleArr.join('')
   const limit = 50
