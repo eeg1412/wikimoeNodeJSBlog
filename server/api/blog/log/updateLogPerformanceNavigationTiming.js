@@ -9,6 +9,7 @@ module.exports = async function (req, res, next) {
   const action = req.body.action
   const actionList = ['open']
   const id = req.body.id
+  const ip = utils.getUserIp(req)
   if (!utils.isObjectId(id)) {
     return
   }
@@ -18,6 +19,11 @@ module.exports = async function (req, res, next) {
   }
   // 判断uuid是否符合格式
   if (!utils.isUUID(uuid)) {
+    return
+  }
+  const { siteLogIPBlockList } = global.$globalConfig.IPBlockSettings
+  if (siteLogIPBlockList.includes(ip)) {
+    console.info(`log block by ip:${ip}`)
     return
   }
   let performanceNavigationTiming = null

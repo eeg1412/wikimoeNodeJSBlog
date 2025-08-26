@@ -1,6 +1,6 @@
 <template>
   <div class="tags-input-root">
-    <div class="tags-input-tags" v-if="tagsValue.length">
+    <div class="tags-input-tags">
       <el-tag
         v-for="(t, i) in tagsValue"
         :key="t + '-' + i"

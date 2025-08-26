@@ -1172,6 +1172,9 @@ input[type='password'] {
   margin-right: 5px;
   margin-bottom: 5px;
 }
+.config-com-body .el-tabs__item {
+  padding: 0 15px;
+}
 
 /* 深色模式适配 */
 html.dark {

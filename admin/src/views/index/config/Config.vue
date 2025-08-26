@@ -30,6 +30,10 @@
       <el-tab-pane label="广告设置" name="ad">
         <ConfigAdSettingsForm v-if="activeName === 'ad'" />
       </el-tab-pane>
+      <!-- IP黑名单设置 -->
+      <el-tab-pane label="IP黑名单设置" name="ip-block">
+        <ConfigIPBlockSettingsForm v-if="activeName === 'ip-block'" />
+      </el-tab-pane>
       <!-- 其他设置 -->
       <el-tab-pane label="其他设置" name="other">
         <ConfigOtherSettingsForm v-if="activeName === 'other'" />
@@ -52,6 +56,7 @@ import ConfigEmailSettingsForm from '@/components/ConfigEmailSettingsForm'
 import ConfigOtherSettingsForm from '@/components/ConfigOtherSettingsForm'
 import ConfigSitePostForm from '@/components/ConfigSitePostForm'
 import ConfigAdSettingsForm from '@/components/ConfigAdSettingsForm'
+import ConfigIPBlockSettingsForm from '@/components/ConfigIPBlockSettingsForm'
 export default {
   components: {
     ConfigSiteSettingsForm,
@@ -61,7 +66,8 @@ export default {
     ConfigEmailSettingsForm,
     ConfigOtherSettingsForm,
     ConfigSitePostForm,
-    ConfigAdSettingsForm
+    ConfigAdSettingsForm,
+    ConfigIPBlockSettingsForm
   },
   setup() {
     const route = useRoute()

@@ -61,6 +61,7 @@ module.exports = async function (req, res, next) {
         siteMaxCommentReview,
         siteMinCommentLength
       } = global.$globalConfig.commentSettings
+      const { siteCommentIPBlockList } = global.$globalConfig.IPBlockSettings
       // 如果content少于siteMinCommentLength个字符，就报错
       if (content.length < siteMinCommentLength) {
         res.status(400).json({
@@ -81,6 +82,19 @@ module.exports = async function (req, res, next) {
             }
           ]
         })
+        return
+      }
+      const ip = utils.getUserIp(req)
+      // 校验IP黑名单
+      if (siteCommentIPBlockList.includes(ip)) {
+        res.status(400).json({
+          errors: [
+            {
+              message: '您已被禁止评论'
+            }
+          ]
+        })
+        console.info(`comment block by ip:${ip}`)
         return
       }
       // 校验敏感词
@@ -112,7 +126,6 @@ module.exports = async function (req, res, next) {
       // 从header中获取uuid
       const uuid = req.headers['wmb-request-id']
 
-      const ip = utils.getUserIp(req)
       // 校验格式
       const params = {
         post,

@@ -134,6 +134,13 @@ const initGlobalConfig = async () => {
     emailRetractCommentTemplate: '',
     emailRetractCommentTemplateIsRichMode: true
   }
+  // IP黑名单配置
+  const IPBlockSettingsConfig = {
+    // 评论IP黑名单
+    siteCommentIPBlockList: [],
+    // 日志记录IP黑名单
+    siteLogIPBlockList: []
+  }
   // 其他配置
   const otherSettingsConfig = {
     // 引用白名单
@@ -207,6 +214,7 @@ const initGlobalConfig = async () => {
         commentSettings: commentSettingsConfig,
         rssSettings: rssSettingsConfig,
         emailSettings: emailSettingsConfig,
+        IPBlockSettings: IPBlockSettingsConfig,
         otherSettings: otherSettingsConfig,
         sitePostSettings: sitePostSettingsConfig,
         adSettings: adSettingsConfig
@@ -222,6 +230,7 @@ const initGlobalConfig = async () => {
       formatResToForm(config.commentSettings, obj)
       formatResToForm(config.rssSettings, obj)
       formatResToForm(config.emailSettings, obj)
+      formatResToForm(config.IPBlockSettings, obj)
       formatResToForm(config.otherSettings, obj)
       formatResToForm(config.sitePostSettings, obj)
       formatResToForm(config.adSettings, obj)

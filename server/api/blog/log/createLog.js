@@ -39,6 +39,14 @@ module.exports = async function (req, res, next) {
     return
   }
 
+  const { siteLogIPBlockList } = global.$globalConfig.IPBlockSettings
+
+  // 校验IP黑名单
+  if (siteLogIPBlockList.includes(ip)) {
+    console.info(`log block by ip:${ip}`)
+    return
+  }
+
   // 根据ip或uuid， 查询 readerlogUtils.count 当天的数据量是否超过1000条
   const readerlogCount = await readerlogUtils.count({
     $or: [

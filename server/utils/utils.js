@@ -291,7 +291,8 @@ exports.getUserIp = function (req) {
     req.socket.remoteAddress ||
     req.connection.socket.remoteAddress ||
     ''
-  if (ip.slice(0, 7).toLowerCase() === '::ffff:') {
+  ip = ip.toLowerCase()
+  if (ip.slice(0, 7) === '::ffff:') {
     ip = ip.slice(7)
   }
   // ip = this.generateRandomIPv4()
