@@ -9,14 +9,14 @@
     <el-form-item label="评论IP黑名单" prop="siteCommentIPBlockList">
       <TagsInput
         v-model="IPBlockSettingsForm.siteCommentIPBlockList"
-        placeholder="添加IP"
+        placeholder="输入IP地址"
       />
     </el-form-item>
 
     <el-form-item label="日志记录IP黑名单" prop="siteLogIPBlockList">
       <TagsInput
         v-model="IPBlockSettingsForm.siteLogIPBlockList"
-        placeholder="添加IP"
+        placeholder="输入IP地址"
       />
     </el-form-item>
 

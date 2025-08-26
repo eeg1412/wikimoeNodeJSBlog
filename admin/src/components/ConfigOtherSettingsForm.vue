@@ -14,11 +14,11 @@
       ></el-input> -->
       <TagsInput
         v-model="otherSettingsForm.siteReferrerWhiteList"
-        placeholder="添加引用域名"
+        placeholder="输入引用域名"
       />
     </el-form-item>
 
-    <el-form-item label="敏感关键词或链接" prop="siteBannedKeywordList">
+    <el-form-item label="敏感关键词" prop="siteBannedKeywordList">
       <!-- <el-input
         type="textarea"
         v-model="otherSettingsForm.siteBannedKeywordList"
@@ -26,8 +26,9 @@
       ></el-input> -->
       <TagsInput
         v-model="otherSettingsForm.siteBannedKeywordList"
-        placeholder="添加敏感关键词或链接"
+        placeholder="输入敏感关键词"
       />
+      <div class="w_10">※会检查评论中的内容、昵称、网址是否包含敏感关键词</div>
     </el-form-item>
 
     <el-form-item
@@ -41,7 +42,7 @@
       ></el-input> -->
       <TagsInput
         v-model="otherSettingsForm.siteRankIgnoreReferrerDomainList"
-        placeholder="添加忽略域名"
+        placeholder="输入忽略域名"
       />
     </el-form-item>
 
