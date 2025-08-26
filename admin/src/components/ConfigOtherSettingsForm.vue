@@ -7,30 +7,42 @@
     v-if="inited"
   >
     <el-form-item label="引用域名白名单" prop="siteReferrerWhiteList">
-      <el-input
+      <!-- <el-input
         type="textarea"
         v-model="otherSettingsForm.siteReferrerWhiteList"
         placeholder="英文逗号隔开"
-      ></el-input>
+      ></el-input> -->
+      <TagsInput
+        v-model="otherSettingsForm.siteReferrerWhiteList"
+        placeholder="添加引用域名"
+      />
     </el-form-item>
 
     <el-form-item label="敏感关键词" prop="siteBannedKeywordList">
-      <el-input
+      <!-- <el-input
         type="textarea"
         v-model="otherSettingsForm.siteBannedKeywordList"
         placeholder="英文逗号隔开"
-      ></el-input>
+      ></el-input> -->
+      <TagsInput
+        v-model="otherSettingsForm.siteBannedKeywordList"
+        placeholder="添加敏感关键词"
+      />
     </el-form-item>
 
     <el-form-item
       label="排名统计来源忽略域名"
       prop="siteRankIgnoreReferrerDomainList"
     >
-      <el-input
+      <!-- <el-input
         type="textarea"
         v-model="otherSettingsForm.siteRankIgnoreReferrerDomainList"
         placeholder="英文逗号隔开"
-      ></el-input>
+      ></el-input> -->
+      <TagsInput
+        v-model="otherSettingsForm.siteRankIgnoreReferrerDomainList"
+        placeholder="添加忽略域名"
+      />
     </el-form-item>
 
     <!-- 是否统计爬虫的文章查看数 -->
