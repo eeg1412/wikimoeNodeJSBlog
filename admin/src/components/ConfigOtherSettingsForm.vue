@@ -18,7 +18,7 @@
       />
     </el-form-item>
 
-    <el-form-item label="敏感关键词" prop="siteBannedKeywordList">
+    <el-form-item label="敏感关键词或链接" prop="siteBannedKeywordList">
       <!-- <el-input
         type="textarea"
         v-model="otherSettingsForm.siteBannedKeywordList"
@@ -26,7 +26,7 @@
       ></el-input> -->
       <TagsInput
         v-model="otherSettingsForm.siteBannedKeywordList"
-        placeholder="添加敏感关键词"
+        placeholder="添加敏感关键词或链接"
       />
     </el-form-item>
 

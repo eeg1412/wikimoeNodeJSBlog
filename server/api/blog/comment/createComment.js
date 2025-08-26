@@ -123,6 +123,50 @@ module.exports = async function (req, res, next) {
         })
         return
       }
+
+      // 校验昵称敏感词
+      const nicknameMintRes = mint.verify(nickname)
+      // 如果有敏感词，报错
+      if (!nicknameMintRes) {
+        res.status(400).json({
+          errors: [
+            {
+              message: '昵称中有不恰当的词汇，请修改后再试'
+            }
+          ]
+        })
+        return
+      }
+
+      // 如果存在url，校验url敏感词
+      if (url) {
+        const urlMintRes = mint.verify(url)
+        // 如果有敏感词，报错
+        if (!urlMintRes) {
+          res.status(400).json({
+            errors: [
+              {
+                message: '填写的网址被禁止，请修改后再试'
+              }
+            ]
+          })
+          return
+        }
+      }
+
+      const isBotRes = utils.isSearchEngine(req)
+      if (isBotRes.isBot) {
+        console.info(`comment block by bot-name:${isBotRes.botName}`)
+        res.status(400).json({
+          errors: [
+            {
+              message: '您已被禁止评论'
+            }
+          ]
+        })
+        return
+      }
+
       // 从header中获取uuid
       const uuid = req.headers['wmb-request-id']
 
