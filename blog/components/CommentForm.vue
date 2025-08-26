@@ -185,12 +185,26 @@ const onSubmit = event => {
     // 提示
     setTimeout(() => {
       toast.add({
-        title: '内容不能为空',
+        title: '评论内容不能为空',
         icon: 'i-heroicons-x-circle',
         color: 'red'
       })
     }, 0)
+  } else {
+    const siteMinCommentLength = options.value.siteMinCommentLength || 1
+    if (event.data.content.length < siteMinCommentLength) {
+      error.value.content = true
+      // 提示
+      setTimeout(() => {
+        toast.add({
+          title: `评论内容不能少于 ${siteMinCommentLength} 个字`,
+          icon: 'i-heroicons-x-circle',
+          color: 'red'
+        })
+      }, 0)
+    }
   }
+
   // 如果有url，校验url的格式
   if (event.data.url) {
     // 如果没有http或https开头，就加上

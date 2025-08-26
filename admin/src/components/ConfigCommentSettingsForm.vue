@@ -40,6 +40,19 @@
       ></el-input-number
       ><span class="pl5">条</span>
     </el-form-item>
+    <!-- 评论最少字数 -->
+    <el-form-item label="评论最少字数" prop="siteMinCommentLength">
+      <!-- 数字 1-500 -->
+      <el-input-number
+        v-model="commentSettingsForm.siteMinCommentLength"
+        controls-position="right"
+        :min="1"
+        :max="500"
+        :step="1"
+        :precision="0"
+      ></el-input-number
+      ><span class="pl5">字</span>
+    </el-form-item>
     <!-- 当日撤回限制 -->
     <el-form-item label="当日撤回限制" prop="siteCommentRetractLimit">
       <!-- 数字 1-100 -->
@@ -96,6 +109,8 @@ export default {
       siteEnableCommentReview: false,
       // 最大待审核评论数
       siteMaxCommentReview: 100,
+      // 评论最少字数
+      siteMinCommentLength: 1,
       // 评论分页
       siteCommentPageSize: 10,
       // 当日撤回限制
@@ -104,6 +119,15 @@ export default {
     const commentSettingsRules = {
       siteCommentInterval: [
         { required: true, message: '请输入发表评论间隔', trigger: 'blur' }
+      ],
+      siteMaxCommentReview: [
+        { required: true, message: '请输入最大待审核评论数', trigger: 'blur' }
+      ],
+      siteMinCommentLength: [
+        { required: true, message: '请输入评论最少字数', trigger: 'blur' }
+      ],
+      siteCommentRetractLimit: [
+        { required: true, message: '请输入当日撤回限制', trigger: 'blur' }
       ],
       siteCommentPageSize: [
         { required: true, message: '请输入评论分页', trigger: 'blur' }

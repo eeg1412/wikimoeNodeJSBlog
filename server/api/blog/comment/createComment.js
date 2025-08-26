@@ -58,8 +58,20 @@ module.exports = async function (req, res, next) {
         siteEnableComment,
         siteCommentInterval,
         siteEnableCommentReview,
-        siteMaxCommentReview
+        siteMaxCommentReview,
+        siteMinCommentLength
       } = global.$globalConfig.commentSettings
+      // 如果content少于siteMinCommentLength个字符，就报错
+      if (content.length < siteMinCommentLength) {
+        res.status(400).json({
+          errors: [
+            {
+              message: `评论内容不能少于${siteMinCommentLength}个字`
+            }
+          ]
+        })
+        return
+      }
       // 如果siteEnableComment为false，则不允许评论
       if (!siteEnableComment) {
         res.status(400).json({

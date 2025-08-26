@@ -85,6 +85,8 @@ const initGlobalConfig = async () => {
     siteEnableCommentReview: false,
     // 最大待审核评论数
     siteMaxCommentReview: 100,
+    // 评论最少字数
+    siteMinCommentLength: 1,
     // 评论分页
     siteCommentPageSize: 10,
     // 当日撤回限制
