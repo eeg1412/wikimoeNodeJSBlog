@@ -137,9 +137,9 @@ const initGlobalConfig = async () => {
   // IP黑名单配置
   const IPBlockSettingsConfig = {
     // 评论IP黑名单
-    siteCommentIPBlockList: [],
+    siteCommentIPBlockList: new Set(),
     // 日志记录IP黑名单
-    siteLogIPBlockList: []
+    siteLogIPBlockList: new Set()
   }
   // 其他配置
   const otherSettingsConfig = {
@@ -196,6 +196,8 @@ const initGlobalConfig = async () => {
           form[key] = obj[key] === 'true'
         } else if (Array.isArray(form[key])) {
           form[key] = obj[key].split(',')
+        } else if (form[key] instanceof Set) {
+          form[key] = new Set(obj[key].split(','))
         } else {
           form[key] = obj[key]
         }
@@ -237,7 +239,17 @@ const initGlobalConfig = async () => {
       // 将配置挂载到global上
       global.$globalConfig = config
       global.$Mint = new Mint(config.otherSettings.siteBannedKeywordList)
-      const showConfig = JSON.parse(JSON.stringify(config))
+      const showConfig = JSON.parse(
+        JSON.stringify(config, (k, v) => {
+          if (v instanceof Set) {
+            return {
+              type: 'Set',
+              value: Array.from(v).join(',')
+            }
+          }
+          return v
+        })
+      )
       // 将emailSettings.emailPassword设置为****
       showConfig.emailSettings.emailPassword = '****'
       console.info('globalConfig更新完成,配置如下:', showConfig)

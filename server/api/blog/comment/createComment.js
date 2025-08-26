@@ -86,7 +86,7 @@ module.exports = async function (req, res, next) {
       }
       const ip = utils.getUserIp(req)
       // 校验IP黑名单
-      if (siteCommentIPBlockList.includes(ip)) {
+      if (siteCommentIPBlockList.has(ip)) {
         res.status(400).json({
           errors: [
             {

@@ -22,7 +22,7 @@ module.exports = async function (req, res, next) {
     return
   }
   const { siteLogIPBlockList } = global.$globalConfig.IPBlockSettings
-  if (siteLogIPBlockList.includes(ip)) {
+  if (siteLogIPBlockList.has(ip)) {
     console.info(`log block by ip:${ip}`)
     return
   }

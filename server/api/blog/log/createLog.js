@@ -42,7 +42,7 @@ module.exports = async function (req, res, next) {
   const { siteLogIPBlockList } = global.$globalConfig.IPBlockSettings
 
   // 校验IP黑名单
-  if (siteLogIPBlockList.includes(ip)) {
+  if (siteLogIPBlockList.has(ip)) {
     console.info(`log block by ip:${ip}`)
     return
   }
