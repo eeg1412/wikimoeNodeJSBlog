@@ -422,7 +422,7 @@ exports.IP2LocationUtils = function (ip, id, modelUtils, updateMongodb = true) {
   })
 }
 exports.deviceUAInfoUtils = function (req) {
-  const ua = req.get('user-agent')
+  const ua = req.get('user-agent') || ''
   if (ua.length > 1000) {
     return null
   }
