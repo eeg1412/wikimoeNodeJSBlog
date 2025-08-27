@@ -133,36 +133,108 @@ exports.limitStr = (str, len) => {
  */
 exports.getTitleFromText = function (text) {
   if (!text) return ''
-  const arr = Array.from(text)
+  const limit = 50
+  let title = text
+  if (title.length > limit) {
+    title = Array.from(title).slice(0, limit).join('')
+  }
 
   // 标点（换行、中文标点，或 '.' 且后面不是数字）
-  const punctRegex = /[\n\r。？\?！!；;…]|\.(?!\d)/
-  const punctIdx = text.search(punctRegex)
-
+  const punctRegex = /[\n\r。？\?！!；;…]|\.(?!\d)/g
   // 简单的 URL 匹配（支持 http(s):// 和 www. 开头）
-  const urlRegex = /\b(?:https?:\/\/|www\.)[^\s]+/i
-  const urlMatch = urlRegex.exec(text)
+  const urlRegex = /\b(?:https?:\/\/|www\.)[^\s]+/gi
 
-  let endIdx
-  if (urlMatch) {
-    const urlStart = urlMatch.index
-    const urlEnd = urlStart + urlMatch[0].length
-    // 如果没有标点，或 URL 在标点之前，则截断到 URL 末尾；否则按标点截断
-    if (punctIdx === -1 || urlStart <= punctIdx) {
-      endIdx = urlEnd
-    } else {
-      endIdx = punctIdx
+  // 收集所有需要跳过的区间（[start, endExclusive)）
+  const ranges = []
+
+  // 1. 找出所有 URL 区间
+  let m
+  while ((m = urlRegex.exec(title)) !== null) {
+    ranges.push([m.index, m.index + m[0].length])
+  }
+
+  // 2. 找出书名号和各类括号的匹配区间（支持嵌套）
+  const pairList = [
+    ['《', '》'],
+    ['(', ')'],
+    ['（', '）'],
+    ['[', ']'],
+    ['【', '】'],
+    ['{', '}'],
+    ['<', '>'],
+    ['「', '」']
+  ]
+
+  for (const [open, close] of pairList) {
+    const stack = []
+    for (let i = 0; i < title.length; i++) {
+      const ch = title[i]
+      if (ch === open) {
+        stack.push(i)
+      } else if (ch === close) {
+        if (stack.length > 0) {
+          const start = stack.pop()
+          // endExclusive = i + 1
+          ranges.push([start, i + 1])
+        }
+      }
+    }
+    // 未闭合的开符号忽略（不生成区间）
+  }
+
+  if (ranges.length > 0) {
+    // 合并并排序区间，便于快速判断包含关系
+    ranges.sort((a, b) => a[0] - b[0])
+    const merged = []
+    let cur = ranges[0].slice()
+    for (let i = 1; i < ranges.length; i++) {
+      const r = ranges[i]
+      if (r[0] <= cur[1]) {
+        // 有重叠或相邻，合并
+        cur[1] = Math.max(cur[1], r[1])
+      } else {
+        merged.push(cur)
+        cur = r.slice()
+      }
+    }
+    merged.push(cur)
+
+    // 辅助：检查索引是否在任一区间内
+    const isInRanges = idx => {
+      // 线性或二分均可；这里区间数量通常很少，线性扫描且有早停
+      for (let i = 0; i < merged.length; i++) {
+        const [s, e] = merged[i]
+        if (idx >= s && idx < e) return true
+        if (idx < s) return false // 早停
+      }
+      return false
+    }
+
+    // 在 title 中查找第一个不在跳过区间内的标点
+    punctRegex.lastIndex = 0
+    let match
+    while ((match = punctRegex.exec(title)) !== null) {
+      const idx = match.index
+      if (!isInRanges(idx)) {
+        // 找到合法的标点，裁切并返回
+        title = title.slice(0, idx)
+        break
+      }
+      // 否则继续查找下一个标点
     }
   } else {
-    endIdx = punctIdx === -1 ? arr.length : punctIdx
+    // 没有需要跳过的区间，直接按第一个标点裁切
+    punctRegex.lastIndex = 0
+    const m2 = punctRegex.exec(title)
+    if (m2) {
+      title = title.slice(0, m2.index)
+    }
   }
 
-  let titleArr = arr.slice(0, endIdx)
-  let title = titleArr.join('')
-  const limit = 50
-  if (titleArr.length > limit) {
-    title = this.limitStr(title, limit)
+  if (text.length > limit) {
+    title = title + '...'
   }
+
   return title
 }
 
