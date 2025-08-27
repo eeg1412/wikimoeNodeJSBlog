@@ -140,6 +140,12 @@ exports.getTitleFromText = function (text) {
     title = Array.from(title).slice(0, limit).join('')
     addPoint = true
   }
+
+  // 删除最前面的换行/空白和 punctRegex 所标记的标点（包括 '.' 且后面不是数字）
+  // 说明：^(?:...)+ 会匹配开头连续的空白或标点并一次性移除
+  title = title.replace(/^(?:\s+|[。？?！!；;…]+|\.(?!\d))+/u, '')
+  if (!title) return ''
+
   // 先以第一个换行符为裁切点（如果存在）
   const newlineIdx = title.search(/[\r\n]/)
   if (newlineIdx !== -1) {
