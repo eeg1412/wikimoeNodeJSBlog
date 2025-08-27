@@ -113,12 +113,21 @@ export const getTitleFromText = (text: string): string => {
   if (!text) return ''
   const limit = 50
   let title = text
+  let addPoint = false
   if (title.length > limit) {
     title = Array.from(title).slice(0, limit).join('')
+    addPoint = true
   }
 
-  // 标点（换行、中文标点，或 '.' 且后面不是数字）
-  const punctRegex = /[\n\r。？\?！!；;…]|\.(?!\d)/g
+  // 先以第一个换行符为裁切点（如果存在）
+  const newlineIdx = title.search(/[\r\n]/)
+  if (newlineIdx !== -1) {
+    title = title.slice(0, newlineIdx)
+    addPoint = false
+  }
+
+  // 标点（中文标点，或 '.' 且后面不是数字）
+  const punctRegex = /[。？\?！!；;…]|\.(?!\d)/g
   // 简单的 URL 匹配（支持 http(s):// 和 www. 开头）
   const urlRegex = /\b(?:https?:\/\/|www\.)[^\s]+/gi
 
@@ -196,6 +205,7 @@ export const getTitleFromText = (text: string): string => {
       if (!isInRanges(idx)) {
         // 找到合法的标点，裁切并返回
         title = title.slice(0, idx)
+        addPoint = false
         break
       }
       // 否则继续查找下一个标点
@@ -206,10 +216,11 @@ export const getTitleFromText = (text: string): string => {
     const m2 = punctRegex.exec(title)
     if (m2) {
       title = title.slice(0, m2.index)
+      addPoint = false
     }
   }
 
-  if (text.length > limit) {
+  if (addPoint) {
     title = title + '...'
   }
 
