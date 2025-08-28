@@ -137,6 +137,18 @@ module.exports = async function (req, res, next) {
           likes: -1
         }
         break
+      // 按照分享数shares升序
+      case 'shares_ascending':
+        postSorting = {
+          shares: 1
+        }
+        break
+      // 按照分享数shares降序
+      case 'shares_descending':
+        postSorting = {
+          shares: -1
+        }
+        break
       // 按照更新时间updatedAt升序
       case 'updatedAt_ascending':
         postSorting = {

@@ -380,6 +380,13 @@
           width="100"
           sortable="likes"
         />
+        <!-- shares -->
+        <el-table-column
+          prop="shares"
+          label="分享数"
+          width="100"
+          sortable="shares"
+        />
         <el-table-column prop="top" label="置顶">
           <template #default="{ row }">
             <el-tag v-if="row.top" type="success">是</el-tag>
