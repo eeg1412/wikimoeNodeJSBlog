@@ -62,6 +62,7 @@ const siteEnableShareButton = computed(
   () => options.value?.siteEnableShareButton
 )
 const siteSharePlatforms = computed(() => options.value?.siteSharePlatforms)
+const siteShareDescription = computed(() => options.value?.siteShareDescription)
 
 const props = defineProps({
   post: {
@@ -109,9 +110,17 @@ const getShareText = () => {
     3: '页面'
   }
   const postType = postTypeMap[props.post.type] || '文章'
-  return `分享${siteTitle.value}的${postType}：${
+  let text = siteShareDescription.value
+  // ${siteTitle}为站点名称
+  // ${title}为文章标题
+  // ${postType}为文章类型
+  text = text.replace('${siteTitle}', siteTitle.value || '')
+  text = text.replace(
+    '${title}',
     props.post.title || getTitleFromText(props.post.excerpt)
-  }`
+  )
+  text = text.replace('${postType}', postType)
+  return text
 }
 
 // 获取分享图片

@@ -134,6 +134,20 @@
         </el-checkbox>
       </el-checkbox-group>
     </el-form-item>
+    <!-- siteShareDescription -->
+    <el-form-item label="分享文案" prop="siteShareDescription">
+      <el-input
+        type="textarea"
+        v-model="siteSettingsForm.siteShareDescription"
+        :rows="6"
+        placeholder="自定义分享文案。"
+      ></el-input>
+      <div class="w_10">
+        <div>${siteTitle}为站点名称</div>
+        <div>${title}为文章标题</div>
+        <div>${postType}为文章类型（博文/推文/页面）</div>
+      </div>
+    </el-form-item>
     <!-- siteExtraJs -->
     <el-form-item label="额外JS脚本" prop="siteExtraJs">
       <el-input
@@ -233,6 +247,8 @@ export default {
       siteEnableShareButton: false,
       // 分享平台
       siteSharePlatforms: [],
+      // 分享文案
+      siteShareDescription: '',
       // 页面底部信息
       siteFooterInfo: '',
       // 额外CSS样式

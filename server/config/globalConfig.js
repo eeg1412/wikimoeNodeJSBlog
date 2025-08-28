@@ -65,6 +65,8 @@ const initGlobalConfig = async () => {
     siteEnableShareButton: false,
     // 分享平台
     siteSharePlatforms: [],
+    // 分享文案
+    siteShareDescription: '',
     // 页面底部信息
     siteFooterInfo: '',
     // 额外CSS样式
