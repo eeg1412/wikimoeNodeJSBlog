@@ -142,7 +142,7 @@ const initGlobalConfig = async () => {
   const IPBlockSettingsConfig = {
     // 评论IP黑名单
     siteCommentIPBlockList: new Set(),
-    // 日志记录IP黑名单
+    // 其他操作IP黑名单
     siteLogIPBlockList: new Set()
   }
   // 其他配置

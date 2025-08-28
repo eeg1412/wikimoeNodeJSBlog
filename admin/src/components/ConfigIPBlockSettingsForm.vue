@@ -3,7 +3,7 @@
     :model="IPBlockSettingsForm"
     :rules="IPBlockSettingsRules"
     ref="IPBlockSettingsFormRef"
-    label-width="160px"
+    label-width="140px"
     v-if="inited"
   >
     <el-form-item label="评论IP黑名单" prop="siteCommentIPBlockList">
@@ -13,11 +13,12 @@
       />
     </el-form-item>
 
-    <el-form-item label="日志记录IP黑名单" prop="siteLogIPBlockList">
+    <el-form-item label="其他操作IP黑名单" prop="siteLogIPBlockList">
       <TagsInput
         v-model="IPBlockSettingsForm.siteLogIPBlockList"
         placeholder="输入IP地址"
       />
+      <div class="w_10">会禁止这些IP的日志记录、点赞、投票</div>
     </el-form-item>
 
     <el-form-item>
@@ -44,7 +45,7 @@ export default {
     const IPBlockSettingsForm = reactive({
       // 评论IP黑名单
       siteCommentIPBlockList: '',
-      // 日志记录IP黑名单
+      // 其他操作IP黑名单
       siteLogIPBlockList: ''
     })
     const IPBlockSettingsRules = {}

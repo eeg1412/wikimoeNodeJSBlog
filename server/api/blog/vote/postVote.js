@@ -78,6 +78,21 @@ module.exports = async function (req, res, next) {
       return
     }
   }
+
+  const { siteLogIPBlockList } = global.$globalConfig.IPBlockSettings
+  // 校验IP黑名单
+  if (siteLogIPBlockList.has(ip)) {
+    res.status(400).json({ errors: [{ message: '您已被禁止投票' }] })
+    console.info(`vote block by ip:${ip}`)
+    return
+  }
+
+  const isSearchEngineResult = utils.isSearchEngine(req)
+  if (isSearchEngineResult.isBot) {
+    res.status(400).json({ errors: [{ message: '您已被禁止投票' }] })
+    return
+  }
+
   utils
     .executeInLock(`voteupdate-${voteId}`, async () => {
       const { isExceedMaxSize } = await utils.getVoteLogsSize()

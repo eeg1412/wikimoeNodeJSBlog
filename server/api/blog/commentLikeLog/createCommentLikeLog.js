@@ -8,6 +8,20 @@ const readerlogUtils = require('../../../mongodb/utils/readerlogs')
 module.exports = async function (req, res, next) {
   utils
     .executeInLock('createCommentLikeLog', async () => {
+      const { siteLogIPBlockList } = global.$globalConfig.IPBlockSettings
+      // 校验IP黑名单
+      const ip = utils.getUserIp(req)
+      if (siteLogIPBlockList.has(ip)) {
+        res.status(400).json({ errors: [{ message: '您已被禁止点赞' }] })
+        console.info(`comment like block by ip:${ip}`)
+        return
+      }
+
+      const isSearchEngineResult = utils.isSearchEngine(req)
+      if (isSearchEngineResult.isBot) {
+        res.status(400).json({ errors: [{ message: '您已被禁止点赞' }] })
+        return
+      }
       const { isExceedMaxSize } = await utils.getReaderlogsSize()
       if (isExceedMaxSize) {
         res.status(400).json({ errors: [{ message: '点赞失败，请稍后再试' }] })
@@ -21,7 +35,6 @@ module.exports = async function (req, res, next) {
       }
       const { like, id, __v } = req.body
       const uuid = req.headers['wmb-request-id']
-      const ip = utils.getUserIp(req)
       const filter = {
         comment: id,
         uuid
@@ -37,6 +50,7 @@ module.exports = async function (req, res, next) {
         })
         return
       }
+
       // 校验格式
       const params = {
         like,
@@ -228,7 +242,7 @@ module.exports = async function (req, res, next) {
           targetId: id,
           content: content
         },
-        ...utils.isSearchEngine(req),
+        ...isSearchEngineResult,
         deviceInfo: params.deviceInfo,
         ipInfo: params.ipInfo,
         ip: ip
