@@ -18,7 +18,7 @@
         v-model="IPBlockSettingsForm.siteLogIPBlockList"
         placeholder="输入IP地址"
       />
-      <div class="w_10">会禁止这些IP的日志记录、点赞、投票</div>
+      <div class="w_10">※会禁止这些IP的日志记录、点赞、投票</div>
     </el-form-item>
 
     <el-form-item>
