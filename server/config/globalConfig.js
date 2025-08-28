@@ -61,6 +61,10 @@ const initGlobalConfig = async () => {
     siteTopSlideTime: 8000,
     // 你所在时区
     siteTimeZone: '',
+    // 开启分享按钮
+    siteEnableShareButton: false,
+    // 分享平台
+    siteSharePlatforms: [],
     // 页面底部信息
     siteFooterInfo: '',
     // 额外CSS样式

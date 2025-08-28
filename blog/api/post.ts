@@ -39,6 +39,14 @@ const putViewCountApi = (params: any) => {
     shouldUuid: true
   })
 }
+// put /post/share/count
+const shareCountURL = `/post/share/count`
+const putShareCountApi = (params: any) => {
+  return httpRequest.putFetch(`${shareCountURL}`, params, {
+    shouldUuid: true
+  })
+}
+
 // post '/post/like/log'
 const likeLogURL = `/post/like/log`
 const postLikeLogApi = (params: any) => {
@@ -59,5 +67,6 @@ export {
   getDetailApi,
   putViewCountApi,
   postLikeLogApi,
-  postLikeLogListApi
+  postLikeLogListApi,
+  putShareCountApi
 }

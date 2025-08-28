@@ -330,6 +330,7 @@ export default {
       postListBook: '文章书籍列表',
       postListGame: '文章游戏列表',
       postView: '文章详情',
+      postShare: '文章分享',
       postLike: '文章点赞',
       postDislike: '取消文章点赞',
       commentLike: '评论点赞',

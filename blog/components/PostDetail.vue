@@ -161,42 +161,67 @@
       />
     </div>
 
-    <!-- 点赞按钮 -->
-    <div class="post-detail-like-body" v-if="likeListInited">
-      <UButton
-        icon="i-heroicons-heart-solid"
-        size="md"
-        color="primary"
-        :variant="colorMode.value === 'dark' ? 'soft' : 'solid'"
-        :label="`${formatNumber(postData.data.likes)}点赞`"
-        :trailing="false"
-        :loading="likeListLoading || likePostIsLoading"
-        v-if="postData.data.isLike"
-        @click="likePost"
-      />
-      <UButton
-        icon="i-heroicons-heart"
-        size="md"
-        color="primary"
-        variant="outline"
-        :label="`${formatNumber(postData.data.likes)}点赞`"
-        :trailing="false"
-        :loading="likeListLoading || likePostIsLoading"
-        v-else
-        @click="likePost"
-      />
+    <div
+      class="post-detail-action-body flex justify-center items-center gap-3 my-4"
+    >
+      <div
+        :class="{
+          'opacity-20': !isHydrated
+        }"
+      >
+        <!-- 分享按钮 -->
+        <SharePopover :post="postData.data" @shared="shared">
+          <UButton
+            icon="i-heroicons-share"
+            size="md"
+            color="primary"
+            variant="outline"
+            :label="`${formatNumber(postData.data.shares)} 分享`"
+            :trailing="false"
+          />
+        </SharePopover>
+      </div>
+
+      <div>
+        <!-- 点赞按钮 -->
+        <div class="post-detail-like-body" v-if="likeListInited">
+          <UButton
+            icon="i-heroicons-heart-solid"
+            size="md"
+            color="primary"
+            :variant="colorMode.value === 'dark' ? 'soft' : 'solid'"
+            :label="`${formatNumber(postData.data.likes)} 点赞`"
+            :trailing="false"
+            :loading="likeListLoading || likePostIsLoading"
+            v-if="postData.data.isLike"
+            @click="likePost"
+          />
+          <UButton
+            icon="i-heroicons-heart"
+            size="md"
+            color="primary"
+            variant="outline"
+            :label="`${formatNumber(postData.data.likes)} 点赞`"
+            :trailing="false"
+            :loading="likeListLoading || likePostIsLoading"
+            v-else
+            @click="likePost"
+          />
+        </div>
+        <div class="post-detail-like-body dflex flexCenter opacity-20" v-else>
+          <UButton
+            icon="i-heroicons-heart"
+            size="md"
+            color="primary"
+            variant="outline"
+            disabled
+            :label="`${formatNumber(postData.data.likes)} 点赞`"
+            :trailing="false"
+          />
+        </div>
+      </div>
     </div>
-    <div class="post-detail-like-body dflex flexCenter opacity-20" v-else>
-      <UButton
-        icon="i-heroicons-heart"
-        size="md"
-        color="primary"
-        variant="outline"
-        disabled
-        :label="`${formatNumber(postData.data.likes)}点赞`"
-        :trailing="false"
-      />
-    </div>
+
     <!-- 文章通用底部内容 -->
     <LazyPostCommonFooter
       :post="postData.data"
@@ -1126,11 +1151,19 @@ const colorMode = useColorMode()
 if (import.meta.client) {
   await getCommentList()
 }
+
+const isHydrated = ref(false)
+
+const shared = () => {
+  postData.value.data.shares += 1
+}
+
 onMounted(() => {
   putViewCount()
   postLikeLogList()
   getHeaderList()
   checkCommentScroll()
+  isHydrated.value = true
 })
 onUnmounted(() => {
   window.removeEventListener('scroll', onScroll)
@@ -1184,7 +1217,6 @@ onUnmounted(() => {
 }
 .post-detail-like-body {
   text-align: center;
-  @apply my-4;
 }
 /* 评论 */
 .comment-list-body {

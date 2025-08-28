@@ -210,6 +210,64 @@ module.exports = async function (req, res, next) {
 
   promiseArray.push(readPostLikeData)
 
+  // 单位时间 postShare
+  const readPostSharePipeline = [
+    {
+      $match: {
+        createdAt: { $gte: startDate.toDate(), $lte: endDate.toDate() },
+        action: { $in: ['postShare'] },
+        isBot: false
+      }
+    },
+    // 根据{data.targetId} 分组
+    {
+      $group: {
+        _id: '$data.targetId',
+        count: { $sum: 1 }
+      }
+    },
+    // 按照次数排序
+    {
+      $sort: {
+        count: -1,
+        _id: -1
+      }
+    },
+    // 只取前10
+    {
+      $limit: limit
+    },
+    // 根据id查询posts,只要返回id,title,excerpt,type
+    {
+      $lookup: {
+        from: 'posts',
+        localField: '_id',
+        foreignField: '_id',
+        as: 'post'
+      }
+    },
+    {
+      $unwind: '$post'
+    },
+    {
+      $project: {
+        _id: 1,
+        count: 1,
+        title: '$post.title',
+        excerpt: '$post.excerpt',
+        type: '$post.type'
+      }
+    }
+  ]
+  const readPostShareData = readerlogUtils
+    .aggregate(readPostSharePipeline)
+    .catch(err => {
+      adminApiLog.error(err)
+      return false
+    })
+
+  promiseArray.push(readPostShareData)
+
   // 单位时间分类访问排行 postListSort
   const readPostListSortPipeline = [
     {
@@ -924,6 +982,7 @@ module.exports = async function (req, res, next) {
       readReferrerData,
       readPostViewData,
       readPostLikeData,
+      readPostShareData,
       readPostListSortData,
       readPostListTagData,
       readPostListKeywordData,
@@ -939,6 +998,7 @@ module.exports = async function (req, res, next) {
       !readReferrerData ||
       !readPostViewData ||
       !readPostLikeData ||
+      !readPostShareData ||
       !readPostListSortData ||
       !readPostListTagData ||
       !readPostListKeywordData ||
@@ -963,6 +1023,7 @@ module.exports = async function (req, res, next) {
       readReferrerData: readReferrerData,
       readPostViewData: readPostViewData,
       readPostLikeData: readPostLikeData,
+      readPostShareData: readPostShareData,
       readPostListSortData: readPostListSortData,
       readPostListTagData: readPostListTagData,
       readPostListKeywordData: readPostListKeywordData,

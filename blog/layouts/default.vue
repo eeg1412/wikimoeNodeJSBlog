@@ -829,6 +829,7 @@ onUnmounted(() => {
   .blog-layout-content-body {
     align-self: flex-end;
     position: sticky;
+    z-index: 1;
     bottom: 0px;
     min-height: 100vh;
     min-height: 100dvh;

@@ -39,7 +39,7 @@ module.exports = async function (req, res, next) {
     return
   }
 
-  // 根据ip或uuid， 查询 readerlogUtils.count 中action字段 postView 当天的数据量是否超过1000条
+  // 根据ip或uuid， 查询 readerlogUtils.count 中action字段 postShare 当天的数据量是否超过1000条
   const readerlogCount = await readerlogUtils.count({
     $or: [
       {
@@ -49,8 +49,8 @@ module.exports = async function (req, res, next) {
         ip: ip
       }
     ],
-    // action字段 postView
-    action: 'postView',
+    // action字段 postShare
+    action: 'postShare',
     createdAt: {
       $gte: utils.getTodayStartTime(),
       $lte: utils.getTodayEndTime()
@@ -61,9 +61,9 @@ module.exports = async function (req, res, next) {
   }
 
   const params = {
-    // views + 1
+    // shares + 1
     $inc: {
-      views: 1
+      shares: 1
     }
   }
 
@@ -92,9 +92,12 @@ module.exports = async function (req, res, next) {
       break
   }
   const isSearchEngineResult = utils.isSearchEngine(req)
+  if (isSearchEngineResult.isBot) {
+    return
+  }
   const readerlogParams = {
     uuid: uuid,
-    action: 'postView',
+    action: 'postShare',
     data: {
       target: target,
       targetId: id,
@@ -108,23 +111,17 @@ module.exports = async function (req, res, next) {
   readerlogUtils
     .save(readerlogParams)
     .then(data => {
-      userApiLog.info(`post view log create success`)
+      userApiLog.info(`post share log create success`)
     })
     .catch(err => {
-      userApiLog.error(`post view log create fail, ${logErrorToText(err)}`)
+      userApiLog.error(`post share log create fail, ${logErrorToText(err)}`)
     })
 
-  // 查询post的views是否超过20亿，如果超过20亿，不再增加
-  if (data.views + 1 >= 2000000000) {
-    userApiLog.error(`post view count exceed 2 billion`)
+  // 查询post的shares是否超过20亿，如果超过20亿，不再增加
+  if (data.shares + 1 >= 2000000000) {
+    userApiLog.error(`post share count exceed 2 billion`)
     return
   }
 
-  const siteSpiderPostVisitEnabled =
-    global.$globalConfig?.otherSettings?.siteSpiderPostVisitEnabled
-
-  if (siteSpiderPostVisitEnabled || !isSearchEngineResult.isBot) {
-    // 更新post的views
-    postUtils.updateOne({ _id: id }, params, true)
-  }
+  postUtils.updateOne({ _id: id }, params, true)
 }

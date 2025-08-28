@@ -62,7 +62,9 @@ module.exports = async function (req, res, next) {
           {
             $match: {
               createdAt: { $gte: twentyFourHoursAgo.toDate() },
-              action: { $in: ['postView', 'postLike', 'postDislike'] },
+              action: {
+                $in: ['postView', 'postShare', 'postLike', 'postDislike']
+              },
               isBot: false
             }
           },
@@ -75,7 +77,8 @@ module.exports = async function (req, res, next) {
                   $switch: {
                     branches: [
                       { case: { $eq: ['$action', 'postDislike'] }, then: -51 },
-                      { case: { $eq: ['$action', 'postLike'] }, then: 51 }
+                      { case: { $eq: ['$action', 'postLike'] }, then: 51 },
+                      { case: { $eq: ['$action', 'postShare'] }, then: 71 }
                     ],
                     default: 13 // 其他情况下
                   }

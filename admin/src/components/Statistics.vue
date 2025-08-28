@@ -29,7 +29,7 @@
     </div>
     <el-row v-if="rankData">
       <!-- 文章阅读 rankData.readPostViewData -->
-      <el-col :span="12" :xs="24" class="p10">
+      <el-col :span="8" :xs="24" class="p10">
         <div class="mb10 fb statistics-title">文章阅读</div>
         <div class="mb10 statistics-panel">
           <el-table
@@ -76,7 +76,7 @@
         </div>
       </el-col>
       <!-- 文章点赞统计 rankData.readPostLikeData -->
-      <el-col :span="12" :xs="24" class="p10">
+      <el-col :span="8" :xs="24" class="p10">
         <div class="mb10 fb statistics-title">文章点赞</div>
         <div class="mb10 statistics-panel">
           <el-table
@@ -122,6 +122,54 @@
           </div>
         </div>
       </el-col>
+      <!-- 文章分享 rankData.readPostShareData -->
+      <el-col :span="8" :xs="24" class="p10">
+        <div class="mb10 fb statistics-title">文章分享</div>
+        <div class="mb10 statistics-panel">
+          <el-table
+            :data="readPostShareData"
+            row-key="_id"
+            style="width: 100%"
+            height="440px"
+          >
+            <el-table-column prop="title" label="标题">
+              <template #default="{ row }">
+                <!-- 判断type，如果是2就用 row.excerpt 否则用title -->
+                <div class="di">
+                  <template v-if="row.type === 2">
+                    {{ reduceText(row.excerpt) }}
+                  </template>
+                  <template v-else>
+                    {{ reduceText(row.title) }}
+                  </template>
+                </div>
+                <!-- 点击打开按钮 -->
+                <div class="dib ml5 vt">
+                  <el-link type="primary" @click="openPage(row)"
+                    ><i class="fas fa-external-link-alt"></i
+                  ></el-link>
+                </div>
+              </template>
+            </el-table-column>
+            <el-table-column
+              prop="count"
+              label="分享量"
+              width="80px"
+            ></el-table-column>
+          </el-table>
+          <div class="dflex flexCenter mt10">
+            <el-pagination
+              layout="prev, pager, next"
+              :total="rankData.readPostShareData.length"
+              :pager-count="5"
+              small
+              v-model:current-page="readPostSharePagination.currentPage"
+              v-model:page-size="readPostSharePagination.pageSize"
+            />
+          </div>
+        </div>
+      </el-col>
+
       <!-- 来源 rankData.readReferrerData -->
       <el-col :span="12" :xs="24" class="p10">
         <div class="mb10 fb statistics-title">来源</div>
@@ -649,6 +697,7 @@ export default {
           if (resetPage) {
             readPostViewPagination.currentPage = 1
             readPostLikePagination.currentPage = 1
+            readPostSharePagination.currentPage = 1
             readReferrerPagination.currentPage = 1
             readPostListSortPagination.currentPage = 1
             readPostListTagPagination.currentPage = 1
@@ -754,6 +803,22 @@ export default {
           (readPostLikePagination.currentPage - 1) *
             readPostLikePagination.pageSize,
           readPostLikePagination.currentPage * readPostLikePagination.pageSize
+        )
+      }
+      return []
+    })
+    // readPostShare 的翻页对象
+    const readPostSharePagination = reactive({
+      currentPage: 1,
+      pageSize: 10
+    })
+    // readPostShare 的computed
+    const readPostShareData = computed(() => {
+      if (rankData.value) {
+        return rankData.value.readPostShareData.slice(
+          (readPostSharePagination.currentPage - 1) *
+            readPostSharePagination.pageSize,
+          readPostSharePagination.currentPage * readPostSharePagination.pageSize
         )
       }
       return []
@@ -1010,6 +1075,8 @@ export default {
       readPostViewData,
       readPostLikePagination,
       readPostLikeData,
+      readPostSharePagination,
+      readPostShareData,
       readReferrerPagination,
       readReferrerData,
       readPostListSortPagination,

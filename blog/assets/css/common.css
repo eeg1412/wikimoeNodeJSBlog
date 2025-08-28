@@ -1181,6 +1181,10 @@ ins.adsbygoogle[data-ad-status='unfilled'] {
   display: inline-block;
 }
 
+.share-popover .inline-flex[data-headlessui-state] {
+  display: block;
+}
+
 /* 富文本 */
 .html-content-body img {
   @apply cursor-pointer;

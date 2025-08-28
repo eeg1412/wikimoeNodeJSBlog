@@ -129,6 +129,13 @@ const blogRouteSetting = [
     middleware: [],
     controller: require('../api/blog/post/updatePostViewCount')
   },
+  // put updatePostShareCount
+  {
+    path: '/post/share/count',
+    method: 'put',
+    middleware: [],
+    controller: require('../api/blog/post/updatePostShareCount')
+  },
   // post createPostLikeLog
   {
     path: '/post/like/log',

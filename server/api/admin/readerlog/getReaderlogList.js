@@ -34,6 +34,7 @@ module.exports = async function (req, res, next) {
       'postListGame',
       'postListKeyword',
       'postView',
+      'postShare',
       'postLike',
       'postDislike',
       'commentLike',

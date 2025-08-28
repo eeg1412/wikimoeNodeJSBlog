@@ -81,6 +81,11 @@ var posts = new Schema(
       default: 0,
       index: true
     },
+    shares: {
+      type: Number,
+      default: 0,
+      index: true
+    },
     top: {
       type: Boolean,
       default: false,

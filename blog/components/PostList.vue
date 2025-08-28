@@ -129,11 +129,14 @@
                   }"
                 >
                   <!-- icon book-open -->
-                  <UIcon class="mr5 f15" name="i-heroicons-book-open" />
+                  <UIcon
+                    class="mr5 post-list-info-bottom-icon"
+                    name="i-heroicons-book-open"
+                  />
                   <span>{{ formatNumber(item.views) }} 阅读</span>
                 </NuxtLink>
               </div>
-              <div>
+              <div class="mr15">
                 <NuxtLink
                   class="dflex flexCenter cGray94 hover:text-primary-500"
                   @click.stop
@@ -146,43 +149,70 @@
                 >
                   <!-- icon chat-bubble-left-ellipsis -->
                   <UIcon
-                    class="mr5 f15"
+                    class="mr5 post-list-info-bottom-icon"
                     name="i-heroicons-chat-bubble-left-ellipsis"
                   />
                   <span>{{ formatNumber(item.comnum) }} 评论</span>
                 </NuxtLink>
               </div>
+              <div class="mr15" @click.stop>
+                <SharePopover :post="item" @shared="shared(item)">
+                  <!-- 分享 -->
+                  <button
+                    class="dflex flexCenter post-list-share-btn cursor-pointer hover:text-primary-500"
+                    :class="{
+                      'opacity-20': !isHydrated
+                    }"
+                  >
+                    <UIcon
+                      name="i-heroicons-share"
+                      class="mr5 post-list-info-bottom-icon"
+                    />
+
+                    <span>{{ formatNumber(item.shares) }} 分享</span>
+                  </button>
+                </SharePopover>
+              </div>
             </div>
 
-            <div
-              class="dflex flexCenter cursor-pointer hover:text-primary-500"
-              :class="item.isLike ? 'text-primary-500' : 'cGray94'"
-              @click.stop="likePost(item._id)"
-              @click.middle.stop
-              v-if="likeListInited"
-            >
-              <!-- 加载 -->
-              <UIcon
-                class="mr5 f15 animate-spin"
-                name="i-heroicons-arrow-path"
-                v-if="getLikePostIsLoading(item._id)"
-              />
-              <!-- heart -->
-              <UIcon
-                class="mr5 f15"
-                name="i-heroicons-heart-solid"
-                v-else-if="item.isLike"
-              />
-              <!-- heart-outline -->
-              <UIcon class="mr5 f15" name="i-heroicons-heart" v-else />
+            <div class="dflex flexCenter">
+              <div
+                class="dflex flexCenter cursor-pointer hover:text-primary-500"
+                :class="item.isLike ? 'text-primary-500' : 'cGray94'"
+                @click.stop="likePost(item._id)"
+                @click.middle.stop
+                v-if="likeListInited"
+              >
+                <!-- 加载 -->
+                <UIcon
+                  class="mr5 post-list-info-bottom-icon animate-spin"
+                  name="i-heroicons-arrow-path"
+                  v-if="getLikePostIsLoading(item._id)"
+                />
+                <!-- heart -->
+                <UIcon
+                  class="mr5 post-list-info-bottom-icon"
+                  name="i-heroicons-heart-solid"
+                  v-else-if="item.isLike"
+                />
+                <!-- heart-outline -->
+                <UIcon
+                  class="mr5 post-list-info-bottom-icon"
+                  name="i-heroicons-heart"
+                  v-else
+                />
 
-              <span>{{ formatNumber(item.likes) }} 点赞</span>
-            </div>
-            <div class="dflex flexCenter opacity-20" v-else>
-              <!-- heart -->
-              <UIcon class="mr5 f15" name="i-heroicons-heart" />
+                <span>{{ formatNumber(item.likes) }} 点赞</span>
+              </div>
+              <div class="dflex flexCenter opacity-20" v-else>
+                <!-- heart -->
+                <UIcon
+                  class="mr5 post-list-info-bottom-icon"
+                  name="i-heroicons-heart"
+                />
 
-              <span>{{ formatNumber(item.likes) }} 点赞</span>
+                <span>{{ formatNumber(item.likes) }} 点赞</span>
+              </div>
             </div>
           </div>
         </div>
@@ -645,6 +675,10 @@ const switchPostType = type => {
   showFilterMenu.value = false
 }
 
+const shared = item => {
+  item.shares += 1
+}
+
 const isHydrated = ref(false)
 
 onMounted(() => {
@@ -675,6 +709,19 @@ onMounted(() => {
   justify-content: space-between;
   font-size: 14px;
 }
+.post-list-info-bottom-icon {
+  font-size: 15px;
+}
+/* 手机模式 */
+@media (max-width: 767px) {
+  .post-list-info-bottom-body {
+    font-size: 13px;
+  }
+  .post-list-info-bottom-icon {
+    font-size: 13px;
+  }
+}
+
 .post-list-page-body {
   @apply text-gray-400;
   padding: 18px 0px;

@@ -117,14 +117,22 @@
         ></el-option>
       </el-select>
     </el-form-item>
-    <!-- siteExtraCss -->
-    <el-form-item label="额外CSS样式" prop="siteExtraCss">
-      <el-input
-        type="textarea"
-        v-model="siteSettingsForm.siteExtraCss"
-        :rows="6"
-        placeholder="自定义CSS样式，会插入到head标签内，覆盖时可能需要添加!important。"
-      ></el-input>
+    <!-- siteEnableShareButton -->
+    <el-form-item label="开启分享按钮" prop="siteEnableShareButton">
+      <el-switch v-model="siteSettingsForm.siteEnableShareButton"></el-switch>
+    </el-form-item>
+    <!-- siteSharePlatforms -->
+    <el-form-item label="分享平台" prop="siteSharePlatforms">
+      <el-checkbox-group v-model="siteSettingsForm.siteSharePlatforms">
+        <el-checkbox
+          v-for="item in sharePlatforms"
+          :key="item.key"
+          :label="item.key"
+          class="mr-4 mb-2 flex items-center"
+        >
+          <span>{{ item.alt }}</span>
+        </el-checkbox>
+      </el-checkbox-group>
     </el-form-item>
     <!-- siteExtraJs -->
     <el-form-item label="额外JS脚本" prop="siteExtraJs">
@@ -221,6 +229,10 @@ export default {
       siteTopSlideTime: 8000,
       // 你所在时区
       siteTimeZone: '',
+      // 开启分享按钮
+      siteEnableShareButton: false,
+      // 分享平台
+      siteSharePlatforms: [],
       // 页面底部信息
       siteFooterInfo: '',
       // 额外CSS样式
@@ -289,6 +301,10 @@ export default {
       ],
       siteTimeZone: [
         { required: true, message: '请选择你所在时区', trigger: 'blur' }
+      ],
+      // siteSharePlatforms 必须选择一项
+      siteSharePlatforms: [
+        { required: true, message: '请选择分享平台', trigger: 'blur' }
       ]
     }
     const setSiteLogo = crop => {
@@ -309,10 +325,17 @@ export default {
         if (valid) {
           const params = []
           Object.keys(siteSettingsForm).forEach(key => {
-            params.push({
-              name: key,
-              value: siteSettingsForm[key]
-            })
+            if (key === 'siteSharePlatforms') {
+              params.push({
+                name: key,
+                value: siteSettingsForm[key].join(',')
+              })
+            } else {
+              params.push({
+                name: key,
+                value: siteSettingsForm[key]
+              })
+            }
           })
           authApi
             .updateOption({ optionList: params })
@@ -459,6 +482,18 @@ export default {
       }
     ])
 
+    const sharePlatforms = [
+      { key: 'weibo', src: '/img/icon/sina-weibo.svg', alt: '新浪微博' },
+      { key: 'qq-zone', src: '/img/icon/qq-zone.svg', alt: 'QQ空间' },
+      { key: 'x', src: '/img/icon/x-icon.svg', alt: 'X' },
+      { key: 'facebook', src: '/img/icon/facebook.svg', alt: 'Facebook' },
+      { key: 'reddit', src: '/img/icon/reddit.svg', alt: 'Reddit' },
+      { key: 'telegram', src: '/img/icon/telegram.svg', alt: 'Telegram' },
+      { key: 'line', src: '/img/icon/line.svg', alt: 'LINE' },
+      { key: 'whatsapp', src: '/img/icon/whatsapp.svg', alt: 'WhatsApp' },
+      { key: 'copy-link', src: '', alt: '复制链接' }
+    ]
+
     onMounted(() => {
       getOptionList()
     })
@@ -475,7 +510,8 @@ export default {
       onSiteUrlBlur,
       onGravatarSourceBlur,
       inited,
-      timeZones
+      timeZones,
+      sharePlatforms
     }
   }
 }
