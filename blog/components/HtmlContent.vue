@@ -297,7 +297,7 @@ const initHljs = async () => {
     const result = codeBlock.result
     let language = 'code'
     if (hasLanguageClass) {
-      language = result.language || 'code'
+      language = result?.language || 'code'
     }
     const lines = (codeBlock.textContent + '\n').split('\n').length - 1
     codeBlock.setAttribute(
