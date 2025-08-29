@@ -505,7 +505,8 @@ exports.IP2LocationUtils = function (ip, id, modelUtils, updateMongodb = true) {
         const ipInfoAll = ip2location.getAll(String(ip).trim())
         // 遍历ipInfoAll，如果包含字符串This method is 就删除该属性
         Object.keys(ipInfoAll).forEach(key => {
-          if (ipInfoAll[key].includes('This method is not')) {
+          const val = ipInfoAll[key]
+          if (typeof val === 'string' && val.includes('This method is not')) {
             delete ipInfoAll[key]
           }
         })
