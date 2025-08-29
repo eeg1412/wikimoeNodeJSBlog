@@ -61,6 +61,10 @@ var readerlogs = new Schema(
         type: String,
         default: ''
       },
+      extraInfo: {
+        type: Object,
+        default: null
+      },
       performanceNavigationTiming: {
         type: PerformanceNavigationTimingSchema,
         default: null

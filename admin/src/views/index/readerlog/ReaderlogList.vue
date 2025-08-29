@@ -147,6 +147,10 @@
               <div v-else>
                 {{ row.data.targetId }}
               </div>
+              <!-- 显示分享平台 -->
+              <div v-if="row.data.extraInfo?.sharePlatform">
+                {{ SHARE_MAP[row.data.extraInfo.sharePlatform]?.alt || '' }}
+              </div>
             </div>
           </template>
         </el-table-column>
@@ -551,6 +555,36 @@ export default {
       return s + 's'
     }
 
+    const SHARE_MAP = {
+      weibo: {
+        alt: '分享到新浪微博'
+      },
+      'qq-zone': {
+        alt: '分享到QQ空间'
+      },
+      x: {
+        alt: '分享到X'
+      },
+      facebook: {
+        alt: '分享到Facebook'
+      },
+      reddit: {
+        alt: '分享到Reddit'
+      },
+      telegram: {
+        alt: '分享到Telegram'
+      },
+      line: {
+        alt: '分享到LINE'
+      },
+      whatsapp: {
+        alt: '分享到WhatsApp'
+      },
+      'copy-link': {
+        alt: '复制链接'
+      }
+    }
+
     onMounted(() => {
       initParams()
       getReaderlogList()
@@ -578,7 +612,8 @@ export default {
       openDeleteDialog,
       deleteDialogRef,
       deletelog,
-      msToSec
+      msToSec,
+      SHARE_MAP
     }
   }
 }

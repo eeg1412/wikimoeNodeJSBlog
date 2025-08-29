@@ -75,7 +75,7 @@ const props = defineProps({
   }
 })
 const toast = useToast()
-const emit = defineEmits(['update:open', 'shared'])
+const emit = defineEmits(['update:open', 'shareadd'])
 
 const open = computed({
   get() {
@@ -208,9 +208,13 @@ const handleShare = platform => {
     )
   }
 
-  emit('shared')
   putShareCountApi({
-    id: props.post._id
+    id: props.post._id,
+    sharePlatform: platform
+  }).then(res => {
+    if (res.add) {
+      emit('shareadd')
+    }
   })
 }
 
@@ -228,7 +232,7 @@ const icons = [
     alt: '分享到QQ空间',
     bg: 'bg-yellow-400'
   },
-  { key: 'x', src: '/img/icon/x-icon.svg', alt: 'X', bg: 'bg-slate-700' },
+  { key: 'x', src: '/img/icon/x-icon.svg', alt: '分享到X', bg: 'bg-slate-700' },
   {
     key: 'facebook',
     src: '/img/icon/facebook.svg',

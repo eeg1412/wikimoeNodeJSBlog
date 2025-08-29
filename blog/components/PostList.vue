@@ -156,7 +156,7 @@
                 </NuxtLink>
               </div>
               <div class="mr15" @click.stop>
-                <SharePopover :post="item" @shared="shared(item)">
+                <SharePopover :post="item" @shareadd="shareadd(item)">
                   <!-- 分享 -->
                   <button
                     class="dflex flexCenter post-list-share-btn cursor-pointer hover:text-primary-500"
@@ -675,7 +675,7 @@ const switchPostType = type => {
   showFilterMenu.value = false
 }
 
-const shared = item => {
+const shareadd = item => {
   item.shares += 1
 }
 

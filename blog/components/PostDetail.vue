@@ -170,7 +170,7 @@
         }"
       >
         <!-- 分享按钮 -->
-        <SharePopover :post="postData.data" @shared="shared">
+        <SharePopover :post="postData.data" @shareadd="shareadd">
           <UButton
             icon="i-heroicons-share"
             size="md"
@@ -1154,7 +1154,7 @@ if (import.meta.client) {
 
 const isHydrated = ref(false)
 
-const shared = () => {
+const shareadd = () => {
   postData.value.data.shares += 1
 }
 
