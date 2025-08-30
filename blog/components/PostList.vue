@@ -155,8 +155,12 @@
                   <span>{{ formatNumber(item.comnum) }} 评论</span>
                 </NuxtLink>
               </div>
-              <div class="mr15" @click.stop>
-                <SharePopover :post="item" @shareadd="shareadd(item)">
+              <div
+                class="mr15"
+                @click.stop
+                v-if="options.siteEnableShareButton"
+              >
+                <LazySharePopover :post="item" @shareadd="shareadd(item)">
                   <!-- 分享 -->
                   <button
                     class="dflex flexCenter post-list-share-btn cursor-pointer hover:text-primary-500"
@@ -171,7 +175,7 @@
 
                     <span>{{ formatNumber(item.shares) }} 分享</span>
                   </button>
-                </SharePopover>
+                </LazySharePopover>
               </div>
             </div>
 

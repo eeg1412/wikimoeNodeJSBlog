@@ -117,8 +117,17 @@
         ></el-option>
       </el-select>
     </el-form-item>
+    <!-- siteEnableFooterQRCodeButton -->
+    <el-form-item
+      label="文章底部二维码按钮"
+      prop="siteEnableFooterQRCodeButton"
+    >
+      <el-switch
+        v-model="siteSettingsForm.siteEnableFooterQRCodeButton"
+      ></el-switch>
+    </el-form-item>
     <!-- siteEnableShareButton -->
-    <el-form-item label="开启分享按钮" prop="siteEnableShareButton">
+    <el-form-item label="分享按钮" prop="siteEnableShareButton">
       <el-switch v-model="siteSettingsForm.siteEnableShareButton"></el-switch>
     </el-form-item>
     <!-- siteSharePlatforms -->
@@ -243,6 +252,8 @@ export default {
       siteTopSlideTime: 8000,
       // 你所在时区
       siteTimeZone: '',
+      // 开启页面底部二维码按钮
+      siteEnableFooterQRCodeButton: false,
       // 开启分享按钮
       siteEnableShareButton: false,
       // 分享平台

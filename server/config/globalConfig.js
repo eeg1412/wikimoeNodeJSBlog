@@ -61,6 +61,8 @@ const initGlobalConfig = async () => {
     siteTopSlideTime: 8000,
     // 你所在时区
     siteTimeZone: '',
+    // 开启页面底部二维码按钮
+    siteEnableFooterQRCodeButton: false,
     // 开启分享按钮
     siteEnableShareButton: false,
     // 分享平台

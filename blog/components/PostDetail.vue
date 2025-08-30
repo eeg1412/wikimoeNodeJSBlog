@@ -162,15 +162,25 @@
     </div>
 
     <div
-      class="post-detail-action-body flex justify-center items-center gap-3 my-4"
+      class="post-detail-action-body flex justify-center items-center gap-2 my-4"
     >
       <div
         :class="{
           'opacity-20': !isHydrated
         }"
+        v-if="options.siteEnableFooterQRCodeButton"
+      >
+        <LazyQRCodePopover :post="postData.data" />
+      </div>
+
+      <div
+        :class="{
+          'opacity-20': !isHydrated
+        }"
+        v-if="options.siteEnableShareButton"
       >
         <!-- 分享按钮 -->
-        <SharePopover :post="postData.data" @shareadd="shareadd">
+        <LazySharePopover :post="postData.data" @shareadd="shareadd">
           <UButton
             icon="i-heroicons-share"
             size="md"
@@ -179,7 +189,7 @@
             :label="`${formatNumber(postData.data.shares)} 分享`"
             :trailing="false"
           />
-        </SharePopover>
+        </LazySharePopover>
       </div>
 
       <div>
