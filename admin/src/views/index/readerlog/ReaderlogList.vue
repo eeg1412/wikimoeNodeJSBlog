@@ -114,6 +114,13 @@
         <el-table-column prop="data" label="操作对象内容" min-width="200">
           <template #default="{ row }">
             <div v-if="row.data">
+              <!-- 显示分享平台 -->
+              <div v-if="row.data.extraInfo?.sharePlatform">
+                {{
+                  SHARE_MAP[row.data.extraInfo.sharePlatform]?.alt ||
+                  '未知分享平台'
+                }}：
+              </div>
               <!-- 如果 target targetId content 三者都有则显示跳转到对应页面的链接，否则优先显示content，没有再显示targetId -->
               <div
                 v-if="
@@ -146,10 +153,6 @@
               </div>
               <div v-else>
                 {{ row.data.targetId }}
-              </div>
-              <!-- 显示分享平台 -->
-              <div v-if="row.data.extraInfo?.sharePlatform">
-                {{ SHARE_MAP[row.data.extraInfo.sharePlatform]?.alt || '' }}
               </div>
             </div>
           </template>
