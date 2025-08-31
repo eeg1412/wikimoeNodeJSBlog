@@ -30,7 +30,7 @@
             :text="getPostUrl"
             :size="512"
             :margin="0"
-            class="post-detail-qr-code rounded"
+            class="post-detail-qr-code rounded dark:border-white dark:border-solid dark:border-2"
           />
         </div>
         <div class="mt-2">
