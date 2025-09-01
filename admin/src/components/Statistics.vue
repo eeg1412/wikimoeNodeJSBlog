@@ -29,7 +29,7 @@
     </div>
     <el-row v-if="rankData">
       <!-- 文章阅读 rankData.readPostViewData -->
-      <el-col :span="8" :xs="24" class="p10">
+      <el-col :span="12" :xs="24" class="p10">
         <div class="mb10 fb statistics-title">文章阅读</div>
         <div class="mb10 statistics-panel">
           <el-table
@@ -76,7 +76,7 @@
         </div>
       </el-col>
       <!-- 文章点赞统计 rankData.readPostLikeData -->
-      <el-col :span="8" :xs="24" class="p10">
+      <el-col :span="12" :xs="24" class="p10">
         <div class="mb10 fb statistics-title">文章点赞</div>
         <div class="mb10 statistics-panel">
           <el-table
@@ -123,7 +123,7 @@
         </div>
       </el-col>
       <!-- 文章分享 rankData.readPostShareData -->
-      <el-col :span="8" :xs="24" class="p10">
+      <el-col :span="12" :xs="24" class="p10">
         <div class="mb10 fb statistics-title">文章分享</div>
         <div class="mb10 statistics-panel">
           <el-table
@@ -165,6 +165,42 @@
               small
               v-model:current-page="readPostSharePagination.currentPage"
               v-model:page-size="readPostSharePagination.pageSize"
+            />
+          </div>
+        </div>
+      </el-col>
+
+      <!-- 文章分享方式 rankData.readPostSharePlatformData -->
+      <el-col :span="12" :xs="24" class="p10">
+        <div class="mb10 fb statistics-title">文章分享方式</div>
+        <div class="mb10 statistics-panel">
+          <el-table
+            :data="readPostSharePlatformData"
+            row-key="_id"
+            style="width: 100%"
+            height="440px"
+          >
+            <el-table-column prop="_id" label="平台名称">
+              <template #default="{ row }">
+                <div>
+                  {{ SHARE_MAP[row._id]?.alt || '未知分享方式' }}
+                </div>
+              </template>
+            </el-table-column>
+            <el-table-column
+              prop="count"
+              label="分享量"
+              width="80px"
+            ></el-table-column>
+          </el-table>
+          <div class="dflex flexCenter mt10">
+            <el-pagination
+              layout="prev, pager, next"
+              :total="rankData.readPostSharePlatformData.length"
+              :pager-count="5"
+              small
+              v-model:current-page="readPostSharePlatformPagination.currentPage"
+              v-model:page-size="readPostSharePlatformPagination.pageSize"
             />
           </div>
         </div>
@@ -577,6 +613,7 @@ import { generateRandomAlphabetString } from '@/utils/utils'
 import { authApi } from '@/api'
 import moment from 'moment'
 import store from '@/store'
+import { SHARE_MAP } from '@/utils/variableMap'
 
 export default {
   setup() {
@@ -698,6 +735,7 @@ export default {
             readPostViewPagination.currentPage = 1
             readPostLikePagination.currentPage = 1
             readPostSharePagination.currentPage = 1
+            readPostSharePlatformPagination.currentPage = 1
             readReferrerPagination.currentPage = 1
             readPostListSortPagination.currentPage = 1
             readPostListTagPagination.currentPage = 1
@@ -819,6 +857,23 @@ export default {
           (readPostSharePagination.currentPage - 1) *
             readPostSharePagination.pageSize,
           readPostSharePagination.currentPage * readPostSharePagination.pageSize
+        )
+      }
+      return []
+    })
+    // readPostSharePlatform 的翻页对象
+    const readPostSharePlatformPagination = reactive({
+      currentPage: 1,
+      pageSize: 10
+    })
+    // readPostSharePlatform 的computed
+    const readPostSharePlatformData = computed(() => {
+      if (rankData.value) {
+        return rankData.value.readPostSharePlatformData.slice(
+          (readPostSharePlatformPagination.currentPage - 1) *
+            readPostSharePlatformPagination.pageSize,
+          readPostSharePlatformPagination.currentPage *
+            readPostSharePlatformPagination.pageSize
         )
       }
       return []
@@ -1061,6 +1116,8 @@ export default {
     })
 
     return {
+      SHARE_MAP,
+
       timeRange,
       pickerClass,
       shortcuts,
@@ -1077,6 +1134,8 @@ export default {
       readPostLikeData,
       readPostSharePagination,
       readPostShareData,
+      readPostSharePlatformPagination,
+      readPostSharePlatformData,
       readReferrerPagination,
       readReferrerData,
       readPostListSortPagination,

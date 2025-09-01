@@ -195,7 +195,7 @@ const handleShare = platform => {
       copyText(`${shareText} ${postUrl}`)
       break
     default:
-      console.warn(`未知的分享平台: ${platform}`)
+      console.warn(`未知的分享方式: ${platform}`)
       return
   }
 

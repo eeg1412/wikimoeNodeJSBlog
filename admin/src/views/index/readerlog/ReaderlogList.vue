@@ -114,11 +114,11 @@
         <el-table-column prop="data" label="操作对象内容" min-width="200">
           <template #default="{ row }">
             <div v-if="row.data">
-              <!-- 显示分享平台 -->
+              <!-- 显示分享方式 -->
               <div v-if="row.data.extraInfo?.sharePlatform">
                 {{
                   SHARE_MAP[row.data.extraInfo.sharePlatform]?.alt ||
-                  '未知分享平台'
+                  '未知分享方式'
                 }}：
               </div>
               <!-- 如果 target targetId content 三者都有则显示跳转到对应页面的链接，否则优先显示content，没有再显示targetId -->
@@ -320,6 +320,7 @@ import {
 } from '@/utils/utils'
 import store from '@/store'
 import CheckDialogService from '@/services/CheckDialogService'
+import { SHARE_MAP } from '@/utils/variableMap'
 
 export default {
   setup() {
@@ -556,36 +557,6 @@ export default {
       }
       const s = ms / 1000
       return s + 's'
-    }
-
-    const SHARE_MAP = {
-      weibo: {
-        alt: '分享到新浪微博'
-      },
-      'qq-zone': {
-        alt: '分享到QQ空间'
-      },
-      x: {
-        alt: '分享到X'
-      },
-      facebook: {
-        alt: '分享到Facebook'
-      },
-      reddit: {
-        alt: '分享到Reddit'
-      },
-      telegram: {
-        alt: '分享到Telegram'
-      },
-      line: {
-        alt: '分享到LINE'
-      },
-      whatsapp: {
-        alt: '分享到WhatsApp'
-      },
-      'copy-link': {
-        alt: '复制链接'
-      }
     }
 
     onMounted(() => {

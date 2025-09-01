@@ -65,7 +65,7 @@ const initGlobalConfig = async () => {
     siteEnableFooterQRCodeButton: false,
     // 开启分享按钮
     siteEnableShareButton: false,
-    // 分享平台
+    // 分享方式
     siteSharePlatforms: [],
     // 分享文案
     siteShareDescription: '',

@@ -268,6 +268,44 @@ module.exports = async function (req, res, next) {
 
   promiseArray.push(readPostShareData)
 
+  // 单位时间分享方式统计 postSharePlatform
+  const readPostSharePlatformPipeline = [
+    {
+      $match: {
+        createdAt: { $gte: startDate.toDate(), $lte: endDate.toDate() },
+        action: { $in: ['postShare'] },
+        'data.extraInfo.sharePlatform': { $exists: true, $ne: null, $ne: '' },
+        isBot: false
+      }
+    },
+    // 根据{data.extraInfo.sharePlatform} 分组
+    {
+      $group: {
+        _id: '$data.extraInfo.sharePlatform',
+        count: { $sum: 1 }
+      }
+    },
+    // 按照次数排序
+    {
+      $sort: {
+        count: -1,
+        _id: -1
+      }
+    },
+    // 只取前100
+    {
+      $limit: limit
+    }
+  ]
+  const readPostSharePlatformData = readerlogUtils
+    .aggregate(readPostSharePlatformPipeline)
+    .catch(err => {
+      adminApiLog.error(err)
+      return false
+    })
+
+  promiseArray.push(readPostSharePlatformData)
+
   // 单位时间分类访问排行 postListSort
   const readPostListSortPipeline = [
     {
@@ -983,6 +1021,7 @@ module.exports = async function (req, res, next) {
       readPostViewData,
       readPostLikeData,
       readPostShareData,
+      readPostSharePlatformData,
       readPostListSortData,
       readPostListTagData,
       readPostListKeywordData,
@@ -999,6 +1038,7 @@ module.exports = async function (req, res, next) {
       !readPostViewData ||
       !readPostLikeData ||
       !readPostShareData ||
+      !readPostSharePlatformData ||
       !readPostListSortData ||
       !readPostListTagData ||
       !readPostListKeywordData ||
@@ -1024,6 +1064,7 @@ module.exports = async function (req, res, next) {
       readPostViewData: readPostViewData,
       readPostLikeData: readPostLikeData,
       readPostShareData: readPostShareData,
+      readPostSharePlatformData: readPostSharePlatformData,
       readPostListSortData: readPostListSortData,
       readPostListTagData: readPostListTagData,
       readPostListKeywordData: readPostListKeywordData,

@@ -131,7 +131,7 @@
       <el-switch v-model="siteSettingsForm.siteEnableShareButton"></el-switch>
     </el-form-item>
     <!-- siteSharePlatforms -->
-    <el-form-item label="分享平台" prop="siteSharePlatforms">
+    <el-form-item label="分享方式" prop="siteSharePlatforms">
       <el-checkbox-group v-model="siteSettingsForm.siteSharePlatforms">
         <el-checkbox
           v-for="item in sharePlatforms"
@@ -256,7 +256,7 @@ export default {
       siteEnableFooterQRCodeButton: false,
       // 开启分享按钮
       siteEnableShareButton: false,
-      // 分享平台
+      // 分享方式
       siteSharePlatforms: [],
       // 分享文案
       siteShareDescription: '',
@@ -331,7 +331,7 @@ export default {
       ],
       // siteSharePlatforms 必须选择一项
       siteSharePlatforms: [
-        { required: true, message: '请选择分享平台', trigger: 'blur' }
+        { required: true, message: '请选择分享方式', trigger: 'blur' }
       ]
     }
     const setSiteLogo = crop => {
