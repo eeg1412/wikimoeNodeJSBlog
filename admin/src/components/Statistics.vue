@@ -455,6 +455,40 @@
         </div>
       </el-col>
 
+      <!-- 地点访问统计 -->
+      <el-col :span="24" :xs="24" class="p10">
+        <div class="mb10 fb statistics-title">地点文章列表</div>
+        <div class="mb10 statistics-panel">
+          <el-table
+            :data="readPostListMappointData"
+            row-key="_id"
+            style="width: 100%"
+            height="440px"
+          >
+            <el-table-column prop="title" label="地点名称">
+              <template #default="{ row }">
+                <div>{{ reduceText(row.title) }}</div>
+              </template>
+            </el-table-column>
+            <el-table-column
+              prop="count"
+              label="访问量"
+              width="80px"
+            ></el-table-column>
+          </el-table>
+          <div class="dflex flexCenter mt10">
+            <el-pagination
+              layout="prev, pager, next"
+              :total="rankData.readPostListMappointData.length"
+              :pager-count="5"
+              small
+              v-model:current-page="readPostListMappointPagination.currentPage"
+              v-model:page-size="readPostListMappointPagination.pageSize"
+            />
+          </div>
+        </div>
+      </el-col>
+
       <!-- 浏览器统计 rankData.browserStats -->
       <el-col :span="12" :xs="24" class="p10">
         <div class="mb10 fb statistics-title">操作系统</div>
@@ -744,6 +778,7 @@ export default {
             readPostListMoviePagination.currentPage = 1
             readPostListBookPagination.currentPage = 1
             readPostListGamePagination.currentPage = 1
+            readPostListMappointPagination.currentPage = 1
             browserStatsPagination.currentPage = 1
             osStatsPagination.currentPage = 1
             countryStatsPagination.currentPage = 1
@@ -1085,6 +1120,24 @@ export default {
       return []
     })
 
+    // 地点访问统计分页对象
+    const readPostListMappointPagination = reactive({
+      currentPage: 1,
+      pageSize: 10
+    })
+    // 地点访问统计数据计算属性
+    const readPostListMappointData = computed(() => {
+      if (rankData.value && rankData.value.readPostListMappointData) {
+        return rankData.value.readPostListMappointData.slice(
+          (readPostListMappointPagination.currentPage - 1) *
+            readPostListMappointPagination.pageSize,
+          readPostListMappointPagination.currentPage *
+            readPostListMappointPagination.pageSize
+        )
+      }
+      return []
+    })
+
     // 新增: 爬虫统计分页对象
     const botStatsPagination = reactive({
       currentPage: 1,
@@ -1154,6 +1207,8 @@ export default {
       readPostListBookData,
       readPostListGamePagination,
       readPostListGameData,
+      readPostListMappointPagination,
+      readPostListMappointData,
 
       browserStatsPagination,
       browserStatsData,

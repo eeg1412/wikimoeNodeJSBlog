@@ -663,6 +663,58 @@ module.exports = async function (req, res, next) {
 
   promiseArray.push(readPostListGameData)
 
+  // 单位时间地点列表访问排行 postListMappoint
+  const readPostListMappointPipeline = [
+    {
+      $match: {
+        createdAt: { $gte: startDate.toDate(), $lte: endDate.toDate() },
+        action: { $in: ['postListMappoint'] },
+        isBot: false
+      }
+    },
+    {
+      $group: {
+        _id: '$data.targetId',
+        count: { $sum: 1 }
+      }
+    },
+    {
+      $sort: {
+        count: -1,
+        _id: -1
+      }
+    },
+    {
+      $limit: limit
+    },
+    {
+      $lookup: {
+        from: 'mappoints',
+        localField: '_id',
+        foreignField: '_id',
+        as: 'mappoint'
+      }
+    },
+    {
+      $unwind: '$mappoint'
+    },
+    {
+      $project: {
+        _id: 1,
+        count: 1,
+        title: '$mappoint.title'
+      }
+    }
+  ]
+  const readPostListMappointData = readerlogUtils
+    .aggregate(readPostListMappointPipeline)
+    .catch(err => {
+      adminApiLog.error(err)
+      return false
+    })
+
+  promiseArray.push(readPostListMappointData)
+
   // 设备和地理位置统计 - 合并在一个聚合查询中以减少查询次数
   const deviceAndLocationPipeline = [
     {
@@ -1029,6 +1081,7 @@ module.exports = async function (req, res, next) {
       readPostListMovieData,
       readPostListBookData,
       readPostListGameData,
+      readPostListMappointData,
       deviceAndLocationData,
       botStatsData // 新增的爬虫统计数据
     ] = await Promise.all(promiseArray)
@@ -1046,6 +1099,7 @@ module.exports = async function (req, res, next) {
       !readPostListMovieData ||
       !readPostListBookData ||
       !readPostListGameData ||
+      !readPostListMappointData ||
       !deviceAndLocationData ||
       !botStatsData
     ) {
@@ -1072,6 +1126,7 @@ module.exports = async function (req, res, next) {
       readPostListMovieData: readPostListMovieData,
       readPostListBookData: readPostListBookData,
       readPostListGameData: readPostListGameData,
+      readPostListMappointData: readPostListMappointData,
       // 设备和地理位置统计数据
       browserStats: deviceAndLocationData[0].browserStats,
       osStats: deviceAndLocationData[0].osStats,
