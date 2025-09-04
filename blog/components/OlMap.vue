@@ -186,9 +186,15 @@ const initMap = async () => {
 // 加载世界地图数据
 const loadWorldData = async () => {
   if (!olClasses || !worldSource) return
-
+  const olMapMapPrecision = options.value?.olMapMapPrecision || 1
   try {
-    const response = await fetch('/geojson/world-mid.geojson')
+    const olMapMapPrecisionMap = {
+      1: 'world-low.geojson',
+      2: 'world-mid.geojson'
+    }
+    const response = await fetch(
+      `/geojson/${olMapMapPrecisionMap[olMapMapPrecision]}`
+    )
     if (!response.ok) throw new Error('本地 world.geojson 未找到')
 
     const geojson = await response.json()

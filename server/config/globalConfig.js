@@ -115,6 +115,8 @@ const initGlobalConfig = async () => {
   }
 
   const olMapSettingsConfig = {
+    // 地图精度 1为低 2为普通
+    olMapMapPrecision: 2,
     // 默认中心坐标
     olMapDefaultCenter: [0, 0],
     // 默认缩放级别

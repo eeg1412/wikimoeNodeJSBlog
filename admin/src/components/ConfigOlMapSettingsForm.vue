@@ -7,6 +7,14 @@
     v-if="inited"
   >
     <!-- 地图设置 -->
+    <el-form-item label="地图精度" prop="olMapMapPrecision">
+      <!-- radio -->
+      <el-radio-group v-model="olMapSettingsForm.olMapMapPrecision">
+        <el-radio :label="1">低</el-radio>
+        <el-radio :label="2">普通</el-radio>
+      </el-radio-group>
+      <div class="w_10">※低精度地图文件约965KB,普通精度地图文件约4.3MB</div>
+    </el-form-item>
 
     <!-- 默认中心坐标 - 经度 -->
     <el-form-item label="默认中心经度" prop="longitude">
@@ -72,6 +80,8 @@ export default {
     // 地图设置
     const olMapSettingsFormRef = ref(null)
     const olMapSettingsForm = reactive({
+      // 地图精度 1为低 2为普通
+      olMapMapPrecision: 2,
       // 默认中心坐标（存储为字符串数组格式）
       olMapDefaultCenter: '0,0',
       // 默认缩放级别
