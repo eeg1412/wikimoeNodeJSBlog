@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="page-olmap-body">
-      <DivLoading :loading="mappointLoading" />
+      <DivLoading :loading="mappointLoading" text="加载中..." />
       <div class="page-olmap-container">
         <OlMap
           :markers="mappointList"
