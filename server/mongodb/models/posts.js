@@ -66,6 +66,9 @@ var posts = new Schema(
       index: true
     },
     tags: [{ type: Schema.ObjectId, ref: 'tags', index: true }],
+    mappointList: [
+      { type: Schema.ObjectId, ref: 'mappoints', default: [], index: true }
+    ],
     views: {
       type: Number,
       default: 0,

@@ -54,6 +54,16 @@
               <i class="fas fa-fw fa-tags pr10"></i>
               <template #title>标签</template>
             </el-menu-item>
+            <!-- 地点 -->
+            <el-menu-item
+              index="MappointList"
+              @click="removeParam('MappointList')"
+              @click.middle="openNewTab('MappointList')"
+              :route="{ name: 'MappointList' }"
+            >
+              <i class="fas fa-fw fa-map pr10"></i>
+              <template #title>地点</template>
+            </el-menu-item>
             <!-- 媒体库 -->
             <el-menu-item
               index="AlbumList"

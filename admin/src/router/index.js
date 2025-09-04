@@ -78,6 +78,33 @@ const routes = [
             /* webpackChunkName: "TagEditor" */ '../views/index/tag/TagEditor.vue'
           )
       },
+      // MappointList
+      {
+        path: '/mappoint/list',
+        name: 'MappointList',
+        component: () =>
+          import(
+            /* webpackChunkName: "MappointList" */ '../views/index/mappoint/MappointList.vue'
+          )
+      },
+      // MappointEditor
+      {
+        path: '/mappoint/add',
+        name: 'MappointAdd',
+        component: () =>
+          import(
+            /* webpackChunkName: "MappointEditor" */ '../views/index/mappoint/MappointEditor.vue'
+          )
+      },
+      // MappointEditor
+      {
+        path: '/mappoint/editor/:id',
+        name: 'MappointEdit',
+        component: () =>
+          import(
+            /* webpackChunkName: "MappointEditor" */ '../views/index/mappoint/MappointEditor.vue'
+          )
+      },
       // LinkList
       {
         path: '/link/list',

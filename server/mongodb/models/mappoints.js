@@ -8,7 +8,7 @@ var mappoints = new Schema(
       type: String,
       required: true
     },
-    // 简评
+    // 简介
     summary: {
       type: String
     },

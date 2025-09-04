@@ -270,6 +270,51 @@ const adminRouteSetting = [
     roleType: null,
     role: null
   },
+  // get /mappoint/list
+  {
+    path: '/mappoint/list',
+    method: 'get',
+    middleware: [checkAuth],
+    controller: require('../api/admin/mappoint/getMappointList'),
+    roleType: null,
+    role: null
+  },
+  // post /mappoint/create
+  {
+    path: '/mappoint/create',
+    method: 'post',
+    middleware: [checkAuth],
+    controller: require('../api/admin/mappoint/createMappoint'),
+    roleType: null,
+    role: null
+  },
+  // get /mappoint/detail
+  {
+    path: '/mappoint/detail',
+    method: 'get',
+    middleware: [checkAuth],
+    controller: require('../api/admin/mappoint/getMappointDetail'),
+    roleType: null,
+    role: null
+  },
+  // put /mappoint/update
+  {
+    path: '/mappoint/update',
+    method: 'put',
+    middleware: [checkAuth],
+    controller: require('../api/admin/mappoint/updateMappoint'),
+    roleType: null,
+    role: null
+  },
+  // delete /mappoint/delete
+  {
+    path: '/mappoint/delete',
+    method: 'delete',
+    middleware: [checkAuth],
+    controller: require('../api/admin/mappoint/deleteMappoint'),
+    roleType: null,
+    role: null
+  },
   // post /attachment/upload
   {
     path: '/attachment/upload',

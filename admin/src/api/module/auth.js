@@ -89,6 +89,40 @@ export default function (api) {
         shouldAdminJWT: true
       })
     },
+    // get mappoint/list
+    getMappointList(data, noLoading = false) {
+      return api.get('/mappoint/list', {
+        params: data,
+        shouldAdminJWT: true,
+        noLoading
+      })
+    },
+    // get mappoint/detail
+    getMappointDetail(data) {
+      return api.get('/mappoint/detail', {
+        params: data,
+        shouldAdminJWT: true
+      })
+    },
+    // post mappoint/create
+    createMappoint(data) {
+      return api.post('/mappoint/create', data, {
+        shouldAdminJWT: true
+      })
+    },
+    // put mappoint/update
+    updateMappoint(data) {
+      return api.put('/mappoint/update', data, {
+        shouldAdminJWT: true
+      })
+    },
+    // delete mappoint/delete
+    deleteMappoint(data) {
+      return api.delete('/mappoint/delete', {
+        params: data,
+        shouldAdminJWT: true
+      })
+    },
     // get album/list
     getAlbumList(data, options = {}) {
       return api.get('/album/list', {
