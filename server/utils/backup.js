@@ -39,6 +39,7 @@ const tagsUtil = require('../mongodb/utils/tags')
 const usersUtil = require('../mongodb/utils/users')
 const votesUtil = require('../mongodb/utils/votes')
 const votelogsUtil = require('../mongodb/utils/votelogs')
+const mappointsUtil = require('../mongodb/utils/mappoints')
 
 // 创建一个映射，键是模型的名称（全部小写），值是对应的工具
 const modelUtilMap = {
@@ -70,7 +71,8 @@ const modelUtilMap = {
   tags: tagsUtil,
   users: usersUtil,
   votes: votesUtil,
-  votelogs: votelogsUtil
+  votelogs: votelogsUtil,
+  mappoints: mappointsUtil
 }
 
 const noDropCollections = ['backups']
