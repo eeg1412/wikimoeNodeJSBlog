@@ -27,10 +27,11 @@
       <template #body>
         <div v-if="currentData">
           <div class="mappoint-detail-content">
-            <div v-if="currentData.summary" class="mappoint-summary mb-2">
-              <p class="text-gray-700 dark:text-gray-300">
-                {{ currentData.summary }}
-              </p>
+            <div
+              v-if="currentData.summary"
+              class="mappoint-summary mb-3 border-b border-dashed border-gray-200 dark:border-gray-700 pb-3"
+            >
+              {{ currentData.summary }}
             </div>
 
             <!-- 文章列表 -->
