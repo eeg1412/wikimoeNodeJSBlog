@@ -40,7 +40,7 @@
                 <div class="mappoint-post-list-body">
                   <div
                     v-if="postList.length > 0"
-                    class="content-grid-list-2-1"
+                    class="content-grid-list-2-1-dialog"
                     :class="{
                       'is-odd': postList.length % 2 !== 0
                     }"

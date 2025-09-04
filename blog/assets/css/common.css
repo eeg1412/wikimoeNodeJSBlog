@@ -1383,6 +1383,24 @@ ins.adsbygoogle[data-ad-status='unfilled'] {
 .content-grid-list-2-1.is-odd .content-grid-list-2-1-item:last-child {
   grid-column: span 2;
 }
+.content-grid-list-2-1-dialog {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.5rem;
+}
+
+.content-grid-list-2-1-dialog.is-odd .content-grid-list-2-1-item:last-child {
+  grid-column: span 2;
+}
+
+@media (max-width: 640px) {
+  .content-grid-list-2-1-dialog {
+    grid-template-columns: 1fr;
+  }
+  .content-grid-list-2-1-dialog.is-odd .content-grid-list-2-1-item:last-child {
+    grid-column: span 1;
+  }
+}
 
 /* 单列 */
 /* 0-640 */
