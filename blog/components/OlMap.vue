@@ -115,8 +115,8 @@ const createStyles = classes => {
         font: '10px sans-serif'
       }),
     world: new classes.Style({
-      fill: new classes.Fill({ color: '#fce8eb50' }),
-      stroke: new classes.Stroke({ color: '#ef8fa7', width: 1 })
+      fill: new classes.Fill({ color: '#ef8fa750' }),
+      stroke: new classes.Stroke({ color: '#ef8fa750', width: 1 })
     })
   }
 }
