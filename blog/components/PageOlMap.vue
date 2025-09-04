@@ -5,8 +5,6 @@
       <div class="page-olmap-container">
         <OlMap
           :markers="mappointList"
-          :center="[104.066, 30.651]"
-          :zoom="4"
           v-show="mappointList.length > 0"
           @markerClick="tryOpenMappoint"
         />

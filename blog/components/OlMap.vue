@@ -6,6 +6,7 @@
 
 <script setup>
 import { ref, onMounted, onUnmounted, watch, nextTick } from 'vue'
+import { useOptionStore } from '@/store/options'
 
 // Props - 接收父组件传入的标记点数据
 const props = defineProps({
@@ -13,16 +14,11 @@ const props = defineProps({
     type: Array,
     default: () => []
     // 数据格式: [{ _id, title, longitude, latitude, summary?, status? }]
-  },
-  center: {
-    type: Array,
-    default: () => [139.6917, 35.6895]
-  },
-  zoom: {
-    type: Number,
-    default: 1
   }
 })
+
+const optionStore = useOptionStore()
+const { options } = storeToRefs(optionStore)
 
 // Emits - 向父组件发射事件
 const emit = defineEmits(['markerClick'])
@@ -44,9 +40,9 @@ let olClasses = null
 // 配置常量
 const CONFIG = {
   WORLD_EXTENT: null,
-  INITIAL_CENTER: props.center,
-  INITIAL_ZOOM: props.zoom,
-  MIN_ZOOM: 0,
+  INITIAL_CENTER: options.value?.olMapDefaultCenter,
+  INITIAL_ZOOM: options.value?.olMapDefaultZoom,
+  MIN_ZOOM: 1,
   MAX_ZOOM: 8
 }
 
@@ -96,6 +92,22 @@ const loadOpenLayers = async () => {
   }
 }
 
+const setMarkerTextVisibility = classes => {
+  const olMapShowMappointText = options.value?.olMapShowMappointText
+  if (olMapShowMappointText) {
+    return label =>
+      new classes.Text({
+        text: label || '',
+        offsetY: -12,
+        fill: new classes.Fill({ color: '#000' }),
+        stroke: new classes.Stroke({ color: '#fff', width: 2 }),
+        font: '10px sans-serif'
+      })
+  } else {
+    return undefined
+  }
+}
+
 // 样式配置工厂函数
 const createStyles = classes => {
   return {
@@ -106,14 +118,7 @@ const createStyles = classes => {
         stroke: new classes.Stroke({ color: '#fff', width: 2 })
       })
     }),
-    markerText: label =>
-      new classes.Text({
-        text: label || '',
-        offsetY: -12,
-        fill: new classes.Fill({ color: '#000' }),
-        stroke: new classes.Stroke({ color: '#fff', width: 2 }),
-        font: '10px sans-serif'
-      }),
+    markerText: setMarkerTextVisibility(classes),
     world: new classes.Style({
       fill: new classes.Fill({ color: '#ef8fa750' }),
       stroke: new classes.Stroke({ color: '#ef8fa750', width: 1 })
@@ -141,7 +146,9 @@ const initMap = async () => {
       source: markerSource,
       style: feature => {
         const style = STYLES.marker.clone()
-        style.setText(STYLES.markerText(feature.get('label')))
+        if (STYLES.markerText) {
+          style.setText(STYLES.markerText(feature.get('label')))
+        }
         return style
       }
     })

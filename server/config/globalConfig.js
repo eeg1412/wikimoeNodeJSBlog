@@ -114,6 +114,15 @@ const initGlobalConfig = async () => {
     // siteRssFullText: false,
   }
 
+  const olMapSettingsConfig = {
+    // 默认中心坐标
+    olMapDefaultCenter: [0, 0],
+    // 默认缩放级别
+    olMapDefaultZoom: 4,
+    // 显示标记点文字
+    olMapShowMappointText: false
+  }
+
   const emailSettingsConfig = {
     // 开启邮件通知
     emailEnable: false,
@@ -224,6 +233,7 @@ const initGlobalConfig = async () => {
         commentSettings: commentSettingsConfig,
         rssSettings: rssSettingsConfig,
         emailSettings: emailSettingsConfig,
+        olMapSettings: olMapSettingsConfig,
         IPBlockSettings: IPBlockSettingsConfig,
         otherSettings: otherSettingsConfig,
         sitePostSettings: sitePostSettingsConfig,
@@ -240,6 +250,7 @@ const initGlobalConfig = async () => {
       formatResToForm(config.commentSettings, obj)
       formatResToForm(config.rssSettings, obj)
       formatResToForm(config.emailSettings, obj)
+      formatResToForm(config.olMapSettings, obj)
       formatResToForm(config.IPBlockSettings, obj)
       formatResToForm(config.otherSettings, obj)
       formatResToForm(config.sitePostSettings, obj)

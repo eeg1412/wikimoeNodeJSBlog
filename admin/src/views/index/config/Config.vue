@@ -22,6 +22,10 @@
       <el-tab-pane label="媒体设置" name="media">
         <ConfigMediaForm v-if="activeName === 'media'" />
       </el-tab-pane>
+      <!-- 地图设置 -->
+      <el-tab-pane label="地图设置" name="ol-map">
+        <ConfigOlMapSettingsForm v-if="activeName === 'ol-map'" />
+      </el-tab-pane>
       <!-- 邮件设置 -->
       <el-tab-pane label="邮件设置" name="email">
         <ConfigEmailSettingsForm v-if="activeName === 'email'" />
@@ -57,6 +61,7 @@ import ConfigOtherSettingsForm from '@/components/ConfigOtherSettingsForm'
 import ConfigSitePostForm from '@/components/ConfigSitePostForm'
 import ConfigAdSettingsForm from '@/components/ConfigAdSettingsForm'
 import ConfigIPBlockSettingsForm from '@/components/ConfigIPBlockSettingsForm'
+import ConfigOlMapSettingsForm from '@/components/ConfigOlMapSettingsForm'
 export default {
   components: {
     ConfigSiteSettingsForm,
@@ -67,7 +72,8 @@ export default {
     ConfigOtherSettingsForm,
     ConfigSitePostForm,
     ConfigAdSettingsForm,
-    ConfigIPBlockSettingsForm
+    ConfigIPBlockSettingsForm,
+    ConfigOlMapSettingsForm
   },
   setup() {
     const route = useRoute()
