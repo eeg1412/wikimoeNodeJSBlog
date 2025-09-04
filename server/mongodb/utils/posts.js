@@ -26,6 +26,16 @@ exports.findOne = async function (parmas, projection, options = {}) {
     })
     .populate('sort')
     .populate('tags')
+    .populate({
+      path: 'mappointList',
+      match: { status: matchStatus },
+      select: 'title _id status'
+    })
+    .populate({
+      path: 'mappointList',
+      match: { status: matchStatus },
+      select: 'title _id status'
+    })
     .populate('coverImages')
     .populate({
       path: 'bangumiList',
@@ -195,6 +205,13 @@ exports.findPage = async function (
     .populate('sort')
     .populate('tags')
     .populate('coverImages')
+  if (projection && !projection.includes('-mappointList')) {
+    query = query.populate({
+      path: 'mappointList',
+      match: { status: matchStatus },
+      select: 'title _id status'
+    })
+  }
 
   if (projection && !projection.includes('-bangumiList')) {
     query = query.populate({

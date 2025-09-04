@@ -1485,7 +1485,7 @@ html.dark .acg-summary {
 html.dark .comment-list-item-parent-content {
   @apply dark:text-gray-300;
 }
-html.dark .random-post-item-body,
+html.dark .post-all-type-item-body,
 html.dark .tweet-content-lite-item-body {
   @apply dark:border-gray-700 hover:dark:border-primary-400;
 }

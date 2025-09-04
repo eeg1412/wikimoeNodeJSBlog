@@ -223,6 +223,19 @@
             </el-select>
           </el-form-item>
         </template>
+
+        <template v-if="type !== 3">
+          <!-- 地点 -->
+          <el-form-item label="地点" prop="mappointList">
+            <MappointSelector
+              v-model="form.mappointList"
+              v-model:mappointList="mappointList"
+              placeholder="请选择地点"
+              width="100%"
+            />
+          </el-form-item>
+        </template>
+
         <div class="config-border-item" v-if="type === 2">
           <div class="config-border-item-title">
             <div>推文内关联内容设定</div>
@@ -521,6 +534,7 @@ import BookSelector from '@/components/BookSelector.vue'
 import PostSelector from '@/components/PostSelector.vue'
 import EventSelector from '@/components/EventSelector.vue'
 import VoteSelector from '@/components/VoteSelector.vue'
+import MappointSelector from '@/components/MappointSelector.vue'
 import draggable from 'vuedraggable'
 import EmojiTextarea from '@/components/EmojiTextarea.vue'
 import StringSortEditBox from '@/components/StringSortEditBox.vue'
@@ -547,6 +561,7 @@ export default {
     PostSelector,
     EventSelector,
     VoteSelector,
+    MappointSelector,
     StringSortEditBox
   },
   setup() {
@@ -603,6 +618,10 @@ export default {
               case 'tags':
                 form[key] = res.data.data[key].map(item => item._id)
                 tagList.value = res.data.data[key]
+                break
+              case 'mappointList':
+                form[key] = res.data.data[key].map(item => item._id)
+                mappointList.value = res.data.data[key]
                 break
               case 'bangumiList':
                 form[key] = res.data.data[key].map(item => item._id)
@@ -789,6 +808,7 @@ export default {
       sort: null,
       type: null,
       tags: [],
+      mappointList: [],
       bangumiList: [],
       movieList: [],
       gameList: [],
@@ -1068,6 +1088,9 @@ export default {
       }
     )
 
+    // mappoints
+    const mappointList = ref([])
+
     // bangumi
     const bangumiList = ref([])
     // movie
@@ -1205,6 +1228,11 @@ export default {
       {
         label: '活动',
         value: 'event'
+      },
+      // 地图
+      {
+        label: '地图',
+        value: 'map'
       }
     ])
 
@@ -1447,6 +1475,8 @@ export default {
       tagList,
       tagsIsLoading,
       queryTags,
+      // mappoints
+      mappointList,
       // bangumi
       bangumiList,
       // movie

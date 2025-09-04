@@ -35,6 +35,7 @@ module.exports = async function (req, res, next) {
     alias,
     sort,
     tags,
+    mappointList,
     top,
     sortop,
     status,
@@ -343,6 +344,45 @@ module.exports = async function (req, res, next) {
     return
   }
 
+  // 校验mappointList
+  if (!Array.isArray(mappointList)) {
+    res.status(400).json({
+      errors: [
+        {
+          message: 'mappointList必须是数组'
+        }
+      ]
+    })
+    return
+  }
+
+  // 校验是否含有空内容
+  for (let i = 0; i < mappointList.length; i++) {
+    if (!mappointList[i]) {
+      res.status(400).json({
+        errors: [
+          {
+            message: 'mappointList格式错误'
+          }
+        ]
+      })
+      return
+    }
+  }
+
+  // 校验是否有重复
+  const uniqueMappointList = new Set(mappointList)
+  if (uniqueMappointList.size !== mappointList.length) {
+    res.status(400).json({
+      errors: [
+        {
+          message: 'mappointList不能重复'
+        }
+      ]
+    })
+    return
+  }
+
   const listSortList = ['media', 'event', 'vote', 'post', 'tweet', 'acgn']
   // seriesSortList 和 contentSeriesSortList 必须为数组且只能包含listSortList里面的值
   if (
@@ -382,6 +422,7 @@ module.exports = async function (req, res, next) {
     alias: alias,
     sort: sort,
     tags: tags,
+    mappointList: mappointList,
     top: top,
     sortop: sortop,
     status: status,

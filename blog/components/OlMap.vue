@@ -1,0 +1,367 @@
+<template>
+  <div class="ol-map-container">
+    <div ref="mapContainer" class="ol-map"></div>
+  </div>
+</template>
+
+<script setup>
+import { ref, onMounted, onUnmounted, watch, nextTick } from 'vue'
+
+// Props - 接收父组件传入的标记点数据
+const props = defineProps({
+  markers: {
+    type: Array,
+    default: () => []
+    // 数据格式: [{ _id, title, longitude, latitude, summary?, status? }]
+  },
+  center: {
+    type: Array,
+    default: () => [139.6917, 35.6895]
+  },
+  zoom: {
+    type: Number,
+    default: 1
+  }
+})
+
+// Emits - 向父组件发射事件
+const emit = defineEmits(['markerClick'])
+
+// 组件引用
+const mapContainer = ref(null)
+
+// 地图相关变量
+let map = null
+let overlay = null
+let markerSource = null
+let markerLayer = null
+let worldSource = null
+let worldLayer = null
+
+// OpenLayers 相关类
+let olClasses = null
+
+// 配置常量
+const CONFIG = {
+  WORLD_EXTENT: null,
+  INITIAL_CENTER: props.center,
+  INITIAL_ZOOM: props.zoom,
+  MIN_ZOOM: 0,
+  MAX_ZOOM: 8
+}
+
+// 异步加载 OpenLayers 依赖
+const loadOpenLayers = async () => {
+  const [
+    olModule,
+    olLayerModule,
+    olSourceModule,
+    olGeomModule,
+    olFeatureModule,
+    olStyleModule,
+    olProjModule,
+    olFormatModule
+  ] = await Promise.all([
+    import('ol'),
+    import('ol/layer'),
+    import('ol/source'),
+    import('ol/geom'),
+    import('ol/Feature'),
+    import('ol/style'),
+    import('ol/proj'),
+    import('ol/format')
+  ])
+
+  // 动态导入 CSS
+  await import('ol/ol.css')
+
+  return {
+    Map: olModule.Map,
+    View: olModule.View,
+    Overlay: olModule.Overlay,
+    VectorLayer: olLayerModule.Vector,
+    VectorSource: olSourceModule.Vector,
+    Point: olGeomModule.Point,
+    Polygon: olGeomModule.Polygon,
+    Feature: olFeatureModule.default,
+    Style: olStyleModule.Style,
+    Circle: olStyleModule.Circle,
+    Fill: olStyleModule.Fill,
+    Stroke: olStyleModule.Stroke,
+    Text: olStyleModule.Text,
+    fromLonLat: olProjModule.fromLonLat,
+    toLonLat: olProjModule.toLonLat,
+    getProjection: olProjModule.get,
+    GeoJSON: olFormatModule.GeoJSON
+  }
+}
+
+// 样式配置工厂函数
+const createStyles = classes => {
+  return {
+    marker: new classes.Style({
+      image: new classes.Circle({
+        radius: 6,
+        fill: new classes.Fill({ color: '#d85f85' }),
+        stroke: new classes.Stroke({ color: '#fff', width: 2 })
+      })
+    }),
+    markerText: label =>
+      new classes.Text({
+        text: label || '',
+        offsetY: -12,
+        fill: new classes.Fill({ color: '#000' }),
+        stroke: new classes.Stroke({ color: '#fff', width: 2 }),
+        font: '10px sans-serif'
+      }),
+    world: new classes.Style({
+      fill: new classes.Fill({ color: '#fce8eb50' }),
+      stroke: new classes.Stroke({ color: '#ef8fa7', width: 1 })
+    })
+  }
+}
+
+// 初始化地图
+const initMap = async () => {
+  if (!mapContainer.value) return
+
+  try {
+    // 异步加载 OpenLayers
+    olClasses = await loadOpenLayers()
+
+    // 获取世界范围
+    CONFIG.WORLD_EXTENT = olClasses.getProjection('EPSG:3857').getExtent()
+
+    // 创建样式
+    const STYLES = createStyles(olClasses)
+
+    // 创建标记点图层
+    markerSource = new olClasses.VectorSource({ wrapX: true })
+    markerLayer = new olClasses.VectorLayer({
+      source: markerSource,
+      style: feature => {
+        const style = STYLES.marker.clone()
+        style.setText(STYLES.markerText(feature.get('label')))
+        return style
+      }
+    })
+
+    // 创建世界地图图层
+    worldSource = new olClasses.VectorSource({ wrapX: true })
+    worldLayer = new olClasses.VectorLayer({
+      source: worldSource,
+      style: STYLES.world
+    })
+
+    // 创建地图
+    map = new olClasses.Map({
+      target: mapContainer.value,
+      layers: [worldLayer, markerLayer],
+      view: new olClasses.View({
+        center: olClasses.fromLonLat(CONFIG.INITIAL_CENTER),
+        zoom: CONFIG.INITIAL_ZOOM,
+        minZoom: CONFIG.MIN_ZOOM,
+        maxZoom: CONFIG.MAX_ZOOM
+        // extent: CONFIG.WORLD_EXTENT
+      })
+    })
+
+    // 添加事件监听
+    setupEventListeners()
+
+    // 加载世界地图数据
+    await loadWorldData()
+
+    // 添加标记点
+    addMarkersToMap()
+  } catch (error) {
+    console.error('Failed to initialize map:', error)
+  }
+}
+
+// 加载世界地图数据
+const loadWorldData = async () => {
+  if (!olClasses || !worldSource) return
+
+  try {
+    const response = await fetch('/geojson/world-mid.geojson')
+    if (!response.ok) throw new Error('本地 world.geojson 未找到')
+
+    const geojson = await response.json()
+    const features = new olClasses.GeoJSON().readFeatures(geojson, {
+      featureProjection: 'EPSG:3857'
+    })
+    worldSource.addFeatures(features)
+  } catch (error) {
+    console.warn('使用默认世界地图:', error.message)
+    // 创建简化的世界矩形
+    const rect = new olClasses.Polygon([
+      [
+        [CONFIG.WORLD_EXTENT[0], CONFIG.WORLD_EXTENT[1]],
+        [CONFIG.WORLD_EXTENT[2], CONFIG.WORLD_EXTENT[1]],
+        [CONFIG.WORLD_EXTENT[2], CONFIG.WORLD_EXTENT[3]],
+        [CONFIG.WORLD_EXTENT[0], CONFIG.WORLD_EXTENT[3]],
+        [CONFIG.WORLD_EXTENT[0], CONFIG.WORLD_EXTENT[1]]
+      ]
+    ])
+    worldSource.addFeature(new olClasses.Feature({ geometry: rect }))
+  }
+}
+
+// 设置事件监听器
+const setupEventListeners = () => {
+  if (!map || !olClasses) return
+
+  // 单击事件
+  map.on('singleclick', evt => {
+    const feature = map.forEachFeatureAtPixel(evt.pixel, f => f, {
+      layerFilter: layer => layer === markerLayer
+    })
+
+    if (feature) {
+      const markerData = feature.get('markerData')
+
+      // 向父组件发射点击事件
+      emit('markerClick', markerData)
+    }
+  })
+
+  // 鼠标移动事件
+  map.on('pointermove', evt => {
+    if (evt.dragging) return
+    const hit = map.hasFeatureAtPixel(evt.pixel, {
+      layerFilter: layer => layer === markerLayer
+    })
+    map.getTargetElement().style.cursor = hit ? 'pointer' : ''
+  })
+}
+
+// 添加单个标记点
+const addMarker = markerData => {
+  if (
+    !markerSource ||
+    !olClasses ||
+    !markerData.longitude ||
+    !markerData.latitude
+  )
+    return
+
+  const feature = new olClasses.Feature({
+    geometry: new olClasses.Point(
+      olClasses.fromLonLat([markerData.longitude, markerData.latitude])
+    ),
+    label: markerData.title,
+    markerData: markerData
+  })
+  markerSource.addFeature(feature)
+}
+
+// 添加所有标记点到地图
+const addMarkersToMap = () => {
+  if (!markerSource) return
+
+  // 清除现有标记点
+  markerSource.clear()
+
+  // 添加新的标记点
+  props.markers.forEach(marker => {
+    addMarker(marker)
+  })
+}
+
+// 监听标记点数据变化
+watch(
+  () => props.markers,
+  () => {
+    if (map && markerSource) {
+      addMarkersToMap()
+    }
+  },
+  { deep: true }
+)
+
+// 组件挂载
+onMounted(async () => {
+  await nextTick()
+  await initMap()
+})
+
+// 组件销毁
+onUnmounted(() => {
+  // 销毁地图
+  if (map) {
+    map.setTarget(null)
+    map = null
+  }
+
+  // 清理引用
+  overlay = null
+  markerSource = null
+  markerLayer = null
+  worldSource = null
+  worldLayer = null
+  olClasses = null
+})
+</script>
+
+<style scoped>
+.ol-map-container {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+.ol-map {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+.ol-popup {
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+  padding: 12px;
+  min-width: 200px;
+  max-width: 300px;
+  z-index: 1000;
+}
+
+.ol-popup-content {
+  font-size: 14px;
+  line-height: 1.4;
+}
+
+.marker-popup strong {
+  display: block;
+  margin-bottom: 8px;
+  color: #333;
+  font-size: 15px;
+}
+
+.marker-summary {
+  margin: 8px 0;
+  color: #666;
+  font-size: 13px;
+  line-height: 1.3;
+}
+
+.marker-coords {
+  margin-top: 8px;
+  color: #888;
+  font-size: 12px;
+  border-top: 1px solid #eee;
+  padding-top: 6px;
+}
+
+/* 覆盖 OpenLayers 默认样式 */
+:deep(.ol-zoom) {
+  top: 0.5em;
+  left: 0.5em;
+}
+
+:deep(.ol-attribution) {
+  right: 0.5em;
+  bottom: 0.5em;
+}
+</style>

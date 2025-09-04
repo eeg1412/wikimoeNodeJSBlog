@@ -57,6 +57,21 @@
           ref="SearchTagSelectorRef"
         />
       </el-form-item>
+      <!-- mappointIdList -->
+      <el-form-item
+        v-if="
+          ['addMappoint', 'setMappoint', 'removeMappoint'].includes(
+            params.action
+          )
+        "
+      >
+        <MappointSelector
+          v-model="params.mappointIdList"
+          v-model:mappointList="mappointList"
+          placeholder="请选择地点"
+          ref="SearchMappointSelectorRef"
+        />
+      </el-form-item>
       <el-form-item>
         <el-button type="primary" @click="tryBatch()">执行</el-button>
         <!-- 取消 -->
@@ -97,6 +112,18 @@
           您确定要对 <span class="cRed">{{ postList.length }}</span> 个项目进行
           <span class="cRed">移除标签</span> 的操作吗？
         </div>
+        <div v-else-if="params.action === 'addMappoint'">
+          您确定要对 <span class="cRed">{{ postList.length }}</span> 个项目进行
+          <span class="cRed">添加地点</span> 的操作吗？
+        </div>
+        <div v-else-if="params.action === 'setMappoint'">
+          您确定要对 <span class="cRed">{{ postList.length }}</span> 个项目进行
+          <span class="cRed">设置地点</span> 的操作吗？
+        </div>
+        <div v-else-if="params.action === 'removeMappoint'">
+          您确定要对 <span class="cRed">{{ postList.length }}</span> 个项目进行
+          <span class="cRed">移除地点</span> 的操作吗？
+        </div>
         <div v-else-if="params.action === 'changeStatus'">
           您确定要对 <span class="cRed">{{ postList.length }}</span> 个项目进行
           <span class="cRed">更改状态为【{{ statusMap[params.status] }}】</span>
@@ -124,6 +151,28 @@
             class="post-batch-selected-tag-list"
           >
             {{ tag.currentLabel }}
+          </el-tag>
+        </div>
+      </div>
+      <div
+        class="post-batch-border"
+        v-if="
+          ['addMappoint', 'setMappoint', 'removeMappoint'].includes(
+            params.action
+          )
+        "
+      >
+        <!-- selectedMappointList -->
+        <div>
+          <div class="dib">已选地点：</div>
+          <el-tag
+            v-for="mappoint in selectedMappointList"
+            :key="mappoint._id"
+            effect="plain"
+            type="success"
+            class="post-batch-selected-tag-list"
+          >
+            {{ mappoint.currentLabel }}
           </el-tag>
         </div>
       </div>
@@ -158,6 +207,7 @@
 import { reactive, ref } from 'vue'
 import SortSelector from '@/components/SortSelector.vue'
 import TagSelector from '@/components/TagSelector.vue'
+import MappointSelector from '@/components/MappointSelector.vue'
 import CheckDialog from '@/components/CheckDialog.vue'
 import { ElMessage } from 'element-plus'
 import { authApi } from '@/api'
@@ -165,6 +215,7 @@ export default {
   components: {
     SortSelector,
     TagSelector,
+    MappointSelector,
     CheckDialog
   },
   props: {
@@ -181,6 +232,9 @@ export default {
       { value: 'addTag', title: '添加标签' },
       { value: 'setTag', title: '设置标签' },
       { value: 'removeTag', title: '移除标签' },
+      { value: 'addMappoint', title: '添加地点' },
+      { value: 'setMappoint', title: '设置地点' },
+      { value: 'removeMappoint', title: '移除地点' },
       { value: 'changeStatus', title: '更改状态' },
       { value: 'delete', title: '删除' }
     ]
@@ -188,11 +242,16 @@ export default {
       action: null,
       status: null,
       sortId: null,
-      tagIdList: []
+      tagIdList: [],
+      mappointIdList: []
     })
 
     const SearchTagSelectorRef = ref(null)
     const selectedTagList = ref([])
+
+    const SearchMappointSelectorRef = ref(null)
+    const selectedMappointList = ref([])
+    const mappointList = ref([])
 
     const SearchSortSelectorRef = ref(null)
     const selectedSortName = ref('')
@@ -203,6 +262,7 @@ export default {
         ElMessage.error('请选择操作')
         return
       }
+      const hasPage = props.postList.some(post => post.type === 3)
       // 根据action执行不同的校验
       switch (params.action) {
         case 'addTag':
@@ -212,8 +272,29 @@ export default {
             ElMessage.error('请选择标签')
             return
           }
+          // props.postList 里不能有type为3的页面
+
+          if (hasPage) {
+            ElMessage.error('页面不支持设置标签，请修改选择项')
+            return
+          }
           selectedTagList.value =
             SearchTagSelectorRef.value?.getSelectedList() || []
+          break
+        case 'addMappoint':
+        case 'setMappoint':
+        case 'removeMappoint':
+          if (!params.mappointIdList.length) {
+            ElMessage.error('请选择地点')
+            return
+          }
+          // props.postList 里不能有type为3的页面
+          if (hasPage) {
+            ElMessage.error('页面不支持设置地点，请修改选择项')
+            return
+          }
+          selectedMappointList.value =
+            SearchMappointSelectorRef.value?.getSelectedList() || []
           break
         case 'changeStatus':
           if (!params.status) {
@@ -249,6 +330,11 @@ export default {
         case 'removeTag':
           form.tagIdList = params.tagIdList
           break
+        case 'addMappoint':
+        case 'setMappoint':
+        case 'removeMappoint':
+          form.mappointIdList = params.mappointIdList
+          break
         case 'changeStatus':
           form.status = Number(params.status)
           break
@@ -279,6 +365,9 @@ export default {
       params,
       SearchTagSelectorRef,
       selectedTagList,
+      SearchMappointSelectorRef,
+      selectedMappointList,
+      mappointList,
       SearchSortSelectorRef,
       selectedSortName,
       tryBatch,

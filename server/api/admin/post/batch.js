@@ -17,6 +17,7 @@ module.exports = async function (req, res, next) {
   // - sort	分类
   // - type	类型：1blog,2tweet,3page
   // - tags	标签字段[]
+  // - mappointList  地点字段[]
 
   // - top	是否置顶字段
   // - sortop	是否排序置顶字段
@@ -32,12 +33,14 @@ module.exports = async function (req, res, next) {
   // action 操作类型
   // sortId 分类id
   // tagIdList 标签id列表
+  // mappointIdList 地点id列表
   // status 状态
 
   const idList = req.body.idList
   const action = req.body.action
   let sortId = req.body.sortId || null
   const tagIdList = req.body.tagIdList || []
+  const mappointIdList = req.body.mappointIdList || []
   const status = req.body.status
 
   if (!idList || !Array.isArray(idList) || idList.length === 0) {
@@ -105,6 +108,21 @@ module.exports = async function (req, res, next) {
     }
   }
 
+  // mappointIdList校验
+  if (mappointIdList.length > 0) {
+    for (const id of mappointIdList) {
+      if (!id) {
+        res.status(400).json({
+          errors: [
+            {
+              message: 'mappointId参数有误'
+            }
+          ]
+        })
+        return
+      }
+    }
+  }
   // 批量操作--更改分类
   const changeSort = async function () {
     // 检验sortId是否合法
@@ -318,6 +336,155 @@ module.exports = async function (req, res, next) {
     }
   }
 
+  // 批量操作--删除地点
+  const removeMappoint = async function () {
+    // 校验mappointIdList的每个id是否合法
+    mappointIdList.forEach(id => {
+      if (!validator.isMongoId(id)) {
+        res.status(400).json({
+          errors: [
+            {
+              message: 'mappointId参数有误'
+            }
+          ]
+        })
+        return false
+      }
+    })
+    const query = {
+      _id: {
+        $in: idList
+      }
+    }
+    const parmas = {
+      $pull: {
+        mappointList: {
+          $in: mappointIdList
+        }
+      }
+    }
+    try {
+      const result = await postUtils.updateMany(query, parmas)
+      return result
+    } catch (err) {
+      adminApiLog.error(err)
+      res.status(500).json({
+        errors: [
+          {
+            message: '删除地点失败'
+          }
+        ]
+      })
+      return false
+    }
+  }
+
+  // 批量操作--增加地点
+  const addMappoint = async function () {
+    const mappoints_ = mappointIdList || []
+    let mappointIdArr = []
+    for await (const mappointId of mappoints_) {
+      if (!validator.isMongoId(mappointId)) {
+        res.status(400).json({
+          errors: [
+            {
+              message: 'mappointId参数有误'
+            }
+          ]
+        })
+        return false
+      } else {
+        mappointIdArr.push(mappointId)
+      }
+    }
+
+    // mappointIdArr 去重
+    mappointIdArr = mappointIdArr.filter(
+      (elem, index, self) => self.indexOf(elem) === index
+    )
+
+    const resultList = []
+    // 遍历mappointIdArr
+    for await (const mappointId of mappointIdArr) {
+      const query = {
+        _id: {
+          $in: idList
+        },
+        mappointList: {
+          $ne: mappointId
+        }
+      }
+      const parmas = {
+        $addToSet: {
+          mappointList: mappointId
+        }
+      }
+      try {
+        const result = await postUtils.updateMany(query, parmas)
+        resultList.push(result)
+      } catch (err) {
+        adminApiLog.error(err)
+        res.status(500).json({
+          errors: [
+            {
+              message: '增加地点失败'
+            }
+          ]
+        })
+        return false
+      }
+    }
+    return resultList
+  }
+
+  // 批量操作--设置地点
+  const setMappoint = async function () {
+    const mappoints_ = mappointIdList || []
+    let mappointIdArr = []
+    for await (const mappointId of mappoints_) {
+      if (!validator.isMongoId(mappointId)) {
+        res.status(400).json({
+          errors: [
+            {
+              message: 'mappointId参数有误'
+            }
+          ]
+        })
+        return false
+      } else {
+        mappointIdArr.push(mappointId)
+      }
+    }
+
+    // mappointIdArr 去重
+    mappointIdArr = mappointIdArr.filter(
+      (elem, index, self) => self.indexOf(elem) === index
+    )
+
+    const query = {
+      _id: {
+        $in: idList
+      }
+    }
+    const parmas = {
+      mappointList: mappointIdArr
+    }
+    try {
+      const result = await postUtils.updateMany(query, parmas)
+      return result
+    } catch (err) {
+      adminApiLog.error(err)
+      res.status(500).json({
+        errors: [
+          {
+            message: '设置地点失败'
+          }
+        ]
+      })
+      return false
+    }
+  }
+
   // 批量操作--更改状态
   const changeStatus = async function () {
     // - status	状态字段：0草稿，1发布
@@ -394,6 +561,15 @@ module.exports = async function (req, res, next) {
         break
       case 'removeTag':
         result = await removeTag()
+        break
+      case 'removeMappoint':
+        result = await removeMappoint()
+        break
+      case 'addMappoint':
+        result = await addMappoint()
+        break
+      case 'setMappoint':
+        result = await setMappoint()
         break
       case 'changeStatus':
         result = await changeStatus()

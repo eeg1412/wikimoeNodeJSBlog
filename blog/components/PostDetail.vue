@@ -97,6 +97,13 @@
           </ClientOnly>
         </div>
       </template>
+      <!-- map -->
+      <template v-else-if="pageTemplate === 'map'">
+        <div>
+          <h2 class="post-title mb-3">{{ postData.data.title }}</h2>
+          <LazyPageOlMap />
+        </div>
+      </template>
       <template v-else>
         <div>
           <h2 class="post-title mb-3">{{ postData.data.title }}</h2>

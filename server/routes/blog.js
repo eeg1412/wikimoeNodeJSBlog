@@ -241,6 +241,27 @@ const blogRouteSetting = [
     middleware: [],
     controller: require('../api/blog/tag/getRandomTagList')
   },
+  // getMappointList
+  {
+    path: '/mappoint/list',
+    method: 'get',
+    middleware: [],
+    controller: require('../api/blog/mappoint/getMappointList')
+  },
+  // getMappointDetail
+  {
+    path: '/mappoint/detail',
+    method: 'get',
+    middleware: [],
+    controller: require('../api/blog/mappoint/getMappointDetail')
+  },
+  // getMappointPostList
+  {
+    path: '/mappoint/post/list',
+    method: 'get',
+    middleware: [],
+    controller: require('../api/blog/mappoint/getMappointPostList')
+  },
   // getGameList
   {
     path: '/game/list',

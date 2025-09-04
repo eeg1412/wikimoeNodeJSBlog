@@ -202,6 +202,22 @@
             </div>
           </template>
         </el-table-column>
+        <!-- 地点 -->
+        <el-table-column prop="mappointList" label="地点" width="200">
+          <template #default="{ row }">
+            <div
+              class="postlist-content-item"
+              v-for="mappoint in row.mappointList"
+              :key="mappoint._id"
+              size="small"
+              style="margin-right: 5px"
+            >
+              <span :class="{ danger: checkShowText(mappoint) }">
+                {{ checkShowText(mappoint) }}{{ mappoint.title }}
+              </span>
+            </div>
+          </template>
+        </el-table-column>
         <!-- 关联内容 -->
         <el-table-column prop="related" label="关联与相关内容" min-width="400">
           <template #default="{ row }">
