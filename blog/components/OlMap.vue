@@ -36,6 +36,10 @@ let worldLayer = null
 
 // OpenLayers 相关类
 let olClasses = null
+// 缓存样式，避免在 layer style 回调中频繁创建
+let STYLES = null
+// 用于 markers 更新去抖
+let markersUpdateTimer = null
 
 // 配置常量
 const CONFIG = {
@@ -137,20 +141,13 @@ const initMap = async () => {
     // 获取世界范围
     CONFIG.WORLD_EXTENT = olClasses.getProjection('EPSG:3857').getExtent()
 
-    // 创建样式
-    const STYLES = createStyles(olClasses)
+    // 创建样式并缓存
+    STYLES = createStyles(olClasses)
 
-    // 创建标记点图层
+    // 创建标记点图层（不在 layer-level 创建 style，改为在添加 feature 时设置一次性 style）
     markerSource = new olClasses.VectorSource({ wrapX: true })
     markerLayer = new olClasses.VectorLayer({
-      source: markerSource,
-      style: feature => {
-        const style = STYLES.marker.clone()
-        if (STYLES.markerText) {
-          style.setText(STYLES.markerText(feature.get('label')))
-        }
-        return style
-      }
+      source: markerSource
     })
 
     // 创建世界地图图层
@@ -260,6 +257,14 @@ const addMarker = markerData => {
     label: markerData.title,
     markerData: markerData
   })
+  // 给 feature 一次性设置 style，避免 layer 的 style 回调在每次渲染时创建新对象
+  if (STYLES && STYLES.marker) {
+    const style = STYLES.marker.clone()
+    if (STYLES.markerText) {
+      style.setText(STYLES.markerText(markerData.title))
+    }
+    feature.setStyle(style)
+  }
   markerSource.addFeature(feature)
 }
 
@@ -267,22 +272,21 @@ const addMarker = markerData => {
 const addMarkersToMap = () => {
   if (!markerSource) return
 
-  // 清除现有标记点
+  // 清除现有标记点并添加新的标记点
+  // 对大量点可以改为 diff 增量，这里先保持简单：一次 clear + add
   markerSource.clear()
-
-  // 添加新的标记点
-  props.markers.forEach(marker => {
-    addMarker(marker)
-  })
+  props.markers.forEach(marker => addMarker(marker))
 }
 
 // 监听标记点数据变化
 watch(
   () => props.markers,
   () => {
-    if (map && markerSource) {
-      addMarkersToMap()
-    }
+    // 防抖：避免父组件短时间内多次修改导致连续重建
+    if (markersUpdateTimer) clearTimeout(markersUpdateTimer)
+    markersUpdateTimer = setTimeout(() => {
+      if (map && markerSource) addMarkersToMap()
+    }, 60)
   },
   { deep: true }
 )
@@ -308,6 +312,11 @@ onUnmounted(() => {
   worldSource = null
   worldLayer = null
   olClasses = null
+  STYLES = null
+  if (markersUpdateTimer) {
+    clearTimeout(markersUpdateTimer)
+    markersUpdateTimer = null
+  }
 })
 </script>
 
