@@ -40,7 +40,7 @@
         v-model="olMapSettingsForm.olMapDefaultZoom"
         controls-position="right"
         :min="1"
-        :max="8"
+        :max="12"
         :step="1"
         :precision="0"
       ></el-input-number>
@@ -128,8 +128,8 @@ export default {
         {
           type: 'number',
           min: 1,
-          max: 8,
-          message: '缩放级别必须在1到8之间',
+          max: 12,
+          message: '缩放级别必须在1到12之间',
           trigger: 'blur'
         }
       ],

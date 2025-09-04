@@ -47,7 +47,7 @@ const CONFIG = {
   INITIAL_CENTER: options.value?.olMapDefaultCenter,
   INITIAL_ZOOM: options.value?.olMapDefaultZoom,
   MIN_ZOOM: 1,
-  MAX_ZOOM: 8
+  MAX_ZOOM: 12
 }
 
 // 异步加载 OpenLayers 依赖
