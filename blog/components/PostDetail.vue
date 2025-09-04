@@ -118,7 +118,12 @@
     >
       <LazyHtmlContent :content="postData.data.content" />
       <!-- tags -->
-      <div class="mt-1 mb-1" v-if="postData.data.tags.length > 0">
+      <div
+        class="mt-1 mb-1"
+        v-if="
+          postData.data.tags.length > 0 || postData.data.mappointList.length > 0
+        "
+      >
         <template v-for="(tag, index) in postData.data.tags" :key="index">
           <NuxtLink
             class="post-detail-tag-item"
@@ -127,6 +132,23 @@
               params: { tagid: tag._id, page: 1 }
             }"
             >#{{ tag.tagname }}</NuxtLink
+          >
+        </template>
+        <template
+          v-for="(mappoint, index) in postData.data.mappointList"
+          :key="index"
+        >
+          <NuxtLink
+            class="post-detail-tag-item"
+            :to="{
+              name: 'postListMappoint',
+              params: { mappointid: mappoint._id, page: 1 }
+            }"
+            ><UIcon
+              name="i-heroicons-map-pin-solid"
+              class="post-detail-map-pin-icon"
+              size="14"
+            />{{ mappoint.title }}</NuxtLink
           >
         </template>
       </div>
@@ -140,6 +162,7 @@
         <LazyTweetContent
           :content="postData.data.excerpt"
           :tags="postData.data.tags"
+          :mappointList="postData.data.mappointList"
           :contentEventList="postData.data.contentEventList"
           :contentVoteList="postData.data.contentVoteList"
           :contentPostList="postData.data.contentPostList"

@@ -332,6 +332,7 @@ export default {
       postListArchive: '文章归档列表',
       postListSort: '文章分类列表',
       postListTag: '文章标签列表',
+      postListMappoint: '文章地点列表',
       postListKeyword: '文章关键字列表',
       postListBangumi: '文章番剧列表',
       postListMovie: '文章电影列表',

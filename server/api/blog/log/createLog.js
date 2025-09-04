@@ -24,7 +24,8 @@ module.exports = async function (req, res, next) {
     'postListBangumi',
     'postListMovie',
     'postListBook',
-    'postListGame'
+    'postListGame',
+    'postListMappoint'
   ]
   let id = null
   let target = null
@@ -154,6 +155,16 @@ module.exports = async function (req, res, next) {
       }
       content = tagname
       target = 'tag'
+      break
+    case 'postListMappoint':
+      id = req.body.mappointid
+      const postListMappointTitle = req.body.title
+      // title 必须
+      if (!postListMappointTitle) {
+        return
+      }
+      content = postListMappointTitle
+      target = 'mappoint'
       break
     case 'postListBangumi':
       id = req.body.bangumiid

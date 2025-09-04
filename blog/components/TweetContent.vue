@@ -10,7 +10,7 @@
       ><span v-else>{{ item.text }}</span></template
     >
   </div>
-  <div class="mt-1 mb-1" v-if="tags.length > 0">
+  <div class="mt-1 mb-1" v-if="tags.length > 0 || mappointList.length > 0">
     <template v-for="(tag, index) in tags" :key="index">
       <NuxtLink
         class="post-detail-tag-item hover:underline"
@@ -19,6 +19,20 @@
           params: { tagid: tag._id, page: 1 }
         }"
         >#{{ tag.tagname }}</NuxtLink
+      >
+    </template>
+    <template v-for="(mappoint, index) in mappointList" :key="index">
+      <NuxtLink
+        class="post-detail-tag-item hover:underline"
+        :to="{
+          name: 'postListMappoint',
+          params: { mappointid: mappoint._id, page: 1 }
+        }"
+        ><UIcon
+          name="i-heroicons-map-pin-solid"
+          class="post-detail-map-pin-icon"
+          size="14"
+        />{{ mappoint.title }}</NuxtLink
       >
     </template>
   </div>
@@ -119,6 +133,11 @@ const props = defineProps({
     default: ''
   },
   tags: {
+    // 数组
+    type: Array,
+    default: () => []
+  },
+  mappointList: {
     // 数组
     type: Array,
     default: () => []

@@ -65,6 +65,7 @@ module.exports = async function (req, res, next) {
     'postListKeyword',
     'postListSort',
     'postListTag',
+    'postListMappoint',
     'postListBangumi',
     'postListMovie',
     'postListBook',

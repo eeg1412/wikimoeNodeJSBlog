@@ -28,6 +28,7 @@ module.exports = async function (req, res, next) {
       'postListArchive',
       'postListSort',
       'postListTag',
+      'postListMappoint',
       'postListBangumi',
       'postListMovie',
       'postListBook',

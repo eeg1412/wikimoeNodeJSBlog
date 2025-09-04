@@ -14,6 +14,7 @@ module.exports = async function (req, res, next) {
     sorttype,
     sortid,
     tags,
+    mappointid,
     bangumiId,
     movieId,
     bookId,
@@ -181,6 +182,23 @@ module.exports = async function (req, res, next) {
     }
     params.tags = {
       $in: tags
+    }
+  }
+  // 如果mappointid存在，就加入查询条件
+  if (mappointid) {
+    // 校验mappointid是否为ObjectId
+    if (!utils.isObjectId(mappointid)) {
+      res.status(400).json({
+        errors: [
+          {
+            message: 'mappointid参数错误'
+          }
+        ]
+      })
+      return
+    }
+    params.mappointList = {
+      $in: [mappointid]
     }
   }
 

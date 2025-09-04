@@ -70,7 +70,7 @@
             <template v-if="item.type === 1">
               <div class="whitespace-pre-wrap" v-if="item.type === 1">{{ item.excerpt || '发表了一篇博文' }}</div>
               <!-- tags -->
-              <div class="mt-1 mb-1" v-if="item.tags.length > 0">
+              <div class="mt-1 mb-1" v-if="item.tags.length > 0 || item.mappointList.length > 0">
                 <template v-for="(tag, index) in item.tags" :key="index">
                   <NuxtLink
                     class="post-detail-tag-item hover:underline"
@@ -81,12 +81,27 @@
                     >#{{ tag.tagname }}</NuxtLink
                   >
                 </template>
+                <template v-for="(mappoint, index) in item.mappointList" :key="index">
+                  <NuxtLink
+                    class="post-detail-tag-item hover:underline"
+                    :to="{
+                      name: 'postListMappoint',
+                      params: { mappointid: mappoint._id, page: 1 },
+                    }"
+                    ><UIcon
+                    name="i-heroicons-map-pin-solid"
+                    class="post-detail-map-pin-icon"
+                    size="14"
+                  />{{ mappoint.title }}</NuxtLink
+                  >
+                </template>
               </div>
             </template>
             <template v-else-if="item.type === 2">
               <LazyTweetContent
                 :content="item.excerpt"
                 :tags="item.tags"
+                :mappointList="item.mappointList"
                 :contentEventList="item.contentEventList"
                 :contentVoteList="item.contentVoteList"
                 :contentPostList="item.contentPostList"
@@ -365,6 +380,7 @@ const sortid = route.params.sortid || ''
 const year = route.params.year || ''
 const month = route.params.month || ''
 const tagid = route.params.tagid || ''
+const mappointid = route.params.mappointid || ''
 const bangumiid = route.params.bangumiid || ''
 const movieid = route.params.movieid || ''
 const bookid = route.params.bookid || ''
@@ -381,6 +397,8 @@ const apiType = computed(() => {
       return 'archive'
     case 'postListTag':
       return 'tag'
+    case 'postListMappoint':
+      return 'mappoint'
     case 'postListBangumi':
       return 'bangumi'
     case 'postListMovie':
@@ -411,6 +429,7 @@ const routePagination = computed(() => {
     case 'postListSort':
     case 'postListArchive':
     case 'postListTag':
+    case 'postListMappoint':
     case 'postListBangumi':
     case 'postListMovie':
     case 'postListBook':
@@ -467,6 +486,7 @@ const [postsDataResponse] = await Promise.all([
     year: year || undefined,
     month: month || undefined,
     'tags[]': tagid ? [tagid] : undefined,
+    mappointid: mappointid || undefined,
     bangumiId: bangumiid || undefined,
     movieId: movieid || undefined,
     bookId: bookid || undefined,
