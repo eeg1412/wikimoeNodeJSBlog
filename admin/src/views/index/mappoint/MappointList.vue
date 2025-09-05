@@ -58,7 +58,7 @@
         </el-table-column>
         <el-table-column prop="summary" label="简介" min-width="200">
           <template #default="{ row }">
-            {{ row.summary || '-' }}
+            {{ row.summary || '' }}
           </template>
         </el-table-column>
         <el-table-column prop="longitude" label="经度" min-width="100">
