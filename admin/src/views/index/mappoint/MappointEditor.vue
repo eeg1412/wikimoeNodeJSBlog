@@ -22,7 +22,7 @@
             v-model="form.summary"
             type="textarea"
             :rows="3"
-            placeholder="请输入简介（可选）"
+            placeholder="请输入简介"
           ></el-input>
         </el-form-item>
         <!-- 快速坐标输入 -->
