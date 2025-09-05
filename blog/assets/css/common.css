@@ -1433,12 +1433,19 @@ ins.adsbygoogle[data-ad-status='unfilled'] {
   vertical-align: -1px;
 }
 
+.ol-control {
+  background-color: rgb(var(--color-primary-100) / 1) !important;
+}
+
 /* 暗模式 */
 :root {
   /* --wikimoe-dark-bg: rgba(20, 20, 20, 1);
   --wikimoe-dark-panel-bg: rgba(17, 17, 17, 1); */
   --wikimoe-dark-bg: rgba(17, 17, 17, 1);
   --wikimoe-dark-panel-bg: rgba(20, 20, 20, 1);
+}
+html.dark .ol-control {
+  background-color: rgb(var(--color-primary-200) / 1) !important;
 }
 html.dark body {
   @apply dark:text-gray-200;
