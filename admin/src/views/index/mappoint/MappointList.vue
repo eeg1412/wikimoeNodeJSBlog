@@ -61,16 +61,17 @@
             {{ row.summary || '' }}
           </template>
         </el-table-column>
-        <el-table-column prop="longitude" label="经度" min-width="100">
-          <template #default="{ row }">
-            {{ row.longitude }}
-          </template>
-        </el-table-column>
         <el-table-column prop="latitude" label="纬度" min-width="100">
           <template #default="{ row }">
             {{ row.latitude }}
           </template>
         </el-table-column>
+        <el-table-column prop="longitude" label="经度" min-width="100">
+          <template #default="{ row }">
+            {{ row.longitude }}
+          </template>
+        </el-table-column>
+
         <!-- zIndex -->
         <el-table-column prop="zIndex" label="层叠顺序" min-width="100">
           <template #default="{ row }">

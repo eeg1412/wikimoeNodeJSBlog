@@ -25,16 +25,20 @@
             placeholder="请输入简介（可选）"
           ></el-input>
         </el-form-item>
-        <el-form-item label="经度" prop="longitude">
-          <el-input-number
-            v-model="form.longitude"
-            :precision="6"
-            :min="-180"
-            :max="180"
-            :step="0.000001"
-            placeholder="请输入经度"
-            style="width: 200px"
-          ></el-input-number>
+        <!-- 快速坐标输入 -->
+        <el-form-item label="坐标转换">
+          <div class="latlng-quick-input-row">
+            <el-input
+              v-model="quickCoordInput"
+              placeholder="请输入：维度,经度"
+              class="latlng-quick-input-field"
+            >
+              <template #append>
+                <el-button @click="parseQuickCoordinate">转换</el-button>
+              </template>
+            </el-input>
+          </div>
+          <div class="w_10">※仅支持 WGS84 坐标系</div>
         </el-form-item>
         <el-form-item label="纬度" prop="latitude">
           <el-input-number
@@ -44,6 +48,17 @@
             :max="90"
             :step="0.000001"
             placeholder="请输入纬度"
+            style="width: 200px"
+          ></el-input-number>
+        </el-form-item>
+        <el-form-item label="经度" prop="longitude">
+          <el-input-number
+            v-model="form.longitude"
+            :precision="6"
+            :min="-180"
+            :max="180"
+            :step="0.000001"
+            placeholder="请输入经度"
             style="width: 200px"
           ></el-input-number>
         </el-form-item>
@@ -73,6 +88,7 @@
 <script>
 import { useRouter, useRoute } from 'vue-router'
 import { onMounted, reactive, ref } from 'vue'
+import { ElMessage } from 'element-plus'
 import { authApi } from '@/api'
 export default {
   setup() {
@@ -123,6 +139,51 @@ export default {
       status: [{ required: true, message: '请选择状态', trigger: 'change' }]
     })
     const formRef = ref(null)
+    const quickCoordInput = ref('')
+
+    // 解析快速坐标输入
+    const parseQuickCoordinate = () => {
+      const input = quickCoordInput.value.trim()
+      if (!input) {
+        ElMessage.warning('请输入坐标数据')
+        return
+      }
+
+      try {
+        if (input.includes(',')) {
+          // 包含逗号，按照 纬度,经度 格式解析
+          const coords = input.split(',').map(coord => parseFloat(coord.trim()))
+          if (coords.length >= 2 && !isNaN(coords[0]) && !isNaN(coords[1])) {
+            // 验证纬度和经度范围
+            if (
+              coords[0] >= -90 &&
+              coords[0] <= 90 &&
+              coords[1] >= -180 &&
+              coords[1] <= 180
+            ) {
+              // 保留最多6位小数
+              const lat = Number(coords[0].toFixed(6))
+              const lon = Number(coords[1].toFixed(6))
+              form.latitude = lat
+              form.longitude = lon
+              ElMessage.success('坐标已填入')
+              quickCoordInput.value = ''
+            } else {
+              ElMessage.error(
+                '坐标范围错误：纬度应在-90到90之间，经度应在-180到180之间'
+              )
+            }
+          } else {
+            ElMessage.error('坐标格式错误，请输入有效的格式')
+          }
+        } else {
+          ElMessage.error('请输入有效的格式')
+        }
+      } catch (error) {
+        ElMessage.error('坐标解析失败，请检查输入格式')
+      }
+    }
+
     const submit = () => {
       formRef.value.validate(async valid => {
         if (!valid) {
@@ -190,6 +251,8 @@ export default {
       form,
       rules,
       formRef,
+      quickCoordInput,
+      parseQuickCoordinate,
       submit
     }
   }
