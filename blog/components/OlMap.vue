@@ -102,6 +102,7 @@ const setMarkerTextVisibility = classes => {
     return label =>
       new classes.Text({
         text: label || '',
+        declutterMode: 'declutter',
         offsetY: -12,
         fill: new classes.Fill({ color: '#000' }),
         stroke: new classes.Stroke({ color: '#fff', width: 2 }),
@@ -118,6 +119,7 @@ const createStyles = classes => {
     marker: new classes.Style({
       image: new classes.Circle({
         radius: 6,
+        declutterMode: 'obstacle',
         fill: new classes.Fill({ color: '#d85f85' }),
         stroke: new classes.Stroke({ color: '#fff', width: 2 })
       })
@@ -147,7 +149,8 @@ const initMap = async () => {
     // 创建标记点图层（不在 layer-level 创建 style，改为在添加 feature 时设置一次性 style）
     markerSource = new olClasses.VectorSource({ wrapX: true })
     markerLayer = new olClasses.VectorLayer({
-      source: markerSource
+      source: markerSource,
+      declutter: true
     })
 
     // 创建世界地图图层
