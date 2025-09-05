@@ -103,10 +103,10 @@ const setMarkerTextVisibility = classes => {
       new classes.Text({
         text: label || '',
         declutterMode: 'declutter',
-        offsetY: -12,
+        offsetY: -16,
         fill: new classes.Fill({ color: '#000' }),
         stroke: new classes.Stroke({ color: '#fff', width: 2 }),
-        font: '10px sans-serif'
+        font: '12px sans-serif'
       })
   } else {
     return undefined
