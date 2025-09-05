@@ -23,6 +23,12 @@
             ></el-input>
           </el-form-item>
           <el-form-item>
+            <el-select v-model="params.status" placeholder="状态" clearable>
+              <el-option label="不显示" :value="0"></el-option>
+              <el-option label="显示" :value="1"></el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item>
             <el-button type="primary" @click="getVoteList(true)"
               >搜索</el-button
             >
@@ -170,6 +176,7 @@ export default {
     const params = reactive({
       page: 1,
       size: 50,
+      status: null,
       keyword: ''
     })
     const total = ref(0)
@@ -238,6 +245,7 @@ export default {
         params.page = sessionParams.page
         params.size = sessionParams.size
         params.keyword = sessionParams.keyword
+        params.status = sessionParams.status
       }
     }
     onMounted(() => {
