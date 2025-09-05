@@ -44,7 +44,7 @@ module.exports = async function (req, res, next) {
     })
     return
   }
-  // 使用聚合查询获取相关的文章
+  // 使用聚合查询同时获取文章列表和总数
   const pipeline = [
     // 匹配条件：status为1且mappointList包含该地图点ID
     {
@@ -53,80 +53,79 @@ module.exports = async function (req, res, next) {
         mappointList: new mongoose.Types.ObjectId(id)
       }
     },
-    // 排序：按日期倒序
+    // 使用 $facet 同时获取数据和总数
     {
-      $sort: {
-        date: -1,
-        _id: -1
-      }
-    },
-    // 分页
-    {
-      $skip: (page - 1) * size
-    },
-    {
-      $limit: size
-    },
-    // 投影：只返回需要的字段
-    {
-      $project: {
-        _id: 1,
-        title: 1,
-        date: 1,
-        alias: 1,
-        type: 1,
-        status: 1,
-        excerpt: {
-          $cond: {
-            if: { $eq: ['$type', 2] },
-            then: '$excerpt',
-            else: '$$REMOVE'
+      $facet: {
+        // 获取文章列表
+        data: [
+          // 排序：按日期倒序
+          {
+            $sort: {
+              date: -1,
+              _id: -1
+            }
+          },
+          // 分页
+          {
+            $skip: (page - 1) * size
+          },
+          {
+            $limit: size
+          },
+          // 投影：只返回需要的字段
+          {
+            $project: {
+              _id: 1,
+              title: 1,
+              date: 1,
+              alias: 1,
+              type: 1,
+              status: 1,
+              excerpt: {
+                $cond: {
+                  if: { $eq: ['$type', 2] },
+                  then: '$excerpt',
+                  else: '$$REMOVE'
+                }
+              },
+              // 只要第一张封面图片
+              coverImage: {
+                $arrayElemAt: ['$coverImages', 0]
+              }
+            }
+          },
+          // 获取 coverImage 的数据
+          {
+            $lookup: {
+              from: 'attachments',
+              localField: 'coverImage',
+              foreignField: '_id',
+              as: 'coverImage'
+            }
+          },
+          {
+            $unwind: {
+              path: '$coverImage',
+              preserveNullAndEmptyArrays: true // 可选：保留空数组和 null 值
+            }
           }
-        },
-        // 只要第一张封面图片
-        coverImage: {
-          $arrayElemAt: ['$coverImages', 0]
-        }
+        ],
+        // 获取总数
+        totalCount: [
+          {
+            $count: 'count'
+          }
+        ]
       }
-    },
-    // 获取 coverImage 的数据
-    {
-      $lookup: {
-        from: 'attachments',
-        localField: 'coverImage',
-        foreignField: '_id',
-        as: 'coverImage'
-      }
-    },
-    {
-      $unwind: {
-        path: '$coverImage',
-        preserveNullAndEmptyArrays: true // 可选：保留空数组和 null 值
-      }
-    }
-  ]
-
-  // 计算总数的聚合管道
-  const countPipeline = [
-    {
-      $match: {
-        status: 1,
-        mappointList: new mongoose.Types.ObjectId(id)
-      }
-    },
-    {
-      $count: 'total'
     }
   ]
 
   try {
     // 执行聚合查询
-    const [posts, countResult] = await Promise.all([
-      postUtils.aggregate(pipeline),
-      postUtils.aggregate(countPipeline)
-    ])
+    const result = await postUtils.aggregate(pipeline)
 
-    const total = countResult[0]?.total || 0
+    const posts = result[0]?.data || []
+    const total = result[0]?.totalCount[0]?.count || 0
 
     res.send({
       list: posts,
