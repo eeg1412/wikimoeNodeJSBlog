@@ -4,7 +4,7 @@ const log4js = require('log4js')
 const adminApiLog = log4js.getLogger('adminApi')
 
 module.exports = async function (req, res, next) {
-  let { page, size, keyword } = req.query
+  let { page, size, keyword, status } = req.query
   page = parseInt(page)
   size = parseInt(size)
   // 判断page和size是否为数字
@@ -23,6 +23,11 @@ module.exports = async function (req, res, next) {
   if (keyword) {
     keyword = utils.escapeSpecialChars(keyword)
     params.title = new RegExp(keyword, 'i')
+  }
+
+  // 如果status存在，就加入查询条件
+  if (status !== undefined && status !== '') {
+    params.status = parseInt(status)
   }
 
   const sort = {
