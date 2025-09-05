@@ -160,7 +160,14 @@ const currentData = ref(null)
 // 文章列表相关数据
 const postList = ref([])
 const postListLoading = ref(false)
-const postPage = ref(1)
+const postPage = computed({
+  get: () => {
+    return parseInt(route.query.postpage) || 1
+  },
+  set: val => {
+    setRouterQuery({ postpage: val })
+  }
+})
 const postPageSize = ref(10)
 const postTotal = ref(0)
 
@@ -168,7 +175,6 @@ const tryOpenMappoint = data => {
   // currentData.value = data
   // mappointOpen.value = true
   // 路由添加mappointid
-  onlyRouteChange.value = true
   setRouterQuery({ mappointid: data._id })
 }
 
@@ -181,7 +187,6 @@ const getMappointDetail = async () => {
     .then(async res => {
       currentData.value = res.data
       // 重置文章列表状态并获取文章列表
-      postPage.value = parseInt(route.query.postpage) || 1
       await getPostList()
       mappointOpen.value = true
     })
@@ -226,10 +231,9 @@ const getPostList = async (page = null) => {
 
     // 如果页码大于1且文章数为0，重置页码为1
     if (targetPage > 1 && res.list && res.list.length === 0 && res.total > 0) {
-      postPage.value = 1
       setRouterQuery({ postpage: 1 })
       // 重新获取第一页数据
-      return getPostList(1)
+      return getPostList()
     } else {
       // 将 .page-commonDialog-current-commonDialog-body 滚动条置顶
       nextTick(() => {
@@ -267,22 +271,15 @@ watch(
   () => route.query,
   (newQuery, oldQuery) => {
     if (newQuery.mappointid) {
-      const data = mappointList.value.find(
+      const data = mappointList.value.some(
         item => item._id === newQuery.mappointid
       )
-      if (data) {
+      const oldmappointid = oldQuery.mappointid
+      if (data && newQuery.mappointid !== oldmappointid) {
         getMappointDetail()
       }
     } else {
       mappointOpen.value = false
-    }
-
-    // 监听文章页码变化
-    if (newQuery.mappointid && newQuery.postpage && currentData.value) {
-      const newPostPage = parseInt(newQuery.postpage) || 1
-      if (newPostPage !== postPage.value) {
-        getPostList(newPostPage)
-      }
     }
 
     if (onlyRouteChange.value) {
@@ -295,8 +292,8 @@ watch(
 watch(
   () => postPage.value,
   newPage => {
-    if (currentData.value && newPage > 0) {
-      setRouterQuery({ postpage: newPage })
+    if (currentData.value && newPage && newPage > 0) {
+      getPostList()
     }
   }
 )
@@ -307,7 +304,6 @@ watch(
     if (!newVal) {
       setTimeout(() => {
         postList.value = []
-        postPage.value = 1
         postTotal.value = 0
         currentData.value = null
 
@@ -321,8 +317,16 @@ onMounted(() => {
   nextTick(async () => {
     await getList()
     nextTick(() => {
-      if (route.query.mappointid) {
-        getMappointDetail()
+      const mappointid = route.query.mappointid
+
+      if (mappointid) {
+        const data = mappointList.value.some(item => item._id === mappointid)
+        if (data) {
+          getMappointDetail()
+        } else {
+          // 如果mappointid不在列表中，清除路由中的mappointid
+          setRouterQuery({ mappointid: undefined, postpage: undefined })
+        }
       }
     })
     hash = undefined
