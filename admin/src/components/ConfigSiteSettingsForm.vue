@@ -157,6 +157,15 @@
         <div>${postType}为文章类型（博文/推文/页面）</div>
       </div>
     </el-form-item>
+    <!-- siteExtraCss -->
+    <el-form-item label="额外CSS样式" prop="siteExtraCss">
+      <el-input
+        type="textarea"
+        v-model="siteSettingsForm.siteExtraCss"
+        :rows="6"
+        placeholder="自定义CSS样式，会插入到head标签内，覆盖时可能需要添加!important。"
+      ></el-input>
+    </el-form-item>
     <!-- siteExtraJs -->
     <el-form-item label="额外JS脚本" prop="siteExtraJs">
       <el-input
