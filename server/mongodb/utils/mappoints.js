@@ -26,6 +26,11 @@ exports.find = async function (parmas, sort, projection, options = {}) {
   return await q
 }
 
+exports.findLimit = async function (parmas, sort, limit = 10, projection) {
+  // document查询
+  return await mappointsModel.find(parmas, projection).sort(sort).limit(limit)
+}
+
 // 分页查询
 exports.findPage = async function (
   parmas,

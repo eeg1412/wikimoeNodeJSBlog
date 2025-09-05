@@ -1,4 +1,5 @@
 const postUtils = require('../../../mongodb/utils/posts')
+const mappointsUtils = require('../../../mongodb/utils/mappoints')
 const sortUtils = require('../../../mongodb/utils/sorts')
 const tagsUtils = require('../../../mongodb/utils/tags')
 const utils = require('../../../utils/utils')
@@ -78,6 +79,19 @@ module.exports = async function (req, res, next) {
       params.$or.push({
         tags: {
           $in: tags.map(tag => tag._id)
+        }
+      })
+    }
+    // 检索mappoints
+    const mappoints = await mappointsUtils
+      .findLimit({ title: { $in: regexArray } }, undefined, 100)
+      .catch(err => {
+        return []
+      })
+    if (mappoints.length > 0) {
+      params.$or.push({
+        mappointList: {
+          $in: mappoints.map(mappoint => mappoint._id)
         }
       })
     }
