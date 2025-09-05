@@ -21,7 +21,7 @@ const optionStore = useOptionStore()
 const { options } = storeToRefs(optionStore)
 
 // Emits - 向父组件发射事件
-const emit = defineEmits(['markerClick'])
+const emit = defineEmits(['markerClick', 'mapReady'])
 
 // 组件引用
 const mapContainer = ref(null)
@@ -181,6 +181,8 @@ const initMap = async () => {
 
     // 添加标记点
     addMarkersToMap()
+    // 向父组件发射地图已准备好事件
+    emit('mapReady', map)
   } catch (error) {
     console.error('Failed to initialize map:', error)
   }
@@ -192,8 +194,8 @@ const loadWorldData = async () => {
   const olMapMapPrecision = options.value?.olMapMapPrecision || 1
   try {
     const olMapMapPrecisionMap = {
-      1: 'world-low.geojson',
-      2: 'world-mid.geojson'
+      1: 'world-low.json',
+      2: 'world-mid.json'
     }
     const response = await fetch(
       `/geojson/${olMapMapPrecisionMap[olMapMapPrecision]}`
