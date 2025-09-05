@@ -251,13 +251,7 @@ const setupEventListeners = () => {
 
 // 添加单个标记点
 const addMarker = markerData => {
-  if (
-    !markerSource ||
-    !olClasses ||
-    !markerData.longitude ||
-    !markerData.latitude
-  )
-    return
+  if (!markerSource || !olClasses) return
 
   const feature = new olClasses.Feature({
     geometry: new olClasses.Point(

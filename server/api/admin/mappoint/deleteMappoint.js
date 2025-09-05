@@ -34,7 +34,7 @@ module.exports = async function (req, res, next) {
       // 删除文章中的tag
       postUtils
         .updateMany(
-          { tags: id },
+          { mappointList: id },
           {
             $pull: {
               mappointList: id
@@ -42,7 +42,7 @@ module.exports = async function (req, res, next) {
           }
         )
         .then(postData => {
-          // console.log(postData)
+          console.log(postData)
           res.send({
             data: {
               message: '删除成功'
