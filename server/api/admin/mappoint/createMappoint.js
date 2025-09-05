@@ -4,13 +4,14 @@ const log4js = require('log4js')
 const adminApiLog = log4js.getLogger('adminApi')
 
 module.exports = async function (req, res, next) {
-  const { title, summary, longitude, latitude, status } = req.body
+  const { title, summary, longitude, latitude, zIndex, status } = req.body
   // 校验格式
   const params = {
     title: title,
     summary: summary,
     longitude: longitude,
     latitude: latitude,
+    zIndex: zIndex || 0,
     status: status
   }
   const rule = [
@@ -37,6 +38,13 @@ module.exports = async function (req, res, next) {
       label: '简介',
       type: null,
       required: false
+    },
+    {
+      key: 'zIndex',
+      label: '层叠顺序',
+      type: 'isInt',
+      options: { min: 0 },
+      required: true
     },
     {
       key: 'status',

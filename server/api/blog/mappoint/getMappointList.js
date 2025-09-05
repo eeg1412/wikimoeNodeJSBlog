@@ -16,7 +16,7 @@ module.exports = async function (req, res, next) {
   }
 
   // 投影：只返回需要的字段，排除简介
-  const projection = '_id title longitude latitude status createdAt updatedAt'
+  const projection = '_id title longitude latitude status zIndex'
 
   mappointUtils
     .find(params, sort, projection, { lean: true })

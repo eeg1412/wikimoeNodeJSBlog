@@ -24,6 +24,11 @@ var mappoints = new Schema(
       required: true,
       index: true
     },
+    zIndex: {
+      type: Number,
+      default: 0,
+      index: true
+    },
     // 状态 0: 不显示 1: 显示
     status: {
       type: Number,

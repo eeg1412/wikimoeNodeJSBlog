@@ -49,7 +49,7 @@ module.exports = async function (req, res, next) {
   }
 
   const sort = {
-    updatedAt: -1,
+    createdAt: -1,
     _id: -1
   }
   // 构建聚合管道

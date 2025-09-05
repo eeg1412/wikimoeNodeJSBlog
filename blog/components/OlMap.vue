@@ -150,7 +150,12 @@ const initMap = async () => {
     markerSource = new olClasses.VectorSource({ wrapX: true })
     markerLayer = new olClasses.VectorLayer({
       source: markerSource,
-      declutter: true
+      declutter: true,
+      renderOrder: (a, b) => {
+        const aZIndex = a.values_?.markerData?.zIndex || 0
+        const bZIndex = b.values_?.markerData?.zIndex || 0
+        return bZIndex - aZIndex
+      }
     })
 
     // 创建世界地图图层

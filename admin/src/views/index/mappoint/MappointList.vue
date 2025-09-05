@@ -71,6 +71,12 @@
             {{ row.latitude }}
           </template>
         </el-table-column>
+        <!-- zIndex -->
+        <el-table-column prop="zIndex" label="层叠顺序" min-width="100">
+          <template #default="{ row }">
+            {{ row.zIndex || 0 }}
+          </template>
+        </el-table-column>
 
         <!-- totalPostCount -->
         <el-table-column

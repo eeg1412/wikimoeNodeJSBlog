@@ -47,6 +47,16 @@
             style="width: 200px"
           ></el-input-number>
         </el-form-item>
+        <el-form-item label="层叠顺序" prop="zIndex">
+          <el-input-number
+            v-model="form.zIndex"
+            :min="0"
+            :step="1"
+            placeholder="请输入层叠顺序"
+            style="width: 200px"
+          ></el-input-number>
+          <div class="w_10">※数值越大越在上面</div>
+        </el-form-item>
         <el-form-item label="状态" prop="status">
           <el-radio-group v-model="form.status">
             <el-radio :label="0">不显示</el-radio>
@@ -74,6 +84,8 @@ export default {
       summary: '',
       longitude: null,
       latitude: null,
+      // 层叠顺序
+      zIndex: 0,
       status: 0,
       __v: null
     })
@@ -99,6 +111,15 @@ export default {
           trigger: 'blur'
         }
       ],
+      zIndex: [
+        { required: true, message: '请输入层叠顺序', trigger: 'blur' },
+        {
+          type: 'number',
+          min: 0,
+          message: '层叠顺序必须大于等于0',
+          trigger: 'blur'
+        }
+      ],
       status: [{ required: true, message: '请选择状态', trigger: 'change' }]
     })
     const formRef = ref(null)
@@ -112,6 +133,7 @@ export default {
           summary: form.summary,
           longitude: form.longitude,
           latitude: form.latitude,
+          zIndex: form.zIndex,
           status: form.status
         }
         if (id.value) {
@@ -153,6 +175,7 @@ export default {
           form.longitude = data.longitude
           form.latitude = data.latitude
           form.status = data.status
+          form.zIndex = data.zIndex || 0
           form.__v = data.__v
         })
         .catch(() => {})
