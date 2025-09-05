@@ -122,7 +122,7 @@ const initGlobalConfig = async () => {
     // 默认缩放级别
     olMapDefaultZoom: 4,
     // 显示标记点文字
-    olMapShowMappointText: false
+    olMapShowMappointText: true
   }
 
   const emailSettingsConfig = {

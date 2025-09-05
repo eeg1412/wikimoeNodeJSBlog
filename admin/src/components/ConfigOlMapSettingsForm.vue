@@ -87,7 +87,7 @@ export default {
       // 默认缩放级别
       olMapDefaultZoom: 4,
       // 显示标记点文字
-      olMapShowMappointText: false
+      olMapShowMappointText: true
     })
 
     // 使用 computed 处理经纬度的转换
