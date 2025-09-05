@@ -150,12 +150,7 @@ const initMap = async () => {
     markerSource = new olClasses.VectorSource({ wrapX: true })
     markerLayer = new olClasses.VectorLayer({
       source: markerSource,
-      declutter: true,
-      renderOrder: (a, b) => {
-        const aZIndex = a.get('markerData')?.zIndex || 0
-        const bZIndex = b.get('markerData')?.zIndex || 0
-        return bZIndex - aZIndex
-      }
+      declutter: true
     })
 
     // 创建世界地图图层
@@ -268,6 +263,7 @@ const addMarker = markerData => {
   // 给 feature 一次性设置 style，避免 layer 的 style 回调在每次渲染时创建新对象
   if (STYLES && STYLES.marker) {
     const style = STYLES.marker.clone()
+    style.setZIndex(markerData.zIndex || 0)
     if (STYLES.markerText) {
       style.setText(STYLES.markerText(markerData.title))
     }
