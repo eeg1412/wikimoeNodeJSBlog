@@ -132,6 +132,8 @@ const createStyles = classes => {
   }
 }
 
+const mapIsReady = ref(false)
+
 // 初始化地图
 const initMap = async () => {
   if (!mapContainer.value) return
@@ -180,9 +182,14 @@ const initMap = async () => {
     await loadWorldData()
 
     // 添加标记点
-    addMarkersToMap()
+    if (markersUpdateTimer) clearTimeout(markersUpdateTimer)
+    markersUpdateTimer = setTimeout(() => {
+      addMarkersToMap()
+    }, 60)
+
     // 向父组件发射地图已准备好事件
     emit('mapReady', map)
+    mapIsReady.value = true
   } catch (error) {
     console.error('Failed to initialize map:', error)
   }
@@ -288,6 +295,7 @@ const addMarkersToMap = () => {
 watch(
   () => props.markers,
   () => {
+    if (mapIsReady.value === false) return
     // 防抖：避免父组件短时间内多次修改导致连续重建
     if (markersUpdateTimer) clearTimeout(markersUpdateTimer)
     markersUpdateTimer = setTimeout(() => {

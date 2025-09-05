@@ -144,7 +144,6 @@ const mapIsReady = ref(false)
 
 const getList = async () => {
   mappointLoading.value = true
-  mappointList.value = []
   const res = await getMappointListApiFetch()
     .then(res => {
       return res
