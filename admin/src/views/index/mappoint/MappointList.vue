@@ -94,12 +94,6 @@
             {{ row.publicPostCount || 0 }}
           </template>
         </el-table-column>
-        <!-- 创建时间 -->
-        <el-table-column prop="createdAt" label="创建时间" min-width="180">
-          <template #default="{ row }">
-            {{ $formatDate(row.createdAt) }}
-          </template>
-        </el-table-column>
 
         <el-table-column prop="status" label="状态" width="100px">
           <template #default="{ row }">
