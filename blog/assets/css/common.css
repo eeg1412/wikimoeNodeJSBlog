@@ -1428,6 +1428,10 @@ ins.adsbygoogle[data-ad-status='unfilled'] {
 .gap-1px {
   gap: 1px;
 }
+.post-detail-map-pin-icon {
+  margin-right: 1px;
+  vertical-align: -1px;
+}
 
 /* 暗模式 */
 :root {
