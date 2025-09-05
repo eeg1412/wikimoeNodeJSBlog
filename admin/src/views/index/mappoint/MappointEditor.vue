@@ -55,7 +55,7 @@
             placeholder="请输入层叠顺序"
             style="width: 200px"
           ></el-input-number>
-          <div class="w_10">※数值越大越在上面</div>
+          <div class="w_10">※数值越大，标记点在地图上的层级就越高</div>
         </el-form-item>
         <el-form-item label="状态" prop="status">
           <el-radio-group v-model="form.status">

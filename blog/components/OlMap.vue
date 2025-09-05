@@ -152,8 +152,8 @@ const initMap = async () => {
       source: markerSource,
       declutter: true,
       renderOrder: (a, b) => {
-        const aZIndex = a.values_?.markerData?.zIndex || 0
-        const bZIndex = b.values_?.markerData?.zIndex || 0
+        const aZIndex = a.get('markerData')?.zIndex || 0
+        const bZIndex = b.get('markerData')?.zIndex || 0
         return bZIndex - aZIndex
       }
     })
