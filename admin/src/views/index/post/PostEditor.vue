@@ -326,8 +326,21 @@
             />
           </el-form-item>
         </div>
-
-        <div class="config-border-item">
+        <!-- 兼容性修改，判断相关内容是否有数据 -->
+        <div
+          class="config-border-item"
+          v-if="
+            type !== 3 ||
+            form.eventList?.length > 0 ||
+            form.voteList?.length > 0 ||
+            form.postList?.length > 0 ||
+            form.tweetList?.length > 0 ||
+            form.bangumiList?.length > 0 ||
+            form.movieList?.length > 0 ||
+            form.bookList?.length > 0 ||
+            form.gameList?.length > 0
+          "
+        >
           <div class="config-border-item-title">
             <div>详情页相关内容设定</div>
             <div class="f12 cGray666">※仅显示在详情页下方的相关内容</div>
