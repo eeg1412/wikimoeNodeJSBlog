@@ -49,6 +49,59 @@ let routeRules = {
   // ads.txt
   '/ads.txt': {
     proxy: `${process.env.NUXT_API_DOMAIN}/ads.txt`
+  },
+  '/geojson/world-mid.json': {
+    headers: {
+      'Cache-Control': 'public, max-age=31536000, immutable'
+    }
+  },
+  '/geojson/world-low.json': {
+    headers: {
+      'Cache-Control': 'public, max-age=31536000, immutable'
+    }
+  },
+  // 整个 avatar 目录
+  '/img/avatar/**': {
+    headers: {
+      'Cache-Control': 'public, max-age=31536000, immutable'
+    }
+  },
+  // 整个 icon 目录
+  '/img/icon/**': {
+    headers: {
+      'Cache-Control': 'public, max-age=31536000, immutable'
+    }
+  },
+  // 单个文件
+  '/img/bg_02_dark.png': {
+    headers: {
+      'Cache-Control': 'public, max-age=31536000, immutable'
+    }
+  },
+  '/img/bg_02.png': {
+    headers: {
+      'Cache-Control': 'public, max-age=31536000, immutable'
+    }
+  },
+  '/img/menuBg.png': {
+    headers: {
+      'Cache-Control': 'public, max-age=31536000, immutable'
+    }
+  },
+  '/img/mypage-banner.webp': {
+    headers: {
+      'Cache-Control': 'public, max-age=31536000, immutable'
+    }
+  },
+  '/img/nodata.webp': {
+    headers: {
+      'Cache-Control': 'public, max-age=31536000, immutable'
+    }
+  },
+  '/img/nopic400-565.png': {
+    headers: {
+      'Cache-Control': 'public, max-age=31536000, immutable'
+    }
   }
 }
 // 如果开启了SWR
