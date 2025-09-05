@@ -12,6 +12,17 @@
     :placeholder="placeholder"
     style="width: 100%"
   >
+    <template #header>
+      <el-radio-group
+        v-model="statusFilter"
+        @change="queryVotes(lastKeyword)"
+        :disabled="loading"
+      >
+        <el-radio :label="undefined" size="small">全部</el-radio>
+        <el-radio :label="0" size="small">仅不显示</el-radio>
+        <el-radio :label="1" size="small">仅显示</el-radio>
+      </el-radio-group>
+    </template>
     <el-option
       v-for="item in voteOptions"
       :key="item._id"
@@ -54,14 +65,20 @@ const selectedVotes = computed({
   }
 })
 
+const lastKeyword = ref(null)
+const statusFilter = ref(undefined) // 0:不显示,1:显示
 // 获取投票列表
 const getVoteList = (keyword = null) => {
   if (loading.value) {
     return
   }
   loading.value = true
+  lastKeyword.value = keyword
   authApi
-    .getVoteList({ keyword, status: 1, size: 50, page: 1 }, true)
+    .getVoteList(
+      { keyword, status: statusFilter.value, size: 50, page: 1 },
+      true
+    )
     .then(res => {
       emit('update:voteList', res.data.list)
     })
@@ -78,7 +95,7 @@ const queryVotes = query => {
   }
   queryVotesTimer = setTimeout(() => {
     getVoteList(query)
-  }, 50)
+  }, 100)
 }
 
 // 检查显示文本

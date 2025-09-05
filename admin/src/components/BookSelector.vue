@@ -12,6 +12,17 @@
     :placeholder="placeholder"
     style="width: 100%"
   >
+    <template #header>
+      <el-radio-group
+        v-model="statusFilter"
+        @change="queryBooks(lastKeyword)"
+        :disabled="loading"
+      >
+        <el-radio :label="undefined" size="small">全部</el-radio>
+        <el-radio :label="0" size="small">仅不显示</el-radio>
+        <el-radio :label="1" size="small">仅显示</el-radio>
+      </el-radio-group>
+    </template>
     <el-option
       v-for="item in bookOptions"
       :key="item._id"
@@ -64,14 +75,21 @@ const checkShowText = item => {
   return ''
 }
 
+const lastKeyword = ref(null)
+const statusFilter = ref(undefined) // 0:不显示,1:显示
+
 // 获取书籍列表
 const getBookList = (keyword = null) => {
   if (loading.value) {
     return
   }
   loading.value = true
+  lastKeyword.value = keyword
   authApi
-    .getBookList({ keyword, status: 1, size: 50, page: 1 }, true)
+    .getBookList(
+      { keyword, status: statusFilter.value, size: 50, page: 1 },
+      true
+    )
     .then(res => {
       emit('update:bookList', res.data.list)
     })
@@ -88,6 +106,6 @@ const queryBooks = query => {
   }
   queryBooksTimer = setTimeout(() => {
     getBookList(query)
-  }, 50)
+  }, 100)
 }
 </script>

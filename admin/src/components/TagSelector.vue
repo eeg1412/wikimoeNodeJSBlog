@@ -96,7 +96,7 @@ export default {
       }
       queryTagsTimer = setTimeout(() => {
         getTagList(query)
-      }, 50)
+      }, 100)
     }
 
     const selectedTags = computed({

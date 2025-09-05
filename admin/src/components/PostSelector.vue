@@ -12,6 +12,17 @@
     :placeholder="placeholder"
     style="width: 100%"
   >
+    <template #header>
+      <el-radio-group
+        v-model="statusFilter"
+        @change="queryPosts(lastKeyword)"
+        :disabled="loading"
+      >
+        <el-radio :label="undefined" size="small">全部</el-radio>
+        <el-radio :label="0" size="small">仅草稿</el-radio>
+        <el-radio :label="1" size="small">仅发布</el-radio>
+      </el-radio-group>
+    </template>
     <el-option
       v-for="item in postOptions"
       :key="item._id"
@@ -46,7 +57,7 @@ const props = defineProps({
     default: ''
   },
   type: {
-    type: String,
+    type: [String, Number],
     default: 1
   }
 })
@@ -73,15 +84,25 @@ const checkShowText = item => {
   return ''
 }
 
+const lastKeyword = ref(null)
+const statusFilter = ref(undefined) // 0:草稿,1:发布
+
 // 获取博文列表
 const getPostList = (keyword = null) => {
   if (loading.value) {
     return
   }
   loading.value = true
+  lastKeyword.value = keyword
   authApi
     .getPostList(
-      { keyword, status: 1, type: props.type, size: 50, page: 1 },
+      {
+        keyword,
+        status: statusFilter.value,
+        type: props.type,
+        size: 50,
+        page: 1
+      },
       true
     )
     .then(res => {
@@ -100,6 +121,6 @@ const queryPosts = query => {
   }
   queryPostsTimer = setTimeout(() => {
     getPostList(query)
-  }, 50)
+  }, 100)
 }
 </script>

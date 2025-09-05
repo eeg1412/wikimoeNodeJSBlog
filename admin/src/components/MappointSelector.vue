@@ -14,6 +14,17 @@
     :placeholder="placeholder"
     ref="mappointSelectorRef"
   >
+    <template #header>
+      <el-radio-group
+        v-model="statusFilter"
+        @change="queryMappoints(lastKeyword)"
+        :disabled="loading"
+      >
+        <el-radio :label="undefined" size="small">全部</el-radio>
+        <el-radio :label="0" size="small">仅不显示</el-radio>
+        <el-radio :label="1" size="small">仅显示</el-radio>
+      </el-radio-group>
+    </template>
     <el-option
       v-for="item in mappointOptions"
       :key="item._id"
@@ -68,14 +79,20 @@ const checkShowText = item => {
   return ''
 }
 
+const lastKeyword = ref(null)
+const statusFilter = ref(undefined) // 0:不显示,1:显示
 // 获取地点列表
 const getMappointList = (keyword = null) => {
   if (loading.value) {
     return
   }
   loading.value = true
+  lastKeyword.value = keyword
   authApi
-    .getMappointList({ keyword, status: 1, size: 50, page: 1 }, true)
+    .getMappointList(
+      { keyword, status: statusFilter.value, size: 50, page: 1 },
+      true
+    )
     .then(res => {
       emit('update:mappointList', res.data.list)
     })
@@ -92,7 +109,7 @@ const queryMappoints = query => {
   }
   queryMappointsTimer = setTimeout(() => {
     getMappointList(query)
-  }, 50)
+  }, 100)
 }
 
 const mappointSelectorRef = ref(null)

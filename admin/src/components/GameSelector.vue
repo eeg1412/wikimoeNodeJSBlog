@@ -12,6 +12,17 @@
     :placeholder="placeholder"
     style="width: 100%"
   >
+    <template #header>
+      <el-radio-group
+        v-model="statusFilter"
+        @change="queryGames(lastKeyword)"
+        :disabled="loading"
+      >
+        <el-radio :label="undefined" size="small">全部</el-radio>
+        <el-radio :label="0" size="small">仅不显示</el-radio>
+        <el-radio :label="1" size="small">仅显示</el-radio>
+      </el-radio-group>
+    </template>
     <el-option
       v-for="item in gameOptions"
       :key="item._id"
@@ -64,14 +75,21 @@ const checkShowText = item => {
   return ''
 }
 
+const lastKeyword = ref(null)
+const statusFilter = ref(undefined) // 0:不显示,1:显示
+
 // 获取游戏列表
 const getGameList = (keyword = null) => {
   if (loading.value) {
     return
   }
   loading.value = true
+  lastKeyword.value = keyword
   authApi
-    .getGameList({ keyword, status: 1, size: 50, page: 1 }, true)
+    .getGameList(
+      { keyword, status: statusFilter.value, size: 50, page: 1 },
+      true
+    )
     .then(res => {
       emit('update:gameList', res.data.list)
     })
@@ -88,6 +106,6 @@ const queryGames = query => {
   }
   queryGamesTimer = setTimeout(() => {
     getGameList(query)
-  }, 50)
+  }, 100)
 }
 </script>

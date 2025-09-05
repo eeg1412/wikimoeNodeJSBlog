@@ -12,6 +12,17 @@
     :placeholder="placeholder"
     style="width: 100%"
   >
+    <template #header>
+      <el-radio-group
+        v-model="statusFilter"
+        @change="queryBangumis(lastKeyword)"
+        :disabled="loading"
+      >
+        <el-radio :label="undefined" size="small">全部</el-radio>
+        <el-radio :label="0" size="small">仅不显示</el-radio>
+        <el-radio :label="1" size="small">仅显示</el-radio>
+      </el-radio-group>
+    </template>
     <el-option
       v-for="item in bangumiOptions"
       :key="item._id"
@@ -65,14 +76,21 @@ const checkShowText = item => {
   return ''
 }
 
+const lastKeyword = ref(null)
+const statusFilter = ref(undefined) // 0:不显示,1:显示
+
 // 获取番剧列表
 const getBangumiList = (keyword = null) => {
   if (loading.value) {
     return
   }
   loading.value = true
+  lastKeyword.value = keyword
   authApi
-    .getBangumiList({ keyword, status: 1, size: 50, page: 1 }, true)
+    .getBangumiList(
+      { keyword, status: statusFilter.value, size: 50, page: 1 },
+      true
+    )
     .then(res => {
       emit('update:bangumiList', res.data.list)
     })
@@ -89,6 +107,6 @@ const queryBangumis = query => {
   }
   queryBangumisTimer = setTimeout(() => {
     getBangumiList(query)
-  }, 50)
+  }, 100)
 }
 </script>
