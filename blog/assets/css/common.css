@@ -1,3 +1,8 @@
+:root {
+  --ol-subtle-foreground-color: rgb(var(--color-primary-500) / 1) !important;
+  --ol-foreground-color: rgb(var(--color-primary-500) / 1) !important;
+  --ol-background-color: rgba(255, 255, 255, 0.8) !important;
+}
 /*CSS reset*/
 body,
 div,
