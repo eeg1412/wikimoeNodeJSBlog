@@ -59,8 +59,10 @@ const loadOpenLayers = async () => {
     olGeomModule,
     olFeatureModule,
     olStyleModule,
+    olInteractionModule,
     olProjModule,
-    olFormatModule
+    olFormatModule,
+    olControlModule
   ] = await Promise.all([
     import('ol'),
     import('ol/layer'),
@@ -68,8 +70,10 @@ const loadOpenLayers = async () => {
     import('ol/geom'),
     import('ol/Feature'),
     import('ol/style'),
+    import('ol/interaction'),
     import('ol/proj'),
-    import('ol/format')
+    import('ol/format'),
+    import('ol/control')
   ])
 
   // 动态导入 CSS
@@ -92,7 +96,10 @@ const loadOpenLayers = async () => {
     fromLonLat: olProjModule.fromLonLat,
     toLonLat: olProjModule.toLonLat,
     getProjection: olProjModule.get,
-    GeoJSON: olFormatModule.GeoJSON
+    GeoJSON: olFormatModule.GeoJSON,
+    interactionDefaults: olInteractionModule.defaults,
+    controlDefaults: olControlModule.defaults,
+    Zoom: olControlModule.Zoom
   }
 }
 
@@ -165,6 +172,12 @@ const initMap = async () => {
     // 创建地图
     map = new olClasses.Map({
       target: mapContainer.value,
+      // 禁用旋转交互（Alt+Shift 拖拽旋转 与 触控捏合旋转）
+      interactions: olClasses.interactionDefaults({
+        altShiftDragRotate: false,
+        pinchRotate: false
+      }),
+      controls: olClasses.controlDefaults({ zoom: false }),
       layers: [worldLayer, markerLayer],
       view: new olClasses.View({
         center: olClasses.fromLonLat(CONFIG.INITIAL_CENTER),
@@ -174,6 +187,17 @@ const initMap = async () => {
         // extent: CONFIG.WORLD_EXTENT
       })
     })
+    try {
+      const zoomControl = new olClasses.Zoom({
+        zoomInLabel: '+', // 按钮可见文本（也可用 HTML 节点）
+        zoomOutLabel: '-',
+        zoomInTipLabel: '放大', // tooltip 文案
+        zoomOutTipLabel: '缩小'
+      })
+      map.addControl(zoomControl)
+    } catch (e) {
+      console.warn('添加缩放控件失败:', e)
+    }
 
     // 添加事件监听
     setupEventListeners()

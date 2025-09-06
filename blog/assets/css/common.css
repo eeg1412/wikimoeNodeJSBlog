@@ -1445,7 +1445,16 @@ ins.adsbygoogle[data-ad-status='unfilled'] {
   --wikimoe-dark-panel-bg: rgba(20, 20, 20, 1);
 }
 html.dark .ol-control {
-  background-color: rgb(var(--color-primary-200) / 1) !important;
+  background-color: rgb(var(--color-gray-800) / 0.8) !important;
+}
+html.dark .ol-control button {
+  background-color: transparent !important;
+  color: #ffffff;
+}
+html.dark .ol-control button:hover,
+html.dark .ol-control button:focus {
+  background-color: rgb(var(--color-gray-700) / 0.8) !important;
+  outline: none !important;
 }
 html.dark body {
   @apply dark:text-gray-200;
