@@ -268,7 +268,7 @@ const setupEventListeners = () => {
   if (!map || !olClasses) return
 
   // 单击事件
-  map.on('singleclick', evt => {
+  map.on('click', evt => {
     const feature = map.forEachFeatureAtPixel(evt.pixel, f => f, {
       layerFilter: layer => layer === markerLayer
     })
