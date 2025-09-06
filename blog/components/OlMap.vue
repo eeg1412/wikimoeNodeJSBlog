@@ -169,6 +169,14 @@ const initMap = async () => {
       style: STYLES.world
     })
 
+    // 创建缩放控件
+    const zoomControl = new olClasses.Zoom({
+      zoomInLabel: '+', // 按钮可见文本（也可用 HTML 节点）
+      zoomOutLabel: '-',
+      zoomInTipLabel: '放大', // tooltip 文案
+      zoomOutTipLabel: '缩小'
+    })
+
     // 创建地图
     map = new olClasses.Map({
       target: mapContainer.value,
@@ -177,7 +185,9 @@ const initMap = async () => {
         altShiftDragRotate: false,
         pinchRotate: false
       }),
-      controls: olClasses.controlDefaults({ zoom: false }),
+      controls: olClasses
+        .controlDefaults({ zoom: false })
+        .extend([zoomControl]),
       layers: [worldLayer, markerLayer],
       view: new olClasses.View({
         center: olClasses.fromLonLat(CONFIG.INITIAL_CENTER),
@@ -187,17 +197,6 @@ const initMap = async () => {
         // extent: CONFIG.WORLD_EXTENT
       })
     })
-    try {
-      const zoomControl = new olClasses.Zoom({
-        zoomInLabel: '+', // 按钮可见文本（也可用 HTML 节点）
-        zoomOutLabel: '-',
-        zoomInTipLabel: '放大', // tooltip 文案
-        zoomOutTipLabel: '缩小'
-      })
-      map.addControl(zoomControl)
-    } catch (e) {
-      console.warn('添加缩放控件失败:', e)
-    }
 
     // 添加事件监听
     setupEventListeners()
