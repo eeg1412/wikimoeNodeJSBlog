@@ -102,15 +102,20 @@ const loadOpenLayers = async () => {
     Zoom: olControlModule.Zoom
   }
 }
-
+const maxTouchPoints = navigator?.maxTouchPoints || 0
 const setMarkerTextVisibility = classes => {
   const olMapShowMappointText = options.value?.olMapShowMappointText
   if (olMapShowMappointText) {
+    let offsetY = -16
+    if (maxTouchPoints > 0) {
+      // 触屏设备上增大偏移，避免遮挡点
+      offsetY = -18
+    }
     return label =>
       new classes.Text({
         text: label || '',
         declutterMode: 'declutter',
-        offsetY: -16,
+        offsetY: offsetY,
         fill: new classes.Fill({ color: '#000' }),
         stroke: new classes.Stroke({ color: '#fff', width: 2 }),
         font: '12px sans-serif'
@@ -122,10 +127,15 @@ const setMarkerTextVisibility = classes => {
 
 // 样式配置工厂函数
 const createStyles = classes => {
+  let radius = 6
+  if (maxTouchPoints > 0) {
+    // 触屏设备上增大点的半径，方便点击
+    radius = 8
+  }
   return {
     marker: new classes.Style({
       image: new classes.Circle({
-        radius: 6,
+        radius: radius,
         declutterMode: 'obstacle',
         fill: new classes.Fill({ color: '#d85f85' }),
         stroke: new classes.Stroke({ color: '#fff', width: 2 })
