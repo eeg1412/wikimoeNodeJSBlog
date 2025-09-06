@@ -109,7 +109,7 @@ const setMarkerTextVisibility = classes => {
     let offsetY = -16
     if (maxTouchPoints > 0) {
       // 触屏设备上增大偏移，避免遮挡点
-      offsetY = -18
+      offsetY = -17
     }
     return label =>
       new classes.Text({
@@ -130,7 +130,7 @@ const createStyles = classes => {
   let radius = 6
   if (maxTouchPoints > 0) {
     // 触屏设备上增大点的半径，方便点击
-    radius = 8
+    radius = 7
   }
   return {
     marker: new classes.Style({

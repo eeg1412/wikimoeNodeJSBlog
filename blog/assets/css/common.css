@@ -1445,10 +1445,10 @@ ins.adsbygoogle[data-ad-status='unfilled'] {
   --wikimoe-dark-panel-bg: rgba(20, 20, 20, 1);
 }
 html.dark .ol-control {
-  background-color: rgb(var(--color-gray-800) / 0.8) !important;
+  background-color: rgb(var(--color-gray-900) / 1) !important;
 }
 html.dark .ol-control button {
-  background-color: transparent !important;
+  background-color: rgb(var(--color-gray-800) / 1) !important;
   color: #ffffff;
 }
 html.dark .ol-control button:hover,
