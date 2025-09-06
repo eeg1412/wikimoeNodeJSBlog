@@ -266,11 +266,16 @@ const loadWorldData = async () => {
 // 设置事件监听器
 const setupEventListeners = () => {
   if (!map || !olClasses) return
-
+  let hitTolerance = 0
+  if (maxTouchPoints > 0) {
+    // 触屏设备上增大容差，方便点击
+    hitTolerance = 8
+  }
   // 单击事件
   map.on('click', evt => {
     const feature = map.forEachFeatureAtPixel(evt.pixel, f => f, {
-      layerFilter: layer => layer === markerLayer
+      layerFilter: layer => layer === markerLayer,
+      hitTolerance: hitTolerance
     })
 
     if (feature) {
