@@ -6,7 +6,8 @@ var mappoints = new Schema(
     // 标题
     title: {
       type: String,
-      required: true
+      required: true,
+      index: true
     },
     // 简介
     summary: {
