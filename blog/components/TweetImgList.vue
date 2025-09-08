@@ -38,10 +38,7 @@
             autoplay
             v-if="videoPlayedIdList.includes(coverImages[0]._id)"
           >
-            <source
-              :src="`${options.siteUrl}${coverImages[0].filepath}`"
-              type="video/mp4"
-            />
+            <source :src="`${coverImages[0].filepath}`" type="video/mp4" />
           </video>
           <!-- 如果是视频加上播放按钮 -->
           <div
@@ -146,10 +143,7 @@
                     @pause="videoPause"
                     v-if="videoPlayedIdList.includes(img._id)"
                   >
-                    <source
-                      :src="`${options.siteUrl}${img.filepath}`"
-                      type="video/mp4"
-                    />
+                    <source :src="`${img.filepath}`" type="video/mp4" />
                   </video>
                   <div
                     class="blog-tweet-img-list-body-item-video-mask absolute inset-0 flex items-center justify-center z-10"
@@ -238,10 +232,7 @@
                     @pause="videoPause"
                     v-if="videoPlayedIdList.includes(img._id)"
                   >
-                    <source
-                      :src="`${options.siteUrl}${img.filepath}`"
-                      type="video/mp4"
-                    />
+                    <source :src="`${img.filepath}`" type="video/mp4" />
                   </video>
                   <div
                     class="blog-tweet-img-list-body-item-video-mask absolute inset-0 flex items-center justify-center z-10"
