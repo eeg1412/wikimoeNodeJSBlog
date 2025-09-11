@@ -56,7 +56,7 @@ export default {
     },
     width: {
       type: String,
-      default: '200px'
+      default: 'auto'
     },
     disabled: {
       type: Boolean,
@@ -160,8 +160,17 @@ export default {
 .draggable-tag {
   cursor: move;
   user-select: none;
-}
+  max-width: 100%;
 
+  display: flex;
+  align-items: center;
+}
+.draggable-tag :deep(.el-tag__content) {
+  max-width: 100%;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+}
 .draggable-tag-ghost {
   opacity: 0.5;
   background: var(--el-color-primary-light-9);

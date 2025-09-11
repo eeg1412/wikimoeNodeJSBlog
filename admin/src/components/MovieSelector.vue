@@ -1,7 +1,7 @@
 <template>
   <div class="movie-selector-container" style="width: 100%">
     <!-- 普通选择模式 -->
-    <div v-show="!isSortMode" class="movie-selector-wrapper">
+    <div v-show="!isSortMode" class="content-selector-wrapper">
       <el-select
         v-model="selectedMovies"
         multiple
@@ -48,36 +48,37 @@
     </div>
 
     <!-- 排序模式 -->
-    <div v-if="isSortMode" class="movie-sort-wrapper">
+    <div v-if="isSortMode" class="content-selector-wrapper">
       <DraggableSelector
         v-model="selectedMovies"
         :options="tagList"
         :placeholder="placeholder"
-        :width="sortable ? 'calc(100% - 80px)' : '100%'"
         value-key="value"
         label-key="currentLabel"
         @change="handleSortChange"
       />
 
-      <!-- 完成排序按钮 -->
-      <div>
-        <el-button
-          type="success"
-          :icon="Check"
-          size="default"
-          @click="toggleSortMode"
-          title="完成排序"
-        />
-      </div>
+      <div class="content-selector-yes-no-wrapper">
+        <!-- 完成排序按钮 -->
+        <div class="content-selector-yes-no-wrapper-item">
+          <el-button
+            type="success"
+            :icon="Check"
+            size="default"
+            @click="toggleSortMode"
+            title="完成排序"
+          />
+        </div>
 
-      <div>
-        <!-- 取消排序按钮 -->
-        <el-button
-          :icon="Close"
-          size="default"
-          @click="cancelSort"
-          title="取消排序"
-        />
+        <div class="content-selector-yes-no-wrapper-item">
+          <!-- 取消排序按钮 -->
+          <el-button
+            :icon="Close"
+            size="default"
+            @click="cancelSort"
+            title="取消排序"
+          />
+        </div>
       </div>
     </div>
   </div>
@@ -135,14 +136,6 @@ const selectedMovies = computed({
   set(value) {
     emit('update:modelValue', value)
   }
-})
-
-// 获取已选择电影的完整信息，用于排序组件
-const selectedMovieOptions = computed(() => {
-  return props.modelValue.map(movieId => {
-    const movie = props.movieList.find(item => item._id === movieId)
-    return movie || { _id: movieId, title: movieId }
-  })
 })
 
 // 检查显示文本
@@ -223,17 +216,5 @@ const handleSortChange = newOrder => {
 <style scoped>
 .movie-selector-container {
   display: inline-block;
-}
-
-.movie-selector-wrapper {
-  display: flex;
-  align-items: flex-start;
-  gap: 8px;
-}
-
-.movie-sort-wrapper {
-  display: flex;
-  align-items: flex-start;
-  gap: 8px;
 }
 </style>

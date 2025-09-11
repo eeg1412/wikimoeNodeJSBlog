@@ -1,7 +1,7 @@
 <template>
   <div class="bangumi-selector-container" style="width: 100%">
     <!-- 普通选择模式 -->
-    <div v-show="!isSortMode" class="bangumi-selector-wrapper">
+    <div v-show="!isSortMode" class="content-selector-wrapper">
       <el-select
         v-model="selectedBangumis"
         multiple
@@ -48,36 +48,37 @@
     </div>
 
     <!-- 排序模式 -->
-    <div v-if="isSortMode" class="bangumi-sort-wrapper">
+    <div v-if="isSortMode" class="content-selector-wrapper">
       <DraggableSelector
         v-model="selectedBangumis"
         :options="tagList"
         :placeholder="placeholder"
-        :width="sortable ? 'calc(100% - 80px)' : '100%'"
         value-key="value"
         label-key="currentLabel"
         @change="handleSortChange"
       />
 
-      <!-- 完成排序按钮 -->
-      <div>
-        <el-button
-          type="success"
-          :icon="Check"
-          size="default"
-          @click="toggleSortMode"
-          title="完成排序"
-        />
-      </div>
+      <div class="content-selector-yes-no-wrapper">
+        <!-- 完成排序按钮 -->
+        <div class="content-selector-yes-no-wrapper-item">
+          <el-button
+            type="success"
+            :icon="Check"
+            size="default"
+            @click="toggleSortMode"
+            title="完成排序"
+          />
+        </div>
 
-      <div>
-        <!-- 取消排序按钮 -->
-        <el-button
-          :icon="Close"
-          size="default"
-          @click="cancelSort"
-          title="取消排序"
-        />
+        <div class="content-selector-yes-no-wrapper-item">
+          <!-- 取消排序按钮 -->
+          <el-button
+            :icon="Close"
+            size="default"
+            @click="cancelSort"
+            title="取消排序"
+          />
+        </div>
       </div>
     </div>
   </div>
@@ -139,14 +140,6 @@ const selectedBangumis = computed({
   set(value) {
     emit('update:modelValue', value)
   }
-})
-
-// 获取已选择番剧的完整信息，用于排序组件
-const selectedBangumiOptions = computed(() => {
-  return props.modelValue.map(bangumiId => {
-    const bangumi = props.bangumiList.find(item => item._id === bangumiId)
-    return bangumi || { _id: bangumiId, title: bangumiId }
-  })
 })
 
 // 检查显示文本
@@ -217,17 +210,5 @@ const handleSortChange = newOrder => {
 <style scoped>
 .bangumi-selector-container {
   display: inline-block;
-}
-
-.bangumi-selector-wrapper {
-  display: flex;
-  align-items: flex-start;
-  gap: 8px;
-}
-
-.bangumi-sort-wrapper {
-  display: flex;
-  align-items: flex-start;
-  gap: 8px;
 }
 </style>

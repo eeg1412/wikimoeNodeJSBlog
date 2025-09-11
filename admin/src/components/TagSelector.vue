@@ -1,7 +1,7 @@
 <template>
   <div class="tag-selector-container" :style="{ width: width }">
     <!-- 普通选择模式 -->
-    <div v-show="!isSortMode" class="tag-selector-wrapper">
+    <div v-show="!isSortMode" class="content-selector-wrapper">
       <el-select
         v-model="selectedTags"
         :placeholder="placeholder"
@@ -42,36 +42,37 @@
     </div>
 
     <!-- 排序模式 -->
-    <div v-if="isSortMode" class="tag-sort-wrapper">
+    <div v-if="isSortMode" class="content-selector-wrapper">
       <DraggableSelector
         v-model="selectedTags"
         :options="selectorTagList"
         :placeholder="placeholder"
-        :width="sortable ? 'calc(100% - 80px)' : '100%'"
         value-key="value"
         label-key="currentLabel"
         @change="handleSortChange"
       />
 
-      <!-- 完成排序按钮 -->
-      <div>
-        <el-button
-          type="success"
-          :icon="Check"
-          size="default"
-          @click="toggleSortMode"
-          title="完成排序"
-        />
-      </div>
+      <div class="content-selector-yes-no-wrapper">
+        <!-- 完成排序按钮 -->
+        <div class="content-selector-yes-no-wrapper-item">
+          <el-button
+            type="success"
+            :icon="Check"
+            size="default"
+            @click="toggleSortMode"
+            title="完成排序"
+          />
+        </div>
 
-      <div>
-        <!-- 取消排序按钮 -->
-        <el-button
-          :icon="Close"
-          size="default"
-          @click="cancelSort"
-          title="取消排序"
-        />
+        <div class="content-selector-yes-no-wrapper-item">
+          <!-- 取消排序按钮 -->
+          <el-button
+            :icon="Close"
+            size="default"
+            @click="cancelSort"
+            title="取消排序"
+          />
+        </div>
       </div>
     </div>
   </div>
@@ -126,14 +127,6 @@ export default {
 
     // 使用 computed 来获取标签列表
     const tagOptions = computed(() => props.tagList)
-
-    // 获取已选择标签的完整信息，用于排序组件
-    const selectedTagOptions = computed(() => {
-      return props.modelValue.map(tagId => {
-        const tag = props.tagList.find(item => item._id === tagId)
-        return tag || { _id: tagId, tagname: tagId }
-      })
-    })
 
     const getTagList = (tagKeyword = null, options = {}) => {
       if (tagsIsLoading.value) {
@@ -213,7 +206,6 @@ export default {
     return {
       getTagList,
       tagOptions,
-      selectedTagOptions,
       tagsIsLoading,
       queryTags,
       selectedTags,
@@ -235,17 +227,5 @@ export default {
 <style scoped>
 .tag-selector-container {
   display: inline-block;
-}
-
-.tag-selector-wrapper {
-  display: flex;
-  align-items: flex-start;
-  gap: 8px;
-}
-
-.tag-sort-wrapper {
-  display: flex;
-  align-items: flex-start;
-  gap: 8px;
 }
 </style>

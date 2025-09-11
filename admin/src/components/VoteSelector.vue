@@ -1,7 +1,7 @@
 <template>
   <div class="vote-selector-container" style="width: 100%">
     <!-- 普通选择模式 -->
-    <div v-show="!isSortMode" class="vote-selector-wrapper">
+    <div v-show="!isSortMode" class="content-selector-wrapper">
       <el-select
         v-model="selectedVotes"
         multiple
@@ -48,36 +48,37 @@
     </div>
 
     <!-- 排序模式 -->
-    <div v-if="isSortMode" class="vote-sort-wrapper">
+    <div v-if="isSortMode" class="content-selector-wrapper">
       <DraggableSelector
         v-model="selectedVotes"
         :options="tagList"
         :placeholder="placeholder"
-        :width="sortable ? 'calc(100% - 80px)' : '100%'"
         value-key="value"
         label-key="currentLabel"
         @change="handleSortChange"
       />
 
-      <!-- 完成排序按钮 -->
-      <div>
-        <el-button
-          type="success"
-          :icon="Check"
-          size="default"
-          @click="toggleSortMode"
-          title="完成排序"
-        />
-      </div>
+      <div class="content-selector-yes-no-wrapper">
+        <!-- 完成排序按钮 -->
+        <div class="content-selector-yes-no-wrapper-item">
+          <el-button
+            type="success"
+            :icon="Check"
+            size="default"
+            @click="toggleSortMode"
+            title="完成排序"
+          />
+        </div>
 
-      <div>
-        <!-- 取消排序按钮 -->
-        <el-button
-          :icon="Close"
-          size="default"
-          @click="cancelSort"
-          title="取消排序"
-        />
+        <div class="content-selector-yes-no-wrapper-item">
+          <!-- 取消排序按钮 -->
+          <el-button
+            :icon="Close"
+            size="default"
+            @click="cancelSort"
+            title="取消排序"
+          />
+        </div>
       </div>
     </div>
   </div>
@@ -134,14 +135,6 @@ const selectedVotes = computed({
   set(value) {
     emit('update:modelValue', value)
   }
-})
-
-// 获取已选择投票的完整信息，用于排序组件
-const selectedVoteOptions = computed(() => {
-  return props.modelValue.map(voteId => {
-    const vote = props.voteList.find(item => item._id === voteId)
-    return vote || { _id: voteId, title: voteId }
-  })
 })
 
 const lastKeyword = ref(null)
@@ -211,17 +204,5 @@ const handleSortChange = newOrder => {
 <style scoped>
 .vote-selector-container {
   display: inline-block;
-}
-
-.vote-selector-wrapper {
-  display: flex;
-  align-items: flex-start;
-  gap: 8px;
-}
-
-.vote-sort-wrapper {
-  display: flex;
-  align-items: flex-start;
-  gap: 8px;
 }
 </style>

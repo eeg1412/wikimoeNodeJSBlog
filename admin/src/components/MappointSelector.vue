@@ -1,7 +1,7 @@
 <template>
   <div class="mappoint-selector-container" :style="{ width: width }">
     <!-- 普通选择模式 -->
-    <div v-show="!isSortMode" class="mappoint-selector-wrapper">
+    <div v-show="!isSortMode" class="content-selector-wrapper">
       <el-select
         v-model="selectedMappoints"
         multiple
@@ -49,36 +49,37 @@
     </div>
 
     <!-- 排序模式 -->
-    <div v-if="isSortMode" class="mappoint-sort-wrapper">
+    <div v-if="isSortMode" class="content-selector-wrapper">
       <DraggableSelector
         v-model="selectedMappoints"
         :options="tagList"
         :placeholder="placeholder"
-        :width="sortable ? 'calc(100% - 80px)' : '100%'"
         value-key="value"
         label-key="currentLabel"
         @change="handleSortChange"
       />
 
-      <!-- 完成排序按钮 -->
-      <div>
-        <el-button
-          type="success"
-          :icon="Check"
-          size="default"
-          @click="toggleSortMode"
-          title="完成排序"
-        />
-      </div>
+      <div class="content-selector-yes-no-wrapper">
+        <!-- 完成排序按钮 -->
+        <div class="content-selector-yes-no-wrapper-item">
+          <el-button
+            type="success"
+            :icon="Check"
+            size="default"
+            @click="toggleSortMode"
+            title="完成排序"
+          />
+        </div>
 
-      <div>
-        <!-- 取消排序按钮 -->
-        <el-button
-          :icon="Close"
-          size="default"
-          @click="cancelSort"
-          title="取消排序"
-        />
+        <div class="content-selector-yes-no-wrapper-item">
+          <!-- 取消排序按钮 -->
+          <el-button
+            :icon="Close"
+            size="default"
+            @click="cancelSort"
+            title="取消排序"
+          />
+        </div>
       </div>
     </div>
   </div>
@@ -135,14 +136,6 @@ const selectedMappoints = computed({
   set(value) {
     emit('update:modelValue', value)
   }
-})
-
-// 获取已选择地点的完整信息，用于排序组件
-const selectedMappointOptions = computed(() => {
-  return props.modelValue.map(mappointId => {
-    const mappoint = props.mappointList.find(item => item._id === mappointId)
-    return mappoint || { _id: mappointId, title: mappointId }
-  })
 })
 
 // 检查显示文本
@@ -222,17 +215,5 @@ defineExpose({
 <style scoped>
 .mappoint-selector-container {
   display: inline-block;
-}
-
-.mappoint-selector-wrapper {
-  display: flex;
-  align-items: flex-start;
-  gap: 8px;
-}
-
-.mappoint-sort-wrapper {
-  display: flex;
-  align-items: flex-start;
-  gap: 8px;
 }
 </style>

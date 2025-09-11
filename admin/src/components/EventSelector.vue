@@ -1,7 +1,7 @@
 <template>
   <div class="event-selector-container" style="width: 100%">
     <!-- 普通选择模式 -->
-    <div v-show="!isSortMode" class="event-selector-wrapper">
+    <div v-show="!isSortMode" class="content-selector-wrapper">
       <el-select
         v-model="selectedEvents"
         multiple
@@ -48,36 +48,37 @@
     </div>
 
     <!-- 排序模式 -->
-    <div v-if="isSortMode" class="event-sort-wrapper">
+    <div v-if="isSortMode" class="content-selector-wrapper">
       <DraggableSelector
         v-model="selectedEvents"
         :options="tagList"
         :placeholder="placeholder"
-        :width="sortable ? 'calc(100% - 80px)' : '100%'"
         value-key="value"
         label-key="currentLabel"
         @change="handleSortChange"
       />
 
-      <!-- 完成排序按钮 -->
-      <div>
-        <el-button
-          type="success"
-          :icon="Check"
-          size="default"
-          @click="toggleSortMode"
-          title="完成排序"
-        />
-      </div>
+      <div class="content-selector-yes-no-wrapper">
+        <!-- 完成排序按钮 -->
+        <div class="content-selector-yes-no-wrapper-item">
+          <el-button
+            type="success"
+            :icon="Check"
+            size="default"
+            @click="toggleSortMode"
+            title="完成排序"
+          />
+        </div>
 
-      <div>
-        <!-- 取消排序按钮 -->
-        <el-button
-          :icon="Close"
-          size="default"
-          @click="cancelSort"
-          title="取消排序"
-        />
+        <div class="content-selector-yes-no-wrapper-item">
+          <!-- 取消排序按钮 -->
+          <el-button
+            :icon="Close"
+            size="default"
+            @click="cancelSort"
+            title="取消排序"
+          />
+        </div>
       </div>
     </div>
   </div>
@@ -138,14 +139,6 @@ const selectedEvents = computed({
   set(value) {
     emit('update:modelValue', value)
   }
-})
-
-// 获取已选择活动的完整信息，用于排序组件
-const selectedEventOptions = computed(() => {
-  return props.modelValue.map(eventId => {
-    const event = props.eventList.find(item => item._id === eventId)
-    return event || { _id: eventId, title: eventId }
-  })
 })
 
 // 检查显示文本
@@ -215,17 +208,5 @@ const handleSortChange = newOrder => {
 <style scoped>
 .event-selector-container {
   display: inline-block;
-}
-
-.event-selector-wrapper {
-  display: flex;
-  align-items: flex-start;
-  gap: 8px;
-}
-
-.event-sort-wrapper {
-  display: flex;
-  align-items: flex-start;
-  gap: 8px;
 }
 </style>
