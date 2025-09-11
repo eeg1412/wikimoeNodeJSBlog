@@ -938,12 +938,17 @@ export default {
       getPostList()
       if (params.tags.length) {
         // 获取已选择的标签数据
-        authApi.getTagList({
-          idList: params.tags,
-          size: 999999
-        }, true).then(res => {
-          tagList.value = res.data.list
-        })
+        authApi
+          .getTagList(
+            {
+              idList: params.tags,
+              size: 999999
+            },
+            true
+          )
+          .then(res => {
+            tagList.value = res.data.list
+          })
       }
     })
     return {
