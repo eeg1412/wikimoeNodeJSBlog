@@ -62,7 +62,7 @@
             @click="showAlbum(item.screenshotAlbum._id)"
           >
             <UIcon name="i-heroicons-photo" class="align-middle mr-1" />
-            相关截图
+            相关相册
           </a>
           <a
             :href="url.url"
