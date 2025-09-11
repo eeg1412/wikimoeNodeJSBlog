@@ -203,6 +203,7 @@
               placeholder="请选择标签"
               width="100%"
               :addNew="true"
+              :sortable="true"
             />
           </el-form-item>
         </template>
@@ -215,6 +216,7 @@
               v-model:mappointList="mappointList"
               placeholder="请选择地点"
               width="100%"
+              :sortable="true"
             />
           </el-form-item>
         </template>
@@ -230,6 +232,7 @@
               v-model="form.contentEventList"
               v-model:eventList="contentEventList"
               placeholder="请选择活动"
+              :sortable="true"
             />
           </el-form-item>
           <!-- 关联投票 -->
@@ -238,6 +241,7 @@
               v-model="form.contentVoteList"
               v-model:voteList="contentVoteList"
               placeholder="请选择投票"
+              :sortable="true"
             />
           </el-form-item>
           <!-- post -->
@@ -248,6 +252,7 @@
               :current-post-id="id"
               :format-date="$formatDate"
               placeholder="请选择博文"
+              :sortable="true"
             />
           </el-form-item>
           <!-- tweet -->
@@ -259,6 +264,7 @@
               :format-date="$formatDate"
               :type="2"
               placeholder="请选择推文"
+              :sortable="true"
             />
           </el-form-item>
           <!-- bangumi -->
@@ -267,6 +273,7 @@
               v-model="form.contentBangumiList"
               v-model:bangumiList="contentBangumiList"
               placeholder="请选择番剧"
+              :sortable="true"
             />
           </el-form-item>
           <el-form-item label="关联电影" prop="movie">
@@ -274,6 +281,7 @@
               v-model="form.contentMovieList"
               v-model:movieList="contentMovieList"
               placeholder="请选择电影"
+              :sortable="true"
             />
           </el-form-item>
           <!-- book -->
@@ -282,6 +290,7 @@
               v-model="form.contentBookList"
               v-model:bookList="contentBookList"
               placeholder="请选择书籍"
+              :sortable="true"
             />
           </el-form-item>
           <!-- game -->
@@ -290,6 +299,7 @@
               v-model="form.contentGameList"
               v-model:gameList="contentGameList"
               placeholder="请选择游戏"
+              :sortable="true"
             />
           </el-form-item>
           <el-form-item label="更改排序" prop="contentSeriesSortListTurnOn">
@@ -334,6 +344,7 @@
               v-model="form.eventList"
               v-model:eventList="eventList"
               placeholder="请选择活动"
+              :sortable="true"
             />
           </el-form-item>
           <!-- 关联投票 -->
@@ -342,6 +353,7 @@
               v-model="form.voteList"
               v-model:voteList="voteList"
               placeholder="请选择投票"
+              :sortable="true"
             />
           </el-form-item>
           <!-- post -->
@@ -352,6 +364,7 @@
               :current-post-id="id"
               :format-date="$formatDate"
               placeholder="请选择博文"
+              :sortable="true"
             />
           </el-form-item>
           <!-- tweet -->
@@ -363,6 +376,7 @@
               :format-date="$formatDate"
               :type="2"
               placeholder="请选择推文"
+              :sortable="true"
             />
           </el-form-item>
           <!-- bangumi -->
@@ -371,6 +385,7 @@
               v-model="form.bangumiList"
               v-model:bangumiList="bangumiList"
               placeholder="请选择番剧"
+              :sortable="true"
             />
           </el-form-item>
           <el-form-item label="相关电影" prop="movie">
@@ -378,6 +393,7 @@
               v-model="form.movieList"
               v-model:movieList="movieList"
               placeholder="请选择电影"
+              :sortable="true"
             />
           </el-form-item>
           <!-- book -->
@@ -386,6 +402,7 @@
               v-model="form.bookList"
               v-model:bookList="bookList"
               placeholder="请选择书籍"
+              :sortable="true"
             />
           </el-form-item>
           <!-- game -->
@@ -394,6 +411,7 @@
               v-model="form.gameList"
               v-model:gameList="gameList"
               placeholder="请选择游戏"
+              :sortable="true"
             />
           </el-form-item>
           <el-form-item label="更改排序" prop="seriesSortListTurnOn">

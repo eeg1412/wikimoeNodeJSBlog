@@ -1,43 +1,93 @@
 <template>
-  <el-select
-    v-model="selectedEvents"
-    multiple
-    filterable
-    remote
-    :remote-method="queryEvents"
-    :automatic-dropdown="true"
-    default-first-option
-    :reserve-keyword="false"
-    :loading="loading"
-    :placeholder="placeholder"
-    style="width: 100%"
-  >
-    <template #header>
-      <el-radio-group
-        v-model="statusFilter"
-        @change="queryEvents(lastKeyword)"
-        :disabled="loading"
+  <div class="event-selector-container" style="width: 100%">
+    <!-- 普通选择模式 -->
+    <div v-show="!isSortMode" class="event-selector-wrapper">
+      <el-select
+        v-model="selectedEvents"
+        multiple
+        filterable
+        remote
+        :remote-method="queryEvents"
+        :automatic-dropdown="true"
+        default-first-option
+        :reserve-keyword="false"
+        :loading="loading"
+        :placeholder="placeholder"
+        style="width: 100%"
+        ref="eventSelectRef"
       >
-        <el-radio :label="undefined" size="small">全部</el-radio>
-        <el-radio :label="0" size="small">仅不显示</el-radio>
-        <el-radio :label="1" size="small">仅显示</el-radio>
-      </el-radio-group>
-    </template>
-    <el-option
-      v-for="item in eventOptions"
-      :key="item._id"
-      :label="`${checkShowText(item)}【${$formatDate(
-        item.startTime,
-        'YYYY年MM月'
-      )}】${item.title}`"
-      :value="item._id"
-    ></el-option>
-  </el-select>
-</template>
+        <template #header>
+          <el-radio-group
+            v-model="statusFilter"
+            @change="queryEvents(lastKeyword)"
+            :disabled="loading"
+          >
+            <el-radio :label="undefined" size="small">全部</el-radio>
+            <el-radio :label="0" size="small">仅不显示</el-radio>
+            <el-radio :label="1" size="small">仅显示</el-radio>
+          </el-radio-group>
+        </template>
+        <el-option
+          v-for="item in eventOptions"
+          :key="item._id"
+          :label="item.label"
+          :value="item._id"
+        ></el-option>
+      </el-select>
 
+      <!-- 排序切换按钮 -->
+      <el-button
+        v-if="sortable"
+        :disabled="selectedEvents.length <= 1"
+        type="primary"
+        :icon="Sort"
+        size="default"
+        @click="toggleSortMode"
+        title="调整顺序"
+      />
+    </div>
+
+    <!-- 排序模式 -->
+    <div v-if="isSortMode" class="event-sort-wrapper">
+      <DraggableSelector
+        v-model="selectedEvents"
+        :options="tagList"
+        :placeholder="placeholder"
+        :width="sortable ? 'calc(100% - 80px)' : '100%'"
+        value-key="value"
+        label-key="currentLabel"
+        @change="handleSortChange"
+      />
+
+      <!-- 完成排序按钮 -->
+      <div>
+        <el-button
+          type="success"
+          :icon="Check"
+          size="default"
+          @click="toggleSortMode"
+          title="完成排序"
+        />
+      </div>
+
+      <div>
+        <!-- 取消排序按钮 -->
+        <el-button
+          :icon="Close"
+          size="default"
+          @click="cancelSort"
+          title="取消排序"
+        />
+      </div>
+    </div>
+  </div>
+</template>
 <script setup>
 import { ref, computed } from 'vue'
+import { Sort, Check, Close } from '@element-plus/icons-vue'
 import { authApi } from '@/api'
+import DraggableSelector from './DraggableSelector.vue'
+import { formatDate, limitStr } from '@/utils/utils'
 
 const props = defineProps({
   modelValue: {
@@ -51,6 +101,10 @@ const props = defineProps({
   placeholder: {
     type: String,
     default: '请选择活动'
+  },
+  sortable: {
+    type: Boolean,
+    default: false
   }
 })
 
@@ -58,7 +112,25 @@ const emit = defineEmits(['update:modelValue', 'update:eventList'])
 
 // 本地状态
 const loading = ref(false)
-const eventOptions = computed(() => props.eventList)
+const isSortMode = ref(false)
+const originalOrder = ref([])
+const eventSelectRef = ref(null)
+const getSelectedList = () => {
+  return eventSelectRef.value?.showTagList || []
+}
+const eventOptions = computed(() => {
+  if (props.eventList && Array.isArray(props.eventList)) {
+    props.eventList.forEach(event => {
+      const label = `${checkShowText(event)}【${
+        event.startTime ? formatDate(event.startTime, 'YYYY年MM月') : ''
+      }】${event.title}`
+      event.label = label
+    })
+    return props.eventList
+  } else {
+    return []
+  }
+})
 const selectedEvents = computed({
   get() {
     return props.modelValue
@@ -66,6 +138,14 @@ const selectedEvents = computed({
   set(value) {
     emit('update:modelValue', value)
   }
+})
+
+// 获取已选择活动的完整信息，用于排序组件
+const selectedEventOptions = computed(() => {
+  return props.modelValue.map(eventId => {
+    const event = props.eventList.find(item => item._id === eventId)
+    return event || { _id: eventId, title: eventId }
+  })
 })
 
 // 检查显示文本
@@ -108,4 +188,44 @@ const queryEvents = query => {
     getEventList(query)
   }, 100)
 }
+
+// 切换排序模式
+const tagList = ref([])
+const toggleSortMode = () => {
+  if (!isSortMode.value) {
+    // 进入排序模式，保存原始顺序
+    originalOrder.value = [...props.modelValue]
+    tagList.value = getSelectedList()
+  }
+  isSortMode.value = !isSortMode.value
+}
+
+// 取消排序，恢复原始顺序
+const cancelSort = () => {
+  emit('update:modelValue', originalOrder.value)
+  isSortMode.value = false
+}
+
+// 处理排序变化
+const handleSortChange = newOrder => {
+  emit('update:modelValue', newOrder)
+}
 </script>
+
+<style scoped>
+.event-selector-container {
+  display: inline-block;
+}
+
+.event-selector-wrapper {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+}
+
+.event-sort-wrapper {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+}
+</style>

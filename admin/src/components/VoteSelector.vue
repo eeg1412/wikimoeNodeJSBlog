@@ -1,40 +1,92 @@
 <template>
-  <el-select
-    v-model="selectedVotes"
-    multiple
-    filterable
-    remote
-    :remote-method="queryVotes"
-    :automatic-dropdown="true"
-    default-first-option
-    :reserve-keyword="false"
-    :loading="loading"
-    :placeholder="placeholder"
-    style="width: 100%"
-  >
-    <template #header>
-      <el-radio-group
-        v-model="statusFilter"
-        @change="queryVotes(lastKeyword)"
-        :disabled="loading"
+  <div class="vote-selector-container" style="width: 100%">
+    <!-- 普通选择模式 -->
+    <div v-show="!isSortMode" class="vote-selector-wrapper">
+      <el-select
+        v-model="selectedVotes"
+        multiple
+        filterable
+        remote
+        :remote-method="queryVotes"
+        :automatic-dropdown="true"
+        default-first-option
+        :reserve-keyword="false"
+        :loading="loading"
+        :placeholder="placeholder"
+        style="width: 100%"
+        ref="voteSelectRef"
       >
-        <el-radio :label="undefined" size="small">全部</el-radio>
-        <el-radio :label="0" size="small">仅不显示</el-radio>
-        <el-radio :label="1" size="small">仅显示</el-radio>
-      </el-radio-group>
-    </template>
-    <el-option
-      v-for="item in voteOptions"
-      :key="item._id"
-      :label="`${checkShowText(item)}${item.title}`"
-      :value="item._id"
-    ></el-option>
-  </el-select>
-</template>
+        <template #header>
+          <el-radio-group
+            v-model="statusFilter"
+            @change="queryVotes(lastKeyword)"
+            :disabled="loading"
+          >
+            <el-radio :label="undefined" size="small">全部</el-radio>
+            <el-radio :label="0" size="small">仅不显示</el-radio>
+            <el-radio :label="1" size="small">仅显示</el-radio>
+          </el-radio-group>
+        </template>
+        <el-option
+          v-for="item in voteOptions"
+          :key="item._id"
+          :label="item.label"
+          :value="item._id"
+        ></el-option>
+      </el-select>
 
+      <!-- 排序切换按钮 -->
+      <el-button
+        v-if="sortable"
+        :disabled="selectedVotes.length <= 1"
+        type="primary"
+        :icon="Sort"
+        size="default"
+        @click="toggleSortMode"
+        title="调整顺序"
+      />
+    </div>
+
+    <!-- 排序模式 -->
+    <div v-if="isSortMode" class="vote-sort-wrapper">
+      <DraggableSelector
+        v-model="selectedVotes"
+        :options="tagList"
+        :placeholder="placeholder"
+        :width="sortable ? 'calc(100% - 80px)' : '100%'"
+        value-key="value"
+        label-key="currentLabel"
+        @change="handleSortChange"
+      />
+
+      <!-- 完成排序按钮 -->
+      <div>
+        <el-button
+          type="success"
+          :icon="Check"
+          size="default"
+          @click="toggleSortMode"
+          title="完成排序"
+        />
+      </div>
+
+      <div>
+        <!-- 取消排序按钮 -->
+        <el-button
+          :icon="Close"
+          size="default"
+          @click="cancelSort"
+          title="取消排序"
+        />
+      </div>
+    </div>
+  </div>
+</template>
 <script setup>
 import { ref, computed } from 'vue'
+import { Sort, Check, Close } from '@element-plus/icons-vue'
 import { authApi } from '@/api'
+import DraggableSelector from './DraggableSelector.vue'
 
 const props = defineProps({
   modelValue: {
@@ -48,6 +100,10 @@ const props = defineProps({
   placeholder: {
     type: String,
     default: '请选择投票'
+  },
+  sortable: {
+    type: Boolean,
+    default: false
   }
 })
 
@@ -55,7 +111,22 @@ const emit = defineEmits(['update:modelValue', 'update:voteList'])
 
 // 本地状态
 const loading = ref(false)
-const voteOptions = computed(() => props.voteList)
+const isSortMode = ref(false)
+const originalOrder = ref([])
+const voteSelectRef = ref(null)
+const getSelectedList = () => {
+  return voteSelectRef.value?.showTagList || []
+}
+const voteOptions = computed(() => {
+  if (props.voteList && Array.isArray(props.voteList)) {
+    props.voteList.forEach(vote => {
+      let label = `${checkShowText(vote)}${vote.title}`
+      vote.label = label
+    })
+    return props.voteList
+  }
+  return []
+})
 const selectedVotes = computed({
   get() {
     return props.modelValue
@@ -63,6 +134,14 @@ const selectedVotes = computed({
   set(value) {
     emit('update:modelValue', value)
   }
+})
+
+// 获取已选择投票的完整信息，用于排序组件
+const selectedVoteOptions = computed(() => {
+  return props.modelValue.map(voteId => {
+    const vote = props.voteList.find(item => item._id === voteId)
+    return vote || { _id: voteId, title: voteId }
+  })
 })
 
 const lastKeyword = ref(null)
@@ -105,4 +184,44 @@ const checkShowText = item => {
   }
   return ''
 }
+
+// 切换排序模式
+const tagList = ref([])
+const toggleSortMode = () => {
+  if (!isSortMode.value) {
+    // 进入排序模式，保存原始顺序
+    originalOrder.value = [...props.modelValue]
+    tagList.value = getSelectedList()
+  }
+  isSortMode.value = !isSortMode.value
+}
+
+// 取消排序，恢复原始顺序
+const cancelSort = () => {
+  emit('update:modelValue', originalOrder.value)
+  isSortMode.value = false
+}
+
+// 处理排序变化
+const handleSortChange = newOrder => {
+  emit('update:modelValue', newOrder)
+}
 </script>
+
+<style scoped>
+.vote-selector-container {
+  display: inline-block;
+}
+
+.vote-selector-wrapper {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+}
+
+.vote-sort-wrapper {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+}
+</style>
