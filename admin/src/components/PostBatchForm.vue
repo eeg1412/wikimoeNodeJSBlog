@@ -52,6 +52,7 @@
       >
         <TagSelector
           v-model="params.tagIdList"
+          v-model:tagList="tagList"
           width="270px"
           :addNew="['addTag', 'setTag'].includes(params.action)"
           ref="SearchTagSelectorRef"
@@ -248,6 +249,7 @@ export default {
 
     const SearchTagSelectorRef = ref(null)
     const selectedTagList = ref([])
+    const tagList = ref([])
 
     const SearchMappointSelectorRef = ref(null)
     const selectedMappointList = ref([])
@@ -365,6 +367,7 @@ export default {
       params,
       SearchTagSelectorRef,
       selectedTagList,
+      tagList,
       SearchMappointSelectorRef,
       selectedMappointList,
       mappointList,

@@ -197,30 +197,13 @@
         <template v-if="type !== 3">
           <!-- tags -->
           <el-form-item label="标签" prop="tags">
-            <el-select
+            <TagSelector
               v-model="form.tags"
-              multiple
-              filterable
-              remote
-              :remote-method="queryTags"
-              :automatic-dropdown="true"
-              default-first-option
-              :reserve-keyword="false"
-              :loading="tagsIsLoading"
+              v-model:tagList="tagList"
               placeholder="请选择标签"
-              style="width: 100%"
-            >
-              <el-option
-                v-for="item in tagList"
-                :key="item._id"
-                :label="item.tagname"
-                :value="item._id"
-              >
-                <template v-if="item.isNew">
-                  {{ `创建新标签「${item.tagname}」` }}
-                </template>
-              </el-option>
-            </el-select>
+              width="100%"
+              :addNew="true"
+            />
           </el-form-item>
         </template>
 
@@ -549,6 +532,7 @@ import PostSelector from '@/components/PostSelector.vue'
 import EventSelector from '@/components/EventSelector.vue'
 import VoteSelector from '@/components/VoteSelector.vue'
 import MappointSelector from '@/components/MappointSelector.vue'
+import TagSelector from '@/components/TagSelector.vue'
 import draggable from 'vuedraggable'
 import EmojiTextarea from '@/components/EmojiTextarea.vue'
 import StringSortEditBox from '@/components/StringSortEditBox.vue'
@@ -576,6 +560,7 @@ export default {
     EventSelector,
     VoteSelector,
     MappointSelector,
+    TagSelector,
     StringSortEditBox
   },
   setup() {
@@ -1036,47 +1021,6 @@ export default {
       })
     }
 
-    // tags
-    const tagList = ref([])
-    const tagsIsLoading = ref(false)
-    const getTagList = (tagKeyword = null) => {
-      if (tagsIsLoading.value) {
-        return
-      }
-      const formatTagKeyword = replaceSpacesWithUnderscores(tagKeyword || '')
-      tagsIsLoading.value = true
-      authApi
-        .getTagList({ keyword: formatTagKeyword, size: 50, page: 1 }, true)
-        .then(res => {
-          const list = res.data.list
-          if (tagKeyword) {
-            // 如果tagkeyword没有在list里面，就把tagkeyword push到list里面
-            const hasTagKeyword = list.some(
-              item => item.tagname === formatTagKeyword
-            )
-            if (!hasTagKeyword) {
-              list.push({
-                _id: formatTagKeyword,
-                tagname: formatTagKeyword,
-                isNew: true
-              })
-            }
-          }
-          tagList.value = res.data.list
-        })
-        .finally(() => {
-          tagsIsLoading.value = false
-        })
-    }
-    let queryTagsTimer = null
-    const queryTags = query => {
-      if (queryTagsTimer) {
-        clearTimeout(queryTagsTimer)
-      }
-      queryTagsTimer = setTimeout(() => {
-        getTagList(query)
-      }, 50)
-    }
     const updateTagLastUseTime = (newTagIdList, oldTagIdList) => {
       // 对比newTagIdList对比oldTagIdList，多了哪些ID
       const addTagIdList = newTagIdList.filter(
@@ -1101,6 +1045,9 @@ export default {
         }
       }
     )
+
+    // tags
+    const tagList = ref([])
 
     // mappoints
     const mappointList = ref([])
@@ -1487,8 +1434,6 @@ export default {
       resetRichEditor,
       // tags
       tagList,
-      tagsIsLoading,
-      queryTags,
       // mappoints
       mappointList,
       // bangumi

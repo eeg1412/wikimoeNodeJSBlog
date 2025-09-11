@@ -49,7 +49,11 @@
           </el-form-item>
           <!-- tags -->
           <el-form-item>
-            <TagSelector v-model="params.tags" ref="SearchTagSelectorRef" />
+            <TagSelector
+              v-model="params.tags"
+              v-model:tagList="tagList"
+              ref="SearchTagSelectorRef"
+            />
           </el-form-item>
           <el-form-item>
             <el-input
@@ -916,6 +920,7 @@ export default {
       }
     )
 
+    const tagList = ref([])
     const SearchTagSelectorRef = ref(null)
 
     const setMovieTitle = item => {
@@ -932,9 +937,12 @@ export default {
       initParams()
       getPostList()
       if (params.tags.length) {
-        SearchTagSelectorRef.value.getTagList(null, {
+        // 获取已选择的标签数据
+        authApi.getTagList({
           idList: params.tags,
           size: 999999
+        }, true).then(res => {
+          tagList.value = res.data.list
         })
       }
     })
@@ -971,6 +979,7 @@ export default {
       clearSelection,
       postBatchFormSuccess,
       // 搜索标签
+      tagList,
       SearchTagSelectorRef,
       checkShowText,
       setMovieTitle

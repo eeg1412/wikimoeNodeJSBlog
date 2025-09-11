@@ -15,7 +15,7 @@
     ref="tagSelectorRef"
   >
     <el-option
-      v-for="item in tagList"
+      v-for="item in tagOptions"
       :key="item._id"
       :label="item.tagname"
       :value="item._id"
@@ -38,6 +38,10 @@ export default {
       type: Array,
       default: () => []
     },
+    tagList: {
+      type: Array,
+      default: () => []
+    },
     placeholder: {
       type: String,
       default: '请选择标签'
@@ -51,11 +55,13 @@ export default {
       default: false
     }
   },
-  emits: ['update:modelValue'],
+  emits: ['update:modelValue', 'update:tagList'],
   setup(props, { emit }) {
-    const tagList = ref([])
     const tagsIsLoading = ref(false)
     let queryTagsTimer = null
+
+    // 使用 computed 来获取标签列表
+    const tagOptions = computed(() => props.tagList)
 
     const getTagList = (tagKeyword = null, options = {}) => {
       if (tagsIsLoading.value) {
@@ -83,7 +89,7 @@ export default {
               })
             }
           }
-          tagList.value = list
+          emit('update:tagList', list)
         })
         .finally(() => {
           tagsIsLoading.value = false
@@ -112,7 +118,7 @@ export default {
 
     return {
       getTagList,
-      tagList,
+      tagOptions,
       tagsIsLoading,
       queryTags,
       selectedTags,
