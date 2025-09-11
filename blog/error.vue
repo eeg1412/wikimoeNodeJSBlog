@@ -3,7 +3,7 @@
     <div class="error-code">{{ error.statusCode }}</div>
     <div class="error-msg">{{ error.message || error.statusMessage }}</div>
     <!-- 尝试回到首页 -->
-    <div class="error-btn pointer" @click="reflushHome">返回首页</div>
+    <div class="error-btn pointer" @click="reflushHome">{{ btnText }}</div>
   </div>
 </template>
 <script setup>
@@ -11,6 +11,14 @@ const error = useError()
 const reflushHome = () => {
   window.location.href = '/'
 }
+// 判断是否是首页
+const isHome = computed(() => {
+  return useRoute().path === '/'
+})
+// 按钮文案
+const btnText = computed(() => {
+  return isHome.value ? '尝试刷新' : '返回首页'
+})
 </script>
 <style scoped>
 /* 报错页面式样，画面居中显示，code粉色 */
