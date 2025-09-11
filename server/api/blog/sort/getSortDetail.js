@@ -15,6 +15,17 @@ module.exports = async function (req, res, next) {
     })
     return
   }
+  // id不能超过64个字符
+  if (id.length > 64) {
+    res.status(400).json({
+      errors: [
+        {
+          message: '参数错误'
+        }
+      ]
+    })
+    return
+  }
   let list = []
   if (global.$cacheData?.sortList) {
     list = global.$cacheData.sortList

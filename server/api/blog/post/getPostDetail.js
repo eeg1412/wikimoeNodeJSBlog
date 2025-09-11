@@ -35,6 +35,17 @@ module.exports = async function (req, res, next) {
     params._id = id
   } else {
     // 根据alias查询
+    // alias不能超过64个字符
+    if (id.length > 64) {
+      res.status(400).json({
+        errors: [
+          {
+            message: '参数错误'
+          }
+        ]
+      })
+      return
+    }
     params.alias = id
   }
   // findOne

@@ -34,6 +34,17 @@ module.exports = async function (req, res, next) {
     return
   }
   if (alias) {
+    // alias如果存在，不能超过64个字符
+    if (alias.length > 64) {
+      res.status(400).json({
+        errors: [
+          {
+            message: '别名不能超过64个字符'
+          }
+        ]
+      })
+      return
+    }
     // 查询alias是否存在，查询条件时大小写不敏感的
     const query = {
       alias: {

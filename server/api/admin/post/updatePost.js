@@ -76,6 +76,17 @@ module.exports = async function (req, res, next) {
     })
     return
   }
+  // alias如果存在，不能超过64个字符
+  if (alias && alias.length > 64) {
+    res.status(400).json({
+      errors: [
+        {
+          message: '别名不能超过64个字符'
+        }
+      ]
+    })
+    return
+  }
   // 如果isAutoSave为true，status只能为0
   if (isAutoSave && status !== 0) {
     res.status(400).json({

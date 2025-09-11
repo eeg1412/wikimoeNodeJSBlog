@@ -20,6 +20,7 @@
         <el-form-item label="分类别名" prop="alias">
           <el-input
             v-model="form.alias"
+            maxlength="64"
             placeholder="请输入分类别名"
           ></el-input>
         </el-form-item>

@@ -435,6 +435,7 @@
         <el-form-item label="文章别名" prop="alias">
           <el-input
             v-model="form.alias"
+            maxlength="64"
             placeholder="请输入文章别名（用于别名访问）"
           ></el-input>
           <!-- 按时间随机别名 -->
