@@ -6,8 +6,8 @@ const mongoose = require('mongoose')
 
 module.exports = async function (req, res, next) {
   let { page, size, keyword, idList, shouldCount } = req.query
-  page = parseInt(page)
-  size = parseInt(size)
+  page = parseInt(page) || 1
+  size = parseInt(size) || 10
   // 判断page和size是否为数字
   if (!utils.isNumber(page) || !utils.isNumber(size)) {
     res.status(400).json({
