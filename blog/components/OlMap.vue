@@ -31,6 +31,8 @@ let map = null
 let overlay = null
 let markerSource = null
 let markerLayer = null
+let labelSource = null
+let labelLayer = null
 let worldSource = null
 let worldLayer = null
 
@@ -103,26 +105,35 @@ const loadOpenLayers = async () => {
   }
 }
 const maxTouchPoints = navigator?.maxTouchPoints || 0
-const setMarkerTextVisibility = classes => {
+
+// 创建文本样式的工厂函数（现在也包含一个 circle image，以便在 label style 中扩展点击区域）
+const createTextStyle = (classes, radius = 6) => {
   const olMapShowMappointText = options.value?.olMapShowMappointText
-  if (olMapShowMappointText) {
-    let offsetY = -16
-    if (maxTouchPoints > 0) {
-      // 触屏设备上增大偏移，避免遮挡点
-      offsetY = -17
-    }
-    return label =>
-      new classes.Text({
-        text: label || '',
-        declutterMode: 'declutter',
-        offsetY: offsetY,
-        fill: new classes.Fill({ color: '#000' }),
-        stroke: new classes.Stroke({ color: '#fff', width: 2 }),
-        font: '12px sans-serif'
-      })
-  } else {
-    return undefined
+  if (!olMapShowMappointText) return null
+
+  let offsetY = -16
+  if (maxTouchPoints > 0) {
+    // 触屏设备上增大偏移，避免遮挡点
+    offsetY = -17
   }
+
+  return new classes.Style({
+    image: new classes.Circle({
+      radius: radius,
+      declutterMode: 'declutter',
+      // 默认用黑色便于测试，后续可改为透明 'rgba(0,0,0,0)'
+      fill: new classes.Fill({ color: 'rgba(0,0,0,0)' }),
+      stroke: new classes.Stroke({ color: 'rgba(0,0,0,0)', width: 2 })
+    }),
+    text: new classes.Text({
+      text: '', // 文本内容将在创建 feature 时设置
+      declutterMode: 'declutter',
+      offsetY: offsetY,
+      fill: new classes.Fill({ color: '#000' }),
+      stroke: new classes.Stroke({ color: '#fff', width: 2 }),
+      font: '12px sans-serif'
+    })
+  })
 }
 
 // 样式配置工厂函数
@@ -141,7 +152,8 @@ const createStyles = classes => {
         stroke: new classes.Stroke({ color: '#fff', width: 2 })
       })
     }),
-    markerText: setMarkerTextVisibility(classes),
+    // 将 radius 传入 createTextStyle，以便 label style 中的 circle 与 marker 保持一致
+    label: createTextStyle(classes, radius),
     world: new classes.Style({
       fill: new classes.Fill({ color: '#ef8fa750' }),
       stroke: new classes.Stroke({ color: '#ef8fa750', width: 1 })
@@ -172,6 +184,13 @@ const initMap = async () => {
       declutter: true
     })
 
+    // 创建标签图层
+    labelSource = new olClasses.VectorSource({ wrapX: true })
+    labelLayer = new olClasses.VectorLayer({
+      source: labelSource,
+      declutter: true
+    })
+
     // 创建世界地图图层
     worldSource = new olClasses.VectorSource({ wrapX: true })
     worldLayer = new olClasses.VectorLayer({
@@ -198,7 +217,7 @@ const initMap = async () => {
       controls: olClasses
         .controlDefaults({ zoom: false })
         .extend([zoomControl]),
-      layers: [worldLayer, markerLayer],
+      layers: [worldLayer, markerLayer, labelLayer],
       view: new olClasses.View({
         center: olClasses.fromLonLat(CONFIG.INITIAL_CENTER),
         zoom: CONFIG.INITIAL_ZOOM,
@@ -274,11 +293,16 @@ const setupEventListeners = () => {
   // 单击事件
   map.on('click', evt => {
     const feature = map.forEachFeatureAtPixel(evt.pixel, f => f, {
-      layerFilter: layer => layer === markerLayer,
+      layerFilter: layer => {
+        console.log('layer:', layer)
+        // 响应标记点图层和标签图层的点击
+        return layer === markerLayer || layer === labelLayer
+      },
       hitTolerance: hitTolerance
     })
 
     if (feature) {
+      console.log('feature:', feature)
       const markerData = feature.get('markerData')
       console.log('Marker clicked:', markerData)
       // 向父组件发射点击事件
@@ -290,7 +314,7 @@ const setupEventListeners = () => {
   map.on('pointermove', evt => {
     if (evt.dragging) return
     const hit = map.hasFeatureAtPixel(evt.pixel, {
-      layerFilter: layer => layer === markerLayer
+      layerFilter: layer => layer === markerLayer || layer === labelLayer
     })
     map.getTargetElement().style.cursor = hit ? 'pointer' : ''
   })
@@ -298,34 +322,61 @@ const setupEventListeners = () => {
 
 // 添加单个标记点
 const addMarker = markerData => {
-  if (!markerSource || !olClasses) return
+  if (!markerSource || !labelSource || !olClasses) return
 
-  const feature = new olClasses.Feature({
-    geometry: new olClasses.Point(
-      olClasses.fromLonLat([markerData.longitude, markerData.latitude])
-    ),
-    label: markerData.title,
+  const position = olClasses.fromLonLat([
+    markerData.longitude,
+    markerData.latitude
+  ])
+  const markerZIndex = markerData.zIndex || 0
+
+  // 创建标记点 feature
+  const markerFeature = new olClasses.Feature({
+    geometry: new olClasses.Point(position),
     markerData: markerData
   })
-  // 给 feature 一次性设置 style，避免 layer 的 style 回调在每次渲染时创建新对象
+
+  // 设置标记点样式
   if (STYLES && STYLES.marker) {
-    const style = STYLES.marker.clone()
-    style.setZIndex(markerData.zIndex || 0)
-    if (STYLES.markerText) {
-      style.setText(STYLES.markerText(markerData.title))
-    }
-    feature.setStyle(style)
+    const markerStyle = STYLES.marker.clone()
+    markerStyle.setZIndex(markerZIndex)
+    markerFeature.setStyle(markerStyle)
   }
-  markerSource.addFeature(feature)
+  markerSource.addFeature(markerFeature)
+
+  // 创建标签 feature（如果启用了标签显示且有标题）
+  const olMapShowMappointText = options.value?.olMapShowMappointText
+  if (olMapShowMappointText && markerData.title && STYLES.label) {
+    const labelFeature = new olClasses.Feature({
+      geometry: new olClasses.Point(position),
+      markerData: markerData
+    })
+
+    // 设置标签样式
+    const labelStyle = STYLES.label.clone()
+    labelStyle.setZIndex(markerZIndex) // 标签 zIndex 与标记点相同
+    // 设置文本内容
+    const textStyle = labelStyle.getText()
+    if (textStyle) {
+      textStyle.setText(markerData.title)
+    }
+    labelFeature.setStyle(labelStyle)
+    labelSource.addFeature(labelFeature)
+    console.log('markerZIndex', markerZIndex)
+
+    // label style 已包含 image circle（由 createTextStyle 提供），不再需要单独创建 invisible feature
+  }
 }
 
 // 添加所有标记点到地图
 const addMarkersToMap = () => {
-  if (!markerSource) return
+  if (!markerSource || !labelSource) return
 
-  // 清除现有标记点并添加新的标记点
+  // 清除现有标记点和标签并添加新的
   // 对大量点可以改为 diff 增量，这里先保持简单：一次 clear + add
   markerSource.clear()
+  labelSource.clear()
+
   props.markers.forEach((marker, index) => {
     const markerZIndex = marker.zIndex
     if (!markerZIndex) {
@@ -337,18 +388,18 @@ const addMarkersToMap = () => {
 }
 
 // 监听标记点数据变化
-watch(
-  () => props.markers,
-  () => {
-    if (mapIsReady.value === false) return
-    // 防抖：避免父组件短时间内多次修改导致连续重建
-    if (markersUpdateTimer) clearTimeout(markersUpdateTimer)
-    markersUpdateTimer = setTimeout(() => {
-      if (map && markerSource) addMarkersToMap()
-    }, 60)
-  },
-  { deep: true }
-)
+// watch(
+//   () => props.markers,
+//   () => {
+//     if (mapIsReady.value === false) return
+//     // 防抖：避免父组件短时间内多次修改导致连续重建
+//     if (markersUpdateTimer) clearTimeout(markersUpdateTimer)
+//     markersUpdateTimer = setTimeout(() => {
+//       if (map && markerSource && labelSource) addMarkersToMap()
+//     }, 60)
+//   },
+//   { deep: true }
+// )
 
 // 组件挂载
 onMounted(async () => {
@@ -368,6 +419,8 @@ onUnmounted(() => {
   overlay = null
   markerSource = null
   markerLayer = null
+  labelSource = null
+  labelLayer = null
   worldSource = null
   worldLayer = null
   olClasses = null

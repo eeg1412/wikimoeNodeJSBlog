@@ -1,13 +1,12 @@
 <template>
   <div>
     <div class="page-olmap-body">
-      <DivLoading :loading="mappointLoading || !mapIsReady" text="加载中..." />
+      <DivLoading :loading="mappointLoading" text="加载中..." />
       <div class="page-olmap-container">
         <OlMap
           :markers="mappointList"
-          v-show="mappointList.length > 0"
+          v-if="mappointList.length > 0"
           @markerClick="tryOpenMappoint"
-          @mapReady="mapIsReady = true"
         />
         <div
           class="page-olmap-empty text-primary-500"
@@ -140,7 +139,7 @@ const toast = useToast()
 
 const mappointList = ref([])
 const mappointLoading = ref(true)
-const mapIsReady = ref(false)
+// const mapIsReady = ref(false)
 
 const getList = async () => {
   mappointLoading.value = true
@@ -265,6 +264,14 @@ const getPostList = async (page = null) => {
   }
 }
 
+// watch mappointList
+// watch(
+//   () => mappointList.value,
+//   (newList, oldList) => {
+//     console.log('mappointList changed:', newList)
+//   }
+// )
+
 // 移除旧的翻页方法，改用watch监听postPage变化
 
 // watch route
@@ -353,7 +360,7 @@ onUnmounted(() => {})
 }
 
 .page-olmap-empty {
-  height: 500px;
+  height: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
