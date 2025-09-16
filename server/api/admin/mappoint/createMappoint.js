@@ -43,7 +43,7 @@ module.exports = async function (req, res, next) {
       key: 'zIndex',
       label: '层叠顺序',
       type: 'isInt',
-      options: { min: 0 },
+      options: { min: 0, max: 99999999 },
       required: true
     },
     {

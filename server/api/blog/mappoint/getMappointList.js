@@ -9,9 +9,9 @@ module.exports = async function (req, res, next) {
     status: 1
   }
 
-  // 排序：按更新时间倒序
+  // 排序：按创建时间降序
   const sort = {
-    updatedAt: -1,
+    createdAt: -1,
     _id: -1
   }
 

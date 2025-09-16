@@ -280,7 +280,7 @@ const setupEventListeners = () => {
 
     if (feature) {
       const markerData = feature.get('markerData')
-
+      console.log('Marker clicked:', markerData)
       // 向父组件发射点击事件
       emit('markerClick', markerData)
     }
@@ -326,7 +326,14 @@ const addMarkersToMap = () => {
   // 清除现有标记点并添加新的标记点
   // 对大量点可以改为 diff 增量，这里先保持简单：一次 clear + add
   markerSource.clear()
-  props.markers.forEach(marker => addMarker(marker))
+  props.markers.forEach((marker, index) => {
+    const markerZIndex = marker.zIndex
+    if (!markerZIndex) {
+      // 如果没有设置 zIndex，则按顺序设置，保证后添加的点在上层
+      marker.zIndex = 0 - index
+    }
+    addMarker(marker)
+  })
 }
 
 // 监听标记点数据变化
