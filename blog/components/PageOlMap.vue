@@ -1,12 +1,13 @@
 <template>
   <div>
     <div class="page-olmap-body">
-      <DivLoading :loading="mappointLoading" text="加载中..." />
+      <DivLoading :loading="mappointLoading || !mapIsReady" text="加载中..." />
       <div class="page-olmap-container">
         <OlMap
           :markers="mappointList"
           v-if="mappointList.length > 0"
           @markerClick="tryOpenMappoint"
+          @mapReady="mapIsReady = true"
         />
         <div
           class="page-olmap-empty text-primary-500"
@@ -139,7 +140,7 @@ const toast = useToast()
 
 const mappointList = ref([])
 const mappointLoading = ref(true)
-// const mapIsReady = ref(false)
+const mapIsReady = ref(false)
 
 const getList = async () => {
   mappointLoading.value = true
@@ -152,6 +153,10 @@ const getList = async () => {
     })
   mappointList.value = res?.list || []
   mappointLoading.value = false
+  if (mappointList.value.length <= 0) {
+    // 没有数据,不显示地图,所以不会触发mapReady事件，手动设置mapIsReady为true
+    mapIsReady.value = true
+  }
 }
 
 const mappointOpen = ref(false)
