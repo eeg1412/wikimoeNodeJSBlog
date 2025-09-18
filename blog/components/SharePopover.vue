@@ -7,10 +7,7 @@
   >
     <slot></slot>
     <template #panel="{ close }">
-      <div
-        class="p-4 share-popover-panel cursor-default text-gray-600"
-        @click.stop
-      >
+      <div class="p-4 share-popover-panel cursor-default" @click.stop>
         <div class="flex justify-between items-center mb-3">
           <div class="share-popover-title text-base font-bold">分享至</div>
           <!-- 关闭 -->
