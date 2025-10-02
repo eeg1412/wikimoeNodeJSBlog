@@ -317,17 +317,32 @@
                 <template #title>引用日志</template>
               </el-menu-item>
             </el-sub-menu>
-            <!-- UserList 管理员 -->
-            <el-menu-item
-              v-if="adminInfo?.role === 999"
-              index="UserList"
-              @click="removeParam('UserList')"
-              @click.middle="openNewTab('UserList')"
-              :route="{ name: 'UserList' }"
-            >
-              <i class="fas fa-fw fa-user pr10"></i>
-              <template #title>管理员</template>
-            </el-menu-item>
+            <el-sub-menu index="user" v-if="adminInfo?.role === 999">
+              <template #title>
+                <!-- 日志图标 -->
+                <i class="fas fa-fw fa-user pr10"></i>管理员
+              </template>
+              <!-- UserList 管理员 -->
+              <el-menu-item
+                index="UserList"
+                @click="removeParam('UserList')"
+                @click.middle="openNewTab('UserList')"
+                :route="{ name: 'UserList' }"
+              >
+                <i class="fas fa-fw fa-user pr10"></i>
+                <template #title>管理员列表</template>
+              </el-menu-item>
+              <!-- 管理员登录日志 UserLoginLogList -->
+              <el-menu-item
+                index="UserLoginLogList"
+                @click="removeParam('UserLoginLogList')"
+                @click.middle="openNewTab('UserLoginLogList')"
+                :route="{ name: 'UserLoginLogList' }"
+              >
+                <i class="fas fa-fw fa-sign-in-alt pr10"></i>
+                <template #title>管理员登录日志</template>
+              </el-menu-item>
+            </el-sub-menu>
             <!-- BackupList 备份 -->
             <el-menu-item
               index="BackupList"

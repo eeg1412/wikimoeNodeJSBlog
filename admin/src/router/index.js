@@ -285,6 +285,15 @@ const routes = [
             /* webpackChunkName: "ReaderlogList" */ '../views/index/readerlog/ReaderlogList.vue'
           )
       },
+      // UserLoginLogList
+      {
+        path: '/userloginlog/list',
+        name: 'UserLoginLogList',
+        component: () =>
+          import(
+            /* webpackChunkName: "UserLoginLogList" */ '../views/index/userloginlog/UserLoginLogList.vue'
+          )
+      },
       // PostLikeLogList
       {
         path: '/postlikelog/list',

@@ -169,7 +169,11 @@ const initGlobalConfig = async () => {
     // 排名统计来源忽略域名
     siteRankIgnoreReferrerDomainList: [],
     // 爬虫增加文章查看数
-    siteSpiderPostVisitEnabled: true
+    siteSpiderPostVisitEnabled: true,
+    // 管理员尝试登录的单位时间（分钟）
+    siteAdminLoginAttemptTime: 5,
+    // 管理员尝试登录的最大次数
+    siteAdminLoginMaxAttempts: 3
   }
   // 文章页设置
   const sitePostSettingsConfig = {

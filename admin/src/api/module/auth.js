@@ -477,6 +477,20 @@ export default function (api) {
         shouldAdminJWT: true
       })
     },
+    // get /userloginlog/list
+    getUserLoginLogList(data) {
+      return api.get('/userloginlog/list', {
+        params: data,
+        shouldAdminJWT: true
+      })
+    },
+    // delete /userloginlog/delete
+    deleteUserLoginLog(data) {
+      return api.delete('/userloginlog/delete', {
+        params: data,
+        shouldAdminJWT: true
+      })
+    },
     // get '/postlikelog/list'
     getPostLikeLogList(data) {
       return api.get('/postlikelog/list', {

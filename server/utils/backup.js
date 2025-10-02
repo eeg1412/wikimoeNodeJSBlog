@@ -37,6 +37,7 @@ const sidebarsUtil = require('../mongodb/utils/sidebars')
 const sortsUtil = require('../mongodb/utils/sorts')
 const tagsUtil = require('../mongodb/utils/tags')
 const usersUtil = require('../mongodb/utils/users')
+const userLoginLogsUtil = require('../mongodb/utils/userLoginLogs')
 const votesUtil = require('../mongodb/utils/votes')
 const votelogsUtil = require('../mongodb/utils/votelogs')
 const mappointsUtil = require('../mongodb/utils/mappoints')
@@ -70,6 +71,7 @@ const modelUtilMap = {
   sorts: sortsUtil,
   tags: tagsUtil,
   users: usersUtil,
+  userloginlogs: userLoginLogsUtil,
   votes: votesUtil,
   votelogs: votelogsUtil,
   mappoints: mappointsUtil

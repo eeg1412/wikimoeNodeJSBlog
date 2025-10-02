@@ -54,6 +54,34 @@
       <div class="w_10">※开启后，爬虫访问文章时也会增加文章查看数</div>
     </el-form-item>
 
+    <!-- 管理员尝试登录尝试限制 -->
+    <el-form-item label="管理员尝试登录限制">
+      每　
+      <el-input-number
+        v-model.number="otherSettingsForm.siteAdminLoginAttemptTime"
+        type="number"
+        placeholder="单位时间（分钟）"
+        style="width: 150px"
+        min="1"
+        max="60"
+      >
+      </el-input-number>
+      　分钟内，允许尝试登录　
+      <el-input-number
+        v-model.number="otherSettingsForm.siteAdminLoginMaxAttempts"
+        type="number"
+        placeholder="最大尝试次数"
+        style="width: 150px"
+        min="1"
+        max="9999"
+      >
+      </el-input-number
+      >　次
+      <div class="w_10">
+        ※在单位时间内，管理员登录失败超过最大尝试次数后，将禁止登录，直到单位时间结束
+      </div>
+    </el-form-item>
+
     <el-form-item label="刷新密钥" v-if="adminInfo.role === 999">
       <el-button type="danger" @click="handleFlushSecret"
         >刷新管理端密钥</el-button
@@ -94,7 +122,11 @@ export default {
       // 排名统计来源忽略域名
       siteRankIgnoreReferrerDomainList: '',
       // 是否统计爬虫的文章查看数
-      siteSpiderPostVisitEnabled: true
+      siteSpiderPostVisitEnabled: true,
+      // 管理员尝试登录的单位时间（分钟）
+      siteAdminLoginAttemptTime: 5,
+      // 管理员尝试登录的最大次数
+      siteAdminLoginMaxAttempts: 3
     })
     const otherSettingsRules = {}
     const otherSettingsSubmit = () => {

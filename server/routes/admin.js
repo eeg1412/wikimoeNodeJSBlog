@@ -762,6 +762,24 @@ const adminRouteSetting = [
     roleType: null,
     role: null
   },
+  // getUserLoginLogList
+  {
+    path: '/userloginlog/list',
+    method: 'get',
+    middleware: [checkAuth],
+    controller: require('../api/admin/userloginlog/getUserLoginLogList'),
+    roleType: 'eq',
+    role: 999
+  },
+  // deleteUserLoginLog
+  {
+    path: '/userloginlog/delete',
+    method: 'delete',
+    middleware: [checkAuth],
+    controller: require('../api/admin/userloginlog/deleteUserLoginLog'),
+    roleType: 'eq',
+    role: 999
+  },
   // getPostLikeLogList
   {
     path: '/postlikelog/list',
