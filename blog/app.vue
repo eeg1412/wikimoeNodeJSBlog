@@ -122,7 +122,9 @@ useHead({
     {
       name: 'twitter:image',
       content: options.value.siteUrl + options.value.siteDefaultCover
-    }
+    },
+    // robots meta，允许大图预览
+    { name: 'robots', content: 'max-image-preview:large' }
   ],
   link: [
     {
