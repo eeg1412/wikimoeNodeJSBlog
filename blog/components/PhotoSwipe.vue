@@ -215,12 +215,31 @@
         width="23"
         height="23"
         viewBox="0 0 640 640"
+        v-show="!VRLoading"
       >
         <path
           fill="currentColor"
           d="M544 160L96 160C60.7 160 32 188.7 32 224L32 416C32 451.3 60.7 480 96 480L213.5 480C230.5 480 246.8 473.3 258.8 461.3L292.7 427.4C299.9 420.2 309.8 416.1 320 416.1C330.2 416.1 340.1 420.2 347.3 427.4L381.2 461.3C393.2 473.3 409.5 480 426.5 480L544 480C579.3 480 608 451.3 608 416L608 224C608 188.7 579.3 160 544 160zM112 304C112 268.7 140.7 240 176 240C211.3 240 240 268.7 240 304C240 339.3 211.3 368 176 368C140.7 368 112 339.3 112 304zM464 240C499.3 240 528 268.7 528 304C528 339.3 499.3 368 464 368C428.7 368 400 339.3 400 304C400 268.7 428.7 240 464 240z"
         />
       </svg>
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        width="23"
+        height="23"
+        viewBox="0 0 640 640"
+        v-show="VRLoading"
+        class="animate-spin"
+      >
+        <path
+          fill="currentColor"
+          d="M272 112C272 85.5 293.5 64 320 64C346.5 64 368 85.5 368 112C368 138.5 346.5 160 320 160C293.5 160 272 138.5 272 112zM272 528C272 501.5 293.5 480 320 480C346.5 480 368 501.5 368 528C368 554.5 346.5 576 320 576C293.5 576 272 554.5 272 528zM112 272C138.5 272 160 293.5 160 320C160 346.5 138.5 368 112 368C85.5 368 64 346.5 64 320C64 293.5 85.5 272 112 272zM480 320C480 293.5 501.5 272 528 272C554.5 272 576 293.5 576 320C576 346.5 554.5 368 528 368C501.5 368 480 346.5 480 320zM139 433.1C157.8 414.3 188.1 414.3 206.9 433.1C225.7 451.9 225.7 482.2 206.9 501C188.1 519.8 157.8 519.8 139 501C120.2 482.2 120.2 451.9 139 433.1zM139 139C157.8 120.2 188.1 120.2 206.9 139C225.7 157.8 225.7 188.1 206.9 206.9C188.1 225.7 157.8 225.7 139 206.9C120.2 188.1 120.2 157.8 139 139zM501 433.1C519.8 451.9 519.8 482.2 501 501C482.2 519.8 451.9 519.8 433.1 501C414.3 482.2 414.3 451.9 433.1 433.1C451.9 414.3 482.2 414.3 501 433.1z"
+        />
+      </svg>
+      <!-- <UIcon
+        class="animate-spin"
+        name="i-heroicons-arrow-path"
+        v-show="VRLoading"
+      /> -->
     </div>
   </Teleport>
 
@@ -245,6 +264,7 @@ const loadViewer = async () => {
 
 let VRViewer = null
 let VREquirectangularViewerModule = null
+const VRLoading = ref(false)
 const loadVREquirectangularViewer = async () => {
   if (!VREquirectangularViewerModule) {
     const module = await import('/utils/vr.js')
@@ -254,6 +274,13 @@ const loadVREquirectangularViewer = async () => {
 }
 
 const enterVR = async () => {
+  if (VRLoading.value) {
+    return
+  }
+  if (VRViewer) {
+    VRViewer.exitVR()
+  }
+  VRLoading.value = true
   const currIndex = lightbox.pswp.currIndex
 
   const VREquirectangularViewerModule = await loadVREquirectangularViewer()
@@ -264,15 +291,18 @@ const enterVR = async () => {
 
     onError: error => {
       console.error('VR错误:', error)
+      VRLoading.value = false
     },
 
     onVRStart: () => {
       console.log('VR模式已激活')
+      VRLoading.value = false
     },
 
     onVREnd: () => {
       console.log('✅ 已退出VR，资源已自动释放')
       VRViewer = null
+      VRLoading.value = false
     }
   })
 

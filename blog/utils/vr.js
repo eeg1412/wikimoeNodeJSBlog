@@ -41,6 +41,11 @@ class VREquirectangularViewer {
     // WebGL和WebXR（懒加载，进入VR时才初始化）
     this.gl = null
     this.canvas = null
+    this.canvasId =
+      'vr-equirectangular-' +
+      Date.now() +
+      '-' +
+      Math.random().toString(36).slice(2, 11)
     this.xrSession = null
     this.xrRefSpace = null
 
@@ -77,8 +82,9 @@ class VREquirectangularViewer {
   _initWebGL() {
     if (this.gl) return true
 
-    // 创建隐藏的canvas
+    // 创建隐藏的canvas并设置唯一ID
     this.canvas = document.createElement('canvas')
+    this.canvas.id = this.canvasId
     this.canvas.style.display = 'none'
     document.body.appendChild(this.canvas)
 
@@ -231,7 +237,8 @@ class VREquirectangularViewer {
         const y = cosTheta
         const z = sinPhi * sinTheta
 
-        const u = 1 - lon / lonBands
+        // 修复镜像:反转纹理U坐标
+        const u = lon / lonBands
         const v = lat / latBands
 
         positions.push(radius * x, radius * y, radius * z)
@@ -244,8 +251,9 @@ class VREquirectangularViewer {
         const first = lat * (lonBands + 1) + lon
         const second = first + lonBands + 1
 
-        indices.push(first, first + 1, second)
-        indices.push(second, first + 1, second + 1)
+        // 反转三角形缠绕顺序以从内部观看
+        indices.push(first, second, first + 1)
+        indices.push(second, second + 1, first + 1)
       }
     }
 
@@ -572,6 +580,14 @@ class VREquirectangularViewer {
     if (this.gl) {
       const gl = this.gl
 
+      // 解绑所有资源
+      gl.bindFramebuffer(gl.FRAMEBUFFER, null)
+      gl.bindBuffer(gl.ARRAY_BUFFER, null)
+      gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, null)
+      gl.bindTexture(gl.TEXTURE_2D, null)
+      gl.useProgram(null)
+
+      // 删除资源
       if (this.texture) {
         gl.deleteTexture(this.texture)
         this.texture = null
@@ -588,17 +604,35 @@ class VREquirectangularViewer {
         gl.deleteProgram(this.shaderProgram)
         this.shaderProgram = null
       }
-
-      // 丢失上下文以释放GPU内存
-      const loseContext = gl.getExtension('WEBGL_lose_context')
-      if (loseContext) {
-        loseContext.loseContext()
-      }
     }
 
-    // 移除canvas
-    if (this.canvas && this.canvas.parentNode) {
-      this.canvas.parentNode.removeChild(this.canvas)
+    // 监听上下文丢失事件,在回调中移除canvas
+    if (this.canvas) {
+      const canvasId = this.canvasId
+      const canvas = this.canvas
+
+      const handleContextLost = event => {
+        event.preventDefault()
+
+        // 上下文已丢失,现在可以安全移除canvas
+        const canvasElement = document.getElementById(canvasId)
+        if (canvasElement && canvasElement.parentNode) {
+          canvasElement.parentNode.removeChild(canvasElement)
+        }
+
+        // 清理事件监听器
+        canvas.removeEventListener('webglcontextlost', handleContextLost)
+      }
+
+      this.canvas.addEventListener('webglcontextlost', handleContextLost)
+
+      // 触发上下文丢失
+      if (this.gl) {
+        const loseContext = this.gl.getExtension('WEBGL_lose_context')
+        if (loseContext) {
+          loseContext.loseContext()
+        }
+      }
     }
 
     // 重置所有状态
