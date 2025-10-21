@@ -244,20 +244,21 @@ const loadViewer = async () => {
 }
 
 let VRViewer = null
+let VREquirectangularViewerModule = null
 const loadVREquirectangularViewer = async () => {
-  if (!VRViewer) {
+  if (!VREquirectangularViewerModule) {
     const module = await import('/utils/vr.js')
-    VRViewer = module.default || module
+    VREquirectangularViewerModule = module.default || module
   }
-  return VRViewer
+  return VREquirectangularViewerModule
 }
 
 const enterVR = async () => {
   const currIndex = lightbox.pswp.currIndex
 
-  const VRViewerModule = await loadVREquirectangularViewer()
+  const VREquirectangularViewerModule = await loadVREquirectangularViewer()
 
-  const viewer = new VRViewerModule({
+  VRViewer = new VREquirectangularViewerModule({
     imageUrl: attachmentList.value[currIndex].filepath,
     maxTextureSize: 4096,
 
@@ -271,10 +272,11 @@ const enterVR = async () => {
 
     onVREnd: () => {
       console.log('✅ 已退出VR，资源已自动释放')
+      VRViewer = null
     }
   })
 
-  viewer.enterVR()
+  VRViewer.enterVR()
 }
 
 const isVRSupported = ref(false)
@@ -686,6 +688,10 @@ const initLightbox = async () => {
   lightbox.init()
   // window.lightbox = lightbox
   lightbox.on('close', () => {
+    if (VRViewer) {
+      VRViewer.exitVR()
+      VRViewer = null
+    }
     clearPanoramaListMap()
     photoswipeInitialLayoutPromiseResolve = null
     photoswipeInitialLayoutPromise = null
