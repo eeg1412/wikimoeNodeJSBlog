@@ -204,6 +204,26 @@
     </div>
   </Teleport>
 
+  <!-- VR全景按钮 -->
+  <Teleport
+    :to="`#photo-swipe-vr-${componentId}`"
+    v-if="showUI && is360PanoramaActive && isVRSupported"
+  >
+    <div class="photo-swipe-photo-swipe-btn" title="VR模式" @click="enterVR">
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        width="23"
+        height="23"
+        viewBox="0 0 640 640"
+      >
+        <path
+          fill="currentColor"
+          d="M544 160L96 160C60.7 160 32 188.7 32 224L32 416C32 451.3 60.7 480 96 480L213.5 480C230.5 480 246.8 473.3 258.8 461.3L292.7 427.4C299.9 420.2 309.8 416.1 320 416.1C330.2 416.1 340.1 420.2 347.3 427.4L381.2 461.3C393.2 473.3 409.5 480 426.5 480L544 480C579.3 480 608 451.3 608 416L608 224C608 188.7 579.3 160 544 160zM112 304C112 268.7 140.7 240 176 240C211.3 240 240 268.7 240 304C240 339.3 211.3 368 176 368C140.7 368 112 339.3 112 304zM464 240C499.3 240 528 268.7 528 304C528 339.3 499.3 368 464 368C428.7 368 400 339.3 400 304C400 268.7 428.7 240 464 240z"
+        />
+      </svg>
+    </div>
+  </Teleport>
+
   <!-- <Teleport :to="`#photo-swipe-loading-${componentId}`" v-if="showUI">
       <div>
         <DivLoading class="photo-swipe-load-body" :loading="loading" />
@@ -221,6 +241,42 @@ const loadViewer = async () => {
     Viewer = module.Viewer
   }
   return Viewer
+}
+
+let VRViewer = null
+const loadVREquirectangularViewer = async () => {
+  if (!VRViewer) {
+    const module = await import('vr-equirectangular-viewer')
+    VRViewer = module.default
+  }
+  return VRViewer
+}
+
+const enterVR = async () => {
+  const currIndex = lightbox.pswp.currIndex
+
+  const VRViewerModule = await loadVREquirectangularViewer()
+
+  const viewer = new VRViewerModule({
+    imageUrl: attachmentList.value[currIndex].filepath
+  })
+
+  viewer.enterVR()
+}
+
+const isVRSupported = ref(false)
+const isVRSupportedCheck = async () => {
+  if (!navigator.xr) {
+    isVRSupported.value = false
+  }
+
+  try {
+    const isSupported = await navigator.xr.isSessionSupported('immersive-vr')
+    isVRSupported.value = isSupported
+  } catch (e) {
+    console.error('Error checking VR support:', e)
+    isVRSupported.value = false
+  }
 }
 
 const panoramaListMap = {}
@@ -752,6 +808,7 @@ const initLightbox = async () => {
     // if you need to read getBoundingClientRect of something - do it here
     showUI.value = true
     check360Btn()
+    isVRSupportedCheck()
     photoswipeInitialLayoutPromiseResolve()
     console.log(lightbox.pswp.on)
   })
@@ -766,6 +823,14 @@ const initLightbox = async () => {
       onInit: (el, pswp) => {
         console.log(el)
       }
+    })
+    // 注册VR按钮
+    lightbox.pswp.ui.registerElement({
+      name: `photo-swipe-vr-button-${componentId}`,
+      title: 'VR模式',
+      order: 9,
+      isButton: true,
+      html: `<div id="photo-swipe-vr-${componentId}"></div>`
     })
     // 注册360度全景截图按钮
     lightbox.pswp.ui.registerElement({
@@ -784,6 +849,8 @@ const initLightbox = async () => {
       isButton: true,
       html: `<div id="photo-swipe-fisheye-${componentId}"></div>`
     })
+
+    // 注册描述开关按钮
     lightbox.pswp.ui.registerElement({
       name: `photo-swipe-caption-button-${componentId}`,
       title: '描述开关',

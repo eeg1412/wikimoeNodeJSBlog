@@ -24,7 +24,8 @@
     "nuxt-swiper": "^1.2.2",
     "ol": "^10.6.1",
     "photoswipe": "^5.4.4",
-    "qrcode": "^1.5.4"
+    "qrcode": "^1.5.4",
+    "vr-equirectangular-viewer": "^1.0.0"
   },
   "version": "0.33.0"
 }
