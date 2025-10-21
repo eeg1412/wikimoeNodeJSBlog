@@ -258,10 +258,25 @@ const enterVR = async () => {
   const VRViewerModule = await loadVREquirectangularViewer()
 
   const viewer = new VRViewerModule({
-    imageUrl: attachmentList.value[currIndex].filepath
+    imageUrl: attachmentList.value[currIndex].filepath,
+    maxTextureSize: 4096,
+
+    onError: error => {
+      console.error('VR错误:', error)
+    },
+
+    onVRStart: () => {
+      console.log('VR模式已激活')
+    },
+
+    onVREnd: () => {
+      console.log('✅ 已退出VR，资源已自动释放')
+    }
   })
 
-  viewer.enterVR()
+  setTimeout(() => {
+    viewer.enterVR()
+  }, 1000)
 }
 
 const isVRSupported = ref(false)
