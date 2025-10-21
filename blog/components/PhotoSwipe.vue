@@ -246,8 +246,8 @@ const loadViewer = async () => {
 let VRViewer = null
 const loadVREquirectangularViewer = async () => {
   if (!VRViewer) {
-    const module = await import('vr-equirectangular-viewer')
-    VRViewer = module.default
+    const module = await import('/utils/vr.js')
+    VRViewer = module.default || module
   }
   return VRViewer
 }
@@ -274,9 +274,7 @@ const enterVR = async () => {
     }
   })
 
-  setTimeout(() => {
-    viewer.enterVR()
-  }, 1000)
+  viewer.enterVR()
 }
 
 const isVRSupported = ref(false)
