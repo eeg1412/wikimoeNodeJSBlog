@@ -267,7 +267,7 @@ let VREquirectangularViewerModule = null
 const VRLoading = ref(false)
 const loadVREquirectangularViewer = async () => {
   if (!VREquirectangularViewerModule) {
-    const module = await import('/utils/vr.js')
+    const module = await import('vr-equirectangular-viewer')
     VREquirectangularViewerModule = module.default || module
   }
   return VREquirectangularViewerModule
@@ -287,7 +287,6 @@ const enterVR = async () => {
 
     VRViewer = new VREquirectangularViewerModule({
       imageUrl: attachmentList.value[currIndex].filepath,
-      maxTextureSize: 4096,
 
       onError: error => {
         VRLoading.value = false
