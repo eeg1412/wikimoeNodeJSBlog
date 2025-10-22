@@ -287,6 +287,7 @@ const enterVR = async () => {
 
     VRViewer = new VREquirectangularViewerModule({
       imageUrl: attachmentList.value[currIndex].filepath,
+      sphereRadius: 50,
 
       onError: error => {
         VRLoading.value = false
