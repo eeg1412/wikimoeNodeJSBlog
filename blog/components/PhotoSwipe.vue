@@ -282,31 +282,46 @@ const enterVR = async () => {
   }
   VRLoading.value = true
   const currIndex = lightbox.pswp.currIndex
+  try {
+    const VREquirectangularViewerModule = await loadVREquirectangularViewer()
 
-  const VREquirectangularViewerModule = await loadVREquirectangularViewer()
+    VRViewer = new VREquirectangularViewerModule({
+      imageUrl: attachmentList.value[currIndex].filepath,
+      maxTextureSize: 4096,
 
-  VRViewer = new VREquirectangularViewerModule({
-    imageUrl: attachmentList.value[currIndex].filepath,
-    maxTextureSize: 4096,
+      onError: error => {
+        VRLoading.value = false
+        toast.add({
+          title: '进入VR模式失败，请检查权限或设备支持情况',
+          icon: 'i-heroicons-x-circle',
+          color: 'red'
+        })
+        console.error('VR错误:', error)
+      },
 
-    onError: error => {
-      console.error('VR错误:', error)
-      VRLoading.value = false
-    },
+      onVRStart: () => {
+        console.log('VR模式已激活')
+        VRLoading.value = false
+      },
 
-    onVRStart: () => {
-      console.log('VR模式已激活')
-      VRLoading.value = false
-    },
+      onVREnd: () => {
+        console.log('✅ 已退出VR，资源已自动释放')
+        VRViewer = null
+        VRLoading.value = false
+      }
+    })
 
-    onVREnd: () => {
-      console.log('✅ 已退出VR，资源已自动释放')
-      VRViewer = null
-      VRLoading.value = false
-    }
-  })
-
-  VRViewer.enterVR()
+    VRViewer.enterVR()
+  } catch (error) {
+    VRLoading.value = false
+    toast.add({
+      title: '进入VR模式失败，请检查权限或设备支持情况',
+      icon: 'i-heroicons-x-circle',
+      color: 'red'
+    })
+    console.error('VR错误:', error)
+    return
+  }
 }
 
 const isVRSupported = ref(false)
