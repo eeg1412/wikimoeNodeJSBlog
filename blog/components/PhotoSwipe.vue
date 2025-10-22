@@ -315,7 +315,7 @@ const enterVR = async () => {
   } catch (error) {
     VRLoading.value = false
     toast.add({
-      title: '进入VR模式失败，请检查权限或设备支持情况',
+      title: '初始化VR模式失败，请检查权限或设备支持情况',
       icon: 'i-heroicons-x-circle',
       color: 'red'
     })
