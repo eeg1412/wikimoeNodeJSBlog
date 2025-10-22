@@ -326,16 +326,34 @@ const enterVR = async () => {
 
 const isVRSupported = ref(false)
 const isVRSupportedCheck = async () => {
+  const btnVRModeEl = document.querySelector(
+    `.pswp__button--photo-swipe-vr-button-${componentId}`
+  )
   if (!navigator.xr) {
     isVRSupported.value = false
+    if (btnVRModeEl) {
+      btnVRModeEl.style.display = 'none'
+    }
   }
 
   try {
     const isSupported = await navigator.xr.isSessionSupported('immersive-vr')
     isVRSupported.value = isSupported
+    if (!isSupported) {
+      if (btnVRModeEl) {
+        btnVRModeEl.style.display = 'none'
+      }
+    } else {
+      if (btnVRModeEl) {
+        btnVRModeEl.style.display = 'block'
+      }
+    }
   } catch (e) {
     console.error('Error checking VR support:', e)
     isVRSupported.value = false
+    if (btnVRModeEl) {
+      btnVRModeEl.style.display = 'none'
+    }
   }
 }
 
@@ -390,6 +408,9 @@ const check360Btn = () => {
   const btnScreenshotEl = document.querySelector(
     `.pswp__button--photo-swipe-screenshot-button-${componentId}`
   )
+  const btnVRModeEl = document.querySelector(
+    `.pswp__button--photo-swipe-vr-button-${componentId}`
+  )
   if (is360PanoramaActive.value) {
     if (btnFishEyeEl) {
       btnFishEyeEl.style.display = 'block'
@@ -397,12 +418,19 @@ const check360Btn = () => {
     if (btnScreenshotEl) {
       btnScreenshotEl.style.display = 'block'
     }
+    // if (btnVRModeEl) {
+    //   btnVRModeEl.style.display = 'block'
+    // }
+    isVRSupportedCheck()
   } else {
     if (btnFishEyeEl) {
       btnFishEyeEl.style.display = 'none'
     }
     if (btnScreenshotEl) {
       btnScreenshotEl.style.display = 'none'
+    }
+    if (btnVRModeEl) {
+      btnVRModeEl.style.display = 'none'
     }
   }
 }
@@ -872,7 +900,6 @@ const initLightbox = async () => {
     // if you need to read getBoundingClientRect of something - do it here
     showUI.value = true
     check360Btn()
-    isVRSupportedCheck()
     photoswipeInitialLayoutPromiseResolve()
     console.log(lightbox.pswp.on)
   })
