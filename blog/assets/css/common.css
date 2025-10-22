@@ -972,6 +972,9 @@ ins.adsbygoogle[data-ad-status='unfilled'] {
 .pswp:not(.pswp--ui-visible) .pswp__button {
   opacity: 0 !important;
 }
+.pswp {
+  z-index: 50 !important;
+}
 .content-h-131 {
   height: 131px;
 }
