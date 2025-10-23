@@ -277,10 +277,10 @@ const enterVR = async () => {
   if (VRLoading.value) {
     return
   }
+  VRLoading.value = true
   if (VRViewer) {
     VRViewer.exitVR()
   }
-  VRLoading.value = true
   const currIndex = lightbox.pswp.currIndex
   try {
     const VREquirectangularViewerModule = await loadVREquirectangularViewer()
@@ -760,10 +760,10 @@ const initLightbox = async () => {
   lightbox.init()
   // window.lightbox = lightbox
   lightbox.on('close', () => {
-    if (VRViewer) {
-      VRViewer.exitVR()
-      VRViewer = null
-    }
+    // if (VRViewer) {
+    //   VRViewer.exitVR()
+    //   VRViewer = null
+    // }
     clearPanoramaListMap()
     photoswipeInitialLayoutPromiseResolve = null
     photoswipeInitialLayoutPromise = null
