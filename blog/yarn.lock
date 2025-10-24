@@ -5895,10 +5895,10 @@ vite@^5.0.0, vite@^5.4.11:
   optionalDependencies:
     fsevents "~2.3.3"
 
-vr-equirectangular-viewer@^1.0.7:
-  version "1.0.7"
-  resolved "https://registry.yarnpkg.com/vr-equirectangular-viewer/-/vr-equirectangular-viewer-1.0.7.tgz#d05ad0917f450edd152512d833df9200250b794d"
-  integrity sha512-4k9FJrdAqnRqS8nzkhFIaUk3BDkkeONuEeuxP095FGt5q1MBHPYNdI8CYBWofhtxI4L0npm5RdFl/Qkhlm742A==
+vr-equirectangular-viewer@^1.0.8:
+  version "1.0.8"
+  resolved "https://registry.yarnpkg.com/vr-equirectangular-viewer/-/vr-equirectangular-viewer-1.0.8.tgz#8cb11df2dae60033746c78694c1e6eff1b52a537"
+  integrity sha512-JEj32kqY+cR+YXjN4DQE+umjLGkeTJQxU7jWokmGJgjax8XtiVDxks54rjqqOTRRKBZagofMHUptroYlXhLDHQ==
 
 vscode-jsonrpc@6.0.0:
   version "6.0.0"
