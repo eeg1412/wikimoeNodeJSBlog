@@ -1184,6 +1184,15 @@ ins.adsbygoogle[data-ad-status='unfilled'] {
 .pswp__icn {
   filter: drop-shadow(0px 0px 2px #000);
 }
+.pswp__button {
+  width: 45px !important;
+}
+/* 小于768px */
+@media (max-width: 768px) {
+  .pswp__button {
+    width: 38px !important;
+  }
+}
 
 .psv-overlay-image svg {
   display: inline-block;

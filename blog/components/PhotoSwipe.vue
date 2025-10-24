@@ -204,6 +204,46 @@
     </div>
   </Teleport>
 
+  <!-- 陀螺仪按钮 -->
+  <Teleport
+    :to="`#photo-swipe-gyroscope-${componentId}`"
+    v-if="showUI && is360PanoramaActive && gyroscopeIsSupported"
+  >
+    <div
+      class="photo-swipe-photo-swipe-btn"
+      title="陀螺仪模式"
+      @click="toggleGyroscope"
+    >
+      <!-- 实心罗盘：根据 gyroscopeIsEnabled 切换样式 -->
+      <template v-if="gyroscopeIsEnabled">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 -960 960 960"
+          width="23"
+          height="23"
+        >
+          <path
+            fill="currentColor"
+            d="M480 0q-99 0-186.5-37.5t-153-103Q75-206 37.5-293.5T0-480h80q0 71 24 136t66.5 117Q213-175 272-138.5T401-87L296-192l56-56L588-12q-26 6-53.5 9T480 0Zm400-480q0-71-24-136t-66.5-117Q747-785 688-821.5T559-873l105 105-56 56-236-236q26-6 53.5-9t54.5-3q99 0 186.5 37.5t153 103q65.5 65.5 103 153T960-480h-80ZM496-182 182.03-496Q171-507 165.5-521q-5.5-14-5.5-29t5.74-29q5.74-14 16.26-25l173.62-174q11.03-11 25.08-16.5 14.05-5.5 29.11-5.5 15.05 0 29.1 5.5T464-778l313.97 313.97Q789-453 794.5-439q5.5 14 5.5 29t-5.74 29q-5.74 14-16.26 25L604.38-182q-11.03 11-25.08 16.5-14.05 5.5-29.11 5.5-15.05 0-29.1-5.5T496-182ZM373-556q13 0 21.5-9t8.5-21q0-13-8.5-21.5T373-616q-12 0-21 8.5t-9 21.5q0 12 9 21t21 9Z"
+          />
+        </svg>
+      </template>
+      <template v-else>
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 -960 960 960"
+          width="23"
+          height="23"
+        >
+          <path
+            fill="currentColor"
+            d="M714-600q-14 0-24-10t-10-24v-132q0-14 10-24t24-10h6v-40q0-33 23.5-56.5T800-920q33 0 56.5 23.5T880-840v40h6q14 0 24 10t10 24v132q0 14-10 24t-24 10H714Zm46-200h80v-40q0-17-11.5-28.5T800-880q-17 0-28.5 11.5T760-840v40ZM480 0q-99 0-186.5-37.5t-153-103Q75-206 37.5-293.5T0-480h80q0 71 24 136t66.5 117Q213-175 272-138.5T401-87L296-192l56-56L588-12q-26 6-53.5 9T480 0ZM373-556q13 0 21.5-9t8.5-21q0-13-8.5-21.5T373-616q-12 0-21 8.5t-9 21.5q0 12 9 21t21 9Zm122.97 374L182.03-496Q171-507 165.5-521.5 160-536 160-550q0-15 5.5-29t16.54-25.06l173.61-173.88Q366.69-789 381.25-795q14.55-6 28.6-6 15.05 0 29.1 6t25.08 17.03l313.94 313.74Q789-453.2 795-439.17q6 14.03 6 29.07 0 14.03-6 28.57Q789-367 777.96-356L604.35-182q-11.04 11-25.09 16.5t-29.11 5.5q-14.05 0-28.6-5.5T495.97-182Z"
+          />
+        </svg>
+      </template>
+    </div>
+  </Teleport>
+
   <!-- VR全景按钮 -->
   <Teleport
     :to="`#photo-swipe-vr-${componentId}`"
@@ -254,12 +294,25 @@ import { useOptionStore } from '@/store/options'
 import '@photo-sphere-viewer/core/index.css'
 
 let Viewer = null
+let gyroscopePlugin = null
+const gyroscopeIsSupported = ref(false)
+const gyroscopeIsEnabled = ref(false)
+const toggleGyroscope = async () => {
+  if (gyroscopeIsSupported.value) {
+    const currIndex = lightbox.pswp.currIndex
+    panoramaListMap[currIndex].plugins.gyroscope.toggle()
+  }
+}
 const loadViewer = async () => {
   if (!Viewer) {
     const module = await import('@photo-sphere-viewer/core')
     Viewer = module.Viewer
   }
-  return Viewer
+  if (!gyroscopePlugin) {
+    const module = await import('@photo-sphere-viewer/gyroscope-plugin')
+    gyroscopePlugin = module.GyroscopePlugin
+  }
+  return { Viewer, gyroscopePlugin }
 }
 
 let VRViewer = null
@@ -391,7 +444,8 @@ const panoramaLang = {
   twoFingers: '使用双指导航',
   ctrlZoom: '使用Ctrl+滚轮缩放图片',
   loadError: '全景图无法加载',
-  webglError: '您的浏览器似乎不支持WebGL'
+  webglError: '您的浏览器似乎不支持WebGL',
+  gyroscope: '陀螺仪控制'
 }
 
 const is360PanoramaActive = ref(false)
@@ -405,6 +459,9 @@ const check360Btn = () => {
   )
   const btnScreenshotEl = document.querySelector(
     `.pswp__button--photo-swipe-screenshot-button-${componentId}`
+  )
+  const btnGyroscopeEl = document.querySelector(
+    `.pswp__button--photo-swipe-gyroscope-button-${componentId}`
   )
   const btnVRModeEl = document.querySelector(
     `.pswp__button--photo-swipe-vr-button-${componentId}`
@@ -426,6 +483,9 @@ const check360Btn = () => {
     }
     if (btnScreenshotEl) {
       btnScreenshotEl.style.display = 'none'
+    }
+    if (btnGyroscopeEl) {
+      btnGyroscopeEl.style.display = 'none'
     }
     if (btnVRModeEl) {
       btnVRModeEl.style.display = 'none'
@@ -767,6 +827,7 @@ const initLightbox = async () => {
     photoswipeInitialLayoutPromiseResolve = null
     photoswipeInitialLayoutPromise = null
     loadingImageIndexList = []
+    gyroscopeIsSupported.value = false
     console.log('close')
     if (closeCallback) {
       closeCallback()
@@ -821,7 +882,7 @@ const initLightbox = async () => {
     is360PanoramaActive.value = false
     if (is360Panorama === true) {
       if (!Viewer) {
-        Viewer = await loadViewer()
+        await loadViewer()
       }
       // isAllPreventDefault = true
       if (image360PanoramaTimer) {
@@ -829,7 +890,7 @@ const initLightbox = async () => {
         image360PanoramaTimer = null
       }
       image360PanoramaTimer = setTimeout(
-        () => {
+        async () => {
           const container = document.querySelector(
             `#lightbox-360panorama-${currIndex}`
           )
@@ -847,9 +908,36 @@ const initLightbox = async () => {
             lang: panoramaLang,
             moveSpeed: 1.5,
             // 设置鱼眼默认为0
-            fisheye: 0
+            fisheye: 0,
+            plugins: [gyroscopePlugin],
+            moveMode: 'fast'
           })
           panoramaListMap[currIndex] = viewer
+
+          viewer.plugins.gyroscope.isSupported().then(supported => {
+            gyroscopeIsSupported.value = supported
+            // 设置按钮显示状态
+            const btnGyroscopeEl = document.querySelector(
+              `.pswp__button--photo-swipe-gyroscope-button-${componentId}`
+            )
+            if (btnGyroscopeEl) {
+              if (supported) {
+                btnGyroscopeEl.style.display = 'block'
+              } else {
+                btnGyroscopeEl.style.display = 'none'
+              }
+            }
+          })
+
+          viewer.plugins.gyroscope.addEventListener(
+            'gyroscope-updated',
+            event => {
+              const enabled = event.gyroscopeEnabled // boolean
+              gyroscopeIsEnabled.value = enabled
+              console.log('Gyroscope enabled:', enabled)
+            }
+          )
+
           // 更新是否为360全景的状态
           viewer.addEventListener(
             'ready',
@@ -920,6 +1008,14 @@ const initLightbox = async () => {
       order: 9,
       isButton: true,
       html: `<div id="photo-swipe-vr-${componentId}"></div>`
+    })
+    // 注册陀螺仪按钮
+    lightbox.pswp.ui.registerElement({
+      name: `photo-swipe-gyroscope-button-${componentId}`,
+      title: '动态视角',
+      order: 9,
+      isButton: true,
+      html: `<div id="photo-swipe-gyroscope-${componentId}"></div>`
     })
     // 注册360度全景截图按钮
     lightbox.pswp.ui.registerElement({
@@ -1027,7 +1123,7 @@ onUnmounted(() => {
 </script>
 <style scoped>
 .photo-swipe-photo-swipe-btn {
-  width: 50px;
+  width: 100%;
   height: 60px;
   color: #ffffff;
   font-size: 23px;
