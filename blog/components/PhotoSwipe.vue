@@ -278,18 +278,18 @@ const enterVR = async () => {
     return
   }
   VRLoading.value = true
-  if (VRViewer) {
-    VRViewer.exitVR()
-  }
   const currIndex = lightbox.pswp.currIndex
   try {
+    if (VRViewer) {
+      await VRViewer.exitVR()
+    }
+
     const VREquirectangularViewerModule = await loadVREquirectangularViewer()
 
     VRViewer = new VREquirectangularViewerModule({
       imageUrl: attachmentList.value[currIndex].filepath,
 
       onError: error => {
-        VRLoading.value = false
         toast.add({
           title: '进入VR模式失败，请检查权限或设备支持情况',
           icon: 'i-heroicons-x-circle',
@@ -300,17 +300,16 @@ const enterVR = async () => {
 
       onVRStart: () => {
         console.log('VR模式已激活')
-        VRLoading.value = false
       },
 
       onVREnd: () => {
         console.log('✅ 已退出VR，资源已自动释放')
         VRViewer = null
-        VRLoading.value = false
       }
     })
 
     await VRViewer.enterVR()
+    VRLoading.value = false
   } catch (error) {
     VRLoading.value = false
     toast.add({
