@@ -211,7 +211,7 @@
   >
     <div
       class="photo-swipe-photo-swipe-btn"
-      title="动态视角"
+      title="动态体感视角"
       @click="toggleGyroscope"
     >
       <!-- 实心罗盘：根据 gyroscopeIsEnabled 切换样式 -->
@@ -445,7 +445,7 @@ const panoramaLang = {
   ctrlZoom: '使用Ctrl+滚轮缩放图片',
   loadError: '全景图无法加载',
   webglError: '您的浏览器似乎不支持WebGL',
-  gyroscope: '动态视角'
+  gyroscope: '动态体感视角'
 }
 
 const is360PanoramaActive = ref(false)
@@ -1012,7 +1012,7 @@ const initLightbox = async () => {
     // 注册陀螺仪按钮
     lightbox.pswp.ui.registerElement({
       name: `photo-swipe-gyroscope-button-${componentId}`,
-      title: '动态视角',
+      title: '动态体感视角',
       order: 9,
       isButton: true,
       html: `<div id="photo-swipe-gyroscope-${componentId}"></div>`
