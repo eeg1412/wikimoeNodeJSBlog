@@ -1080,12 +1080,17 @@
   resolved "https://registry.yarnpkg.com/@petamoriken/float16/-/float16-3.9.2.tgz#217a5d349f3655b8e286be447e0ed1eae063a78f"
   integrity sha512-VgffxawQde93xKxT3qap3OH+meZf7VaSB5Sqd4Rqc+FP5alWbpOyan/7tRbOAvynjpG3GpdtAuGU/NdhQpmrog==
 
-"@photo-sphere-viewer/core@^5.12.1":
-  version "5.12.1"
-  resolved "https://registry.yarnpkg.com/@photo-sphere-viewer/core/-/core-5.12.1.tgz#62bffa90726b3280bbb5cdfcea4bf193b4e04487"
-  integrity sha512-aK+SueXdKOr5FQAMwjxswHaa2OZcpWi4tx5P4fjq1vWEDa8PtdaoSdQaAp3Csmthvd9DlfNDUb6c21fTudzM/w==
+"@photo-sphere-viewer/core@^5.14.0":
+  version "5.14.0"
+  resolved "https://registry.yarnpkg.com/@photo-sphere-viewer/core/-/core-5.14.0.tgz#9ed37c41dbf671b33cf60a06e93aa1bc3ab09e16"
+  integrity sha512-V0JeDSB1D2Q60Zqn7+0FPjq8gqbKEwuxMzNdTLydefkQugVztLvdZykO+4k5XTpweZ2QAWPH/QOI1xZbsdvR9A==
   dependencies:
-    three "^0.173.0"
+    three "^0.179.0"
+
+"@photo-sphere-viewer/gyroscope-plugin@^5.14.0":
+  version "5.14.0"
+  resolved "https://registry.yarnpkg.com/@photo-sphere-viewer/gyroscope-plugin/-/gyroscope-plugin-5.14.0.tgz#f02625bc295f25df2c95f30f5150fc11493cc905"
+  integrity sha512-KDaQlL9E1Od2ipISRgZzLeG/iH46h05K6iP6qszZX5e+YeSR8aeYFg1Q9qdo1JYm0LhSaA5Hd9jffFa+dDDQPw==
 
 "@pinia/nuxt@^0.5.1":
   version "0.5.5"
@@ -5540,10 +5545,10 @@ thenify-all@^1.0.0:
   dependencies:
     any-promise "^1.0.0"
 
-three@^0.173.0:
-  version "0.173.0"
-  resolved "https://registry.yarnpkg.com/three/-/three-0.173.0.tgz#e82989961cd2db05768540458c81b29f565be921"
-  integrity sha512-AUwVmViIEUgBwxJJ7stnF0NkPpZxx1aZ6WiAbQ/Qq61h6I9UR4grXtZDmO8mnlaNORhHnIBlXJ1uBxILEKuVyw==
+three@^0.179.0:
+  version "0.179.1"
+  resolved "https://registry.yarnpkg.com/three/-/three-0.179.1.tgz#6c0b43e046eaad0f42b163143517a44ae44ed446"
+  integrity sha512-5y/elSIQbrvKOISxpwXCR4sQqHtGiOI+MKLc3SsBdDXA2hz3Mdp3X59aUp8DyybMa34aeBwbFTpdoLJaUDEWSw==
 
 tiny-invariant@^1.1.0:
   version "1.3.3"
