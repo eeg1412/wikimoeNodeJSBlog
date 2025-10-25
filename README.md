@@ -24,10 +24,19 @@
 ![image](https://github.com/user-attachments/assets/701ed64f-4e96-44b0-a0b7-57475f52501c)
 
 ### 支持深色主题切换
-![image](https://github.com/user-attachments/assets/b29f821a-1446-4380-8913-23c0e879a4c5)
+https://github.com/user-attachments/assets/8064ff4f-1bf8-4143-8dcb-0c3617dc0517
 
 ### 支持360°全景照片
-![image](https://github.com/user-attachments/assets/acd45951-6dad-464b-a9c4-92a73b32e4ae)  
+https://github.com/user-attachments/assets/887094da-803a-47ea-bc2f-9fe1780c5dc1
+
+#### 通过VR观看 360°全景照片
+https://github.com/user-attachments/assets/2f4c8ad0-cda4-4890-a28b-963f22b74791  
+
+#### 通过陀螺仪观看 360°全景照片
+https://github.com/user-attachments/assets/770257e4-096d-4ae2-9d01-61973d15b63c
+
+### 探访足迹
+<img width="1906" height="952" alt="image" src="https://github.com/user-attachments/assets/71f2e7f4-b364-4d7d-8a40-519f9f866292" />
 
 ## 当前已知问题
 
