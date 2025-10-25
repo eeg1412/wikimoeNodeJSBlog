@@ -17,26 +17,31 @@
 ![image](https://github.com/user-attachments/assets/1977835c-370b-4cb1-acbb-59d33b9e1136)  
 ![image](https://github.com/user-attachments/assets/d4ecea17-fa94-4489-bb7e-4bbfcc060621)  
 ![image](https://github.com/user-attachments/assets/96ac6f02-3b35-4755-ab4f-31b2c97df597)  
-![image](https://github.com/user-attachments/assets/2032f613-85f7-47e7-9210-670240968927)  
+![image](https://github.com/user-attachments/assets/2032f613-85f7-47e7-9210-670240968927)
 
 ### 管理与分享自己的日程
 
 ![image](https://github.com/user-attachments/assets/701ed64f-4e96-44b0-a0b7-57475f52501c)
 
 ### 支持深色主题切换
+
 https://github.com/user-attachments/assets/8064ff4f-1bf8-4143-8dcb-0c3617dc0517
 
-### 支持360°全景照片
+### 支持 360° 全景照片
+
 https://github.com/user-attachments/assets/887094da-803a-47ea-bc2f-9fe1780c5dc1
 
-#### 通过VR观看 360°全景照片
-https://github.com/user-attachments/assets/2f4c8ad0-cda4-4890-a28b-963f22b74791  
+#### 通过 VR 观看 360° 全景照片
 
-#### 通过陀螺仪观看 360°全景照片
+https://github.com/user-attachments/assets/2f4c8ad0-cda4-4890-a28b-963f22b74791
+
+#### 通过陀螺仪观看 360° 全景照片
+
 https://github.com/user-attachments/assets/770257e4-096d-4ae2-9d01-61973d15b63c
 
-### 探访足迹
-<img width="1906" height="952" alt="image" src="https://github.com/user-attachments/assets/71f2e7f4-b364-4d7d-8a40-519f9f866292" />
+### 记录自己曾经去过的地方
+
+![image](https://github.com/user-attachments/assets/71f2e7f4-b364-4d7d-8a40-519f9f866292)
 
 ## 当前已知问题
 
@@ -343,3 +348,13 @@ yarn run set-user-ban 1
 1.**参数传 1 禁用，传 0 解禁**
 
 请注意，这些命令需要在项目的 server 目录下运行，并且需要先安装所有的依赖。你可以使用 `yarn install` 命令来安装依赖。
+
+### 重置管理员登录限制
+
+如果不小心因为密码错误次数过多导致登录受到限制，可以重置管理员登录限制。
+
+```bash
+yarn reset-admin-login-attempt
+```
+
+请注意，执行后管理员的登录限制将会被设定为每 1 分钟 9999 次。在登录后可以在【管理员】->【管理员登录日志】中删除前面失败的登录记录。之后请别忘记手动还原之前的 【管理员尝试登录限制】 设置。
