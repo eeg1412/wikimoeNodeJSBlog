@@ -354,7 +354,7 @@ yarn run set-user-ban 1
 如果不小心因为密码错误次数过多导致登录受到限制，可以重置管理员登录限制。
 
 ```bash
-yarn reset-admin-login-attempt
+yarn run reset-admin-login-attempt
 ```
 
 请注意，执行后管理员的登录限制将会被设定为每 1 分钟 9999 次。在登录后可以在【管理员】->【管理员登录日志】中删除前面失败的登录记录。之后请别忘记手动还原之前的 【管理员尝试登录限制】 设置。
