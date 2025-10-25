@@ -1192,6 +1192,9 @@ ins.adsbygoogle[data-ad-status='unfilled'] {
   .pswp__button {
     width: 38px !important;
   }
+  .pswp__button--close .pswp__icn {
+    left: 4px;
+  }
 }
 
 .psv-overlay-image svg {
