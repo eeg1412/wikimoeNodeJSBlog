@@ -9,6 +9,7 @@
     "change-user-password": "node ./tools/changeUserPassword",
     "get-user-list": "node ./tools/getUserList",
     "set-user-ban": "node ./tools/setUserBan",
+    "reset-admin-login-attempt": "node ./tools/resetAdminLoginAttempt",
     "createCRUD": "node ./tools/createCRUD",
     "sumPostComment": "node ./tools/sumPostComment",
     "fixAttachmentMimetype": "node ./tools/fixAttachmentMimetype",
