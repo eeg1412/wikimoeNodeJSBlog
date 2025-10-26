@@ -25,21 +25,19 @@
 
 ### 支持深色主题切换
 
-[videoUrl](https://github.com/user-attachments/assets/8064ff4f-1bf8-4143-8dcb-0c3617dc0517)
+<video src="https://github.com/user-attachments/assets/8064ff4f-1bf8-4143-8dcb-0c3617dc0517" playsinline controls muted autoplay loop></video>
 
 ### 支持 360° 全景照片
 
-[videoUrl](https://github.com/user-attachments/assets/887094da-803a-47ea-bc2f-9fe1780c5dc1)
+<video src="https://github.com/user-attachments/assets/887094da-803a-47ea-bc2f-9fe1780c5dc1" playsinline controls muted autoplay loop></video>
 
 #### 通过 VR 观看 360° 全景照片
 
-[videoUrl](https://github.com/user-attachments/assets/2f4c8ad0-cda4-4890-a28b-963f22b74791)
+<video src="https://github.com/user-attachments/assets/2f4c8ad0-cda4-4890-a28b-963f22b74791" playsinline controls muted autoplay loop></video>
 
 #### 通过陀螺仪观看 360° 全景照片
 
-[videoUrl](https://github.com/user-attachments/assets/e18f8c66-c637-4a22-baf9-09e8ae89ed89)
-
-
+<video src="https://github.com/user-attachments/assets/e18f8c66-c637-4a22-baf9-09e8ae89ed89" playsinline controls muted autoplay loop></video>
 
 ### 记录自己曾经去过的地方
 
