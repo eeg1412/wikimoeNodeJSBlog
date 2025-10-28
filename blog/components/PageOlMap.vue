@@ -358,7 +358,7 @@ onUnmounted(() => {})
 }
 
 .page-olmap-container {
-  height: calc(100dvh - 16rem);
+  height: calc(100vh - 16rem);
   width: 100%;
   min-height: 200px;
   position: relative;
