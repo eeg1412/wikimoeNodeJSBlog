@@ -214,7 +214,7 @@ const getImgList = mediaList => {
   return imgList
 }
 const getImgListHash = (imgList = undefined) => {
-  console.time('getImgListHash')
+  // console.time('getImgListHash')
   if (!imgList) {
     const mediaList = getMediaList()
     imgList = getImgList(mediaList)
@@ -223,7 +223,7 @@ const getImgListHash = (imgList = undefined) => {
   const imgListHash = getImgListHashFromImgList(imgList)
 
   console.log('imgListHash:', imgListHash)
-  console.timeEnd('getImgListHash')
+  // console.timeEnd('getImgListHash')
   return {
     imgListHash,
     imgList

@@ -145,7 +145,7 @@ const srcCom = computed(() => {
 })
 
 const getImgListHash = (imgList = undefined) => {
-  console.time('getImgListHash')
+  // console.time('getImgListHash')
   if (!imgList) {
     imgList = getImgList()
   }
@@ -153,7 +153,7 @@ const getImgListHash = (imgList = undefined) => {
   const imgListHash = getImgListHashFromImgList(imgList)
 
   console.log('imgListHash:', imgListHash)
-  console.timeEnd('getImgListHash')
+  // console.timeEnd('getImgListHash')
   return {
     imgListHash,
     imgList
