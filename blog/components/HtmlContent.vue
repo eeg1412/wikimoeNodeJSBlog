@@ -429,7 +429,7 @@ const checkPswp = () => {
     pswpIsOpen.value === false
   ) {
     const { imgListHash, imgList } = getImgListHash()
-    if (pswphash === imgListHash) {
+    if (pswphash === imgListHash && imgList.length > 0) {
       // 如果index不是数字，或者超出范围，则设置为0
       let index = Number(pswpindex)
       if (isNaN(index) || index < 0 || index >= imgList.length) {

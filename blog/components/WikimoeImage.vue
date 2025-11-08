@@ -161,6 +161,9 @@ const getImgListHash = (imgList = undefined) => {
 }
 const checkPswp = () => {
   const { pswpopen, pswphash, pswpcomponent, pswpindex = 0 } = route.query
+  if (pswpIsOpen.value) {
+    console.warn('pswp is already open, skip checkPswp')
+  }
   if (
     pswpopen === '1' &&
     pswpcomponent === componentNameLower &&
@@ -169,7 +172,7 @@ const checkPswp = () => {
   ) {
     console.log('开始检查 pswpopen for WikimoeImage')
     const { imgListHash, imgList } = getImgListHash()
-    if (pswphash === imgListHash) {
+    if (pswphash === imgListHash && imgList.length > 0) {
       // 如果index不是数字，或者超出范围，则设置为0
       let index = Number(pswpindex)
       if (isNaN(index) || index < 0 || index >= imgList.length) {

@@ -799,7 +799,9 @@ const open = async (
   // }
   // window.history.pushState(window.history.state, '', '#photo-swipelightboxopen')
   nextTick(() => {
+    const path = route.path
     router.push({
+      path,
       query: {
         ...route.query,
         pswpopen: '1',
@@ -874,13 +876,14 @@ const initLightbox = async () => {
     // }
     showUI.value = false
     attachmentList.value = []
-    console.log(window.history.state)
     if (route.query.pswpopen === '1') {
       if (window.history.state && window.history.state.back) {
         router.back()
       } else {
+        const path = route.path
         // 没有上一页历史，导航到首页
         router.replace({
+          path,
           query: {
             ...route.query,
             pswpopen: undefined
@@ -918,7 +921,9 @@ const initLightbox = async () => {
       if (Number(nowIndex) === currIndex) {
         return
       }
+      const path = route.path
       router.replace({
+        path,
         query: {
           ...route.query,
           pswpindex: currIndex || undefined
