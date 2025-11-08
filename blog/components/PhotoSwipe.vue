@@ -788,6 +788,18 @@ const open = async (
       height: attachmentList.value[index].height
     }
   })
+  const path = route.path
+  router.push({
+    path,
+    query: {
+      ...route.query,
+      pswpopen: '1',
+      pswphash: hashId || undefined,
+      pswpcomponent: componentName || undefined,
+      pswpindex: showIndex || undefined
+    }
+  })
+
   lightbox.loadAndOpen(showIndex)
   // if (window.location.hash) {
   //   const urlWithoutHash = window.location.href.split('#')[0]
@@ -798,19 +810,6 @@ const open = async (
   //   )
   // }
   // window.history.pushState(window.history.state, '', '#photo-swipelightboxopen')
-  nextTick(() => {
-    const path = route.path
-    router.push({
-      path,
-      query: {
-        ...route.query,
-        pswpopen: '1',
-        pswphash: hashId || undefined,
-        pswpcomponent: componentName || undefined,
-        pswpindex: showIndex || undefined
-      }
-    })
-  })
 }
 
 setPhotoSwipe(open)
@@ -916,19 +915,18 @@ const initLightbox = async () => {
     itemIndex.value = currIndex
     const currSlide = lightbox.pswp.currSlide
     const data = currSlide?.data
-    nextTick(() => {
-      const nowIndex = route.query.pswpindex || 0
-      if (Number(nowIndex) === currIndex) {
-        return
+
+    const nowIndex = route.query.pswpindex || 0
+    if (Number(nowIndex) === currIndex) {
+      return
+    }
+    const path = route.path
+    router.replace({
+      path,
+      query: {
+        ...route.query,
+        pswpindex: currIndex || undefined
       }
-      const path = route.path
-      router.replace({
-        path,
-        query: {
-          ...route.query,
-          pswpindex: currIndex || undefined
-        }
-      })
     })
     if (data?.shouldLoadImageItem && data?.loadFailed !== true) {
       const imageSrc = data?.imageSrc
