@@ -161,9 +161,6 @@ const getImgListHash = (imgList = undefined) => {
 }
 const checkPswp = () => {
   const { pswpopen, pswphash, pswpcomponent, pswpindex = 0 } = route.query
-  if (pswpIsOpen.value) {
-    console.warn('pswp is already open, skip checkPswp')
-  }
   if (
     pswpopen === '1' &&
     pswpcomponent === componentNameLower &&
