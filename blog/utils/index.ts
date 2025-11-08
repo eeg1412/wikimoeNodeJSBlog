@@ -28,37 +28,39 @@ export function openPhotoSwipe(
   }
 }
 
-export function getImgListHashFromImgList(imgList: string[]) {
-  // 根据imgList生成一个64位hash字符串，用于标识当前的imgList
-  const str = JSON.stringify(imgList)
+// 复用 TextEncoder 实例
+let encoder: any = null
+if (import.meta.client) {
+  encoder = new TextEncoder()
+}
 
-  // FNV-1a 64-bit，基于字节处理，使用 TextEncoder 保证 UTF-8 一致性
-  const fnv1a64 = (input: string) => {
-    const data =
-      typeof input === 'string' ? new TextEncoder().encode(input) : input
-    let hash = BigInt('0xcbf29ce484222325') // offset basis
-    const prime = BigInt('0x100000001b3')
-    for (let i = 0; i < data.length; i++) {
-      hash ^= BigInt(data[i])
+export function getImgListHashFromImgList(imgList: any[]) {
+  let hash = BigInt('0xcbf29ce484222325')
+  const prime = BigInt('0x100000001b3')
+
+  // 流式处理，逐个图片计算哈希，避免生成大字符串
+  for (let i = 0; i < imgList.length; i++) {
+    const img = imgList[i]
+    const str = img.filepath || img.src || JSON.stringify(img)
+
+    // 直接对每个字符串编码并哈希，不需要先拼接
+    const data = encoder.encode(str)
+    for (let j = 0; j < data.length; j++) {
+      hash ^= BigInt(data[j])
       hash = (hash * prime) & BigInt('0xffffffffffffffff')
     }
-    return hash
+
+    // 添加分隔符的哈希
+    if (i < imgList.length - 1) {
+      const separator = encoder.encode('|')
+      for (let j = 0; j < separator.length; j++) {
+        hash ^= BigInt(separator[j])
+        hash = (hash * prime) & BigInt('0xffffffffffffffff')
+      }
+    }
   }
 
-  try {
-    const h = fnv1a64(str)
-    // 使用 base36 输出更短的字符串，也可以用 toString(16) 输出 hex
-    return h.toString(36)
-  } catch (err) {
-    // 回退到原来的 32 位简单算法（兼容不支持 BigInt 的环境）
-    let hash = 0
-    for (let i = 0; i < str.length; i++) {
-      const char = str.charCodeAt(i)
-      hash = (hash << 5) - hash + char
-      hash |= 0
-    }
-    return hash.toString(36)
-  }
+  return hash.toString(36)
 }
 
 // 格式化时间 支持1秒前、1分钟前、1小时前、1天前，超过1天显示具体时间，支持具体时间自定义格式
