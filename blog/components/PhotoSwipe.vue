@@ -885,7 +885,10 @@ const initLightbox = async () => {
           path,
           query: {
             ...route.query,
-            pswpopen: undefined
+            pswpopen: undefined,
+            pswphash: undefined,
+            pswpcomponent: undefined,
+            pswpindex: undefined
           }
         })
       }
@@ -917,17 +920,18 @@ const initLightbox = async () => {
     const data = currSlide?.data
 
     const nowIndex = route.query.pswpindex || 0
-    if (Number(nowIndex) === currIndex) {
-      return
+    const pswpopen = route.query.pswpopen || '0'
+    if (pswpopen === '1' && Number(nowIndex) !== currIndex) {
+      const path = route.path
+      router.replace({
+        path,
+        query: {
+          ...route.query,
+          pswpindex: currIndex || undefined
+        }
+      })
     }
-    const path = route.path
-    router.replace({
-      path,
-      query: {
-        ...route.query,
-        pswpindex: currIndex || undefined
-      }
-    })
+
     if (data?.shouldLoadImageItem && data?.loadFailed !== true) {
       const imageSrc = data?.imageSrc
       loadNoSizeImage(imageSrc, currIndex)
