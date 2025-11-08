@@ -292,6 +292,14 @@
 <script setup>
 import { useOptionStore } from '@/store/options'
 import '@photo-sphere-viewer/core/index.css'
+import { usePswpIsOpenStore } from '@/store/pswpIsOpen'
+import { storeToRefs } from 'pinia'
+
+const router = useRouter()
+const route = useRoute()
+
+const pswpIsOpenStore = usePswpIsOpenStore()
+const { pswpIsOpen } = storeToRefs(pswpIsOpenStore)
 
 let Viewer = null
 let gyroscopePlugin = null
@@ -656,7 +664,19 @@ const loadNoSizeImage = (src, index) => {
       })
     })
 }
-const open = async (list = [], showIndex = 0, closeCallback_) => {
+
+const open = async (
+  list = [],
+  showIndex = 0,
+  closeCallback_,
+  hashId,
+  componentName
+) => {
+  if (pswpIsOpen.value) {
+    return
+  }
+
+  pswpIsOpenStore.setPswpIsOpen(true)
   if (!lightbox) {
     await initLightbox()
   }
@@ -769,15 +789,26 @@ const open = async (list = [], showIndex = 0, closeCallback_) => {
     }
   })
   lightbox.loadAndOpen(showIndex)
-  if (window.location.hash) {
-    const urlWithoutHash = window.location.href.split('#')[0]
-    window.history.replaceState(
-      window.history.state,
-      '',
-      urlWithoutHash + '#wmpsvoid'
-    )
-  }
-  window.history.pushState(window.history.state, '', '#photo-swipelightboxopen')
+  // if (window.location.hash) {
+  //   const urlWithoutHash = window.location.href.split('#')[0]
+  //   window.history.replaceState(
+  //     window.history.state,
+  //     '',
+  //     urlWithoutHash + '#wmpsvoid'
+  //   )
+  // }
+  // window.history.pushState(window.history.state, '', '#photo-swipelightboxopen')
+  nextTick(() => {
+    router.push({
+      query: {
+        ...route.query,
+        pswpopen: '1',
+        pswphash: hashId || undefined,
+        pswpcomponent: componentName || undefined,
+        pswpindex: showIndex || undefined
+      }
+    })
+  })
 }
 
 setPhotoSwipe(open)
@@ -838,11 +869,28 @@ const initLightbox = async () => {
       clearTimeout(videoTimer)
       videoTimer = null
     }
-    if (window.location.hash === '#photo-swipelightboxopen') {
-      window.history.back()
-    }
+    // if (window.location.hash === '#photo-swipelightboxopen') {
+    //   window.history.back()
+    // }
     showUI.value = false
     attachmentList.value = []
+    console.log(window.history.state)
+    if (route.query.pswpopen === '1') {
+      if (window.history.state && window.history.state.back) {
+        router.back()
+      } else {
+        // 没有上一页历史，导航到首页
+        router.replace({
+          query: {
+            ...route.query,
+            pswpopen: undefined
+          }
+        })
+      }
+    }
+    nextTick(() => {
+      pswpIsOpenStore.setPswpIsOpen(false)
+    })
   })
   lightbox.on('change', async () => {
     console.log('change')
@@ -865,6 +913,18 @@ const initLightbox = async () => {
     itemIndex.value = currIndex
     const currSlide = lightbox.pswp.currSlide
     const data = currSlide?.data
+    nextTick(() => {
+      const nowIndex = route.query.pswpindex || 0
+      if (Number(nowIndex) === currIndex) {
+        return
+      }
+      router.replace({
+        query: {
+          ...route.query,
+          pswpindex: currIndex || undefined
+        }
+      })
+    })
     if (data?.shouldLoadImageItem && data?.loadFailed !== true) {
       const imageSrc = data?.imageSrc
       loadNoSizeImage(imageSrc, currIndex)
@@ -1053,12 +1113,6 @@ const initLightbox = async () => {
     }
   })
 }
-const onHashchange = () => {
-  if (window.location.hash !== '#photo-swipelightboxopen') {
-    console.log('close hashchange')
-    lightbox && lightbox.pswp && lightbox.pswp.close()
-  }
-}
 
 // 将附件按照9个一组分组
 const attachmentGroup = computed(() => {
@@ -1104,21 +1158,20 @@ const goTo = (index, close) => {
   close()
 }
 
-const checkHash = () => {
-  const lightboxopen = window.location.hash === '#photo-swipelightboxopen'
-  if (lightboxopen) {
-    const urlWithoutHash = window.location.href.split('#')[0]
-    window.history.replaceState(window.history.state, '', urlWithoutHash)
+watch(
+  () => route.query.pswpopen,
+  (newVal, oldVal) => {
+    console.log('watch pswpopen', newVal, oldVal)
+    if (newVal !== '1') {
+      lightbox && lightbox.pswp && lightbox.pswp.close()
+    }
   }
-}
-onMounted(() => {
-  checkHash()
-  window.addEventListener('hashchange', onHashchange)
-})
+)
+
+onMounted(() => {})
 onUnmounted(() => {
   lightbox.destroy()
   lightbox = null
-  window.removeEventListener('hashchange', onHashchange)
 })
 </script>
 <style scoped>

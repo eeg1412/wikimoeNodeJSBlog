@@ -3,7 +3,9 @@ import emoji from '@/utils/emoji.json'
 type OpenFunction = (
   list: any[],
   showIndex: number,
-  closeCallback?: () => void
+  closeCallback?: () => void,
+  hashId?: string,
+  componentName?: string
 ) => void
 
 let photoSwipe = {
@@ -17,10 +19,45 @@ export function setPhotoSwipe(open: OpenFunction) {
 export function openPhotoSwipe(
   list: any[],
   showIndex: number,
-  closeCallback?: () => void
+  closeCallback?: () => void,
+  hashId?: string,
+  componentName?: string
 ) {
   if (photoSwipe.open) {
-    photoSwipe.open(list, showIndex, closeCallback)
+    photoSwipe.open(list, showIndex, closeCallback, hashId, componentName)
+  }
+}
+
+export function getImgListHashFromImgList(imgList: string[]) {
+  // 根据imgList生成一个64位hash字符串，用于标识当前的imgList
+  const str = JSON.stringify(imgList)
+
+  // FNV-1a 64-bit，基于字节处理，使用 TextEncoder 保证 UTF-8 一致性
+  const fnv1a64 = (input: string) => {
+    const data =
+      typeof input === 'string' ? new TextEncoder().encode(input) : input
+    let hash = BigInt('0xcbf29ce484222325') // offset basis
+    const prime = BigInt('0x100000001b3')
+    for (let i = 0; i < data.length; i++) {
+      hash ^= BigInt(data[i])
+      hash = (hash * prime) & BigInt('0xffffffffffffffff')
+    }
+    return hash
+  }
+
+  try {
+    const h = fnv1a64(str)
+    // 使用 base36 输出更短的字符串，也可以用 toString(16) 输出 hex
+    return h.toString(36)
+  } catch (err) {
+    // 回退到原来的 32 位简单算法（兼容不支持 BigInt 的环境）
+    let hash = 0
+    for (let i = 0; i < str.length; i++) {
+      const char = str.charCodeAt(i)
+      hash = (hash << 5) - hash + char
+      hash |= 0
+    }
+    return hash.toString(36)
   }
 }
 

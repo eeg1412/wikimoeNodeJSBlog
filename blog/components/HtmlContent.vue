@@ -29,7 +29,11 @@
 <script setup>
 import { getEventDetailApiFetch } from '@/api/event'
 import 'highlight.js/styles/base16/dracula.css'
+import { usePswpIsOpenStore } from '@/store/pswpIsOpen'
+import { storeToRefs } from 'pinia'
 
+const pswpIsOpenStore = usePswpIsOpenStore()
+const { pswpIsOpen } = storeToRefs(pswpIsOpenStore)
 const toast = useToast()
 // props
 const props = defineProps({
@@ -39,6 +43,11 @@ const props = defineProps({
     default: ''
   }
 })
+
+const componentNameLower = 'htmlcontent'
+
+const route = useRoute()
+const router = useRouter()
 // img标签自动添加loading="lazy"
 // let htmlContent = '你的HTML内容'
 // htmlContent = htmlContent.replace(
@@ -152,6 +161,74 @@ const clickOnSpan = e => {
       break
   }
 }
+const getMediaList = () => {
+  const mediaList = Array.from(htmlContent.value.querySelectorAll('img, video'))
+  return mediaList
+}
+const getIndex = (mediaList, e) => {
+  const index = mediaList.findIndex(media => {
+    return media === e.target
+  })
+  return index
+}
+const getImgList = mediaList => {
+  const imgList = []
+
+  mediaList.forEach(media => {
+    let src = ''
+    let width = null
+    let height = null
+    let mimetype = ''
+    let thumfor = ''
+    let is360Panorama = false
+    if (media.tagName === 'IMG') {
+      const imgE = {
+        target: media
+      }
+      const imgWidAndHeight = getImgWidAndHeight(imgE)
+      is360Panorama =
+        media.getAttribute('data-type') === 'panorama360' ? true : false
+      thumfor = media.src
+      src = getImgHref(imgE) || media.src
+      width = imgWidAndHeight.width || null
+      height = imgWidAndHeight.height || null
+      mimetype = 'image'
+    } else if (media.tagName === 'VIDEO') {
+      // 获取source标签的src
+      const source = media.querySelector('source')
+      src = source.src || media.src
+      width = media.width || null
+      height = media.height || null
+      thumfor = media.poster
+      mimetype = 'video'
+    }
+    imgList.push({
+      src,
+      width,
+      height,
+      mimetype,
+      thumfor,
+      is360Panorama
+    })
+  })
+  return imgList
+}
+const getImgListHash = (imgList = undefined) => {
+  console.time('getImgListHash')
+  if (!imgList) {
+    const mediaList = getMediaList()
+    imgList = getImgList(mediaList)
+  }
+
+  const imgListHash = getImgListHashFromImgList(imgList)
+
+  console.log('imgListHash:', imgListHash)
+  console.timeEnd('getImgListHash')
+  return {
+    imgListHash,
+    imgList
+  }
+}
 const clickOnImg = e => {
   const dataHref = getImgHref(e) || e.target?.src || ''
   const imageRegex = /\.(jpe?g|png|gif|bmp|svg|webp)$/i
@@ -159,54 +236,13 @@ const clickOnImg = e => {
   const dataHrefNoQuery = dataHref.split('?')[0]
   if (imageRegex.test(dataHrefNoQuery)) {
     // 获取htmlContent下的所有img和video标签，按照它们在htmlContent中的顺序
-    const mediaList = Array.from(
-      htmlContent.value.querySelectorAll('img, video')
-    )
+    const mediaList = getMediaList()
     // 获取当前点击的img标签在mediaList中的索引
-    const index = mediaList.findIndex(media => {
-      return media === e.target
-    })
+    const index = getIndex(mediaList, e)
 
-    const imgList = []
-
-    mediaList.forEach(media => {
-      let src = ''
-      let width = null
-      let height = null
-      let mimetype = ''
-      let thumfor = ''
-      let is360Panorama = false
-      if (media.tagName === 'IMG') {
-        const imgE = {
-          target: media
-        }
-        const imgWidAndHeight = getImgWidAndHeight(imgE)
-        is360Panorama =
-          media.getAttribute('data-type') === 'panorama360' ? true : false
-        thumfor = media.src
-        src = getImgHref(imgE) || media.src
-        width = imgWidAndHeight.width || null
-        height = imgWidAndHeight.height || null
-        mimetype = 'image'
-      } else if (media.tagName === 'VIDEO') {
-        // 获取source标签的src
-        const source = media.querySelector('source')
-        src = source.src || media.src
-        width = media.width || null
-        height = media.height || null
-        thumfor = media.poster
-        mimetype = 'video'
-      }
-      imgList.push({
-        src,
-        width,
-        height,
-        mimetype,
-        thumfor,
-        is360Panorama
-      })
-    })
-    openPhotoSwipe(imgList, index)
+    const imgList = getImgList(mediaList)
+    const { imgListHash } = getImgListHash(imgList)
+    openPhotoSwipe(imgList, index, undefined, imgListHash, componentNameLower)
   } else {
     // 新窗口
     if (dataHref) {
@@ -385,8 +421,42 @@ const cleanup = () => {
   codeCopyListeners.length = 0
 }
 
+const checkPswp = () => {
+  const { pswpopen, pswphash, pswpcomponent, pswpindex = 0 } = route.query
+  if (
+    pswpopen === '1' &&
+    pswpcomponent === componentNameLower &&
+    pswpIsOpen.value === false
+  ) {
+    const { imgListHash, imgList } = getImgListHash()
+    if (pswphash === imgListHash) {
+      // 如果index不是数字，或者超出范围，则设置为0
+      let index = Number(pswpindex)
+      if (isNaN(index) || index < 0 || index >= imgList.length) {
+        index = 0
+      }
+      openPhotoSwipe(imgList, index, undefined, imgListHash, componentNameLower)
+    }
+  }
+}
+
+// watch route changes to check pswpopen
+watch(
+  () => route.query.pswpopen,
+  (newVal, oldVal) => {
+    // 如果是从非1变为1，则检查
+    if (newVal === '1' && oldVal !== '1') {
+      console.log('checkPswp', newVal, oldVal)
+      checkPswp()
+    }
+  }
+)
+
 onMounted(() => {
   init()
+  nextTick(() => {
+    checkPswp()
+  })
 })
 
 // 组件卸载时清理
