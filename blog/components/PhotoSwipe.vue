@@ -62,7 +62,7 @@
                 :style="{
                   backgroundImage: `url(${item.thumfor || item.filepath})`
                 }"
-                @click="goTo(index + groupPage * 9, close)"
+                @click="() => goTo(index + groupPage * 9, close)"
               >
                 <!-- 如果is360Panorama为true加上360°的字样 -->
                 <div
