@@ -1066,7 +1066,7 @@
     rc9 "^2.1.2"
     std-env "^3.8.1"
 
-"@nuxt/ui@^2.22.3":
+"@nuxt/ui@2.22.3":
   version "2.22.3"
   resolved "https://registry.yarnpkg.com/@nuxt/ui/-/ui-2.22.3.tgz#4eac7d011a03b44d5f02f30255cb4064c6a66803"
   integrity sha512-895SAzqCCT5JAc1JQ8nAmmpwdKCJqArY8ifL/PNtD681FKSdXiSPxODGnpqpovM/ws6bvoRwglA7BtwAJ5ySBg==
