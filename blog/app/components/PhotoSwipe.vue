@@ -986,8 +986,7 @@ const initLightbox = async () => {
             moveSpeed: 1.5,
             // 设置鱼眼默认为0
             fisheye: 0,
-            plugins: [gyroscopePlugin],
-            moveMode: 'fast'
+            plugins: [gyroscopePlugin]
           })
           panoramaListMap[currIndex] = viewer
 
@@ -1011,6 +1010,14 @@ const initLightbox = async () => {
             event => {
               const enabled = event.gyroscopeEnabled // boolean
               gyroscopeIsEnabled.value = enabled
+              const currIndex = lightbox.pswp.currIndex
+              if (enabled) {
+                // 禁用 全景图的拖拽功能 mousemove
+                panoramaListMap[currIndex]?.setOption('mousemove', false)
+              } else {
+                // 启用 全景图的拖拽功能 mousemove
+                panoramaListMap[currIndex]?.setOption('mousemove', true)
+              }
               console.log('Gyroscope enabled:', enabled)
             }
           )
