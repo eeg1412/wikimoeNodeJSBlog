@@ -298,6 +298,21 @@ import { storeToRefs } from 'pinia'
 const router = useRouter()
 const route = useRoute()
 
+const clearRouteQuery = () => {
+  const path = route.path
+  router.replace({
+    path,
+    query: {
+      ...route.query,
+      pswpopen: undefined,
+      pswphash: undefined,
+      pswpcomponent: undefined,
+      pswpindex: undefined
+    }
+  })
+  console.log('clearRouteQuery')
+}
+
 const pswpIsOpenStore = usePswpIsOpenStore()
 const { pswpIsOpen } = storeToRefs(pswpIsOpenStore)
 
@@ -677,6 +692,11 @@ const open = async (
   }
 
   pswpIsOpenStore.setPswpIsOpen(true)
+  const pswpopen = route.query.pswpopen
+  if (pswpopen && pswpopen === '1') {
+    clearRouteQuery()
+  }
+
   if (!lightbox) {
     await initLightbox()
   }
@@ -879,18 +899,8 @@ const initLightbox = async () => {
       if (window.history.state && window.history.state.back) {
         router.back()
       } else {
-        const path = route.path
         // 没有上一页历史，导航到首页
-        router.replace({
-          path,
-          query: {
-            ...route.query,
-            pswpopen: undefined,
-            pswphash: undefined,
-            pswpcomponent: undefined,
-            pswpindex: undefined
-          }
-        })
+        clearRouteQuery()
       }
     }
     nextTick(() => {
