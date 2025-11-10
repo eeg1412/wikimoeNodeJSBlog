@@ -350,7 +350,6 @@
   </div>
 </template>
 <script setup>
-import { useRoute } from 'vue-router'
 import { getPostsApi, postLikeLogListApi, postLikeLogApi } from '@/api/post'
 import { useOptionStore } from '@/store/options'
 import { storeToRefs } from 'pinia'
