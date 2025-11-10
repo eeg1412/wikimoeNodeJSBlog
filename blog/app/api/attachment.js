@@ -7,7 +7,7 @@ import httpRequest from '~/api'
  */
 
 const URL = `/attachment/list`
-const getAttachmentListApiFetch = (params: any) => {
+const getAttachmentListApiFetch = params => {
   return httpRequest.getFetch(URL, params)
 }
 

@@ -7,13 +7,13 @@ import httpRequest from '~/api'
  */
 
 const URL = `/event/list`
-const getEventListApiFetch = (params: any) => {
+const getEventListApiFetch = params => {
   return httpRequest.getFetch(URL, params)
 }
 
 // /event/detail
 const URL_DETAIL = `/event/detail`
-const getEventDetailApiFetch = (params: any) => {
+const getEventDetailApiFetch = params => {
   return httpRequest.getFetch(URL_DETAIL, params)
 }
 

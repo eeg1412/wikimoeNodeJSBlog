@@ -1,5 +1,5 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
-const publicRuntimeConfigPlus: any = {}
+const publicRuntimeConfigPlus = {}
 
 // 缓存时间
 const cacheTime = process.env.SWR_CACHE_MAXAGE

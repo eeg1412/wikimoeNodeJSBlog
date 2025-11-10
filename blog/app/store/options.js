@@ -5,7 +5,7 @@ import { getOptionsApi } from '~/api/option'
 export const useOptionStore = defineStore('options', () => {
   const options = ref(null)
   async function getOptions() {
-    await getOptionsApi().then((res: any) => {
+    await getOptionsApi().then(res => {
       options.value = res.data.value.data
     })
   }

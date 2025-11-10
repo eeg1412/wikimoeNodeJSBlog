@@ -1,9 +1,4 @@
-import { onMounted, onUnmounted, type Ref } from 'vue'
-
-interface UseOutsideClickOptions {
-  enabled?: boolean
-  ignore?: (string | Element | Ref<Element | null> | (() => Element | null))[]
-}
+import { onMounted, onUnmounted } from 'vue'
 
 /**
  * 检测元素外部点击的 composable
@@ -11,27 +6,23 @@ interface UseOutsideClickOptions {
  * @param callback - 点击外部时的回调函数
  * @param options - 配置选项
  */
-export const useOutsideClick = (
-  elementRef: Ref<Element | null>,
-  callback: (event: Event) => void,
-  options: UseOutsideClickOptions = {}
-) => {
+export const useOutsideClick = (elementRef, callback, options = {}) => {
   const { enabled = true, ignore = [] } = options
 
-  const handleClick = (event: Event) => {
+  const handleClick = event => {
     if (!enabled) return
 
     const element = unref(elementRef)
     if (!element) return
 
     // 检查点击的元素是否在目标元素内部
-    if (element.contains(event.target as Node)) return
+    if (element.contains(event.target)) return
 
     // 检查是否在忽略列表中
     const isIgnored = ignore.some(selector => {
       console.log('Checking ignore condition for:', selector)
       if (typeof selector === 'string') {
-        return (event.target as Element).closest(selector)
+        return event.target.closest(selector)
       }
       // 处理 Element 类型
       if (
@@ -40,19 +31,19 @@ export const useOutsideClick = (
         typeof selector.contains === 'function'
       ) {
         console.log('处理 Element 类型')
-        return selector.contains(event.target as Node)
+        return selector.contains(event.target)
       }
       // 处理函数类型
       if (typeof selector === 'function') {
         console.log('处理函数类型')
         const element = selector()
-        return element && element.contains(event.target as Node)
+        return element && element.contains(event.target)
       }
       // 处理 Ref<Element> 类型
       if (selector && 'value' in selector) {
         console.log('处理 Ref<Element> 类型')
-        const element = unref(selector as Ref<Element | null>)
-        return element && element.contains(event.target as Node)
+        const element = unref(selector)
+        return element && element.contains(event.target)
       }
       return false
     })

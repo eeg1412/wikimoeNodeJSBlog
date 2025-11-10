@@ -7,30 +7,30 @@ import httpRequest from '~/api'
  */
 
 const URL = `/game/list`
-const getGameListApi = (params: any) => {
+const getGameListApi = params => {
   return httpRequest.get(URL, params, { watch: false })
 }
-const getGameListApiFetch = (params: any) => {
+const getGameListApiFetch = params => {
   return httpRequest.getFetch(URL, params)
 }
 
 // detail
 const URL_DETAIL = `/game/detail`
-const getGameDetailApi = (params: any) => {
+const getGameDetailApi = params => {
   return httpRequest.get(URL_DETAIL, params, { watch: false })
 }
-const getGameDetailApiFetch = (params: any) => {
+const getGameDetailApiFetch = params => {
   return httpRequest.getFetch(URL_DETAIL, params)
 }
 
 const URL2 = `/game/platform/list`
-const getGamePlatformListApi = (params: any) => {
+const getGamePlatformListApi = params => {
   return httpRequest.get(URL2, params, { watch: false })
 }
 
 // /game/playing/list
 const URL3 = `/game/playing/list`
-const getGamePlayingListApi = (params: any) => {
+const getGamePlayingListApi = params => {
   return httpRequest.get(URL3, { watch: false })
 }
 

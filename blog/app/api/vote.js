@@ -8,7 +8,7 @@ import httpRequest from '~/api'
 
 // get /vote/detail
 const voteDetailURL = `/vote/detail`
-const getVoteDetailApi = (params: any) => {
+const getVoteDetailApi = params => {
   return httpRequest.getFetch(`${voteDetailURL}`, params, {
     shouldUuid: true
   })
@@ -16,7 +16,7 @@ const getVoteDetailApi = (params: any) => {
 
 // post /vote
 const voteURL = `/vote`
-const postVoteApi = (params: any) => {
+const postVoteApi = params => {
   return httpRequest.postFetch(`${voteURL}`, params, {
     shouldUuid: true
   })

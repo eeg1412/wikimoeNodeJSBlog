@@ -1,27 +1,19 @@
 import emoji from '@/utils/emoji.json'
 
-type OpenFunction = (
-  list: any[],
-  showIndex: number,
-  closeCallback?: () => void,
-  hashId?: string,
-  componentName?: string
-) => void
-
 let photoSwipe = {
-  open: null as OpenFunction | null
+  open: null
 }
 
-export function setPhotoSwipe(open: OpenFunction) {
+export function setPhotoSwipe(open) {
   photoSwipe.open = open
 }
 
 export function openPhotoSwipe(
-  list: any[],
-  showIndex: number,
-  closeCallback?: () => void,
-  hashId?: string,
-  componentName?: string
+  list,
+  showIndex,
+  closeCallback,
+  hashId,
+  componentName
 ) {
   if (photoSwipe.open) {
     photoSwipe.open(list, showIndex, closeCallback, hashId, componentName)
@@ -29,12 +21,12 @@ export function openPhotoSwipe(
 }
 
 // 复用 TextEncoder 实例
-let encoder: any = null
+let encoder = null
 if (import.meta.client) {
   encoder = new TextEncoder()
 }
 
-export function getImgListHashFromImgList(imgList: any[]) {
+export function getImgListHashFromImgList(imgList) {
   let hash = BigInt('0xcbf29ce484222325')
   const prime = BigInt('0x100000001b3')
 
@@ -64,10 +56,7 @@ export function getImgListHashFromImgList(imgList: any[]) {
 }
 
 // 格式化时间 支持1秒前、1分钟前、1小时前、1天前，超过1天显示具体时间，支持具体时间自定义格式
-export function fromNow(
-  date: string | number | Date,
-  fmt = 'yyyy-MM-dd hh:mm:ss'
-) {
+export function fromNow(date, fmt = 'yyyy-MM-dd hh:mm:ss') {
   date = new Date(date)
   const now = Date.now()
   // 如果来自未来的时间
@@ -90,13 +79,10 @@ export function fromNow(
   }
 }
 
-export function formatDate(
-  date: string | number | Date,
-  fmt = 'yyyy-MM-dd hh:mm:ss'
-) {
+export function formatDate(date, fmt = 'yyyy-MM-dd hh:mm:ss') {
   date = new Date(date)
 
-  const o: { [key: string]: number } = {
+  const o = {
     'M+': date.getMonth() + 1, // 月份
     'd+': date.getDate(), // 日
     'h+': date.getHours(), // 小时
@@ -130,7 +116,7 @@ export function formatDate(
 }
 
 // 转换数字格式，分k、m, b
-export function formatNumber(num: number) {
+export function formatNumber(num) {
   if (num < 10000) {
     return num
   } else if (num < 100000000) {
@@ -140,7 +126,7 @@ export function formatNumber(num: number) {
   }
 }
 
-export const limitStr = (str: string, len: number) => {
+export const limitStr = (str, len) => {
   const strArray = Array.from(str)
   if (strArray.length > len) {
     return strArray.slice(0, len).join('') + '...'
@@ -148,7 +134,7 @@ export const limitStr = (str: string, len: number) => {
   return str
 }
 
-export const getTitleFromText = (text: string): string => {
+export const getTitleFromText = text => {
   if (!text) return ''
   const limit = 50
   let title = text
@@ -215,11 +201,11 @@ export const getTitleFromText = (text: string): string => {
 
   if (ranges.length > 0) {
     // 合并并排序区间，便于快速判断包含关系
-    ranges.sort((a: any[], b: any[]) => a[0] - b[0])
-    const merged: any[] = []
-    let cur: any[] = ranges[0].slice()
+    ranges.sort((a, b) => a[0] - b[0])
+    const merged = []
+    let cur = ranges[0].slice()
     for (let i = 1; i < ranges.length; i++) {
-      const r: any[] = ranges[i]
+      const r = ranges[i]
       if (r[0] <= cur[1]) {
         // 有重叠或相邻，合并
         cur[1] = Math.max(cur[1], r[1])
@@ -231,7 +217,7 @@ export const getTitleFromText = (text: string): string => {
     merged.push(cur)
 
     // 辅助：检查索引是否在任一区间内
-    const isInRanges = (idx: number) => {
+    const isInRanges = idx => {
       // 线性或二分均可；这里区间数量通常很少，线性扫描且有早停
       for (let i = 0; i < merged.length; i++) {
         const [s, e] = merged[i]
@@ -272,7 +258,7 @@ export const getTitleFromText = (text: string): string => {
 }
 
 // 生成uuid
-export const uuid = (): string => {
+export const uuid = () => {
   return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
     // eslint-disable-next-line no-mixed-operators
     const r = (Math.random() * 16) | 0
@@ -282,7 +268,7 @@ export const uuid = (): string => {
   })
 }
 // 检查uuid是否格式是否合法
-export const checkUuidFormat = (uuid: string): boolean => {
+export const checkUuidFormat = uuid => {
   return /^[0-9A-F]{8}-[0-9A-F]{4}-4[0-9A-F]{3}-[89AB][0-9A-F]{3}-[0-9A-F]{12}$/i.test(
     uuid
   )
@@ -297,7 +283,7 @@ export const checkUuid = () => {
   return storedUuid
 }
 
-export const isObjectId = (value: string) => {
+export const isObjectId = value => {
   return value.match(/^[0-9a-fA-F]{24}$/)
 }
 
@@ -306,7 +292,7 @@ export const getEmoji = () => {
   return emoji
 }
 
-export const videoUrlToBlob = async (url: string): Promise<string> => {
+export const videoUrlToBlob = async url => {
   try {
     const response = await fetch(url)
     const blob = await response.blob()
@@ -317,12 +303,12 @@ export const videoUrlToBlob = async (url: string): Promise<string> => {
   }
 }
 
-export const revokeVideoObjectURL = (url: string) => {
+export const revokeVideoObjectURL = url => {
   URL.revokeObjectURL(url)
 }
 
 // 传入开始时间和结束时间，如果结束时间不存在用现在的时间，计算两个时间差，1天以内返回x小时，1天以上返回x天，1周以上返回x周x天，1个月以上返回x个月x天，1年以上返回x年x月
-export const getACGDuration = (startTime: string, endTime?: string) => {
+export const getACGDuration = (startTime, endTime) => {
   const start = new Date(startTime).getTime()
   const end = endTime ? new Date(endTime).getTime() : Date.now()
   const diff = end - start
@@ -355,7 +341,7 @@ export const getACGDuration = (startTime: string, endTime?: string) => {
   return result
 }
 
-export const ratingToText = (rating: number) => {
+export const ratingToText = rating => {
   if (rating >= 90) return '神作'
   if (rating >= 80) return '佳作'
   if (rating >= 70) return '良作'
@@ -369,7 +355,7 @@ export const ratingToText = (rating: number) => {
   return '暂无评分'
 }
 
-export const generateRandomString = (length: number) => {
+export const generateRandomString = length => {
   const characters = 'abcdefghijklmnopqrstuvwxyz0123456789'
   let result = ''
   for (let i = 0; i < length; i++) {
@@ -378,7 +364,7 @@ export const generateRandomString = (length: number) => {
   return result
 }
 
-export const seasonToName = (season: number) => {
+export const seasonToName = season => {
   switch (season) {
     case 1:
       return '冬季新番'
@@ -396,11 +382,11 @@ export const seasonToName = (season: number) => {
   }
 }
 
-export const nextFrame = (fn: () => void) => {
+export const nextFrame = fn => {
   window.requestAnimationFrame(() => window.requestAnimationFrame(fn))
 }
 
-export const copyToClipboard = async (text: string, toast: any) => {
+export const copyToClipboard = async (text, toast) => {
   try {
     await navigator.clipboard.writeText(text)
     if (!toast) return
@@ -421,10 +407,7 @@ export const copyToClipboard = async (text: string, toast: any) => {
   }
 }
 
-export const changedParams = (
-  checkedParams: object,
-  paramsValue: object
-): string[] => {
+export const changedParams = (checkedParams, paramsValue) => {
   console.log(checkedParams, paramsValue)
 
   // 获取两个对象的所有唯一字段
@@ -433,9 +416,7 @@ export const changedParams = (
   ]
 
   // 比较所有字段的值
-  const list = allKeys.filter(
-    key => (checkedParams as any)[key] !== (paramsValue as any)[key]
-  )
+  const list = allKeys.filter(key => checkedParams[key] !== paramsValue[key])
 
   console.log(list)
   return list

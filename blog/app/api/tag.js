@@ -7,13 +7,13 @@ import httpRequest from '~/api'
  */
 
 const URL = `/tag/detail`
-const getTagDetailApi = (params: any) => {
+const getTagDetailApi = params => {
   return httpRequest.get(URL, params)
 }
 
 // /tag/random/list
 const RandomURL = `/tag/random/list`
-const getRandomTagListApi = (params: any) => {
+const getRandomTagListApi = params => {
   return httpRequest.get(RandomURL, params)
 }
 

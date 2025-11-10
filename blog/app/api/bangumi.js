@@ -7,31 +7,31 @@ import httpRequest from '~/api'
  */
 
 const URL = `/bangumi/list`
-const getBangumiListApi = (params: any) => {
+const getBangumiListApi = params => {
   return httpRequest.get(URL, params, { watch: false })
 }
-const getBangumiListApiFetch = (params: any) => {
+const getBangumiListApiFetch = params => {
   return httpRequest.getFetch(URL, params)
 }
 
 // detail
 const URL1 = `/bangumi/detail`
-const getBangumiDetailApi = (params: any) => {
+const getBangumiDetailApi = params => {
   return httpRequest.get(URL1, params, { watch: false })
 }
-const getBangumiDetailApiFetch = (params: any) => {
+const getBangumiDetailApiFetch = params => {
   return httpRequest.getFetch(URL1, params)
 }
 
 // /bangumi/year/list
 const URL2 = `/bangumi/year/list`
-const getBangumiYearListApi = (params: any) => {
+const getBangumiYearListApi = params => {
   return httpRequest.get(URL2, { watch: false })
 }
 
 // /bangumi/season/list
 const URL3 = `/bangumi/season/list`
-const getBangumiSeasonListApi = (params: any) => {
+const getBangumiSeasonListApi = params => {
   return httpRequest.get(URL3, { watch: false })
 }
 

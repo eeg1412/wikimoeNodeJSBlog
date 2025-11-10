@@ -7,7 +7,7 @@ import httpRequest from '~/api'
  */
 
 const POSTURL = `/trend/post/list`
-const getTrendPostListApi = (params: any) => {
+const getTrendPostListApi = params => {
   return httpRequest.get(POSTURL, params)
 }
 

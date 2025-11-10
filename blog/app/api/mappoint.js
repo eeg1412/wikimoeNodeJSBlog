@@ -16,7 +16,7 @@ const getMappointListApi = () => {
  * @return {any} 返回地图标记点详情
  */
 const detailURL = `/mappoint/detail`
-const getMappointDetailApi = (params: { id: string }) => {
+const getMappointDetailApi = params => {
   return httpRequest.get(detailURL, params)
 }
 
@@ -28,7 +28,7 @@ const getMappointDetailApi = (params: { id: string }) => {
  * @return {any} 返回文章列表
  */
 const postListURL = `/mappoint/post/list`
-const getMappointPostListApi = (params: { id: string; page?: number }) => {
+const getMappointPostListApi = params => {
   return httpRequest.get(postListURL, params)
 }
 
@@ -46,7 +46,7 @@ const getMappointListApiFetch = () => {
  * @param {string} params.id - 地图标记点ID
  * @return {any} 返回地图标记点详情
  */
-const getMappointDetailApiFetch = (params: { id: string }) => {
+const getMappointDetailApiFetch = params => {
   return httpRequest.getFetch(detailURL, params)
 }
 
@@ -57,7 +57,7 @@ const getMappointDetailApiFetch = (params: { id: string }) => {
  * @param {number} params.page - 页码
  * @return {any} 返回文章列表
  */
-const getMappointPostListApiFetch = (params: { id: string; page?: number }) => {
+const getMappointPostListApiFetch = params => {
   return httpRequest.getFetch(postListURL, params)
 }
 

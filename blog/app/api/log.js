@@ -2,7 +2,7 @@ import httpRequest from '~/api'
 
 // post '/log/create'
 const createURL = `/log/create`
-const postLogCreateApi = (params: any) => {
+const postLogCreateApi = params => {
   return httpRequest.postFetch(`${createURL}`, params, {
     shouldUuid: true
   })
@@ -10,7 +10,7 @@ const postLogCreateApi = (params: any) => {
 
 // put /log/update/performance
 const updatePerformanceURL = `/log/update/performance`
-const putLogUpdatePerformanceApi = (params: any) => {
+const putLogUpdatePerformanceApi = params => {
   return httpRequest.putFetch(`${updatePerformanceURL}`, params, {
     shouldUuid: true
   })

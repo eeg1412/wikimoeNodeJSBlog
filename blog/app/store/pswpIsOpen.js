@@ -3,7 +3,7 @@ import { defineStore } from 'pinia'
 
 export const usePswpIsOpenStore = defineStore('pswpIsOpen', () => {
   const pswpIsOpen = ref(false)
-  function setPswpIsOpen(status: boolean) {
+  function setPswpIsOpen(status) {
     // console.error('setPswpIsOpen', status)
     pswpIsOpen.value = status
   }

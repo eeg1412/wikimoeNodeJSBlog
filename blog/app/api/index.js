@@ -1,24 +1,9 @@
-import type { UseFetchOptions } from 'nuxt/app'
-
-type Methods = 'GET' | 'POST' | 'DELETE' | 'PUT'
-
 const BASE_URL = '/api/blog'
 
-export interface IResultData<T> {
-  code: number
-  data: T
-  msg: string
-}
-
 class HttpRequest {
-  request<T = any>(
-    url: string,
-    method: Methods,
-    data: any,
-    options?: UseFetchOptions<T>
-  ) {
+  request(url, method, data, options) {
     return new Promise((resolve, reject) => {
-      const newOptions: UseFetchOptions<T> = {
+      const newOptions = {
         baseURL: BASE_URL,
         method: method,
         ...options
@@ -49,7 +34,7 @@ class HttpRequest {
     })
   }
 
-  requestFetch(url: string, options: any) {
+  requestFetch(url, options) {
     // 查看options内包含shouldUuid
     const shouldUuid = options.shouldUuid
     // 如果有就去本地拿uuid
@@ -82,7 +67,7 @@ class HttpRequest {
     }
     return new Promise((resolve, reject) => {
       $fetch(url, options)
-        .then((res: any) => {
+        .then(res => {
           resolve(res)
         })
         .catch(error => {
@@ -93,45 +78,45 @@ class HttpRequest {
 
   // 封装常用方法
 
-  get<T = any>(url: string, params?: any, options?: UseFetchOptions<T>) {
+  get(url, params, options) {
     return this.request(url, 'GET', params, options)
   }
 
-  post<T = any>(url: string, data: any, options?: UseFetchOptions<T>) {
+  post(url, data, options) {
     return this.request(url, 'POST', data, options)
   }
 
-  put<T = any>(url: string, data: any, options?: UseFetchOptions<T>) {
+  put(url, data, options) {
     return this.request(url, 'PUT', data, options)
   }
 
-  delete<T = any>(url: string, params: any, options?: UseFetchOptions<T>) {
+  delete(url, params, options) {
     return this.request(url, 'DELETE', params, options)
   }
 
   // requestFetch
-  getFetch(url: string, data: any, options: any = {}) {
+  getFetch(url, data, options = {}) {
     options.method = 'GET'
     options.baseURL = BASE_URL
     options.params = data
     return this.requestFetch(url, options)
   }
 
-  postFetch(url: string, data: any, options?: any) {
+  postFetch(url, data, options) {
     options.method = 'POST'
     options.baseURL = BASE_URL
     options.body = data
     return this.requestFetch(url, options)
   }
 
-  putFetch(url: string, data: any, options?: any) {
+  putFetch(url, data, options) {
     options.method = 'PUT'
     options.baseURL = BASE_URL
     options.body = data
     return this.requestFetch(url, options)
   }
 
-  deleteFetch(url: string, data: any, options?: any) {
+  deleteFetch(url, data, options) {
     options.method = 'DELETE'
     options.baseURL = BASE_URL
     options.params = data

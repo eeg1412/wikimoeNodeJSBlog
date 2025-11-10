@@ -7,25 +7,25 @@ import httpRequest from '~/api'
  */
 
 const URL = `/movie/list`
-const getMovieListApi = (params: any) => {
+const getMovieListApi = params => {
   return httpRequest.get(URL, params, { watch: false })
 }
-const getMovieListApiFetch = (params: any) => {
+const getMovieListApiFetch = params => {
   return httpRequest.getFetch(URL, params)
 }
 
 // detail
 const URL_DETAIL = `/movie/detail`
-const getMovieDetailApi = (params: any) => {
+const getMovieDetailApi = params => {
   return httpRequest.get(URL_DETAIL, params, { watch: false })
 }
-const getMovieDetailApiFetch = (params: any) => {
+const getMovieDetailApiFetch = params => {
   return httpRequest.getFetch(URL_DETAIL, params)
 }
 
 // /movie/year/list
 const URL_YEAR = `/movie/year/list`
-const getMovieYearListApi = (params: any) => {
+const getMovieYearListApi = params => {
   return httpRequest.get(URL_YEAR, params, { watch: false })
 }
 

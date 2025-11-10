@@ -7,30 +7,30 @@ import httpRequest from '~/api'
  */
 
 const URL = `/book/list`
-const getBookListApi = (params: any) => {
+const getBookListApi = params => {
   return httpRequest.get(URL, params, { watch: false })
 }
-const getBookListApiFetch = (params: any) => {
+const getBookListApiFetch = params => {
   return httpRequest.getFetch(URL, params)
 }
 
 // detail
 const URL_DETAIL = `/book/detail`
-const getBookDetailApi = (params: any) => {
+const getBookDetailApi = params => {
   return httpRequest.get(URL_DETAIL, params, { watch: false })
 }
-const getBookDetailApiFetch = (params: any) => {
+const getBookDetailApiFetch = params => {
   return httpRequest.getFetch(URL_DETAIL, params)
 }
 
 const URL2 = `/booktype/list`
-const getBooktypeListApi = (params: any) => {
+const getBooktypeListApi = params => {
   return httpRequest.get(URL2, params, { watch: false })
 }
 
 // /book/reading/list
 const URL3 = `/book/reading/list`
-const getBookReadingListApi = (params: any) => {
+const getBookReadingListApi = params => {
   return httpRequest.get(URL3, { watch: false })
 }
 

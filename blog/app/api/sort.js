@@ -12,7 +12,7 @@ const getSortListApi = () => {
 }
 // /sort/detail
 const URL_DETAIL = `/sort/detail`
-const getSortDetailApi = (params: any) => {
+const getSortDetailApi = params => {
   return httpRequest.get(URL_DETAIL, params)
 }
 
