@@ -10,13 +10,12 @@
     "postinstall": "nuxt prepare"
   },
   "devDependencies": {
-    "@nuxt/devtools": "latest",
-    "@types/node": "^24.10.0",
-    "nuxt": "^4.0.0",
-    "vue": "^3.5.0",
-    "vue-router": "^4.2.5"
+    "@types/node": "^24.10.0"
   },
   "dependencies": {
+    "nuxt": "^4.0.0",
+    "vue": "^3.5.0",
+    "vue-router": "^4.5.1",
     "@nuxt/ui": "^2.11.1",
     "@photo-sphere-viewer/core": "^5.14.0",
     "@photo-sphere-viewer/gyroscope-plugin": "^5.14.0",
