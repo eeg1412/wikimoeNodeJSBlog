@@ -487,8 +487,8 @@
                       <UButton
                         size="2xs"
                         icon="i-heroicons-heart"
-                        color="white"
-                        variant="solid"
+                        color="neutral"
+                        variant="outline"
                         @click="likeComment(item._id)"
                         :loading="likeCommentIsLoading[item._id] === true"
                         v-else
@@ -501,7 +501,7 @@
                       >
                         <UButton
                           size="2xs"
-                          color="white"
+                          color="neutral"
                           variant="ghost"
                           @click="openComment(item._id)"
                           v-if="item._id !== commentid"
@@ -509,7 +509,7 @@
                         >
                         <UButton
                           size="2xs"
-                          color="white"
+                          color="neutral"
                           variant="ghost"
                           @click="closeComment"
                           v-else
@@ -1213,6 +1213,8 @@ onUnmounted(() => {
 })
 </script>
 <style scoped>
+@reference '@/assets/css/main.css';
+
 .post-detail-body {
   position: relative;
   padding: 18px;

@@ -51,55 +51,52 @@
             </UPopover>
           </div>
         </div>
-        <UFormGroup name="content" :error="error.content">
+        <UFormField name="content" :error="error.content">
           <UTextarea
             class="comment-form-textarea"
             ref="contentRef"
             placeholder="说点什么吧..."
             v-model="form.content"
           />
-        </UFormGroup>
+        </UFormField>
 
         <div
           class="flex flex-col space-y-2 sm:flex-row sm:space-x-2 sm:space-y-0"
         >
           <div class="w-full sm:w-1/3">
-            <UFormGroup name="nickname" :error="error.nickname">
+            <UFormField name="nickname" :error="error.nickname">
               <UInput
                 class="flex-grow"
                 icon="i-heroicons-user-circle"
                 size="sm"
-                color="white"
                 :trailing="false"
                 v-model="form.nickname"
                 placeholder="昵称"
               />
-            </UFormGroup>
+            </UFormField>
           </div>
           <div class="w-full sm:w-1/3">
-            <UFormGroup name="email" :error="error.email">
+            <UFormField name="email" :error="error.email">
               <UInput
                 class="flex-grow"
                 icon="i-heroicons-at-symbol"
                 size="sm"
-                color="white"
                 :trailing="false"
                 v-model="form.email"
                 placeholder="邮箱（选填）"
-            /></UFormGroup>
+            /></UFormField>
           </div>
           <div class="w-full sm:w-1/3">
-            <UFormGroup name="url" :error="error.url">
+            <UFormField name="url" :error="error.url">
               <UInput
                 class="flex-grow"
                 icon="i-heroicons-link"
                 size="sm"
-                color="white"
                 :trailing="false"
                 name="url"
                 v-model="form.url"
                 placeholder="网址（选填）"
-            /></UFormGroup>
+            /></UFormField>
           </div>
 
           <div class="w-full sm:w-20">

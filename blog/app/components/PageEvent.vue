@@ -447,6 +447,8 @@ onMounted(() => {
 onUnmounted(() => {})
 </script>
 <style scoped>
+@reference '@/assets/css/main.css';
+
 .page-event-table {
   width: max-content;
 }

@@ -129,6 +129,8 @@ const getBackgroundImage = item => {
 </script>
 
 <style scoped>
+@reference '@/assets/css/main.css';
+
 .post-all-type-item-body {
   @apply border-gray-200;
   height: 6.5rem;

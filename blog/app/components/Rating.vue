@@ -35,6 +35,8 @@ const percent = computed(() => {
 })
 </script>
 <style scoped>
+@reference '@/assets/css/main.css';
+
 .rating-body {
   margin-top: 0px;
   position: relative;

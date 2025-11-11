@@ -247,6 +247,8 @@ const dayClick = day => {
 onMounted(() => {})
 </script>
 <style scoped>
+@reference '@/assets/css/main.css';
+
 .content {
   width: 100%;
 }

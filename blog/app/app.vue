@@ -1,11 +1,12 @@
 <template>
   <div class="blog-body">
-    <NuxtLoadingIndicator color="#ef90a7" />
-    <NuxtPage></NuxtPage>
-    <UNotifications />
-    <ClientOnly>
-      <PhotoSwipe />
-    </ClientOnly>
+    <UApp>
+      <NuxtLoadingIndicator color="#ef90a7" />
+      <NuxtPage></NuxtPage>
+      <ClientOnly>
+        <PhotoSwipe />
+      </ClientOnly>
+    </UApp>
   </div>
 </template>
 <script setup>

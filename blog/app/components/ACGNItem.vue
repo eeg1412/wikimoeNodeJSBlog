@@ -88,16 +88,9 @@
             标记：<UBadge
               v-for="(label, index) in item.label"
               :key="index"
-              color="white"
+              color="neutral"
+              variant="outline"
               size="xs"
-              :ui="{
-                color: {
-                  white: {
-                    solid:
-                      'ring-1 ring-inset ring-gray-300 dark:ring-gray-700 text-gray-500 dark:text-white bg-white dark:text-gray-300'
-                  }
-                }
-              }"
               class="mr-1 mt-1"
             >
               {{ label }}

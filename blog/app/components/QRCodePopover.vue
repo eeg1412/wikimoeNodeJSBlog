@@ -34,7 +34,7 @@
           />
         </div>
         <div class="mt-2">
-          <UButtonGroup size="xs" orientation="horizontal" class="w-full">
+          <UFieldGroup size="xs" orientation="horizontal" class="w-full">
             <UInput
               name="url"
               readonly
@@ -43,10 +43,11 @@
             />
             <UButton
               icon="i-heroicons-clipboard-document"
-              color="gray"
+              color="neutral"
+              variant="subtle"
               @click="copyText(getPostUrl)"
             />
-          </UButtonGroup>
+          </UFieldGroup>
         </div>
       </div>
     </template>

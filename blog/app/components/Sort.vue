@@ -54,6 +54,8 @@ const [sortData] = await Promise.all([getSortListApi()])
 const { data: sortListData } = sortData
 </script>
 <style scoped>
+@reference '@/assets/css/main.css';
+
 .sidebar-sort-body {
   padding-top: 10px;
 }

@@ -78,6 +78,8 @@ const imgLoad = () => {
 }
 </script>
 <style scoped>
+@reference '@/assets/css/main.css';
+
 .blog-avatar-body {
   @apply bg-gray-100;
   border-radius: 5px;

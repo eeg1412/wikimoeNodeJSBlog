@@ -49,6 +49,8 @@ const props = defineProps({
 })
 </script>
 <style scoped>
+@reference '@/assets/css/main.css';
+
 .my-page-banner {
   margin-top: -18px;
   margin-left: -18px;

@@ -107,6 +107,8 @@ const openLink = (item, midClick) => {
 }
 </style>
 <style>
+@reference '@/assets/css/main.css';
+
 .top-banner-list-body
   .swiper-pagination-progressbar
   .swiper-pagination-progressbar-fill {
@@ -115,6 +117,6 @@ const openLink = (item, midClick) => {
 .top-banner-list-body .swiper-pagination-progressbar {
   top: unset !important;
   bottom: 0px !important;
-  @apply bg-black bg-opacity-40;
+  @apply bg-black/40;
 }
 </style>

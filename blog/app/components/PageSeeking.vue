@@ -173,14 +173,14 @@ function slide() {
     slidecount > 33
       ? 1500
       : slidecount > 32
-        ? 800
-        : slidecount > 25
-          ? 400
-          : slidecount > 20
-            ? 200
-            : slidecount > 15
-              ? 150
-              : 100
+      ? 800
+      : slidecount > 25
+      ? 400
+      : slidecount > 20
+      ? 200
+      : slidecount > 15
+      ? 150
+      : 100
 
   var cardInfo = getNextCardText()
   cardList.value.push(cardInfo)
@@ -199,6 +199,8 @@ onUnmounted(() => {
 })
 </script>
 <style scoped>
+@reference '@/assets/css/main.css';
+
 .info {
   text-align: center;
   color: #dc143c;

@@ -160,6 +160,8 @@ const getBackgroundImage = item => {
 }
 </script>
 <style scoped>
+@reference '@/assets/css/main.css';
+
 .trend-item-body {
   border-color: #e2e2e2;
 }

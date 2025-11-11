@@ -1,12 +1,12 @@
 <template>
-  <UModal v-model="commonDialogOpen">
+  <UModal v-model:open="commonDialogOpen">
     <div
       class="flex items-center justify-between page-commonDialog-current-commonDialog-title"
     >
       <!-- slot -->
       <slot name="title"></slot>
       <UButton
-        color="gray"
+        color="neutral"
         variant="ghost"
         icon="i-heroicons-x-mark-20-solid"
         @click="commonDialogOpen = false"

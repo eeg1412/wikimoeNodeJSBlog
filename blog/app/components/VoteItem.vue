@@ -281,6 +281,8 @@ onUnmounted(() => {
 </script>
 
 <style scoped>
+@reference '@/assets/css/main.css';
+
 .vote-item-body {
   padding: 0.68rem 1rem 1rem 1rem;
   overflow: hidden;

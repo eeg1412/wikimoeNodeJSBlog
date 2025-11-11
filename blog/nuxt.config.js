@@ -163,7 +163,11 @@ export default defineNuxtConfig({
     // modules: ['navigation', 'pagination'], // all modules are imported by default
   },
 
-  css: ['~/assets/css/common.css', 'photoswipe/style.css'],
+  css: [
+    '~/assets/css/main.css',
+    '~/assets/css/common.css',
+    'photoswipe/style.css'
+  ],
 
   runtimeConfig: {
     // apiDomain: '',

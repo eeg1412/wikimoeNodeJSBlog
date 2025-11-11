@@ -15,6 +15,8 @@
 </template>
 <script setup></script>
 <style scoped>
+@reference '@/assets/css/main.css';
+
 .empty-body {
   width: 100%;
   padding: 60px 0;

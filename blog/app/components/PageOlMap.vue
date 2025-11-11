@@ -350,6 +350,8 @@ onUnmounted(() => {})
 </script>
 
 <style scoped>
+@reference '@/assets/css/main.css';
+
 .page-olmap-body {
   @apply border border-primary-200 border-solid dark:border-gray-700;
   border-radius: 8px;

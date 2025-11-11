@@ -1,0 +1,16 @@
+@import 'tailwindcss';
+@import '@nuxt/ui';
+
+@theme {
+  --color-wikimoe-50: #fef1f3;
+  --color-wikimoe-100: #fce8eb;
+  --color-wikimoe-200: #f9d2db;
+  --color-wikimoe-300: #f4aebe;
+  --color-wikimoe-400: #ef8fa7;
+  --color-wikimoe-500: #e9819d;
+  --color-wikimoe-600: #d85f85;
+  --color-wikimoe-700: #d4356a;
+  --color-wikimoe-800: #bf2b64;
+  --color-wikimoe-900: #a72a5e;
+  --color-wikimoe-950: #75153a;
+}

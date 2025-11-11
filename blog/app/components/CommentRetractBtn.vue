@@ -17,7 +17,9 @@
       <div class="flex flex-col gap-4">
         <div>确定要撤回这条评论吗？</div>
         <div class="flex justify-end gap-3">
-          <UButton color="gray" @click="isModalOpen = false">取消</UButton>
+          <UButton color="neutral" variant="subtle" @click="isModalOpen = false"
+            >取消</UButton
+          >
           <UButton color="primary" :loading="isLoading" @click="retractComment"
             >确认撤回</UButton
           >

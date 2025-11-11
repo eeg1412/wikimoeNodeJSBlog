@@ -130,8 +130,8 @@
             >
               <template #trailing>
                 <UButton
-                  color="gray"
-                  variant="link"
+                  color="neutral"
+                  variant="subtle"
                   icon="i-heroicons-magnifying-glass-20-solid"
                   :padded="false"
                   @click="goSearch"
@@ -435,6 +435,8 @@ onUnmounted(() => {
 })
 </script>
 <style scoped>
+@reference '@/assets/css/main.css';
+
 /* flex布局 左边固定300px 右边固定300px margin10 */
 .blog-layout-body {
   @apply bg-white;

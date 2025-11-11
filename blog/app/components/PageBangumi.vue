@@ -27,8 +27,8 @@
                     <template #trailing>
                       <UButton
                         v-show="filterCache.keyword"
-                        color="gray"
-                        variant="link"
+                        color="neutral"
+                        variant="subtle"
                         icon="i-heroicons-x-mark-20-solid"
                         :padded="false"
                         @click="filterCache.keyword = undefined"

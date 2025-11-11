@@ -66,6 +66,8 @@ const image = computed(() => {
 })
 </script>
 <style scoped>
+@reference '@/assets/css/main.css';
+
 .tweet-content-lite-item-body {
   @apply border-gray-200;
   height: 6.5rem;

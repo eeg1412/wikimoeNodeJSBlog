@@ -14,6 +14,8 @@ const reflushHome = () => {
 const runtimeConfig = useRuntimeConfig()
 </script>
 <style scoped>
+@reference '@/assets/css/main.css';
+
 /* 报错页面式样，画面居中显示，code粉色 */
 .error-body {
   width: 100%;

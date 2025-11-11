@@ -1,148 +1,9 @@
+@reference '@/assets/css/main.css';
+
 :root {
   --ol-subtle-foreground-color: rgb(var(--color-primary-500) / 1) !important;
   --ol-foreground-color: rgb(var(--color-primary-500) / 1) !important;
   --ol-background-color: rgba(255, 255, 255, 0.8) !important;
-}
-/*CSS reset*/
-body,
-div,
-dl,
-dt,
-dd,
-ul,
-ol,
-li,
-h1,
-h2,
-h3,
-h4,
-h5,
-h6,
-pre,
-code,
-form,
-fieldset,
-legend,
-input,
-textarea,
-p,
-blockquote,
-th,
-td,
-hr,
-button,
-article,
-aside,
-details,
-figcaption,
-figure,
-footer,
-header,
-hgroup,
-menu,
-nav,
-section {
-  margin: 0;
-  padding: 0;
-}
-table {
-  border-collapse: collapse;
-  border-spacing: 0;
-}
-fieldset,
-img {
-  border: 0;
-}
-ol,
-ul,
-li {
-  list-style: none;
-}
-caption {
-  text-align: left;
-  font-weight: normal;
-}
-q:before,
-q:after {
-  content: '';
-}
-abbr,
-acronym {
-  border: 0;
-  font-variant: normal;
-}
-sub,
-sup {
-  font-size: 65%;
-  line-height: 0;
-  position: relative;
-  vertical-align: baseline;
-}
-sup {
-  top: 2.1em;
-  right: 0.4em;
-}
-sub {
-  bottom: 0;
-  padding-left: 5px;
-}
-ins,
-a {
-  text-decoration: none;
-}
-a {
-  cursor: pointer;
-}
-a,
-li,
-input {
-  outline: none;
-}
-input,
-textarea,
-select {
-  font-family: inherit;
-  font-size: inherit;
-  font-weight: inherit;
-}
-legend {
-  color: #000;
-}
-:focus {
-  outline: 0;
-}
-blockquote,
-q {
-  quotes: '' '';
-}
-textarea {
-  resize: none;
-  overflow-y: auto;
-}
-img {
-  border: 0;
-  overflow: hidden;
-  text-align: center;
-  vertical-align: middle;
-}
-/*文字*/
-h1 {
-  font-size: 24px;
-}
-h2 {
-  font-size: 22px;
-}
-h3 {
-  font-size: 20px;
-}
-h4 {
-  font-size: 18px;
-}
-h5 {
-  font-size: 17px;
-}
-h6 {
-  font-size: 16px;
 }
 .f10 {
   font-size: 10px;
@@ -588,46 +449,6 @@ h6 {
 .pr_5 {
   padding-right: 5%;
 }
-/* html 5 Specific */
-article,
-aside,
-canvas,
-details,
-div,
-figcaption,
-figure,
-footer,
-header,
-menu,
-nav,
-section,
-summary,
-time,
-mark,
-audio,
-video {
-  margin: 0;
-  padding: 0;
-  border: 0;
-  outline: 0;
-  font-size: 100%;
-  vertical-align: middle;
-  background: transparent;
-}
-article,
-aside,
-canvas,
-details,
-figcaption,
-figure,
-footer,
-header,
-menu,
-nav,
-section,
-summary {
-  display: block;
-}
 /*--针对特定项目的页面的样式(可修改)--*/
 html,
 body {
@@ -659,28 +480,10 @@ body {
   background-position: center top;
 }
 /*-- 按钮 --*/
-input {
-  font-family: -apple-system, BlinkMacSystemFont, Helvetica Neue, PingFang SC,
-    Microsoft YaHei, Source Han Sans SC, Noto Sans CJK SC, WenQuanYi Micro Hei,
-    sans-serif;
-}
-input[type='button'],
-input[type='submit'] {
-  cursor: pointer;
-  -webkit-appearance: none;
-  -moz-appearance: none;
-}
 .inputType {
   display: block;
   box-sizing: border-box;
   border: none;
-}
-input[type='tel'],
-input[type='text'],
-input[type='number'],
-input[type='password'] {
-  -webkit-appearance: none;
-  -moz-appearance: none;
 }
 .cutDefault {
   -webkit-appearance: none;
@@ -1394,7 +1197,7 @@ ins.adsbygoogle[data-ad-status='unfilled'] {
   left: 0.5rem;
   /* 点击穿透 */
   pointer-events: none;
-  @apply rounded px-1 py-0.5 bg-primary-500 text-white dark:text-gray-900 bg-opacity-80 text-xs flex align-middle justify-center pointer mr-1 whitespace-nowrap;
+  @apply rounded px-1 py-0.5 bg-primary-500/80 text-white dark:text-gray-900 text-xs flex align-middle justify-center cursor-pointer mr-1 whitespace-nowrap;
 }
 
 .content-grid-list-2-1 {

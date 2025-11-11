@@ -13,19 +13,19 @@
     "@types/node": "^24.10.0"
   },
   "dependencies": {
-    "nuxt": "^4.0.0",
-    "vue": "^3.5.0",
-    "@nuxt/ui": "2.22.3",
+    "@nuxt/ui": "^4.1.0",
     "@photo-sphere-viewer/core": "^5.14.0",
     "@photo-sphere-viewer/gyroscope-plugin": "^5.14.0",
     "@pinia/nuxt": "^0.5.1",
     "highlight.js": "^11.11.1",
     "moment": "^2.30.1",
+    "nuxt": "^4.0.0",
     "nuxt-swiper": "^1.2.2",
     "ol": "^10.6.1",
     "photoswipe": "^5.4.4",
     "qrcode": "^1.5.4",
-    "vr-equirectangular-viewer": "^1.0.8"
+    "vr-equirectangular-viewer": "^1.0.8",
+    "vue": "^3.5.0"
   },
   "version": "0.34.0"
 }

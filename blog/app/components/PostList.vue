@@ -710,6 +710,8 @@ onMounted(() => {
 })
 </script>
 <style scoped>
+@reference '@/assets/css/main.css';
+
 /* .post-list-body {
   padding: 15px;
   padding-bottom: 0px;

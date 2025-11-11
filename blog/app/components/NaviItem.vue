@@ -120,6 +120,8 @@ const afterLeave = el => {
 }
 </script>
 <style scoped>
+@reference '@/assets/css/main.css';
+
 .blog-layout-sidebar-item {
   width: 100%;
   height: 40px;

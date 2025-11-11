@@ -1,5 +1,5 @@
 <template>
-  <CommonDialog v-model:show="eventOpen">
+  <CommonDialog v-model:show="eventOpen" v-if="currentData">
     <template #title>
       <h3
         class="text-base font-semibold leading-6 text-gray-900 dark:text-white"
