@@ -1,7 +1,7 @@
 <template>
   <div v-if="ipInfo">
-    <div class="dflex flexMiddle">
-      <div>{{ str }}</div>
+    <div>
+      <div class="di">{{ str }}</div>
 
       <el-tooltip
         effect="dark"
@@ -15,7 +15,7 @@
             {{ englishStr }}
           </div>
         </template>
-        <div class="ml5">
+        <div class="ml5 di">
           <el-link type="primary"><i class="fa fa-language f16"></i></el-link>
         </div>
       </el-tooltip>
