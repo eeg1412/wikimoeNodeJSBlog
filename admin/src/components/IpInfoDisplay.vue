@@ -41,9 +41,10 @@ export default {
       if (!props.ipInfo) return ''
       const { countryLong = '', region = '', city = '' } = props.ipInfo
       if (!countryLong) return ''
-      return `${countryLong}${region !== city ? ' ' + region : ''}${
-        countryLong !== city ? ' ' + city : ''
-      }`
+      const result = `${countryLong}${
+        region !== city && region !== countryLong ? ' ' + region : ''
+      }${countryLong !== city ? ' ' + city : ''}`
+      return result.trim()
     })
 
     watch(
@@ -73,7 +74,9 @@ export default {
         const cityTranslations = regionTranslationMap?.get(city) || city
 
         str.value = `${countryTranslation}${
-          region !== city ? ' ' + regionTranslation : ''
+          region !== city && region !== countryLong
+            ? ' ' + regionTranslation
+            : ''
         }${countryLong !== city ? ' ' + cityTranslations : ''}`
       },
       { immediate: true }
