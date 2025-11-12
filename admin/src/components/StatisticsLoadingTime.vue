@@ -365,11 +365,15 @@
             height="440px"
             empty-text="暂无数据"
           >
-            <el-table-column
-              prop="country"
-              label="国家/地区"
-              min-width="150"
-            ></el-table-column>
+            <el-table-column prop="country" label="国家/地区" min-width="150">
+              <template #default="{ row }">
+                <IpInfoDisplay
+                  :ipInfo="{
+                    countryLong: row.country
+                  }"
+                />
+              </template>
+            </el-table-column>
             <el-table-column label="平均加载时间" width="120">
               <template #default="{ row }">
                 {{ formatDuration(row.avgDuration) }} 秒
@@ -404,11 +408,15 @@
             height="440px"
             empty-text="暂无数据"
           >
-            <el-table-column
-              prop="country"
-              label="国家/地区"
-              min-width="150"
-            ></el-table-column>
+            <el-table-column prop="country" label="国家/地区" min-width="150">
+              <template #default="{ row }">
+                <IpInfoDisplay
+                  :ipInfo="{
+                    countryLong: row.country
+                  }"
+                />
+              </template>
+            </el-table-column>
             <el-table-column label="平均加载时间" width="120">
               <template #default="{ row }">
                 {{ formatDuration(row.avgDuration) }} 秒
@@ -446,11 +454,11 @@
             height="440px"
             empty-text="暂无数据"
           >
-            <el-table-column
-              prop="location"
-              label="行政区划"
-              min-width="150"
-            ></el-table-column>
+            <el-table-column prop="location" label="行政区划" min-width="150">
+              <template #default="{ row }">
+                <IpInfoDisplay :ipInfo="row.ipInfo" />
+              </template>
+            </el-table-column>
             <el-table-column label="平均加载时间" width="120">
               <template #default="{ row }">
                 {{ formatDuration(row.avgDuration) }} 秒
@@ -485,11 +493,11 @@
             height="440px"
             empty-text="暂无数据"
           >
-            <el-table-column
-              prop="location"
-              label="行政区划"
-              min-width="150"
-            ></el-table-column>
+            <el-table-column prop="location" label="行政区划" min-width="150">
+              <template #default="{ row }">
+                <IpInfoDisplay :ipInfo="row.ipInfo" />
+              </template>
+            </el-table-column>
             <el-table-column label="平均加载时间" width="120">
               <template #default="{ row }">
                 {{ formatDuration(row.avgDuration) }} 秒

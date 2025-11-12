@@ -1015,6 +1015,10 @@ module.exports = async function (req, res, next) {
                   else: { $concat: ['$_id.country', ' ', '$_id.region'] } // 否则显示国家+空格+地区
                 }
               },
+              ipInfo: {
+                countryLong: '$_id.country',
+                region: '$_id.region'
+              },
               count: 1
             }
           },

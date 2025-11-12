@@ -307,6 +307,10 @@ module.exports = async function (req, res, next) {
                     else: { $concat: ['$_id.country', ' ', '$_id.region'] } // 否则显示国家+空格+地区
                   }
                 },
+                ipInfo: {
+                  countryLong: '$_id.country',
+                  region: '$_id.region'
+                },
                 avgDuration: { $round: ['$avgDuration', 0] },
                 count: 1
               }
@@ -350,6 +354,10 @@ module.exports = async function (req, res, next) {
                     then: '$_id.country', // 如果国家和地区相同，只显示一次
                     else: { $concat: ['$_id.country', ' ', '$_id.region'] } // 否则显示国家+空格+地区
                   }
+                },
+                ipInfo: {
+                  countryLong: '$_id.country',
+                  region: '$_id.region'
                 },
                 avgDuration: { $round: ['$avgDuration', 0] },
                 count: 1

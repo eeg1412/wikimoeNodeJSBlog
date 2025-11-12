@@ -568,7 +568,15 @@
         <div class="mb10 fb statistics-title">国家/地区</div>
         <div class="mb10 statistics-panel">
           <el-table :data="countryStatsData" style="width: 100%" height="440px">
-            <el-table-column prop="_id" label="国家/地区"> </el-table-column>
+            <el-table-column prop="_id" label="国家/地区">
+              <template #default="{ row }">
+                <IpInfoDisplay
+                  :ipInfo="{
+                    countryLong: row._id
+                  }"
+                />
+              </template>
+            </el-table-column>
             <el-table-column
               prop="count"
               label="访问量"
@@ -594,6 +602,9 @@
         <div class="mb10 statistics-panel">
           <el-table :data="regionStatsData" style="width: 100%" height="440px">
             <el-table-column prop="location" label="行政区划">
+              <template #default="{ row }">
+                <IpInfoDisplay :ipInfo="row.ipInfo" />
+              </template>
             </el-table-column>
             <el-table-column
               prop="count"
