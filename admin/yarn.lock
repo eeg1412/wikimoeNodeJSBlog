@@ -4040,10 +4040,10 @@ joi@^17.4.0:
     "@sideway/formula" "^3.0.1"
     "@sideway/pinpoint" "^2.0.0"
 
-js-locations-zh@^1.0.4:
-  version "1.0.4"
-  resolved "https://registry.yarnpkg.com/js-locations-zh/-/js-locations-zh-1.0.4.tgz#335fc873ccff8bfea4de334575d3dc82d5a91dd2"
-  integrity sha512-GTEoeQMBQM4C2DcMlHHM9ZmvP3eFPHKRldealdlPacNipBdzZLeV1AR2N9ZktGjDXKBkGFirsVoEEv/cSN7Tww==
+js-locations-zh@^1.0.5:
+  version "1.0.5"
+  resolved "https://registry.yarnpkg.com/js-locations-zh/-/js-locations-zh-1.0.5.tgz#9807c69350222faaedec78f212a61ac6d55b50c3"
+  integrity sha512-YNKRiZHrKPLUdKhtj1h5Q1NtWgJm9blswHiLIJbjgIO0uOnQs9IEiAgN+iduYGPIcmTMX2cXtjdcrPUsTnqszg==
 
 js-message@1.0.7:
   version "1.0.7"
