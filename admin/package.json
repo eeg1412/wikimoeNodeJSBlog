@@ -18,7 +18,7 @@
     "core-js": "^3.8.3",
     "element-plus": "^2.5.5",
     "idb-keyval": "^6.2.1",
-    "js-locations-zh": "^1.0.5",
+    "js-locations-zh": "^1.0.6",
     "moment": "^2.29.4",
     "photoswipe": "^5.4.4",
     "vue": "^3.2.13",
