@@ -11,7 +11,7 @@
       class="flex-1 min-w-0 pr-4 pl-3 py-2 tweet-content-lite-item-left transition duration-500"
     >
       <div
-        class="line-clamp-3 text-gray-800 dark:text-gray-200 font-semibold text-sm break-words tweet-content-lite-item-title"
+        class="line-clamp-3 text-gray-800 dark:text-gray-200 font-semibold text-sm break-words tweet-content-lite-item-title break-all"
       >
         {{ item.excerpt || '推文' }}
       </div>
