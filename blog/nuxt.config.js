@@ -50,6 +50,10 @@ let routeRules = {
   '/ads.txt': {
     proxy: `${process.env.NUXT_API_DOMAIN}/ads.txt`
   },
+  // robots.txt
+  '/robots.txt': {
+    proxy: `${process.env.NUXT_API_DOMAIN}/seo/blog/robots.txt`
+  },
   '/geojson/world-mid.json': {
     headers: {
       'Cache-Control': 'public, max-age=31536000, immutable'

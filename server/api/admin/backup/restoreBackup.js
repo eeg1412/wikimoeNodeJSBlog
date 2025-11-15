@@ -9,6 +9,8 @@ const cacheDataUtils = require('../../../config/cacheData')
 const globalConfigUtils = require('../../../config/globalConfig')
 const rssToolUtils = require('../../../utils/rss')
 const sitemapToolUtils = require('../../../utils/sitemap')
+// robots.txt utils
+const robotsTxtToolUtils = require('../../../utils/robotstxt')
 
 module.exports = async function (req, res, next) {
   const id = req.body.id
@@ -79,7 +81,9 @@ module.exports = async function (req, res, next) {
           name: `【${data.name}】的还原`,
           type: 2,
           fileStatus: 2,
-          remark: `在${moment().format('YYYY-MM-DD HH:mm:ss')}还原了备份【${data.name}】`
+          remark: `在${moment().format('YYYY-MM-DD HH:mm:ss')}还原了备份【${
+            data.name
+          }】`
         })
         .then(restoreData => {
           // 更新备份文件状态
@@ -147,6 +151,7 @@ module.exports = async function (req, res, next) {
             cacheDataUtils.getMovieYearList()
             rssToolUtils.reflushRSS()
             sitemapToolUtils.reflushSitemap()
+            robotsTxtToolUtils.reflushRobotsTxt()
           })
           res.send({})
           adminApiLog.info(`restore backup`)

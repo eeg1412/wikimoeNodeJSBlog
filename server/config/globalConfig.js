@@ -82,7 +82,9 @@ const initGlobalConfig = async () => {
     // 加载动画文案
     siteShowLoadingText: '',
     // 显示版本号
-    siteShowBlogVersion: false
+    siteShowBlogVersion: false,
+    // robots.txt
+    siteRobotsTxt: ''
   }
   const commentSettingsConfig = {
     // 开启评论

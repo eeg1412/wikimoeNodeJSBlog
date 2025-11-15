@@ -19,6 +19,7 @@ var adminRouter = require('./routes/admin')
 const blogRouter = require('./routes/blog')
 const rssRouter = require('./routes/rss/index')
 const sitemapToolUtils = require('./utils/sitemap')
+const robotsTxtToolUtils = require('./utils/robotstxt')
 
 var app = express()
 
@@ -95,6 +96,11 @@ app.use((err, req, res, next) => {
   }
   next()
 })
+// robots.txt
+app.use('/seo/blog/robots.txt', async function (req, res) {
+  robotsTxtToolUtils.getRobotsTxt(req, res)
+})
+
 app.use('/api/admin', adminRouter)
 app.use('/api/blog', blogRouter)
 app.use('/rss', rssRouter)

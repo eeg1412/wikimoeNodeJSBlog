@@ -188,6 +188,15 @@
     <el-form-item label="底部显示版本号" prop="siteShowBlogVersion">
       <el-switch v-model="siteSettingsForm.siteShowBlogVersion"></el-switch>
     </el-form-item>
+    <!-- robots.txt -->
+    <el-form-item label="robots.txt" prop="siteRobotsTxt">
+      <el-input
+        type="textarea"
+        v-model="siteSettingsForm.siteRobotsTxt"
+        :rows="6"
+        placeholder="自定义robots.txt内容。"
+      ></el-input>
+    </el-form-item>
     <!-- Gravatar头像图源 -->
     <el-form-item label="Gravatar头像图源" prop="siteGravatarSource">
       <el-input
@@ -286,7 +295,9 @@ export default {
       // 加载动画文案
       siteShowLoadingText: '',
       // 显示版本号
-      siteShowBlogVersion: false
+      siteShowBlogVersion: false,
+      // robots.txt
+      siteRobotsTxt: ''
     })
     const onSiteUrlBlur = () => {
       // 去掉最末尾的斜杠

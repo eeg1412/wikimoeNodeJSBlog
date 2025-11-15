@@ -3,6 +3,8 @@ const globalConfigUtils = require('../config/globalConfig')
 const cacheDataUtils = require('../config/cacheData')
 const rssToolUtils = require('../utils/rss')
 const sitemapToolUtils = require('../utils/sitemap')
+// robots.txt utils
+const robotsTxtToolUtils = require('../utils/robotstxt')
 let mongodbErrorCount = 0
 console.info('数据库连接中...')
 // console.log('数据库地址：', process.env.DB_HOST);
@@ -49,6 +51,7 @@ db.on('open', async () => {
   cacheDataUtils.getMovieYearList()
   rssToolUtils.reflushRSS()
   sitemapToolUtils.reflushSitemap()
+  robotsTxtToolUtils.reflushRobotsTxt()
   global.$isReady = true
 })
 
