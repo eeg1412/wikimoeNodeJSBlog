@@ -45,7 +45,7 @@
 
 ## 当前已知问题
 
-1. 如果不做任何设置的话，资源文件默认是通过 nuxt4 反代到 express 获取资源文件的，此时如果用 nginx 再去反代资源文件的话会出现 safari 无法查看视频的问题，如果用 nginx 代理博客的话，请将以下路径反代到博客 API 的地址。
+1. 如果不做任何设置的话，资源文件默认是通过 nuxt 反代到 express 获取资源文件的，此时如果用 nginx 再去反代资源文件的话会出现 safari 无法查看视频的问题，如果用 nginx 代理博客的话，请将以下路径反代到博客 API 的地址。
 
 - /content
 - /upload
@@ -88,7 +88,7 @@ location /upload {
 
 【维基萌博客系统】的架构如下图所示：
 
-![image](https://github.com/eeg1412/wikimoeNodeJSBlog/assets/27753071/997d9cb4-56fc-4886-b155-bb5102fd20b9)
+![image](https://github.com/user-attachments/assets/c5dc6874-e6ca-4910-833d-01234616ad22)
 
 项目目录分为三个部分  
 server：博客 api 部分  
