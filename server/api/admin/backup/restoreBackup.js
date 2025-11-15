@@ -85,7 +85,12 @@ module.exports = async function (req, res, next) {
             data.name
           }】`
         })
-        .then(restoreData => {
+        .then(async restoreData => {
+          res.send({})
+
+          // 5秒后开始，还原备份，给前端响应时间
+          await utils.sleep(5000)
+          global.$isReady = false
           // 更新备份文件状态
           // 开始还原
           const restoreWorker = new Worker('./utils/workers/restoreWorker.js')
@@ -136,9 +141,16 @@ module.exports = async function (req, res, next) {
               )
             }
             // 关闭 worker
-            restoreWorker.terminate().then(() => {
-              console.log('Worker terminated')
-            })
+            restoreWorker
+              .terminate()
+              .then(() => {
+                console.log('Worker terminated')
+                global.$isReady = true
+              })
+              .catch(err => {
+                global.$isReady = true
+                adminApiLog.error(`restore backup fail, ${logErrorToText(err)}`)
+              })
             // 重新加载缓存
             // 更新时注意同时更新初始化数据库的地方
             await globalConfigUtils.initGlobalConfig()
@@ -153,7 +165,7 @@ module.exports = async function (req, res, next) {
             sitemapToolUtils.reflushSitemap()
             robotsTxtToolUtils.reflushRobotsTxt()
           })
-          res.send({})
+
           adminApiLog.info(`restore backup`)
         })
         .catch(err => {

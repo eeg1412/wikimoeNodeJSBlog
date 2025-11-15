@@ -1307,6 +1307,10 @@ exports.formatDateByTimezone = function (date, timezone, format) {
   }
 }
 
+exports.sleep = function (ms) {
+  return new Promise(resolve => setTimeout(resolve, ms))
+}
+
 // let reflushBlogCacheTimer = null
 // exports.reflushBlogCache = async () => {
 //   if (reflushBlogCacheTimer) {

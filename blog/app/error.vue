@@ -1,7 +1,7 @@
 <template>
   <div class="error-body">
     <div class="error-code">{{ error.statusCode }}</div>
-    <div class="error-msg">{{ error.message || error.statusMessage }}</div>
+    <div class="error-msg">{{ errorMessage }}</div>
     <!-- 尝试回到首页 -->
     <div class="error-btn pointer" @click="reflushHome">{{ btnText }}</div>
   </div>
@@ -19,6 +19,21 @@ const isHome = computed(() => {
 const btnText = computed(() => {
   return isHome.value ? '尝试刷新' : '返回首页'
 })
+
+const errorMessage = computed(() => {
+  switch (error.value.statusCode) {
+    case 404:
+      return '您访问的页面不存在。'
+    case 403:
+      return '您当前没有权限访问此页面。'
+    case 500:
+      return '服务器出现了问题,请稍后再试。'
+    case 503:
+      return '服务器正在维护中，请稍后再试。'
+    default:
+      return error.message || error.statusMessage
+  }
+})
 </script>
 <style scoped>
 /* 报错页面式样，画面居中显示，code粉色 */
@@ -33,6 +48,7 @@ const btnText = computed(() => {
   align-items: center;
   background: #ffffff;
   height: 100dvh;
+  padding: 10px;
 }
 .error-code {
   font-size: 100px;

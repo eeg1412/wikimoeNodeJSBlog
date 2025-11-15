@@ -95,6 +95,12 @@ api.interceptors.response.use(
           }
         }
         break
+      case 503:
+        ElMessage.error({
+          message: '服务器可能正在维护中，请稍后再试。',
+          'custom-class': 'common-message-error'
+        })
+        break
       default:
         ElMessage.error({
           message: '发生错误。code:' + status,

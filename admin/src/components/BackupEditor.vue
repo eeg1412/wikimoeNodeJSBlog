@@ -23,6 +23,12 @@
             placeholder="请输入备注"
           ></el-input>
         </el-form-item>
+        <!-- 我已知晓备份时站点将不可用 -->
+        <el-form-item v-if="!id" prop="acknowledged">
+          <el-checkbox v-model="form.acknowledged">
+            <span class="cRed">我已知晓备份时站点将不可用</span>
+          </el-checkbox>
+        </el-form-item>
       </el-form>
     </div>
     <template #footer>
@@ -52,10 +58,23 @@ export default {
     const form = reactive({
       __v: null,
       name: '',
-      remark: ''
+      remark: '',
+      acknowledged: false
     })
     const rules = reactive({
-      name: [{ required: true, message: '请输入名称', trigger: 'blur' }]
+      name: [{ required: true, message: '请输入名称', trigger: 'blur' }],
+      acknowledged: [
+        {
+          validator: (rule, value, callback) => {
+            if (!value) {
+              callback(new Error('请确认已知晓备份时站点将不可用'))
+            } else {
+              callback()
+            }
+          },
+          trigger: 'change'
+        }
+      ]
     })
     const formRef = ref(null)
     const submit = () => {

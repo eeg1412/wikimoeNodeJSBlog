@@ -46,8 +46,19 @@ module.exports = async function (req, res, next) {
   backupUtils
     .save(params)
     .then(async data => {
+      res.send({
+        data: data
+      })
+
+      // 5秒后开始创建备份，给前端响应时间
+      await utils.sleep(5000)
+
+      global.$isReady = false
+
+      // 创建备份任务
       const backupWorker = new Worker('./utils/workers/backupWorker.js')
       const id = data._id
+
       backupWorker.postMessage(String(id))
 
       backupWorker.on('message', message => {
@@ -71,12 +82,16 @@ module.exports = async function (req, res, next) {
           )
         }
         // 关闭 worker
-        backupWorker.terminate().then(() => {
-          console.log('Worker terminated')
-        })
-      })
-      res.send({
-        data: data
+        backupWorker
+          .terminate()
+          .then(() => {
+            console.log('Worker terminated')
+            global.$isReady = true
+          })
+          .catch(err => {
+            global.$isReady = true
+            adminApiLog.error(`backup create fail, ${logErrorToText(err)}`)
+          })
       })
       adminApiLog.info(`backup document create success`)
     })
