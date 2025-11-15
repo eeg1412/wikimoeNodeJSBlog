@@ -1,6 +1,6 @@
 <template>
   <div
-    class="tweet-content-lite-item-body min-w-0 flex border border-solid cursor-pointer rounded-md overflow-hidden transition-border-color duration-500 bg-white dark:bg-gray-800/40"
+    class="tweet-content-lite-item-body flex border border-solid cursor-pointer rounded-md overflow-hidden transition-border-color duration-500 bg-white dark:bg-gray-800/40"
   >
     <!-- 图片区域 -->
     <div class="tweet-content-lite-item-images">
