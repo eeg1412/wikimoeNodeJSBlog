@@ -1,6 +1,6 @@
 <template>
   <div
-    class="tweet-content-lite-item-body flex border border-solid cursor-pointer rounded-md overflow-hidden transition-border-color duration-500 bg-white dark:bg-gray-800/40"
+    class="tweet-content-lite-item-body min-w-0 flex border border-solid cursor-pointer rounded-md overflow-hidden transition-border-color duration-500 bg-white dark:bg-gray-800/40"
   >
     <!-- 图片区域 -->
     <div class="tweet-content-lite-item-images">
@@ -11,7 +11,7 @@
       class="flex-1 min-w-0 pr-4 pl-3 py-2 tweet-content-lite-item-left transition duration-500"
     >
       <div
-        class="line-clamp-3 text-gray-800 dark:text-gray-200 font-semibold text-sm break-words tweet-content-lite-item-title break-all"
+        class="line-clamp-3 text-gray-800 dark:text-gray-200 font-semibold text-sm break-words tweet-content-lite-item-title"
       >
         {{ item.excerpt || '推文' }}
       </div>
