@@ -18,6 +18,7 @@ data
 /server/public/ucloudImg/*
 /server/seo/sitemap/sitemap.xml
 /server/seo/rss/*
+/server/seo/robots/*
 /server/front/*
 /server/config/globalConfig.json
 /server/uploadCache/*
