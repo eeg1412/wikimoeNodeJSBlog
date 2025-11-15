@@ -2,8 +2,6 @@ const optionUtils = require('../../../mongodb/utils/options')
 const utils = require('../../../utils/utils')
 const rssToolUtils = require('../../../utils/rss')
 const sitemapToolUtils = require('../../../utils/sitemap')
-// robots.txt utils
-const robotsTxtToolUtils = require('../../../utils/robotstxt')
 const log4js = require('log4js')
 const adminApiLog = log4js.getLogger('adminApi')
 const globalConfigUtils = require('../../../config/globalConfig')
@@ -68,7 +66,6 @@ module.exports = async function (req, res, next) {
   cacheDataUtils.getPostArchiveList()
   rssToolUtils.reflushRSS()
   sitemapToolUtils.reflushSitemap()
-  robotsTxtToolUtils.reflushRobotsTxt()
   // utils.reflushBlogCache()
   // 返回结果
   res.send({

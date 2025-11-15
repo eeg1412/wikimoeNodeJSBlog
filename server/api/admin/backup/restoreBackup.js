@@ -9,8 +9,6 @@ const cacheDataUtils = require('../../../config/cacheData')
 const globalConfigUtils = require('../../../config/globalConfig')
 const rssToolUtils = require('../../../utils/rss')
 const sitemapToolUtils = require('../../../utils/sitemap')
-// robots.txt utils
-const robotsTxtToolUtils = require('../../../utils/robotstxt')
 
 module.exports = async function (req, res, next) {
   const id = req.body.id
@@ -163,7 +161,6 @@ module.exports = async function (req, res, next) {
             cacheDataUtils.getMovieYearList()
             rssToolUtils.reflushRSS()
             sitemapToolUtils.reflushSitemap()
-            robotsTxtToolUtils.reflushRobotsTxt()
           })
 
           adminApiLog.info(`restore backup`)

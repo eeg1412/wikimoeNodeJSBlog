@@ -19,7 +19,6 @@ var adminRouter = require('./routes/admin')
 const blogRouter = require('./routes/blog')
 const rssRouter = require('./routes/rss/index')
 const sitemapToolUtils = require('./utils/sitemap')
-const robotsTxtToolUtils = require('./utils/robotstxt')
 
 var app = express()
 
@@ -98,7 +97,8 @@ app.use((err, req, res, next) => {
 })
 // robots.txt
 app.use('/seo/blog/robots.txt', async function (req, res) {
-  robotsTxtToolUtils.getRobotsTxt(req, res)
+  res.setHeader('Content-Type', 'text/plain')
+  res.send(global.$globalConfig?.siteSettings?.siteRobotsTxt || '')
 })
 
 app.use('/api/admin', adminRouter)
@@ -120,7 +120,7 @@ app.use('/sitemap.xsl', function (req, res) {
 // AdAdsTxt ads.txt
 app.use('/ads.txt', function (req, res) {
   res.type('text/plain')
-  res.send(global.$globalConfig.adSettings.AdAdsTxt)
+  res.send(global.$globalConfig?.adSettings?.AdAdsTxt || '')
 })
 // 所有第一级路径不是/admin的，都返回404
 app.use((req, res, next) => {
