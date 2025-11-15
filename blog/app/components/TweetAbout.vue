@@ -13,7 +13,7 @@
       }"
     >
       <div
-        class="header-scroll-margin-top content-grid-list-2-1-item"
+        class="min-w-0 header-scroll-margin-top content-grid-list-2-1-item"
         v-for="item in tweetList"
         :id="`post-${idPrefix}-${item._id}-${postId}`"
         :key="item._id"
