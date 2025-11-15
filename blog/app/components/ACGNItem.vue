@@ -16,7 +16,80 @@
             fit="contain"
           />
         </div>
+        <!-- <div class="text-xs text-gray-500 font-medium">本站评分</div> -->
         <Rating :rating="item.rating" />
+        <!-- 好评中评差评按钮 -->
+        <!-- <div
+          class="text-xs text-gray-500 font-medium border-t border-gray-200 pt-1 mt-1"
+        >
+          大众评价
+        </div> -->
+        <div
+          class="border border-solid border-gray-200 dark:border-gray-700 dark:bg-black/30 rounded p-1 mt-2"
+        >
+          <div class="acgn-rating-buttons flex flex-col space-y-0">
+            <button
+              class="acgn-rating-button flex items-center cursor-pointer bg-transparent border-none py-0.5 px-1"
+            >
+              <UIcon
+                name="i-heroicons-hand-thumb-up"
+                class="w-4 h-4 text-green-500 text-xs flex-shrink-0"
+              />
+              <div
+                class="acgn-progress-bar bg-gray-200 dark:bg-gray-700 rounded-full h-3 flex-1 relative ml-1 overflow-hidden"
+              >
+                <div
+                  class="acgn-progress-fill bg-green-500/80 h-full"
+                  style="width: 58.8%"
+                ></div>
+                <span
+                  class="acgn-progress-text text-xs text-gray-700 dark:text-gray-300 font-bold"
+                  >{{ formatNumber(10054654) }}</span
+                >
+              </div>
+            </button>
+            <button
+              class="acgn-rating-button flex items-center cursor-pointer bg-transparent border-none py-0.5 px-1"
+            >
+              <UIcon
+                name="i-heroicons-minus"
+                class="w-4 h-4 text-yellow-500 text-xs flex-shrink-0"
+              />
+              <div
+                class="acgn-progress-bar bg-gray-200 dark:bg-gray-700 rounded-full h-3 flex-1 relative ml-1 overflow-hidden"
+              >
+                <div
+                  class="acgn-progress-fill bg-yellow-500/80 h-full"
+                  style="width: 29.4%"
+                ></div>
+                <span
+                  class="acgn-progress-text text-xs text-gray-700 dark:text-gray-300 font-bold"
+                  >{{ formatNumber(1005400654) }}</span
+                >
+              </div>
+            </button>
+            <button
+              class="acgn-rating-button flex items-center cursor-pointer bg-transparent border-none py-0.5 px-1"
+            >
+              <UIcon
+                name="i-heroicons-hand-thumb-down"
+                class="w-4 h-4 text-red-500 text-xs flex-shrink-0"
+              />
+              <div
+                class="acgn-progress-bar bg-gray-200 dark:bg-gray-700 rounded-full h-3 flex-1 relative ml-1 overflow-hidden"
+              >
+                <div
+                  class="acgn-progress-fill bg-red-500/80 h-full"
+                  style="width: 11.8%"
+                ></div>
+                <span
+                  class="acgn-progress-text text-xs text-gray-700 dark:text-gray-300 font-bold"
+                  >{{ formatNumber(20) }}</span
+                >
+              </div>
+            </button>
+          </div>
+        </div>
       </div>
     </div>
     <div class="acgn-right-content">
@@ -195,5 +268,19 @@ const postLinkParams = computed(() => {
   border-radius: 5px;
   display: inline-block;
   line-height: 18px;
+}
+.acgn-progress-text {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 9px;
+  width: 100%;
+}
+.acgn-rating-button {
+  @apply transition-colors duration-200;
+}
+.acgn-rating-button:hover {
+  @apply bg-primary/20 rounded;
 }
 </style>
