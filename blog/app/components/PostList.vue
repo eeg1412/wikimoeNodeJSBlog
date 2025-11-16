@@ -261,8 +261,27 @@
           <UIcon class="mr5" name="i-heroicons-chevron-left" />
         </NuxtLink>
       </div>
-      <div>
-        <span>{{ page }}/{{ totalPage }}</span>
+      <div
+        class="h-[21px]"
+        :class="{
+          'cursor-pointer': totalPage > 1
+        }"
+      >
+        <input
+          v-if="showPageInput"
+          ref="pageInputRef"
+          type="number"
+          name="pageInput"
+          min="1"
+          :max="totalPage"
+          v-model.number="pageInputModel"
+          @blur="changeToPageByInput()"
+          @keyup.enter="changeToPageByInput()"
+          class="w-12 text-center border border-gray-300 rounded h-[21px] post-list-page-input"
+        />
+        <span @click="switchToPageInput()" v-else
+          >{{ page }}/{{ totalPage }}</span
+        >
       </div>
       <div class="dflex page-link-body next-page-btn">
         <!-- 去下一页 -->
@@ -704,6 +723,57 @@ const shareadd = item => {
 
 const isHydrated = ref(false)
 
+const pageInputRef = ref(null)
+const pageInputModel = ref(page)
+const showPageInput = ref(false)
+const switchToPageInput = () => {
+  // 如果 totalPage 小于等于1，就不切换
+  if (totalPage.value <= 1) {
+    if (showPageInput.value) {
+      showPageInput.value = false
+    }
+    return
+  }
+  showPageInput.value = !showPageInput.value
+  // 如果切换到了输入框，就聚焦
+  if (showPageInput.value) {
+    nextTick(() => {
+      pageInputModel.value = page
+      pageInputRef.value?.focus()
+      // 选中全部文字
+      pageInputRef.value?.select()
+    })
+  }
+}
+const changeToPageByInput = () => {
+  let targetPage = pageInputModel.value
+  // 如果一样就不跳转
+  if (targetPage === Number(page)) {
+    showPageInput.value = false
+    return
+  }
+  // 必须是正整数
+  if (!Number.isInteger(targetPage)) {
+    pageInputModel.value = page
+    return
+  }
+  if (targetPage < 1) {
+    pageInputModel.value = 1
+    return
+  } else if (targetPage > totalPage.value) {
+    pageInputModel.value = totalPage.value
+    return
+  }
+  router.push({
+    name: route.name,
+    params: {
+      ...route.params,
+      page: targetPage
+    }
+  })
+  pageInputModel.value = targetPage
+}
+
 onMounted(() => {
   postLikeLogList()
   isHydrated.value = true
@@ -768,5 +838,15 @@ onMounted(() => {
 }
 .page-link:hover {
   @apply text-primary-500;
+}
+
+/* 隐藏数字输入框的上下步进按钮 */
+.post-list-page-input::-webkit-outer-spin-button,
+.post-list-page-input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+.post-list-page-input {
+  -moz-appearance: textfield;
 }
 </style>
