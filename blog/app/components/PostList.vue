@@ -264,7 +264,7 @@
       <div
         class="h-[21px]"
         :class="{
-          'cursor-pointer': totalPage > 1
+          'cursor-pointer': totalPage > 1 && isHydrated
         }"
       >
         <input
