@@ -277,7 +277,7 @@
           v-model.number="pageInputModel"
           @blur="changeToPageByInput()"
           @keyup.enter="changeToPageByInput()"
-          class="w-12 text-center border border-gray-300 rounded h-[21px] post-list-page-input"
+          class="w-12 text-center border dark:border-gray-400 border-gray-300 rounded h-[21px] post-list-page-input"
         />
         <span @click="switchToPageInput()" v-else
           >{{ page }}/{{ totalPage }}</span
