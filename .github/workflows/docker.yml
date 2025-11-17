@@ -39,7 +39,7 @@ jobs:
         uses: docker/build-push-action@v3
         with:
           context: .
-          platforms: linux/amd64
+          platforms: linux/amd64,linux/arm64
           tags: ${{ steps.meta.outputs.tags }},eeg1412/wikimoe-blog-server:latest
           labels: ${{ steps.meta.outputs.labels }}
       - name: Build and push
@@ -50,7 +50,7 @@ jobs:
           push: ${{ startsWith(github.ref, 'refs/tags/v') }}
           tags: ${{ steps.meta.outputs.tags }},eeg1412/wikimoe-blog-server:latest
           labels: ${{ steps.meta.outputs.labels }}
-          platforms: linux/amd64
+          platforms: linux/amd64,linux/arm64
 
   blog_docker:
     runs-on: ubuntu-latest
@@ -82,7 +82,7 @@ jobs:
         uses: docker/build-push-action@v3
         with:
           context: ./blog
-          platforms: linux/amd64
+          platforms: linux/amd64,linux/arm64
           tags: ${{ steps.meta_blog.outputs.tags }},eeg1412/wikimoe-blog-nuxt:latest
           labels: ${{ steps.meta_blog.outputs.labels }}
       - name: Build and push for blog
@@ -93,4 +93,4 @@ jobs:
           push: ${{ startsWith(github.ref, 'refs/tags/v') }}
           tags: ${{ steps.meta_blog.outputs.tags }},eeg1412/wikimoe-blog-nuxt:latest
           labels: ${{ steps.meta_blog.outputs.labels }}
-          platforms: linux/amd64
+          platforms: linux/amd64,linux/arm64
