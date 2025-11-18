@@ -581,14 +581,11 @@
           </el-table>
           <div class="dflex flexCenter mt10">
             <el-pagination
-              v-model:current-page="languageStatsPagination.currentPage"
               layout="prev, pager, next"
-              :page-count="
-                Math.ceil(
-                  (rankData?.languageStats?.length || 0) /
-                    languageStatsPagination.pageSize
-                )
-              "
+              :total="rankData.languageStats?.length || 0"
+              :pager-count="5"
+              small
+              v-model:current-page="languageStatsPagination.currentPage"
               v-model:page-size="languageStatsPagination.pageSize"
             />
           </div>
@@ -613,14 +610,11 @@
           </el-table>
           <div class="dflex flexCenter mt10">
             <el-pagination
-              v-model:current-page="fullLocaleStatsPagination.currentPage"
               layout="prev, pager, next"
-              :page-count="
-                Math.ceil(
-                  (rankData?.fullLocaleStats?.length || 0) /
-                    fullLocaleStatsPagination.pageSize
-                )
-              "
+              :total="rankData.fullLocaleStats?.length || 0"
+              :pager-count="5"
+              small
+              v-model:current-page="fullLocaleStatsPagination.currentPage"
               v-model:page-size="fullLocaleStatsPagination.pageSize"
             />
           </div>
