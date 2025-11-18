@@ -563,6 +563,70 @@
         </div>
       </el-col>
 
+      <!-- 新增: 语言统计 rankData.languageStats -->
+      <el-col :span="12" :xs="24" class="p10">
+        <div class="mb10 fb statistics-title">语言</div>
+        <div class="mb10 statistics-panel">
+          <el-table
+            :data="languageStatsData"
+            style="width: 100%"
+            height="440px"
+          >
+            <el-table-column prop="_id" label="语言代码"> </el-table-column>
+            <el-table-column
+              prop="count"
+              label="数量"
+              width="80px"
+            ></el-table-column>
+          </el-table>
+          <div class="dflex flexCenter mt10">
+            <el-pagination
+              v-model:current-page="languageStatsPagination.currentPage"
+              layout="prev, pager, next"
+              :page-count="
+                Math.ceil(
+                  (rankData?.languageStats?.length || 0) /
+                    languageStatsPagination.pageSize
+                )
+              "
+              v-model:page-size="languageStatsPagination.pageSize"
+            />
+          </div>
+        </div>
+      </el-col>
+
+      <!-- 新增: 完整语言环境统计 rankData.fullLocaleStats -->
+      <el-col :span="12" :xs="24" class="p10">
+        <div class="mb10 fb statistics-title">完整语言环境</div>
+        <div class="mb10 statistics-panel">
+          <el-table
+            :data="fullLocaleStatsData"
+            style="width: 100%"
+            height="440px"
+          >
+            <el-table-column prop="_id" label="语言环境代码"> </el-table-column>
+            <el-table-column
+              prop="count"
+              label="数量"
+              width="80px"
+            ></el-table-column>
+          </el-table>
+          <div class="dflex flexCenter mt10">
+            <el-pagination
+              v-model:current-page="fullLocaleStatsPagination.currentPage"
+              layout="prev, pager, next"
+              :page-count="
+                Math.ceil(
+                  (rankData?.fullLocaleStats?.length || 0) /
+                    fullLocaleStatsPagination.pageSize
+                )
+              "
+              v-model:page-size="fullLocaleStatsPagination.pageSize"
+            />
+          </div>
+        </div>
+      </el-col>
+
       <!-- 国家统计 rankData.countryStats -->
       <el-col :span="12" :xs="24" class="p10">
         <div class="mb10 fb statistics-title">国家/地区</div>
@@ -794,7 +858,9 @@ export default {
             osStatsPagination.currentPage = 1
             countryStatsPagination.currentPage = 1
             regionStatsPagination.currentPage = 1
-            botStatsPagination.currentPage = 1 // 新增: 重置爬虫统计分页
+            botStatsPagination.currentPage = 1
+            languageStatsPagination.currentPage = 1 // 新增: 重置语言统计分页
+            fullLocaleStatsPagination.currentPage = 1 // 新增: 重置完整语言环境统计分页
           }
           // 遍历browserStats 和 osStats 的children 并定义一个 _id + version 的新_id
           res.data.browserStats.forEach(item => {
@@ -1165,6 +1231,41 @@ export default {
       return []
     })
 
+    // 新增: 语言统计分页对象
+    const languageStatsPagination = reactive({
+      currentPage: 1,
+      pageSize: 10
+    })
+    // 新增: 语言统计数据计算属性
+    const languageStatsData = computed(() => {
+      if (rankData.value && rankData.value.languageStats) {
+        return rankData.value.languageStats.slice(
+          (languageStatsPagination.currentPage - 1) *
+            languageStatsPagination.pageSize,
+          languageStatsPagination.currentPage * languageStatsPagination.pageSize
+        )
+      }
+      return []
+    })
+
+    // 新增: 完整语言环境统计分页对象
+    const fullLocaleStatsPagination = reactive({
+      currentPage: 1,
+      pageSize: 10
+    })
+    // 新增: 完整语言环境统计数据计算属性
+    const fullLocaleStatsData = computed(() => {
+      if (rankData.value && rankData.value.fullLocaleStats) {
+        return rankData.value.fullLocaleStats.slice(
+          (fullLocaleStatsPagination.currentPage - 1) *
+            fullLocaleStatsPagination.pageSize,
+          fullLocaleStatsPagination.currentPage *
+            fullLocaleStatsPagination.pageSize
+        )
+      }
+      return []
+    })
+
     const showData = ref(false)
     const tryShowData = () => {
       getStatistics()
@@ -1233,6 +1334,14 @@ export default {
       // 新增: 爬虫统计相关变量
       botStatsPagination,
       botStatsData,
+
+      // 新增: 语言统计相关变量
+      languageStatsPagination,
+      languageStatsData,
+
+      // 新增: 完整语言环境统计相关变量
+      fullLocaleStatsPagination,
+      fullLocaleStatsData,
 
       showData,
       tryShowData

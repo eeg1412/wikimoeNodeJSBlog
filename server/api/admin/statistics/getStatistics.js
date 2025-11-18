@@ -1071,6 +1071,141 @@ module.exports = async function (req, res, next) {
   })
   promiseArray.push(botStatsData)
 
+  // 新增：语言统计（仅统计 language 字段）
+  const languageStatsPipeline = [
+    {
+      $match: {
+        createdAt: { $gte: startDate.toDate(), $lte: endDate.toDate() },
+        action: 'open',
+        isBot: false,
+        'data.extraInfo.language.language': {
+          $exists: true,
+          $ne: null,
+          $ne: ''
+        }
+      }
+    },
+    {
+      $group: {
+        _id: '$data.extraInfo.language.language',
+        count: { $sum: 1 }
+      }
+    },
+    {
+      $sort: { count: -1 }
+    },
+    {
+      $limit: limit
+    }
+  ]
+
+  const languageStatsData = readerlogUtils
+    .aggregate(languageStatsPipeline)
+    .catch(err => {
+      adminApiLog.error(err)
+      return false
+    })
+  promiseArray.push(languageStatsData)
+
+  // 新增：完整语言环境统计（language-script-region）
+  const fullLocaleStatsPipeline = [
+    {
+      $match: {
+        createdAt: { $gte: startDate.toDate(), $lte: endDate.toDate() },
+        action: 'open',
+        isBot: false,
+        'data.extraInfo.language.language': {
+          $exists: true,
+          $ne: null,
+          $ne: ''
+        }
+      }
+    },
+    {
+      $project: {
+        fullLocale: {
+          $concat: [
+            { $ifNull: ['$data.extraInfo.language.language', ''] },
+            {
+              $cond: [
+                {
+                  $and: [
+                    {
+                      $ne: [
+                        { $ifNull: ['$data.extraInfo.language.script', ''] },
+                        ''
+                      ]
+                    },
+                    {
+                      $ne: [
+                        { $ifNull: ['$data.extraInfo.language.language', ''] },
+                        ''
+                      ]
+                    }
+                  ]
+                },
+                {
+                  $concat: [
+                    '-',
+                    { $ifNull: ['$data.extraInfo.language.script', ''] }
+                  ]
+                },
+                ''
+              ]
+            },
+            {
+              $cond: [
+                {
+                  $and: [
+                    {
+                      $ne: [
+                        { $ifNull: ['$data.extraInfo.language.region', ''] },
+                        ''
+                      ]
+                    },
+                    {
+                      $ne: [
+                        { $ifNull: ['$data.extraInfo.language.language', ''] },
+                        ''
+                      ]
+                    }
+                  ]
+                },
+                {
+                  $concat: [
+                    '-',
+                    { $ifNull: ['$data.extraInfo.language.region', ''] }
+                  ]
+                },
+                ''
+              ]
+            }
+          ]
+        }
+      }
+    },
+    {
+      $group: {
+        _id: '$fullLocale',
+        count: { $sum: 1 }
+      }
+    },
+    {
+      $sort: { count: -1 }
+    },
+    {
+      $limit: limit
+    }
+  ]
+
+  const fullLocaleStatsData = readerlogUtils
+    .aggregate(fullLocaleStatsPipeline)
+    .catch(err => {
+      adminApiLog.error(err)
+      return false
+    })
+  promiseArray.push(fullLocaleStatsData)
+
   try {
     const [
       readReferrerData,
@@ -1087,7 +1222,9 @@ module.exports = async function (req, res, next) {
       readPostListGameData,
       readPostListMappointData,
       deviceAndLocationData,
-      botStatsData // 新增的爬虫统计数据
+      botStatsData, // 爬虫统计数据
+      languageStatsData, // 语言统计数据
+      fullLocaleStatsData // 完整语言环境统计数据
     ] = await Promise.all(promiseArray)
 
     if (
@@ -1105,7 +1242,9 @@ module.exports = async function (req, res, next) {
       !readPostListGameData ||
       !readPostListMappointData ||
       !deviceAndLocationData ||
-      !botStatsData
+      !botStatsData ||
+      !languageStatsData ||
+      !fullLocaleStatsData
     ) {
       res.status(500).json({
         errors: [
@@ -1136,8 +1275,11 @@ module.exports = async function (req, res, next) {
       osStats: deviceAndLocationData[0].osStats,
       countryStats: deviceAndLocationData[0].countryStats,
       regionStats: deviceAndLocationData[0].regionStats,
-      // 新增爬虫统计数据
-      botStats: botStatsData
+      // 爬虫统计数据
+      botStats: botStatsData,
+      // 语言统计数据
+      languageStats: languageStatsData,
+      fullLocaleStats: fullLocaleStatsData
     }
 
     // 发送响应
