@@ -203,8 +203,8 @@ const postLogCreate = () => {
   postLogCreateApi({
     referrer: referrer,
     action: 'open',
-    timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,
-    language: navigator.language,
+    timeZone: Intl?.DateTimeFormat()?.resolvedOptions()?.timeZone,
+    language: navigator?.language,
     performanceNavigationTiming: performanceNavigationTiming
   }).then(res => {
     openLogId = res.id
