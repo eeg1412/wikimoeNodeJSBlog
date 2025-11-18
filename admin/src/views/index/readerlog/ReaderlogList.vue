@@ -206,7 +206,7 @@
                 <div>时区：{{ row.data.extraInfo.timeZone }}</div>
               </div>
               <div v-if="row.data?.extraInfo?.language">
-                语言：<LanguageTag
+                语言环境代码：<LanguageTag
                   :language="row.data.extraInfo.language.language"
                   :region="row.data.extraInfo.language.region"
                   :script="row.data.extraInfo.language.script"
