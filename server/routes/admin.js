@@ -17,6 +17,18 @@ const checkIsReady = (req, res, next) => {
   }
 }
 
+const checkIsBackuping = (req, res, next) => {
+  const isBackuping = global.$isBackuping
+  // 判断是POST PUT DELETE 方法
+  if (isBackuping && ['POST', 'PUT', 'DELETE'].includes(req.method)) {
+    res
+      .status(400)
+      .json({ errors: [{ message: '系统正在进行备份或还原操作，请稍后再试' }] })
+  } else {
+    next()
+  }
+}
+
 const referrerRecordMiddleware = (req, res, next) => {
   referrerRecord(req.headers.referer, 'adminApi')
   next()
@@ -1488,6 +1500,7 @@ const adminRouteSetting = [
 adminRouteSetting.forEach(item => {
   const middleware = [
     checkIsReady,
+    checkIsBackuping,
     referrerRecordMiddleware,
     ...item.middleware
   ]

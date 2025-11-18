@@ -1,5 +1,6 @@
 global.$cacheData = {}
 global.$isReady = false
+global.$isBackuping = false
 global.$secret = {}
 var express = require('express')
 const utils = require('./utils/utils')
