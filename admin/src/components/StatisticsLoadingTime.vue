@@ -100,7 +100,7 @@
                 <IpInfoDisplay :ipInfo="row.ipInfo" />
               </template>
             </el-table-column>
-            <el-table-column label="UA信息" width="100" align="center">
+            <el-table-column label="客户端信息" width="100" align="center">
               <template #default="{ row }">
                 <el-tooltip
                   effect="dark"
@@ -110,14 +110,32 @@
                 >
                   <template #content>
                     <div class="tooltip-content">
-                      <div>系统：{{ row.deviceInfo?.os?.name }}</div>
-                      <div>系统版本号：{{ row.deviceInfo?.os?.version }}</div>
-                      <div>浏览器：{{ row.deviceInfo?.browser?.name }}</div>
                       <div>
-                        浏览器版本号： {{ row.deviceInfo?.browser?.version }}
+                        <div>系统：{{ row.deviceInfo?.os?.name }}</div>
+                        <div>系统版本号：{{ row.deviceInfo?.os?.version }}</div>
+                        <div>浏览器：{{ row.deviceInfo?.browser?.name }}</div>
+                        <div>
+                          浏览器版本号： {{ row.deviceInfo?.browser?.version }}
+                        </div>
+                        <div v-if="row.deviceInfo?.ua" class="word-break">
+                          UA：{{ row.deviceInfo?.ua }}
+                        </div>
                       </div>
-                      <div v-if="row.deviceInfo?.ua" class="word-break">
-                        UA：{{ row.deviceInfo?.ua }}
+                      <div
+                        v-if="
+                          row?.extraInfo?.timeZone || row?.extraInfo?.language
+                        "
+                      >
+                        <div v-if="row?.extraInfo?.timeZone">
+                          <div>时区：{{ row.extraInfo.timeZone }}</div>
+                        </div>
+                        <div v-if="row?.extraInfo?.language">
+                          语言：<LanguageTag
+                            :language="row.extraInfo.language.language"
+                            :region="row.extraInfo.language.region"
+                            :script="row.extraInfo.language.script"
+                          />
+                        </div>
                       </div>
                     </div>
                   </template>
@@ -240,7 +258,7 @@
               </template>
             </el-table-column>
 
-            <el-table-column label="UA信息" width="100" align="center">
+            <el-table-column label="客户端信息" width="100" align="center">
               <template #default="{ row }">
                 <el-tooltip
                   effect="dark"
@@ -250,14 +268,32 @@
                 >
                   <template #content>
                     <div class="tooltip-content">
-                      <div>系统：{{ row.deviceInfo?.os?.name }}</div>
-                      <div>系统版本号：{{ row.deviceInfo?.os?.version }}</div>
-                      <div>浏览器：{{ row.deviceInfo?.browser?.name }}</div>
                       <div>
-                        浏览器版本号： {{ row.deviceInfo?.browser?.version }}
+                        <div>系统：{{ row.deviceInfo?.os?.name }}</div>
+                        <div>系统版本号：{{ row.deviceInfo?.os?.version }}</div>
+                        <div>浏览器：{{ row.deviceInfo?.browser?.name }}</div>
+                        <div>
+                          浏览器版本号： {{ row.deviceInfo?.browser?.version }}
+                        </div>
+                        <div v-if="row.deviceInfo?.ua" class="word-break">
+                          UA：{{ row.deviceInfo?.ua }}
+                        </div>
                       </div>
-                      <div v-if="row.deviceInfo?.ua" class="word-break">
-                        UA：{{ row.deviceInfo?.ua }}
+                      <div
+                        v-if="
+                          row?.extraInfo?.timeZone || row?.extraInfo?.language
+                        "
+                      >
+                        <div v-if="row?.extraInfo?.timeZone">
+                          <div>时区：{{ row.extraInfo.timeZone }}</div>
+                        </div>
+                        <div v-if="row?.extraInfo?.language">
+                          语言：<LanguageTag
+                            :language="row.extraInfo.language.language"
+                            :region="row.extraInfo.language.region"
+                            :script="row.extraInfo.language.script"
+                          />
+                        </div>
                       </div>
                     </div>
                   </template>
@@ -535,6 +571,8 @@ import { generateRandomAlphabetString } from '@/utils/utils'
 import { authApi } from '@/api'
 import moment from 'moment'
 import IpInfoDisplay from '@/components/IpInfoDisplay.vue'
+import LanguageTag from '@/components/LanguageTag.vue'
+
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -558,6 +596,7 @@ ChartJS.register(
 export default {
   components: {
     IpInfoDisplay,
+    LanguageTag,
     Line
   },
   setup() {

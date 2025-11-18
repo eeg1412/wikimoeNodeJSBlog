@@ -116,7 +116,9 @@ module.exports = async function (req, res, next) {
           ipInfo: 1,
           deviceInfo: 1,
           createdAt: 1,
-          'data.performanceNavigationTiming': 1
+          'data.performanceNavigationTiming': 1,
+          'data.extraInfo.language': 1,
+          'data.extraInfo.timeZone': 1
         }
       },
       // 3. 根据IP分组，取每组中duration最大的记录（如果相同则取最早时间的）
@@ -135,6 +137,7 @@ module.exports = async function (req, res, next) {
           performanceNavigationTiming: {
             $first: '$data.performanceNavigationTiming'
           },
+          extraInfo: { $first: '$data.extraInfo' },
           createdAt: { $first: '$createdAt' }
         }
       },
@@ -180,6 +183,7 @@ module.exports = async function (req, res, next) {
                 ipInfo: 1,
                 deviceInfo: 1,
                 performanceNavigationTiming: 1,
+                extraInfo: 1,
                 createdAt: 1
               }
             }
@@ -202,6 +206,7 @@ module.exports = async function (req, res, next) {
                 ipInfo: 1,
                 deviceInfo: 1,
                 performanceNavigationTiming: 1,
+                extraInfo: 1,
                 createdAt: 1
               }
             }

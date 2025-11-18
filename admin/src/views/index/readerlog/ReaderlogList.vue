@@ -180,27 +180,46 @@
             <IpInfoDisplay :ipInfo="row.ipInfo" />
           </template>
         </el-table-column>
-        <!-- UA信息 -->
-        <el-table-column label="UA信息" width="210">
+        <!-- 客户端信息 -->
+        <el-table-column label="客户端信息" width="210">
           <template #default="{ row }">
-            <div>系统：{{ row.deviceInfo?.os?.name }}</div>
-            <div>系统版本号：{{ row.deviceInfo?.os?.version }}</div>
-            <div>浏览器：{{ row.deviceInfo?.browser?.name }}</div>
-            <div>浏览器版本号： {{ row.deviceInfo?.browser?.version }}</div>
             <div>
-              是否为机器人：
-              <el-tag v-if="row.isBot" type="danger">是</el-tag>
-              <el-tag v-else type="success">否</el-tag>
+              <div>系统：{{ row.deviceInfo?.os?.name }}</div>
+              <div>系统版本号：{{ row.deviceInfo?.os?.version }}</div>
+              <div>浏览器：{{ row.deviceInfo?.browser?.name }}</div>
+              <div>浏览器版本号： {{ row.deviceInfo?.browser?.version }}</div>
+              <div>
+                是否为机器人：
+                <el-tag v-if="row.isBot" type="danger">是</el-tag>
+                <el-tag v-else type="success">否</el-tag>
+              </div>
+              <div v-if="row.isBot">机器人类型：{{ row.botName }}</div>
+              <!-- ua -->
+              <div>UA：{{ row.deviceInfo?.ua }}</div>
             </div>
-            <div v-if="row.isBot">机器人类型：{{ row.botName }}</div>
-            <!-- ua -->
-            <div>UA：{{ row.deviceInfo?.ua }}</div>
+            <div
+              v-if="
+                row.data?.extraInfo?.timeZone || row.data?.extraInfo?.language
+              "
+            >
+              <div v-if="row.data?.extraInfo?.timeZone">
+                <div>时区：{{ row.data.extraInfo.timeZone }}</div>
+              </div>
+              <div v-if="row.data?.extraInfo?.language">
+                语言：<LanguageTag
+                  :language="row.data.extraInfo.language.language"
+                  :region="row.data.extraInfo.language.region"
+                  :script="row.data.extraInfo.language.script"
+                />
+              </div>
+            </div>
           </template>
         </el-table-column>
-        <!-- 性能统计 performanceNavigationTiming -->
+
         <el-table-column label="性能统计" min-width="230">
           <template #default="{ row }">
             <div v-if="row.data?.performanceNavigationTiming">
+              <!-- 性能统计 performanceNavigationTiming -->
               <div>
                 重定向计数：{{
                   row.data.performanceNavigationTiming.redirectCount
@@ -320,9 +339,13 @@ import {
 } from '@/utils/utils'
 import store from '@/store'
 import CheckDialogService from '@/services/CheckDialogService'
+import LanguageTag from '@/components/LanguageTag.vue'
 import { SHARE_MAP } from '@/utils/variableMap'
 
 export default {
+  components: {
+    LanguageTag
+  },
   setup() {
     const route = useRoute()
     const router = useRouter()

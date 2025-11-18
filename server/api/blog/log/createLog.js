@@ -3,7 +3,11 @@ const readerlogUtils = require('../../../mongodb/utils/readerlogs')
 const utils = require('../../../utils/utils')
 const log4js = require('log4js')
 const userApiLog = log4js.getLogger('userApi')
+const validator = require('validator')
 const mongoose = require('mongoose')
+const languageData = require('../../../utils/intl/language.json')
+const regionData = require('../../../utils/intl/region.json')
+const scriptData = require('../../../utils/intl/script.json')
 
 module.exports = async function (req, res, next) {
   const logId = new mongoose.Types.ObjectId()
@@ -31,6 +35,7 @@ module.exports = async function (req, res, next) {
   let target = null
   let content = ''
   let performanceNavigationTiming = null
+  let extraInfo = undefined
   // 判断action是否符合格式
   if (!actionList.includes(action)) {
     return
@@ -70,54 +75,134 @@ module.exports = async function (req, res, next) {
   const searchEngineData = utils.isSearchEngine(req)
   switch (action) {
     case 'open':
-      const performanceNavigationTimingData =
-        req.body.performanceNavigationTiming || null
-      if (
-        !searchEngineData.isBot &&
-        performanceNavigationTimingData &&
-        typeof performanceNavigationTimingData === 'object' &&
-        performanceNavigationTimingData?.duration > 0
-      ) {
-        performanceNavigationTiming = {}
+      // 如果不是机器人
+      if (!searchEngineData.isBot) {
+        // 处理 performanceNavigationTiming
+        const performanceNavigationTimingData =
+          req.body.performanceNavigationTiming || null
+        if (
+          performanceNavigationTimingData &&
+          typeof performanceNavigationTimingData === 'object' &&
+          performanceNavigationTimingData?.duration > 0
+        ) {
+          performanceNavigationTiming = {}
 
-        const keys = [
-          'connectDuration',
-          'domComplete',
-          'domInteractive',
-          'domainLookupDuration',
-          'duration',
-          'loadEventDuration',
-          'redirectCount'
-        ]
-        const stringKeys = ['entryType', 'name', 'type']
+          const keys = [
+            'connectDuration',
+            'domComplete',
+            'domInteractive',
+            'domainLookupDuration',
+            'duration',
+            'loadEventDuration',
+            'redirectCount'
+          ]
+          const stringKeys = ['entryType', 'name', 'type']
 
-        keys.forEach(key => {
-          if (performanceNavigationTimingData.hasOwnProperty(key)) {
-            const value = performanceNavigationTimingData[key]
+          keys.forEach(key => {
+            if (performanceNavigationTimingData.hasOwnProperty(key)) {
+              const value = performanceNavigationTimingData[key]
+              if (
+                typeof value === 'number' &&
+                !isNaN(value) &&
+                value < 999999 &&
+                value >= 0
+              ) {
+                performanceNavigationTiming[key] = value
+              } else {
+                performanceNavigationTiming[key] = null
+              }
+            }
+          })
+
+          stringKeys.forEach(key => {
+            if (performanceNavigationTimingData.hasOwnProperty(key)) {
+              const value = performanceNavigationTimingData[key]
+              if (typeof value === 'string' && value.length < 200) {
+                performanceNavigationTiming[key] = value
+              } else {
+                performanceNavigationTiming[key] = null
+              }
+            }
+          })
+        }
+
+        extraInfo = {}
+        // 如果存在时区和语言
+        let timeZone = req.body.timeZone || null
+        let bodyLanguage = req.body.language || null
+
+        // 时区列表
+        const timeZoneList = Intl.supportedValuesOf('timeZone')
+        // 验证时区，先校验字符串是否存在，且字符串长度小于100，再校验值是否在列表中
+        if (
+          timeZone &&
+          typeof timeZone === 'string' &&
+          timeZone.length < 100 &&
+          timeZoneList.includes(timeZone)
+        ) {
+          extraInfo.timeZone = timeZone
+        }
+
+        // 验证语言，先校验字符串是否存在，且字符串长度在2-29 之间，只能是横杠和大小写英文
+        if (
+          bodyLanguage &&
+          typeof bodyLanguage === 'string' &&
+          bodyLanguage.length >= 2 &&
+          bodyLanguage.length <= 29 &&
+          /^[a-zA-Z-]+$/.test(bodyLanguage)
+        ) {
+          try {
+            const intlLocale = new Intl.Locale(bodyLanguage)
+            let { language, region, script } = intlLocale
+
+            // 用于匹配的版本（小写）
+            const languageLower = language ? language.toLowerCase() : null
+            const regionLower = region ? region.toLowerCase() : null
+            const scriptLower = script ? script.toLowerCase() : null
+
+            // 校验language: 必须有，长度2-3，且在language.json中
+            let valid = true
             if (
-              typeof value === 'number' &&
-              !isNaN(value) &&
-              value < 999999 &&
-              value >= 0
+              !languageLower ||
+              languageLower.length < 2 ||
+              languageLower.length > 3 ||
+              !languageData[languageLower]
             ) {
-              performanceNavigationTiming[key] = value
-            } else {
-              performanceNavigationTiming[key] = null
+              valid = false
             }
-          }
-        })
+            // 校验region: 可有可无，存在时长度2-3，且在region.json中
+            if (
+              valid &&
+              regionLower &&
+              (regionLower.length < 2 ||
+                regionLower.length > 3 ||
+                !regionData[regionLower])
+            ) {
+              valid = false
+            }
+            // 校验script: 可有可无，存在时长度4，且在script.json中
+            if (
+              valid &&
+              scriptLower &&
+              (scriptLower.length !== 4 || !scriptData[scriptLower])
+            ) {
+              valid = false
+            }
 
-        stringKeys.forEach(key => {
-          if (performanceNavigationTimingData.hasOwnProperty(key)) {
-            const value = performanceNavigationTimingData[key]
-            if (typeof value === 'string' && value.length < 200) {
-              performanceNavigationTiming[key] = value
-            } else {
-              performanceNavigationTiming[key] = null
+            if (valid) {
+              extraInfo.language = { language, region, script }
             }
+          } catch (e) {
+            bodyLanguage = null
           }
-        })
+        }
+
+        // 如果 extraInfo 为空对象，设为 undefined
+        if (Object.keys(extraInfo).length === 0) {
+          extraInfo = undefined
+        }
       }
+
       break
     case 'postListArchive':
       const title = req.body.title
@@ -235,6 +320,11 @@ module.exports = async function (req, res, next) {
     ipInfo: await utils.IP2LocationUtils(ip, null, null, false),
     ip: ip
   }
+
+  if (extraInfo) {
+    readerlogParams.data.extraInfo = extraInfo
+  }
+
   readerlogUtils
     .save(readerlogParams)
     .then(data => {
