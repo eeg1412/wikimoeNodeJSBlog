@@ -81,8 +81,8 @@ module.exports = async function (req, res, next) {
   }
 
   const readerlogParams = {
-    data: {
-      performanceNavigationTiming: performanceNavigationTiming
+    $set: {
+      'data.performanceNavigationTiming': performanceNavigationTiming
     }
   }
   setTimeout(() => {
