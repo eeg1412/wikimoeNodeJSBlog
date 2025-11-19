@@ -575,7 +575,7 @@
             <el-table-column prop="_id" label="语言代码"> </el-table-column>
             <el-table-column
               prop="count"
-              label="数量"
+              label="访问量"
               width="80px"
             ></el-table-column>
           </el-table>
@@ -604,7 +604,7 @@
             <el-table-column prop="_id" label="语言环境代码"> </el-table-column>
             <el-table-column
               prop="count"
-              label="数量"
+              label="访问量"
               width="80px"
             ></el-table-column>
           </el-table>
