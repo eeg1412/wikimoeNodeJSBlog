@@ -224,7 +224,7 @@
     >
       <ul>
         <li>注意该操作将会<span class="cRed">删除所有现有内容！</span></li>
-        <li>在还原时<span class="cRed">博客将不可用！</span></li>
+        <li>在还原时<span class="cRed">站点部分功能将不可用！</span></li>
         <li>在还原期间管理员账号可能会无法登录！</li>
         <li>确定要还原吗？</li>
       </ul>

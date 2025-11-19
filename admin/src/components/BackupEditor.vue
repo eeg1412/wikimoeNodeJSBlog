@@ -23,10 +23,10 @@
             placeholder="请输入备注"
           ></el-input>
         </el-form-item>
-        <!-- 我已知晓备份时站点将不可用 -->
+        <!-- 我已知晓备份时站点部分功能将不可用 -->
         <el-form-item v-if="!id" prop="acknowledged">
           <el-checkbox v-model="form.acknowledged">
-            <span class="cRed">我已知晓备份时站点将不可用</span>
+            <span class="cRed">我已知晓备份时站点部分功能将不可用</span>
           </el-checkbox>
         </el-form-item>
       </el-form>
@@ -67,7 +67,7 @@ export default {
         {
           validator: (rule, value, callback) => {
             if (!value) {
-              callback(new Error('请确认已知晓备份时站点将不可用'))
+              callback(new Error('请确认已知晓备份时站点部分功能将不可用'))
             } else {
               callback()
             }
