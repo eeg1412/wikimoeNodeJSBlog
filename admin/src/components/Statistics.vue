@@ -2,25 +2,37 @@
   <div>
     <div class="el-descriptions__header">
       <div class="el-descriptions__title">统计排名</div>
-      <div class="el-descriptions__extra">
-        <el-date-picker
-          v-model="timeRange"
-          :popper-class="pickerClass"
-          type="daterange"
-          range-separator="至"
-          start-placeholder="开始日期"
-          end-placeholder="结束日期"
-          :shortcuts="shortcuts"
-          teleported
-          :editable="false"
-          :clearable="false"
-          :disabled-date="timeRangeDisabledDate"
-          :default-time="[
-            new Date().setHours(0, 0, 0, 0),
-            new Date().setHours(23, 59, 59, 999)
-          ]"
-          @change="getStatistics(true)"
-        />
+      <div class="el-descriptions__extra statistics-extra-area">
+        <div>
+          <el-date-picker
+            v-model="timeRange"
+            :popper-class="pickerClass"
+            type="daterange"
+            range-separator="至"
+            start-placeholder="开始日期"
+            end-placeholder="结束日期"
+            :shortcuts="shortcuts"
+            teleported
+            :editable="false"
+            :clearable="false"
+            :disabled-date="timeRangeDisabledDate"
+            :default-time="[
+              new Date().setHours(0, 0, 0, 0),
+              new Date().setHours(23, 59, 59, 999)
+            ]"
+            @change="getStatistics(true)"
+          />
+        </div>
+        <div class="mt5 tr">
+          <span class="pr5">排序优先级：</span>
+          <el-radio-group
+            v-model="dataSortPriority"
+            @change="getStatistics(true)"
+          >
+            <el-radio label="ip" size="small">IP</el-radio>
+            <el-radio label="pv" size="small">PV</el-radio>
+          </el-radio-group>
+        </div>
       </div>
     </div>
     <!-- showData 按钮展示 -->
@@ -58,8 +70,13 @@
               </template>
             </el-table-column>
             <el-table-column
-              prop="count"
-              label="阅读量"
+              prop="ipCount"
+              label="IP"
+              width="80px"
+            ></el-table-column>
+            <el-table-column
+              prop="pvCount"
+              label="PV"
               width="80px"
             ></el-table-column>
           </el-table>
@@ -217,9 +234,15 @@
             height="440px"
           >
             <el-table-column prop="_id" label="来源"> </el-table-column>
+
             <el-table-column
-              prop="count"
-              label="访问量"
+              prop="ipCount"
+              label="IP"
+              width="80px"
+            ></el-table-column>
+            <el-table-column
+              prop="pvCount"
+              label="PV"
               width="80px"
             ></el-table-column>
           </el-table>
@@ -246,9 +269,15 @@
             height="440px"
           >
             <el-table-column prop="sortname" label="分类"> </el-table-column>
+
             <el-table-column
-              prop="count"
-              label="访问量"
+              prop="ipCount"
+              label="IP"
+              width="80px"
+            ></el-table-column>
+            <el-table-column
+              prop="pvCount"
+              label="PV"
               width="80px"
             ></el-table-column>
           </el-table>
@@ -275,9 +304,15 @@
             height="440px"
           >
             <el-table-column prop="tagname" label="标签"> </el-table-column>
+
             <el-table-column
-              prop="count"
-              label="访问量"
+              prop="ipCount"
+              label="IP"
+              width="80px"
+            ></el-table-column>
+            <el-table-column
+              prop="pvCount"
+              label="PV"
               width="80px"
             ></el-table-column>
           </el-table>
@@ -304,9 +339,15 @@
             height="440px"
           >
             <el-table-column prop="_id" label="关键词"> </el-table-column>
+
             <el-table-column
-              prop="count"
-              label="访问量"
+              prop="ipCount"
+              label="IP"
+              width="80px"
+            ></el-table-column>
+            <el-table-column
+              prop="pvCount"
+              label="PV"
               width="80px"
             ></el-table-column>
           </el-table>
@@ -337,9 +378,15 @@
                 <div>{{ reduceText(row.title) }}</div>
               </template>
             </el-table-column>
+
             <el-table-column
-              prop="count"
-              label="访问量"
+              prop="ipCount"
+              label="IP"
+              width="80px"
+            ></el-table-column>
+            <el-table-column
+              prop="pvCount"
+              label="PV"
               width="80px"
             ></el-table-column>
           </el-table>
@@ -370,9 +417,15 @@
                 <div>{{ reduceText(row.title) }}</div>
               </template>
             </el-table-column>
+
             <el-table-column
-              prop="count"
-              label="访问量"
+              prop="ipCount"
+              label="IP"
+              width="80px"
+            ></el-table-column>
+            <el-table-column
+              prop="pvCount"
+              label="PV"
               width="80px"
             ></el-table-column>
           </el-table>
@@ -403,9 +456,15 @@
                 <div>{{ reduceText(row.title) }}</div>
               </template>
             </el-table-column>
+
             <el-table-column
-              prop="count"
-              label="访问量"
+              prop="ipCount"
+              label="IP"
+              width="80px"
+            ></el-table-column>
+            <el-table-column
+              prop="pvCount"
+              label="PV"
               width="80px"
             ></el-table-column>
           </el-table>
@@ -436,9 +495,15 @@
                 <div>{{ reduceText(row.title) }}</div>
               </template>
             </el-table-column>
+
             <el-table-column
-              prop="count"
-              label="访问量"
+              prop="ipCount"
+              label="IP"
+              width="80px"
+            ></el-table-column>
+            <el-table-column
+              prop="pvCount"
+              label="PV"
               width="80px"
             ></el-table-column>
           </el-table>
@@ -470,9 +535,15 @@
                 <div>{{ reduceText(row.title) }}</div>
               </template>
             </el-table-column>
+
             <el-table-column
-              prop="count"
-              label="访问量"
+              prop="ipCount"
+              label="IP"
+              width="80px"
+            ></el-table-column>
+            <el-table-column
+              prop="pvCount"
+              label="PV"
               width="80px"
             ></el-table-column>
           </el-table>
@@ -508,9 +579,15 @@
                 </span>
               </template>
             </el-table-column>
+
             <el-table-column
-              prop="count"
-              label="访问量"
+              prop="ipCount"
+              label="IP"
+              width="80px"
+            ></el-table-column>
+            <el-table-column
+              prop="pvCount"
+              label="PV"
               width="80px"
             ></el-table-column>
           </el-table>
@@ -544,9 +621,15 @@
                 </span>
               </template>
             </el-table-column>
+
             <el-table-column
-              prop="count"
-              label="访问量"
+              prop="ipCount"
+              label="IP"
+              width="80px"
+            ></el-table-column>
+            <el-table-column
+              prop="pvCount"
+              label="PV"
               width="80px"
             ></el-table-column>
           </el-table>
@@ -573,9 +656,15 @@
             height="440px"
           >
             <el-table-column prop="_id" label="语言代码"> </el-table-column>
+
             <el-table-column
-              prop="count"
-              label="访问量"
+              prop="ipCount"
+              label="IP"
+              width="80px"
+            ></el-table-column>
+            <el-table-column
+              prop="pvCount"
+              label="PV"
               width="80px"
             ></el-table-column>
           </el-table>
@@ -602,9 +691,15 @@
             height="440px"
           >
             <el-table-column prop="_id" label="语言环境代码"> </el-table-column>
+
             <el-table-column
-              prop="count"
-              label="访问量"
+              prop="ipCount"
+              label="IP"
+              width="80px"
+            ></el-table-column>
+            <el-table-column
+              prop="pvCount"
+              label="PV"
               width="80px"
             ></el-table-column>
           </el-table>
@@ -635,9 +730,15 @@
                 />
               </template>
             </el-table-column>
+
             <el-table-column
-              prop="count"
-              label="访问量"
+              prop="ipCount"
+              label="IP"
+              width="80px"
+            ></el-table-column>
+            <el-table-column
+              prop="pvCount"
+              label="PV"
               width="80px"
             ></el-table-column>
           </el-table>
@@ -664,9 +765,15 @@
                 <IpInfoDisplay :ipInfo="row.ipInfo" />
               </template>
             </el-table-column>
+
             <el-table-column
-              prop="count"
-              label="访问量"
+              prop="ipCount"
+              label="IP"
+              width="80px"
+            ></el-table-column>
+            <el-table-column
+              prop="pvCount"
+              label="PV"
               width="80px"
             ></el-table-column>
           </el-table>
@@ -820,6 +927,9 @@ export default {
       )
     }
 
+    // 数据排序优先级（IP优先，PV优先，默认IP优先）
+    const dataSortPriority = ref('ip')
+
     const rankData = ref(null)
     const getStatistics = resetPage => {
       const startTime = new Date(timeRange.value[0])
@@ -831,7 +941,8 @@ export default {
       authApi
         .getStatistics({
           startTime: startTime,
-          endTime: endTime
+          endTime: endTime,
+          dataSortPriority: dataSortPriority.value
         })
         .then(res => {
           if (resetPage) {
@@ -1282,6 +1393,8 @@ export default {
       shortcuts,
       timeRangeDisabledDate,
 
+      dataSortPriority,
+
       rankData,
       getStatistics,
       reduceText,
@@ -1356,5 +1469,22 @@ export default {
 }
 .statistics-panel.type-small {
   height: 222.5px;
+}
+.statistics-extra-area {
+  display: flex;
+  /* 从右到左 */
+  flex-direction: row-reverse;
+  gap: 10px;
+}
+.statistics-extra-area :deep(.el-radio) {
+  margin-right: 16px;
+}
+/* 小于1024 时换行 */
+@media (max-width: 1024px) {
+  .statistics-extra-area {
+    flex-wrap: wrap;
+    width: 250px;
+    gap: 5px;
+  }
 }
 </style>

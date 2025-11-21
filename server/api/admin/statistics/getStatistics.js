@@ -8,6 +8,7 @@ const postLikeLogUtils = require('../../../mongodb/utils/postLikeLogs')
 module.exports = async function (req, res, next) {
   const startTime = req.query.startTime
   const endTime = req.query.endTime
+  const dataSortPriority = req.query.dataSortPriority || 'ip'
 
   const limit = 100
 
@@ -34,13 +35,22 @@ module.exports = async function (req, res, next) {
         strict: true,
         strictSeparator: true
       }
+    },
+    // dataSortPriority
+    {
+      key: 'dataSortPriority',
+      label: '数据排序优先级',
+      type: 'isIn',
+      required: false,
+      options: ['ip', 'pv']
     }
   ]
 
   const errors = utils.checkForm(
     {
       startTime,
-      endTime
+      endTime,
+      dataSortPriority
     },
     rule
   )
@@ -58,6 +68,28 @@ module.exports = async function (req, res, next) {
   const siteRankIgnoreReferrerDomainListReg =
     siteRankIgnoreReferrerDomainList.map(domain => new RegExp(domain, 'i'))
 
+  /**
+   * 生成排序规则对象
+   * @param {string} priority - 排序优先级：'ip' 或 'pv'
+   * @returns {object} MongoDB 排序对象
+   */
+  const getSortRule = (priority = 'ip') => {
+    const sortRule = {}
+
+    if (priority === 'pv') {
+      sortRule.pvCount = -1
+      sortRule.ipCount = -1
+    } else {
+      // 默认 IP 优先
+      sortRule.ipCount = -1
+      sortRule.pvCount = -1
+    }
+
+    return sortRule
+  }
+
+  const ippvSortRule = getSortRule(dataSortPriority)
+
   // 来源站统计
   const readReferrerpipeline = [
     {
@@ -68,21 +100,29 @@ module.exports = async function (req, res, next) {
         isBot: false
       }
     },
-    // 统计每个referrer出现的次数
+    // 统计每个referrer的PV和IP
     {
       $group: {
         _id: '$referrer',
-        count: { $sum: 1 }
+        pvCount: { $sum: 1 },
+        ips: { $addToSet: '$ip' }
       }
     },
-    // 按照次数排序
+    {
+      $project: {
+        _id: 1,
+        pvCount: 1,
+        ipCount: { $size: '$ips' }
+      }
+    },
+    // 按照IP数排序
     {
       $sort: {
-        count: -1,
+        ...ippvSortRule,
         _id: -1
       }
     },
-    // 只取前10
+    // 只取前100
     {
       $limit: limit
     }
@@ -104,21 +144,29 @@ module.exports = async function (req, res, next) {
         isBot: false
       }
     },
-    // 根据{data.targetId} 分组
+    // 根据{data.targetId} 分组，统计PV和IP
     {
       $group: {
         _id: '$data.targetId',
-        count: { $sum: 1 }
+        pvCount: { $sum: 1 },
+        ips: { $addToSet: '$ip' }
       }
     },
-    // 按照次数排序
+    {
+      $project: {
+        _id: 1,
+        pvCount: 1,
+        ipCount: { $size: '$ips' }
+      }
+    },
+    // 按照IP数排序
     {
       $sort: {
-        count: -1,
+        ...ippvSortRule,
         _id: -1
       }
     },
-    // 只取前10
+    // 只取前100
     {
       $limit: limit
     },
@@ -137,7 +185,8 @@ module.exports = async function (req, res, next) {
     {
       $project: {
         _id: 1,
-        count: 1,
+        pvCount: 1,
+        ipCount: 1,
         title: '$post.title',
         excerpt: '$post.excerpt',
         type: '$post.type'
@@ -315,21 +364,29 @@ module.exports = async function (req, res, next) {
         isBot: false
       }
     },
-    // 根据{data.targetId} 分组
+    // 根据{data.targetId} 分组，统计PV和IP
     {
       $group: {
         _id: '$data.targetId',
-        count: { $sum: 1 }
+        pvCount: { $sum: 1 },
+        ips: { $addToSet: '$ip' }
       }
     },
-    // 按照次数排序
+    {
+      $project: {
+        _id: 1,
+        pvCount: 1,
+        ipCount: { $size: '$ips' }
+      }
+    },
+    // 按照IP数排序
     {
       $sort: {
-        count: -1,
+        ...ippvSortRule,
         _id: -1
       }
     },
-    // 只取前10
+    // 只取前100
     {
       $limit: limit
     },
@@ -348,7 +405,8 @@ module.exports = async function (req, res, next) {
     {
       $project: {
         _id: 1,
-        count: 1,
+        pvCount: 1,
+        ipCount: 1,
         sortname: '$sort.sortname'
       }
     }
@@ -371,21 +429,29 @@ module.exports = async function (req, res, next) {
         isBot: false
       }
     },
-    // 根据{data.targetId} 分组
+    // 根据{data.targetId} 分组，统计PV和IP
     {
       $group: {
         _id: '$data.targetId',
-        count: { $sum: 1 }
+        pvCount: { $sum: 1 },
+        ips: { $addToSet: '$ip' }
       }
     },
-    // 按照次数排序
+    {
+      $project: {
+        _id: 1,
+        pvCount: 1,
+        ipCount: { $size: '$ips' }
+      }
+    },
+    // 按照IP数排序
     {
       $sort: {
-        count: -1,
+        ...ippvSortRule,
         _id: -1
       }
     },
-    // 只取前10
+    // 只取前100
     {
       $limit: limit
     },
@@ -404,7 +470,8 @@ module.exports = async function (req, res, next) {
     {
       $project: {
         _id: 1,
-        count: 1,
+        pvCount: 1,
+        ipCount: 1,
         tagname: '$tag.tagname'
       }
     }
@@ -427,21 +494,29 @@ module.exports = async function (req, res, next) {
         isBot: false
       }
     },
-    // 根据{data.content} 分组
+    // 根据{data.content} 分组，统计PV和IP
     {
       $group: {
         _id: '$data.content',
-        count: { $sum: 1 }
+        pvCount: { $sum: 1 },
+        ips: { $addToSet: '$ip' }
       }
     },
-    // 按照次数排序
+    {
+      $project: {
+        _id: 1,
+        pvCount: 1,
+        ipCount: { $size: '$ips' }
+      }
+    },
+    // 按照IP数排序
     {
       $sort: {
-        count: -1,
+        ...ippvSortRule,
         _id: -1
       }
     },
-    // 只取前10
+    // 只取前100
     {
       $limit: limit
     }
@@ -467,12 +542,20 @@ module.exports = async function (req, res, next) {
     {
       $group: {
         _id: '$data.targetId',
-        count: { $sum: 1 }
+        pvCount: { $sum: 1 },
+        ips: { $addToSet: '$ip' }
+      }
+    },
+    {
+      $project: {
+        _id: 1,
+        pvCount: 1,
+        ipCount: { $size: '$ips' }
       }
     },
     {
       $sort: {
-        count: -1,
+        ...ippvSortRule,
         _id: -1
       }
     },
@@ -493,7 +576,8 @@ module.exports = async function (req, res, next) {
     {
       $project: {
         _id: 1,
-        count: 1,
+        pvCount: 1,
+        ipCount: 1,
         title: '$bangumi.title'
       }
     }
@@ -519,12 +603,20 @@ module.exports = async function (req, res, next) {
     {
       $group: {
         _id: '$data.targetId',
-        count: { $sum: 1 }
+        pvCount: { $sum: 1 },
+        ips: { $addToSet: '$ip' }
+      }
+    },
+    {
+      $project: {
+        _id: 1,
+        pvCount: 1,
+        ipCount: { $size: '$ips' }
       }
     },
     {
       $sort: {
-        count: -1,
+        ...ippvSortRule,
         _id: -1
       }
     },
@@ -545,7 +637,8 @@ module.exports = async function (req, res, next) {
     {
       $project: {
         _id: 1,
-        count: 1,
+        pvCount: 1,
+        ipCount: 1,
         title: '$movie.title'
       }
     }
@@ -571,12 +664,20 @@ module.exports = async function (req, res, next) {
     {
       $group: {
         _id: '$data.targetId',
-        count: { $sum: 1 }
+        pvCount: { $sum: 1 },
+        ips: { $addToSet: '$ip' }
+      }
+    },
+    {
+      $project: {
+        _id: 1,
+        pvCount: 1,
+        ipCount: { $size: '$ips' }
       }
     },
     {
       $sort: {
-        count: -1,
+        ...ippvSortRule,
         _id: -1
       }
     },
@@ -597,7 +698,8 @@ module.exports = async function (req, res, next) {
     {
       $project: {
         _id: 1,
-        count: 1,
+        pvCount: 1,
+        ipCount: 1,
         title: '$book.title'
       }
     }
@@ -623,12 +725,20 @@ module.exports = async function (req, res, next) {
     {
       $group: {
         _id: '$data.targetId',
-        count: { $sum: 1 }
+        pvCount: { $sum: 1 },
+        ips: { $addToSet: '$ip' }
+      }
+    },
+    {
+      $project: {
+        _id: 1,
+        pvCount: 1,
+        ipCount: { $size: '$ips' }
       }
     },
     {
       $sort: {
-        count: -1,
+        ...ippvSortRule,
         _id: -1
       }
     },
@@ -649,7 +759,8 @@ module.exports = async function (req, res, next) {
     {
       $project: {
         _id: 1,
-        count: 1,
+        pvCount: 1,
+        ipCount: 1,
         title: '$game.title'
       }
     }
@@ -675,12 +786,20 @@ module.exports = async function (req, res, next) {
     {
       $group: {
         _id: '$data.targetId',
-        count: { $sum: 1 }
+        pvCount: { $sum: 1 },
+        ips: { $addToSet: '$ip' }
+      }
+    },
+    {
+      $project: {
+        _id: 1,
+        pvCount: 1,
+        ipCount: { $size: '$ips' }
       }
     },
     {
       $sort: {
-        count: -1,
+        ...ippvSortRule,
         _id: -1
       }
     },
@@ -701,7 +820,8 @@ module.exports = async function (req, res, next) {
     {
       $project: {
         _id: 1,
-        count: 1,
+        pvCount: 1,
+        ipCount: 1,
         title: '$mappoint.title'
       }
     }
@@ -728,7 +848,8 @@ module.exports = async function (req, res, next) {
       // 只保留需要的字段，减少后续处理的数据量
       $project: {
         deviceInfo: 1,
-        ipInfo: 1
+        ipInfo: 1,
+        ip: 1
       }
     },
     {
@@ -757,7 +878,8 @@ module.exports = async function (req, res, next) {
                   },
                   '未知版本' // 字段不存在时返回"未知版本"
                 ]
-              }
+              },
+              ip: 1
             }
           },
           // 直接按浏览器名称+版本分组，避免中间步骤
@@ -767,31 +889,42 @@ module.exports = async function (req, res, next) {
                 name: '$browserName',
                 version: '$browserVersion'
               },
-              count: { $sum: 1 }
+              pvCount: { $sum: 1 },
+              ips: { $addToSet: '$ip' }
+            }
+          },
+          {
+            $project: {
+              _id: 1,
+              pvCount: 1,
+              ipCount: { $size: '$ips' }
             }
           },
           // 按浏览器名称重新分组
           {
             $group: {
               _id: '$_id.name',
-              count: { $sum: '$count' },
+              pvCount: { $sum: '$pvCount' },
+              ipCount: { $sum: '$ipCount' },
               versions: {
                 $push: {
                   version: '$_id.version',
-                  count: '$count'
+                  pvCount: '$pvCount',
+                  ipCount: '$ipCount'
                 }
               }
             }
           },
-          // 对版本数组排序
+          // 对版本数组排序（按IP数）
           {
             $project: {
               _id: 1,
-              count: 1,
+              pvCount: 1,
+              ipCount: 1,
               sortedVersions: {
                 $sortArray: {
                   input: '$versions',
-                  sortBy: { count: -1 }
+                  sortBy: { ...ippvSortRule }
                 }
               }
             }
@@ -800,9 +933,10 @@ module.exports = async function (req, res, next) {
           {
             $project: {
               _id: 1,
-              count: 1,
+              pvCount: 1,
+              ipCount: 1,
               top10: { $slice: ['$sortedVersions', 0, 10] },
-              remainingCount: {
+              remainingPvCount: {
                 $cond: {
                   if: { $gt: [{ $size: '$sortedVersions' }, 10] },
                   then: {
@@ -816,7 +950,28 @@ module.exports = async function (req, res, next) {
                           ]
                         },
                         as: 'item',
-                        in: '$$item.count'
+                        in: '$$item.pvCount'
+                      }
+                    }
+                  },
+                  else: 0
+                }
+              },
+              remainingIpCount: {
+                $cond: {
+                  if: { $gt: [{ $size: '$sortedVersions' }, 10] },
+                  then: {
+                    $sum: {
+                      $map: {
+                        input: {
+                          $slice: [
+                            '$sortedVersions',
+                            10,
+                            { $subtract: [{ $size: '$sortedVersions' }, 10] }
+                          ]
+                        },
+                        as: 'item',
+                        in: '$$item.ipCount'
                       }
                     }
                   },
@@ -829,14 +984,21 @@ module.exports = async function (req, res, next) {
           {
             $project: {
               _id: 1,
-              count: 1,
+              pvCount: 1,
+              ipCount: 1,
               children: {
                 $cond: {
-                  if: { $gt: ['$remainingCount', 0] },
+                  if: { $gt: ['$remainingPvCount', 0] },
                   then: {
                     $concatArrays: [
                       '$top10',
-                      [{ version: '其他', count: '$remainingCount' }]
+                      [
+                        {
+                          version: '其他',
+                          pvCount: '$remainingPvCount',
+                          ipCount: '$remainingIpCount'
+                        }
+                      ]
                     ]
                   },
                   else: '$top10'
@@ -844,9 +1006,9 @@ module.exports = async function (req, res, next) {
               }
             }
           },
-          // 按总数量排序
+          // 排序
           {
-            $sort: { count: -1 }
+            $sort: { ...ippvSortRule }
           },
           {
             $limit: limit
@@ -876,7 +1038,8 @@ module.exports = async function (req, res, next) {
                   },
                   '未知版本' // 字段不存在时返回"未知版本"
                 ]
-              }
+              },
+              ip: 1
             }
           },
           // 直接按操作系统名称+版本分组
@@ -886,31 +1049,42 @@ module.exports = async function (req, res, next) {
                 name: '$osName',
                 version: '$osVersion'
               },
-              count: { $sum: 1 }
+              pvCount: { $sum: 1 },
+              ips: { $addToSet: '$ip' }
+            }
+          },
+          {
+            $project: {
+              _id: 1,
+              pvCount: 1,
+              ipCount: { $size: '$ips' }
             }
           },
           // 按操作系统名称重新分组
           {
             $group: {
               _id: '$_id.name',
-              count: { $sum: '$count' },
+              pvCount: { $sum: '$pvCount' },
+              ipCount: { $sum: '$ipCount' },
               versions: {
                 $push: {
                   version: '$_id.version',
-                  count: '$count'
+                  pvCount: '$pvCount',
+                  ipCount: '$ipCount'
                 }
               }
             }
           },
-          // 对版本数组排序
+          // 对版本数组排序（按IP数）
           {
             $project: {
               _id: 1,
-              count: 1,
+              pvCount: 1,
+              ipCount: 1,
               sortedVersions: {
                 $sortArray: {
                   input: '$versions',
-                  sortBy: { count: -1 }
+                  sortBy: { ...ippvSortRule }
                 }
               }
             }
@@ -919,9 +1093,10 @@ module.exports = async function (req, res, next) {
           {
             $project: {
               _id: 1,
-              count: 1,
+              pvCount: 1,
+              ipCount: 1,
               top10: { $slice: ['$sortedVersions', 0, 10] },
-              remainingCount: {
+              remainingPvCount: {
                 $cond: {
                   if: { $gt: [{ $size: '$sortedVersions' }, 10] },
                   then: {
@@ -935,7 +1110,28 @@ module.exports = async function (req, res, next) {
                           ]
                         },
                         as: 'item',
-                        in: '$$item.count'
+                        in: '$$item.pvCount'
+                      }
+                    }
+                  },
+                  else: 0
+                }
+              },
+              remainingIpCount: {
+                $cond: {
+                  if: { $gt: [{ $size: '$sortedVersions' }, 10] },
+                  then: {
+                    $sum: {
+                      $map: {
+                        input: {
+                          $slice: [
+                            '$sortedVersions',
+                            10,
+                            { $subtract: [{ $size: '$sortedVersions' }, 10] }
+                          ]
+                        },
+                        as: 'item',
+                        in: '$$item.ipCount'
                       }
                     }
                   },
@@ -948,14 +1144,21 @@ module.exports = async function (req, res, next) {
           {
             $project: {
               _id: 1,
-              count: 1,
+              pvCount: 1,
+              ipCount: 1,
               children: {
                 $cond: {
-                  if: { $gt: ['$remainingCount', 0] },
+                  if: { $gt: ['$remainingPvCount', 0] },
                   then: {
                     $concatArrays: [
                       '$top10',
-                      [{ version: '其他', count: '$remainingCount' }]
+                      [
+                        {
+                          version: '其他',
+                          pvCount: '$remainingPvCount',
+                          ipCount: '$remainingIpCount'
+                        }
+                      ]
                     ]
                   },
                   else: '$top10'
@@ -963,9 +1166,9 @@ module.exports = async function (req, res, next) {
               }
             }
           },
-          // 按总数量排序
+          // 按总IP数量排序
           {
-            $sort: { count: -1 }
+            $sort: { ...ippvSortRule }
           },
           {
             $limit: limit
@@ -981,11 +1184,19 @@ module.exports = async function (req, res, next) {
           {
             $group: {
               _id: '$ipInfo.countryLong',
-              count: { $sum: 1 }
+              pvCount: { $sum: 1 },
+              ips: { $addToSet: '$ip' }
             }
           },
           {
-            $sort: { count: -1 }
+            $project: {
+              _id: 1,
+              pvCount: 1,
+              ipCount: { $size: '$ips' }
+            }
+          },
+          {
+            $sort: { ...ippvSortRule }
           },
           {
             $limit: limit
@@ -1002,7 +1213,8 @@ module.exports = async function (req, res, next) {
           {
             $group: {
               _id: { country: '$ipInfo.countryLong', region: '$ipInfo.region' },
-              count: { $sum: 1 }
+              pvCount: { $sum: 1 },
+              ips: { $addToSet: '$ip' }
             }
           },
           {
@@ -1019,11 +1231,12 @@ module.exports = async function (req, res, next) {
                 countryLong: '$_id.country',
                 region: '$_id.region'
               },
-              count: 1
+              pvCount: 1,
+              ipCount: { $size: '$ips' }
             }
           },
           {
-            $sort: { count: -1 }
+            $sort: { ...ippvSortRule }
           },
           {
             $limit: limit
@@ -1088,11 +1301,19 @@ module.exports = async function (req, res, next) {
     {
       $group: {
         _id: '$data.extraInfo.language.language',
-        count: { $sum: 1 }
+        pvCount: { $sum: 1 },
+        ips: { $addToSet: '$ip' }
       }
     },
     {
-      $sort: { count: -1 }
+      $project: {
+        _id: 1,
+        pvCount: 1,
+        ipCount: { $size: '$ips' }
+      }
+    },
+    {
+      $sort: { ...ippvSortRule }
     },
     {
       $limit: limit
@@ -1181,17 +1402,26 @@ module.exports = async function (req, res, next) {
               ]
             }
           ]
-        }
+        },
+        ip: 1
       }
     },
     {
       $group: {
         _id: '$fullLocale',
-        count: { $sum: 1 }
+        pvCount: { $sum: 1 },
+        ips: { $addToSet: '$ip' }
       }
     },
     {
-      $sort: { count: -1 }
+      $project: {
+        _id: 1,
+        pvCount: 1,
+        ipCount: { $size: '$ips' }
+      }
+    },
+    {
+      $sort: { ...ippvSortRule }
     },
     {
       $limit: limit
