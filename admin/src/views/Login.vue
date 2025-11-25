@@ -10,7 +10,11 @@
       <div class="tc pb40 pt20">
         <el-form :model="form" label-width="0px">
           <el-form-item label="">
-            <el-input v-model="form.username" placeholder="用户名" />
+            <el-input
+              v-model="form.username"
+              @keydown.enter="login"
+              placeholder="用户名"
+            />
           </el-form-item>
           <el-form-item label="">
             <el-input
