@@ -637,14 +637,14 @@ body {
     'Microsoft YaHei', sans-serif, system-ui, -apple-system, BlinkMacSystemFont,
     'Segoe UI Emoji', 'Noto Color Emoji', emoji;
   color: #171717;
-  width: 100%;
-  height: 100%;
+  /* width: 100%;
+  height: 100%; */
 }
 
 html {
   -webkit-text-size-adjust: none;
-  width: 100%;
-  height: 100%;
+  /* width: 100%;
+  height: 100%; */
   /* 小滚动条 */
   scrollbar-width: thin;
 }
