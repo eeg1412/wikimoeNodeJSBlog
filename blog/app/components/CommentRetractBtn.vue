@@ -28,9 +28,6 @@
 </template>
 
 <script setup>
-import { useOptionStore } from '@/store/options'
-import { useCommentRetractAuthDecodeStore } from '@/store/commentRetractAuthDecode'
-import { useCommentRetractCountDataStore } from '@/store/commentRetractCountData'
 import { deleteCommentRetractApi } from '@/api/comment'
 const emits = defineEmits(['refresh'])
 const props = defineProps({
@@ -43,17 +40,14 @@ const props = defineProps({
     default: ''
   }
 })
-const optionStore = useOptionStore()
-const { options } = storeToRefs(optionStore)
+const { options } = useOptions()
 const toast = useToast()
 const now = ref(Date.now())
-const commentRetractAuthDecodeStore = useCommentRetractAuthDecodeStore()
-const { setCommentRetractAuthDecode } = commentRetractAuthDecodeStore
-const { commentRetractAuthDecode } = storeToRefs(commentRetractAuthDecodeStore)
+const { setCommentRetractAuthDecode, commentRetractAuthDecode } =
+  useCommentRetractAuthDecode()
 
-const commentRetractCountDataStore = useCommentRetractCountDataStore()
-const { setCommentRetractCountData } = commentRetractCountDataStore
-const { commentRetractCountData } = storeToRefs(commentRetractCountDataStore)
+const { setCommentRetractCountData, commentRetractCountData } =
+  useCommentRetractCountData()
 const min5 = 300000 // 5分钟
 
 const showBtn = computed(() => {

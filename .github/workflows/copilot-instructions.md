@@ -220,11 +220,11 @@ const action = {
   actionName: async (param1, param2) => {
     // Implementation
     return result
-  },
+  }
 }
 
 // Handle messages
-parentPort.on('message', async (params) => {
+parentPort.on('message', async params => {
   try {
     const result = await action[params.action](...params.data)
     parentPort.postMessage({ status: 'success', data: result })
@@ -265,10 +265,10 @@ blog/
 ├── api/                # API request modules
 ├── assets/             # Static assets
 ├── components/         # Vue components
+├── composables/        # Vue composables (useState, custom hooks)
 ├── layouts/            # Layout components
 ├── pages/              # Page components (auto-routed)
 ├── plugins/            # Nuxt plugins
-├── store/              # Pinia stores
 └── utils/              # Utility functions
 ```
 
@@ -300,24 +300,32 @@ blog/
 
 ### Blog State Management
 
-- Use Pinia for state management
-- Create separate stores for different domains
+- Use Nuxt `useState` composable for state management
+- Create separate composables for different domains in `composables/` directory
 - Follow consistent pattern:
 
 ```typescript
-export const useStore = defineStore('storeName', {
-  state: () => ({
-    // State properties
-  }),
+export function useStoreName() {
+  const state = useState('storeName', () => ({
+    // State properties with default values
+  }))
 
-  actions: {
-    // Actions
-    async fetchData() {
-      // Implementation
-    },
-  },
-})
+  function updateState(newValue) {
+    state.value = newValue
+  }
+
+  async function fetchData() {
+    // Implementation
+  }
+
+  return { state, updateState, fetchData }
+}
 ```
+
+- Key advantages of `useState`:
+  - SSR-friendly: automatically serializes/deserializes state between server and client
+  - Reactive: state is reactive across the entire application
+  - Shared state: identified by a unique key string
 
 ### Blog API Integration
 
@@ -326,10 +334,10 @@ export const useStore = defineStore('storeName', {
 - Use consistent naming: `getEntityNameApi`, `postEntityNameApi`, etc.
 
 ```typescript
-export const getPostListApi = (params) => {
+export const getPostListApi = params => {
   return $fetch('/api/blog/post/list', {
     method: 'GET',
-    params,
+    params
   })
 }
 ```
@@ -387,7 +395,7 @@ export default {
     return {
       // Exposed properties and methods
     }
-  },
+  }
 }
 </script>
 
@@ -419,9 +427,9 @@ export default function (api) {
       return api.get('/entity/list', {
         params: data,
         shouldAdminJWT: true,
-        noLoading,
+        noLoading
       })
-    },
+    }
 
     // Other API functions
   }

@@ -56,11 +56,8 @@
 </template>
 <script setup>
 import { getTrendPostListApi } from '@/api/trend'
-import { useOptionStore } from '@/store/options'
-import { storeToRefs } from 'pinia'
 
-const optionStore = useOptionStore()
-const { options } = storeToRefs(optionStore)
+const { options } = useOptions()
 
 const { data: trendPostListData } = await getTrendPostListApi()
 const trendPostList = ref(trendPostListData.value.list)

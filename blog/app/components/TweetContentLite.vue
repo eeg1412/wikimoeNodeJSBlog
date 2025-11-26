@@ -26,9 +26,6 @@
   </div>
 </template>
 <script setup>
-import { useOptionStore } from '@/store/options'
-import { storeToRefs } from 'pinia'
-
 // props
 const props = defineProps({
   item: {
@@ -37,8 +34,7 @@ const props = defineProps({
   }
 })
 
-const optionStore = useOptionStore()
-const { options } = storeToRefs(optionStore)
+const { options } = useOptions()
 
 const coverImages = computed(() => {
   const coverImages = props.item?.coverImages || []

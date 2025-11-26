@@ -9,21 +9,13 @@
   </div>
 </template>
 <script setup>
-import { useOptionStore } from '@/store/options'
-import { useIsFullscreenStore } from '@/store/isFullscreen'
-import { storeToRefs } from 'pinia'
 import { postLogCreateApi, putLogUpdatePerformanceApi } from '@/api/log'
-import { useCommentRetractAuthDecodeStore } from '@/store/commentRetractAuthDecode'
-import { useCommentRetractCountDataStore } from '@/store/commentRetractCountData'
 
-const optionStore = useOptionStore()
-const commentRetractAuthDecodeStore = useCommentRetractAuthDecodeStore()
-const { setCommentRetractAuthDecode } = commentRetractAuthDecodeStore
-const commentRetractCountDataStore = useCommentRetractCountDataStore()
-const { setCommentRetractCountData } = commentRetractCountDataStore
-const { getOptions } = optionStore
+const { options, getOptions } = useOptions()
 await getOptions()
-const { options } = storeToRefs(optionStore)
+
+const { setCommentRetractAuthDecode } = useCommentRetractAuthDecode()
+const { setCommentRetractCountData } = useCommentRetractCountData()
 const siteEnableRss = options.value.siteEnableRss
 const rssHead = () => {
   if (siteEnableRss) {
@@ -259,9 +251,8 @@ const setJs = () => {
 }
 setJs()
 
-// useIsFullscreenStore
-const isFullscreenStore = useIsFullscreenStore()
-const { setFullscreen } = isFullscreenStore
+// 全屏状态
+const { setFullscreen } = useIsFullscreen()
 
 // 全屏状态变化时的回调函数
 const onFullscreenChange = () => {

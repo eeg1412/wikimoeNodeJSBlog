@@ -299,23 +299,16 @@
 </template>
 <script setup>
 import { nextTick, onMounted, onUnmounted, ref } from 'vue'
-import { storeToRefs } from 'pinia'
-import { useOptionStore } from '@/store/options'
-import { useIsFullscreenStore } from '@/store/isFullscreen'
-import { usePswpIsOpenStore } from '@/store/pswpIsOpen'
 
-const optionStore = useOptionStore()
-const { options } = storeToRefs(optionStore)
-const pswpIsOpenStore = usePswpIsOpenStore()
-const { pswpIsOpen } = storeToRefs(pswpIsOpenStore)
+const { options } = useOptions()
+const { pswpIsOpen } = usePswpIsOpen()
 
 const router = useRouter()
 const route = useRoute()
 
 const componentNameLower = 'tweetimglist'
 
-const isFullscreenStore = useIsFullscreenStore()
-const { isFullscreen: isFullscreenMode } = storeToRefs(isFullscreenStore)
+const { isFullscreen: isFullscreenMode } = useIsFullscreen()
 
 const isFullscreen = computed(() => {
   if (isFullscreenMode.value) {

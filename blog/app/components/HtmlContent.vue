@@ -29,11 +29,8 @@
 <script setup>
 import { getEventDetailApiFetch } from '@/api/event'
 import 'highlight.js/styles/base16/dracula.css'
-import { usePswpIsOpenStore } from '@/store/pswpIsOpen'
-import { storeToRefs } from 'pinia'
 
-const pswpIsOpenStore = usePswpIsOpenStore()
-const { pswpIsOpen } = storeToRefs(pswpIsOpenStore)
+const { pswpIsOpen } = usePswpIsOpen()
 const toast = useToast()
 // props
 const props = defineProps({

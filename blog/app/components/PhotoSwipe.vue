@@ -290,10 +290,7 @@
     </Teleport> -->
 </template>
 <script setup>
-import { useOptionStore } from '@/store/options'
 import '@photo-sphere-viewer/core/index.css'
-import { usePswpIsOpenStore } from '@/store/pswpIsOpen'
-import { storeToRefs } from 'pinia'
 
 const router = useRouter()
 const route = useRoute()
@@ -313,8 +310,7 @@ const clearRouteQuery = () => {
   console.log('clearRouteQuery')
 }
 
-const pswpIsOpenStore = usePswpIsOpenStore()
-const { pswpIsOpen } = storeToRefs(pswpIsOpenStore)
+const { pswpIsOpen, setPswpIsOpen } = usePswpIsOpen()
 
 let Viewer = null
 let gyroscopePlugin = null
@@ -567,8 +563,7 @@ const toggleFisheye = () => {
 
 let isAllPreventDefault = false
 
-const optionStore = useOptionStore()
-const { options } = storeToRefs(optionStore)
+const { options } = useOptions()
 
 const emits = defineEmits()
 
@@ -691,7 +686,7 @@ const open = async (
     return
   }
 
-  pswpIsOpenStore.setPswpIsOpen(true)
+  setPswpIsOpen(true)
   const pswpopen = route.query.pswpopen
   if (pswpopen && pswpopen === '1') {
     clearRouteQuery()
@@ -904,7 +899,7 @@ const initLightbox = async () => {
       }
     }
     nextTick(() => {
-      pswpIsOpenStore.setPswpIsOpen(false)
+      setPswpIsOpen(false)
     })
   })
   lightbox.on('change', async () => {

@@ -49,10 +49,8 @@
   </UPopover>
 </template>
 <script setup>
-import { useOptionStore } from '@/store/options'
 import { putShareCountApi } from '@/api/post'
-const optionStore = useOptionStore()
-const { options } = storeToRefs(optionStore)
+const { options } = useOptions()
 const siteUrl = computed(() => options.value?.siteUrl)
 const siteTitle = computed(() => options.value?.siteTitle)
 const siteEnableShareButton = computed(

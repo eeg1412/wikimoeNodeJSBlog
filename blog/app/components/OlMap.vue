@@ -6,7 +6,6 @@
 
 <script setup>
 import { ref, onMounted, onUnmounted, watch, nextTick } from 'vue'
-import { useOptionStore } from '@/store/options'
 
 // Props - 接收父组件传入的标记点数据
 const props = defineProps({
@@ -17,8 +16,7 @@ const props = defineProps({
   }
 })
 
-const optionStore = useOptionStore()
-const { options } = storeToRefs(optionStore)
+const { options } = useOptions()
 
 // Emits - 向父组件发射事件
 const emit = defineEmits(['markerClick', 'mapReady'])

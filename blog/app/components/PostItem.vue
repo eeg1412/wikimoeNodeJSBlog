@@ -32,17 +32,13 @@
   </div>
 </template>
 <script setup>
-import { useOptionStore } from '@/store/options'
-import { storeToRefs } from 'pinia'
-
 const props = defineProps({
   post: {
     type: Object,
     required: true
   }
 })
-const optionStore = useOptionStore()
-const { options } = storeToRefs(optionStore)
+const { options } = useOptions()
 const defaultCover = options.value.siteDefaultCover || ''
 </script>
 <style scoped>

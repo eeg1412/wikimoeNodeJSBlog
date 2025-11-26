@@ -649,11 +649,8 @@ import {
   postCommentLikeLogApi,
   postCommentLikeLogListApi
 } from '@/api/comment'
-import { storeToRefs } from 'pinia'
-import { useOptionStore } from '@/store/options'
 
-const optionStore = useOptionStore()
-const { options } = storeToRefs(optionStore)
+const { options } = useOptions()
 
 const route = useRoute()
 const id = route.params.id

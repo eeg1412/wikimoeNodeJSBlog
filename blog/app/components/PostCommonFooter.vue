@@ -5,9 +5,6 @@
   </div>
 </template>
 <script setup>
-import { storeToRefs } from 'pinia'
-import { useOptionStore } from '@/store/options'
-
 // props
 const props = defineProps({
   post: {
@@ -16,8 +13,7 @@ const props = defineProps({
   }
 })
 
-const optionStore = useOptionStore()
-const { options } = storeToRefs(optionStore)
+const { options } = useOptions()
 const router = useRouter()
 
 const type = computed(() => props.post.type)

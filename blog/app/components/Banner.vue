@@ -42,10 +42,8 @@
 </template>
 <script setup>
 import { getBannerListApi } from '@/api/banner'
-import { useOptionStore } from '@/store/options'
 
-const optionStore = useOptionStore()
-const { options } = storeToRefs(optionStore)
+const { options } = useOptions()
 
 const siteTopSlideTime = computed(() => options.value.siteTopSlideTime || 8000)
 const router = useRouter()

@@ -370,11 +370,8 @@
 </template>
 <script setup>
 import { getPostsApi, postLikeLogListApi, postLikeLogApi } from '@/api/post'
-import { useOptionStore } from '@/store/options'
-import { storeToRefs } from 'pinia'
 
-const optionStore = useOptionStore()
-const { options } = storeToRefs(optionStore)
+const { options } = useOptions()
 const defaultCover = options.value.siteDefaultCover || ''
 const sitePageSize = computed(() => options.value.sitePageSize || 1)
 const route = useRoute()

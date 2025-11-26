@@ -123,16 +123,11 @@
   </div>
 </template>
 <script setup>
-import { storeToRefs } from 'pinia'
-import { useOptionStore } from '@/store/options'
 import { getCommentCreateApi } from '@/api/comment'
-import { useCommentRetractAuthDecodeStore } from '@/store/commentRetractAuthDecode'
 
 const toast = useToast()
-const optionStore = useOptionStore()
-const commentRetractAuthDecodeStore = useCommentRetractAuthDecodeStore()
-const { options } = storeToRefs(optionStore)
-const { setCommentRetractAuthDecode } = commentRetractAuthDecodeStore
+const { options } = useOptions()
+const { setCommentRetractAuthDecode } = useCommentRetractAuthDecode()
 
 const props = defineProps({
   postid: {

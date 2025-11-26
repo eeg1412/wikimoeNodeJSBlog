@@ -18,7 +18,6 @@
     "@nuxt/ui": "2.22.3",
     "@photo-sphere-viewer/core": "^5.14.0",
     "@photo-sphere-viewer/gyroscope-plugin": "^5.14.0",
-    "@pinia/nuxt": "^0.5.1",
     "highlight.js": "^11.11.1",
     "moment": "^2.30.1",
     "nuxt-swiper": "^1.2.2",

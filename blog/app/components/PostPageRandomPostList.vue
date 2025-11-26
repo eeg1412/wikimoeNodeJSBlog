@@ -21,9 +21,6 @@
   </div>
 </template>
 <script setup>
-import { useOptionStore } from '@/store/options'
-import { storeToRefs } from 'pinia'
-
 // props
 const props = defineProps({
   randomPostList: {
@@ -32,7 +29,6 @@ const props = defineProps({
   }
 })
 
-const optionStore = useOptionStore()
-const { options } = storeToRefs(optionStore)
+const { options } = useOptions()
 </script>
 <style scoped></style>

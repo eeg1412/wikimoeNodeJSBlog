@@ -17,8 +17,6 @@
   </div>
 </template>
 <script setup>
-import { useOptionStore } from '@/store/options'
-import { storeToRefs } from 'pinia'
 const props = defineProps({
   avatar: {
     type: String,
@@ -33,8 +31,7 @@ const props = defineProps({
     default: 50
   }
 })
-const optionStore = useOptionStore()
-const { options } = storeToRefs(optionStore)
+const { options } = useOptions()
 const siteGravatarSource = options.value.siteGravatarSource
 const imgStyle = computed(() => {
   return {

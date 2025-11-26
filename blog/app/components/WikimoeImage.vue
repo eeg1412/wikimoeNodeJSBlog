@@ -14,14 +14,9 @@
 
 <script setup>
 import { computed } from 'vue'
-import { storeToRefs } from 'pinia'
-import { useOptionStore } from '@/store/options'
-import { usePswpIsOpenStore } from '@/store/pswpIsOpen'
 
-const optionStore = useOptionStore()
-const { options } = storeToRefs(optionStore)
-const pswpIsOpenStore = usePswpIsOpenStore()
-const { pswpIsOpen } = storeToRefs(pswpIsOpenStore)
+const { options } = useOptions()
+const { pswpIsOpen } = usePswpIsOpen()
 
 // props
 const props = defineProps({

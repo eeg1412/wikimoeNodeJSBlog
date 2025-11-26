@@ -53,9 +53,7 @@
   </UPopover>
 </template>
 <script setup>
-import { useOptionStore } from '@/store/options'
-const optionStore = useOptionStore()
-const { options } = storeToRefs(optionStore)
+const { options } = useOptions()
 const siteUrl = computed(() => options.value?.siteUrl)
 const siteEnableFooterQRCodeButton = computed(
   () => options.value?.siteEnableFooterQRCodeButton

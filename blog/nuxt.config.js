@@ -157,7 +157,7 @@ export default defineNuxtConfig({
     port: 8078
   },
 
-  modules: ['@pinia/nuxt', '@nuxt/ui', 'nuxt-swiper'],
+  modules: ['@nuxt/ui', 'nuxt-swiper'],
 
   swiper: {
     // Swiper options

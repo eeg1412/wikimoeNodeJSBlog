@@ -254,8 +254,6 @@
   </div>
 </template>
 <script setup>
-import { useOptionStore } from '@/store/options'
-import { storeToRefs } from 'pinia'
 import { getNaviListApi } from '@/api/navi'
 import { getSidebarListApi } from '@/api/sidebar'
 
@@ -304,8 +302,7 @@ if (import.meta.client) {
   })
 }
 
-const optionStore = useOptionStore()
-const { options } = storeToRefs(optionStore)
+const { options } = useOptions()
 
 const config = useRuntimeConfig()
 const version = config.public.version
