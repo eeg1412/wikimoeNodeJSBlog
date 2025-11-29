@@ -41,10 +41,26 @@ export default {
       if (!props.ipInfo) return ''
       const { countryLong = '', region = '', city = '' } = props.ipInfo
       if (!countryLong) return ''
-      const result = `${countryLong}${
-        region !== city && region !== countryLong ? ' ' + region : ''
-      }${countryLong !== city ? ' ' + city : ''}`
-      return result.trim()
+
+      const parts = [countryLong]
+
+      // 如果国家和省不同，才考虑添加省
+      if (region !== countryLong) {
+        // 如果省和城市不同，添加省
+        if (region !== city) {
+          parts.push(region)
+        } else if (region === city) {
+          // 如果省和城市相同，优先显示省
+          parts.push(region)
+        }
+      }
+
+      // 只在省和城市不同且省不等于国家且城市不等于国家时添加城市
+      if (region !== city && region !== countryLong && countryLong !== city) {
+        parts.push(city)
+      }
+
+      return parts.join(' ')
     })
 
     watch(
@@ -73,11 +89,25 @@ export default {
           regionTranslationMap?.get('translation') || region
         const cityTranslations = regionTranslationMap?.get(city) || city
 
-        str.value = `${countryTranslation}${
-          region !== city && region !== countryLong
-            ? ' ' + regionTranslation
-            : ''
-        }${countryLong !== city ? ' ' + cityTranslations : ''}`
+        const parts = [countryTranslation]
+
+        // 如果国家和省不同，才考虑添加省
+        if (region !== countryLong) {
+          // 如果省和城市不同，添加省
+          if (region !== city) {
+            parts.push(regionTranslation)
+          } else if (region === city) {
+            // 如果省和城市相同，优先显示省
+            parts.push(regionTranslation)
+          }
+        }
+
+        // 只在省和城市不同且省不等于国家且城市不等于国家时添加城市
+        if (region !== city && region !== countryLong && countryLong !== city) {
+          parts.push(cityTranslations)
+        }
+
+        str.value = parts.join(' ')
       },
       { immediate: true }
     )
