@@ -9,7 +9,7 @@
     <el-form-item label="开启SWR缓存" prop="swrCacheEnabled">
       <el-switch v-model="swrCacheSettingsForm.swrCacheEnabled"></el-switch>
       <div class="w_10">
-        ※开启后，博客前端页面将启用SWR缓存，需要blog前端重启后生效
+        ※开启后，博客前端页面将启用SWR缓存
       </div>
     </el-form-item>
 
@@ -51,7 +51,7 @@
         :max="1000"
       >
       </el-input-number>
-      <div class="w_10">※LRU缓存最大页面数量，默认10，需要blog前端重启后生效</div>
+      <div class="w_10">※内存中最多缓存的页面数量，默认10</div>
     </el-form-item>
 
     <el-form-item label="缓存TTL(毫秒)" prop="cacheTTL">
@@ -64,13 +64,13 @@
         :max="86400000"
       >
       </el-input-number>
-      <div class="w_10">※LRU缓存生存时间（毫秒），默认60000，需要blog前端重启后生效</div>
+      <div class="w_10">※缓存生存时间（毫秒），默认60000</div>
     </el-form-item>
 
     <el-form-item label="清空缓存">
       <el-button type="danger" @click="handleClearCache">一键清空缓存</el-button>
       <div class="w_10">
-        ※点击后将发送缓存清除信号，blog前端会在下次请求时清除旧缓存
+        ※点击后将立即清空blog前端的所有页面缓存
       </div>
     </el-form-item>
 

@@ -114,7 +114,6 @@ export default defineNuxtConfig({
     storage: {
       cache: {
         driver: 'lruCache',
-        // 默认值，实际值通过管理后台设置并需要重启blog前端生效
         max: 10,
         ttl: 60000,
         updateAgeOnGet: true,
@@ -124,7 +123,6 @@ export default defineNuxtConfig({
     devStorage: {
       cache: {
         driver: 'lruCache',
-        // 默认值，实际值通过管理后台设置并需要重启blog前端生效
         max: 10,
         ttl: 60000,
         updateAgeOnGet: true,
