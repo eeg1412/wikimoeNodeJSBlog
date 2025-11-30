@@ -1,10 +1,8 @@
-// This plugin fetches SWR cache settings from the backend and stores them globally
-// The cache version is checked periodically to invalidate cache when needed
-
-let cacheVersion = 0
+// This plugin initializes the SWR cache settings from the backend
+// The API domain is made available to all server routes at runtime
 
 export default defineNitroPlugin((nitroApp) => {
-  // Fetch initial cache settings and version
+  // Get the API domain from environment variables at runtime
   const apiDomain = process.env.NUXT_API_DOMAIN || 'http://localhost:3000'
   
   // Store the API domain for use in other parts of the application
@@ -12,6 +10,4 @@ export default defineNitroPlugin((nitroApp) => {
     // Make the API domain available in the event context
     event.context.apiDomain = apiDomain
   })
-  
-  console.log('SWR Cache Plugin initialized, API Domain:', apiDomain)
 })
