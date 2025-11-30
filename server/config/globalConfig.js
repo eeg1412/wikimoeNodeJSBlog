@@ -217,7 +217,11 @@ const initGlobalConfig = async () => {
     // SWR缓存最大时间（秒）
     swrCacheMaxAge: 10,
     // SWR缓存过期时间（秒）
-    swrCacheStaleMaxAge: 3600
+    swrCacheStaleMaxAge: 3600,
+    // 缓存最大页面数量
+    cacheMaxPage: 10,
+    // 缓存时间（毫秒）
+    cacheTTL: 60000
   }
 
   // 写一个函数，先判断原始类型，再将字符串转换为对应的类型

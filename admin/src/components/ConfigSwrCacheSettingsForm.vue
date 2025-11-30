@@ -3,7 +3,7 @@
     :model="swrCacheSettingsForm"
     :rules="swrCacheSettingsRules"
     ref="swrCacheSettingsFormRef"
-    label-width="160px"
+    label-width="180px"
     v-if="inited"
   >
     <el-form-item label="开启SWR缓存" prop="swrCacheEnabled">
@@ -41,6 +41,32 @@
       </div>
     </el-form-item>
 
+    <el-form-item label="缓存最大页面数量" prop="cacheMaxPage">
+      <el-input-number
+        v-model.number="swrCacheSettingsForm.cacheMaxPage"
+        type="number"
+        placeholder="缓存最大页面数量"
+        style="width: 200px"
+        :min="1"
+        :max="1000"
+      >
+      </el-input-number>
+      <div class="w_10">※LRU缓存最大页面数量，默认10，需要blog前端重启后生效</div>
+    </el-form-item>
+
+    <el-form-item label="缓存TTL(毫秒)" prop="cacheTTL">
+      <el-input-number
+        v-model.number="swrCacheSettingsForm.cacheTTL"
+        type="number"
+        placeholder="缓存TTL"
+        style="width: 200px"
+        :min="1000"
+        :max="86400000"
+      >
+      </el-input-number>
+      <div class="w_10">※LRU缓存生存时间（毫秒），默认60000，需要blog前端重启后生效</div>
+    </el-form-item>
+
     <el-form-item label="清空缓存">
       <el-button type="danger" @click="handleClearCache">一键清空缓存</el-button>
       <div class="w_10">
@@ -76,7 +102,11 @@ export default {
       // SWR缓存最大时间（秒）
       swrCacheMaxAge: 10,
       // SWR缓存过期时间（秒）
-      swrCacheStaleMaxAge: 3600
+      swrCacheStaleMaxAge: 3600,
+      // 缓存最大页面数量
+      cacheMaxPage: 10,
+      // 缓存时间（毫秒）
+      cacheTTL: 60000
     })
     const swrCacheSettingsRules = {}
     const swrCacheSettingsSubmit = () => {
