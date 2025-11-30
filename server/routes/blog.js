@@ -55,6 +55,20 @@ const blogRouteSetting = [
     middleware: [],
     controller: require('../api/blog/option/getoptionList')
   },
+  // getSwrCacheSettings
+  {
+    path: '/swr-cache-settings',
+    method: 'get',
+    middleware: [],
+    controller: require('../api/blog/option/getSwrCacheSettings')
+  },
+  // getCacheVersion
+  {
+    path: '/cache-version',
+    method: 'get',
+    middleware: [],
+    controller: require('../api/blog/option/getCacheVersion')
+  },
   // getnaviList
   {
     path: '/navi/list',

@@ -368,6 +368,16 @@ export default function (api) {
         }
       )
     },
+    // post /cache/clear
+    clearCache() {
+      return api.post(
+        '/cache/clear',
+        {},
+        {
+          shouldAdminJWT: true
+        }
+      )
+    },
     // get dashboard
     getDashboard() {
       return api.get('/dashboard', {

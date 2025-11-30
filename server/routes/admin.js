@@ -630,6 +630,15 @@ const adminRouteSetting = [
     roleType: 'eq',
     role: 999
   },
+  // post /cache/clear
+  {
+    path: '/cache/clear',
+    method: 'post',
+    middleware: [checkAuth],
+    controller: require('../api/admin/cache/clearCache'),
+    roleType: null,
+    role: null
+  },
   // get dashboard
   {
     path: '/dashboard',

@@ -210,6 +210,16 @@ const initGlobalConfig = async () => {
     AdAdsTxt: ''
   }
 
+  // SWR缓存设置
+  const swrCacheSettingsConfig = {
+    // 是否开启SWR缓存
+    swrCacheEnabled: false,
+    // SWR缓存最大时间（秒）
+    swrCacheMaxAge: 10,
+    // SWR缓存过期时间（秒）
+    swrCacheStaleMaxAge: 3600
+  }
+
   // 写一个函数，先判断原始类型，再将字符串转换为对应的类型
   const formatResToForm = (form, obj) => {
     Object.keys(form).forEach(key => {
@@ -245,7 +255,8 @@ const initGlobalConfig = async () => {
         IPBlockSettings: IPBlockSettingsConfig,
         otherSettings: otherSettingsConfig,
         sitePostSettings: sitePostSettingsConfig,
-        adSettings: adSettingsConfig
+        adSettings: adSettingsConfig,
+        swrCacheSettings: swrCacheSettingsConfig
       }
       // 将data转换为object
       const obj = {}
@@ -263,6 +274,7 @@ const initGlobalConfig = async () => {
       formatResToForm(config.otherSettings, obj)
       formatResToForm(config.sitePostSettings, obj)
       formatResToForm(config.adSettings, obj)
+      formatResToForm(config.swrCacheSettings, obj)
       // 将配置挂载到global上
       global.$globalConfig = config
       global.$Mint = new Mint(config.otherSettings.siteBannedKeywordList)

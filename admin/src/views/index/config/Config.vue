@@ -38,6 +38,10 @@
       <el-tab-pane label="IP黑名单设置" name="ip-block">
         <ConfigIPBlockSettingsForm v-if="activeName === 'ip-block'" />
       </el-tab-pane>
+      <!-- SWR缓存设置 -->
+      <el-tab-pane label="缓存设置" name="swr-cache">
+        <ConfigSwrCacheSettingsForm v-if="activeName === 'swr-cache'" />
+      </el-tab-pane>
       <!-- 其他设置 -->
       <el-tab-pane label="其他设置" name="other">
         <ConfigOtherSettingsForm v-if="activeName === 'other'" />
@@ -62,6 +66,7 @@ import ConfigSitePostForm from '@/components/ConfigSitePostForm'
 import ConfigAdSettingsForm from '@/components/ConfigAdSettingsForm'
 import ConfigIPBlockSettingsForm from '@/components/ConfigIPBlockSettingsForm'
 import ConfigOlMapSettingsForm from '@/components/ConfigOlMapSettingsForm'
+import ConfigSwrCacheSettingsForm from '@/components/ConfigSwrCacheSettingsForm'
 export default {
   components: {
     ConfigSiteSettingsForm,
@@ -73,7 +78,8 @@ export default {
     ConfigSitePostForm,
     ConfigAdSettingsForm,
     ConfigIPBlockSettingsForm,
-    ConfigOlMapSettingsForm
+    ConfigOlMapSettingsForm,
+    ConfigSwrCacheSettingsForm
   },
   setup() {
     const route = useRoute()
