@@ -1,58 +1,72 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
+const command = process.argv[2]
+console.log('当前执行的命令:', command)
 const publicRuntimeConfigPlus = {}
 
+// 判断是否是 build 命令
+const isBuild = command === 'build'
+
 // 缓存时间
-const cacheTime = process.env.SWR_CACHE_MAXAGE
+const cacheTime = isBuild
+  ? '__NUXT_ENV_SWR_CACHE_MAXAGE__'
+  : process.env.SWR_CACHE_MAXAGE
   ? Number(process.env.SWR_CACHE_MAXAGE)
   : 10
-const staleMaxAge = process.env.SWR_CACHE_STALEMAXAGE
+const staleMaxAge = isBuild
+  ? '__NUXT_ENV_SWR_CACHE_STALEMAXAGE__'
+  : process.env.SWR_CACHE_STALEMAXAGE
   ? Number(process.env.SWR_CACHE_STALEMAXAGE)
   : 3600
 
+// API 域名
+const apiDomain = isBuild
+  ? '__NUXT_ENV_API_DOMAIN__'
+  : process.env.NUXT_API_DOMAIN
+
 let routeRules = {
   '/rss': {
-    proxy: `${process.env.NUXT_API_DOMAIN}/rss`
+    proxy: `${apiDomain}/rss`
   },
   '/rss/blog': {
-    proxy: `${process.env.NUXT_API_DOMAIN}/rss/blog`
+    proxy: `${apiDomain}/rss/blog`
   },
   '/rss/tweet': {
-    proxy: `${process.env.NUXT_API_DOMAIN}/rss/tweet`
+    proxy: `${apiDomain}/rss/tweet`
   },
   '/content/**': {
-    proxy: `${process.env.NUXT_API_DOMAIN}/content/**`
+    proxy: `${apiDomain}/content/**`
   },
   '/upload/**': {
-    proxy: `${process.env.NUXT_API_DOMAIN}/upload/**`
+    proxy: `${apiDomain}/upload/**`
   },
   '/up_works/**': {
-    proxy: `${process.env.NUXT_API_DOMAIN}/up_works/**`
+    proxy: `${apiDomain}/up_works/**`
   },
   '/web_demo/**': {
-    proxy: `${process.env.NUXT_API_DOMAIN}/web_demo/**`
+    proxy: `${apiDomain}/web_demo/**`
   },
   // ucloudImg
   '/ucloudImg/**': {
-    proxy: `${process.env.NUXT_API_DOMAIN}/ucloudImg/**`
+    proxy: `${apiDomain}/ucloudImg/**`
   },
   '/api/blog/**': {
-    proxy: `${process.env.NUXT_API_DOMAIN}/api/blog/**`
+    proxy: `${apiDomain}/api/blog/**`
   },
   // sitemap.xml
   '/sitemap.xml': {
-    proxy: `${process.env.NUXT_API_DOMAIN}/sitemap.xml`
+    proxy: `${apiDomain}/sitemap.xml`
   },
   // sitemap.xsl
   '/sitemap.xsl': {
-    proxy: `${process.env.NUXT_API_DOMAIN}/sitemap.xsl`
+    proxy: `${apiDomain}/sitemap.xsl`
   },
   // ads.txt
   '/ads.txt': {
-    proxy: `${process.env.NUXT_API_DOMAIN}/ads.txt`
+    proxy: `${apiDomain}/ads.txt`
   },
   // robots.txt
   '/robots.txt': {
-    proxy: `${process.env.NUXT_API_DOMAIN}/seo/blog/robots.txt`
+    proxy: `${apiDomain}/seo/blog/robots.txt`
   },
   '/geojson/world-mid.json': {
     headers: {
@@ -132,12 +146,28 @@ if (process.env.SWR_ENABLED === '1') {
   }
   routeRules = { ...routeRules, ...swrRules }
 }
-const CACHE_MAX_PAGE = process.env.CACHE_MAX_PAGE
+// 构建时缓存配置使用占位符，开发时使用实际数值
+const CACHE_MAX_PAGE_BUILD = isBuild
+  ? '__NUXT_ENV_CACHE_MAX_PAGE__'
+  : process.env.CACHE_MAX_PAGE
   ? Number(process.env.CACHE_MAX_PAGE)
   : 10
-const CACHE_TTL = process.env.CACHE_TTL ? Number(process.env.CACHE_TTL) : 60000
-console.log('缓存最大页面数量', CACHE_MAX_PAGE)
-console.log('缓存时间', CACHE_TTL)
+const CACHE_TTL_BUILD = isBuild
+  ? '__NUXT_ENV_CACHE_TTL__'
+  : process.env.CACHE_TTL
+  ? Number(process.env.CACHE_TTL)
+  : 60000
+
+// 开发时缓存配置始终使用实际数值
+const CACHE_MAX_PAGE_DEV = process.env.CACHE_MAX_PAGE
+  ? Number(process.env.CACHE_MAX_PAGE)
+  : 10
+const CACHE_TTL_DEV = process.env.CACHE_TTL
+  ? Number(process.env.CACHE_TTL)
+  : 60000
+
+console.log('缓存最大页面数量', isBuild ? '(构建占位符)' : CACHE_MAX_PAGE_DEV)
+console.log('缓存时间', isBuild ? '(构建占位符)' : CACHE_TTL_DEV)
 console.log('routeRules', routeRules)
 export default defineNuxtConfig({
   app: {
@@ -194,8 +224,8 @@ export default defineNuxtConfig({
     storage: {
       cache: {
         driver: 'lruCache',
-        max: CACHE_MAX_PAGE,
-        ttl: CACHE_TTL,
+        max: CACHE_MAX_PAGE_BUILD,
+        ttl: CACHE_TTL_BUILD,
         updateAgeOnGet: true,
         updateAgeOnHas: true
       }
@@ -203,8 +233,8 @@ export default defineNuxtConfig({
     devStorage: {
       cache: {
         driver: 'lruCache',
-        max: CACHE_MAX_PAGE,
-        ttl: CACHE_TTL,
+        max: CACHE_MAX_PAGE_DEV,
+        ttl: CACHE_TTL_DEV,
         updateAgeOnGet: true,
         updateAgeOnHas: true
       }

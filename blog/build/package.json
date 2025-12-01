@@ -1,7 +1,9 @@
 {
+  "type": "module",
   "scripts": {
-    "start-linux": "NITRO_PORT=3007 node .output/server/index.mjs",
-    "start-linux-with-jemalloc": "env LD_PRELOAD=/usr/local/lib/libjemalloc.so.2 NITRO_PORT=3007 node .output/server/index.mjs",
-    "start-windows": "set NITRO_PORT=3007 && node .output/server/index.mjs"
+    "start": "node index.mjs",
+    "start-linux-with-jemalloc": "env LD_PRELOAD=/usr/local/lib/libjemalloc.so.2 node index.mjs",
+    "start-linux": "node .output/server/index.mjs",
+    "start-windows": "node .output/server/index.mjs"
   }
 }
