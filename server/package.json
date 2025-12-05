@@ -33,7 +33,7 @@
     "feed": "^4.2.2",
     "fs-extra": "^11.2.0",
     "ip2location-nodejs": "^9.6.1",
-    "jsonwebtoken": "^9.0.2",
+    "jsonwebtoken": "^9.0.3",
     "log4js": "^6.9.1",
     "mint-filter": "^4.0.3",
     "moment-timezone": "^0.5.43",
