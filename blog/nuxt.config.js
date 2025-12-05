@@ -190,25 +190,25 @@ export default defineNuxtConfig({
       dir: 'build/.output',
       serverDir: 'build/.output/server',
       publicDir: 'build/.output/public'
-    },
-    storage: {
-      cache: {
-        driver: 'lruCache',
-        max: CACHE_MAX_PAGE,
-        ttl: CACHE_TTL,
-        updateAgeOnGet: true,
-        updateAgeOnHas: true
-      }
-    },
-    devStorage: {
-      cache: {
-        driver: 'lruCache',
-        max: CACHE_MAX_PAGE,
-        ttl: CACHE_TTL,
-        updateAgeOnGet: true,
-        updateAgeOnHas: true
-      }
     }
+    // storage: {
+    //   cache: {
+    //     driver: 'lruCache',
+    //     max: CACHE_MAX_PAGE,
+    //     ttl: CACHE_TTL,
+    //     updateAgeOnGet: true,
+    //     updateAgeOnHas: true
+    //   }
+    // },
+    // devStorage: {
+    //   cache: {
+    //     driver: 'lruCache',
+    //     max: CACHE_MAX_PAGE,
+    //     ttl: CACHE_TTL,
+    //     updateAgeOnGet: true,
+    //     updateAgeOnHas: true
+    //   }
+    // }
   },
   vite: {
     esbuild: {
