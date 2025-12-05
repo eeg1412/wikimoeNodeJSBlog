@@ -39,9 +39,9 @@ let routeRules = {
     proxy: `${process.env.NUXT_API_DOMAIN}/api/blog/**`
   },
   // sitemap.xml
-  '/sitemap.xml': {
-    proxy: `${process.env.NUXT_API_DOMAIN}/sitemap.xml`
-  },
+  // '/sitemap.xml': {
+  //   proxy: `${process.env.NUXT_API_DOMAIN}/sitemap.xml`
+  // },
   // sitemap.xsl
   '/sitemap.xsl': {
     proxy: `${process.env.NUXT_API_DOMAIN}/sitemap.xsl`
