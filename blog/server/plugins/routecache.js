@@ -9,8 +9,8 @@ export default defineNitroPlugin(nitroApp => {
   const driver = LRUCacheDriver({
     max: MAX_ITEMS,
     ttl: TTL,
-    updateAgeOnGet: true,
-    updateAgeOnHas: true
+    updateAgeOnGet: false,
+    updateAgeOnHas: false
     /* other redis connector options */
   })
 
@@ -19,21 +19,22 @@ export default defineNitroPlugin(nitroApp => {
   // console.log('Runtime config in nitro plugin', config)
   // const routerules = config.nitro.routeRules
   nitroApp.hooks.hook('render:html', (html, { event }) => {
-    console.log('Nitro config hook', html, event)
+    // console.log('Nitro config hook', html, event)
   })
 
   // render:response
-  nitroApp.hooks.hook('render:response', async (response, { event }) => {
-    console.log('Nitro response hook', response, event)
+  nitroApp.hooks.hook('render:response', (response, { event }) => {
+    // console.log('Nitro response hook', response, event)
     // 如果状态是200，则缓存响应
     if (response.statusCode === 200) {
       // 写入LRU缓存
-      await driver.setItem(event.node.req.url, {
+      driver.setItem(event.node.req.url, {
         headers: response.headers,
         response: {
           body: response.body
         }
       })
+      console.log(`Cached response for ${event.node.req.url}`)
     }
   })
 
@@ -46,6 +47,8 @@ export default defineNitroPlugin(nitroApp => {
     if (cached) {
       // 设置缓存命中标记
       event.node.res.setHeader('x-cache-hit', '1')
+
+      console.log(`Serving cached response for ${url}`)
 
       // 使用 respondWith 返回缓存内容
       return event.respondWith(
