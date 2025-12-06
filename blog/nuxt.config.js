@@ -109,29 +109,29 @@ let routeRules = {
   }
 }
 // 如果开启了SWR
-if (process.env.SWR_ENABLED === '1') {
-  const swrRules = {
-    '/': {
-      swr: cacheTime,
-      cache: {
-        staleMaxAge: staleMaxAge
-      }
-    },
-    '/page/**': {
-      swr: cacheTime,
-      cache: {
-        staleMaxAge: staleMaxAge
-      }
-    },
-    '/post/**': {
-      swr: cacheTime,
-      cache: {
-        staleMaxAge: staleMaxAge
-      }
-    }
-  }
-  routeRules = { ...routeRules, ...swrRules }
-}
+// if (process.env.SWR_ENABLED === '1') {
+//   const swrRules = {
+//     '/': {
+//       swr: cacheTime,
+//       cache: {
+//         staleMaxAge: staleMaxAge
+//       }
+//     },
+//     '/page/**': {
+//       swr: cacheTime,
+//       cache: {
+//         staleMaxAge: staleMaxAge
+//       }
+//     },
+//     '/post/**': {
+//       swr: cacheTime,
+//       cache: {
+//         staleMaxAge: staleMaxAge
+//       }
+//     }
+//   }
+//   routeRules = { ...routeRules, ...swrRules }
+// }
 const CACHE_MAX_PAGE = process.env.CACHE_MAX_PAGE
   ? Number(process.env.CACHE_MAX_PAGE)
   : 10
