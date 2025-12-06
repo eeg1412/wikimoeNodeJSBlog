@@ -39,10 +39,6 @@ export default defineNitroPlugin(nitroApp => {
     /* other redis connector options */
   })
 
-  // console.log('Nitro plugin', nitroApp)
-  // const config = useRuntimeConfig()
-  // console.log('Runtime config in nitro plugin', config)
-  // const routerules = config.nitro.routeRules
   nitroApp.hooks.hook('render:html', (html, { event }) => {
     // console.log('Nitro config hook', html, event)
   })
@@ -149,21 +145,4 @@ export default defineNitroPlugin(nitroApp => {
   nitroApp.hooks.hook('render:afterResponse', (event, { body }) => {
     console.log('Nitro afterResponse hook', event, body)
   })
-
-  // console.log('Nitro plugin end')
-  // console.log('Nitro app config before update', nitroApp)
-  // const appConfig = useAppConfig()
-  // console.log('App config in nitro plugin', appConfig)
-  // console.log(this)
-  // setTimeout(() => {
-  //   const nitro = useNitro()
-  //   console.log('Nitro app config before update', nitro)
-  // }, 1000)
-  // console.log(nitroApp.updateConfig)
-  // const nuxt = useNuxtApp()
-  // nuxt.hook('ready', () => {
-  //   const nitro = useNitro()
-  //   console.log('Nitro app config on nuxt ready', nitro)
-  //   // Do something with Nitro instance
-  // })
 })
