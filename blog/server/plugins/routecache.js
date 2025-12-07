@@ -164,10 +164,22 @@ export default defineNitroPlugin(nitroApp => {
     console.log(`\n${status} SWR 功能\n`)
     console.log('📋 SWR 配置详情:')
     console.log(`  - SWR_ENABLED: ${finalConfig.SWR_ENABLED}`)
-    console.log(`  - SWR_CACHE_MAXAGE: ${finalConfig.SWR_CACHE_MAXAGE / 1000}s (${finalConfig.SWR_CACHE_MAXAGE}ms)`)
-    console.log(`  - SWR_CACHE_STALEMAXAGE: ${finalConfig.SWR_CACHE_STALEMAXAGE / 1000}s (${finalConfig.SWR_CACHE_STALEMAXAGE}ms)`)
+    console.log(
+      `  - SWR_CACHE_MAXAGE: ${finalConfig.SWR_CACHE_MAXAGE / 1000}s (${
+        finalConfig.SWR_CACHE_MAXAGE
+      }ms)`
+    )
+    console.log(
+      `  - SWR_CACHE_STALEMAXAGE: ${
+        finalConfig.SWR_CACHE_STALEMAXAGE / 1000
+      }s (${finalConfig.SWR_CACHE_STALEMAXAGE}ms)`
+    )
     console.log(`  - SWR_CACHE_MAX_PAGE: ${finalConfig.SWR_CACHE_MAX_PAGE}`)
-    console.log(`  - SWR_CACHE_TTL: ${finalConfig.SWR_CACHE_TTL / 1000}s (${finalConfig.SWR_CACHE_TTL}ms)\n`)
+    console.log(
+      `  - SWR_CACHE_TTL: ${finalConfig.SWR_CACHE_TTL / 1000}s (${
+        finalConfig.SWR_CACHE_TTL
+      }ms)\n`
+    )
 
     return finalConfig
   }
