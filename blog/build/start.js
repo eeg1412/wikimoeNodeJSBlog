@@ -4,65 +4,129 @@ const path = require('path')
 const { spawn } = require('child_process')
 
 /**
- * 加载环境变量
- * 优先级: Docker环境变量 > .env文件
+ * 从.env文件读取环境变量
  */
-function loadEnvironmentVariables() {
+function readEnvFile(envFilePath) {
   const envVars = {}
-  const envFilePath = path.join(__dirname, '..', '.env')
+  try {
+    const envContent = fs.readFileSync(envFilePath, 'utf-8')
+    const lines = envContent.split('\n')
 
-  // 1. 先读取.env文件（如果存在）
-  if (fs.existsSync(envFilePath)) {
-    try {
-      const envContent = fs.readFileSync(envFilePath, 'utf-8')
-      const lines = envContent.split('\n')
+    lines.forEach(line => {
+      line = line.trim()
+      // 跳过空行和注释
+      if (!line || line.startsWith('#')) return
 
-      lines.forEach(line => {
-        line = line.trim()
-        // 跳过空行和注释
-        if (!line || line.startsWith('#')) return
+      const match = line.match(/^([^=]+)=(.*)$/)
+      if (match) {
+        let key = match[1].trim()
+        let value = match[2].trim()
 
-        const match = line.match(/^([^=]+)=(.*)$/)
-        if (match) {
-          let key = match[1].trim()
-          let value = match[2].trim()
-
-          // 去掉引号
-          if (
-            (value.startsWith('"') && value.endsWith('"')) ||
-            (value.startsWith("'") && value.endsWith("'"))
-          ) {
-            value = value.slice(1, -1)
-          }
-
-          envVars[key] = value
+        // 去掉引号
+        if (
+          (value.startsWith('"') && value.endsWith('"')) ||
+          (value.startsWith("'") && value.endsWith("'"))
+        ) {
+          value = value.slice(1, -1)
         }
-      })
-      console.log('[INFO] 从 .env 文件加载环境变量')
-    } catch (error) {
-      console.error(`[ERROR] 读取 .env 文件失败: ${error.message}`)
-    }
+
+        envVars[key] = value
+      }
+    })
+    return envVars
+  } catch (error) {
+    console.error(`[ERROR] 读取 ${envFilePath} 失败: ${error.message}`)
+    return null
+  }
+}
+
+/**
+ * 从Docker环境变量读取NUXT_和NITRO_相关变量
+ */
+function readDockerEnvironmentVariables() {
+  const envVars = {}
+  const dockerVarExists = Object.keys(process.env).some(
+    key => key.startsWith('NUXT_') || key === 'NITRO_PORT'
+  )
+
+  if (!dockerVarExists) {
+    return null
   }
 
-  // 2. Docker环境变量覆盖.env文件中的值
   Object.keys(process.env).forEach(key => {
     if (key.startsWith('NUXT_') || key === 'NITRO_PORT') {
       envVars[key] = process.env[key]
     }
   })
 
-  // 3. 设置到process.env中
+  return envVars
+}
+
+/**
+ * 加载环境变量
+ * 优先级（只要读到一种就停止）:
+ *   1. /blog/.env
+ *   2. blog/build/.env
+ *   3. Docker环境变量
+ * 如果都不存在则报错停止
+ */
+function loadEnvironmentVariables() {
+  const envVars = {}
+  let sourceType = null
+
+  // 1. 检查 /blog/.env
+  const blogEnvPath = path.join(__dirname, '..', '.env')
+  if (fs.existsSync(blogEnvPath)) {
+    const result = readEnvFile(blogEnvPath)
+    if (result) {
+      Object.assign(envVars, result)
+      sourceType = '/blog/.env'
+    }
+  }
+
+  // 2. 如果没有读到，检查 blog/build/.env
+  if (!sourceType) {
+    const buildEnvPath = path.join(__dirname, '.env')
+    if (fs.existsSync(buildEnvPath)) {
+      const result = readEnvFile(buildEnvPath)
+      if (result) {
+        Object.assign(envVars, result)
+        sourceType = 'blog/build/.env'
+      }
+    }
+  }
+
+  // 3. 如果还没有读到，检查Docker环境变量
+  if (!sourceType) {
+    const dockerVars = readDockerEnvironmentVariables()
+    if (dockerVars) {
+      Object.assign(envVars, dockerVars)
+      sourceType = 'Docker环境变量'
+    }
+  }
+
+  // 4. 如果三种都不存在，报错停止
+  if (!sourceType) {
+    console.error('[ERROR] 无法找到环境变量配置源')
+    console.error('[ERROR] 请确保以下其中之一存在:')
+    console.error('  1. /blog/.env')
+    console.error('  2. blog/build/.env')
+    console.error('  3. Docker环境变量 (NUXT_* 或 NITRO_PORT)')
+    process.exit(1)
+  }
+
+  // 5. 设置到process.env中
   Object.keys(envVars).forEach(key => {
     process.env[key] = envVars[key]
   })
 
-  return envVars
+  return { envVars, sourceType }
 }
 
 /**
  * 启动应用
  */
-function startApp(envVars) {
+function startApp() {
   const indexPath = path.join(__dirname, '.output', 'server', 'index.mjs')
 
   if (!fs.existsSync(indexPath)) {
@@ -70,12 +134,6 @@ function startApp(envVars) {
     console.error('[ERROR] 请先运行 npm run build')
     process.exit(1)
   }
-
-  console.log('[INFO] ========== 环境变量配置 ==========')
-  Object.keys(envVars).forEach(key => {
-    console.log(`[INFO] ${key}=${envVars[key]}`)
-  })
-  console.log('[INFO] ========== 启动应用 ==========')
 
   const child = spawn('node', [indexPath], {
     stdio: 'inherit',
@@ -94,14 +152,16 @@ function startApp(envVars) {
 
 // 主程序
 try {
-  const envVars = loadEnvironmentVariables()
+  const { envVars, sourceType } = loadEnvironmentVariables()
 
   console.log('[INFO] ========== 环境变量配置 ==========')
+  console.log(`[INFO] 来源: ${sourceType}`)
   Object.keys(envVars).forEach(key => {
     console.log(`[INFO] ${key}=${envVars[key]}`)
   })
+  console.log('[INFO] ========== 启动应用 ==========')
 
-  startApp(envVars)
+  startApp()
 } catch (error) {
   console.error(`[ERROR] 启动器异常: ${error.message}`)
   console.error(error.stack)
