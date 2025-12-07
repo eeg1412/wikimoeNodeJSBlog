@@ -118,7 +118,7 @@ wget -O .env https://raw.githubusercontent.com/eeg1412/wikimoeNodeJSBlog/main/ex
 ```
 
 然后使用 `docker-compose up -d` 即可在本地快速体验，注意：docker-compose-lite.yml 预设了一部分配置，如果你想自定义更多参数，请参照下面的完整部署  
-相比较完整版，lite 版没有 SWR 缓存技术，并且限制了（后端）Server 的端口必须为 3006。  
+相比较完整版，lite 版默认禁用 SWR 缓存技术，并且限制了（后端）Server 的端口必须为 3006。  
 完成部署后，账号为.env 里的 USER_NAME（默认为`admin`），密码为`7@wVUo6BL6LHjNR*#x`，请初始化后及时修改。  
 注意事项和 lite 版的完整的部署过程可以查看[如何使用 Docker 一键部署猛男自用的维基萌博客 lite 版](https://www.wikimoe.com/post/a91p25pa)
 
@@ -265,11 +265,11 @@ yarn install
 
 ```env
 NUXT_API_DOMAIN="填写API的HTTP地址，如：http://localhost:3006"
-SWR_ENABLED="设置为1时打开SWR缓存，将会消耗大量内存提升访问速度"
-SWR_CACHE_MAXAGE="SWR缓存时间，单位秒，默认10秒"
-SWR_CACHE_STALEMAXAGE="staleMaxAge的时间，单位秒，默认3600秒"
-CACHE_MAX_PAGE="开启SWR时的缓存页面数量，默认10个页面"
-CACHE_TTL="缓存的过期时间，单位毫秒，默认60000毫秒"
+NUXT_SWR_ENABLED="设置为1时打开SWR缓存，将会消耗大量内存提升访问速度，默认0（关闭）"
+NUXT_SWR_CACHE_MAXAGE="SWR缓存时间，单位秒，默认10秒"
+NUXT_SWR_CACHE_STALEMAXAGE="staleMaxAge的时间，单位秒，默认3600秒"
+NUXT_SWR_CACHE_MAX_PAGE="开启SWR时的缓存页面数量，默认100个页面"
+NUXT_SWR_CACHE_TTL="缓存的过期时间，单位秒，默认86400秒"
 ```
 
 ### 配置谷歌广告 ads.txt （如果需要）
