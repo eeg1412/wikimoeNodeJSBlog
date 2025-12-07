@@ -41,7 +41,7 @@ function readEnvFile(envFilePath) {
 }
 
 /**
- * 从Docker环境变量读取NUXT_和NITRO_相关变量
+ * 从命令行环境变量读取NUXT_和NITRO_相关变量
  */
 function readDockerEnvironmentVariables() {
   const envVars = {}
@@ -67,7 +67,7 @@ function readDockerEnvironmentVariables() {
  * 优先级（只要读到一种就停止）:
  *   1. /blog/.env
  *   2. /build/.env
- *   3. Docker环境变量
+ *   3. 命令行环境变量
  * 如果都不存在则报错停止
  */
 function loadEnvironmentVariables() {
@@ -96,12 +96,12 @@ function loadEnvironmentVariables() {
     }
   }
 
-  // 3. 如果还没有读到，检查Docker环境变量
+  // 3. 如果还没有读到，检查命令行环境变量
   if (!sourceType) {
     const dockerVars = readDockerEnvironmentVariables()
     if (dockerVars) {
       Object.assign(envVars, dockerVars)
-      sourceType = 'Docker环境变量'
+      sourceType = '命令行环境变量'
     }
   }
 
@@ -111,7 +111,7 @@ function loadEnvironmentVariables() {
     console.error('[ERROR] 请确保以下其中之一存在:')
     console.error('  1. /blog/.env')
     console.error('  2. /build/.env')
-    console.error('  3. Docker环境变量 (NUXT_* 或 NITRO_PORT)')
+    console.error('  3. 命令行环境变量 (NUXT_* 或 NITRO_PORT)')
     process.exit(1)
   }
 
