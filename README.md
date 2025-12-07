@@ -131,7 +131,7 @@ cd && mkdir wikimoe && cd wikimoe && git clone https://github.com/eeg1412/wikimo
 cd wikimoeNodeJSBlog && mv example.env .env
 ```
 
-按照 [API 配置部分](#配置env-文件) 、[Blog 配置部分](#配置env-文件-1) 修改 `.env` 文件中的 USER_NAME 环境变量（此环境变量为站长初始用户名），以及其他相关环境变量。注意：port 相关请修改 compose.yml 文件来修改端口映射
+按照 [API 配置部分](#配置env-文件) 、[Blog 配置部分](#配置env-文件-1) 修改 `.env` 文件中的环境变量。注意：port 相关请修改 compose.yml 文件来修改端口映射
 
 然后使用 `docker-compose up -d`拉起容器，你所修改的环境变量会传递给容器
 
@@ -270,6 +270,7 @@ NUXT_SWR_CACHE_MAXAGE="SWR缓存时间，单位秒，默认10秒"
 NUXT_SWR_CACHE_STALEMAXAGE="staleMaxAge的时间，单位秒，默认3600秒"
 NUXT_SWR_CACHE_MAX_PAGE="开启SWR时的缓存页面数量，默认100个页面"
 NUXT_SWR_CACHE_TTL="缓存的过期时间，单位秒，默认86400秒"
+NITRO_PORT="设置Nitro服务器端口，默认3007(仅编译后启动时环境生效)"
 ```
 
 ### 配置谷歌广告 ads.txt （如果需要）
