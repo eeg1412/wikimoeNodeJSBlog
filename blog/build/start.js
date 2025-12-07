@@ -66,7 +66,7 @@ function readDockerEnvironmentVariables() {
  * 加载环境变量
  * 优先级（只要读到一种就停止）:
  *   1. /blog/.env
- *   2. blog/build/.env
+ *   2. /build/.env
  *   3. Docker环境变量
  * 如果都不存在则报错停止
  */
@@ -84,14 +84,14 @@ function loadEnvironmentVariables() {
     }
   }
 
-  // 2. 如果没有读到，检查 blog/build/.env
+  // 2. 如果没有读到，检查 /build/.env
   if (!sourceType) {
     const buildEnvPath = path.join(__dirname, '.env')
     if (fs.existsSync(buildEnvPath)) {
       const result = readEnvFile(buildEnvPath)
       if (result) {
         Object.assign(envVars, result)
-        sourceType = 'blog/build/.env'
+        sourceType = '/build/.env'
       }
     }
   }
@@ -110,12 +110,19 @@ function loadEnvironmentVariables() {
     console.error('[ERROR] 无法找到环境变量配置源')
     console.error('[ERROR] 请确保以下其中之一存在:')
     console.error('  1. /blog/.env')
-    console.error('  2. blog/build/.env')
+    console.error('  2. /build/.env')
     console.error('  3. Docker环境变量 (NUXT_* 或 NITRO_PORT)')
     process.exit(1)
   }
 
-  // 5. 设置到process.env中
+  // 5. 检查必需的环境变量
+  if (!envVars.NUXT_API_DOMAIN) {
+    console.error('[ERROR] 缺少必需的环境变量: NUXT_API_DOMAIN')
+    console.error('[ERROR] 请在配置源中设置 NUXT_API_DOMAIN')
+    process.exit(1)
+  }
+
+  // 6. 设置到process.env中
   Object.keys(envVars).forEach(key => {
     process.env[key] = envVars[key]
   })
