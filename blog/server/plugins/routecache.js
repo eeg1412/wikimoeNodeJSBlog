@@ -248,7 +248,7 @@ export default defineNitroPlugin(nitroApp => {
   }
 
   function isBodyCacheable(body) {
-    return typeof body === 'string' || Buffer.isBuffer(body)
+    return typeof body === 'string'
   }
 
   function getCacheKey(url) {
