@@ -118,7 +118,7 @@ wget -O .env https://raw.githubusercontent.com/eeg1412/wikimoeNodeJSBlog/main/ex
 ```
 
 然后使用 `docker-compose up -d` 即可在本地快速体验，注意：docker-compose.yml 预设了一部分配置，如果你想自定义更多参数，请修改 `.env` 文件
-Docker 版本限制了限制了（后端）Server 的端口必须为 3006。  
+  
 完成部署后，账号为.env 里的 USER_NAME（默认为`admin`），密码为`7@wVUo6BL6LHjNR*#x`，请初始化后及时修改。  
 
 创建用户后会生成 install.lock 防止重复初始化，请不要删除该文件！
