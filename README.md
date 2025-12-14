@@ -109,7 +109,7 @@ curl -fsSL https://get.docker.com | bash -s docker --mirror Aliyun
 
 ### Docker 部署
 
-从 repo 下载 docker-compose-lite.yml 以及 .env 文件
+从 repo 下载 docker-compose.yml 以及 .env 文件
 
 ```bash
 cd && mkdir wikimoe && cd wikimoe
