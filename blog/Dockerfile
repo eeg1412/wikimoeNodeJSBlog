@@ -13,5 +13,5 @@ FROM node:20-alpine AS runner
 
 WORKDIR /app
 COPY --from=builder /app/build /app
-CMD ["yarn", "run","start-linux"]
+CMD ["yarn", "run","start"]
 EXPOSE 3007
