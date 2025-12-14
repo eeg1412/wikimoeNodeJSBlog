@@ -225,13 +225,21 @@ export default defineNitroPlugin(nitroApp => {
   // 生成32位随机密码
   const RANDOMPASS = crypto.randomBytes(32).toString('hex')
 
+  // 预编译缓存URL正则，避免每次请求重复创建正则对象，并修复正则转义安全隐患
+  const cachedUrlRegexes = Array.from(cachedUrls).map(pattern => {
+    // 转义正则特殊字符，除了 *
+    const escaped = pattern.replace(/[.+?^${}()|[\]\\]/g, '\\$&')
+    // 将 * 替换为 .*
+    const regexStr = '^' + escaped.replace(/\*/g, '.*') + '$'
+    return new RegExp(regexStr)
+  })
+
   // 检查url是否在缓存列表中
   function isUrlCacheable(url) {
     // url 拆分路径和查询参数
     const [path] = url.split('?')
 
-    for (const pattern of cachedUrls) {
-      const regex = new RegExp('^' + pattern.replace('*', '.*') + '$')
+    for (const regex of cachedUrlRegexes) {
       if (regex.test(path)) {
         return true
       }
