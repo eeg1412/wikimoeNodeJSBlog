@@ -352,13 +352,38 @@ exports.checkForm = function (form, ruleArr) {
   }
   const result = []
   ruleArr.forEach(rule => {
-    const { key, label, type, required, options, errorMessage, reg } = rule
+    const {
+      key,
+      label,
+      type,
+      required,
+      options,
+      errorMessage,
+      reg,
+      strict,
+      strictType
+    } = rule
     const value = form[key]
     if (requiredCheck(required, value)) {
       result.push({
         key,
         message: `${label || key} 是必须项`
       })
+    }
+    if (strict && !checkVauleIsNone(value)) {
+      // 如果发现不存在strictType，则报错
+      if (!strictType) {
+        throw new Error('strictType is required when strict is true')
+      }
+      const valueType = typeof value
+      if (valueType !== strictType) {
+        result.push({
+          key,
+          message:
+            errorMessage ||
+            `${label || key} 类型必须是 ${strictType}，当前类型为 ${valueType}`
+        })
+      }
     }
     if (type && !checkVauleIsNone(value)) {
       if (type === 'regCheck') {
