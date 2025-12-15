@@ -584,6 +584,27 @@ exports.isObjectId = function (value) {
   const str = String(value)
   return /^[0-9a-fA-F]{24}$/.test(str)
 }
+exports.isURL = function (value, options = {}) {
+  // 通过 validator isURL 来判断
+  return validator.isURL(String(value), options)
+}
+// check urlList
+exports.checkURLList = function (urlList, options = {}) {
+  if (!Array.isArray(urlList)) {
+    return false
+  }
+  for (let i = 0; i < urlList.length; i++) {
+    const urlItem = urlList[i]
+    const { text, url } = urlItem
+    if (typeof text !== 'string') {
+      return false
+    }
+    if (typeof url !== 'string' || !this.isURL(url, options)) {
+      return false
+    }
+  }
+  return true
+}
 // isUUID
 exports.isUUID = function (value, version = 4) {
   // 通过 validator isUUID 来判断
