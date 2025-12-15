@@ -12,11 +12,11 @@ const sitemapToolUtils = require('../../../utils/sitemap')
 
 module.exports = async function (req, res, next) {
   const id = req.body.id
-  if (!id) {
+  if (!utils.isObjectId(id)) {
     res.status(400).json({
       errors: [
         {
-          message: 'id不能为空'
+          message: 'id格式错误'
         }
       ]
     })

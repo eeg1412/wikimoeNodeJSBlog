@@ -5,28 +5,35 @@ const adminApiLog = log4js.getLogger('adminApi')
 
 module.exports = async function (req, res, next) {
   const { id, __v } = req.body
-  if (!id) {
-    res.status(400).json({
-      errors: [
-        {
-          message: 'id不能为空'
-        }
-      ]
-    })
+
+  const bodyCheck = {
+    id,
+    __v
+  }
+  const rule = [
+    {
+      key: 'id',
+      label: '备份ID',
+      type: 'isMongoId',
+      required: true
+    },
+    {
+      key: '__v',
+      label: '__v',
+      type: 'isInt',
+      strict: true,
+      strictType: 'number',
+      options: {
+        min: 0
+      },
+      required: true
+    }
+  ]
+  const errors = utils.checkForm(bodyCheck, rule)
+  if (errors.length > 0) {
+    res.status(400).json({ errors })
     return
   }
-  // __v 可以为零，但不能为空/null/undefined
-  if (__v === undefined || __v === null) {
-    res.status(400).json({
-      errors: [
-        {
-          message: '__v不能为空'
-        }
-      ]
-    })
-    return
-  }
-  // 校验格式
   const params = {
     fileStatus: 2 // 标记为删除状态
   }

@@ -10,11 +10,11 @@ module.exports = async function (req, res, next) {
   const id = req.query.id
   const deletefile = req.query.deletefile
   const deleterecord = req.query.deleterecord
-  if (!id) {
+  if (!utils.isObjectId(id)) {
     res.status(400).json({
       errors: [
         {
-          message: 'id不能为空'
+          message: 'id格式错误'
         }
       ]
     })
@@ -92,7 +92,9 @@ module.exports = async function (req, res, next) {
           ]
         })
         adminApiLog.error(
-          `backup delete file success, but update record fail, ${logErrorToText(err)}`
+          `backup delete file success, but update record fail, ${logErrorToText(
+            err
+          )}`
         )
         return
       }

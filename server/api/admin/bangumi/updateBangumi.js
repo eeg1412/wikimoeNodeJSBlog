@@ -23,27 +23,6 @@ module.exports = async function (req, res, next) {
     postLinkOpen,
     __v
   } = req.body
-  if (!id) {
-    res.status(400).json({
-      errors: [
-        {
-          message: 'id不能为空'
-        }
-      ]
-    })
-    return
-  }
-  // __v 可以为零，但不能为空/null/undefined
-  if (__v === undefined || __v === null) {
-    res.status(400).json({
-      errors: [
-        {
-          message: '__v不能为空'
-        }
-      ]
-    })
-    return
-  }
   // 校验格式
   const params = {
     title,
@@ -56,6 +35,87 @@ module.exports = async function (req, res, next) {
     giveUp,
     postLinkOpen,
     status
+  }
+  const bodyCheck = {
+    ...params,
+    id,
+    __v
+  }
+  const rule = [
+    {
+      key: 'id',
+      label: 'id',
+      type: 'isMongoId',
+      required: true
+    },
+    {
+      key: '__v',
+      label: '__v',
+      strict: true,
+      strictType: 'number',
+      required: true
+    },
+    {
+      key: 'title',
+      label: '标题',
+      strict: true,
+      strictType: 'string',
+      type: null,
+      required: false
+    },
+    {
+      key: 'rating',
+      label: '评分',
+      strict: true,
+      strictType: 'number'
+    },
+    {
+      key: 'year',
+      label: '年份',
+      strict: true,
+      strictType: 'number'
+    },
+    {
+      key: 'season',
+      label: '季度',
+      strict: true,
+      strictType: 'number'
+    },
+    {
+      key: 'giveUp',
+      label: '弃坑',
+      strict: true,
+      strictType: 'boolean'
+    },
+    {
+      key: 'postLinkOpen',
+      label: '文章链接公开',
+      strict: true,
+      strictType: 'boolean'
+    },
+    {
+      key: 'status',
+      label: '状态',
+      strict: true,
+      strictType: 'number'
+    }
+  ]
+  const errors = utils.checkForm(bodyCheck, rule)
+  if (errors.length > 0) {
+    res.status(400).json({ errors })
+    return
+  }
+
+  // urlList 检查
+  if (!utils.checkURLList(urlList)) {
+    res.status(400).json({
+      errors: [
+        {
+          message: '链接列表格式错误'
+        }
+      ]
+    })
+    return
   }
 
   const oldData = await bangumiUtils.findOne({ _id: id, __v })

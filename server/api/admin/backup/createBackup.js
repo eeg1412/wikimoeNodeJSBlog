@@ -20,6 +20,14 @@ module.exports = async function (req, res, next) {
       label: '备份名称',
       type: null,
       required: true
+    },
+    {
+      key: 'remark',
+      label: '备注',
+      strict: true,
+      strictType: 'string',
+      type: null,
+      required: false
     }
   ]
   const errors = utils.checkForm(params, rule)

@@ -17,6 +17,18 @@ module.exports = async function (req, res, next) {
     })
     return
   }
+  for (const id of ids) {
+    if (!utils.isObjectId(id)) {
+      res.status(400).json({
+        errors: [
+          {
+            message: 'ids中包含无效的id'
+          }
+        ]
+      })
+      return
+    }
+  }
   const rule = [
     {
       key: 'album',

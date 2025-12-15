@@ -89,6 +89,16 @@ module.exports = async function (req, res, next) {
     })
     return
   }
+  if (!utils.isObjectId(albumid)) {
+    res.status(400).json({
+      errors: [
+        {
+          message: '相册id格式错误'
+        }
+      ]
+    })
+    return
+  }
   const album = await albumUtils.findOne({ _id: albumid })
   if (!album) {
     res.status(400).json({

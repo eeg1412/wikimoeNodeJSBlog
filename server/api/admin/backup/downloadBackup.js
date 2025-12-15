@@ -32,11 +32,11 @@ module.exports = async function (req, res, next) {
     return
   }
 
-  if (!id) {
+  if (!utils.isObjectId(id)) {
     res.status(400).json({
       errors: [
         {
-          message: 'id不能为空'
+          message: 'id格式错误'
         }
       ]
     })

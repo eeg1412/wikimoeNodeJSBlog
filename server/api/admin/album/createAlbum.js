@@ -14,7 +14,9 @@ module.exports = async function (req, res, next) {
       key: 'name',
       label: '相册名称',
       type: null,
-      required: true
+      required: true,
+      strict: true,
+      strictType: 'string'
     }
   ]
   const errors = utils.checkForm(params, rule)

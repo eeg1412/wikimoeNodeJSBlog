@@ -5,17 +5,39 @@ const adminApiLog = log4js.getLogger('adminApi')
 
 module.exports = async function (req, res, next) {
   let { page, size, keyword, album, typeList, is360Panorama } = req.query
-  page = parseInt(page)
-  size = parseInt(size)
-  // 判断page和size是否为数字
-  if (!utils.isNumber(page) || !utils.isNumber(size)) {
-    res.status(400).json({
-      errors: [
-        {
-          message: '参数错误'
-        }
-      ]
-    })
+  page = Number(page)
+  size = Number(size)
+  const queryCheck = {
+    page,
+    size
+  }
+  const queryRule = [
+    {
+      key: 'page',
+      label: '页数',
+      strict: true,
+      strictType: 'number',
+      type: 'isInt',
+      options: {
+        min: 1
+      },
+      required: true
+    },
+    {
+      key: 'size',
+      label: '每页数量',
+      strict: true,
+      strictType: 'number',
+      type: 'isInt',
+      options: {
+        min: 1
+      },
+      required: true
+    }
+  ]
+  const queryErrors = utils.checkForm(queryCheck, queryRule)
+  if (queryErrors.length > 0) {
+    res.status(400).json({ errors: queryErrors })
     return
   }
   const params = {}
@@ -28,6 +50,16 @@ module.exports = async function (req, res, next) {
     params.name = new RegExp(keyword, 'i')
   }
   if (album) {
+    if (!utils.isObjectId(album)) {
+      res.status(400).json({
+        errors: [
+          {
+            message: 'album格式错误'
+          }
+        ]
+      })
+      return
+    }
     params.album = album
   }
   // 如果typeList是数组，就加入查询条件

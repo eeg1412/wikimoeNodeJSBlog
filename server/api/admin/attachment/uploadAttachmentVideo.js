@@ -34,32 +34,60 @@ module.exports = async function (req, res, next) {
     })
     return
   }
-  // 宽高必须存在
-  if (!width || !height) {
-    res.status(400).json({
-      errors: [
-        {
-          message: '请指定视频宽高'
-        }
-      ]
-    })
-    return
-  }
   // 宽高转换成数字
   width = Number(width)
   height = Number(height)
 
-  //  查询相册是否存在
-  if (!albumid) {
-    res.status(400).json({
-      errors: [
-        {
-          message: '请指定相册'
-        }
-      ]
-    })
+  const bodyCheck = {
+    filename,
+    albumid,
+    width,
+    height
+  }
+  const rule = [
+    {
+      key: 'filename',
+      label: '文件名称',
+      type: null,
+      strict: true,
+      strictType: 'string',
+      required: false
+    },
+    {
+      key: 'albumid',
+      label: '相册id',
+      type: 'isMongoId',
+      required: true
+    },
+    {
+      key: 'width',
+      label: '视频宽度',
+      strict: true,
+      strictType: 'number',
+      type: 'isInt',
+      options: {
+        min: 1
+      },
+      required: true
+    },
+    {
+      key: 'height',
+      label: '视频高度',
+      strict: true,
+      strictType: 'number',
+      type: 'isInt',
+      options: {
+        min: 1
+      },
+      required: true
+    }
+  ]
+  const errors = utils.checkForm(bodyCheck, rule)
+  if (errors.length > 0) {
+    res.status(400).json({ errors })
     return
   }
+  // 校验相册是否存在
   const album = await albumUtils.findOne({ _id: albumid })
   if (!album) {
     res.status(400).json({
@@ -71,6 +99,11 @@ module.exports = async function (req, res, next) {
     })
     return
   }
+
+  const coverInfo = await utils.imageMetadata(cover.buffer)
+  // 读取图片信息
+  const coverWidth = coverInfo.width
+  const coverHeight = coverInfo.height
 
   // 写入文件
   // 生成ObjectId
@@ -86,8 +119,8 @@ module.exports = async function (req, res, next) {
     // mp4格式
     mimetype: 'video/mp4',
     thumfor: '',
-    thumWidth: width || 0,
-    thumHeight: height || 0,
+    thumWidth: coverWidth || 0,
+    thumHeight: coverHeight || 0,
     album: albumid
   }
 

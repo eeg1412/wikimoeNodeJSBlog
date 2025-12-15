@@ -34,20 +34,29 @@ module.exports = async function (req, res, next) {
       // 校验格式
       const params = {
         username: username,
-        password: password
+        password: password,
+        remember: remember
       }
       const rule = [
         {
           key: 'username',
           label: '用户名',
-          type: null,
-          required: true
+          required: true,
+          strict: true,
+          strictType: 'string'
         },
         {
           key: 'password',
           label: '密码',
-          type: null,
-          required: true
+          required: true,
+          strict: true,
+          strictType: 'string'
+        },
+        {
+          key: 'remember',
+          label: '记住密码',
+          strict: true,
+          strictType: 'boolean'
         }
       ]
       const errors = utils.checkForm(params, rule)

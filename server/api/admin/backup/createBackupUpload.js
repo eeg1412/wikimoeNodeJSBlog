@@ -7,42 +7,39 @@ const fs = require('fs')
 
 module.exports = async function (req, res, next) {
   const { fileName, fileSize } = req.body
-  if (!fileName) {
-    res.status(400).json({
-      errors: [
-        {
-          message: '文件名不能为空'
-        }
-      ]
-    })
-    return
+
+  const bodyCheck = {
+    fileName,
+    fileSize
   }
-  if (!fileSize) {
-    res.status(400).json({
-      errors: [
-        {
-          message: '文件大小不能为空'
-        }
-      ]
-    })
+  // 校验格式
+  const rule = [
+    {
+      key: 'fileName',
+      label: '文件名',
+      strict: true,
+      strictType: 'string',
+      type: null,
+      required: true
+    },
+    {
+      key: 'fileSize',
+      label: '文件大小',
+      strict: true,
+      strictType: 'number',
+      type: 'isInt',
+      options: {
+        min: 1
+      },
+      required: true
+    }
+  ]
+  const errors = utils.checkForm(bodyCheck, rule)
+  if (errors.length > 0) {
+    res.status(400).json({ errors })
     return
   }
 
-  function isPositiveInteger(n) {
-    return Number.isInteger(n) && n > 0
-  }
-
-  // fileSize 必须是正整数
-  if (!isPositiveInteger(fileSize)) {
-    res.status(400).json({
-      errors: [
-        {
-          message: '文件大小必须是正整数'
-        }
-      ]
-    })
-    return
-  }
   const dataStr = moment().format('YYYY-MM-DD HH:mm:ss')
   // 校验格式
   const params = {

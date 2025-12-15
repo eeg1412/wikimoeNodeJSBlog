@@ -2,6 +2,7 @@ const attachmentUtils = require('../../../mongodb/utils/attachments')
 const albumUtils = require('../../../mongodb/utils/albums')
 const postUtils = require('../../../mongodb/utils/posts')
 const userUtils = require('../../../mongodb/utils/users')
+const utils = require('../../../utils/utils')
 const log4js = require('log4js')
 const adminApiLog = log4js.getLogger('adminApi')
 const fs = require('fs')
@@ -9,11 +10,11 @@ const path = require('path')
 
 module.exports = async function (req, res, next) {
   const id = req.query.id
-  if (!id) {
+  if (!utils.isObjectId(id)) {
     res.status(400).json({
       errors: [
         {
-          message: 'id不能为空'
+          message: 'id格式错误'
         }
       ]
     })
@@ -138,7 +139,9 @@ module.exports = async function (req, res, next) {
             ]
           })
           adminApiLog.error(
-            `album:${attachmentData.album} count - 1 fail, ${logErrorToText(err)}`
+            `album:${attachmentData.album} count - 1 fail, ${logErrorToText(
+              err
+            )}`
           )
         })
     })

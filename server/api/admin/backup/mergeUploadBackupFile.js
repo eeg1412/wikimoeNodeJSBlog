@@ -4,9 +4,20 @@ const adminApiLog = log4js.getLogger('adminApi')
 const moment = require('moment')
 const fs = require('fs')
 const fsEX = require('fs-extra')
+const utils = require('../../../utils/utils')
 
 module.exports = async function (req, res, next) {
   const id = req.body.id
+  if (!utils.isObjectId(id)) {
+    res.status(400).json({
+      errors: [
+        {
+          message: 'id格式错误'
+        }
+      ]
+    })
+    return
+  }
   const backup = await backupUtils.findOne({
     _id: id,
     status: 3,
@@ -22,7 +33,9 @@ module.exports = async function (req, res, next) {
     })
     return
   }
-  const fileName = `backup-${moment().format('YYYYMMDDHHmmss')}-${backup._id}.zip`
+  const fileName = `backup-${moment().format('YYYYMMDDHHmmss')}-${
+    backup._id
+  }.zip`
   const cacheDir = `./cache/${backup._id}`
   const backupDir = `./backups`
   // 如果备份目录不存在，则创建

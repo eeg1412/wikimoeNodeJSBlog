@@ -5,11 +5,11 @@ const fs = require('fs')
 module.exports = async function (req, res, next) {
   const id = req.query.id
   const fileSize = req.query.fileSize
-  if (!id) {
+  if (!utils.isObjectId(id)) {
     res.status(400).json({
       errors: [
         {
-          message: '备份id不能为空'
+          message: '备份id格式错误'
         }
       ]
     })

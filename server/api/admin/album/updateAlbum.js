@@ -6,46 +6,49 @@ const adminApiLog = log4js.getLogger('adminApi')
 module.exports = async function (req, res, next) {
   // name	String	是	否	无	相册名称
   const { name, id, __v } = req.body
-  if (!id) {
-    res.status(400).json({
-      errors: [
-        {
-          message: 'id不能为空'
-        }
-      ]
-    })
-    return
-  }
-  // __v 可以为零，但不能为空/null/undefined
-  if (__v === undefined || __v === null) {
-    res.status(400).json({
-      errors: [
-        {
-          message: '__v不能为空'
-        }
-      ]
-    })
-    return
-  }
   // 校验格式
   const params = {
-    name: name
+    name
+  }
+  const bodyCheck = {
+    ...params,
+    id,
+    __v
   }
   const rule = [
     {
       key: 'name',
       label: '相册名称',
       type: null,
+      required: true,
+      strict: true,
+      strictType: 'string'
+    },
+    {
+      key: 'id',
+      label: 'id',
+      type: 'isMongoId',
+      required: true
+    },
+    {
+      key: '__v',
+      label: '__v',
+      strict: true,
+      strictType: 'number',
+      type: 'isInt',
+      options: {
+        min: 0
+      },
       required: true
     }
   ]
-  const errors = utils.checkForm(params, rule)
+  const errors = utils.checkForm(bodyCheck, rule)
   if (errors.length > 0) {
     res.status(400).json({ errors })
     return
   }
   // name不能重复
-  const album = await albumUtils.findOne({ name })
+  const album = await albumUtils.findOne({ name, _id: { $ne: id } })
   if (album) {
     res.status(400).json({
       errors: [
