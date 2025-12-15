@@ -1163,8 +1163,7 @@ exports.executeInLock = (key, fn) => {
 
 exports.getReaderlogsSize = async () => {
   const mongodb = global.$mongodDB
-  const db = mongodb.db.collection('readerlogs')
-  const stats = await db.stats()
+  const stats = await mongodb.db.command({ collStats: 'readerlogs' })
   const size = stats.size
   // 从环境变量获取最大大小,默认1GB
   const maxReaderlogsSize = process.env.MAX_HISTORYLOGS_SIZE
@@ -1182,8 +1181,7 @@ exports.getReaderlogsSize = async () => {
 // postLikeLogs
 exports.getPostLikeLogsSize = async () => {
   const mongodb = global.$mongodDB
-  const db = mongodb.db.collection('postlikelogs')
-  const stats = await db.stats()
+  const stats = await mongodb.db.command({ collStats: 'postlikelogs' })
   const size = stats.size
   // 从环境变量获取最大大小,默认1GB
   const maxPostLikeLogsSize = process.env.MAX_HISTORYLOGS_SIZE
@@ -1201,8 +1199,7 @@ exports.getPostLikeLogsSize = async () => {
 // commentLikeLogs
 exports.getCommentLikeLogsSize = async () => {
   const mongodb = global.$mongodDB
-  const db = mongodb.db.collection('commentlikelogs')
-  const stats = await db.stats()
+  const stats = await mongodb.db.command({ collStats: 'commentlikelogs' })
   const size = stats.size
   // 从环境变量获取最大大小,默认1GB
   const maxCommentLikeLogsSize = process.env.MAX_HISTORYLOGS_SIZE
@@ -1220,8 +1217,7 @@ exports.getCommentLikeLogsSize = async () => {
 // votelogs
 exports.getVoteLogsSize = async () => {
   const mongodb = global.$mongodDB
-  const db = mongodb.db.collection('votelogs')
-  const stats = await db.stats()
+  const stats = await mongodb.db.command({ collStats: 'votelogs' })
   const size = stats.size
   // 从环境变量获取最大大小,默认1GB
   const maxVoteLogsSize = process.env.MAX_HISTORYLOGS_SIZE
