@@ -50,11 +50,11 @@
 - /content
 - /upload
 
-以下是一个例子，假如 API 是 3000 端口：
+以下是一个例子，假如 API 是 3006 端口：
 
 ```nginx
 location /content {
-    proxy_pass http://localhost:3000;
+    proxy_pass http://localhost:3006;
     proxy_set_header Host $host;
     proxy_set_header X-Real-IP $remote_addr;
     proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
@@ -63,7 +63,7 @@ location /content {
 }
 
 location /upload {
-    proxy_pass http://localhost:3000;
+    proxy_pass http://localhost:3006;
     proxy_set_header Host $host;
     proxy_set_header X-Real-IP $remote_addr;
     proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
@@ -118,21 +118,20 @@ wget -O .env https://raw.githubusercontent.com/eeg1412/wikimoeNodeJSBlog/main/ex
 ```
 
 然后使用 `docker-compose up -d` 即可在本地快速体验，注意：docker-compose.yml 预设了一部分配置，如果你想自定义更多参数，请修改 `.env` 文件
-  
-完成部署后，账号为.env 里的 USER_NAME（默认为`admin`），密码为`7@wVUo6BL6LHjNR*#x`，请初始化后及时修改。  
+
+完成部署后，账号为.env 里的 USER_NAME（默认为`admin`），密码为`7@wVUo6BL6LHjNR*#x`，请初始化后及时修改。
 
 创建用户后会生成 install.lock 防止重复初始化，请不要删除该文件！
 
 反向代理可根据自己需求修改
 
-（后端）Server：`http://localhost:3000`
+（后端）Server：`http://localhost:3006`
 
 （前端）Blog：`http://localhost:3007`
 
-（后台）admin：`http://localhost:3000/admin`
+（后台）admin：`http://localhost:3006/admin`
 
 注意事项和完整的部署过程可以查看[如何使用 Docker 一键部署猛男自用的维基萌博客 lite 版](https://www.wikimoe.com/post/a91p25pa)
-
 
 ## 对于 1Panel 的部署
 
@@ -252,18 +251,14 @@ yarn install
 文件内容如下：
 
 ```env
-NUXT_API_DOMAIN="填写API的HTTP地址，如：http://localhost:3006"
+NUXT_API_DOMAIN="填写API的HTTP地址，如：http://localhost:3006，必填项"
 NUXT_SWR_ENABLED="设置为1时打开SWR缓存，将会消耗大量内存提升访问速度，默认0（关闭）"
 NUXT_SWR_CACHE_MAXAGE="SWR缓存时间，单位秒，默认10秒"
 NUXT_SWR_CACHE_STALEMAXAGE="staleMaxAge的时间，单位秒，默认3600秒"
 NUXT_SWR_CACHE_MAX_PAGE="开启SWR时的缓存页面数量，默认100个页面"
 NUXT_SWR_CACHE_TTL="缓存的过期时间，单位秒，默认86400秒"
-NITRO_PORT="设置Nitro服务器端口，默认3007(仅对生产环境生效)"
+NITRO_PORT="设置Nitro服务器端口，默认3000(仅对生产环境生效)"
 ```
-
-### 配置谷歌广告 ads.txt （如果需要）
-
-在/blog/public/目录下放置 ads.txt 即可
 
 ### 编译
 
@@ -281,19 +276,9 @@ cd build
 
 ### 运行
 
-linux
-
 ```bash
-yarn start-linux
+yarn run start
 ```
-
-windows
-
-```powershell
-yarn start-windows
-```
-
-※在 blog/build/package.json 中可以修改运行端口
 
 ## 用户管理命令
 
