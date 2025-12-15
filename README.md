@@ -107,35 +107,20 @@ blog：博客部分
 curl -fsSL https://get.docker.com | bash -s docker --mirror Aliyun
 ```
 
-### lite 快速体验版
+### Docker 部署
 
-从 repo 下载 docker-compose-lite.yml 以及 .env 文件
+从 repo 下载 docker-compose.yml 以及 .env 文件
 
 ```bash
 cd && mkdir wikimoe && cd wikimoe
-wget -O compose.yml https://raw.githubusercontent.com/eeg1412/wikimoeNodeJSBlog/main/docker-compose-lite.yml
+wget -O compose.yml https://raw.githubusercontent.com/eeg1412/wikimoeNodeJSBlog/main/docker-compose.yml
 wget -O .env https://raw.githubusercontent.com/eeg1412/wikimoeNodeJSBlog/main/example.env
 ```
 
-然后使用 `docker-compose up -d` 即可在本地快速体验，注意：docker-compose-lite.yml 预设了一部分配置，如果你想自定义更多参数，请参照下面的完整部署  
-相比较完整版，lite 版默认禁用 SWR 缓存技术，并且限制了（后端）Server 的端口必须为 3006。  
+然后使用 `docker-compose up -d` 即可在本地快速体验，注意：docker-compose.yml 预设了一部分配置，如果你想自定义更多参数，请修改 `.env` 文件
+  
 完成部署后，账号为.env 里的 USER_NAME（默认为`admin`），密码为`7@wVUo6BL6LHjNR*#x`，请初始化后及时修改。  
-注意事项和 lite 版的完整的部署过程可以查看[如何使用 Docker 一键部署猛男自用的维基萌博客 lite 版](https://www.wikimoe.com/post/a91p25pa)
 
-### 完整部署
-
-Clone 仓库，并修改 .env 文件的内容
-
-```bash
-cd && mkdir wikimoe && cd wikimoe && git clone https://github.com/eeg1412/wikimoeNodeJSBlog --depth=1
-cd wikimoeNodeJSBlog && mv example.env .env
-```
-
-按照 [API 配置部分](#配置env-文件) 、[Blog 配置部分](#配置env-文件-1) 修改 `.env` 文件中的环境变量。注意：port 相关请修改 compose.yml 文件来修改端口映射
-
-然后使用 `docker-compose up -d`拉起容器，你所修改的环境变量会传递给容器
-
-Server 容器会自动检查 USER_NAME 环境变量，并为你创建站长用户（默认为`admin`），注意：此用户的初始密码为 `7@wVUo6BL6LHjNR*#x` ，请初始化后及时修改。  
 创建用户后会生成 install.lock 防止重复初始化，请不要删除该文件！
 
 反向代理可根据自己需求修改
@@ -145,6 +130,9 @@ Server 容器会自动检查 USER_NAME 环境变量，并为你创建站长用�
 （前端）Blog：`http://localhost:3007`
 
 （后台）admin：`http://localhost:3000/admin`
+
+注意事项和完整的部署过程可以查看[如何使用 Docker 一键部署猛男自用的维基萌博客 lite 版](https://www.wikimoe.com/post/a91p25pa)
+
 
 ## 对于 1Panel 的部署
 
