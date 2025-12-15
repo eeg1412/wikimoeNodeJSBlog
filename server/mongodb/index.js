@@ -10,10 +10,7 @@ if (!process.env.DB_HOST) {
   console.error('请在根目录下创建.env文件，并添加数据库地址。')
   process.exit(1)
 }
-mongoose.connect(process.env.DB_HOST, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true
-})
+mongoose.connect(process.env.DB_HOST)
 const db = mongoose.connection
 
 function handleDbError() {
@@ -28,10 +25,7 @@ function handleDbError() {
   console.error(`数据库连接失败，${retryTime / 1000}秒后重新连接数据库`)
   setTimeout(() => {
     console.info('数据库连接中...')
-    mongoose.connect(process.env.DB_HOST, {
-      useNewUrlParser: true,
-      useUnifiedTopology: true
-    })
+    mongoose.connect(process.env.DB_HOST)
   }, retryTime)
 }
 

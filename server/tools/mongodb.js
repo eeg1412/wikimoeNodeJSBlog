@@ -5,10 +5,7 @@ if (!process.env.DB_HOST) {
   console.error('请在根目录下创建.env文件，并添加数据库地址。')
   process.exit(1)
 }
-mongoose.connect(process.env.DB_HOST, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true
-})
+mongoose.connect(process.env.DB_HOST)
 var db = mongoose.connection
 
 db.once('open', async () => {
