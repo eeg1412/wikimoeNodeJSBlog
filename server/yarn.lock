@@ -853,10 +853,10 @@ inherits@^2.0.3, inherits@~2.0.3, inherits@~2.0.4:
   resolved "https://registry.npmjs.org/inherits/-/inherits-2.0.4.tgz"
   integrity sha512-k/vGaX4/Yla3WzyMCvTQOXYeIHvqOKtnqBduzTHpzpQZzAskKMhZ2K+EnBiSM9zGSoIFeMpXKxa4dYeZIQqewQ==
 
-ip2location-nodejs@^9.6.1:
-  version "9.6.1"
-  resolved "https://registry.yarnpkg.com/ip2location-nodejs/-/ip2location-nodejs-9.6.1.tgz#1c61172c3baa8f56ba6e4037330ae9f8e9f61af9"
-  integrity sha512-Q2Oqt7p2n2gYmuehPuZfuXC+wpOfl0DtNF8N4DYm4j+JhBBMKUll0EuuVJrHUXnWQwxI8JTb8667NeBOtrOQlw==
+ip2location-nodejs@9.7.0:
+  version "9.7.0"
+  resolved "https://registry.yarnpkg.com/ip2location-nodejs/-/ip2location-nodejs-9.7.0.tgz#5a842a77aa5679ba370df0d2cce363d392fff8c4"
+  integrity sha512-eQ4T5TXm1cx0+pQcRycPiuaiRuoDEMd9O89Be7Ugk555qi9UY9enXSznkkqr3kQRyUaXx7zj5dORC5LGTPOttA==
   dependencies:
     csv-parser "^3.0.0"
 

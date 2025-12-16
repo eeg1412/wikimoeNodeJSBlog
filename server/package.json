@@ -32,7 +32,7 @@
     "express": "4.22.1",
     "feed": "^4.2.2",
     "fs-extra": "^11.2.0",
-    "ip2location-nodejs": "^9.6.1",
+    "ip2location-nodejs": "9.7.0",
     "jsonwebtoken": "^9.0.3",
     "log4js": "^6.9.1",
     "mint-filter": "^4.0.3",
