@@ -31,6 +31,17 @@ function handleDbError() {
 
 db.on('open', async () => {
   console.info('数据库连接成功！')
+  // 输出mongodb版本信息
+  try {
+    const nativeDb = db.db
+    if (!nativeDb) throw new Error('无法获取原生 MongoDB db 对象')
+    const admin = nativeDb.admin()
+    const buildInfo = await admin.command({ buildInfo: 1 })
+    console.info(`MongoDB 版本：${buildInfo.version}`)
+  } catch (err) {
+    console.warn('获取MongoDB版本信息失败：', err.message || err)
+  }
+
   mongodbErrorCount = 0
   // 更新时注意同时更新还原时的缓存
   await globalConfigUtils.initGlobalConfig()
