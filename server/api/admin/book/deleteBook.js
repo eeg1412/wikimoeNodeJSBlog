@@ -9,11 +9,11 @@ const cacheDataUtils = require('../../../config/cacheData')
 
 module.exports = async function (req, res, next) {
   const id = req.query.id
-  if (!id) {
+  if (!utils.isObjectId(id)) {
     res.status(400).json({
       errors: [
         {
-          message: 'id不能为空'
+          message: 'id格式错误'
         }
       ]
     })
@@ -72,7 +72,16 @@ module.exports = async function (req, res, next) {
       // 删除文章下的书籍
       postUtils
         .updateMany(
-          { bookList: id },
+          {
+            $or: [
+              {
+                bookList: id
+              },
+              {
+                contentBookList: id
+              }
+            ]
+          },
           { $pull: { bookList: id, contentBookList: id } }
         )
         .then(postData => {

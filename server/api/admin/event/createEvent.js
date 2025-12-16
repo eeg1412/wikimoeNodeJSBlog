@@ -37,7 +37,9 @@ module.exports = async function (req, res, next) {
       key: 'title',
       label: '活动名称',
       type: null,
-      required: true
+      required: true,
+      strict: true,
+      strictType: 'string'
     },
     // startTime
     {
@@ -60,6 +62,12 @@ module.exports = async function (req, res, next) {
         strict: true,
         strictSeparator: true
       }
+    },
+    {
+      key: 'status',
+      label: '状态',
+      strict: true,
+      strictType: 'number'
     }
   ]
   const errors = utils.checkForm(params, rule)
@@ -67,6 +75,19 @@ module.exports = async function (req, res, next) {
     res.status(400).json({ errors })
     return
   }
+
+  // urlList 检查
+  if (!utils.checkStringList(urlList, ['text', 'url'])) {
+    res.status(400).json({
+      errors: [
+        {
+          message: '链接列表格式错误'
+        }
+      ]
+    })
+    return
+  }
+
   // 校验结束时间是否在开始时间之后
   if (new Date(endTime) < new Date(startTime)) {
     res.status(400).json({

@@ -7,11 +7,11 @@ const cacheDataUtils = require('../../../config/cacheData')
 
 module.exports = async function (req, res, next) {
   const { status, id, __v } = req.body
-  if (!id) {
+  if (!utils.isObjectId(id)) {
     res.status(400).json({
       errors: [
         {
-          message: 'id不能为空'
+          message: 'id格式错误'
         }
       ]
     })

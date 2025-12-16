@@ -17,27 +17,6 @@ module.exports = async function (req, res, next) {
     id,
     __v
   } = req.body
-  if (!id) {
-    res.status(400).json({
-      errors: [
-        {
-          message: 'id不能为空'
-        }
-      ]
-    })
-    return
-  }
-  // __v 可以为零，但不能为空/null/undefined
-  if (__v === undefined || __v === null) {
-    res.status(400).json({
-      errors: [
-        {
-          message: '__v不能为空'
-        }
-      ]
-    })
-    return
-  }
   // 校验格式
   const params = {
     eventtype,
@@ -49,8 +28,25 @@ module.exports = async function (req, res, next) {
     endTime,
     status
   }
+  const formCheck = {
+    id,
+    __v,
+    ...params
+  }
   const rule = [
-    // eventtype
+    {
+      key: 'id',
+      label: 'id',
+      type: 'isMongoId',
+      required: true
+    },
+    {
+      key: '__v',
+      label: '__v',
+      strict: true,
+      strictType: 'number',
+      required: true
+    },
     {
       key: 'eventtype',
       label: '活动类型',
@@ -61,9 +57,10 @@ module.exports = async function (req, res, next) {
       key: 'title',
       label: '活动名称',
       type: null,
-      required: true
+      required: true,
+      strict: true,
+      strictType: 'string'
     },
-    // startTime
     {
       key: 'startTime',
       label: '开始时间',
@@ -74,7 +71,6 @@ module.exports = async function (req, res, next) {
         strictSeparator: true
       }
     },
-    // endTime
     {
       key: 'endTime',
       label: '结束时间',
@@ -84,13 +80,32 @@ module.exports = async function (req, res, next) {
         strict: true,
         strictSeparator: true
       }
+    },
+    {
+      key: 'status',
+      label: '状态',
+      strict: true,
+      strictType: 'number'
     }
   ]
-  const errors = utils.checkForm(params, rule)
+  const errors = utils.checkForm(formCheck, rule)
   if (errors.length > 0) {
     res.status(400).json({ errors })
     return
   }
+
+  // urlList 检查
+  if (!utils.checkStringList(urlList, ['text', 'url'])) {
+    res.status(400).json({
+      errors: [
+        {
+          message: '链接列表格式错误'
+        }
+      ]
+    })
+    return
+  }
+
   // 校验结束时间是否在开始时间之后
   if (new Date(endTime) < new Date(startTime)) {
     res.status(400).json({

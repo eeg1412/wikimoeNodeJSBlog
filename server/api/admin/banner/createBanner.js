@@ -5,12 +5,37 @@ const adminApiLog = log4js.getLogger('adminApi')
 const cacheDataUtils = require('../../../config/cacheData')
 
 module.exports = async function (req, res, next) {
-  const { title, taxis, img, link } = req.body
+  const { title, taxis, link } = req.body
   // 校验格式
   const params = {
     title: title || '',
     taxis: taxis || 0,
     link: link || ''
+  }
+  const rule = [
+    {
+      key: 'title',
+      label: '标题',
+      strict: true,
+      strictType: 'string'
+    },
+    {
+      key: 'taxis',
+      label: '排序',
+      strict: true,
+      strictType: 'number'
+    },
+    {
+      key: 'link',
+      label: '链接',
+      strict: true,
+      strictType: 'string'
+    }
+  ]
+  const errors = utils.checkForm(params, rule)
+  if (errors.length > 0) {
+    res.status(400).json({ errors })
+    return
   }
   // save
   bannerUtils

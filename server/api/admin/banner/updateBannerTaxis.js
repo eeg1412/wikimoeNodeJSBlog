@@ -10,11 +10,23 @@ module.exports = async function (req, res, next) {
   const promises = []
   bannerList.forEach(item => {
     const { _id, taxis } = item
-    if (!_id) {
+    if (!utils.isObjectId(_id)) {
       return
     }
     const params = {
       taxis: taxis || 0
+    }
+    const rule = [
+      {
+        key: 'taxis',
+        label: '排序',
+        strict: true,
+        strictType: 'number'
+      }
+    ]
+    const errors = utils.checkForm(params, rule)
+    if (errors.length > 0) {
+      return
     }
     // updateOne
     const updatePromise = new Promise((resolve, reject) => {

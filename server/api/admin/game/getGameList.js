@@ -7,17 +7,61 @@ const mongoose = require('mongoose')
 module.exports = async function (req, res, next) {
   let { page, size, keyword, gamePlatform, status, playStatus, shouldCount } =
     req.query
-  page = parseInt(page)
-  size = parseInt(size)
-  // 判断page和size是否为数字
-  if (!utils.isNumber(page) || !utils.isNumber(size)) {
-    res.status(400).json({
-      errors: [
-        {
-          message: '参数错误'
-        }
-      ]
-    })
+  page = Number(page)
+  size = Number(size)
+  const queryCheck = {
+    page,
+    size,
+    keyword,
+    status,
+    playStatus
+  }
+  const queryRule = [
+    {
+      key: 'page',
+      label: '页数',
+      strict: true,
+      strictType: 'number',
+      type: 'isInt',
+      options: {
+        min: 1
+      },
+      required: true
+    },
+    {
+      key: 'size',
+      label: '每页数量',
+      strict: true,
+      strictType: 'number',
+      type: 'isInt',
+      options: {
+        min: 1
+      },
+      required: true
+    },
+    {
+      key: 'keyword',
+      label: '关键词',
+      strict: true,
+      strictType: 'string',
+      required: false
+    },
+    {
+      key: 'status',
+      label: '状态',
+      type: 'isInt',
+      required: false
+    },
+    {
+      key: 'playStatus',
+      label: '游玩状态',
+      type: 'isInt',
+      required: false
+    }
+  ]
+  const queryErrors = utils.checkForm(queryCheck, queryRule)
+  if (queryErrors.length > 0) {
+    res.status(400).json({ errors: queryErrors })
     return
   }
   const params = {}

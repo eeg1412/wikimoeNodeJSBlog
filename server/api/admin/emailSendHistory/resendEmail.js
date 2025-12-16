@@ -6,11 +6,11 @@ const adminApiLog = log4js.getLogger('adminApi')
 module.exports = async function (req, res, next) {
   const { id } = req.body
   // 查询id是否存在
-  if (!id) {
+  if (!utils.isObjectId(id)) {
     res.status(400).json({
       errors: [
         {
-          message: '参数错误'
+          message: 'id格式错误'
         }
       ]
     })

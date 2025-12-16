@@ -24,58 +24,93 @@ module.exports = async function (req, res, next) {
     id,
     __v
   } = req.body
-  if (!id) {
-    res.status(400).json({
-      errors: [
-        {
-          message: 'id不能为空'
-        }
-      ]
-    })
-    return
-  }
-  // __v 可以为零，但不能为空/null/undefined
-  if (__v === undefined || __v === null) {
-    res.status(400).json({
-      errors: [
-        {
-          message: '__v不能为空'
-        }
-      ]
-    })
-    return
-  }
   // 校验格式
   const params = {
-    title: title,
-    booktype: booktype,
-    summary: summary,
-    rating: rating,
-    label: label,
-    urlList: urlList,
-    startTime: startTime,
-    endTime: endTime,
-    status: status,
-    postLinkOpen: postLinkOpen,
-    giveUp: giveUp
+    title,
+    booktype,
+    summary,
+    rating,
+    label,
+    urlList,
+    startTime,
+    endTime,
+    status,
+    postLinkOpen,
+    giveUp
+  }
+  const formCheck = {
+    id,
+    __v,
+    ...params
   }
   const rule = [
+    {
+      key: 'id',
+      label: 'id',
+      type: 'isMongoId',
+      required: true
+    },
+    {
+      key: '__v',
+      label: '__v',
+      strict: true,
+      strictType: 'number',
+      required: true
+    },
     {
       key: 'title',
       label: '书籍名称',
       type: null,
-      required: true
+      required: true,
+      strict: true,
+      strictType: 'string'
     },
     {
       key: 'booktype',
       label: '书籍类型',
       type: 'isMongoId',
       required: true
+    },
+    {
+      key: 'rating',
+      label: '评分',
+      strict: true,
+      strictType: 'number'
+    },
+    {
+      key: 'status',
+      label: '状态',
+      strict: true,
+      strictType: 'number'
+    },
+    {
+      key: 'giveUp',
+      label: '弃坑',
+      strict: true,
+      strictType: 'boolean'
+    },
+    {
+      key: 'postLinkOpen',
+      label: '文章链接公开',
+      strict: true,
+      strictType: 'boolean'
     }
   ]
-  const errors = utils.checkForm(params, rule)
+  const errors = utils.checkForm(formCheck, rule)
   if (errors.length > 0) {
     res.status(400).json({ errors })
+    return
+  }
+
+  // urlList 检查
+  if (!utils.checkStringList(urlList, ['text', 'url'])) {
+    res.status(400).json({
+      errors: [
+        {
+          message: '链接列表格式错误'
+        }
+      ]
+    })
     return
   }
 

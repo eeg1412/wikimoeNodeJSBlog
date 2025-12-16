@@ -5,17 +5,61 @@ const adminApiLog = log4js.getLogger('adminApi')
 
 module.exports = async function (req, res, next) {
   let { page, size, keyword, eventtype, status } = req.query
-  page = parseInt(page)
-  size = parseInt(size)
-  // 判断page和size是否为数字
-  if (!utils.isNumber(page) || !utils.isNumber(size)) {
-    res.status(400).json({
-      errors: [
-        {
-          message: '参数错误'
-        }
-      ]
-    })
+  page = Number(page)
+  size = Number(size)
+  const queryCheck = {
+    page,
+    size,
+    keyword,
+    eventtype,
+    status
+  }
+  const queryRule = [
+    {
+      key: 'page',
+      label: '页数',
+      strict: true,
+      strictType: 'number',
+      type: 'isInt',
+      options: {
+        min: 1
+      },
+      required: true
+    },
+    {
+      key: 'size',
+      label: '每页数量',
+      strict: true,
+      strictType: 'number',
+      type: 'isInt',
+      options: {
+        min: 1
+      },
+      required: true
+    },
+    {
+      key: 'keyword',
+      label: '关键词',
+      strict: true,
+      strictType: 'string',
+      required: false
+    },
+    {
+      key: 'eventtype',
+      label: '活动类型',
+      type: 'isMongoId',
+      required: false
+    },
+    {
+      key: 'status',
+      label: '状态',
+      type: 'isInt',
+      required: false
+    }
+  ]
+  const queryErrors = utils.checkForm(queryCheck, queryRule)
+  if (queryErrors.length > 0) {
+    res.status(400).json({ errors: queryErrors })
     return
   }
   const params = {}
@@ -29,6 +73,16 @@ module.exports = async function (req, res, next) {
   }
   // 如果eventtype存在，就加入查询条件
   if (eventtype) {
+    if (!utils.isObjectId(eventtype)) {
+      res.status(400).json({
+        errors: [
+          {
+            message: 'eventtype格式错误'
+          }
+        ]
+      })
+      return
+    }
     params.eventtype = eventtype
   }
   // 如果status存在，就加入查询条件

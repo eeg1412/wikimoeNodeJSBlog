@@ -7,25 +7,76 @@ const cacheDataUtils = require('../../../config/cacheData')
 
 module.exports = async function (req, res, next) {
   const { content, top, nickname, url, email, status, id, __v } = req.body
-  if (!id) {
-    res.status(400).json({
-      errors: [
-        {
-          message: 'id不能为空'
-        }
-      ]
-    })
-    return
+  const checkForm = {
+    id,
+    __v,
+    content,
+    top,
+    nickname,
+    url,
+    email,
+    status
   }
-  // __v 可以为零，但不能为空/null/undefined
-  if (__v === undefined || __v === null) {
-    res.status(400).json({
-      errors: [
-        {
-          message: '__v不能为空'
-        }
-      ]
-    })
+  const rule = [
+    {
+      key: 'id',
+      label: 'id',
+      type: 'isMongoId',
+      required: true
+    },
+    {
+      key: '__v',
+      label: '__v',
+      strict: true,
+      strictType: 'number',
+      required: true
+    },
+    {
+      key: 'content',
+      label: '内容',
+      strict: true,
+      strictType: 'string',
+      required: false
+    },
+    {
+      key: 'top',
+      label: '置顶',
+      strict: true,
+      strictType: 'boolean',
+      required: false
+    },
+    {
+      key: 'status',
+      label: '状态',
+      strict: true,
+      strictType: 'number',
+      required: false
+    },
+    {
+      key: 'nickname',
+      label: '昵称',
+      strict: true,
+      strictType: 'string',
+      required: false
+    },
+    {
+      key: 'url',
+      label: '网址',
+      strict: true,
+      strictType: 'string',
+      required: false
+    },
+    {
+      key: 'email',
+      label: '邮箱',
+      strict: true,
+      strictType: 'string',
+      required: false
+    }
+  ]
+  const errors = utils.checkForm(checkForm, rule)
+  if (errors.length > 0) {
+    res.status(400).json({ errors })
     return
   }
 
@@ -41,9 +92,11 @@ module.exports = async function (req, res, next) {
   // 评论状态,0待审核,1已审核,2未通过
   // 如果status是0-2的整数 ，那么就更新，否则不更新
   // 转换成整数
-  const statusInt = parseInt(status)
-  if (statusInt >= 0 && statusInt <= 2) {
-    params.status = statusInt
+  if (status !== undefined && status !== null) {
+    const statusInt = parseInt(status)
+    if (statusInt >= 0 && statusInt <= 2) {
+      params.status = statusInt
+    }
   }
   // 如果nickname，url，email是字符串，那么就更新，否则不更新
   if (typeof nickname === 'string') {

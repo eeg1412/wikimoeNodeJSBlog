@@ -6,11 +6,11 @@ const cacheDataUtils = require('../../../config/cacheData')
 
 module.exports = async function (req, res, next) {
   const { _id, title, status, link, isdefault, newtab, img } = req.body
-  if (!_id) {
+  if (!utils.isObjectId(_id)) {
     res.status(400).json({
       errors: [
         {
-          message: 'id不能为空'
+          message: 'id格式错误'
         }
       ]
     })
@@ -22,6 +22,43 @@ module.exports = async function (req, res, next) {
     link: link || '',
     isdefault: isdefault ? true : false,
     newtab: newtab ? true : false
+  }
+  const rule = [
+    {
+      key: 'title',
+      label: '标题',
+      strict: true,
+      strictType: 'string'
+    },
+    {
+      key: 'status',
+      label: '状态',
+      strict: true,
+      strictType: 'number'
+    },
+    {
+      key: 'link',
+      label: '链接',
+      strict: true,
+      strictType: 'string'
+    },
+    {
+      key: 'isdefault',
+      label: '默认',
+      strict: true,
+      strictType: 'boolean'
+    },
+    {
+      key: 'newtab',
+      label: '新标签页',
+      strict: true,
+      strictType: 'boolean'
+    }
+  ]
+  const errors = utils.checkForm(params, rule)
+  if (errors.length > 0) {
+    res.status(400).json({ errors })
+    return
   }
   // 如果状态为1，img必填
   if (status === 1 && !img) {

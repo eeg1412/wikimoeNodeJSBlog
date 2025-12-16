@@ -720,15 +720,6 @@ const adminRouteSetting = [
     roleType: null,
     role: null
   },
-  // put /banner/update/img
-  // {
-  //   path: '/banner/update/img',
-  //   method: 'put',
-  //   middleware: [checkAuth],
-  //   controller: require('../api/admin/banner/updateBannerImg'),
-  //   roleType: null,
-  //   role: null
-  // },
   // put /banner/update/taxis
   {
     path: '/banner/update/taxis',

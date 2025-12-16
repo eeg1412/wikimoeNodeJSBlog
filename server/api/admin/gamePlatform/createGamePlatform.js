@@ -15,13 +15,17 @@ module.exports = async function (req, res, next) {
       key: 'name',
       label: '游戏平台名称',
       type: null,
-      required: true
+      required: true,
+      strict: true,
+      strictType: 'string'
     },
     {
       key: 'color',
       label: '颜色',
       type: null,
-      required: true
+      required: true,
+      strict: true,
+      strictType: 'string'
     }
   ]
   const errors = utils.checkForm(params, rule)

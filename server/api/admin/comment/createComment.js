@@ -26,20 +26,36 @@ module.exports = async function (req, res, next) {
     {
       key: 'post',
       label: '评论文章',
-      type: null,
+      type: 'isMongoId',
       required: true
+    },
+    {
+      key: 'parent',
+      label: '父级评论',
+      type: 'isMongoId',
+      required: false
     },
     {
       key: 'content',
       label: '评论内容',
       type: null,
-      required: true
+      required: true,
+      strict: true,
+      strictType: 'string'
     },
     {
       key: 'user',
       label: '评论用户',
-      type: null,
+      type: 'isMongoId',
       required: true
+    },
+    {
+      key: 'top',
+      label: '置顶',
+      type: null,
+      required: false,
+      strict: true,
+      strictType: 'boolean'
     }
   ]
   const errors = utils.checkForm(params, rule)

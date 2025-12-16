@@ -107,7 +107,7 @@ module.exports = async function (req, res, next) {
   }
 
   // urlList 检查
-  if (!utils.checkURLList(urlList)) {
+  if (!utils.checkStringList(urlList, ['text', 'url'])) {
     res.status(400).json({
       errors: [
         {

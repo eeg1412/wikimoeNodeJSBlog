@@ -343,6 +343,32 @@ exports.parseBase64 = base64 => {
   }
 }
 
+exports.checkType = function (value, type) {
+  return typeof value === type
+}
+
+exports.checkStringList = function (list, keys = []) {
+  if (!Array.isArray(list)) {
+    return false
+  }
+  for (let i = 0; i < list.length; i++) {
+    if (keys.length > 0) {
+      const item = list[i]
+      for (let j = 0; j < keys.length; j++) {
+        const key = keys[j]
+        if (!this.checkType(item[key], 'string')) {
+          return false
+        }
+      }
+    } else {
+      if (!this.checkType(list[i], 'string')) {
+        return false
+      }
+    }
+  }
+  return true
+}
+
 exports.checkForm = function (form, ruleArr) {
   const requiredCheck = function (required, value) {
     return required && checkVauleIsNone(value)
@@ -583,27 +609,6 @@ exports.isNumber = function (value) {
 exports.isObjectId = function (value) {
   const str = String(value)
   return /^[0-9a-fA-F]{24}$/.test(str)
-}
-exports.isURL = function (value, options = {}) {
-  // 通过 validator isURL 来判断
-  return validator.isURL(String(value), options)
-}
-// check urlList
-exports.checkURLList = function (urlList, options = {}) {
-  if (!Array.isArray(urlList)) {
-    return false
-  }
-  for (let i = 0; i < urlList.length; i++) {
-    const urlItem = urlList[i]
-    const { text, url } = urlItem
-    if (typeof text !== 'string') {
-      return false
-    }
-    if (typeof url !== 'string' || !this.isURL(url, options)) {
-      return false
-    }
-  }
-  return true
 }
 // isUUID
 exports.isUUID = function (value, version = 4) {

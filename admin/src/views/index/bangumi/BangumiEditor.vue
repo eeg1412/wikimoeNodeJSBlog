@@ -115,10 +115,7 @@
                     :prop="'urlList.' + index + '.url'"
                     :rules="{
                       required: true,
-                      // 简单的url格式校验
-                      pattern:
-                        '^(https?:\\/\\/)?([\\w\\-]+\\.)+[\\w\\-]+(\\/[-\\w@\\+\\.~#\\?&//=]*)?$',
-                      message: '请输入正确的链接URL',
+                      message: '请输入链接URL',
                       trigger: 'blur'
                     }"
                   >
