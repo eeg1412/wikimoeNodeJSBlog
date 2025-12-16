@@ -279,7 +279,43 @@ const initGlobalConfig = async () => {
       )
       // 将emailSettings.emailPassword设置为****
       showConfig.emailSettings.emailPassword = '****'
-      console.info('globalConfig更新完成,配置如下:', showConfig)
+      // 颜色设置（ANSI）
+      const ANSI = {
+        reset: '\x1b[0m',
+        key: '\x1b[36m', // cyan for keys
+        value: '\x1b[32m', // green for values
+        header: '\x1b[33m' // yellow for section headers
+      }
+
+      const formatValueColored = v => {
+        if (v && typeof v === 'object') {
+          if (v.type === 'Set') return ANSI.value + v.value + ANSI.reset
+          if (Array.isArray(v)) return ANSI.value + v.join(', ') + ANSI.reset
+          return ANSI.value + JSON.stringify(v) + ANSI.reset
+        }
+        return ANSI.value + String(v) + ANSI.reset
+      }
+
+      const prettyConfig = Object.keys(showConfig)
+        .map(section => {
+          const sec = showConfig[section]
+          const header = `${ANSI.header}==== ${section} ==== ${ANSI.reset}`
+          if (sec && typeof sec === 'object') {
+            const body = Object.keys(sec)
+              .map(
+                k =>
+                  `- ${ANSI.key}${k}${ANSI.reset}: ${formatValueColored(
+                    sec[k]
+                  )}`
+              )
+              .join('\n')
+            return `${header}\n${body}`
+          }
+          return `${header}\n  ${formatValueColored(sec)}`
+        })
+        .join('\n\n')
+
+      console.info('\n全局配置更新完成:\n' + prettyConfig + '\n')
     })
     .catch(err => {
       console.error('globalConfig更新失败', err)
