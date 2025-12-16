@@ -147,4 +147,6 @@ app.use('/admin', express.static(path.join(__dirname, 'front/admin')))
 //   console.log(`RSS: ${rss} MB, Heap Total: ${heapTotal} MB, Heap Used: ${heapUsed} MB`);
 // }, 1000);
 
+console.info('Express应用初始化完成')
+
 module.exports = app

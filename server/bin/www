@@ -1,9 +1,16 @@
 #!/usr/bin/env node
-
 /**
  * Module dependencies.
  */
 require('dotenv').config()
+
+// 欢迎语 // process.env.npm_package_version
+const version = process.env.npm_package_version
+const node = process.version || ''
+
+console.log('欢迎使用 维基萌博客系统')
+console.log(`服务端版本：${version}    NodeJs版本：${node}`)
+
 require('../utils/chalk')
 require('../utils/utils').checkEnv()
 const log4js = require('log4js')
