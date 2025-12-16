@@ -67,7 +67,7 @@ module.exports = async function (req, res, next) {
   // 校验idList的每个id是否合法
   // utils.isObjectId
   for (const id of idList) {
-    if (!validator.isMongoId(id)) {
+    if (!utils.isObjectId(id)) {
       res.status(400).json({
         errors: [
           {
@@ -77,6 +77,11 @@ module.exports = async function (req, res, next) {
       })
       return
     }
+  }
+
+  if (sortId && !utils.isObjectId(sortId)) {
+    res.status(400).json({ errors: [{ message: 'sortId格式错误' }] })
+    return
   }
 
   // tagIdList校验
@@ -111,7 +116,7 @@ module.exports = async function (req, res, next) {
   // mappointIdList校验
   if (mappointIdList.length > 0) {
     for (const id of mappointIdList) {
-      if (!id) {
+      if (!utils.isObjectId(id)) {
         res.status(400).json({
           errors: [
             {

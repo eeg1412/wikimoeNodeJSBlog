@@ -33,6 +33,69 @@ module.exports = async function (req, res, next) {
     postLinkOpen,
     status
   }
+  const rule = [
+    {
+      key: 'title',
+      label: '标题',
+      type: null,
+      required: false,
+      strict: true,
+      strictType: 'string'
+    },
+    {
+      key: 'rating',
+      label: '评分',
+      strict: true,
+      strictType: 'number'
+    },
+    {
+      key: 'year',
+      label: '年份',
+      strict: true,
+      strictType: 'number'
+    },
+    {
+      key: 'month',
+      label: '月份',
+      strict: true,
+      strictType: 'number'
+    },
+    {
+      key: 'day',
+      label: '日期',
+      strict: true,
+      strictType: 'number'
+    },
+    {
+      key: 'postLinkOpen',
+      label: '文章链接公开',
+      strict: true,
+      strictType: 'boolean'
+    },
+    {
+      key: 'status',
+      label: '状态',
+      strict: true,
+      strictType: 'number'
+    }
+  ]
+  const errors = utils.checkForm(params, rule)
+  if (errors.length > 0) {
+    res.status(400).json({ errors })
+    return
+  }
+
+  // urlList 检查
+  if (!utils.checkStringList(urlList, ['text', 'url'])) {
+    res.status(400).json({
+      errors: [
+        {
+          message: '链接列表格式错误'
+        }
+      ]
+    })
+    return
+  }
 
   if (year || month || day) {
     if (!utils.validateDate(year, month, day)) {

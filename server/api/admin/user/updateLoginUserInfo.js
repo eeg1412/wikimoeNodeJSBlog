@@ -15,6 +15,69 @@ module.exports = async function (req, res, next) {
     cover
   } = req.body
 
+  const params = {
+    nickname,
+    email,
+    description,
+    currentPassword,
+    password,
+    cover
+  }
+  const rule = [
+    {
+      key: 'nickname',
+      label: '昵称',
+      type: 'regCheck',
+      reg: /^.{1,10}$/,
+      required: true,
+      strict: true,
+      strictType: 'string'
+    },
+    {
+      key: 'email',
+      label: '邮箱',
+      type: 'isEmail',
+      strict: true,
+      strictType: 'string'
+    },
+    {
+      key: 'description',
+      label: '描述',
+      strict: true,
+      strictType: 'string'
+    }
+  ]
+  if (cover) {
+    rule.push({
+      key: 'cover',
+      label: '封面',
+      type: 'isMongoId'
+    })
+  }
+  if (password) {
+    rule.push({
+      key: 'currentPassword',
+      label: '当前密码',
+      required: true,
+      strict: true,
+      strictType: 'string'
+    })
+    rule.push({
+      key: 'password',
+      label: '新密码',
+      type: 'regCheck',
+      reg: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*])[a-zA-Z\d!@#$%^&*]{4,}$/,
+      required: true,
+      strict: true,
+      strictType: 'string'
+    })
+  }
+  const errors = utils.checkForm(params, rule)
+  if (errors.length > 0) {
+    res.status(400).json({ errors })
+    return
+  }
+
   // 更新
   const id = req.admin._id
   const updateData = {
@@ -104,8 +167,9 @@ module.exports = async function (req, res, next) {
       const imgRes = utils.base64ToFile(photo, path, fileName, {
         createDir: true
       })
-      updateData['photo'] =
-        `/upload/avatar/${imgRes.fileNameAll}?v=${Date.now()}`
+      updateData['photo'] = `/upload/avatar/${
+        imgRes.fileNameAll
+      }?v=${Date.now()}`
     } catch (error) {
       res.status(400).json({
         errors: [

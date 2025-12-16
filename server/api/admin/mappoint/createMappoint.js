@@ -19,38 +19,50 @@ module.exports = async function (req, res, next) {
       key: 'title',
       label: '标题',
       type: null,
-      required: true
+      required: true,
+      strict: true,
+      strictType: 'string'
     },
     {
       key: 'longitude',
       label: '经度',
       type: 'isFloat',
-      required: true
+      required: true,
+      strict: true,
+      strictType: 'number'
     },
     {
       key: 'latitude',
       label: '纬度',
       type: 'isFloat',
-      required: true
+      required: true,
+      strict: true,
+      strictType: 'number'
     },
     {
       key: 'summary',
       label: '简介',
       type: null,
-      required: false
+      required: false,
+      strict: true,
+      strictType: 'string'
     },
     {
       key: 'zIndex',
       label: '层叠顺序',
       type: 'isInt',
       options: { min: 0, max: 99999999 },
-      required: true
+      required: true,
+      strict: true,
+      strictType: 'number'
     },
     {
       key: 'status',
       label: '状态',
       type: 'isInt',
-      required: true
+      required: true,
+      strict: true,
+      strictType: 'number'
     }
   ]
   const errors = utils.checkForm(params, rule)

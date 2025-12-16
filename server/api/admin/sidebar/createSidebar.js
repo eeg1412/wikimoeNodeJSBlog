@@ -34,7 +34,27 @@ module.exports = async function (req, res, next) {
       key: 'type',
       label: '侧边栏类型',
       type: null,
-      required: true
+      required: true,
+      strict: true,
+      strictType: 'number'
+    },
+    {
+      key: 'count',
+      label: '计数',
+      strict: true,
+      strictType: 'number'
+    },
+    {
+      key: 'taxis',
+      label: '排序',
+      strict: true,
+      strictType: 'number'
+    },
+    {
+      key: 'status',
+      label: '状态',
+      strict: true,
+      strictType: 'number'
     }
   ]
   const errors = utils.checkForm(params, rule)

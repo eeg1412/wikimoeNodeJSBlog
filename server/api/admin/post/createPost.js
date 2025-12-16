@@ -6,21 +6,30 @@ const cacheDataUtils = require('../../../config/cacheData')
 
 module.exports = async function (req, res, next) {
   const type = req.body.type
-  // 校验type只能为1，2，3
-  if (type !== 1 && type !== 2 && type !== 3) {
-    res.status(400).json({
-      errors: [
-        {
-          message: 'type格式错误'
-        }
-      ]
-    })
+  // 校验格式
+  const params = {
+    type: type
+  }
+  const rule = [
+    {
+      key: 'type',
+      label: '类型',
+      type: 'isIn',
+      options: ['1', '2', '3'],
+      required: true,
+      strict: true,
+      strictType: 'number'
+    }
+  ]
+  const errors = utils.checkForm(params, rule)
+  if (errors.length > 0) {
+    res.status(400).json({ errors })
     return
   }
   // 获取管理员ID
   const adminId = req.admin._id
   // 校验格式
-  const params = {
+  const updateData = {
     type: type,
     author: adminId,
     lastChangDate: new Date()
@@ -28,7 +37,7 @@ module.exports = async function (req, res, next) {
 
   // save
   postUtils
-    .save(params)
+    .save(updateData)
     .then(data => {
       res.send({
         data: data

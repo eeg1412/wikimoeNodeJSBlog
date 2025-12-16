@@ -8,27 +8,6 @@ const nodePath = require('path')
 module.exports = async function (req, res, next) {
   const { id, __v } = req.body
   const { icon, sitename, siteurl, description, taxis, status, rss } = req.body
-  if (!id) {
-    res.status(400).json({
-      errors: [
-        {
-          message: 'id不能为空'
-        }
-      ]
-    })
-    return
-  }
-  // __v 可以为零，但不能为空/null/undefined
-  if (__v === undefined || __v === null) {
-    res.status(400).json({
-      errors: [
-        {
-          message: '__v不能为空'
-        }
-      ]
-    })
-    return
-  }
   // 校验格式
   const params = {
     sitename,
@@ -38,21 +17,59 @@ module.exports = async function (req, res, next) {
     status: status || 0,
     rss: rss || ''
   }
+  const formCheck = {
+    id,
+    __v,
+    ...params
+  }
   const rule = [
+    {
+      key: 'id',
+      label: 'id',
+      type: 'isMongoId',
+      required: true
+    },
+    {
+      key: '__v',
+      label: '__v',
+      strict: true,
+      strictType: 'number',
+      required: true
+    },
     {
       key: 'sitename',
       label: '网站名称',
       type: null,
-      required: true
+      required: true,
+      strict: true,
+      strictType: 'string'
     },
     {
       key: 'siteurl',
       label: '网站URL',
       type: null,
-      required: true
+      required: true,
+      strict: true,
+      strictType: 'string'
+    },
+    {
+      key: 'taxis',
+      label: '排序',
+      strict: true,
+      strictType: 'number'
+    },
+    {
+      key: 'status',
+      label: '状态',
+      strict: true,
+      strictType: 'number'
     }
   ]
-  const errors = utils.checkForm(params, rule)
+  const errors = utils.checkForm(formCheck, rule)
+  if (errors.length > 0) {
+    res.status(400).json({ errors })
+    return
+  }
   if (errors.length > 0) {
     res.status(400).json({ errors })
     return

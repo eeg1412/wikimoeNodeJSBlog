@@ -12,27 +12,72 @@ module.exports = async function (req, res, next) {
   // description	String	否	否	无	分类描述
   const { sortname, alias, taxis, description, id, __v } = req.body
   const parent = req.body.parent || null
-  if (!id) {
-    res.status(400).json({
-      errors: [
-        {
-          message: 'id不能为空'
-        }
-      ]
+  // 校验格式
+  const params = {
+    sortname,
+    alias,
+    taxis,
+    parent,
+    description
+  }
+  const formCheck = {
+    id,
+    __v,
+    ...params
+  }
+  const rule = [
+    {
+      key: 'id',
+      label: 'id',
+      type: 'isMongoId',
+      required: true
+    },
+    {
+      key: 'sortname',
+      label: '分类名称',
+      required: true,
+      strict: true,
+      strictType: 'string'
+    },
+    {
+      key: 'alias',
+      label: '分类别名',
+      strict: true,
+      strictType: 'string'
+    },
+    {
+      key: 'taxis',
+      label: '排序值',
+      strict: true,
+      strictType: 'number'
+    },
+    {
+      key: 'description',
+      label: '分类描述',
+      strict: true,
+      strictType: 'string'
+    },
+    {
+      key: '__v',
+      label: '__v',
+      required: true,
+      strict: true,
+      strictType: 'number'
+    }
+  ]
+  if (parent) {
+    rule.push({
+      key: 'parent',
+      label: '父级分类',
+      type: 'isMongoId'
     })
+  }
+  const errors = utils.checkForm(formCheck, rule)
+  if (errors.length > 0) {
+    res.status(400).json({ errors })
     return
   }
-  // __v 可以为零，但不能为空/null/undefined
-  if (__v === undefined || __v === null) {
-    res.status(400).json({
-      errors: [
-        {
-          message: '__v不能为空'
-        }
-      ]
-    })
-    return
-  }
+
   // parent 不能和 id 相同
   if (parent === id) {
     res.status(400).json({
@@ -42,27 +87,6 @@ module.exports = async function (req, res, next) {
         }
       ]
     })
-    return
-  }
-  // 校验格式
-  const params = {
-    sortname: sortname,
-    alias: alias,
-    taxis: taxis,
-    parent: parent,
-    description: description
-  }
-  const rule = [
-    {
-      key: 'sortname',
-      label: '分类名称',
-      type: null,
-      required: true
-    }
-  ]
-  const errors = utils.checkForm(params, rule)
-  if (errors.length > 0) {
-    res.status(400).json({ errors })
     return
   }
   if (alias) {

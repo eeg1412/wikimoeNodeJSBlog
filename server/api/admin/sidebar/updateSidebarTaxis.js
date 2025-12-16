@@ -10,7 +10,7 @@ module.exports = async function (req, res, next) {
   const promises = []
   sidebarList.forEach(item => {
     const { _id, taxis } = item
-    if (!_id) {
+    if (!utils.isObjectId(_id)) {
       return
     }
     // 校验格式
@@ -22,7 +22,9 @@ module.exports = async function (req, res, next) {
         key: 'taxis',
         label: '侧边栏排序',
         type: 'isInt',
-        required: true
+        required: true,
+        strict: true,
+        strictType: 'number'
       }
     ]
     const errors = utils.checkForm(params, rule)

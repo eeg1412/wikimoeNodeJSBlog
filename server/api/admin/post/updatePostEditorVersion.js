@@ -11,30 +11,25 @@ const sitemapToolUtils = require('../../../utils/sitemap')
 module.exports = async function (req, res, next) {
   const id = req.body.id
   let { __v } = req.body
-  // 校验id是否存在
-  if (!id) {
-    res.status(400).json({
-      errors: [
-        {
-          message: 'id不能为空'
-        }
-      ]
-    })
-    return
-  }
-  // __v 可以为零，但不能为空/null/undefined
-  if (__v === undefined || __v === null) {
-    res.status(400).json({
-      errors: [
-        {
-          message: '__v不能为空'
-        }
-      ]
-    })
+
+  const params = { id, __v }
+  const rule = [
+    { key: 'id', label: 'id', type: 'isMongoId', required: true },
+    {
+      key: '__v',
+      label: '__v',
+      required: true,
+      strict: true,
+      strictType: 'number'
+    }
+  ]
+  const errors = utils.checkForm(params, rule)
+  if (errors.length > 0) {
+    res.status(400).json({ errors })
     return
   }
 
-  const params = {
+  const updateData = {
     editorVersion: 5,
     content: '',
     status: 0,
@@ -42,7 +37,7 @@ module.exports = async function (req, res, next) {
   }
   // 更新
   postUtils
-    .updateOne({ _id: id, __v: __v }, params)
+    .updateOne({ _id: id, __v: __v }, updateData)
     .then(data => {
       if (data.modifiedCount === 0) {
         res.status(400).json({

@@ -17,25 +17,85 @@ module.exports = async function (req, res, next) {
     deepmatch,
     query
   } = req.body
-  if (!id) {
-    res.status(400).json({
-      errors: [
-        {
-          message: 'id不能为空'
-        }
-      ]
-    })
-    return
+  // 校验格式
+  const params = {
+    naviname,
+    url,
+    newtab: newtab ? true : false,
+    status: status || 0,
+    taxis: taxis || 0,
+    parent: parent || null,
+    isdefault: isdefault ? true : false,
+    deepmatch: deepmatch ? true : false,
+    query: query || ''
   }
-  // __v 可以为零，但不能为空/null/undefined
-  if (__v === undefined || __v === null) {
-    res.status(400).json({
-      errors: [
-        {
-          message: '__v不能为空'
-        }
-      ]
-    })
+  const formCheck = {
+    id,
+    __v,
+    ...params
+  }
+  const rule = [
+    {
+      key: 'id',
+      label: 'id',
+      type: 'isMongoId',
+      required: true
+    },
+    {
+      key: '__v',
+      label: '__v',
+      strict: true,
+      strictType: 'number',
+      required: true
+    },
+    {
+      key: 'naviname',
+      label: '导航名称',
+      type: null,
+      required: true,
+      strict: true,
+      strictType: 'string'
+    },
+    {
+      key: 'parent',
+      label: '父导航',
+      type: 'isMongoId',
+      required: false
+    },
+    {
+      key: 'newtab',
+      label: '新标签页',
+      strict: true,
+      strictType: 'boolean'
+    },
+    {
+      key: 'status',
+      label: '状态',
+      strict: true,
+      strictType: 'number'
+    },
+    {
+      key: 'taxis',
+      label: '排序',
+      strict: true,
+      strictType: 'number'
+    },
+    {
+      key: 'isdefault',
+      label: '本站链接',
+      strict: true,
+      strictType: 'boolean'
+    },
+    {
+      key: 'deepmatch',
+      label: '深度匹配',
+      strict: true,
+      strictType: 'boolean'
+    }
+  ]
+  const errors = utils.checkForm(formCheck, rule)
+  if (errors.length > 0) {
+    res.status(400).json({ errors })
     return
   }
   // parent 不能和 id 相同
@@ -47,31 +107,6 @@ module.exports = async function (req, res, next) {
         }
       ]
     })
-    return
-  }
-  // 校验格式
-  const params = {
-    naviname: naviname,
-    url,
-    newtab: newtab ? true : false,
-    status: status || 0,
-    taxis: taxis || 0,
-    parent: parent || null,
-    isdefault: isdefault ? true : false,
-    deepmatch: deepmatch ? true : false,
-    query: query || ''
-  }
-  const rule = [
-    {
-      key: 'naviname',
-      label: '导航名称',
-      type: null,
-      required: true
-    }
-  ]
-  const errors = utils.checkForm(params, rule)
-  if (errors.length > 0) {
-    res.status(400).json({ errors })
     return
   }
   // updateOne

@@ -6,16 +6,40 @@ const mongoose = require('mongoose')
 
 module.exports = async function (req, res, next) {
   let { page, size, keyword, idList, shouldCount, status } = req.query
-  page = parseInt(page)
-  size = parseInt(size)
-  // 判断page和size是否为数字
-  if (!utils.isNumber(page) || !utils.isNumber(size)) {
+  page = Number(page)
+  size = Number(size)
+  const queryCheck = {
+    page,
+    size
+  }
+  const queryRule = [
+    {
+      key: 'page',
+      label: '页数',
+      strict: true,
+      strictType: 'number',
+      type: 'isInt',
+      options: {
+        min: 1
+      },
+      required: true
+    },
+    {
+      key: 'size',
+      label: '每页数量',
+      strict: true,
+      strictType: 'number',
+      type: 'isInt',
+      options: {
+        min: 1
+      },
+      required: true
+    }
+  ]
+  const queryErrors = utils.checkForm(queryCheck, queryRule)
+  if (queryErrors.length > 0) {
     res.status(400).json({
-      errors: [
-        {
-          message: '参数错误'
-        }
-      ]
+      errors: queryErrors
     })
     return
   }
@@ -30,6 +54,9 @@ module.exports = async function (req, res, next) {
     params.status = parseInt(status)
   }
   if (idList) {
+    if (!Array.isArray(idList)) {
+      idList = [idList]
+    }
     // 校验idList是否为数组且是否为ObjectId
     for (let i = 0; i < idList.length; i++) {
       if (!utils.isObjectId(idList[i])) {

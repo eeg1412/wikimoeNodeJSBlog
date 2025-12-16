@@ -14,25 +14,28 @@ module.exports = async function (req, res, next) {
     options,
     endTime
   } = req.body
-  if (!utils.isObjectId(id || '')) {
-    res.status(400).json({
-      errors: [
-        {
-          message: 'id格式不正确'
-        }
-      ]
-    })
-    return
+  const baseCheck = {
+    id,
+    __v
   }
-  // __v 可以为零，但不能为空/null/undefined
-  if (__v === undefined || __v === null) {
-    res.status(400).json({
-      errors: [
-        {
-          message: '__v不能为空'
-        }
-      ]
-    })
+  const rule = [
+    {
+      key: 'id',
+      label: 'id',
+      type: 'isMongoId',
+      required: true
+    },
+    {
+      key: '__v',
+      label: '__v',
+      required: true,
+      strict: true,
+      strictType: 'number'
+    }
+  ]
+  const baseCheckErrors = utils.checkForm(baseCheck, rule)
+  if (baseCheckErrors.length > 0) {
+    res.status(400).json({ errors: baseCheckErrors })
     return
   }
 
@@ -117,6 +120,13 @@ module.exports = async function (req, res, next) {
             min: 1,
             max: finalOptionsLength
           }
+        },
+        {
+          key: 'status',
+          label: '状态',
+          required: true,
+          strict: true,
+          strictType: 'number'
         },
         {
           key: 'endTime',

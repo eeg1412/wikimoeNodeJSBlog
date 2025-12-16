@@ -16,17 +16,79 @@ module.exports = async function (req, res, next) {
     id,
     __v
   } = req.body
-  // 判断id是否符合mongodb的id规则
-  if (!utils.isObjectId(id)) {
-    res.status(400).json({
-      errors: [
-        {
-          message: 'id不正确'
-        }
-      ]
+  const params = {
+    id,
+    nickname,
+    email,
+    description,
+    disabled,
+    password,
+    cover,
+    __v
+  }
+  const rule = [
+    {
+      key: 'id',
+      label: 'id',
+      type: 'isMongoId',
+      required: true
+    },
+    {
+      key: 'nickname',
+      label: '昵称',
+      type: 'regCheck',
+      reg: /^.{1,10}$/,
+      strict: true,
+      strictType: 'string'
+    },
+    {
+      key: 'email',
+      label: '邮箱',
+      type: 'isEmail',
+      strict: true,
+      strictType: 'string'
+    },
+    {
+      key: 'description',
+      label: '描述',
+      strict: true,
+      strictType: 'string'
+    },
+    {
+      key: 'disabled',
+      label: '禁用',
+      strict: true,
+      strictType: 'boolean'
+    },
+    {
+      key: 'password',
+      label: '密码',
+      type: 'regCheck',
+      reg: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*])[a-zA-Z\d!@#$%^&*]{4,}$/,
+      strict: true,
+      strictType: 'string'
+    },
+    {
+      key: '__v',
+      label: '__v',
+      required: true,
+      strict: true,
+      strictType: 'number'
+    }
+  ]
+  if (cover) {
+    rule.push({
+      key: 'cover',
+      label: '封面',
+      type: 'isMongoId'
     })
+  }
+  const errors = utils.checkForm(params, rule)
+  if (errors.length > 0) {
+    res.status(400).json({ errors })
     return
   }
+
   const adminId = req.admin.id
   // 管理员不能修改自己
   if (id === adminId) {
@@ -34,17 +96,6 @@ module.exports = async function (req, res, next) {
       errors: [
         {
           message: '不能修改自己'
-        }
-      ]
-    })
-    return
-  }
-  // disabled必须为布尔值
-  if (disabled !== undefined && typeof disabled !== 'boolean') {
-    res.status(400).json({
-      errors: [
-        {
-          message: 'disabled不正确'
         }
       ]
     })
@@ -136,8 +187,9 @@ module.exports = async function (req, res, next) {
       const imgRes = utils.base64ToFile(photo, path, fileName, {
         createDir: true
       })
-      updateData['photo'] =
-        `/upload/avatar/${imgRes.fileNameAll}?v=${Date.now()}`
+      updateData['photo'] = `/upload/avatar/${
+        imgRes.fileNameAll
+      }?v=${Date.now()}`
     } catch (error) {
       res.status(400).json({
         errors: [

@@ -6,13 +6,20 @@ const adminApiLog = log4js.getLogger('adminApi')
 module.exports = async function (req, res, next) {
   // updateTagLastusetime
   const id = req.body.id
+  const params = { id }
+  const rule = [{ key: 'id', label: 'id', type: 'isMongoId', required: true }]
+  const errors = utils.checkForm(params, rule)
+  if (errors.length > 0) {
+    res.status(400).json({ errors })
+    return
+  }
   const lastusetime = new Date()
-  const params = {
+  const updateData = {
     lastusetime: lastusetime
   }
   // updateOne
   tagUtils
-    .updateOne({ _id: id }, params)
+    .updateOne({ _id: id }, updateData)
     .then(data => {
       if (data.modifiedCount === 0) {
         res.status(400).json({

@@ -6,6 +6,56 @@ const adminApiLog = log4js.getLogger('adminApi')
 module.exports = async function (req, res, next) {
   const { title, maxSelect, showResultAfter, status, options, endTime } =
     req.body
+
+  const params = {
+    title,
+    maxSelect,
+    showResultAfter,
+    status,
+    endTime
+  }
+  const rule = [
+    {
+      key: 'title',
+      label: '标题',
+      required: true,
+      strict: true,
+      strictType: 'string'
+    },
+    {
+      key: 'maxSelect',
+      label: '最大选择数',
+      required: true,
+      strict: true,
+      strictType: 'number'
+    },
+    {
+      key: 'showResultAfter',
+      label: '投票后显示结果',
+      required: true,
+      strict: true,
+      strictType: 'boolean'
+    },
+    {
+      key: 'status',
+      label: '状态',
+      required: true,
+      strict: true,
+      strictType: 'number'
+    },
+    {
+      key: 'endTime',
+      label: '结束时间',
+      strict: true,
+      strictType: 'string'
+    }
+  ]
+  const errors = utils.checkForm(params, rule)
+  if (errors.length > 0) {
+    res.status(400).json({ errors })
+    return
+  }
+
   // options 不是数组则报错
   if (!Array.isArray(options)) {
     res.status(400).json({
@@ -29,14 +79,14 @@ module.exports = async function (req, res, next) {
     return
   }
   // 校验格式
-  const params = {
+  const updateData = {
     title,
     maxSelect: Number(maxSelect),
     showResultAfter: showResultAfter ? true : false,
     endTime: endTime || null,
     status
   }
-  const rule = [
+  const rules = [
     {
       key: 'title',
       label: '投票标题',
@@ -62,9 +112,9 @@ module.exports = async function (req, res, next) {
       }
     }
   ]
-  const errors = utils.checkForm(params, rule)
-  if (errors.length > 0) {
-    res.status(400).json({ errors })
+  const validationErrors = utils.checkForm(updateData, rules)
+  if (validationErrors.length > 0) {
+    res.status(400).json({ errors: validationErrors })
     return
   }
   // 校验options
@@ -110,10 +160,10 @@ module.exports = async function (req, res, next) {
     })
     return
   }
-  params.options = checkedOptions
+  updateData.options = checkedOptions
   // save
   voteUtils
-    .save(params)
+    .save(updateData)
     .then(data => {
       res.send({
         data: data

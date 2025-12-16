@@ -23,27 +23,101 @@ module.exports = async function (req, res, next) {
     postLinkOpen,
     __v
   } = req.body
-  if (!id) {
+  // 校验格式
+  const params = {
+    title,
+    summary,
+    rating,
+    year,
+    month,
+    day,
+    label,
+    status,
+    urlList,
+    postLinkOpen
+  }
+  const formCheck = {
+    id,
+    __v,
+    ...params
+  }
+  const rule = [
+    {
+      key: 'id',
+      label: 'id',
+      type: 'isMongoId',
+      required: true
+    },
+    {
+      key: '__v',
+      label: '__v',
+      strict: true,
+      strictType: 'number',
+      required: true
+    },
+    {
+      key: 'title',
+      label: '标题',
+      type: null,
+      required: false,
+      strict: true,
+      strictType: 'string'
+    },
+    {
+      key: 'rating',
+      label: '评分',
+      strict: true,
+      strictType: 'number'
+    },
+    {
+      key: 'year',
+      label: '年份',
+      strict: true,
+      strictType: 'number'
+    },
+    {
+      key: 'month',
+      label: '月份',
+      strict: true,
+      strictType: 'number'
+    },
+    {
+      key: 'day',
+      label: '日期',
+      strict: true,
+      strictType: 'number'
+    },
+    {
+      key: 'postLinkOpen',
+      label: '文章链接公开',
+      strict: true,
+      strictType: 'boolean'
+    },
+    {
+      key: 'status',
+      label: '状态',
+      strict: true,
+      strictType: 'number'
+    }
+  ]
+  const errors = utils.checkForm(formCheck, rule)
+  if (errors.length > 0) {
+    res.status(400).json({ errors })
+    return
+  }
+
+  // urlList 检查
+  if (!utils.checkStringList(urlList, ['text', 'url'])) {
     res.status(400).json({
       errors: [
         {
-          message: 'id不能为空'
+          message: '链接列表格式错误'
         }
       ]
     })
     return
   }
-  // __v 可以为零，但不能为空/null/undefined
-  if (__v === undefined || __v === null) {
-    res.status(400).json({
-      errors: [
-        {
-          message: '__v不能为空'
-        }
-      ]
-    })
-    return
-  }
+
   if (year || month || day) {
     if (!utils.validateDate(year, month, day)) {
       res.status(400).json({
@@ -57,7 +131,7 @@ module.exports = async function (req, res, next) {
     }
   }
   // 校验格式
-  const params = {
+  const updateData = {
     title,
     summary,
     rating,
@@ -96,8 +170,8 @@ module.exports = async function (req, res, next) {
       let baseCover = '/upload/movie/'
       // 拼接文件夹
       baseCover = baseCover + coverFolder + '/'
-      params['cover'] = `${baseCover}${imgRes.fileNameAll}?v=${Date.now()}`
-      params['coverFileName'] = imgRes.fileNameAll
+      updateData['cover'] = `${baseCover}${imgRes.fileNameAll}?v=${Date.now()}`
+      updateData['coverFileName'] = imgRes.fileNameAll
     } catch (error) {
       res.status(400).json({
         errors: [
@@ -127,13 +201,13 @@ module.exports = async function (req, res, next) {
       })
       return
     }
-    params['cover'] = null
-    params['coverFileName'] = null
+    updateData['cover'] = null
+    updateData['coverFileName'] = null
   }
 
   // updateOne
   movieUtils
-    .updateOne({ _id: id, __v }, params)
+    .updateOne({ _id: id, __v }, updateData)
     .then(data => {
       if (data.modifiedCount === 0) {
         res.status(400).json({

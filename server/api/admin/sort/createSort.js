@@ -12,6 +12,7 @@ module.exports = async function (req, res, next) {
   // description	String	否	否	无	分类描述
   const { sortname, alias, taxis, description } = req.body
   const parent = req.body.parent || null
+
   // 校验格式
   const params = {
     sortname: sortname,
@@ -24,10 +25,36 @@ module.exports = async function (req, res, next) {
     {
       key: 'sortname',
       label: '分类名称',
-      type: null,
-      required: true
+      required: true,
+      strict: true,
+      strictType: 'string'
+    },
+    {
+      key: 'alias',
+      label: '分类别名',
+      strict: true,
+      strictType: 'string'
+    },
+    {
+      key: 'taxis',
+      label: '排序值',
+      strict: true,
+      strictType: 'number'
+    },
+    {
+      key: 'description',
+      label: '分类描述',
+      strict: true,
+      strictType: 'string'
     }
   ]
+  if (parent) {
+    rule.push({
+      key: 'parent',
+      label: '父级分类',
+      type: 'isMongoId'
+    })
+  }
   const errors = utils.checkForm(params, rule)
   if (errors.length > 0) {
     res.status(400).json({ errors })

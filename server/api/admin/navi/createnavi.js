@@ -70,7 +70,45 @@ module.exports = async function (req, res, next) {
       key: 'naviname',
       label: '导航名称',
       type: null,
-      required: true
+      required: true,
+      strict: true,
+      strictType: 'string'
+    },
+    {
+      key: 'parent',
+      label: '父导航',
+      type: 'isMongoId',
+      required: false
+    },
+    {
+      key: 'newtab',
+      label: '新标签页',
+      strict: true,
+      strictType: 'boolean'
+    },
+    {
+      key: 'status',
+      label: '状态',
+      strict: true,
+      strictType: 'number'
+    },
+    {
+      key: 'taxis',
+      label: '排序',
+      strict: true,
+      strictType: 'number'
+    },
+    {
+      key: 'isdefault',
+      label: '本站链接',
+      strict: true,
+      strictType: 'boolean'
+    },
+    {
+      key: 'deepmatch',
+      label: '深度匹配',
+      strict: true,
+      strictType: 'boolean'
     }
   ]
   const errors = utils.checkForm(params, rule)

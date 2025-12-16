@@ -6,76 +6,89 @@ const adminApiLog = log4js.getLogger('adminApi')
 module.exports = async function (req, res, next) {
   const { title, summary, longitude, latitude, zIndex, status, id, __v } =
     req.body
-  if (!id) {
-    res.status(400).json({
-      errors: [
-        {
-          message: 'id不能为空'
-        }
-      ]
-    })
-    return
-  }
-  // __v 可以为零，但不能为空/null/undefined
-  if (__v === undefined || __v === null) {
-    res.status(400).json({
-      errors: [
-        {
-          message: '__v不能为空'
-        }
-      ]
-    })
-    return
-  }
   // 校验格式
   const params = {
-    title: title,
-    summary: summary,
-    longitude: longitude,
-    latitude: latitude,
+    title,
+    summary,
+    longitude,
+    latitude,
     zIndex: zIndex || 0,
-    status: status
+    status
+  }
+  const formCheck = {
+    id,
+    __v,
+    ...params
   }
   const rule = [
+    {
+      key: 'id',
+      label: 'id',
+      type: 'isMongoId',
+      required: true
+    },
+    {
+      key: '__v',
+      label: '__v',
+      strict: true,
+      strictType: 'number',
+      required: true
+    },
     {
       key: 'title',
       label: '标题',
       type: null,
-      required: true
+      required: true,
+      strict: true,
+      strictType: 'string'
     },
     {
       key: 'longitude',
       label: '经度',
       type: 'isFloat',
-      required: true
+      required: true,
+      strict: true,
+      strictType: 'number'
     },
     {
       key: 'latitude',
       label: '纬度',
       type: 'isFloat',
-      required: true
+      required: true,
+      strict: true,
+      strictType: 'number'
     },
     {
       key: 'summary',
       label: '简评',
       type: null,
-      required: false
+      required: false,
+      strict: true,
+      strictType: 'string'
     },
     {
       key: 'zIndex',
       label: '层叠顺序',
       type: 'isInt',
       options: { min: 0, max: 99999999 },
-      required: true
+      required: true,
+      strict: true,
+      strictType: 'number'
     },
     {
       key: 'status',
       label: '状态',
       type: 'isInt',
-      required: true
+      required: true,
+      strict: true,
+      strictType: 'number'
     }
   ]
-  const errors = utils.checkForm(params, rule)
+  const errors = utils.checkForm(formCheck, rule)
+  if (errors.length > 0) {
+    res.status(400).json({ errors })
+    return
+  }
   if (errors.length > 0) {
     res.status(400).json({ errors })
     return

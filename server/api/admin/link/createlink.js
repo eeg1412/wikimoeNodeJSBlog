@@ -54,13 +54,29 @@ module.exports = async function (req, res, next) {
       key: 'sitename',
       label: '网站名称',
       type: null,
-      required: true
+      required: true,
+      strict: true,
+      strictType: 'string'
     },
     {
       key: 'siteurl',
       label: '网站URL',
       type: null,
-      required: true
+      required: true,
+      strict: true,
+      strictType: 'string'
+    },
+    {
+      key: 'taxis',
+      label: '排序',
+      strict: true,
+      strictType: 'number'
+    },
+    {
+      key: 'status',
+      label: '状态',
+      strict: true,
+      strictType: 'number'
     }
   ]
   const errors = utils.checkForm(params, rule)

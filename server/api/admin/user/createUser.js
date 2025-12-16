@@ -14,7 +14,8 @@ module.exports = async function (req, res, next) {
     email,
     description,
     password,
-    role: 990
+    role: 990,
+    cover
   }
   const rule = [
     {
@@ -22,7 +23,9 @@ module.exports = async function (req, res, next) {
       label: '用户名',
       type: 'regCheck',
       reg: /^[a-z0-9]+$/,
-      required: true
+      required: true,
+      strict: true,
+      strictType: 'string'
     },
     {
       // nickname
@@ -31,7 +34,9 @@ module.exports = async function (req, res, next) {
       type: 'regCheck',
       // 10以内的文字
       reg: /^.{1,10}$/,
-      required: true
+      required: true,
+      strict: true,
+      strictType: 'string'
     },
     // password
     {
@@ -39,16 +44,33 @@ module.exports = async function (req, res, next) {
       label: '密码',
       type: 'regCheck',
       reg: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*])[a-zA-Z\d!@#$%^&*]{4,}$/,
-      required: true
+      required: true,
+      strict: true,
+      strictType: 'string'
     },
     // email
     {
       key: 'email',
       label: '邮箱',
       type: 'isEmail',
-      required: false
+      required: false,
+      strict: true,
+      strictType: 'string'
+    },
+    {
+      key: 'description',
+      label: '描述',
+      strict: true,
+      strictType: 'string'
     }
   ]
+  if (cover) {
+    rule.push({
+      key: 'cover',
+      label: '封面',
+      type: 'isMongoId'
+    })
+  }
   const errors = utils.checkForm(params, rule)
   if (errors.length > 0) {
     res.status(400).json({ errors })

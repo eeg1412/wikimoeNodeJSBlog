@@ -6,23 +6,57 @@ const cacheDataUtils = require('../../../config/cacheData')
 
 module.exports = async function (req, res, next) {
   const { _id, title, content, count, status } = req.body
-  if (!_id) {
-    res.status(400).json({
-      errors: [
-        {
-          message: 'id不能为空'
-        }
-      ]
-    })
-    return
-  }
-
   // 校验格式
   const params = {
     title: title || '',
     content: content || '',
     count: count || 1,
     status: status || 0
+  }
+  const formCheck = {
+    _id,
+    ...params
+  }
+  const rule = [
+    {
+      key: '_id',
+      label: 'id',
+      type: 'isMongoId',
+      required: true
+    },
+    {
+      key: 'title',
+      label: '侧边栏名称',
+      type: null,
+      required: false,
+      strict: true,
+      strictType: 'string'
+    },
+    {
+      key: 'content',
+      label: '侧边栏内容',
+      type: null,
+      required: false,
+      strict: true,
+      strictType: 'string'
+    },
+    {
+      key: 'count',
+      label: '计数',
+      strict: true,
+      strictType: 'number'
+    },
+    {
+      key: 'status',
+      label: '状态',
+      strict: true,
+      strictType: 'number'
+    }
+  ]
+  const errors = utils.checkForm(formCheck, rule)
+  if (errors.length > 0) {
+    res.status(400).json({ errors })
+    return
   }
   // updateOne
   sidebarUtils

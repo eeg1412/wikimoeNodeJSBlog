@@ -5,16 +5,40 @@ const adminApiLog = log4js.getLogger('adminApi')
 
 module.exports = async function (req, res, next) {
   let { page, size, keyword, type, sorttype, status, sort, tags } = req.query
-  page = parseInt(page)
-  size = parseInt(size)
-  // 判断page和size是否为数字
-  if (!utils.isNumber(page) || !utils.isNumber(size)) {
+  page = Number(page)
+  size = Number(size)
+  const queryCheck = {
+    page,
+    size
+  }
+  const queryRule = [
+    {
+      key: 'page',
+      label: '页数',
+      strict: true,
+      strictType: 'number',
+      type: 'isInt',
+      options: {
+        min: 1
+      },
+      required: true
+    },
+    {
+      key: 'size',
+      label: '每页数量',
+      strict: true,
+      strictType: 'number',
+      type: 'isInt',
+      options: {
+        min: 1
+      },
+      required: true
+    }
+  ]
+  const queryErrors = utils.checkForm(queryCheck, queryRule)
+  if (queryErrors.length > 0) {
     res.status(400).json({
-      errors: [
-        {
-          message: '参数错误'
-        }
-      ]
+      errors: queryErrors
     })
     return
   }
@@ -59,6 +83,10 @@ module.exports = async function (req, res, next) {
   }
   // 如果sort存在，就加入查询条件
   if (sort) {
+    if (!utils.isObjectId(sort)) {
+      res.status(400).json({ errors: [{ message: 'sort格式错误' }] })
+      return
+    }
     params.sort = sort
   }
   // 如果tags存在，就加入查询条件
