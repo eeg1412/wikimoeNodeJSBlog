@@ -443,14 +443,4 @@ export default defineNitroPlugin(nitroApp => {
 
     event.node.res.setHeader('x-wm-cache', XWMCACHE_VALUE)
   })
-
-  // beforeResponse
-  nitroApp.hooks.hook('render:beforeResponse', (event, { body }) => {
-    console.log('Nitro beforeResponse hook', event, body)
-  })
-
-  // afterResponse
-  nitroApp.hooks.hook('render:afterResponse', (event, { body }) => {
-    console.log('Nitro afterResponse hook', event, body)
-  })
 })
