@@ -1,5 +1,12 @@
 <template>
-  <LazyACGNItem v-if="book" :item="book" :badge="book.booktype" type="book">
+  <LazyACGNItem
+    v-if="book"
+    :item="book"
+    :badge="book.booktype"
+    type="book"
+    :enableSummaryToggle="enableSummaryToggle"
+    :summaryToggleThreshold="summaryToggleThreshold"
+  >
     <template #options>
       <div
         class="text-sm mb-1 text-gray-400 flex-shrink-0 w_10 flex items-center"
@@ -69,6 +76,14 @@ const props = defineProps({
   showAnimeDot: {
     type: Boolean,
     default: true
+  },
+  enableSummaryToggle: {
+    type: Boolean,
+    default: false
+  },
+  summaryToggleThreshold: {
+    type: Number,
+    default: undefined
   }
 })
 </script>

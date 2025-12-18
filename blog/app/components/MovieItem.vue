@@ -7,6 +7,8 @@
       color: '#fb923c'
     }"
     type="movie"
+    :enableSummaryToggle="enableSummaryToggle"
+    :summaryToggleThreshold="summaryToggleThreshold"
   >
     <template #options>
       <div
@@ -26,6 +28,14 @@ const props = defineProps({
   movie: {
     type: Object,
     required: true
+  },
+  enableSummaryToggle: {
+    type: Boolean,
+    default: false
+  },
+  summaryToggleThreshold: {
+    type: Number,
+    default: undefined
   }
 })
 const watDate = computed(() => {

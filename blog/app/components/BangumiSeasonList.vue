@@ -6,7 +6,7 @@
       class="acgn-sidebar-item-body"
     >
       <div class="acgn-sidebar-item">
-        <BangumiItem :bangumi="bangumi" />
+        <BangumiItem :bangumi="bangumi" :enableSummaryToggle="true" />
       </div>
     </div>
     <div

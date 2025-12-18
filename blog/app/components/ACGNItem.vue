@@ -77,8 +77,21 @@
         </div>
 
         <div class="acg-summary">
-          <!-- prettier-ignore -->
-          <div class="text-sm whitespace-pre-line text-gray-500 flex-grow dark:text-gray-300" v-if="item.summary">{{ item.summary }}</div>
+          <div v-if="item.summary">
+            <div
+              class="text-sm whitespace-pre-line text-gray-500 flex-grow dark:text-gray-300"
+            >
+              <span class="break-all">{{ displaySummary }}</span
+              ><span class="inline-block" v-if="summaryTooLong">
+                <button
+                  @click="toggleSummary"
+                  class="text-sm text-primary inline-flex items-center pl-1"
+                >
+                  {{ summaryExpanded ? '<收起>' : '<更多>' }}
+                </button>
+              </span>
+            </div>
+          </div>
           <div v-else class="text-sm text-gray-400">暂无内容</div>
 
           <div
@@ -124,6 +137,14 @@ const props = defineProps({
   type: {
     type: String,
     default: ''
+  },
+  enableSummaryToggle: {
+    type: Boolean,
+    default: false
+  },
+  summaryToggleThreshold: {
+    type: Number,
+    default: 160
   }
 })
 
@@ -175,6 +196,23 @@ const postLinkParams = computed(() => {
       return {}
   }
 })
+
+// 简介更多/收起功能
+const summaryExpanded = ref(false)
+const summaryTooLong = computed(() => {
+  const s = props.item?.summary || ''
+  return props.enableSummaryToggle && s.length > props.summaryToggleThreshold
+})
+const displaySummary = computed(() => {
+  const s = props.item?.summary || ''
+  if (!props.enableSummaryToggle) return s
+  if (summaryExpanded.value) return s
+  if (s.length <= props.summaryToggleThreshold) return s
+  return s.slice(0, props.summaryToggleThreshold) + '...'
+})
+const toggleSummary = () => {
+  summaryExpanded.value = !summaryExpanded.value
+}
 </script>
 <style scoped>
 /* .acgn-item-cover-body {

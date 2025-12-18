@@ -7,6 +7,8 @@
       color: '#f472b6'
     }"
     type="bangumi"
+    :enableSummaryToggle="enableSummaryToggle"
+    :summaryToggleThreshold="summaryToggleThreshold"
   >
     <template #options>
       <div
@@ -34,6 +36,14 @@ const props = defineProps({
   bangumi: {
     type: Object,
     required: true
+  },
+  enableSummaryToggle: {
+    type: Boolean,
+    default: false
+  },
+  summaryToggleThreshold: {
+    type: Number,
+    default: undefined
   }
 })
 </script>
