@@ -1,12 +1,14 @@
 <template>
-  <ins
-    class="adsbygoogle"
-    style="display: block"
-    :data-ad-slot="adSlot"
-    :data-ad-format="adFormat"
-    :data-ad-layout-key="adLayoutKey"
-    :data-ad-client="adClient"
-  />
+  <div class="adsbygoogle-container">
+    <ins
+      class="adsbygoogle"
+      style="display: block"
+      :data-ad-slot="adSlot"
+      :data-ad-format="adFormat"
+      :data-ad-layout-key="adLayoutKey"
+      :data-ad-client="adClient"
+    />
+  </div>
 </template>
 
 <script setup>
@@ -41,4 +43,10 @@ onMounted(() => {
 })
 </script>
 
-<style scoped></style>
+<style scoped>
+.adsbygoogle-container {
+  max-width: 100%;
+  max-height: 100%;
+  overflow: hidden;
+}
+</style>
