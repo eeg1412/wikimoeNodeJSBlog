@@ -330,7 +330,7 @@ export default defineNitroPlugin(nitroApp => {
         timestamp: Date.now(),
         originalUrl: url
       })
-      console.log(`Cached response for ${url} with key ${cacheKey}`)
+      // console.log(`Cached response for ${url} with key ${cacheKey}`)
     } catch (error) {
       console.error(`Failed to cache response for ${url}:`, error)
     } finally {
@@ -394,7 +394,7 @@ export default defineNitroPlugin(nitroApp => {
             return
           }
           // 超过最大缓存时间，
-          console.log(`Cache stale for ${url}, age: ${age}ms`)
+          // console.log(`Cache stale for ${url}, age: ${age}ms`)
           XWMCACHE_VALUE = 'UPDATING'
         } else {
           XWMCACHE_VALUE = 'HIT'
@@ -403,7 +403,7 @@ export default defineNitroPlugin(nitroApp => {
         // 设置缓存命中标记
         event.node.res.setHeader('x-wm-cache', XWMCACHE_VALUE)
 
-        console.log(`Serving cached response for ${url}`)
+        // console.log(`Serving cached response for ${url}`)
 
         // 如果 XWMCACHE_VALUE 是 UPDATING 则启动后台更新缓存
         if (XWMCACHE_VALUE === 'UPDATING') {
@@ -420,7 +420,7 @@ export default defineNitroPlugin(nitroApp => {
               }
             })
               .then(res => {
-                console.log(`Background cache update completed for ${url}`)
+                // console.log(`Background cache update completed for ${url}`)
               })
               .catch(err => {
                 console.error(`Background cache update failed for ${url}:`, err)
