@@ -63,7 +63,7 @@ services:
 
   mongo:
     container_name: wikimoe-db
-    image: mongo:8.2.3-noble
+    image: mongo:6.0.12-jammy
     volumes:
       - ./data/db:/data/db
     networks:
