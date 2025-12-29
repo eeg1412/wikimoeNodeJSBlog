@@ -85,6 +85,11 @@
                 color="white"
                 :trailing="false"
                 v-model="form.email"
+                @blur="
+                  () => {
+                    form.email = form.email.toLowerCase()
+                  }
+                "
                 placeholder="邮箱（选填）"
             /></UFormGroup>
           </div>
@@ -213,8 +218,8 @@ const onSubmit = event => {
   // 校验邮箱地址
   if (event.data.email) {
     const emailReg =
-      /^[a-zA-Z0-9_+-]+(\.[a-zA-Z0-9_+-]+)*@([a-zA-Z0-9][a-zA-Z0-9-]*[a-zA-Z0-9]*\.)+[a-zA-Z]{2,}$/
-    if (!emailReg.test(event.data.email)) {
+      /^[a-z0-9_+-]+(\.[a-z0-9_+-]+)*@([a-z0-9][a-z0-9-]*[a-z0-9]*\.)+[a-z]{2,}$/
+    if (!emailReg.test(event.data.email) || event.data.email.length > 100) {
       error.value.email = true
       // 提示
       setTimeout(() => {

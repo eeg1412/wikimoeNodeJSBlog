@@ -26,7 +26,16 @@
             <el-input v-model="form.url" placeholder="请输入网址"></el-input>
           </el-form-item>
           <el-form-item label="邮箱" prop="email">
-            <el-input v-model="form.email" placeholder="请输入邮箱"></el-input>
+            <el-input
+              v-model="form.email"
+              @blur="
+                () => {
+                  // 小写
+                  form.email = form.email.toLowerCase()
+                }
+              "
+              placeholder="请输入邮箱"
+            ></el-input>
           </el-form-item>
         </template>
         <!-- 父级评论内容 -->

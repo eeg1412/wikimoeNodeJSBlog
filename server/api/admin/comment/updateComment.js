@@ -108,7 +108,9 @@ module.exports = async function (req, res, next) {
   if (typeof email === 'string') {
     if (email) {
       // 正则校验email
-      const emailReg = /^(\w-*\.*)+@(\w-?)+(\.\w{2,})+$/
+      const emailReg =
+        /^[a-z0-9_+-]+(\.[a-z0-9_+-]+)*@([a-z0-9][a-z0-9-]*[a-z0-9]*\.)+[a-z]{2,}$/
+
       if (!emailReg.test(email)) {
         res.status(400).json({
           errors: [

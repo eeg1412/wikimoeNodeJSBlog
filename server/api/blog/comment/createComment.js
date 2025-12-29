@@ -42,16 +42,32 @@ module.exports = async function (req, res, next) {
         })
         return
       }
-      // email 50个字符以内
-      if (email?.length > 100) {
-        res.status(400).json({
-          errors: [
-            {
-              message: '邮箱地址不能超过100个字符'
-            }
-          ]
-        })
-        return
+      if (email) {
+        // email 100个字符以内
+        if (email?.length > 100) {
+          res.status(400).json({
+            errors: [
+              {
+                message: '邮箱地址不能超过100个字符'
+              }
+            ]
+          })
+          return
+        }
+
+        const emailReg =
+          /^[a-z0-9_+-]+(\.[a-z0-9_+-]+)*@([a-z0-9][a-z0-9-]*[a-z0-9]*\.)+[a-z]{2,}$/
+
+        if (!emailReg.test(email)) {
+          res.status(400).json({
+            errors: [
+              {
+                message: '邮箱地址格式不正确'
+              }
+            ]
+          })
+          return
+        }
       }
       // 获取全局配置
       const {
