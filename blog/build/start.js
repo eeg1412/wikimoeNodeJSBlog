@@ -122,6 +122,11 @@ function loadEnvironmentVariables() {
     process.exit(1)
   }
 
+  // 如果 NITRO_PORT 不存在，则默认分配 3007
+  if (!envVars.NITRO_PORT) {
+    envVars.NITRO_PORT = '3007'
+  }
+
   // 6. 设置到process.env中
   Object.keys(envVars).forEach(key => {
     process.env[key] = envVars[key]
