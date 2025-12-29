@@ -101,45 +101,140 @@ blog：博客部分
 
 ## Docker 部署
 
-### 准备环境
+使用 Docker 部署是最简单、最干净的方式。你不需要在服务器上安装 Node.js 或 MongoDB，只需要安装 Docker 即可。
+
+### 1. 安装 Docker 环境
+
+如果你还没有安装 Docker，请在终端执行以下命令（仅限 Linux）：
 
 ```bash
 curl -fsSL https://get.docker.com | bash -s docker --mirror Aliyun
 ```
 
-### Docker 部署
+### 2. 准备部署目录
 
-从 repo 下载 docker-compose.yml 以及 .env 文件
+创建一个文件夹来存放博客的数据和配置文件：
 
 ```bash
-cd && mkdir wikimoe && cd wikimoe
-wget -O compose.yml https://raw.githubusercontent.com/eeg1412/wikimoeNodeJSBlog/main/docker-compose.yml
-wget -O .env https://raw.githubusercontent.com/eeg1412/wikimoeNodeJSBlog/main/example.env
+mkdir wikimoe
 ```
 
-然后使用 `docker-compose up -d` 即可在本地快速体验，注意：docker-compose.yml 预设了一部分配置，如果你想自定义更多参数，请修改 `.env` 文件
+```bash
+cd wikimoe
+```
 
-完成部署后，账号为.env 里的 USER_NAME（默认为`admin`），密码为`7@wVUo6BL6LHjNR*#x`，请初始化后及时修改。
+### 3. 下载配置文件
 
-创建用户后会生成 install.lock 防止重复初始化，请不要删除该文件！
+下载部署所需的 `compose.yml` 和环境变量模板 `example.env`：
 
-反向代理可根据自己需求修改
+```bash
+wget -O compose.yml https://raw.githubusercontent.com/eeg1412/wikimoeNodeJSBlog/main/docker-compose.yml
+```
 
-（后端）Server：`http://localhost:3006`
+```bash
+wget -O example.env https://raw.githubusercontent.com/eeg1412/wikimoeNodeJSBlog/main/example.env
+```
 
-（前端）Blog：`http://localhost:3007`
+**重命名配置文件：**
+Docker 运行需要读取名为 `.env` 的配置文件，所以我们需要将下载的模板重命名：
 
-（后台）admin：`http://localhost:3006/admin`
+```bash
+mv example.env .env
+```
 
-注意事项和完整的部署过程可以查看[如何使用 Docker 一键部署猛男自用的维基萌博客 lite 版](https://www.wikimoe.com/post/a91p25pa)
+**注意：** 如果用的是老版升级但是又不想升级 mongoDB 版本，可以下载 MongoDB 6 版本的配置文件（不推荐，有安全风险，仅做兼容）：
 
-## 对于 1Panel 的部署
+> ```bash
+> wget -O compose.yml https://raw.githubusercontent.com/eeg1412/wikimoeNodeJSBlog/main/docker-compose-mongo6.yml
+> ```
 
-可以参考[如何使用 1Panel 搭建猛男自用的维基萌博客](https://www.wikimoe.com/post/94r1mfyk)
+### 4. 修改环境变量
 
-## 对于 宝塔/aaPanel 的部署
+使用编辑器（如 `nano` 或 `vi`）打开 `.env` 文件：
 
-可以参考[如果使用宝塔/aaPanel 搭建猛男自用的维基萌博客](https://www.wikimoe.com/post/tcxurept)
+```bash
+nano .env
+```
+
+你需要了解并根据需要修改以下内容：
+
+#### 核心配置（必看）
+
+| 变量名            | 默认值                                   | 说明                                                                                               |
+| :---------------- | :--------------------------------------- | :------------------------------------------------------------------------------------------------- |
+| `USER_NAME`       | `admin`                                  | **首次启动**时创建的管理员账号名。                                                                 |
+| `NUXT_API_DOMAIN` | `http://localhost:3006`                  | **非常重要！** 博客前端访问后端的地址。如果你通过公网访问，请将其改为 `http://你的服务器IP:3006`。 |
+| `PORT`            | `3006`                                   | 后端 API 服务的内部端口，通常不需要修改。                                                          |
+| `NITRO_PORT`      | `3007`                                   | 博客前端页面的内部端口，通常不需要修改。                                                           |
+| `DB_HOST`         | `mongodb://wikimoe-db:27017/wikimoeBlog` | 数据库连接地址，Docker 内部自动关联，无需修改。                                                    |
+
+#### 性能与限制配置（可选）
+
+| 变量名                  | 默认值       | 说明                                                                                                                           |
+| :---------------------- | :----------- | :----------------------------------------------------------------------------------------------------------------------------- |
+| `JSON_LIMIT`            | `50mb`       | JSON 格式上传文件的大小限制。如果你要上传大图，可以调大这个值。                                                                |
+| `URLENCODED_LIMIT`      | `50mb`       | URL 编码格式上传的大小限制，建议与 `JSON_LIMIT` 保持一致。                                                                     |
+| `MAX_HISTORYLOGS_SIZE`  | `1073741824` | 历史日志的最大占用空间（单位：字节），默认 1GB。超过后会停止记录日志。                                                         |
+| `IP2LOCATION_FILE_NAME` | (空)         | IP 地址库文件名，一般不用改，除非你修改了地址库的文件名。具体请参考下文 [关于 IP2LOCATION 文件](#关于-ip2location-文件) 章节。 |
+
+#### SWR 高级缓存配置（可选）
+
+> **什么是 SWR 缓存？** 开启后，系统会将页面生成的 HTML 缓存起来。下次访问时直接秒开，极大地减轻服务器负担，但会消耗更多内存。
+
+| 变量名                       | 默认值  | 说明                                                                   |
+| :--------------------------- | :------ | :--------------------------------------------------------------------- |
+| `NUXT_SWR_ENABLED`           | `0`     | 是否开启 SWR 缓存（1 开启/0 关闭）。                                   |
+| `NUXT_SWR_CACHE_MAXAGE`      | `10`    | 缓存的有效期（秒）。在此时间内访问将直接读取缓存。                     |
+| `NUXT_SWR_CACHE_STALEMAXAGE` | `3600`  | 宽限期（秒）。缓存过期后，系统会先给用户看旧缓存，同时在后台静默更新。 |
+| `NUXT_SWR_CACHE_MAX_PAGE`    | `100`   | 最大缓存的页面数量。如果你的文章非常多，可以调大。                     |
+| `NUXT_SWR_CACHE_TTL`         | `86400` | 缓存数据的物理生存时间（秒）。                                         |
+
+修改完成后，按 `Ctrl+O` 保存，`Ctrl+X` 退出。
+
+### 5. 启动博客
+
+执行以下命令开始下载镜像并启动：
+
+```bash
+docker compose up -d
+```
+
+### 6. 访问与登录
+
+启动成功后，你可以通过以下地址访问：
+
+- **博客前台**：`http://你的服务器IP:3007`
+- **管理后台**：`http://你的服务器IP:3006/admin`
+
+**初始登录信息：**
+
+- **账号**：你在 `.env` 中设置的 `USER_NAME`（默认 `admin`）
+- **密码**：`7@wVUo6BL6LHjNR*#x`
+- **注意**：登录后请务必第一时间修改密码！创建用户后会生成 `install.lock` 防止重复初始化，请不要删除该文件。
+
+---
+
+### 如何更新维基萌博客？
+
+当作者发布了新版本，你只需要进入 `wikimoe` 目录执行以下命令即可完成无损更新：
+
+1. **拉取最新镜像**：
+
+```bash
+docker compose pull
+```
+
+2. **重新启动服务**：
+
+```bash
+docker compose up -d
+```
+
+3. **清理旧镜像（可选，释放空间）**：
+
+```bash
+docker image prune -f
+```
 
 ## 一键编译运行
 
@@ -257,7 +352,7 @@ NUXT_SWR_CACHE_MAXAGE="SWR缓存时间，单位秒，默认10秒"
 NUXT_SWR_CACHE_STALEMAXAGE="staleMaxAge的时间，单位秒，默认3600秒"
 NUXT_SWR_CACHE_MAX_PAGE="开启SWR时的缓存页面数量，默认100个页面"
 NUXT_SWR_CACHE_TTL="缓存的过期时间，单位秒，默认86400秒"
-NITRO_PORT="设置Nitro服务器端口，默认3000(仅对生产环境生效)"
+NITRO_PORT="设置Nitro服务器端口，默认3007(仅对生产环境生效)"
 ```
 
 ### 编译
