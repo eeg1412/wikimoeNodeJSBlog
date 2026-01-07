@@ -850,6 +850,10 @@ let photoswipeInitialLayoutPromiseResolve = null
 let photoswipeInitialLayoutPromise = null
 const initLightbox = async () => {
   const module = await import('photoswipe/lightbox')
+  if (isUnmounting) {
+    console.log('组件已卸载，取消初始化lightbox')
+    return
+  }
   const PhotoSwipeLightbox = module.default
   lightbox = new PhotoSwipeLightbox({
     pswpModule: () => import('photoswipe'),
@@ -1187,10 +1191,12 @@ watch(
   }
 )
 
+let isUnmounting = false
 onMounted(() => {})
 onUnmounted(() => {
-  lightbox.destroy()
+  lightbox?.destroy()
   lightbox = null
+  isUnmounting = true
 })
 </script>
 <style scoped>
