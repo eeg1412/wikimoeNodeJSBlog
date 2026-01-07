@@ -22,7 +22,7 @@ class HttpRequest {
             console.log('statusCode', statusCode)
             showError({
               statusCode: statusCode || 500,
-              message: '发生一点小意外'
+              message: '服务器正在维护中，请稍后再试。'
             })
           } else {
             resolve(res)

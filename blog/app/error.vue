@@ -26,12 +26,14 @@ const errorMessage = computed(() => {
       return '您访问的页面不存在。'
     case 403:
       return '您当前没有权限访问此页面。'
-    case 500:
-      return '服务器出现了问题,请稍后再试。'
     case 503:
-      return '服务器正在维护中，请稍后再试。'
+      return '服务器正在更新维护中，请稍后再试。'
     default:
-      return error.message || error.statusMessage
+      return (
+        error.value?.message ||
+        error.value?.statusMessage ||
+        '服务器正在维护中，请稍后再试。'
+      )
   }
 })
 </script>
