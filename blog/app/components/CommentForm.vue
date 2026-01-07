@@ -162,9 +162,34 @@ const emits = defineEmits()
 
 const error = ref({})
 const commentIsSending = ref(false)
-const onSubmit = event => {
+let validatorModule = null
+const loadValidatorModule = async () => {
+  if (!validatorModule) {
+    const isEmail = await import('validator/es/lib/isEmail')
+    const isURL = await import('validator/es/lib/isURL')
+    validatorModule = {
+      isEmail: isEmail.default,
+      isURL: isURL.default
+    }
+  }
+}
+const onSubmit = async event => {
   if (commentIsSending.value) {
     return
+  }
+  commentIsSending.value = true
+  try {
+    await loadValidatorModule()
+  } catch (error) {
+    commentIsSending.value = false
+    toast.add({
+      title: '加载验证模块失败, 请稍后再试',
+      icon: 'i-heroicons-x-circle',
+      color: 'red'
+    })
+    throw error
+  } finally {
+    commentIsSending.value = false
   }
   // 清空error
   error.value = {}
@@ -175,6 +200,16 @@ const onSubmit = event => {
     setTimeout(() => {
       toast.add({
         title: '昵称不能为空',
+        icon: 'i-heroicons-x-circle',
+        color: 'red'
+      })
+    }, 0)
+  } else if (event.data.nickname.length > 20) {
+    error.value.nickname = true
+    // 提示
+    setTimeout(() => {
+      toast.add({
+        title: '昵称不能超过20个字符',
         icon: 'i-heroicons-x-circle',
         color: 'red'
       })
@@ -202,11 +237,32 @@ const onSubmit = event => {
           color: 'red'
         })
       }, 0)
+    } else if (event.data.content.length > 500) {
+      error.value.content = true
+      // 提示
+      setTimeout(() => {
+        toast.add({
+          title: '评论内容不能超过500个字符',
+          icon: 'i-heroicons-x-circle',
+          color: 'red'
+        })
+      }, 0)
     }
   }
 
   // 如果有url，校验url的格式
   if (event.data.url) {
+    if (event.data.url.length > 200) {
+      error.value.url = true
+      // 提示
+      setTimeout(() => {
+        toast.add({
+          title: 'url不能超过200个字符',
+          icon: 'i-heroicons-x-circle',
+          color: 'red'
+        })
+      }, 0)
+    }
     // 如果没有http或https开头，就加上
     if (
       !event.data.url.startsWith('http://') &&
@@ -214,17 +270,51 @@ const onSubmit = event => {
     ) {
       event.data.url = 'https://' + event.data.url
     }
+
+    const isURL = validatorModule.isURL
+    if (
+      !isURL(event.data.url, {
+        protocols: ['http', 'https'],
+        require_protocol: true,
+        require_host: true,
+        require_valid_protocol: true,
+        require_tld: true,
+        require_port: false,
+        allow_protocol_relative_urls: false,
+        validate_length: false
+      })
+    ) {
+      error.value.url = true
+      // 提示
+      setTimeout(() => {
+        toast.add({
+          title: '网址格式不正确',
+          icon: 'i-heroicons-x-circle',
+          color: 'red'
+        })
+      }, 0)
+    }
   }
   // 校验邮箱地址
   if (event.data.email) {
-    const emailReg =
-      /^[a-z0-9_+-]+(\.[a-z0-9_+-]+)*@([a-z0-9][a-z0-9-]*[a-z0-9]*\.)+[a-z]{2,}$/
-    if (!emailReg.test(event.data.email) || event.data.email.length > 100) {
+    if (event.data.email.length > 100) {
       error.value.email = true
       // 提示
       setTimeout(() => {
         toast.add({
-          title: '邮箱格式不正确',
+          title: '邮箱地址不能超过100个字符',
+          icon: 'i-heroicons-x-circle',
+          color: 'red'
+        })
+      }, 0)
+    }
+    const isEmail = validatorModule.isEmail
+    if (!isEmail(event.data.email)) {
+      error.value.email = true
+      // 提示
+      setTimeout(() => {
+        toast.add({
+          title: '邮箱地址格式不正确',
           icon: 'i-heroicons-x-circle',
           color: 'red'
         })

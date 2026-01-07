@@ -7,6 +7,52 @@ const cacheDataUtils = require('../../../config/cacheData')
 
 module.exports = async function (req, res, next) {
   const { content, top, nickname, url, email, status, id, __v } = req.body
+  // 如果content超过500个字符，就报错
+  if (content?.length > 500) {
+    res.status(400).json({
+      errors: [
+        {
+          message: '评论内容不能超过500个字符'
+        }
+      ]
+    })
+    return
+  }
+  // nickname 20个字符以内
+  if (nickname?.length > 20) {
+    res.status(400).json({
+      errors: [
+        {
+          message: '昵称不能超过20个字符'
+        }
+      ]
+    })
+    return
+  }
+  // url 200个字符以内
+  if (url?.length > 200) {
+    res.status(400).json({
+      errors: [
+        {
+          message: 'url不能超过200个字符'
+        }
+      ]
+    })
+    return
+  }
+  if (email) {
+    // email 100个字符以内
+    if (email?.length > 100) {
+      res.status(400).json({
+        errors: [
+          {
+            message: '邮箱地址不能超过100个字符'
+          }
+        ]
+      })
+      return
+    }
+  }
   const checkForm = {
     id,
     __v,
@@ -62,15 +108,23 @@ module.exports = async function (req, res, next) {
     {
       key: 'url',
       label: '网址',
-      strict: true,
-      strictType: 'string',
-      required: false
+      type: 'isURL',
+      required: false,
+      options: {
+        protocols: ['http', 'https'],
+        require_protocol: true,
+        require_host: true,
+        require_valid_protocol: true,
+        require_tld: true,
+        require_port: false,
+        allow_protocol_relative_urls: false,
+        validate_length: false
+      }
     },
     {
       key: 'email',
-      label: '邮箱',
-      strict: true,
-      strictType: 'string',
+      label: '邮箱地址',
+      type: 'isEmail',
       required: false
     }
   ]
@@ -106,22 +160,6 @@ module.exports = async function (req, res, next) {
     params.url = url
   }
   if (typeof email === 'string') {
-    if (email) {
-      // 正则校验email
-      const emailReg =
-        /^[a-z0-9_+-]+(\.[a-z0-9_+-]+)*@([a-z0-9][a-z0-9-]*[a-z0-9]*\.)+[a-z]{2,}$/
-
-      if (!emailReg.test(email)) {
-        res.status(400).json({
-          errors: [
-            {
-              message: '邮箱格式不正确'
-            }
-          ]
-        })
-        return
-      }
-    }
     params.email = email
   }
 

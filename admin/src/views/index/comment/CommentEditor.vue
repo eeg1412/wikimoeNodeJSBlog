@@ -105,6 +105,7 @@ import { useRouter, useRoute } from 'vue-router'
 import { computed, onMounted, reactive, ref, nextTick } from 'vue'
 import { authApi } from '@/api'
 import EmojiTextarea from '@/components/EmojiTextarea.vue'
+import validator from 'validator'
 export default {
   components: {
     EmojiTextarea
@@ -136,18 +137,59 @@ export default {
     const rules = computed(() => {
       const ruleList = {
         content: [
-          { required: true, message: '请输入评论内容', trigger: 'blur' }
+          { required: true, message: '请输入评论内容', trigger: 'blur' },
+          { max: 500, message: '评论内容不能超过500个字符', trigger: 'blur' }
         ]
       }
       if (!detailData.user) {
         ruleList.nickname = [
-          { required: true, message: '请输入昵称', trigger: 'blur' }
+          { required: true, message: '请输入昵称', trigger: 'blur' },
+          { max: 20, message: '昵称不能超过20个字符', trigger: 'blur' }
+        ]
+        // 校验网址
+        ruleList.url = [
+          { max: 200, message: 'url不能超过200个字符', trigger: 'blur' },
+          {
+            validator: (rule, value, callback) => {
+              if (value) {
+                if (
+                  !validator.isURL(value, {
+                    protocols: ['http', 'https'],
+                    require_protocol: true,
+                    require_host: true,
+                    require_valid_protocol: true,
+                    require_tld: true,
+                    require_port: false,
+                    allow_protocol_relative_urls: false,
+                    validate_length: false
+                  })
+                ) {
+                  callback(new Error('网址格式不正确'))
+                } else {
+                  callback()
+                }
+              } else {
+                callback()
+              }
+            },
+            trigger: 'blur'
+          }
         ]
         // 校验邮箱
         ruleList.email = [
+          { max: 100, message: '邮箱地址不能超过100个字符', trigger: 'blur' },
           {
-            type: 'email',
-            message: '请输入正确的邮箱地址',
+            validator: (rule, value, callback) => {
+              if (value) {
+                if (!validator.isEmail(value)) {
+                  callback(new Error('邮箱地址格式不正确'))
+                } else {
+                  callback()
+                }
+              } else {
+                callback()
+              }
+            },
             trigger: ['blur', 'change']
           }
         ]

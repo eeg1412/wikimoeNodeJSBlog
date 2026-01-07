@@ -54,20 +54,6 @@ module.exports = async function (req, res, next) {
           })
           return
         }
-
-        const emailReg =
-          /^[a-z0-9_+-]+(\.[a-z0-9_+-]+)*@([a-z0-9][a-z0-9-]*[a-z0-9]*\.)+[a-z]{2,}$/
-
-        if (!emailReg.test(email)) {
-          res.status(400).json({
-            errors: [
-              {
-                message: '邮箱地址格式不正确'
-              }
-            ]
-          })
-          return
-        }
       }
       // 获取全局配置
       const {
