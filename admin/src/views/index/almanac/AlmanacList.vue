@@ -119,7 +119,7 @@
             :key="index"
             class="default-item"
           >
-            <el-checkbox :value="index">
+            <el-checkbox :label="index">
               <span class="default-item-name">{{ item.name }}</span>
             </el-checkbox>
             <div class="default-item-content">

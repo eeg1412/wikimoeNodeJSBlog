@@ -55,9 +55,11 @@
     >
       <div class="default-items-list">
         <el-checkbox-group v-model="selectedDefaults">
-          <div v-for="(item, index) in defaultTools" :key="index" class="default-item">
-            <el-checkbox :value="index">{{ item }}</el-checkbox>
-          </div>
+          <el-row :gutter="10">
+            <el-col :span="8" v-for="(item, index) in defaultTools" :key="index" class="mb-2">
+              <el-checkbox :label="index">{{ item }}</el-checkbox>
+            </el-col>
+          </el-row>
         </el-checkbox-group>
       </div>
       <template #footer>
@@ -198,8 +200,7 @@ export default {
   max-height: 400px;
   overflow-y: auto;
 }
-.default-item {
-  padding: 8px;
-  border-bottom: 1px solid #f0f0f0;
+.mb-2 {
+  margin-bottom: 8px;
 }
 </style>

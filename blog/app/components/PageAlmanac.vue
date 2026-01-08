@@ -1,7 +1,7 @@
 <template>
   <div class="container dark:opacity-80">
     <div class="title bg-primary text-white dark:text-black">程序员老黄历</div>
-    <div class="date">{{ almanacData?.titleDate || '正在计算今日运势...' }}</div>
+    <div class="date">{{ isLoading ? '正在计算今日运势...' : almanacData?.titleDate || '' }}</div>
     <div class="good">
       <div class="title">
         <table>
@@ -62,19 +62,30 @@
 </template>
 
 <script setup>
-import { getAlmanacApi } from '@/api/almanac'
+import { ref, onMounted } from 'vue'
+import { getAlmanacApiFetch } from '@/api/almanac'
+
+const almanacData = ref(null)
+const isLoading = ref(true)
 
 const getTimezoneOffset = () => {
   // 获取浏览器时区偏移（小时）
-  if (import.meta.client) {
-    return -new Date().getTimezoneOffset() / 60
-  }
-  return 8 // Default to UTC+8 for SSR
+  return -new Date().getTimezoneOffset() / 60
 }
 
-const timezone = getTimezoneOffset()
-
-const { data: almanacData } = await getAlmanacApi({ timezone })
+onMounted(async () => {
+  try {
+    const timezone = getTimezoneOffset()
+    const res = await getAlmanacApiFetch({ timezone })
+    if (res?.data?.value?.data) {
+      almanacData.value = res.data.value.data
+    }
+    isLoading.value = false
+  } catch (error) {
+    console.error('Failed to fetch almanac:', error)
+    isLoading.value = false
+  }
+})
 </script>
 
 <style scoped>
