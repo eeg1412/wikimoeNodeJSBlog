@@ -276,6 +276,15 @@ const routes = [
             /* webpackChunkName: "BannerList" */ '../views/index/banner/BannerList.vue'
           )
       },
+      // AlmanacList
+      {
+        path: '/almanac/list',
+        name: 'AlmanacList',
+        component: () =>
+          import(
+            /* webpackChunkName: "AlmanacList" */ '../views/index/almanac/AlmanacList.vue'
+          )
+      },
       // ReaderlogList
       {
         path: '/readerlog/list',

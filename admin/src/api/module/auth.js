@@ -1003,6 +1003,45 @@ export default function (api) {
       return api.get('/votelog/stats', {
         shouldAdminJWT: true
       })
+    },
+    // get /almanac/list
+    getAlmanacList(data) {
+      return api.get('/almanac/list', {
+        params: data,
+        shouldAdminJWT: true
+      })
+    },
+    // post /almanac/create
+    createAlmanac(data) {
+      return api.post('/almanac/create', data, {
+        shouldAdminJWT: true
+      })
+    },
+    // get /almanac/detail
+    getAlmanacDetail(data) {
+      return api.get('/almanac/detail', {
+        params: data,
+        shouldAdminJWT: true
+      })
+    },
+    // put /almanac/update
+    updateAlmanac(data) {
+      return api.put('/almanac/update', data, {
+        shouldAdminJWT: true
+      })
+    },
+    // delete /almanac/delete
+    deleteAlmanac(data) {
+      return api.delete('/almanac/delete', {
+        params: data,
+        shouldAdminJWT: true
+      })
+    },
+    // put /almanac/update/taxis
+    updateAlmanacTaxis(data) {
+      return api.put('/almanac/update/taxis', data, {
+        shouldAdminJWT: true
+      })
     }
   }
 }
