@@ -738,6 +738,60 @@ const adminRouteSetting = [
     roleType: null,
     role: null
   },
+  // get /almanac/list
+  {
+    path: '/almanac/list',
+    method: 'get',
+    middleware: [checkAuth],
+    controller: require('../api/admin/almanac/getAlmanacList'),
+    roleType: null,
+    role: null
+  },
+  // post /almanac/create
+  {
+    path: '/almanac/create',
+    method: 'post',
+    middleware: [checkAuth],
+    controller: require('../api/admin/almanac/createAlmanac'),
+    roleType: null,
+    role: null
+  },
+  // get /almanac/detail
+  {
+    path: '/almanac/detail',
+    method: 'get',
+    middleware: [checkAuth],
+    controller: require('../api/admin/almanac/getAlmanacDetail'),
+    roleType: null,
+    role: null
+  },
+  // put /almanac/update
+  {
+    path: '/almanac/update',
+    method: 'put',
+    middleware: [checkAuth],
+    controller: require('../api/admin/almanac/updateAlmanac'),
+    roleType: null,
+    role: null
+  },
+  // put /almanac/update/taxis
+  {
+    path: '/almanac/update/taxis',
+    method: 'put',
+    middleware: [checkAuth],
+    controller: require('../api/admin/almanac/updateAlmanacTaxis'),
+    roleType: null,
+    role: null
+  },
+  // delete /almanac/delete
+  {
+    path: '/almanac/delete',
+    method: 'delete',
+    middleware: [checkAuth],
+    controller: require('../api/admin/almanac/deleteAlmanac'),
+    roleType: null,
+    role: null
+  },
   // getReaderlogList
   {
     path: '/readerlog/list',

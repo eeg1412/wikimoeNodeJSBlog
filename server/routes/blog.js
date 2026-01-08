@@ -76,6 +76,13 @@ const blogRouteSetting = [
     middleware: [],
     controller: require('../api/blog/banner/getBannerList')
   },
+  // getAlmanac
+  {
+    path: '/almanac',
+    method: 'get',
+    middleware: [],
+    controller: require('../api/blog/almanac/getAlmanac')
+  },
   // getSidebar
   {
     path: '/sidebar/list',
