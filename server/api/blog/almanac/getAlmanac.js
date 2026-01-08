@@ -159,7 +159,7 @@ module.exports = async function (req, res, next) {
     
     // 过滤出有效的项目
     activities = activities.filter(activity => {
-      // 检查生效日期
+      // 检查生效日期：如果设置了生效日期，只在那一天显示
       if (activity.effectiveDate !== null && activity.effectiveDate !== iday) {
         return false
       }

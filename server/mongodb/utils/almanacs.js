@@ -23,7 +23,7 @@ exports.find = async function (parmas, sort, projection, options = {}) {
 }
 
 // 分页查询
-exports.findPage = async function (parmas, sort, page, limit, projection) {
+exports.findPage = async function (parmas, sort, page = 1, limit = 9999, projection) {
   // document查询
   const list = await almanacsModel
     .find(parmas, projection)
