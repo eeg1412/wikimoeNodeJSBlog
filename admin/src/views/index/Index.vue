@@ -133,6 +133,16 @@
               <i class="fas fa-fw fa-image pr10"></i>
               <template #title>横幅</template>
             </el-menu-item>
+            <!-- 老黄历 -->
+            <el-menu-item
+              index="AlmanacList"
+              @click="removeParam('AlmanacList')"
+              @click.middle="openNewTab('AlmanacList')"
+              :route="{ name: 'AlmanacList' }"
+            >
+              <i class="fas fa-fw fa-calendar-day pr10"></i>
+              <template #title>老黄历</template>
+            </el-menu-item>
             <!-- 番剧 BangumiList -->
             <el-menu-item
               index="BangumiList"

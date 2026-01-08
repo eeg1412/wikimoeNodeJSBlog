@@ -285,6 +285,24 @@ const routes = [
             /* webpackChunkName: "AlmanacList" */ '../views/index/almanac/AlmanacList.vue'
           )
       },
+      // AlmanacAdd
+      {
+        path: '/almanac/add',
+        name: 'AlmanacAdd',
+        component: () =>
+          import(
+            /* webpackChunkName: "AlmanacEditor" */ '../views/index/almanac/AlmanacEditor.vue'
+          )
+      },
+      // AlmanacEdit
+      {
+        path: '/almanac/editor/:id',
+        name: 'AlmanacEdit',
+        component: () =>
+          import(
+            /* webpackChunkName: "AlmanacEditor" */ '../views/index/almanac/AlmanacEditor.vue'
+          )
+      },
       // ReaderlogList
       {
         path: '/readerlog/list',
