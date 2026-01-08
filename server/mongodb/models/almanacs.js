@@ -11,8 +11,8 @@ var almanacs = new Schema(
     bad: { type: String, default: '' },
     // 是否仅周末显示
     weekend: { type: Boolean, default: false },
-    // 生效日期（YYYYMMDD格式，如20240101，为null表示长期有效）
-    effectiveDate: { type: Number, default: null },
+    // 生效日期（YYYYMMDD格式，如20240101，表示从该日期开始生效，必填）
+    effectiveDate: { type: Number, required: true, index: true },
     // 排序
     taxis: { type: Number, default: 0, index: true },
     // 0:不可见 1:可见

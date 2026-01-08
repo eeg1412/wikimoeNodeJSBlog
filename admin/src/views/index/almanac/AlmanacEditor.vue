@@ -25,16 +25,12 @@
         </el-form-item>
         <el-form-item label="宜的说明" prop="good">
           <el-input
-            type="textarea"
-            :rows="3"
             v-model="form.good"
             placeholder="例如：写单元测试将减少出错"
           ></el-input>
         </el-form-item>
         <el-form-item label="不宜的说明" prop="bad">
           <el-input
-            type="textarea"
-            :rows="3"
             v-model="form.bad"
             placeholder="例如：写单元测试会降低你的开发效率"
           ></el-input>
@@ -46,14 +42,17 @@
           </div>
         </el-form-item>
         <el-form-item label="生效日期" prop="effectiveDate">
-          <el-input
-            v-model="form.effectiveDate"
-            type="number"
-            placeholder="留空表示长期有效"
-          ></el-input>
+          <el-date-picker
+            v-model="effectiveDateValue"
+            type="date"
+            placeholder="选择生效日期"
+            format="YYYY-MM-DD"
+            value-format="YYYYMMDD"
+            @change="handleDateChange"
+          />
           <div class="form-tip">
-            格式：YYYYMMDD（如：20260108），留空表示长期有效。<br />
-            设置后该项目仅在指定日期显示，可用于特殊日期的自定义内容。
+            从该日期开始生效（包括当天），之后该项目会出现在老黄历中。<br />
+            必填项，用于控制内容的上线时间。
           </div>
         </el-form-item>
         <el-form-item label="状态" prop="status">
@@ -74,7 +73,7 @@
 import { useRoute, useRouter } from 'vue-router'
 import { authApi } from '@/api'
 import { ElMessage } from 'element-plus'
-import { onMounted, reactive, ref } from 'vue'
+import { onMounted, reactive, ref, computed } from 'vue'
 
 export default {
   setup() {
@@ -92,15 +91,33 @@ export default {
       status: 1
     })
 
+    // Date picker value (string format for element-plus)
+    const effectiveDateValue = ref('')
+
     const rules = {
       name: [
         { required: true, message: '请输入项目名称', trigger: 'blur' }
+      ],
+      effectiveDate: [
+        { required: true, message: '请选择生效日期', trigger: 'change' }
       ]
+    }
+
+    const handleDateChange = (val) => {
+      if (val) {
+        form.effectiveDate = Number(val)
+      } else {
+        form.effectiveDate = null
+      }
     }
 
     const getDetail = () => {
       authApi.getAlmanacDetail({ id: id.value }).then(res => {
         Object.assign(form, res.data.data)
+        // Convert effectiveDate number to string for date picker
+        if (form.effectiveDate) {
+          effectiveDateValue.value = String(form.effectiveDate)
+        }
       })
     }
 
@@ -108,11 +125,9 @@ export default {
       formRef.value.validate(valid => {
         if (valid) {
           const data = { ...form }
-          // Convert effectiveDate to number or null
+          // Ensure effectiveDate is a number
           if (data.effectiveDate) {
             data.effectiveDate = Number(data.effectiveDate)
-          } else {
-            data.effectiveDate = null
           }
 
           if (id.value) {
@@ -148,6 +163,15 @@ export default {
     onMounted(() => {
       if (id.value) {
         getDetail()
+      } else {
+        // Set default effectiveDate to today
+        const today = new Date()
+        const year = today.getFullYear()
+        const month = String(today.getMonth() + 1).padStart(2, '0')
+        const day = String(today.getDate()).padStart(2, '0')
+        const todayStr = `${year}${month}${day}`
+        effectiveDateValue.value = todayStr
+        form.effectiveDate = Number(todayStr)
       }
     })
 
@@ -156,6 +180,8 @@ export default {
       form,
       rules,
       formRef,
+      effectiveDateValue,
+      handleDateChange,
       submitForm,
       goBack
     }

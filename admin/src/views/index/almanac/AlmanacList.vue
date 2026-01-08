@@ -119,20 +119,20 @@
             :key="index"
             class="default-item"
           >
-            <el-checkbox :label="index" class="default-checkbox">
-              <div class="default-item-content">
-                <div class="default-item-name">{{ item.name }}</div>
-                <div class="default-item-desc">
-                  <span class="good-tag">宜：</span>{{ item.good }}
-                </div>
-                <div class="default-item-desc" v-if="item.bad">
-                  <span class="bad-tag">不宜：</span>{{ item.bad }}
-                </div>
-                <div class="default-item-tags">
-                  <el-tag v-if="item.weekend" size="small">仅周末</el-tag>
-                </div>
-              </div>
+            <el-checkbox :value="index">
+              <span class="default-item-name">{{ item.name }}</span>
             </el-checkbox>
+            <div class="default-item-content">
+              <div class="default-item-desc">
+                <span class="good-tag">宜：</span>{{ item.good }}
+              </div>
+              <div class="default-item-desc" v-if="item.bad">
+                <span class="bad-tag">不宜：</span>{{ item.bad }}
+              </div>
+              <div class="default-item-tags">
+                <el-tag v-if="item.weekend" size="small">仅周末</el-tag>
+              </div>
+            </div>
           </div>
         </el-checkbox-group>
       </div>
@@ -355,13 +355,21 @@ export default {
         return
       }
 
+      // Get today's date as effectiveDate
+      const today = new Date()
+      const year = today.getFullYear()
+      const month = String(today.getMonth() + 1).padStart(2, '0')
+      const day = String(today.getDate()).padStart(2, '0')
+      const todayDate = Number(`${year}${month}${day}`)
+
       const promises = selectedDefaults.value.map(index => {
         const item = defaultActivities[index]
         return authApi.createAlmanac({
           name: item.name,
           good: item.good,
           bad: item.bad,
-          weekend: item.weekend || false
+          weekend: item.weekend || false,
+          effectiveDate: todayDate
         })
       })
 
@@ -411,21 +419,19 @@ export default {
   border: 1px solid #e0e0e0;
   border-radius: 4px;
 }
-.default-checkbox {
-  width: 100%;
-}
 .default-item-content {
-  margin-left: 30px;
+  margin-left: 24px;
+  margin-top: 8px;
 }
 .default-item-name {
   font-weight: bold;
-  font-size: 16px;
-  margin-bottom: 8px;
+  font-size: 15px;
 }
 .default-item-desc {
-  font-size: 14px;
-  color: #666;
-  margin-bottom: 5px;
+  font-size: 13px;
+  color: #606266;
+  margin-top: 5px;
+  line-height: 1.5;
 }
 .good-tag {
   color: #67c23a;

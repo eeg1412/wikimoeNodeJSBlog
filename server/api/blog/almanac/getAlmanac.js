@@ -159,8 +159,8 @@ module.exports = async function (req, res, next) {
     
     // 过滤出有效的项目
     activities = activities.filter(activity => {
-      // 检查生效日期：如果设置了生效日期，只在那一天显示
-      if (activity.effectiveDate !== null && activity.effectiveDate !== iday) {
+      // 检查生效日期：如果设置了生效日期，则在该日期之后显示（包括当天）
+      if (activity.effectiveDate !== null && activity.effectiveDate > iday) {
         return false
       }
       // 周末过滤
