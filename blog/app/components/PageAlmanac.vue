@@ -1,7 +1,7 @@
 <template>
   <div class="container dark:opacity-80">
     <div class="title bg-primary text-white dark:text-black">程序员老黄历</div>
-    <div class="date">{{ isLoading ? '正在计算今日运势...' : titleDate }}</div>
+    <div class="date">{{ almanacData?.titleDate || '正在计算今日运势...' }}</div>
     <div class="good">
       <div class="title">
         <table>
@@ -14,7 +14,7 @@
       </div>
       <div class="content">
         <ul>
-          <li v-for="(item, index) in goodList" :key="index">
+          <li v-for="(item, index) in almanacData?.goodList || []" :key="index">
             <div class="name">{{ item.name }}</div>
             <div class="description">{{ item.good }}</div>
           </li>
@@ -35,7 +35,7 @@
       </div>
       <div class="content">
         <ul>
-          <li v-for="(item, index) in badList" :key="index">
+          <li v-for="(item, index) in almanacData?.badList || []" :key="index">
             <div class="name">{{ item.name }}</div>
             <div class="description">{{ item.bad }}</div>
           </li>
@@ -46,64 +46,35 @@
     <div class="split"></div>
     <div class="line-tip">
       <strong>座位朝向：</strong>面向<span class="direction_value">{{
-        direction_value
+        almanacData?.direction_value || ''
       }}</span
       >写程序，BUG 最少。
     </div>
     <div class="line-tip">
       <strong>今日宜饮：</strong
-      ><span class="drink_value">{{ drink_value }}</span>
+      ><span class="drink_value">{{ almanacData?.drink_value || '' }}</span>
     </div>
     <div class="line-tip">
       <strong>女神亲近指数：</strong
-      ><span class="goddes_value">{{ goddes_value }}</span>
+      ><span class="goddes_value">{{ almanacData?.goddes_value || '' }}</span>
     </div>
   </div>
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
-import api from '@/api'
-
-const isLoading = ref(true)
-const titleDate = ref('')
-const goodList = ref([])
-const badList = ref([])
-const direction_value = ref('')
-const drink_value = ref('')
-const goddes_value = ref('')
+import { getAlmanacApi } from '@/api/almanac'
 
 const getTimezoneOffset = () => {
   // 获取浏览器时区偏移（小时）
-  return -new Date().getTimezoneOffset() / 60
-}
-
-const init = async () => {
   if (import.meta.client) {
-    try {
-      const timezone = getTimezoneOffset()
-      const res = await api.get('/almanac', { timezone })
-      
-      if (res.data?.value?.data) {
-        const data = res.data.value.data
-        titleDate.value = data.titleDate
-        goodList.value = data.goodList
-        badList.value = data.badList
-        direction_value.value = data.direction_value
-        drink_value.value = data.drink_value
-        goddes_value.value = data.goddes_value
-      }
-      isLoading.value = false
-    } catch (error) {
-      console.error('Failed to fetch almanac:', error)
-      isLoading.value = false
-    }
+    return -new Date().getTimezoneOffset() / 60
   }
+  return 8 // Default to UTC+8 for SSR
 }
 
-onMounted(() => {
-  init()
-})
+const timezone = getTimezoneOffset()
+
+const { data: almanacData } = await getAlmanacApi({ timezone })
 </script>
 
 <style scoped>

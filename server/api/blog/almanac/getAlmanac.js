@@ -6,15 +6,15 @@ const blogApiLog = log4js.getLogger('blogApi')
  * 注意：本程序中的"随机"都是伪随机概念，以当前的天为种子。
  */
 function random(dayseed, indexseed) {
-  var n = dayseed % 11117
-  for (var i = 0; i < 100 + indexseed; i++) {
+  let n = dayseed % 11117
+  for (let i = 0; i < 100 + indexseed; i++) {
     n = n * n
     n = n % 11117 // 11117 是个质数
   }
   return n
 }
 
-var tools = [
+const tools = [
   'Eclipse写程序',
   'MSOffice写文档',
   '记事本写程序',
@@ -26,7 +26,7 @@ var tools = [
   'iOS设备'
 ]
 
-var varNames = [
+const varNames = [
   'jieguo',
   'huodong',
   'pay',
@@ -44,7 +44,7 @@ var varNames = [
   'ui'
 ]
 
-var drinks = [
+const drinks = [
   '水',
   '茶',
   '红茶',
@@ -62,7 +62,7 @@ var drinks = [
   '酒'
 ]
 
-var directions = [
+const directions = [
   '北方',
   '东北方',
   '东方',
@@ -75,7 +75,7 @@ var directions = [
 
 // 解析占位符并替换成随机内容
 function parse(event, iday) {
-  var result = { name: event.name, good: event.good, bad: event.bad } // clone
+  const result = { name: event.name, good: event.good, bad: event.bad } // clone
 
   if (result.name.indexOf('%v') != -1) {
     result.name = result.name.replace(
@@ -103,14 +103,14 @@ function parse(event, iday) {
 
 // 从数组中随机挑选 size 个
 function pickRandom(array, size, iday) {
-  var result = []
+  const result = []
 
-  for (var i = 0; i < array.length; i++) {
+  for (let i = 0; i < array.length; i++) {
     result.push(array[i])
   }
 
-  for (var j = 0; j < array.length - size; j++) {
-    var index = random(iday, j) % result.length
+  for (let j = 0; j < array.length - size; j++) {
+    const index = random(iday, j) % result.length
     result.splice(index, 1)
   }
 
@@ -118,8 +118,8 @@ function pickRandom(array, size, iday) {
 }
 
 function star(num) {
-  var result = ''
-  var i = 0
+  let result = ''
+  let i = 0
   while (i < num) {
     result += '★'
     i++
