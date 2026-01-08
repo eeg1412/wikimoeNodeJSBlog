@@ -276,6 +276,51 @@ const routes = [
             /* webpackChunkName: "BannerList" */ '../views/index/banner/BannerList.vue'
           )
       },
+      // AlmanacList
+      {
+        path: '/almanac/list',
+        name: 'AlmanacList',
+        component: () =>
+          import(
+            /* webpackChunkName: "AlmanacList" */ '../views/index/almanac/AlmanacList.vue'
+          )
+      },
+      // AlmanacAdd
+      {
+        path: '/almanac/add',
+        name: 'AlmanacAdd',
+        component: () =>
+          import(
+            /* webpackChunkName: "AlmanacEditor" */ '../views/index/almanac/AlmanacEditor.vue'
+          )
+      },
+      // AlmanacEdit
+      {
+        path: '/almanac/editor/:id',
+        name: 'AlmanacEdit',
+        component: () =>
+          import(
+            /* webpackChunkName: "AlmanacEditor" */ '../views/index/almanac/AlmanacEditor.vue'
+          )
+      },
+      // AlmanacToolList
+      {
+        path: '/almanacTool/list',
+        name: 'AlmanacToolList',
+        component: () =>
+          import(
+            /* webpackChunkName: "AlmanacToolList" */ '../views/index/almanacTool/AlmanacToolList.vue'
+          )
+      },
+      // AlmanacDrinkList
+      {
+        path: '/almanacDrink/list',
+        name: 'AlmanacDrinkList',
+        component: () =>
+          import(
+            /* webpackChunkName: "AlmanacDrinkList" */ '../views/index/almanacDrink/AlmanacDrinkList.vue'
+          )
+      },
       // ReaderlogList
       {
         path: '/readerlog/list',

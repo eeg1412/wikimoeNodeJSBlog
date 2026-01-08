@@ -738,6 +738,132 @@ const adminRouteSetting = [
     roleType: null,
     role: null
   },
+  // get /almanac/list
+  {
+    path: '/almanac/list',
+    method: 'get',
+    middleware: [checkAuth],
+    controller: require('../api/admin/almanac/getAlmanacList'),
+    roleType: null,
+    role: null
+  },
+  // post /almanac/create
+  {
+    path: '/almanac/create',
+    method: 'post',
+    middleware: [checkAuth],
+    controller: require('../api/admin/almanac/createAlmanac'),
+    roleType: null,
+    role: null
+  },
+  // get /almanac/detail
+  {
+    path: '/almanac/detail',
+    method: 'get',
+    middleware: [checkAuth],
+    controller: require('../api/admin/almanac/getAlmanacDetail'),
+    roleType: null,
+    role: null
+  },
+  // put /almanac/update
+  {
+    path: '/almanac/update',
+    method: 'put',
+    middleware: [checkAuth],
+    controller: require('../api/admin/almanac/updateAlmanac'),
+    roleType: null,
+    role: null
+  },
+  // put /almanac/update/taxis
+  {
+    path: '/almanac/update/taxis',
+    method: 'put',
+    middleware: [checkAuth],
+    controller: require('../api/admin/almanac/updateAlmanacTaxis'),
+    roleType: null,
+    role: null
+  },
+  // delete /almanac/delete
+  {
+    path: '/almanac/delete',
+    method: 'delete',
+    middleware: [checkAuth],
+    controller: require('../api/admin/almanac/deleteAlmanac'),
+    roleType: null,
+    role: null
+  },
+  // get /almanacTool/list
+  {
+    path: '/almanacTool/list',
+    method: 'get',
+    middleware: [checkAuth],
+    controller: require('../api/admin/almanacTool/getAlmanacToolList'),
+    roleType: null,
+    role: null
+  },
+  // post /almanacTool/create
+  {
+    path: '/almanacTool/create',
+    method: 'post',
+    middleware: [checkAuth],
+    controller: require('../api/admin/almanacTool/createAlmanacTool'),
+    roleType: null,
+    role: null
+  },
+  // put /almanacTool/update
+  {
+    path: '/almanacTool/update',
+    method: 'put',
+    middleware: [checkAuth],
+    controller: require('../api/admin/almanacTool/updateAlmanacTool'),
+    roleType: null,
+    role: null
+  },
+  // delete /almanacTool/delete
+  {
+    path: '/almanacTool/delete',
+    method: 'delete',
+    middleware: [checkAuth],
+    controller: require('../api/admin/almanacTool/deleteAlmanacTool'),
+    roleType: null,
+    role: null
+  },
+  // get /almanacDrink/list
+  {
+    path: '/almanacDrink/list',
+    method: 'get',
+    middleware: [checkAuth],
+    controller: require('../api/admin/almanacDrink/getAlmanacDrinkList'),
+    roleType: null,
+    role: null
+  },
+  // post /almanacDrink/create
+  {
+    path: '/almanacDrink/create',
+    method: 'post',
+    middleware: [checkAuth],
+    controller: require('../api/admin/almanacDrink/createAlmanacDrink'),
+    roleType: null,
+    role: null
+  },
+  // put /almanacDrink/update
+  {
+    path: '/almanacDrink/update',
+    method: 'put',
+    middleware: [checkAuth],
+    controller: require('../api/admin/almanacDrink/updateAlmanacDrink'),
+    roleType: null,
+    role: null
+  },
+  // delete /almanacDrink/delete
+  {
+    path: '/almanacDrink/delete',
+    method: 'delete',
+    middleware: [checkAuth],
+    controller: require('../api/admin/almanacDrink/deleteAlmanacDrink'),
+    roleType: null,
+    role: null
+  },
   // getReaderlogList
   {
     path: '/readerlog/list',

@@ -1003,6 +1003,97 @@ export default function (api) {
       return api.get('/votelog/stats', {
         shouldAdminJWT: true
       })
+    },
+    // get /almanac/list
+    getAlmanacList(data) {
+      return api.get('/almanac/list', {
+        params: data,
+        shouldAdminJWT: true
+      })
+    },
+    // post /almanac/create
+    createAlmanac(data) {
+      return api.post('/almanac/create', data, {
+        shouldAdminJWT: true
+      })
+    },
+    // get /almanac/detail
+    getAlmanacDetail(data) {
+      return api.get('/almanac/detail', {
+        params: data,
+        shouldAdminJWT: true
+      })
+    },
+    // put /almanac/update
+    updateAlmanac(data) {
+      return api.put('/almanac/update', data, {
+        shouldAdminJWT: true
+      })
+    },
+    // delete /almanac/delete
+    deleteAlmanac(data) {
+      return api.delete('/almanac/delete', {
+        params: data,
+        shouldAdminJWT: true
+      })
+    },
+    // put /almanac/update/taxis
+    updateAlmanacTaxis(data) {
+      return api.put('/almanac/update/taxis', data, {
+        shouldAdminJWT: true
+      })
+    },
+    // get /almanacTool/list
+    getAlmanacToolList(data) {
+      return api.get('/almanacTool/list', {
+        params: data,
+        shouldAdminJWT: true
+      })
+    },
+    // post /almanacTool/create
+    createAlmanacTool(data) {
+      return api.post('/almanacTool/create', data, {
+        shouldAdminJWT: true
+      })
+    },
+    // put /almanacTool/update
+    updateAlmanacTool(data) {
+      return api.put('/almanacTool/update', data, {
+        shouldAdminJWT: true
+      })
+    },
+    // delete /almanacTool/delete
+    deleteAlmanacTool(data) {
+      return api.delete('/almanacTool/delete', {
+        params: data,
+        shouldAdminJWT: true
+      })
+    },
+    // get /almanacDrink/list
+    getAlmanacDrinkList(data) {
+      return api.get('/almanacDrink/list', {
+        params: data,
+        shouldAdminJWT: true
+      })
+    },
+    // post /almanacDrink/create
+    createAlmanacDrink(data) {
+      return api.post('/almanacDrink/create', data, {
+        shouldAdminJWT: true
+      })
+    },
+    // put /almanacDrink/update
+    updateAlmanacDrink(data) {
+      return api.put('/almanacDrink/update', data, {
+        shouldAdminJWT: true
+      })
+    },
+    // delete /almanacDrink/delete
+    deleteAlmanacDrink(data) {
+      return api.delete('/almanacDrink/delete', {
+        params: data,
+        shouldAdminJWT: true
+      })
     }
   }
 }
