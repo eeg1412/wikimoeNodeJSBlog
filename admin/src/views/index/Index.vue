@@ -134,15 +134,38 @@
               <template #title>横幅</template>
             </el-menu-item>
             <!-- 老黄历 -->
-            <el-menu-item
-              index="AlmanacList"
-              @click="removeParam('AlmanacList')"
-              @click.middle="openNewTab('AlmanacList')"
-              :route="{ name: 'AlmanacList' }"
-            >
-              <i class="fas fa-fw fa-calendar-day pr10"></i>
-              <template #title>老黄历</template>
-            </el-menu-item>
+            <el-sub-menu index="almanac">
+              <template #title>
+                <i class="fas fa-fw fa-calendar-day pr10"></i>老黄历
+              </template>
+              <el-menu-item
+                index="AlmanacList"
+                @click="removeParam('AlmanacList')"
+                @click.middle="openNewTab('AlmanacList')"
+                :route="{ name: 'AlmanacList' }"
+              >
+                <i class="fas fa-fw fa-list pr10"></i>
+                <template #title>项目列表</template>
+              </el-menu-item>
+              <el-menu-item
+                index="AlmanacToolList"
+                @click="removeParam('AlmanacToolList')"
+                @click.middle="openNewTab('AlmanacToolList')"
+                :route="{ name: 'AlmanacToolList' }"
+              >
+                <i class="fas fa-fw fa-tools pr10"></i>
+                <template #title>工具管理</template>
+              </el-menu-item>
+              <el-menu-item
+                index="AlmanacDrinkList"
+                @click="removeParam('AlmanacDrinkList')"
+                @click.middle="openNewTab('AlmanacDrinkList')"
+                :route="{ name: 'AlmanacDrinkList' }"
+              >
+                <i class="fas fa-fw fa-coffee pr10"></i>
+                <template #title>饮品管理</template>
+              </el-menu-item>
+            </el-sub-menu>
             <!-- 番剧 BangumiList -->
             <el-menu-item
               index="BangumiList"

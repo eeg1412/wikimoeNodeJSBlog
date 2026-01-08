@@ -303,6 +303,24 @@ const routes = [
             /* webpackChunkName: "AlmanacEditor" */ '../views/index/almanac/AlmanacEditor.vue'
           )
       },
+      // AlmanacToolList
+      {
+        path: '/almanacTool/list',
+        name: 'AlmanacToolList',
+        component: () =>
+          import(
+            /* webpackChunkName: "AlmanacToolList" */ '../views/index/almanacTool/AlmanacToolList.vue'
+          )
+      },
+      // AlmanacDrinkList
+      {
+        path: '/almanacDrink/list',
+        name: 'AlmanacDrinkList',
+        component: () =>
+          import(
+            /* webpackChunkName: "AlmanacDrinkList" */ '../views/index/almanacDrink/AlmanacDrinkList.vue'
+          )
+      },
       // ReaderlogList
       {
         path: '/readerlog/list',

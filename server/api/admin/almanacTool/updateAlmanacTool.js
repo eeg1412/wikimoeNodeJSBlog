@@ -1,0 +1,55 @@
+const almanacToolsUtils = require('../../../mongodb/utils/almanacTools')
+const utils = require('../../../utils/utils')
+const log4js = require('log4js')
+const adminApiLog = log4js.getLogger('adminApi')
+
+module.exports = async function (req, res, next) {
+  const { _id, name, status } = req.body
+  const params = {
+    _id: _id || '',
+    name: name || '',
+    status: status !== undefined ? status : 1
+  }
+  const rule = [
+    {
+      key: '_id',
+      label: 'ID',
+      strict: true,
+      strictType: 'string'
+    },
+    {
+      key: 'name',
+      label: '工具名称',
+      strict: true,
+      strictType: 'string'
+    }
+  ]
+  const errors = utils.checkForm(params, rule)
+  if (errors.length > 0) {
+    res.status(400).json({ errors })
+    return
+  }
+
+  const updateParams = {
+    name: params.name,
+    status: params.status
+  }
+  almanacToolsUtils
+    .updateOne({ _id: params._id }, updateParams)
+    .then(data => {
+      res.send({
+        data: data
+      })
+      adminApiLog.info(`almanac tool update success`)
+    })
+    .catch(err => {
+      res.status(400).json({
+        errors: [
+          {
+            message: '工具更新失败'
+          }
+        ]
+      })
+      adminApiLog.error(`almanac tool update fail, ${JSON.stringify(err)}`)
+    })
+}
