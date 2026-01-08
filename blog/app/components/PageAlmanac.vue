@@ -1,7 +1,9 @@
 <template>
   <div class="container dark:opacity-80">
     <div class="title bg-primary text-white dark:text-black">程序员老黄历</div>
-    <div class="date">{{ isLoading ? '正在计算今日运势...' : almanacData?.titleDate || '' }}</div>
+    <div class="date">
+      {{ isLoading ? '正在计算今日运势...' : almanacData?.titleDate || '' }}
+    </div>
     <div class="good">
       <div class="title">
         <table>
@@ -77,8 +79,8 @@ onMounted(async () => {
   try {
     const timezone = getTimezoneOffset()
     const res = await getAlmanacApiFetch({ timezone })
-    if (res?.data?.value?.data) {
-      almanacData.value = res.data.value.data
+    if (res?.data) {
+      almanacData.value = res.data
     }
     isLoading.value = false
   } catch (error) {
