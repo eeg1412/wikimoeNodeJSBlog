@@ -7,6 +7,7 @@ module.exports = async function (req, res, next) {
   const params = {}
 
   const sort = {
+    name: 1,
     _id: -1
   }
   gamePlatformUtils
