@@ -138,8 +138,11 @@
         <!-- postLinkOpen 是否开启文章链接 -->
         <el-table-column prop="postLinkOpen" label="文章链接开关" width="120px">
           <template #default="{ row }">
-            <el-tag v-if="row.postLinkOpen" type="success">开启</el-tag>
-            <el-tag v-else type="danger">关闭</el-tag>
+            <el-switch
+              v-model="row.postLinkOpen"
+              :loading="loadingMap[row._id]"
+              :before-change="() => updatePostLinkOpen(row)"
+            ></el-switch>
           </template>
         </el-table-column>
         <!-- 状态 -->
@@ -190,6 +193,7 @@ export default {
     const route = useRoute()
     const router = useRouter()
     const movieList = ref([])
+    const loadingMap = reactive({})
     const params = reactive({
       page: 1,
       size: 50,
@@ -259,6 +263,25 @@ export default {
         })
     }
 
+    const updatePostLinkOpen = row => {
+      const id = row._id
+      const postLinkOpen = !row.postLinkOpen
+      loadingMap[id] = true
+      return authApi
+        .updateMoviePostLinkOpen({ id, postLinkOpen })
+        .then(() => {
+          ElMessage.success('更新成功')
+          return true
+        })
+        .catch(err => {
+          console.log(err)
+          return false
+        })
+        .finally(() => {
+          loadingMap[id] = false
+        })
+    }
+
     const initParams = () => {
       const sessionParams = getSessionParams(route.name)
       if (sessionParams) {
@@ -276,13 +299,15 @@ export default {
     })
     return {
       movieList,
+      loadingMap,
       params,
       total,
       tableRef,
       getMovieList,
       handleAdd,
       goEdit,
-      deleteMovie
+      deleteMovie,
+      updatePostLinkOpen
     }
   }
 }

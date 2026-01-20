@@ -559,6 +559,13 @@ export default function (api) {
         shouldAdminJWT: true
       })
     },
+    // put /bangumi/update/postlinkopen
+    updateBangumiPostLinkOpen(data) {
+      return api.put('/bangumi/update/postlinkopen', data, {
+        shouldAdminJWT: true,
+        noLoading: true
+      })
+    },
     // post /movie/create
     createMovie(data) {
       return api.post('/movie/create', data, {
@@ -591,6 +598,13 @@ export default function (api) {
     updateMovie(data) {
       return api.put('/movie/update', data, {
         shouldAdminJWT: true
+      })
+    },
+    // put /movie/update/postlinkopen
+    updateMoviePostLinkOpen(data) {
+      return api.put('/movie/update/postlinkopen', data, {
+        shouldAdminJWT: true,
+        noLoading: true
       })
     },
     // get /emailsendhistory/list
@@ -693,6 +707,13 @@ export default function (api) {
     updateGame(data) {
       return api.put('/game/update', data, {
         shouldAdminJWT: true
+      })
+    },
+    // put /game/update/postlinkopen
+    updateGamePostLinkOpen(data) {
+      return api.put('/game/update/postlinkopen', data, {
+        shouldAdminJWT: true,
+        noLoading: true
       })
     },
     // delete /game/delete
@@ -829,6 +850,13 @@ export default function (api) {
     updateBook(data) {
       return api.put('/book/update', data, {
         shouldAdminJWT: true
+      })
+    },
+    // put /book/update/postlinkopen
+    updateBookPostLinkOpen(data) {
+      return api.put('/book/update/postlinkopen', data, {
+        shouldAdminJWT: true,
+        noLoading: true
       })
     },
     // delete /book/delete

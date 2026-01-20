@@ -196,8 +196,11 @@
         <!-- postLinkOpen 是否开启文章链接 -->
         <el-table-column prop="postLinkOpen" label="文章链接开关" width="120px">
           <template #default="{ row }">
-            <el-tag v-if="row.postLinkOpen" type="success">开启</el-tag>
-            <el-tag v-else type="danger">关闭</el-tag>
+            <el-switch
+              v-model="row.postLinkOpen"
+              :loading="loadingMap[row._id]"
+              :before-change="() => updatePostLinkOpen(row)"
+            ></el-switch>
           </template>
         </el-table-column>
         <!-- 状态 -->
@@ -247,6 +250,7 @@ export default {
     const route = useRoute()
     const router = useRouter()
     const gameList = ref([])
+    const loadingMap = reactive({})
     const params = reactive({
       page: 1,
       size: 50,
@@ -313,6 +317,25 @@ export default {
         .then(() => {})
         .catch(error => {
           console.log('Dialog closed:', error)
+        })
+    }
+
+    const updatePostLinkOpen = row => {
+      const id = row._id
+      const postLinkOpen = !row.postLinkOpen
+      loadingMap[id] = true
+      return authApi
+        .updateGamePostLinkOpen({ id, postLinkOpen })
+        .then(() => {
+          ElMessage.success('更新成功')
+          return true
+        })
+        .catch(err => {
+          console.log(err)
+          return false
+        })
+        .finally(() => {
+          loadingMap[id] = false
         })
     }
 
@@ -388,6 +411,7 @@ export default {
     })
     return {
       gameList,
+      loadingMap,
       params,
       total,
       tableRef,
@@ -395,6 +419,7 @@ export default {
       handleAdd,
       goEdit,
       deleteGame,
+      updatePostLinkOpen,
       gamePlatformList,
       gamePlatformListIsLoading,
       queryGamePlatformList,
