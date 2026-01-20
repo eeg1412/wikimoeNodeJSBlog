@@ -1,26 +1,26 @@
-const utils = require('../../utils/utils')
+const utils = require('./utils')
 const log4js = require('log4js')
 const adminApiLog = log4js.getLogger('adminApi')
 
 // Map of type to corresponding utils and display names
 const typeConfig = {
   bangumi: {
-    utils: require('../../mongodb/utils/bangumis'),
+    utils: require('../mongodb/utils/bangumis'),
     displayName: '番剧',
     logName: 'bangumi'
   },
   book: {
-    utils: require('../../mongodb/utils/books'),
+    utils: require('../mongodb/utils/books'),
     displayName: '书籍',
     logName: 'book'
   },
   game: {
-    utils: require('../../mongodb/utils/games'),
+    utils: require('../mongodb/utils/games'),
     displayName: '游戏',
     logName: 'game'
   },
   movie: {
-    utils: require('../../mongodb/utils/movies'),
+    utils: require('../mongodb/utils/movies'),
     displayName: '电影',
     logName: 'movie'
   }
