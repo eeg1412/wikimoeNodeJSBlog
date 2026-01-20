@@ -196,8 +196,10 @@
         <!-- postLinkOpen 是否开启文章链接 -->
         <el-table-column prop="postLinkOpen" label="文章链接开关" width="120px">
           <template #default="{ row }">
-            <el-tag v-if="row.postLinkOpen" type="success">开启</el-tag>
-            <el-tag v-else type="danger">关闭</el-tag>
+            <el-switch
+              v-model="row.postLinkOpen"
+              @change="updatePostLinkOpen(row)"
+            ></el-switch>
           </template>
         </el-table-column>
         <!-- 状态 -->
@@ -316,6 +318,21 @@ export default {
         })
     }
 
+    const updatePostLinkOpen = row => {
+      const id = row._id
+      const postLinkOpen = row.postLinkOpen
+      authApi
+        .updateGamePostLinkOpen({ id, postLinkOpen })
+        .then(() => {
+          ElMessage.success('更新成功')
+        })
+        .catch(err => {
+          console.log(err)
+          // 回滚状态
+          row.postLinkOpen = !postLinkOpen
+        })
+    }
+
     const initParams = () => {
       const sessionParams = getSessionParams(route.name)
       if (sessionParams) {
@@ -395,6 +412,7 @@ export default {
       handleAdd,
       goEdit,
       deleteGame,
+      updatePostLinkOpen,
       gamePlatformList,
       gamePlatformListIsLoading,
       queryGamePlatformList,

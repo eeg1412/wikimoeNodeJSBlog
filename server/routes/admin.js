@@ -882,6 +882,15 @@ const adminRouteSetting = [
     roleType: null,
     role: null
   },
+  // updateBangumiPostLinkOpen
+  {
+    path: '/bangumi/update/postlinkopen',
+    method: 'put',
+    middleware: [checkAuth],
+    controller: require('../api/admin/bangumi/updateBangumiPostLinkOpen'),
+    roleType: null,
+    role: null
+  },
   // createMovie
   {
     path: '/movie/create',
@@ -924,6 +933,15 @@ const adminRouteSetting = [
     method: 'put',
     middleware: [checkAuth],
     controller: require('../api/admin/movie/updateMovie'),
+    roleType: null,
+    role: null
+  },
+  // updateMoviePostLinkOpen
+  {
+    path: '/movie/update/postlinkopen',
+    method: 'put',
+    middleware: [checkAuth],
+    controller: require('../api/admin/movie/updateMoviePostLinkOpen'),
     roleType: null,
     role: null
   },
@@ -1068,6 +1086,15 @@ const adminRouteSetting = [
     method: 'put',
     middleware: [checkAuth],
     controller: require('../api/admin/game/updateGame'),
+    roleType: null,
+    role: null
+  },
+  // updateGamePostLinkOpen
+  {
+    path: '/game/update/postlinkopen',
+    method: 'put',
+    middleware: [checkAuth],
+    controller: require('../api/admin/game/updateGamePostLinkOpen'),
     roleType: null,
     role: null
   },
@@ -1248,6 +1275,15 @@ const adminRouteSetting = [
     method: 'put',
     middleware: [checkAuth],
     controller: require('../api/admin/book/updateBook'),
+    roleType: null,
+    role: null
+  },
+  // updateBookPostLinkOpen
+  {
+    path: '/book/update/postlinkopen',
+    method: 'put',
+    middleware: [checkAuth],
+    controller: require('../api/admin/book/updateBookPostLinkOpen'),
     roleType: null,
     role: null
   },
