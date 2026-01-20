@@ -194,7 +194,8 @@
           <template #default="{ row }">
             <el-switch
               v-model="row.postLinkOpen"
-              @change="updatePostLinkOpen(row)"
+              :loading="loadingMap[row._id]"
+              :before-change="() => updatePostLinkOpen(row)"
             ></el-switch>
           </template>
         </el-table-column>
@@ -246,6 +247,7 @@ export default {
     const route = useRoute()
     const router = useRouter()
     const bookList = ref([])
+    const loadingMap = reactive({})
     const params = reactive({
       page: 1,
       size: 50,
@@ -317,16 +319,20 @@ export default {
 
     const updatePostLinkOpen = row => {
       const id = row._id
-      const postLinkOpen = row.postLinkOpen
-      authApi
+      const postLinkOpen = !row.postLinkOpen
+      loadingMap[id] = true
+      return authApi
         .updateBookPostLinkOpen({ id, postLinkOpen })
         .then(() => {
           ElMessage.success('更新成功')
+          return true
         })
         .catch(err => {
           console.log(err)
-          // 回滚状态
-          row.postLinkOpen = !postLinkOpen
+          return false
+        })
+        .finally(() => {
+          loadingMap[id] = false
         })
     }
 
@@ -403,6 +409,7 @@ export default {
     })
     return {
       bookList,
+      loadingMap,
       params,
       total,
       tableRef,
