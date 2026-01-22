@@ -168,10 +168,13 @@ export function usePostSeo() {
         imageUrl = siteUrl + imageUrl
       }
 
+      const width = coverImage.thumWidth || coverImage.width || undefined
+      const height = coverImage.thumHeight || coverImage.height || undefined
+
       return {
         url: imageUrl,
-        width: coverImage.width || undefined,
-        height: coverImage.height || undefined
+        width: width,
+        height: height
       }
     }
 

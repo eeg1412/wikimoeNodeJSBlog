@@ -178,11 +178,33 @@ export function useArticleJsonLd() {
       return {
         '@type': 'ListItem',
         position: index + 1,
-        item: {
-          '@type': articleType,
-          url: postUrl,
-          headline: itemName
-        }
+        item: (() => {
+          const itemObj = {
+            '@type': articleType,
+            url: postUrl,
+            headline: itemName
+          }
+
+          // 添加图片信息（如果存在）
+          const coverImageInfo = getCoverImageInfo(post)
+          if (coverImageInfo && coverImageInfo.url) {
+            itemObj.image = {
+              '@type': 'ImageObject',
+              url: coverImageInfo.url
+            }
+            if (coverImageInfo.width) itemObj.image.width = coverImageInfo.width
+            if (coverImageInfo.height)
+              itemObj.image.height = coverImageInfo.height
+          }
+
+          // 添加作者信息（如果存在）
+          const authorInfo = getAuthorInfo(post)
+          if (authorInfo) {
+            itemObj.author = authorInfo
+          }
+
+          return itemObj
+        })()
       }
     })
 
