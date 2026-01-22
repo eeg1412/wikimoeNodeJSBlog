@@ -947,112 +947,30 @@ const likePost = () => {
     })
 }
 
-// 过滤HTML标签
-const filterHtmlTag = str => {
-  if (!str) {
-    return ''
-  }
-  // 过滤 <style> 和 <script> 标签及其内容，其他 HTML 标签、换行符和空格
-  return str.replace(
-    /<(style|script)[^>]*>[\s\S]*?<\/\1>|<[^>]+>|\r?\n|\s/g,
-    ''
-  )
-}
-// 设置SEO
-const seoImageSet = () => {
-  let newImage = options.value.siteUrl + options.value.siteDefaultCover
-  if (postData.value?.data?.coverImages?.length > 0) {
-    if (postData.value?.data?.coverImages[0]?.thumfor) {
-      newImage =
-        options.value.siteUrl + postData.value?.data?.coverImages[0]?.thumfor
-    } else {
-      newImage =
-        options.value.siteUrl + postData.value?.data?.coverImages[0]?.filepath
-    }
-  }
-  return newImage
-}
-const seoTitleSet = () => {
-  let newTitle =
-    postData.value?.data?.title || postData.value?.data?.excerpt || ''
-  const type = postData.value?.data?.type
-  if (type === 2) {
-    newTitle = getTitleFromText(newTitle)
-  }
-  return newTitle
-}
-const seoDescriptionSet = () => {
-  let newDescription =
-    postData.value?.data?.excerpt ||
-    filterHtmlTag(postData.value?.data?.content) ||
-    ''
-  // 超过200个字符，截取
-  if (newDescription.length > 200) {
-    newDescription = limitStr(newDescription, 200)
-  }
-  return newDescription
-}
-const seoKeywordsSet = () => {
-  const data = postData.value?.data || null
-  if (!data) return options.value.siteKeywords
+// 设置SEO - 使用公共方法
+const { generatePostSeoData } = usePostSeo()
+const seoData = generatePostSeoData(postData.value.data)
 
-  const keyArray = [
-    'bangumiList',
-    'bookList',
-    'gameList',
-    'movieList',
-    'mappointList',
-    'tags',
-    'contentBangumiList',
-    'contentBookList',
-    'contentGameList',
-    'contentMovieList'
-  ]
-
-  const keywordsSet = new Set()
-  for (const key of keyArray) {
-    const list = data[key]
-    if (!Array.isArray(list) || list.length === 0) continue
-    if (key === 'tags') {
-      for (const item of list) {
-        if (item && item.tagname) keywordsSet.add(item.tagname)
-      }
-    } else {
-      for (const item of list) {
-        if (item && item.title) keywordsSet.add(item.title)
-      }
-    }
-  }
-
-  if (keywordsSet.size > 0) {
-    let keywordsStr = Array.from(keywordsSet).join(',')
-    // 结合站点默认关键词
-    if (options.value.siteKeywords) {
-      keywordsStr += ',' + options.value.siteKeywords
-    }
-
-    return keywordsStr
-  }
-
-  return options.value.siteKeywords
-}
-
-const seoImage = seoImageSet()
-const seoTitle = seoTitleSet()
-const seoDescription = seoDescriptionSet()
-const seoKeywords = seoKeywordsSet()
 useSeoMeta({
-  title: seoTitle,
-  ogTitle: seoTitle,
-  description: seoDescription,
-  keywords: seoKeywords,
-  ogDescription: seoDescription,
-  ogImage: seoImage,
+  title: seoData.title,
+  ogTitle: seoData.title,
+  description: seoData.description,
+  keywords: seoData.keywords,
+  ogDescription: seoData.description,
+  ogImage: seoData.image,
+  ogUrl: seoData.url,
   // twitter
-  twitterTitle: seoTitle,
-  twitterDescription: seoDescription,
-  twitterImage: seoImage
+  twitterTitle: seoData.title,
+  twitterDescription: seoData.description,
+  twitterImage: seoData.image
 })
+
+// Article JSON-LD 结构化数据 - 传入已计算的seoData避免重复计算
+const { generateArticleJsonLd, setJsonLd } = useArticleJsonLd()
+const articleJsonLd = generateArticleJsonLd(postData.value.data, seoData)
+if (articleJsonLd) {
+  setJsonLd(articleJsonLd)
+}
 
 // 文章导航
 const showHeaderListMenu = ref(false)

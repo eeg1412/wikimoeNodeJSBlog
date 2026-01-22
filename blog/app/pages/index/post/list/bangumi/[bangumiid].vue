@@ -26,9 +26,11 @@ const bangumiid = route.params.bangumiid
 const { data } = await getBangumiDetailApi({
   id: bangumiid
 })
+const { getCurrentUrl } = usePostSeo()
 useSeoMeta({
   title: data.value.data.title,
   ogTitle: data.value.data.title,
+  ogUrl: getCurrentUrl(),
   // twitter
   twitterTitle: data.value.data.title
 })

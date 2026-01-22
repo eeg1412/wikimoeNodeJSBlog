@@ -4,4 +4,9 @@
     <NuxtPage></NuxtPage>
   </div>
 </template>
-<script setup></script>
+<script setup>
+const { getCurrentUrl } = usePostSeo()
+useSeoMeta({
+  ogUrl: getCurrentUrl()
+})
+</script>

@@ -26,9 +26,11 @@ const tagid = route.params.tagid
 const { data } = await getTagDetailApi({
   id: tagid
 })
+const { getCurrentUrl } = usePostSeo()
 useSeoMeta({
   title: data.value.data.tagname,
   ogTitle: data.value.data.tagname,
+  ogUrl: getCurrentUrl(),
   // twitter
   twitterTitle: data.value.data.tagname
 })

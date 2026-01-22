@@ -533,6 +533,44 @@ const totalPage = computed(() => {
   return Math.ceil(postsData.value.total / postsData.value.size)
 })
 
+// ItemList JSON-LD 结构化数据
+const { generateItemListJsonLd, setJsonLd } = useArticleJsonLd()
+const getListName = () => {
+  switch (routeName.value) {
+    case 'postList':
+      return page === 1 ? '首页' : `首页 - 第${page}页`
+    case 'postListKeyword':
+      return `搜索：${keyword}`
+    case 'postListSort':
+      return `分类文章`
+    case 'postListArchive':
+      return `归档：${year}年${month}月`
+    case 'postListTag':
+      return `标签文章`
+    case 'postListMappoint':
+      return `地点文章`
+    case 'postListBangumi':
+      return `番剧相关文章`
+    case 'postListMovie':
+      return `电影相关文章`
+    case 'postListBook':
+      return `图书相关文章`
+    case 'postListGame':
+      return `游戏相关文章`
+    default:
+      return '文章列表'
+  }
+}
+if (postsData?.value?.list && postsData.value.list.length > 0) {
+  const itemListJsonLd = generateItemListJsonLd(
+    postsData.value.list,
+    getListName()
+  )
+  if (itemListJsonLd) {
+    setJsonLd(itemListJsonLd)
+  }
+}
+
 const goPostDetail = (e, item, middle) => {
   console.log(e)
   // 如果是点击了链接，就不跳转
