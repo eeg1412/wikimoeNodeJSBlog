@@ -29,7 +29,7 @@ const { data } = await getSortDetailApi({
   id: sortid
 })
 
-const description = data.value.description
+let description = data.value.description
 if (description && typeof description === 'string') {
   // 将换行符替换为空格
   description = description.replace(/\r?\n/g, ' ')
