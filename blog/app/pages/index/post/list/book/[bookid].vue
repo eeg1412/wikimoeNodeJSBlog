@@ -26,11 +26,9 @@ const bookid = route.params.bookid
 const { data } = await getBookDetailApi({
   id: bookid
 })
-const { getCurrentUrl } = usePostSeo()
 useSeoMeta({
   title: data.value.data.title,
   ogTitle: data.value.data.title,
-  ogUrl: getCurrentUrl(),
   // twitter
   twitterTitle: data.value.data.title
 })

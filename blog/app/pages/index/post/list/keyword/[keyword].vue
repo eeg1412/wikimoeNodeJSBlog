@@ -23,12 +23,10 @@ if (!/^\d+$/.test(page)) {
   throw new Error('页面不存在')
 }
 // 设置SEO
-const { getCurrentUrl } = usePostSeo()
 useSeoMeta({
   title: keyword,
   ogTitle: keyword,
   keywords: keyword,
-  ogUrl: getCurrentUrl(),
   // twitter
   twitterTitle: keyword
 })

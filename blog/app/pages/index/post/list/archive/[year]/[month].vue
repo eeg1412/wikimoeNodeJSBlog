@@ -26,11 +26,9 @@ const year = route.params.year
 const month = route.params.month
 const title = `归档${year}年${month}月`
 // 设置SEO
-const { getCurrentUrl } = usePostSeo()
 useSeoMeta({
   title: title,
   ogTitle: title,
-  ogUrl: getCurrentUrl(),
   // twitter
   twitterTitle: title
 })

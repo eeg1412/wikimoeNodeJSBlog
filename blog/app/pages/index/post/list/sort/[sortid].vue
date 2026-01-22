@@ -28,12 +28,10 @@ const sortid = route.params.sortid
 const { data } = await getSortDetailApi({
   id: sortid
 })
-const { getCurrentUrl } = usePostSeo()
 useSeoMeta({
   title: data.value.sortname,
   ogTitle: data.value.sortname,
   description: data.value.description,
-  ogUrl: getCurrentUrl(),
   // twitter
   twitterTitle: data.value.sortname,
   twitterDescription: data.value.description

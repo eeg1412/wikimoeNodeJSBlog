@@ -101,7 +101,7 @@ useHead({
     { property: 'og:site_name', content: options.value.siteTitle },
     { property: 'og:title', content: options.value.siteTitle },
     { property: 'og:description', content: options.value.siteDescription },
-    { property: 'og:url', content: options.value.siteUrl },
+    // { property: 'og:url', content: options.value.siteUrl },
     {
       property: 'og:image',
       content: options.value.siteUrl + options.value.siteDefaultCover
@@ -225,6 +225,19 @@ const updatePerformance = () => {
     tryCount++
   }
 }
+
+// watch 路由变化 重新设置 og:url
+const route = useRoute()
+watch(
+  () => route.path,
+  () => {
+    const { getCurrentUrl } = usePostSeo()
+    useSeoMeta({
+      ogUrl: getCurrentUrl()
+    })
+  },
+  { immediate: true }
+)
 
 const setStyle = () => {
   // 如果存在 options.siteExtraCss
