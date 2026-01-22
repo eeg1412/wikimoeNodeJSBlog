@@ -28,15 +28,21 @@ const sortid = route.params.sortid
 const { data } = await getSortDetailApi({
   id: sortid
 })
+
+const description = data.value.description
+if (description && typeof description === 'string') {
+  // 将换行符替换为空格
+  description = description.replace(/\r?\n/g, ' ')
+}
 useSeoMeta({
   title: data.value.sortname,
   ogTitle: data.value.sortname,
-  description: data.value.description,
+  description: description,
   // og
-  ogDescription: data.value.description,
+  ogDescription: description,
   // twitter
   twitterTitle: data.value.sortname,
-  twitterDescription: data.value.description
+  twitterDescription: description
 })
 onMounted(() => {
   postLogCreateApi({

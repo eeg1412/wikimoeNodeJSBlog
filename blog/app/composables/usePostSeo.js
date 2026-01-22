@@ -91,6 +91,9 @@ export function usePostSeo() {
       description = limitStr(description, 200)
     }
 
+    // 将换行符替换为空格
+    description = description.replace(/\r?\n/g, ' ')
+
     return description
   }
 
