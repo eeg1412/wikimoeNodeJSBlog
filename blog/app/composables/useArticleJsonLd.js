@@ -35,7 +35,7 @@ export function useArticleJsonLd() {
     if (post.type === 1) {
       articleType = 'BlogPosting'
     } else if (post.type === 2) {
-      articleType = 'SocialMediaPosting'
+      articleType = 'BlogPosting'
     } else if (post.type === 3) {
       articleType = 'WebPage'
     }
@@ -170,7 +170,7 @@ export function useArticleJsonLd() {
       if (post.type === 1) {
         articleType = 'BlogPosting'
       } else if (post.type === 2) {
-        articleType = 'SocialMediaPosting'
+        articleType = 'BlogPosting'
       } else if (post.type === 3) {
         articleType = 'WebPage'
       }
