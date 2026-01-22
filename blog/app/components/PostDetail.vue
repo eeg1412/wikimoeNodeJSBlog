@@ -993,12 +993,48 @@ const seoDescriptionSet = () => {
   return newDescription
 }
 const seoKeywordsSet = () => {
-  // 先判断 postData.value?.data?.tags 是否存在，存在就用，不存在就用 options.value.siteKeywords
-  if (postData.value?.data?.tags?.length > 0) {
-    return postData.value?.data?.tags.map(item => item.tagname).join(',')
-  } else {
-    return options.value.siteKeywords
+  const data = postData.value?.data || null
+  if (!data) return options.value.siteKeywords
+
+  const keyArray = [
+    'bangumiList',
+    'bookList',
+    'gameList',
+    'movieList',
+    'mappointList',
+    'tags',
+    'contentBangumiList',
+    'contentBookList',
+    'contentGameList',
+    'contentMovieList'
+  ]
+
+  const keywordsSet = new Set()
+  for (const key of keyArray) {
+    const list = data[key]
+    if (!Array.isArray(list) || list.length === 0) continue
+    if (key === 'tags') {
+      for (const item of list) {
+        if (item && item.tagname) keywordsSet.add(item.tagname)
+      }
+    } else {
+      for (const item of list) {
+        if (item && item.title) keywordsSet.add(item.title)
+      }
+    }
   }
+
+  if (keywordsSet.size > 0) {
+    let keywordsStr = Array.from(keywordsSet).join(',')
+    // 结合站点默认关键词
+    if (options.value.siteKeywords) {
+      keywordsStr += ',' + options.value.siteKeywords
+    }
+
+    return keywordsStr
+  }
+
+  return options.value.siteKeywords
 }
 
 const seoImage = seoImageSet()
