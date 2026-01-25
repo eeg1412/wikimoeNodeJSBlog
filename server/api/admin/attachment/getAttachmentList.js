@@ -4,7 +4,15 @@ const log4js = require('log4js')
 const adminApiLog = log4js.getLogger('adminApi')
 
 module.exports = async function (req, res, next) {
-  let { page, size, keyword, album, typeList, is360Panorama } = req.query
+  let {
+    page,
+    size,
+    keyword,
+    album,
+    typeList,
+    is360Panorama,
+    sort: sortParam
+  } = req.query
   page = Number(page)
   size = Number(size)
   const queryCheck = {
@@ -74,9 +82,23 @@ module.exports = async function (req, res, next) {
   }
 
   // updatedAt越新越靠前，_id越新越靠前
-  const sort = {
+  let sort = {
     updatedAt: -1,
     _id: -1
+  }
+  if (sortParam === 'oldest') {
+    sort = {
+      updatedAt: 1,
+      _id: 1
+    }
+  } else if (sortParam === 'name_asc') {
+    sort = {
+      name: 1
+    }
+  } else if (sortParam === 'name_desc') {
+    sort = {
+      name: -1
+    }
   }
   attachmentUtils
     .findPage(params, sort, page, size)

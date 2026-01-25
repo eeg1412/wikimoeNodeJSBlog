@@ -13,42 +13,69 @@
   >
     <template #header="{ close, titleId, titleClass }">
       <div class="my-header">
-        <div :id="titleId" :class="titleClass">
-          <el-select
-            :model-value="albumId"
-            placeholder="请选择相册"
-            clearable
-            filterable
-            remote
-            :remote-method="searchAlbumsRemote"
-            @change="preChangeAlbum"
-            :automatic-dropdown="true"
-            class="attachments-form-item"
-          >
-            <el-option
-              v-for="item in albumListCom"
-              :key="item._id"
-              :label="item.name"
-              :value="item._id"
-            />
-          </el-select>
-          <!-- 关键词 -->
-          <el-input
-            v-model="params.keyword"
-            placeholder="关键词搜索"
-            @keyup.enter="getAttachmentList(true)"
-            @clear="getAttachmentList(true)"
-            clearable
-            class="attachments-form-item ml5"
-          >
-            <template #append>
-              <el-button :icon="Search" @click="getAttachmentList(true)" />
-            </template>
-          </el-input>
+        <div
+          :id="titleId"
+          :class="titleClass + ' attachments-dialog-header-body'"
+        >
+          <div class="attachments-dialog-header">
+            <el-select
+              :model-value="albumId"
+              placeholder="请选择相册"
+              clearable
+              filterable
+              remote
+              :remote-method="searchAlbumsRemote"
+              @change="preChangeAlbum"
+              :automatic-dropdown="true"
+              class="attachments-form-item"
+            >
+              <el-option
+                v-for="item in albumListCom"
+                :key="item._id"
+                :label="item.name"
+                :value="item._id"
+              />
+            </el-select>
+            <!-- 关键词 -->
+            <el-input
+              v-model="params.keyword"
+              placeholder="关键词搜索"
+              @keyup.enter="getAttachmentList(true)"
+              @clear="getAttachmentList(true)"
+              clearable
+              class="attachments-form-item"
+            >
+              <template #append>
+                <el-button :icon="Search" @click="getAttachmentList(true)" />
+              </template>
+            </el-input>
+            <el-dropdown trigger="click" @command="handleSortChange">
+              <el-button>
+                {{ sortLabel
+                }}<el-icon class="el-icon--right"><ArrowDown /></el-icon>
+              </el-button>
+              <template #dropdown>
+                <el-dropdown-menu>
+                  <el-dropdown-item command="newest"
+                    >更新时间(新-旧)</el-dropdown-item
+                  >
+                  <el-dropdown-item command="oldest"
+                    >更新时间(旧-新)</el-dropdown-item
+                  >
+                  <el-dropdown-item command="name_asc"
+                    >名称(A-Z)</el-dropdown-item
+                  >
+                  <el-dropdown-item command="name_desc"
+                    >名称(Z-A)</el-dropdown-item
+                  >
+                </el-dropdown-menu>
+              </template>
+            </el-dropdown>
+          </div>
         </div>
         <button
           aria-label="Close this dialog"
-          class="el-dialog__headerbtn"
+          class="el-dialog__headerbtn attachments-dialog-close-btn"
           type="button"
           @click="close"
         >
@@ -373,7 +400,8 @@ import {
   Search,
   Sort,
   CircleCheck,
-  Remove
+  Remove,
+  ArrowDown
 } from '@element-plus/icons-vue'
 import axios from 'axios'
 import { showLoading, hideLoading } from '@/utils/utils'
@@ -452,11 +480,24 @@ export default {
         albumId.value = albumList.value[0]._id || ''
       }
       params.album = albumId.value
+      // params.sort = 'newest'
       updateHeaders()
       getAttachmentList(true, true)
       nextTick(() => {
         visible.value = true
       })
+    }
+
+    const sortLabels = {
+      newest: '更新时间(新-旧)',
+      oldest: '更新时间(旧-新)',
+      name_asc: '名称(A-Z)',
+      name_desc: '名称(Z-A)'
+    }
+    const sortLabel = computed(() => sortLabels[params.sort])
+    const handleSortChange = command => {
+      params.sort = command
+      getAttachmentList(true)
     }
 
     const albumList = ref([])
@@ -590,7 +631,8 @@ export default {
       page: 1,
       size: 20,
       keyword: '',
-      album: albumId.value
+      album: albumId.value,
+      sort: 'newest'
     })
     const total = ref(0)
     const getAttachmentList = (resetPage, resetKeyword) => {
@@ -1007,6 +1049,7 @@ export default {
       Sort,
       CircleCheck,
       Remove,
+      ArrowDown,
       visible,
       fileList,
       albumId,
@@ -1020,6 +1063,8 @@ export default {
       params,
       total,
       getAttachmentList,
+      handleSortChange,
+      sortLabel,
       headers,
       updateHeaders,
       options,
@@ -1110,6 +1155,23 @@ export default {
 
 .accactment-options-value {
   flex-grow: 1; /* 元素将占用剩余的空间 */
+}
+.attachments-dialog-header {
+  display: flex;
+  justify-content: start;
+  align-items: center;
+  gap: 5px;
+  min-width: 450px;
+}
+.attachments-dialog-header-body {
+  width: calc(100% - 35px);
+  overflow: auto;
+  /* 小滚动条 */
+  scrollbar-width: thin;
+  padding-right: 35px;
+}
+.attachments-dialog-close-btn {
+  background-color: var(--el-bg-color);
 }
 /* 小于500 */
 @media screen and (max-width: 500px) {
