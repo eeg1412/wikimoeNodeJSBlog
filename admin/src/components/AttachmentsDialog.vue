@@ -1158,7 +1158,7 @@ export default {
 }
 .attachments-dialog-header {
   display: flex;
-  justify-content: start;
+  justify-content: flex-start;
   align-items: center;
   gap: 5px;
   min-width: 450px;
