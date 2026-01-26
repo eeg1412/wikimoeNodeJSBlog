@@ -25,5 +25,8 @@ export const SHARE_MAP = {
   },
   'copy-link': {
     alt: '复制链接'
+  },
+  其他: {
+    alt: '其他'
   }
 }

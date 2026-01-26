@@ -10,7 +10,7 @@ module.exports = async function (req, res, next) {
   const endTime = req.query.endTime
   const dataSortPriority = req.query.dataSortPriority || 'ip'
 
-  const limit = 100
+  const limit = 99
 
   // 时间格式是 2023-08-10T15:00:00.000Z 需要判断合法性
   const rule = [
@@ -90,6 +90,60 @@ module.exports = async function (req, res, next) {
 
   const ippvSortRule = getSortRule(dataSortPriority)
 
+  /**
+   * 生成 Top N + Others 的聚合阶段
+   * @param {Array} enrichmentStages - Top N 数据需要的后续处理（如 lookup）
+   * @param {Object} othersProjection - Others 数据的 project 字段
+   * @param {Array} countFields - 需要统计的数值字段
+   */
+  const getTopAndOthersStages = (
+    enrichmentStages = [],
+    othersProjection = {},
+    countFields = ['pvCount', 'ipCount']
+  ) => {
+    // Top branch
+    const topStages = [{ $limit: limit }, ...enrichmentStages]
+
+    // Others branch
+    const groupStats = {}
+    countFields.forEach(field => {
+      groupStats[field] = { $sum: `$${field}` }
+    })
+
+    const othersStages = [
+      { $skip: limit },
+      {
+        $group: {
+          _id: '其他',
+          ...groupStats
+        }
+      },
+      {
+        $project: {
+          _id: '其他',
+          ...othersProjection,
+          ...countFields.reduce((acc, field) => ({ ...acc, [field]: 1 }), {})
+        }
+      }
+    ]
+
+    return [
+      {
+        $facet: {
+          top: topStages,
+          others: othersStages
+        }
+      },
+      {
+        $project: {
+          results: { $concatArrays: ['$top', '$others'] }
+        }
+      },
+      { $unwind: '$results' },
+      { $replaceRoot: { newRoot: '$results' } }
+    ]
+  }
+
   // 来源站统计
   const readReferrerpipeline = [
     {
@@ -122,10 +176,8 @@ module.exports = async function (req, res, next) {
         _id: -1
       }
     },
-    // 只取前100
-    {
-      $limit: limit
-    }
+    // Top 99 + Others
+    ...getTopAndOthersStages([], {}, ['pvCount', 'ipCount'])
   ]
   const readReferrerData = readerlogUtils
     .aggregate(readReferrerpipeline)
@@ -166,32 +218,34 @@ module.exports = async function (req, res, next) {
         _id: -1
       }
     },
-    // 只取前100
-    {
-      $limit: limit
-    },
-    // 根据id查询posts,只要返回id,title,excerpt,type
-    {
-      $lookup: {
-        from: 'posts',
-        localField: '_id',
-        foreignField: '_id',
-        as: 'post'
-      }
-    },
-    {
-      $unwind: '$post'
-    },
-    {
-      $project: {
-        _id: 1,
-        pvCount: 1,
-        ipCount: 1,
-        title: '$post.title',
-        excerpt: '$post.excerpt',
-        type: '$post.type'
-      }
-    }
+    // Top 99 + Others
+    ...getTopAndOthersStages(
+      [
+        {
+          $lookup: {
+            from: 'posts',
+            localField: '_id',
+            foreignField: '_id',
+            as: 'post'
+          }
+        },
+        {
+          $unwind: { path: '$post', preserveNullAndEmptyArrays: true }
+        },
+        {
+          $project: {
+            _id: 1,
+            pvCount: 1,
+            ipCount: 1,
+            title: { $ifNull: ['$post.title', '已删除文章'] },
+            excerpt: { $ifNull: ['$post.excerpt', ''] },
+            type: { $ifNull: ['$post.type', -1] }
+          }
+        }
+      ],
+      { title: '其他', excerpt: '', type: { $literal: -2 } },
+      ['pvCount', 'ipCount']
+    )
   ]
 
   const readPostViewData = readerlogUtils
@@ -224,31 +278,33 @@ module.exports = async function (req, res, next) {
         _id: -1
       }
     },
-    // 只取前10
-    {
-      $limit: limit
-    },
-    // 根据id查询posts,只要返回id,title,excerpt,type
-    {
-      $lookup: {
-        from: 'posts',
-        localField: '_id',
-        foreignField: '_id',
-        as: 'post'
-      }
-    },
-    {
-      $unwind: '$post'
-    },
-    {
-      $project: {
-        _id: 1,
-        count: 1,
-        title: '$post.title',
-        excerpt: '$post.excerpt',
-        type: '$post.type'
-      }
-    }
+    // Top 99 + Others
+    ...getTopAndOthersStages(
+      [
+        {
+          $lookup: {
+            from: 'posts',
+            localField: '_id',
+            foreignField: '_id',
+            as: 'post'
+          }
+        },
+        {
+          $unwind: { path: '$post', preserveNullAndEmptyArrays: true }
+        },
+        {
+          $project: {
+            _id: 1,
+            count: 1,
+            title: { $ifNull: ['$post.title', '已删除文章'] },
+            excerpt: { $ifNull: ['$post.excerpt', ''] },
+            type: { $ifNull: ['$post.type', -1] }
+          }
+        }
+      ],
+      { title: '其他', excerpt: '', type: { $literal: -2 } },
+      ['count']
+    )
   ]
   const readPostLikeData = postLikeLogUtils
     .aggregate(readPostLikePipeline)
@@ -282,31 +338,33 @@ module.exports = async function (req, res, next) {
         _id: -1
       }
     },
-    // 只取前10
-    {
-      $limit: limit
-    },
-    // 根据id查询posts,只要返回id,title,excerpt,type
-    {
-      $lookup: {
-        from: 'posts',
-        localField: '_id',
-        foreignField: '_id',
-        as: 'post'
-      }
-    },
-    {
-      $unwind: '$post'
-    },
-    {
-      $project: {
-        _id: 1,
-        count: 1,
-        title: '$post.title',
-        excerpt: '$post.excerpt',
-        type: '$post.type'
-      }
-    }
+    // Top 99 + Others
+    ...getTopAndOthersStages(
+      [
+        {
+          $lookup: {
+            from: 'posts',
+            localField: '_id',
+            foreignField: '_id',
+            as: 'post'
+          }
+        },
+        {
+          $unwind: { path: '$post', preserveNullAndEmptyArrays: true }
+        },
+        {
+          $project: {
+            _id: 1,
+            count: 1,
+            title: { $ifNull: ['$post.title', '已删除文章'] },
+            excerpt: { $ifNull: ['$post.excerpt', ''] },
+            type: { $ifNull: ['$post.type', -1] }
+          }
+        }
+      ],
+      { title: '其他', excerpt: '', type: { $literal: -2 } },
+      ['count']
+    )
   ]
   const readPostShareData = readerlogUtils
     .aggregate(readPostSharePipeline)
@@ -341,10 +399,8 @@ module.exports = async function (req, res, next) {
         _id: -1
       }
     },
-    // 只取前100
-    {
-      $limit: limit
-    }
+    // Top 99 + Others
+    ...getTopAndOthersStages([], {}, ['count'])
   ]
   const readPostSharePlatformData = readerlogUtils
     .aggregate(readPostSharePlatformPipeline)
@@ -386,30 +442,32 @@ module.exports = async function (req, res, next) {
         _id: -1
       }
     },
-    // 只取前100
-    {
-      $limit: limit
-    },
-    // 根据id查询sorts,只要返回id,sortname
-    {
-      $lookup: {
-        from: 'sorts',
-        localField: '_id',
-        foreignField: '_id',
-        as: 'sort'
-      }
-    },
-    {
-      $unwind: '$sort'
-    },
-    {
-      $project: {
-        _id: 1,
-        pvCount: 1,
-        ipCount: 1,
-        sortname: '$sort.sortname'
-      }
-    }
+    // Top 99 + Others
+    ...getTopAndOthersStages(
+      [
+        {
+          $lookup: {
+            from: 'sorts',
+            localField: '_id',
+            foreignField: '_id',
+            as: 'sort'
+          }
+        },
+        {
+          $unwind: { path: '$sort', preserveNullAndEmptyArrays: true }
+        },
+        {
+          $project: {
+            _id: 1,
+            pvCount: 1,
+            ipCount: 1,
+            sortname: { $ifNull: ['$sort.sortname', '未知分类'] }
+          }
+        }
+      ],
+      { sortname: '其他' },
+      ['pvCount', 'ipCount']
+    )
   ]
   const readPostListSortData = readerlogUtils
     .aggregate(readPostListSortPipeline)
@@ -451,30 +509,32 @@ module.exports = async function (req, res, next) {
         _id: -1
       }
     },
-    // 只取前100
-    {
-      $limit: limit
-    },
-    // 根据id查询tags,只要返回id,tagname
-    {
-      $lookup: {
-        from: 'tags',
-        localField: '_id',
-        foreignField: '_id',
-        as: 'tag'
-      }
-    },
-    {
-      $unwind: '$tag'
-    },
-    {
-      $project: {
-        _id: 1,
-        pvCount: 1,
-        ipCount: 1,
-        tagname: '$tag.tagname'
-      }
-    }
+    // Top 99 + Others
+    ...getTopAndOthersStages(
+      [
+        {
+          $lookup: {
+            from: 'tags',
+            localField: '_id',
+            foreignField: '_id',
+            as: 'tag'
+          }
+        },
+        {
+          $unwind: { path: '$tag', preserveNullAndEmptyArrays: true }
+        },
+        {
+          $project: {
+            _id: 1,
+            pvCount: 1,
+            ipCount: 1,
+            tagname: { $ifNull: ['$tag.tagname', '未知标签'] }
+          }
+        }
+      ],
+      { tagname: '其他' },
+      ['pvCount', 'ipCount']
+    )
   ]
   const readPostListTagData = readerlogUtils
     .aggregate(readPostListTagPipeline)
@@ -516,10 +576,8 @@ module.exports = async function (req, res, next) {
         _id: -1
       }
     },
-    // 只取前100
-    {
-      $limit: limit
-    }
+    // Top 99 + Others
+    ...getTopAndOthersStages([], {}, ['pvCount', 'ipCount'])
   ]
   const readPostListKeywordData = readerlogUtils
     .aggregate(readPostListKeywordPipeline)
@@ -559,28 +617,32 @@ module.exports = async function (req, res, next) {
         _id: -1
       }
     },
-    {
-      $limit: limit
-    },
-    {
-      $lookup: {
-        from: 'bangumis',
-        localField: '_id',
-        foreignField: '_id',
-        as: 'bangumi'
-      }
-    },
-    {
-      $unwind: '$bangumi'
-    },
-    {
-      $project: {
-        _id: 1,
-        pvCount: 1,
-        ipCount: 1,
-        title: '$bangumi.title'
-      }
-    }
+    // Top 99 + Others
+    ...getTopAndOthersStages(
+      [
+        {
+          $lookup: {
+            from: 'bangumis',
+            localField: '_id',
+            foreignField: '_id',
+            as: 'bangumi'
+          }
+        },
+        {
+          $unwind: { path: '$bangumi', preserveNullAndEmptyArrays: true }
+        },
+        {
+          $project: {
+            _id: 1,
+            pvCount: 1,
+            ipCount: 1,
+            title: { $ifNull: ['$bangumi.title', '未知内容'] }
+          }
+        }
+      ],
+      { title: '其他' },
+      ['pvCount', 'ipCount']
+    )
   ]
   const readPostListBangumiData = readerlogUtils
     .aggregate(readPostListBangumiPipeline)
@@ -620,28 +682,32 @@ module.exports = async function (req, res, next) {
         _id: -1
       }
     },
-    {
-      $limit: limit
-    },
-    {
-      $lookup: {
-        from: 'movies',
-        localField: '_id',
-        foreignField: '_id',
-        as: 'movie'
-      }
-    },
-    {
-      $unwind: '$movie'
-    },
-    {
-      $project: {
-        _id: 1,
-        pvCount: 1,
-        ipCount: 1,
-        title: '$movie.title'
-      }
-    }
+    // Top 99 + Others
+    ...getTopAndOthersStages(
+      [
+        {
+          $lookup: {
+            from: 'movies',
+            localField: '_id',
+            foreignField: '_id',
+            as: 'movie'
+          }
+        },
+        {
+          $unwind: { path: '$movie', preserveNullAndEmptyArrays: true }
+        },
+        {
+          $project: {
+            _id: 1,
+            pvCount: 1,
+            ipCount: 1,
+            title: { $ifNull: ['$movie.title', '未知内容'] }
+          }
+        }
+      ],
+      { title: '其他' },
+      ['pvCount', 'ipCount']
+    )
   ]
   const readPostListMovieData = readerlogUtils
     .aggregate(readPostListMoviePipeline)
@@ -681,28 +747,32 @@ module.exports = async function (req, res, next) {
         _id: -1
       }
     },
-    {
-      $limit: limit
-    },
-    {
-      $lookup: {
-        from: 'books',
-        localField: '_id',
-        foreignField: '_id',
-        as: 'book'
-      }
-    },
-    {
-      $unwind: '$book'
-    },
-    {
-      $project: {
-        _id: 1,
-        pvCount: 1,
-        ipCount: 1,
-        title: '$book.title'
-      }
-    }
+    // Top 99 + Others
+    ...getTopAndOthersStages(
+      [
+        {
+          $lookup: {
+            from: 'books',
+            localField: '_id',
+            foreignField: '_id',
+            as: 'book'
+          }
+        },
+        {
+          $unwind: { path: '$book', preserveNullAndEmptyArrays: true }
+        },
+        {
+          $project: {
+            _id: 1,
+            pvCount: 1,
+            ipCount: 1,
+            title: { $ifNull: ['$book.title', '未知内容'] }
+          }
+        }
+      ],
+      { title: '其他' },
+      ['pvCount', 'ipCount']
+    )
   ]
   const readPostListBookData = readerlogUtils
     .aggregate(readPostListBookPipeline)
@@ -742,28 +812,32 @@ module.exports = async function (req, res, next) {
         _id: -1
       }
     },
-    {
-      $limit: limit
-    },
-    {
-      $lookup: {
-        from: 'games',
-        localField: '_id',
-        foreignField: '_id',
-        as: 'game'
-      }
-    },
-    {
-      $unwind: '$game'
-    },
-    {
-      $project: {
-        _id: 1,
-        pvCount: 1,
-        ipCount: 1,
-        title: '$game.title'
-      }
-    }
+    // Top 99 + Others
+    ...getTopAndOthersStages(
+      [
+        {
+          $lookup: {
+            from: 'games',
+            localField: '_id',
+            foreignField: '_id',
+            as: 'game'
+          }
+        },
+        {
+          $unwind: { path: '$game', preserveNullAndEmptyArrays: true }
+        },
+        {
+          $project: {
+            _id: 1,
+            pvCount: 1,
+            ipCount: 1,
+            title: { $ifNull: ['$game.title', '未知内容'] }
+          }
+        }
+      ],
+      { title: '其他' },
+      ['pvCount', 'ipCount']
+    )
   ]
   const readPostListGameData = readerlogUtils
     .aggregate(readPostListGamePipeline)
@@ -803,28 +877,32 @@ module.exports = async function (req, res, next) {
         _id: -1
       }
     },
-    {
-      $limit: limit
-    },
-    {
-      $lookup: {
-        from: 'mappoints',
-        localField: '_id',
-        foreignField: '_id',
-        as: 'mappoint'
-      }
-    },
-    {
-      $unwind: '$mappoint'
-    },
-    {
-      $project: {
-        _id: 1,
-        pvCount: 1,
-        ipCount: 1,
-        title: '$mappoint.title'
-      }
-    }
+    // Top 99 + Others
+    ...getTopAndOthersStages(
+      [
+        {
+          $lookup: {
+            from: 'mappoints',
+            localField: '_id',
+            foreignField: '_id',
+            as: 'mappoint'
+          }
+        },
+        {
+          $unwind: { path: '$mappoint', preserveNullAndEmptyArrays: true }
+        },
+        {
+          $project: {
+            _id: 1,
+            pvCount: 1,
+            ipCount: 1,
+            title: { $ifNull: ['$mappoint.title', '未知内容'] }
+          }
+        }
+      ],
+      { title: '其他' },
+      ['pvCount', 'ipCount']
+    )
   ]
   const readPostListMappointData = readerlogUtils
     .aggregate(readPostListMappointPipeline)
@@ -836,7 +914,7 @@ module.exports = async function (req, res, next) {
   promiseArray.push(readPostListMappointData)
 
   // 设备和地理位置统计 - 合并在一个聚合查询中以减少查询次数
-  const deviceAndLocationPipeline = [
+  const commonMatchHeader = [
     {
       $match: {
         createdAt: { $gte: startDate.toDate(), $lte: endDate.toDate() },
@@ -851,408 +929,433 @@ module.exports = async function (req, res, next) {
         ipInfo: 1,
         ip: 1
       }
-    },
-    {
-      $facet: {
-        // 浏览器统计，包含版本信息
-        browserStats: [
-          {
-            $match: {
-              'deviceInfo.browser.name': { $exists: true, $ne: null }
-            }
-          },
-          // 预处理：规范化版本号
-          {
-            $project: {
-              browserName: '$deviceInfo.browser.name',
-              browserVersion: {
-                $ifNull: [
-                  // 先处理字段不存在的情况
-                  {
-                    $cond: [
-                      // 再处理空字符串
-                      { $eq: ['$deviceInfo.browser.version', ''] },
-                      '未知版本',
-                      '$deviceInfo.browser.version'
-                    ]
-                  },
-                  '未知版本' // 字段不存在时返回"未知版本"
-                ]
-              },
-              ip: 1
-            }
-          },
-          // 直接按浏览器名称+版本分组，避免中间步骤
-          {
-            $group: {
-              _id: {
-                name: '$browserName',
-                version: '$browserVersion'
-              },
-              pvCount: { $sum: 1 },
-              ips: { $addToSet: '$ip' }
-            }
-          },
-          {
-            $project: {
-              _id: 1,
-              pvCount: 1,
-              ipCount: { $size: '$ips' }
-            }
-          },
-          // 按浏览器名称重新分组
-          {
-            $group: {
-              _id: '$_id.name',
-              pvCount: { $sum: '$pvCount' },
-              ipCount: { $sum: '$ipCount' },
-              versions: {
-                $push: {
-                  version: '$_id.version',
-                  pvCount: '$pvCount',
-                  ipCount: '$ipCount'
-                }
-              }
-            }
-          },
-          // 对版本数组排序（按IP数）
-          {
-            $project: {
-              _id: 1,
-              pvCount: 1,
-              ipCount: 1,
-              sortedVersions: {
-                $sortArray: {
-                  input: '$versions',
-                  sortBy: { ...ippvSortRule }
-                }
-              }
-            }
-          },
-          // 分离前10个和剩余的版本
-          {
-            $project: {
-              _id: 1,
-              pvCount: 1,
-              ipCount: 1,
-              top10: { $slice: ['$sortedVersions', 0, 10] },
-              remainingPvCount: {
-                $cond: {
-                  if: { $gt: [{ $size: '$sortedVersions' }, 10] },
-                  then: {
-                    $sum: {
-                      $map: {
-                        input: {
-                          $slice: [
-                            '$sortedVersions',
-                            10,
-                            { $subtract: [{ $size: '$sortedVersions' }, 10] }
-                          ]
-                        },
-                        as: 'item',
-                        in: '$$item.pvCount'
-                      }
-                    }
-                  },
-                  else: 0
-                }
-              },
-              remainingIpCount: {
-                $cond: {
-                  if: { $gt: [{ $size: '$sortedVersions' }, 10] },
-                  then: {
-                    $sum: {
-                      $map: {
-                        input: {
-                          $slice: [
-                            '$sortedVersions',
-                            10,
-                            { $subtract: [{ $size: '$sortedVersions' }, 10] }
-                          ]
-                        },
-                        as: 'item',
-                        in: '$$item.ipCount'
-                      }
-                    }
-                  },
-                  else: 0
-                }
-              }
-            }
-          },
-          // 添加"其他"项
-          {
-            $project: {
-              _id: 1,
-              pvCount: 1,
-              ipCount: 1,
-              children: {
-                $cond: {
-                  if: { $gt: ['$remainingPvCount', 0] },
-                  then: {
-                    $concatArrays: [
-                      '$top10',
-                      [
-                        {
-                          version: '其他',
-                          pvCount: '$remainingPvCount',
-                          ipCount: '$remainingIpCount'
-                        }
-                      ]
-                    ]
-                  },
-                  else: '$top10'
-                }
-              }
-            }
-          },
-          // 排序
-          {
-            $sort: { ...ippvSortRule }
-          },
-          {
-            $limit: limit
-          }
-        ],
-        // 操作系统统计，包含版本信息
-        osStats: [
-          {
-            $match: {
-              'deviceInfo.os.name': { $exists: true, $ne: null }
-            }
-          },
-          // 预处理：规范化版本号
-          {
-            $project: {
-              osName: '$deviceInfo.os.name',
-              osVersion: {
-                $ifNull: [
-                  // 先处理字段不存在的情况
-                  {
-                    $cond: [
-                      // 再处理空字符串
-                      { $eq: ['$deviceInfo.os.version', ''] },
-                      '未知版本',
-                      '$deviceInfo.os.version'
-                    ]
-                  },
-                  '未知版本' // 字段不存在时返回"未知版本"
-                ]
-              },
-              ip: 1
-            }
-          },
-          // 直接按操作系统名称+版本分组
-          {
-            $group: {
-              _id: {
-                name: '$osName',
-                version: '$osVersion'
-              },
-              pvCount: { $sum: 1 },
-              ips: { $addToSet: '$ip' }
-            }
-          },
-          {
-            $project: {
-              _id: 1,
-              pvCount: 1,
-              ipCount: { $size: '$ips' }
-            }
-          },
-          // 按操作系统名称重新分组
-          {
-            $group: {
-              _id: '$_id.name',
-              pvCount: { $sum: '$pvCount' },
-              ipCount: { $sum: '$ipCount' },
-              versions: {
-                $push: {
-                  version: '$_id.version',
-                  pvCount: '$pvCount',
-                  ipCount: '$ipCount'
-                }
-              }
-            }
-          },
-          // 对版本数组排序（按IP数）
-          {
-            $project: {
-              _id: 1,
-              pvCount: 1,
-              ipCount: 1,
-              sortedVersions: {
-                $sortArray: {
-                  input: '$versions',
-                  sortBy: { ...ippvSortRule }
-                }
-              }
-            }
-          },
-          // 分离前10个和剩余的版本
-          {
-            $project: {
-              _id: 1,
-              pvCount: 1,
-              ipCount: 1,
-              top10: { $slice: ['$sortedVersions', 0, 10] },
-              remainingPvCount: {
-                $cond: {
-                  if: { $gt: [{ $size: '$sortedVersions' }, 10] },
-                  then: {
-                    $sum: {
-                      $map: {
-                        input: {
-                          $slice: [
-                            '$sortedVersions',
-                            10,
-                            { $subtract: [{ $size: '$sortedVersions' }, 10] }
-                          ]
-                        },
-                        as: 'item',
-                        in: '$$item.pvCount'
-                      }
-                    }
-                  },
-                  else: 0
-                }
-              },
-              remainingIpCount: {
-                $cond: {
-                  if: { $gt: [{ $size: '$sortedVersions' }, 10] },
-                  then: {
-                    $sum: {
-                      $map: {
-                        input: {
-                          $slice: [
-                            '$sortedVersions',
-                            10,
-                            { $subtract: [{ $size: '$sortedVersions' }, 10] }
-                          ]
-                        },
-                        as: 'item',
-                        in: '$$item.ipCount'
-                      }
-                    }
-                  },
-                  else: 0
-                }
-              }
-            }
-          },
-          // 添加"其他"项
-          {
-            $project: {
-              _id: 1,
-              pvCount: 1,
-              ipCount: 1,
-              children: {
-                $cond: {
-                  if: { $gt: ['$remainingPvCount', 0] },
-                  then: {
-                    $concatArrays: [
-                      '$top10',
-                      [
-                        {
-                          version: '其他',
-                          pvCount: '$remainingPvCount',
-                          ipCount: '$remainingIpCount'
-                        }
-                      ]
-                    ]
-                  },
-                  else: '$top10'
-                }
-              }
-            }
-          },
-          // 按总IP数量排序
-          {
-            $sort: { ...ippvSortRule }
-          },
-          {
-            $limit: limit
-          }
-        ],
-        // 国家统计
-        countryStats: [
-          {
-            $match: {
-              'ipInfo.countryLong': { $exists: true, $ne: null, $ne: '-' }
-            }
-          },
-          {
-            $group: {
-              _id: '$ipInfo.countryLong',
-              pvCount: { $sum: 1 },
-              ips: { $addToSet: '$ip' }
-            }
-          },
-          {
-            $project: {
-              _id: 1,
-              pvCount: 1,
-              ipCount: { $size: '$ips' }
-            }
-          },
-          {
-            $sort: { ...ippvSortRule }
-          },
-          {
-            $limit: limit
-          }
-        ],
-        // 国家+地区统计
-        regionStats: [
-          {
-            $match: {
-              'ipInfo.countryLong': { $exists: true, $ne: null, $ne: '-' },
-              'ipInfo.region': { $exists: true, $ne: null, $ne: '-' }
-            }
-          },
-          {
-            $group: {
-              _id: { country: '$ipInfo.countryLong', region: '$ipInfo.region' },
-              pvCount: { $sum: 1 },
-              ips: { $addToSet: '$ip' }
-            }
-          },
-          {
-            $project: {
-              _id: 0,
-              location: {
-                $cond: {
-                  if: { $eq: ['$_id.country', '$_id.region'] },
-                  then: '$_id.country', // 如果国家和地区相同，只显示一次
-                  else: { $concat: ['$_id.country', ' ', '$_id.region'] } // 否则显示国家+空格+地区
-                }
-              },
-              ipInfo: {
-                countryLong: '$_id.country',
-                region: '$_id.region'
-              },
-              pvCount: 1,
-              ipCount: { $size: '$ips' }
-            }
-          },
-          {
-            $sort: { ...ippvSortRule }
-          },
-          {
-            $limit: limit
-          }
-        ]
-      }
     }
   ]
 
-  const deviceAndLocationData = readerlogUtils
-    .aggregate(deviceAndLocationPipeline)
+  // 浏览器统计
+  const browserStatsPipeline = [
+    ...commonMatchHeader,
+    {
+      $match: {
+        'deviceInfo.browser.name': { $exists: true, $ne: null }
+      }
+    },
+    // 预处理：规范化版本号
+    {
+      $project: {
+        browserName: '$deviceInfo.browser.name',
+        browserVersion: {
+          $ifNull: [
+            // 先处理字段不存在的情况
+            {
+              $cond: [
+                // 再处理空字符串
+                { $eq: ['$deviceInfo.browser.version', ''] },
+                '未知版本',
+                '$deviceInfo.browser.version'
+              ]
+            },
+            '未知版本' // 字段不存在时返回"未知版本"
+          ]
+        },
+        ip: 1
+      }
+    },
+    // 直接按浏览器名称+版本分组，避免中间步骤
+    {
+      $group: {
+        _id: {
+          name: '$browserName',
+          version: '$browserVersion'
+        },
+        pvCount: { $sum: 1 },
+        ips: { $addToSet: '$ip' }
+      }
+    },
+    {
+      $project: {
+        _id: 1,
+        pvCount: 1,
+        ipCount: { $size: '$ips' }
+      }
+    },
+    // 按浏览器名称重新分组
+    {
+      $group: {
+        _id: '$_id.name',
+        pvCount: { $sum: '$pvCount' },
+        ipCount: { $sum: '$ipCount' },
+        versions: {
+          $push: {
+            version: '$_id.version',
+            pvCount: '$pvCount',
+            ipCount: '$ipCount'
+          }
+        }
+      }
+    },
+    // 对版本数组排序（按IP数）
+    {
+      $project: {
+        _id: 1,
+        pvCount: 1,
+        ipCount: 1,
+        sortedVersions: {
+          $sortArray: {
+            input: '$versions',
+            sortBy: { ...ippvSortRule }
+          }
+        }
+      }
+    },
+    // 分离前10个和剩余的版本
+    {
+      $project: {
+        _id: 1,
+        pvCount: 1,
+        ipCount: 1,
+        top10: { $slice: ['$sortedVersions', 0, 10] },
+        remainingPvCount: {
+          $cond: {
+            if: { $gt: [{ $size: '$sortedVersions' }, 10] },
+            then: {
+              $sum: {
+                $map: {
+                  input: {
+                    $slice: [
+                      '$sortedVersions',
+                      10,
+                      { $subtract: [{ $size: '$sortedVersions' }, 10] }
+                    ]
+                  },
+                  as: 'item',
+                  in: '$$item.pvCount'
+                }
+              }
+            },
+            else: 0
+          }
+        },
+        remainingIpCount: {
+          $cond: {
+            if: { $gt: [{ $size: '$sortedVersions' }, 10] },
+            then: {
+              $sum: {
+                $map: {
+                  input: {
+                    $slice: [
+                      '$sortedVersions',
+                      10,
+                      { $subtract: [{ $size: '$sortedVersions' }, 10] }
+                    ]
+                  },
+                  as: 'item',
+                  in: '$$item.ipCount'
+                }
+              }
+            },
+            else: 0
+          }
+        }
+      }
+    },
+    // 添加"其他"项
+    {
+      $project: {
+        _id: 1,
+        pvCount: 1,
+        ipCount: 1,
+        children: {
+          $cond: {
+            if: { $gt: ['$remainingPvCount', 0] },
+            then: {
+              $concatArrays: [
+                '$top10',
+                [
+                  {
+                    version: '其他',
+                    pvCount: '$remainingPvCount',
+                    ipCount: '$remainingIpCount'
+                  }
+                ]
+              ]
+            },
+            else: '$top10'
+          }
+        }
+      }
+    },
+    // 排序
+    {
+      $sort: { ...ippvSortRule }
+    },
+    // Top 99 + Others
+    ...getTopAndOthersStages([], {}, ['pvCount', 'ipCount'])
+  ]
+  const browserStatsData = readerlogUtils
+    .aggregate(browserStatsPipeline)
     .catch(err => {
       adminApiLog.error(err)
       return false
     })
-  promiseArray.push(deviceAndLocationData)
+  promiseArray.push(browserStatsData)
+
+  // 操作系统统计
+  const osStatsPipeline = [
+    ...commonMatchHeader,
+    {
+      $match: {
+        'deviceInfo.os.name': { $exists: true, $ne: null }
+      }
+    },
+    // 预处理：规范化版本号
+    {
+      $project: {
+        osName: '$deviceInfo.os.name',
+        osVersion: {
+          $ifNull: [
+            // 先处理字段不存在的情况
+            {
+              $cond: [
+                // 再处理空字符串
+                { $eq: ['$deviceInfo.os.version', ''] },
+                '未知版本',
+                '$deviceInfo.os.version'
+              ]
+            },
+            '未知版本' // 字段不存在时返回"未知版本"
+          ]
+        },
+        ip: 1
+      }
+    },
+    // 直接按操作系统名称+版本分组
+    {
+      $group: {
+        _id: {
+          name: '$osName',
+          version: '$osVersion'
+        },
+        pvCount: { $sum: 1 },
+        ips: { $addToSet: '$ip' }
+      }
+    },
+    {
+      $project: {
+        _id: 1,
+        pvCount: 1,
+        ipCount: { $size: '$ips' }
+      }
+    },
+    // 按操作系统名称重新分组
+    {
+      $group: {
+        _id: '$_id.name',
+        pvCount: { $sum: '$pvCount' },
+        ipCount: { $sum: '$ipCount' },
+        versions: {
+          $push: {
+            version: '$_id.version',
+            pvCount: '$pvCount',
+            ipCount: '$ipCount'
+          }
+        }
+      }
+    },
+    // 对版本数组排序（按IP数）
+    {
+      $project: {
+        _id: 1,
+        pvCount: 1,
+        ipCount: 1,
+        sortedVersions: {
+          $sortArray: {
+            input: '$versions',
+            sortBy: { ...ippvSortRule }
+          }
+        }
+      }
+    },
+    // 分离前10个和剩余的版本
+    {
+      $project: {
+        _id: 1,
+        pvCount: 1,
+        ipCount: 1,
+        top10: { $slice: ['$sortedVersions', 0, 10] },
+        remainingPvCount: {
+          $cond: {
+            if: { $gt: [{ $size: '$sortedVersions' }, 10] },
+            then: {
+              $sum: {
+                $map: {
+                  input: {
+                    $slice: [
+                      '$sortedVersions',
+                      10,
+                      { $subtract: [{ $size: '$sortedVersions' }, 10] }
+                    ]
+                  },
+                  as: 'item',
+                  in: '$$item.pvCount'
+                }
+              }
+            },
+            else: 0
+          }
+        },
+        remainingIpCount: {
+          $cond: {
+            if: { $gt: [{ $size: '$sortedVersions' }, 10] },
+            then: {
+              $sum: {
+                $map: {
+                  input: {
+                    $slice: [
+                      '$sortedVersions',
+                      10,
+                      { $subtract: [{ $size: '$sortedVersions' }, 10] }
+                    ]
+                  },
+                  as: 'item',
+                  in: '$$item.ipCount'
+                }
+              }
+            },
+            else: 0
+          }
+        }
+      }
+    },
+    // 添加"其他"项
+    {
+      $project: {
+        _id: 1,
+        pvCount: 1,
+        ipCount: 1,
+        children: {
+          $cond: {
+            if: { $gt: ['$remainingPvCount', 0] },
+            then: {
+              $concatArrays: [
+                '$top10',
+                [
+                  {
+                    version: '其他',
+                    pvCount: '$remainingPvCount',
+                    ipCount: '$remainingIpCount'
+                  }
+                ]
+              ]
+            },
+            else: '$top10'
+          }
+        }
+      }
+    },
+    // 按总IP数量排序
+    {
+      $sort: { ...ippvSortRule }
+    },
+    // Top 99 + Others
+    ...getTopAndOthersStages([], {}, ['pvCount', 'ipCount'])
+  ]
+  const osStatsData = readerlogUtils.aggregate(osStatsPipeline).catch(err => {
+    adminApiLog.error(err)
+    return false
+  })
+  promiseArray.push(osStatsData)
+
+  // 国家统计
+  const countryStatsPipeline = [
+    ...commonMatchHeader,
+    {
+      $match: {
+        'ipInfo.countryLong': { $exists: true, $ne: null, $ne: '-' }
+      }
+    },
+    {
+      $group: {
+        _id: '$ipInfo.countryLong',
+        pvCount: { $sum: 1 },
+        ips: { $addToSet: '$ip' }
+      }
+    },
+    {
+      $project: {
+        _id: 1,
+        pvCount: 1,
+        ipCount: { $size: '$ips' }
+      }
+    },
+    {
+      $sort: { ...ippvSortRule }
+    },
+    // Top 99 + Others
+    ...getTopAndOthersStages([], {}, ['pvCount', 'ipCount'])
+  ]
+  const countryStatsData = readerlogUtils
+    .aggregate(countryStatsPipeline)
+    .catch(err => {
+      adminApiLog.error(err)
+      return false
+    })
+  promiseArray.push(countryStatsData)
+
+  // 地区统计
+  const regionStatsPipeline = [
+    ...commonMatchHeader,
+    {
+      $match: {
+        'ipInfo.countryLong': { $exists: true, $ne: null, $ne: '-' },
+        'ipInfo.region': { $exists: true, $ne: null, $ne: '-' }
+      }
+    },
+    {
+      $group: {
+        _id: { country: '$ipInfo.countryLong', region: '$ipInfo.region' },
+        pvCount: { $sum: 1 },
+        ips: { $addToSet: '$ip' }
+      }
+    },
+    {
+      $project: {
+        _id: 0,
+        location: {
+          $cond: {
+            if: { $eq: ['$_id.country', '$_id.region'] },
+            then: '$_id.country', // 如果国家和地区相同，只显示一次
+            else: { $concat: ['$_id.country', ' ', '$_id.region'] } // 否则显示国家+空格+地区
+          }
+        },
+        ipInfo: {
+          countryLong: '$_id.country',
+          region: '$_id.region'
+        },
+        pvCount: 1,
+        ipCount: { $size: '$ips' }
+      }
+    },
+    {
+      $sort: { ...ippvSortRule }
+    },
+    // Top 99 + Others
+    ...getTopAndOthersStages(
+      [],
+      {
+        location: '其他',
+        ipInfo: { countryLong: '其他', region: '其他' }
+      },
+      ['pvCount', 'ipCount']
+    )
+  ]
+  const regionStatsData = readerlogUtils
+    .aggregate(regionStatsPipeline)
+    .catch(err => {
+      adminApiLog.error(err)
+      return false
+    })
+  promiseArray.push(regionStatsData)
 
   // 新增：搜索引擎爬虫统计
   const botStatsPipeline = [
@@ -1273,9 +1376,8 @@ module.exports = async function (req, res, next) {
     {
       $sort: { count: -1 }
     },
-    {
-      $limit: limit
-    }
+    // Top 99 + Others
+    ...getTopAndOthersStages([], {}, ['count'])
   ]
 
   const botStatsData = readerlogUtils.aggregate(botStatsPipeline).catch(err => {
@@ -1315,9 +1417,8 @@ module.exports = async function (req, res, next) {
     {
       $sort: { ...ippvSortRule }
     },
-    {
-      $limit: limit
-    }
+    // Top 99 + Others
+    ...getTopAndOthersStages([], {}, ['pvCount', 'ipCount'])
   ]
 
   const languageStatsData = readerlogUtils
@@ -1423,9 +1524,8 @@ module.exports = async function (req, res, next) {
     {
       $sort: { ...ippvSortRule }
     },
-    {
-      $limit: limit
-    }
+    // Top 99 + Others
+    ...getTopAndOthersStages([], {}, ['pvCount', 'ipCount'])
   ]
 
   const fullLocaleStatsData = readerlogUtils
@@ -1451,7 +1551,10 @@ module.exports = async function (req, res, next) {
       readPostListBookData,
       readPostListGameData,
       readPostListMappointData,
-      deviceAndLocationData,
+      browserStatsData,
+      osStatsData,
+      countryStatsData,
+      regionStatsData,
       botStatsData, // 爬虫统计数据
       languageStatsData, // 语言统计数据
       fullLocaleStatsData // 完整语言环境统计数据
@@ -1471,7 +1574,10 @@ module.exports = async function (req, res, next) {
       !readPostListBookData ||
       !readPostListGameData ||
       !readPostListMappointData ||
-      !deviceAndLocationData ||
+      !browserStatsData ||
+      !osStatsData ||
+      !countryStatsData ||
+      !regionStatsData ||
       !botStatsData ||
       !languageStatsData ||
       !fullLocaleStatsData
@@ -1501,10 +1607,10 @@ module.exports = async function (req, res, next) {
       readPostListGameData: readPostListGameData,
       readPostListMappointData: readPostListMappointData,
       // 设备和地理位置统计数据
-      browserStats: deviceAndLocationData[0].browserStats,
-      osStats: deviceAndLocationData[0].osStats,
-      countryStats: deviceAndLocationData[0].countryStats,
-      regionStats: deviceAndLocationData[0].regionStats,
+      browserStats: browserStatsData,
+      osStats: osStatsData,
+      countryStats: countryStatsData,
+      regionStats: regionStatsData,
       // 爬虫统计数据
       botStats: botStatsData,
       // 语言统计数据
