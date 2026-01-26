@@ -47,8 +47,6 @@
           <el-table
             :data="readPostViewData"
             row-key="_id"
-            class="wm-stats-table"
-            :cell-style="tableCellStyle('readPostViewData')"
             style="width: 100%"
             height="440px"
           >
@@ -64,29 +62,23 @@
                   </template>
                 </div>
                 <!-- 点击打开按钮 -->
-                <div class="dib ml5 vt" v-if="[1, 2, 3].includes(row.type)">
+                <div class="dib ml5 vt">
                   <el-link type="primary" @click="openPage(row)"
                     ><i class="fas fa-external-link-alt"></i
                   ></el-link>
                 </div>
               </template>
             </el-table-column>
-            <el-table-column label="IP" prop="ipCount" width="100px">
-              <template #default="{ row }">
-                {{ row.ipCount }}
-                <span class="wm-stats-percent-1">{{
-                  getPercent(row, 'ipCount', 'readPostViewData')
-                }}</span>
-              </template>
-            </el-table-column>
-            <el-table-column label="PV" prop="pvCount" width="100px">
-              <template #default="{ row }">
-                {{ row.pvCount }}
-                <span class="wm-stats-percent-2">{{
-                  getPercent(row, 'pvCount', 'readPostViewData')
-                }}</span>
-              </template>
-            </el-table-column>
+            <el-table-column
+              prop="ipCount"
+              label="IP"
+              width="80px"
+            ></el-table-column>
+            <el-table-column
+              prop="pvCount"
+              label="PV"
+              width="80px"
+            ></el-table-column>
           </el-table>
           <div class="dflex flexCenter mt10">
             <el-pagination
@@ -107,8 +99,6 @@
           <el-table
             :data="readPostLikeData"
             row-key="_id"
-            class="wm-stats-table"
-            :cell-style="tableCellStyle('readPostLikeData')"
             style="width: 100%"
             height="440px"
           >
@@ -124,21 +114,18 @@
                   </template>
                 </div>
                 <!-- 点击打开按钮 -->
-                <div class="dib ml5 vt" v-if="[1, 2, 3].includes(row.type)">
+                <div class="dib ml5 vt">
                   <el-link type="primary" @click="openPage(row)"
                     ><i class="fas fa-external-link-alt"></i
                   ></el-link>
                 </div>
               </template>
             </el-table-column>
-            <el-table-column label="点赞量" prop="count" width="100px">
-              <template #default="{ row }">
-                {{ row.count }}
-                <span class="wm-stats-percent-3">{{
-                  getPercent(row, 'count', 'readPostLikeData')
-                }}</span>
-              </template>
-            </el-table-column>
+            <el-table-column
+              prop="count"
+              label="点赞量"
+              width="80px"
+            ></el-table-column>
           </el-table>
           <div class="dflex flexCenter mt10">
             <el-pagination
@@ -159,8 +146,6 @@
           <el-table
             :data="readPostShareData"
             row-key="_id"
-            class="wm-stats-table"
-            :cell-style="tableCellStyle('readPostShareData')"
             style="width: 100%"
             height="440px"
           >
@@ -176,21 +161,18 @@
                   </template>
                 </div>
                 <!-- 点击打开按钮 -->
-                <div class="dib ml5 vt" v-if="[1, 2, 3].includes(row.type)">
+                <div class="dib ml5 vt">
                   <el-link type="primary" @click="openPage(row)"
                     ><i class="fas fa-external-link-alt"></i
                   ></el-link>
                 </div>
               </template>
             </el-table-column>
-            <el-table-column label="分享量" prop="count" width="100px">
-              <template #default="{ row }">
-                {{ row.count }}
-                <span class="wm-stats-percent-3">{{
-                  getPercent(row, 'count', 'readPostShareData')
-                }}</span>
-              </template>
-            </el-table-column>
+            <el-table-column
+              prop="count"
+              label="分享量"
+              width="80px"
+            ></el-table-column>
           </el-table>
           <div class="dflex flexCenter mt10">
             <el-pagination
@@ -212,8 +194,6 @@
           <el-table
             :data="readPostSharePlatformData"
             row-key="_id"
-            class="wm-stats-table"
-            :cell-style="tableCellStyle('readPostSharePlatformData')"
             style="width: 100%"
             height="440px"
           >
@@ -224,14 +204,11 @@
                 </div>
               </template>
             </el-table-column>
-            <el-table-column label="分享量" prop="count" width="100px">
-              <template #default="{ row }">
-                {{ row.count }}
-                <span class="wm-stats-percent-3">{{
-                  getPercent(row, 'count', 'readPostSharePlatformData')
-                }}</span>
-              </template>
-            </el-table-column>
+            <el-table-column
+              prop="count"
+              label="分享量"
+              width="80px"
+            ></el-table-column>
           </el-table>
           <div class="dflex flexCenter mt10">
             <el-pagination
@@ -253,29 +230,21 @@
           <el-table
             :data="readReferrerData"
             row-key="_id"
-            class="wm-stats-table"
-            :cell-style="tableCellStyle('readReferrerData')"
             style="width: 100%"
             height="440px"
           >
             <el-table-column prop="_id" label="来源"> </el-table-column>
 
-            <el-table-column label="IP" prop="ipCount" width="100px">
-              <template #default="{ row }">
-                {{ row.ipCount }}
-                <span class="wm-stats-percent-1">{{
-                  getPercent(row, 'ipCount', 'readReferrerData')
-                }}</span>
-              </template>
-            </el-table-column>
-            <el-table-column label="PV" prop="pvCount" width="100px">
-              <template #default="{ row }">
-                {{ row.pvCount }}
-                <span class="wm-stats-percent-2">{{
-                  getPercent(row, 'pvCount', 'readReferrerData')
-                }}</span>
-              </template>
-            </el-table-column>
+            <el-table-column
+              prop="ipCount"
+              label="IP"
+              width="80px"
+            ></el-table-column>
+            <el-table-column
+              prop="pvCount"
+              label="PV"
+              width="80px"
+            ></el-table-column>
           </el-table>
           <div class="dflex flexCenter mt10">
             <el-pagination
@@ -296,29 +265,21 @@
           <el-table
             :data="readPostListSortData"
             row-key="_id"
-            class="wm-stats-table"
-            :cell-style="tableCellStyle('readPostListSortData')"
             style="width: 100%"
             height="440px"
           >
             <el-table-column prop="sortname" label="分类"> </el-table-column>
 
-            <el-table-column label="IP" prop="ipCount" width="100px">
-              <template #default="{ row }">
-                {{ row.ipCount }}
-                <span class="wm-stats-percent-1">{{
-                  getPercent(row, 'ipCount', 'readPostListSortData')
-                }}</span>
-              </template>
-            </el-table-column>
-            <el-table-column label="PV" prop="pvCount" width="100px">
-              <template #default="{ row }">
-                {{ row.pvCount }}
-                <span class="wm-stats-percent-2">{{
-                  getPercent(row, 'pvCount', 'readPostListSortData')
-                }}</span>
-              </template>
-            </el-table-column>
+            <el-table-column
+              prop="ipCount"
+              label="IP"
+              width="80px"
+            ></el-table-column>
+            <el-table-column
+              prop="pvCount"
+              label="PV"
+              width="80px"
+            ></el-table-column>
           </el-table>
           <div class="dflex flexCenter mt10">
             <el-pagination
@@ -339,29 +300,21 @@
           <el-table
             :data="readPostListTagData"
             row-key="_id"
-            class="wm-stats-table"
-            :cell-style="tableCellStyle('readPostListTagData')"
             style="width: 100%"
             height="440px"
           >
             <el-table-column prop="tagname" label="标签"> </el-table-column>
 
-            <el-table-column label="IP" prop="ipCount" width="100px">
-              <template #default="{ row }">
-                {{ row.ipCount }}
-                <span class="wm-stats-percent-1">{{
-                  getPercent(row, 'ipCount', 'readPostListTagData')
-                }}</span>
-              </template>
-            </el-table-column>
-            <el-table-column label="PV" prop="pvCount" width="100px">
-              <template #default="{ row }">
-                {{ row.pvCount }}
-                <span class="wm-stats-percent-2">{{
-                  getPercent(row, 'pvCount', 'readPostListTagData')
-                }}</span>
-              </template>
-            </el-table-column>
+            <el-table-column
+              prop="ipCount"
+              label="IP"
+              width="80px"
+            ></el-table-column>
+            <el-table-column
+              prop="pvCount"
+              label="PV"
+              width="80px"
+            ></el-table-column>
           </el-table>
           <div class="dflex flexCenter mt10">
             <el-pagination
@@ -382,29 +335,21 @@
           <el-table
             :data="readPostListKeywordData"
             row-key="_id"
-            class="wm-stats-table"
-            :cell-style="tableCellStyle('readPostListKeywordData')"
             style="width: 100%"
             height="440px"
           >
             <el-table-column prop="_id" label="关键词"> </el-table-column>
 
-            <el-table-column label="IP" prop="ipCount" width="100px">
-              <template #default="{ row }">
-                {{ row.ipCount }}
-                <span class="wm-stats-percent-1">{{
-                  getPercent(row, 'ipCount', 'readPostListKeywordData')
-                }}</span>
-              </template>
-            </el-table-column>
-            <el-table-column label="PV" prop="pvCount" width="100px">
-              <template #default="{ row }">
-                {{ row.pvCount }}
-                <span class="wm-stats-percent-2">{{
-                  getPercent(row, 'pvCount', 'readPostListKeywordData')
-                }}</span>
-              </template>
-            </el-table-column>
+            <el-table-column
+              prop="ipCount"
+              label="IP"
+              width="80px"
+            ></el-table-column>
+            <el-table-column
+              prop="pvCount"
+              label="PV"
+              width="80px"
+            ></el-table-column>
           </el-table>
           <div class="dflex flexCenter mt10">
             <el-pagination
@@ -425,8 +370,6 @@
           <el-table
             :data="readPostListBangumiData"
             row-key="_id"
-            class="wm-stats-table"
-            :cell-style="tableCellStyle('readPostListBangumiData')"
             style="width: 100%"
             height="440px"
           >
@@ -436,22 +379,16 @@
               </template>
             </el-table-column>
 
-            <el-table-column label="IP" prop="ipCount" width="100px">
-              <template #default="{ row }">
-                {{ row.ipCount }}
-                <span class="wm-stats-percent-1">{{
-                  getPercent(row, 'ipCount', 'readPostListBangumiData')
-                }}</span>
-              </template>
-            </el-table-column>
-            <el-table-column label="PV" prop="pvCount" width="100px">
-              <template #default="{ row }">
-                {{ row.pvCount }}
-                <span class="wm-stats-percent-2">{{
-                  getPercent(row, 'pvCount', 'readPostListBangumiData')
-                }}</span>
-              </template>
-            </el-table-column>
+            <el-table-column
+              prop="ipCount"
+              label="IP"
+              width="80px"
+            ></el-table-column>
+            <el-table-column
+              prop="pvCount"
+              label="PV"
+              width="80px"
+            ></el-table-column>
           </el-table>
           <div class="dflex flexCenter mt10">
             <el-pagination
@@ -472,8 +409,6 @@
           <el-table
             :data="readPostListMovieData"
             row-key="_id"
-            class="wm-stats-table"
-            :cell-style="tableCellStyle('readPostListMovieData')"
             style="width: 100%"
             height="440px"
           >
@@ -483,22 +418,16 @@
               </template>
             </el-table-column>
 
-            <el-table-column label="IP" prop="ipCount" width="100px">
-              <template #default="{ row }">
-                {{ row.ipCount }}
-                <span class="wm-stats-percent-1">{{
-                  getPercent(row, 'ipCount', 'readPostListMovieData')
-                }}</span>
-              </template>
-            </el-table-column>
-            <el-table-column label="PV" prop="pvCount" width="100px">
-              <template #default="{ row }">
-                {{ row.pvCount }}
-                <span class="wm-stats-percent-2">{{
-                  getPercent(row, 'pvCount', 'readPostListMovieData')
-                }}</span>
-              </template>
-            </el-table-column>
+            <el-table-column
+              prop="ipCount"
+              label="IP"
+              width="80px"
+            ></el-table-column>
+            <el-table-column
+              prop="pvCount"
+              label="PV"
+              width="80px"
+            ></el-table-column>
           </el-table>
           <div class="dflex flexCenter mt10">
             <el-pagination
@@ -519,8 +448,6 @@
           <el-table
             :data="readPostListBookData"
             row-key="_id"
-            class="wm-stats-table"
-            :cell-style="tableCellStyle('readPostListBookData')"
             style="width: 100%"
             height="440px"
           >
@@ -530,22 +457,16 @@
               </template>
             </el-table-column>
 
-            <el-table-column label="IP" prop="ipCount" width="100px">
-              <template #default="{ row }">
-                {{ row.ipCount }}
-                <span class="wm-stats-percent-1">{{
-                  getPercent(row, 'ipCount', 'readPostListBookData')
-                }}</span>
-              </template>
-            </el-table-column>
-            <el-table-column label="PV" prop="pvCount" width="100px">
-              <template #default="{ row }">
-                {{ row.pvCount }}
-                <span class="wm-stats-percent-2">{{
-                  getPercent(row, 'pvCount', 'readPostListBookData')
-                }}</span>
-              </template>
-            </el-table-column>
+            <el-table-column
+              prop="ipCount"
+              label="IP"
+              width="80px"
+            ></el-table-column>
+            <el-table-column
+              prop="pvCount"
+              label="PV"
+              width="80px"
+            ></el-table-column>
           </el-table>
           <div class="dflex flexCenter mt10">
             <el-pagination
@@ -566,8 +487,6 @@
           <el-table
             :data="readPostListGameData"
             row-key="_id"
-            class="wm-stats-table"
-            :cell-style="tableCellStyle('readPostListGameData')"
             style="width: 100%"
             height="440px"
           >
@@ -577,22 +496,16 @@
               </template>
             </el-table-column>
 
-            <el-table-column label="IP" prop="ipCount" width="100px">
-              <template #default="{ row }">
-                {{ row.ipCount }}
-                <span class="wm-stats-percent-1">{{
-                  getPercent(row, 'ipCount', 'readPostListGameData')
-                }}</span>
-              </template>
-            </el-table-column>
-            <el-table-column label="PV" prop="pvCount" width="100px">
-              <template #default="{ row }">
-                {{ row.pvCount }}
-                <span class="wm-stats-percent-2">{{
-                  getPercent(row, 'pvCount', 'readPostListGameData')
-                }}</span>
-              </template>
-            </el-table-column>
+            <el-table-column
+              prop="ipCount"
+              label="IP"
+              width="80px"
+            ></el-table-column>
+            <el-table-column
+              prop="pvCount"
+              label="PV"
+              width="80px"
+            ></el-table-column>
           </el-table>
           <div class="dflex flexCenter mt10">
             <el-pagination
@@ -614,8 +527,6 @@
           <el-table
             :data="readPostListMappointData"
             row-key="_id"
-            class="wm-stats-table"
-            :cell-style="tableCellStyle('readPostListMappointData')"
             style="width: 100%"
             height="440px"
           >
@@ -625,22 +536,16 @@
               </template>
             </el-table-column>
 
-            <el-table-column label="IP" prop="ipCount" width="100px">
-              <template #default="{ row }">
-                {{ row.ipCount }}
-                <span class="wm-stats-percent-1">{{
-                  getPercent(row, 'ipCount', 'readPostListMappointData')
-                }}</span>
-              </template>
-            </el-table-column>
-            <el-table-column label="PV" prop="pvCount" width="100px">
-              <template #default="{ row }">
-                {{ row.pvCount }}
-                <span class="wm-stats-percent-2">{{
-                  getPercent(row, 'pvCount', 'readPostListMappointData')
-                }}</span>
-              </template>
-            </el-table-column>
+            <el-table-column
+              prop="ipCount"
+              label="IP"
+              width="80px"
+            ></el-table-column>
+            <el-table-column
+              prop="pvCount"
+              label="PV"
+              width="80px"
+            ></el-table-column>
           </el-table>
           <div class="dflex flexCenter mt10">
             <el-pagination
@@ -663,8 +568,6 @@
             :data="osStatsData"
             style="width: 100%"
             row-key="_id"
-            class="wm-stats-table"
-            :cell-style="tableCellStyle('osStats')"
             height="440px"
             default-expand-all
           >
@@ -677,22 +580,16 @@
               </template>
             </el-table-column>
 
-            <el-table-column label="IP" prop="ipCount" width="100px">
-              <template #default="{ row }">
-                {{ row.ipCount }}
-                <span class="wm-stats-percent-1">{{
-                  getPercent(row, 'ipCount', 'osStats')
-                }}</span>
-              </template>
-            </el-table-column>
-            <el-table-column label="PV" prop="pvCount" width="100px">
-              <template #default="{ row }">
-                {{ row.pvCount }}
-                <span class="wm-stats-percent-2">{{
-                  getPercent(row, 'pvCount', 'osStats')
-                }}</span>
-              </template>
-            </el-table-column>
+            <el-table-column
+              prop="ipCount"
+              label="IP"
+              width="80px"
+            ></el-table-column>
+            <el-table-column
+              prop="pvCount"
+              label="PV"
+              width="80px"
+            ></el-table-column>
           </el-table>
           <div class="dflex flexCenter mt10">
             <el-pagination
@@ -713,8 +610,6 @@
             :data="browserStatsData"
             style="width: 100%"
             row-key="_id"
-            class="wm-stats-table"
-            :cell-style="tableCellStyle('browserStats')"
             height="440px"
             default-expand-all
           >
@@ -727,22 +622,16 @@
               </template>
             </el-table-column>
 
-            <el-table-column label="IP" prop="ipCount" width="100px">
-              <template #default="{ row }">
-                {{ row.ipCount }}
-                <span class="wm-stats-percent-1">{{
-                  getPercent(row, 'ipCount', 'browserStats')
-                }}</span>
-              </template>
-            </el-table-column>
-            <el-table-column label="PV" prop="pvCount" width="100px">
-              <template #default="{ row }">
-                {{ row.pvCount }}
-                <span class="wm-stats-percent-2">{{
-                  getPercent(row, 'pvCount', 'browserStats')
-                }}</span>
-              </template>
-            </el-table-column>
+            <el-table-column
+              prop="ipCount"
+              label="IP"
+              width="80px"
+            ></el-table-column>
+            <el-table-column
+              prop="pvCount"
+              label="PV"
+              width="80px"
+            ></el-table-column>
           </el-table>
           <div class="dflex flexCenter mt10">
             <el-pagination
@@ -764,28 +653,20 @@
           <el-table
             :data="languageStatsData"
             style="width: 100%"
-            class="wm-stats-table"
-            :cell-style="tableCellStyle('languageStats')"
             height="440px"
           >
             <el-table-column prop="_id" label="语言代码"> </el-table-column>
 
-            <el-table-column label="IP" prop="ipCount" width="100px">
-              <template #default="{ row }">
-                {{ row.ipCount }}
-                <span class="wm-stats-percent-1">{{
-                  getPercent(row, 'ipCount', 'languageStats')
-                }}</span>
-              </template>
-            </el-table-column>
-            <el-table-column label="PV" prop="pvCount" width="100px">
-              <template #default="{ row }">
-                {{ row.pvCount }}
-                <span class="wm-stats-percent-2">{{
-                  getPercent(row, 'pvCount', 'languageStats')
-                }}</span>
-              </template>
-            </el-table-column>
+            <el-table-column
+              prop="ipCount"
+              label="IP"
+              width="80px"
+            ></el-table-column>
+            <el-table-column
+              prop="pvCount"
+              label="PV"
+              width="80px"
+            ></el-table-column>
           </el-table>
           <div class="dflex flexCenter mt10">
             <el-pagination
@@ -807,28 +688,20 @@
           <el-table
             :data="fullLocaleStatsData"
             style="width: 100%"
-            class="wm-stats-table"
-            :cell-style="tableCellStyle('fullLocaleStats')"
             height="440px"
           >
             <el-table-column prop="_id" label="语言环境代码"> </el-table-column>
 
-            <el-table-column label="IP" prop="ipCount" width="100px">
-              <template #default="{ row }">
-                {{ row.ipCount }}
-                <span class="wm-stats-percent-1">{{
-                  getPercent(row, 'ipCount', 'fullLocaleStats')
-                }}</span>
-              </template>
-            </el-table-column>
-            <el-table-column label="PV" prop="pvCount" width="100px">
-              <template #default="{ row }">
-                {{ row.pvCount }}
-                <span class="wm-stats-percent-2">{{
-                  getPercent(row, 'pvCount', 'fullLocaleStats')
-                }}</span>
-              </template>
-            </el-table-column>
+            <el-table-column
+              prop="ipCount"
+              label="IP"
+              width="80px"
+            ></el-table-column>
+            <el-table-column
+              prop="pvCount"
+              label="PV"
+              width="80px"
+            ></el-table-column>
           </el-table>
           <div class="dflex flexCenter mt10">
             <el-pagination
@@ -847,13 +720,7 @@
       <el-col :span="12" :xs="24" class="p10">
         <div class="mb10 fb statistics-title">国家/地区</div>
         <div class="mb10 statistics-panel">
-          <el-table
-            :data="countryStatsData"
-            style="width: 100%"
-            height="440px"
-            class="wm-stats-table"
-            :cell-style="tableCellStyle('countryStats')"
-          >
+          <el-table :data="countryStatsData" style="width: 100%" height="440px">
             <el-table-column prop="_id" label="国家/地区">
               <template #default="{ row }">
                 <IpInfoDisplay
@@ -864,22 +731,16 @@
               </template>
             </el-table-column>
 
-            <el-table-column label="IP" prop="ipCount" width="100px">
-              <template #default="{ row }">
-                {{ row.ipCount }}
-                <span class="wm-stats-percent-1">{{
-                  getPercent(row, 'ipCount', 'countryStats')
-                }}</span>
-              </template>
-            </el-table-column>
-            <el-table-column label="PV" prop="pvCount" width="100px">
-              <template #default="{ row }">
-                {{ row.pvCount }}
-                <span class="wm-stats-percent-2">{{
-                  getPercent(row, 'pvCount', 'countryStats')
-                }}</span>
-              </template>
-            </el-table-column>
+            <el-table-column
+              prop="ipCount"
+              label="IP"
+              width="80px"
+            ></el-table-column>
+            <el-table-column
+              prop="pvCount"
+              label="PV"
+              width="80px"
+            ></el-table-column>
           </el-table>
           <div class="dflex flexCenter mt10">
             <el-pagination
@@ -898,35 +759,23 @@
       <el-col :span="12" :xs="24" class="p10">
         <div class="mb10 fb statistics-title">行政区划</div>
         <div class="mb10 statistics-panel">
-          <el-table
-            :data="regionStatsData"
-            style="width: 100%"
-            height="440px"
-            class="wm-stats-table"
-            :cell-style="tableCellStyle('regionStats')"
-          >
+          <el-table :data="regionStatsData" style="width: 100%" height="440px">
             <el-table-column prop="location" label="行政区划">
               <template #default="{ row }">
                 <IpInfoDisplay :ipInfo="row.ipInfo" />
               </template>
             </el-table-column>
 
-            <el-table-column prop="ipCount" label="IP" width="160px">
-              <template #default="{ row }">
-                <span>{{ row.ipCount }}</span
-                ><span class="wm-stats-percent-1">{{
-                  getPercent(row, 'ipCount', 'regionStats')
-                }}</span>
-              </template>
-            </el-table-column>
-            <el-table-column prop="pvCount" label="PV" width="160px">
-              <template #default="{ row }">
-                <span>{{ row.pvCount }}</span
-                ><span class="wm-stats-percent-2">{{
-                  getPercent(row, 'pvCount', 'regionStats')
-                }}</span>
-              </template>
-            </el-table-column>
+            <el-table-column
+              prop="ipCount"
+              label="IP"
+              width="80px"
+            ></el-table-column>
+            <el-table-column
+              prop="pvCount"
+              label="PV"
+              width="80px"
+            ></el-table-column>
           </el-table>
           <div class="dflex flexCenter mt10">
             <el-pagination
@@ -945,22 +794,13 @@
       <el-col :span="24" :xs="24" class="p10">
         <div class="mb10 fb statistics-title">爬虫</div>
         <div class="mb10 statistics-panel">
-          <el-table
-            :data="botStatsData"
-            style="width: 100%"
-            height="440px"
-            class="wm-stats-table"
-            :cell-style="tableCellStyle('botStats')"
-          >
+          <el-table :data="botStatsData" style="width: 100%" height="440px">
             <el-table-column prop="_id" label="爬虫名称"></el-table-column>
-            <el-table-column prop="count" label="访问量" width="160px">
-              <template #default="{ row }">
-                <span>{{ row.count }}</span
-                ><span class="wm-stats-percent-3">{{
-                  getPercent(row, 'count', 'botStats')
-                }}</span>
-              </template>
-            </el-table-column>
+            <el-table-column
+              prop="count"
+              label="访问量"
+              width="80px"
+            ></el-table-column>
           </el-table>
           <div class="dflex flexCenter mt10">
             <el-pagination
@@ -1148,78 +988,9 @@ export default {
           })
           console.log('获取统计数据', res.data)
           rankData.value = res.data
-          calculateTotals()
           showData.value = true
         })
     }
-
-    const totals = reactive({})
-
-    const calculateTotals = () => {
-      const keys = [
-        { key: 'readReferrerData', fields: ['ipCount', 'pvCount'] },
-        { key: 'readPostViewData', fields: ['ipCount', 'pvCount'] },
-        { key: 'readPostLikeData', fields: ['count'] },
-        { key: 'readPostShareData', fields: ['count'] },
-        { key: 'readPostSharePlatformData', fields: ['count'] },
-        { key: 'readPostListSortData', fields: ['ipCount', 'pvCount'] },
-        { key: 'readPostListTagData', fields: ['ipCount', 'pvCount'] },
-        { key: 'readPostListKeywordData', fields: ['ipCount', 'pvCount'] },
-        { key: 'readPostListBangumiData', fields: ['ipCount', 'pvCount'] },
-        { key: 'readPostListMovieData', fields: ['ipCount', 'pvCount'] },
-        { key: 'readPostListBookData', fields: ['ipCount', 'pvCount'] },
-        { key: 'readPostListGameData', fields: ['ipCount', 'pvCount'] },
-        { key: 'readPostListMappointData', fields: ['ipCount', 'pvCount'] },
-        { key: 'browserStats', fields: ['ipCount', 'pvCount'] },
-        { key: 'osStats', fields: ['ipCount', 'pvCount'] },
-        { key: 'countryStats', fields: ['ipCount', 'pvCount'] },
-        { key: 'regionStats', fields: ['ipCount', 'pvCount'] },
-        { key: 'botStats', fields: ['count'] },
-        { key: 'languageStats', fields: ['ipCount', 'pvCount'] },
-        { key: 'fullLocaleStats', fields: ['ipCount', 'pvCount'] }
-      ]
-
-      keys.forEach(({ key, fields }) => {
-        totals[key] = {}
-        const list = rankData.value[key] || []
-        fields.forEach(field => {
-          totals[key][field] = list.reduce(
-            (acc, curr) => acc + (curr[field] || 0),
-            0
-          )
-        })
-      })
-    }
-
-    const getPercent = (row, field, dataKey) => {
-      const val = row[field] || 0
-      const total = totals[dataKey]?.[field] || 0
-      if (total === 0) return '(0.0%)'
-      return `(${((val / total) * 100).toFixed(1)}%)`
-    }
-
-    const tableCellStyle =
-      dataKey =>
-      ({ row, column }) => {
-        const field = column.property
-        if (!field || !['ipCount', 'pvCount', 'count'].includes(field))
-          return {}
-
-        const val = row[field] || 0
-        const total = totals[dataKey]?.[field] || 0
-        const p = total === 0 ? 0 : (val / total) * 100
-
-        let color = 'rgba(64, 158, 255, 0.3)' // Default blue
-        if (field === 'pvCount') {
-          color = 'rgba(103, 194, 58, 0.3)' // Green
-        }
-
-        return {
-          backgroundImage: `linear-gradient(to right, ${color} 0%, ${color} ${p}%, transparent ${p}%, transparent 100%)`,
-          backgroundSize: '100% 100%',
-          backgroundRepeat: 'no-repeat'
-        }
-      }
 
     // 缩减文字到20字的方法
     const reduceText = text => {
@@ -1680,9 +1451,7 @@ export default {
       fullLocaleStatsData,
 
       showData,
-      tryShowData,
-      getPercent,
-      tableCellStyle
+      tryShowData
     }
   }
 }
@@ -1709,31 +1478,6 @@ export default {
 }
 .statistics-extra-area :deep(.el-radio) {
   margin-right: 16px;
-}
-
-/* Ensure progress bars are not hidden on hover */
-.wm-stats-table :deep(.el-table__row:hover > td.el-table__cell) {
-  background-color: transparent !important;
-}
-.wm-stats-percent-1 {
-  color: #409eff;
-  font-size: 12px;
-  margin-left: 5px;
-}
-.wm-stats-percent-2 {
-  color: #67c23a;
-  font-size: 12px;
-  margin-left: 5px;
-}
-.wm-stats-percent-3 {
-  color: #409eff;
-  font-size: 12px;
-  margin-left: 5px;
-}
-.wm-stats-percent {
-  color: #999;
-  font-size: 12px;
-  margin-left: 5px;
 }
 /* 小于1024 时换行 */
 @media (max-width: 1024px) {
