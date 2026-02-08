@@ -400,6 +400,7 @@
                         <a
                           class="pr-1"
                           :href="item.url"
+                          rel="ugc nofollow"
                           target="_blank"
                           v-if="item.url"
                           >{{ item.nickname }}</a
