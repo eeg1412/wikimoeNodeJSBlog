@@ -381,7 +381,12 @@
               ></div>
               <div class="flex">
                 <div class="comment-list-item-avatar-body">
-                  <a :href="item.url" target="_blank" v-if="item.url">
+                  <a
+                    :href="item.url"
+                    rel="ugc nofollow"
+                    target="_blank"
+                    v-if="item.url"
+                  >
                     <Avatar :avatar="item.avatar" :alt="item.nickname" />
                   </a>
                   <Avatar :avatar="item.avatar" :alt="item.nickname" v-else />
