@@ -17,7 +17,7 @@ const keyword = route.params.keyword || ''
 const page = route.params.page
 if (!/^\d+$/.test(page)) {
   showError({
-    status: 404,
+    statusCode: 404,
     message: '页面不存在'
   })
   throw new Error('页面不存在')

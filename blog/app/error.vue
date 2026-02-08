@@ -1,6 +1,6 @@
 <template>
   <div class="error-body">
-    <div class="error-code">{{ error.status || error.statusCode }}</div>
+    <div class="error-code">{{ error.statusCode }}</div>
     <div class="error-msg">{{ errorMessage }}</div>
     <!-- 尝试回到首页 -->
     <div class="error-btn pointer" @click="reflushHome">{{ btnText }}</div>
@@ -21,8 +21,7 @@ const btnText = computed(() => {
 })
 
 const errorMessage = computed(() => {
-  const status = error.value.status || error.value.statusCode
-  switch (status) {
+  switch (error.value.statusCode) {
     case 404:
       return '您访问的页面不存在。'
     case 403:
@@ -32,7 +31,6 @@ const errorMessage = computed(() => {
     default:
       return (
         error.value?.message ||
-        error.value?.statusText ||
         error.value?.statusMessage ||
         '服务器正在维护中，请稍后再试。'
       )

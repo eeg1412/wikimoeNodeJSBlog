@@ -18,11 +18,10 @@ class HttpRequest {
       useFetch(url, newOptions)
         .then(res => {
           if (res.error?.value) {
-            const status =
-              res.error?.value?.status || res.error?.value?.statusCode
-            console.log('status', status)
+            const statusCode = res.error?.value?.statusCode
+            console.log('statusCode', statusCode)
             showError({
-              status: status || 500,
+              statusCode: statusCode || 500,
               message: '服务器正在维护中，请稍后再试。'
             })
           } else {
