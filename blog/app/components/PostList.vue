@@ -487,7 +487,7 @@ const routePagination = computed(() => {
 // 如果page不是正整数，报错去404页面
 if (!/^\d+$/.test(page)) {
   showError({
-    statusCode: 404,
+    status: 404,
     message: '页面不存在'
   })
   throw new Error('页面不存在')

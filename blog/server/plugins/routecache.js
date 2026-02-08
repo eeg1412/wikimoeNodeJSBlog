@@ -305,7 +305,8 @@ export default defineNitroPlugin(nitroApp => {
       return
     }
 
-    if (response.statusCode !== 200 || !isMethodCacheable(method)) {
+    const status = response.status || response.statusCode
+    if (status !== 200 || !isMethodCacheable(method)) {
       return
     }
 
@@ -349,7 +350,7 @@ export default defineNitroPlugin(nitroApp => {
       console.warn(
         `Request URL exceeds ${MAX_URL_LENGTH} characters: ${url.length} bytes`
       )
-      event.node.res.statusCode = 400
+      setResponseStatus(event, 400)
       event.node.res.end('Bad Request: URL too long')
       return
     }
@@ -385,7 +386,7 @@ export default defineNitroPlugin(nitroApp => {
             // 检查 x-wm-cache-update-pass 是否正确
             const reqPass = req.headers['x-wm-cache-update-pass'] || ''
             if (reqPass !== RANDOMPASS) {
-              event.node.res.statusCode = 403
+              setResponseStatus(event, 403)
               event.node.res.end('Forbidden: Invalid cache update pass')
               return
             }
