@@ -8,7 +8,8 @@
   >
     <span v-if="loading" class="wui-button-loading">
       <svg
-        class="animate-spin h-4 w-4"
+        class="animate-spin"
+        :class="iconClass"
         xmlns="http://www.w3.org/2000/svg"
         fill="none"
         viewBox="0 0 24 24"
@@ -49,7 +50,7 @@ const props = defineProps({
   trailingIcon: { type: String, default: '' },
   color: { type: String, default: 'primary' },
   variant: { type: String, default: 'solid' },
-  size: { type: String, default: 'md' },
+  size: { type: String, default: 'sm' },
   type: { type: String, default: 'button' },
   block: { type: Boolean, default: false },
   disabled: { type: Boolean, default: false },
@@ -66,77 +67,103 @@ const hasContent = computed(() => {
   return !!slots.default || !!props.label
 })
 
+// Matches Nuxt UI 2 button.ts exactly
 const sizeClasses = {
-  '2xs': 'text-xs px-1.5 py-0.5 gap-x-1',
-  xs: 'text-xs px-2 py-1 gap-x-1',
-  sm: 'text-sm px-2.5 py-1.5 gap-x-1.5',
-  md: 'text-sm px-3 py-2 gap-x-2',
-  lg: 'text-base px-3.5 py-2.5 gap-x-2.5',
-  xl: 'text-base px-4 py-3 gap-x-3'
+  '2xs': 'text-xs gap-x-1',
+  xs: 'text-xs gap-x-1.5',
+  sm: 'text-sm gap-x-1.5',
+  md: 'text-sm gap-x-2',
+  lg: 'text-sm gap-x-2.5',
+  xl: 'text-base gap-x-2.5'
 }
 
-const iconSizeClasses = {
-  '2xs': 'w-3.5 h-3.5',
-  xs: 'w-4 h-4',
-  sm: 'w-4 h-4',
-  md: 'w-5 h-5',
-  lg: 'w-5 h-5',
-  xl: 'w-6 h-6'
+const paddingClasses = {
+  '2xs': 'px-2 py-1',
+  xs: 'px-2.5 py-1.5',
+  sm: 'px-2.5 py-1.5',
+  md: 'px-3 py-2',
+  lg: 'px-3.5 py-2.5',
+  xl: 'px-3.5 py-2.5'
 }
 
-const iconOnlySizeClasses = {
-  '2xs': 'p-0.5',
-  xs: 'p-1',
+const squareClasses = {
+  '2xs': 'p-1',
+  xs: 'p-1.5',
   sm: 'p-1.5',
   md: 'p-2',
   lg: 'p-2.5',
-  xl: 'p-3'
+  xl: 'p-2.5'
+}
+
+const iconSizeClasses = {
+  '2xs': 'w-4 h-4',
+  xs: 'w-4 h-4',
+  sm: 'w-5 h-5',
+  md: 'w-5 h-5',
+  lg: 'w-5 h-5',
+  xl: 'w-6 h-6'
 }
 
 const colorVariantClasses = computed(() => {
   const c = props.color
   const v = props.variant
 
+  // Matches Nuxt UI 2 button.ts color/variant config
   const map = {
     primary: {
       solid:
-        'bg-primary-500 text-white hover:bg-primary-600 dark:bg-primary-400 dark:text-gray-900 dark:hover:bg-primary-500 focus-visible:outline-primary-500 disabled:bg-primary-300 dark:disabled:bg-primary-500/50',
+        'shadow-sm text-white dark:text-gray-900 bg-primary-500 hover:bg-primary-600 disabled:bg-primary-500 dark:bg-primary-400 dark:hover:bg-primary-500 dark:disabled:bg-primary-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-500 dark:focus-visible:outline-primary-400',
       outline:
-        'text-primary-500 ring-1 ring-inset ring-primary-500 hover:bg-primary-50 dark:text-primary-400 dark:ring-primary-400 dark:hover:bg-primary-950 disabled:text-primary-300 dark:disabled:text-primary-500/50',
-      soft: 'text-primary-500 bg-primary-50 hover:bg-primary-100 dark:text-primary-400 dark:bg-primary-950 dark:hover:bg-primary-900 disabled:text-primary-300',
+        'ring-1 ring-inset ring-current text-primary-500 dark:text-primary-400 hover:bg-primary-50 disabled:bg-transparent dark:hover:bg-primary-950 dark:disabled:bg-transparent focus-visible:ring-2 focus-visible:ring-primary-500 dark:focus-visible:ring-primary-400',
+      soft: 'text-primary-500 dark:text-primary-400 bg-primary-50 hover:bg-primary-100 disabled:bg-primary-50 dark:bg-primary-950 dark:hover:bg-primary-900 dark:disabled:bg-primary-950 focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-primary-500 dark:focus-visible:ring-primary-400',
       ghost:
-        'text-primary-500 hover:bg-primary-50 dark:text-primary-400 dark:hover:bg-primary-950 disabled:text-primary-300',
-      link: 'text-primary-500 hover:text-primary-600 underline-offset-4 hover:underline dark:text-primary-400 dark:hover:text-primary-500 disabled:text-primary-300'
+        'text-primary-500 dark:text-primary-400 hover:bg-primary-50 disabled:bg-transparent dark:hover:bg-primary-950 dark:disabled:bg-transparent focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-primary-500 dark:focus-visible:ring-primary-400',
+      link: 'text-primary-500 hover:text-primary-600 disabled:text-primary-500 dark:text-primary-400 dark:hover:text-primary-500 dark:disabled:text-primary-400 underline-offset-4 hover:underline focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-primary-500 dark:focus-visible:ring-primary-400'
     },
     gray: {
       solid:
-        'bg-gray-100 text-gray-700 hover:bg-gray-200 dark:bg-gray-800 dark:text-gray-200 dark:hover:bg-gray-700 disabled:text-gray-400',
-      outline:
-        'text-gray-700 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 dark:text-gray-200 dark:ring-gray-600 dark:hover:bg-gray-800 disabled:text-gray-400',
-      soft: 'text-gray-700 bg-gray-50 hover:bg-gray-100 dark:text-gray-200 dark:bg-gray-800 dark:hover:bg-gray-700 disabled:text-gray-400',
+        'shadow-sm ring-1 ring-inset ring-gray-300 dark:ring-gray-700 text-gray-700 dark:text-gray-200 bg-gray-50 hover:bg-gray-100 disabled:bg-gray-50 dark:bg-gray-800 dark:hover:bg-gray-700/50 dark:disabled:bg-gray-800 focus-visible:ring-2 focus-visible:ring-primary-500 dark:focus-visible:ring-primary-400',
       ghost:
-        'text-gray-700 hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-800 disabled:text-gray-400',
-      link: 'text-gray-500 hover:text-gray-700 underline-offset-4 hover:underline dark:text-gray-400 dark:hover:text-gray-200 disabled:text-gray-300'
+        'text-gray-700 dark:text-gray-200 hover:text-gray-900 dark:hover:text-white hover:bg-gray-50 dark:hover:bg-gray-800 focus-visible:ring-inset focus-visible:ring-2 focus-visible:ring-primary-500 dark:focus-visible:ring-primary-400',
+      link: 'text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 underline-offset-4 hover:underline focus-visible:ring-inset focus-visible:ring-2 focus-visible:ring-primary-500 dark:focus-visible:ring-primary-400',
+      outline:
+        'ring-1 ring-inset ring-gray-300 dark:ring-gray-700 text-gray-700 dark:text-gray-200 hover:bg-gray-50 disabled:bg-transparent dark:hover:bg-gray-800 dark:disabled:bg-transparent focus-visible:ring-2 focus-visible:ring-primary-500 dark:focus-visible:ring-primary-400',
+      soft: 'text-gray-700 dark:text-gray-200 bg-gray-50 hover:bg-gray-100 disabled:bg-gray-50 dark:bg-gray-800 dark:hover:bg-gray-700 dark:disabled:bg-gray-800 focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-primary-500 dark:focus-visible:ring-primary-400'
     },
     white: {
       solid:
-        'bg-white text-gray-700 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 dark:bg-gray-900 dark:text-gray-200 dark:ring-gray-700 dark:hover:bg-gray-800 disabled:text-gray-400',
-      outline:
-        'text-gray-700 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 dark:text-gray-200 dark:ring-gray-600 dark:hover:bg-gray-800 disabled:text-gray-400',
-      soft: 'text-gray-700 bg-gray-50 hover:bg-gray-100 dark:text-gray-200 dark:bg-gray-800 dark:hover:bg-gray-700 disabled:text-gray-400',
+        'shadow-sm ring-1 ring-inset ring-gray-300 dark:ring-gray-700 text-gray-900 dark:text-white bg-white hover:bg-gray-50 disabled:bg-white dark:bg-gray-900 dark:hover:bg-gray-800/50 dark:disabled:bg-gray-900 focus-visible:ring-2 focus-visible:ring-primary-500 dark:focus-visible:ring-primary-400',
       ghost:
-        'text-gray-700 hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-800 disabled:text-gray-400',
-      link: 'text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 disabled:text-gray-300'
+        'text-gray-900 dark:text-white hover:bg-white dark:hover:bg-gray-900 focus-visible:ring-inset focus-visible:ring-2 focus-visible:ring-primary-500 dark:focus-visible:ring-primary-400',
+      link: 'text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 underline-offset-4 hover:underline focus-visible:ring-inset focus-visible:ring-2 focus-visible:ring-primary-500 dark:focus-visible:ring-primary-400',
+      outline:
+        'ring-1 ring-inset ring-gray-300 dark:ring-gray-700 text-gray-900 dark:text-white hover:bg-gray-50 disabled:bg-transparent dark:hover:bg-gray-800 dark:disabled:bg-transparent focus-visible:ring-2 focus-visible:ring-primary-500 dark:focus-visible:ring-primary-400',
+      soft: 'text-gray-900 dark:text-white bg-gray-50 hover:bg-gray-100 disabled:bg-gray-50 dark:bg-gray-800 dark:hover:bg-gray-700 dark:disabled:bg-gray-800 focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-primary-500 dark:focus-visible:ring-primary-400'
+    },
+    black: {
+      solid:
+        'shadow-sm text-white dark:text-gray-900 bg-gray-900 hover:bg-gray-800 disabled:bg-gray-900 dark:bg-white dark:hover:bg-gray-100 dark:disabled:bg-white focus-visible:ring-inset focus-visible:ring-2 focus-visible:ring-primary-500 dark:focus-visible:ring-primary-400',
+      link: 'text-gray-900 dark:text-white underline-offset-4 hover:underline focus-visible:ring-inset focus-visible:ring-2 focus-visible:ring-primary-500 dark:focus-visible:ring-primary-400'
     },
     red: {
       solid:
-        'bg-red-500 text-white hover:bg-red-600 dark:bg-red-400 dark:text-gray-900 dark:hover:bg-red-500 disabled:bg-red-300',
+        'shadow-sm text-white dark:text-gray-900 bg-red-500 hover:bg-red-600 disabled:bg-red-500 dark:bg-red-400 dark:hover:bg-red-500 dark:disabled:bg-red-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-500 dark:focus-visible:outline-red-400',
       outline:
-        'text-red-500 ring-1 ring-inset ring-red-500 hover:bg-red-50 dark:text-red-400 dark:ring-red-400 dark:hover:bg-red-950 disabled:text-red-300',
-      soft: 'text-red-500 bg-red-50 hover:bg-red-100 dark:text-red-400 dark:bg-red-950 dark:hover:bg-red-900 disabled:text-red-300',
+        'ring-1 ring-inset ring-current text-red-500 dark:text-red-400 hover:bg-red-50 disabled:bg-transparent dark:hover:bg-red-950 dark:disabled:bg-transparent focus-visible:ring-2 focus-visible:ring-red-500 dark:focus-visible:ring-red-400',
+      soft: 'text-red-500 dark:text-red-400 bg-red-50 hover:bg-red-100 disabled:bg-red-50 dark:bg-red-950 dark:hover:bg-red-900 dark:disabled:bg-red-950 focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-red-500 dark:focus-visible:ring-red-400',
       ghost:
-        'text-red-500 hover:bg-red-50 dark:text-red-400 dark:hover:bg-red-950 disabled:text-red-300',
-      link: 'text-red-500 hover:text-red-600 dark:text-red-400 dark:hover:text-red-500 disabled:text-red-300'
+        'text-red-500 dark:text-red-400 hover:bg-red-50 disabled:bg-transparent dark:hover:bg-red-950 dark:disabled:bg-transparent focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-red-500 dark:focus-visible:ring-red-400',
+      link: 'text-red-500 hover:text-red-600 disabled:text-red-500 dark:text-red-400 dark:hover:text-red-500 dark:disabled:text-red-400 underline-offset-4 hover:underline focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-red-500 dark:focus-visible:ring-red-400'
+    },
+    green: {
+      solid:
+        'shadow-sm text-white dark:text-gray-900 bg-green-500 hover:bg-green-600 disabled:bg-green-500 dark:bg-green-400 dark:hover:bg-green-500 dark:disabled:bg-green-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-500 dark:focus-visible:outline-green-400',
+      outline:
+        'ring-1 ring-inset ring-current text-green-500 dark:text-green-400 hover:bg-green-50 disabled:bg-transparent dark:hover:bg-green-950 dark:disabled:bg-transparent focus-visible:ring-2 focus-visible:ring-green-500 dark:focus-visible:ring-green-400',
+      soft: 'text-green-500 dark:text-green-400 bg-green-50 hover:bg-green-100 disabled:bg-green-50 dark:bg-green-950 dark:hover:bg-green-900 dark:disabled:bg-green-950 focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-green-500 dark:focus-visible:ring-green-400',
+      ghost:
+        'text-green-500 dark:text-green-400 hover:bg-green-50 disabled:bg-transparent dark:hover:bg-green-950 dark:disabled:bg-transparent focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-green-500 dark:focus-visible:ring-green-400',
+      link: 'text-green-500 hover:text-green-600 disabled:text-green-500 dark:text-green-400 dark:hover:text-green-500 dark:disabled:text-green-400 underline-offset-4 hover:underline focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-green-500 dark:focus-visible:ring-green-400'
     }
   }
 
@@ -145,39 +172,34 @@ const colorVariantClasses = computed(() => {
 })
 
 const iconClass = computed(() => {
-  return iconSizeClasses[props.size] || iconSizeClasses.md
+  return iconSizeClasses[props.size] || iconSizeClasses.sm
 })
 
 const buttonClasses = computed(() => {
   const classes = []
 
-  // size
+  // Text size + gap
+  classes.push(sizeClasses[props.size] || sizeClasses.sm)
+
+  // Padding / square / icon-only
   const isIconOnly =
     (props.icon || props.trailingIcon) && !hasContent.value && !props.label
   if (isIconOnly) {
-    classes.push(iconOnlySizeClasses[props.size] || iconOnlySizeClasses.md)
+    classes.push(squareClasses[props.size] || squareClasses.sm)
+  } else if (props.square) {
+    classes.push(squareClasses[props.size] || squareClasses.sm)
   } else if (props.padded) {
-    classes.push(sizeClasses[props.size] || sizeClasses.md)
+    classes.push(paddingClasses[props.size] || paddingClasses.sm)
   } else {
-    classes.push(
-      'p-0',
-      sizeClasses[props.size]
-        ?.replace(/px-\S+\s*/g, '')
-        .replace(/py-\S+\s*/g, '') || ''
-    )
+    classes.push('p-0')
   }
 
-  // color
+  // Color + variant
   classes.push(colorVariantClasses.value)
 
-  // block
+  // Block
   if (props.block) {
     classes.push('w-full justify-center')
-  }
-
-  // square
-  if (props.square) {
-    classes.push('!p-1.5')
   }
 
   return classes.filter(Boolean).join(' ')
@@ -186,9 +208,10 @@ const buttonClasses = computed(() => {
 
 <style scoped>
 .wui-button {
-  @apply inline-flex items-center font-medium rounded-md cursor-pointer
-    focus:outline-none focus-visible:outline-2 focus-visible:outline-offset-2
-    transition-colors duration-200 disabled:cursor-not-allowed disabled:opacity-75;
+  @apply inline-flex items-center flex-shrink-0 font-medium rounded-md cursor-pointer
+    focus:outline-none focus-visible:outline-0
+    transition-colors duration-200
+    disabled:cursor-not-allowed disabled:opacity-75;
 }
 
 .wui-button-loading {

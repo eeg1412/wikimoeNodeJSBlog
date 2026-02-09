@@ -1,7 +1,6 @@
 <template>
   <WUIPopover
     :popper="{ arrow: true }"
-    v-model:open="open"
     class="share-popover"
     v-if="siteEnableShareButton"
   >
@@ -63,23 +62,10 @@ const props = defineProps({
   post: {
     type: Object,
     required: true
-  },
-  open: {
-    type: Boolean,
-    default: false
   }
 })
 const toast = useWToast()
-const emit = defineEmits(['update:open', 'shareadd'])
-
-const open = computed({
-  get() {
-    return props.open
-  },
-  set(value) {
-    emit('update:open', value)
-  }
-})
+const emit = defineEmits(['shareadd'])
 
 const copyText = text => {
   copyToClipboard(text, toast)

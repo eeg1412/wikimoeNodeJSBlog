@@ -42,27 +42,29 @@ onUnmounted(() => {
 
 <style scoped>
 .wui-modal-overlay {
-  @apply fixed inset-0 z-50 flex items-center justify-center
-    bg-gray-900/75 dark:bg-gray-950/75
-    px-4;
+  @apply fixed inset-0 z-50 flex items-end sm:items-center justify-center
+    bg-gray-200/75 dark:bg-gray-800/75
+    px-4 sm:px-0;
 }
 
 .wui-modal-container {
   @apply relative bg-white dark:bg-gray-900
     rounded-lg shadow-xl
-    w-full max-w-lg max-h-[90vh]
+    w-full sm:max-w-lg max-h-[90dvh]
     overflow-y-auto
+    sm:my-8
+    my-2
     ring-1 ring-gray-200 dark:ring-gray-800;
 }
 
 .wui-modal-enter-active,
 .wui-modal-leave-active {
-  transition: opacity 0.2s ease;
+  transition: opacity 0.3s ease;
 }
 
 .wui-modal-enter-active .wui-modal-container,
 .wui-modal-leave-active .wui-modal-container {
-  transition: transform 0.2s ease;
+  transition: all 0.3s ease;
 }
 
 .wui-modal-enter-from,
@@ -71,10 +73,22 @@ onUnmounted(() => {
 }
 
 .wui-modal-enter-from .wui-modal-container {
-  transform: scale(0.95);
+  transform: translateY(1rem) scale(0.95);
+}
+
+@media (min-width: 640px) {
+  .wui-modal-enter-from .wui-modal-container {
+    transform: translateY(0) scale(0.95);
+  }
 }
 
 .wui-modal-leave-to .wui-modal-container {
-  transform: scale(0.95);
+  transform: translateY(1rem) scale(0.95);
+}
+
+@media (min-width: 640px) {
+  .wui-modal-leave-to .wui-modal-container {
+    transform: translateY(0) scale(0.95);
+  }
 }
 </style>

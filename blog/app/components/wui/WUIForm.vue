@@ -1,12 +1,16 @@
 <template>
-  <form @submit.prevent="$emit('submit', $event)">
+  <form @submit.prevent="onSubmit">
     <slot />
   </form>
 </template>
 
 <script setup>
-defineProps({
+const props = defineProps({
   state: { type: Object, default: () => ({}) }
 })
-defineEmits(['submit'])
+const emit = defineEmits(['submit'])
+
+function onSubmit() {
+  emit('submit', { data: props.state })
+}
 </script>

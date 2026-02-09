@@ -12,7 +12,7 @@
       :class="inputClasses"
       :value="modelValue"
       :placeholder="placeholder"
-      :type="inputType"
+      :type="type"
       :name="name"
       :readonly="readonly"
       :disabled="disabled"
@@ -29,17 +29,19 @@
 </template>
 
 <script setup>
-import { computed, ref } from 'vue'
+import { computed, ref, useSlots } from 'vue'
+
+const slots = useSlots()
 
 const props = defineProps({
   modelValue: { type: [String, Number], default: '' },
   placeholder: { type: String, default: '' },
   icon: { type: String, default: '' },
-  size: { type: String, default: 'md' },
+  size: { type: String, default: 'sm' },
   variant: { type: String, default: 'outline' },
-  color: { type: String, default: 'primary' },
+  color: { type: String, default: 'white' },
   name: { type: String, default: '' },
-  inputType: { type: String, default: 'text' },
+  type: { type: String, default: 'text' },
   trailing: { type: Boolean, default: true },
   readonly: { type: Boolean, default: false },
   disabled: { type: Boolean, default: false },
@@ -51,11 +53,12 @@ defineEmits(['update:modelValue', 'keydown', 'blur', 'focus'])
 const inputRef = ref(null)
 
 const sizeClasses = {
-  xs: 'text-xs py-1',
+  '2xs': 'text-xs py-1',
+  xs: 'text-xs py-1.5',
   sm: 'text-sm py-1.5',
   md: 'text-sm py-2',
-  lg: 'text-base py-2.5',
-  xl: 'text-lg py-3'
+  lg: 'text-sm py-2.5',
+  xl: 'text-base py-2.5'
 }
 
 const wrapperClasses = computed(() => {
@@ -76,18 +79,29 @@ const wrapperClasses = computed(() => {
 })
 
 const inputClasses = computed(() => {
+  const paddings = {
+    '2xs': { normal: 'px-2', leading: 'ps-7 pe-2', trailing: 'ps-2 pe-7' },
+    xs: { normal: 'px-2.5', leading: 'ps-8 pe-2.5', trailing: 'ps-2.5 pe-8' },
+    sm: { normal: 'px-2.5', leading: 'ps-9 pe-2.5', trailing: 'ps-2.5 pe-9' },
+    md: { normal: 'px-3', leading: 'ps-10 pe-3', trailing: 'ps-3 pe-10' },
+    lg: { normal: 'px-3.5', leading: 'ps-11 pe-3.5', trailing: 'ps-3.5 pe-11' },
+    xl: { normal: 'px-3.5', leading: 'ps-12 pe-3.5', trailing: 'ps-3.5 pe-12' }
+  }
+  const pad = paddings[props.size] || paddings.sm
   const classes = [
     'w-full border-0 bg-transparent',
     'text-gray-900 dark:text-white',
     'placeholder:text-gray-400 dark:placeholder:text-gray-500',
     'focus:outline-none focus:ring-0',
-    sizeClasses[props.size] || sizeClasses.md
+    sizeClasses[props.size] || sizeClasses.sm
   ]
 
   if (props.icon && !props.trailing) {
-    classes.push('pl-8 pr-3')
+    classes.push(pad.leading)
+  } else if (slots.trailing) {
+    classes.push(pad.trailing)
   } else {
-    classes.push('px-3')
+    classes.push(pad.normal)
   }
 
   return classes.join(' ')

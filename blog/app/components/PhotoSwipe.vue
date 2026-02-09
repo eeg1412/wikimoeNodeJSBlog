@@ -39,7 +39,7 @@
           <div class="flex justify-end mb-2">
             <WUIButton
               size="2xs"
-              type="primary"
+              color="primary"
               variant="ghost"
               icon="i-heroicons-x-mark-20-solid"
               @click="close"
@@ -90,7 +90,7 @@
                 :disabled="!hasPrevGroup"
                 @click="prevGroup"
                 size="2xs"
-                type="primary"
+                color="primary"
                 icon="i-heroicons-chevron-left"
               />
               <div class="mx-2 px-1">{{ groupPage + 1 }}/{{ groupCount }}</div>
@@ -98,7 +98,7 @@
                 :disabled="!hasNextGroup"
                 @click="nextGroup"
                 size="2xs"
-                type="primary"
+                color="primary"
                 icon="i-heroicons-chevron-right"
               />
             </div>
