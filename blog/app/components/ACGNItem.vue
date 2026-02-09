@@ -52,7 +52,7 @@
               }
             }"
           >
-            <UIcon name="i-heroicons-newspaper" class="align-middle mr-1" />
+            <WUIIcon name="i-heroicons-newspaper" class="align-middle mr-1" />
             相关文章
           </NuxtLink>
           <a
@@ -61,7 +61,7 @@
             v-if="item.screenshotAlbum"
             @click="showAlbum(item.screenshotAlbum._id)"
           >
-            <UIcon name="i-heroicons-photo" class="align-middle mr-1" />
+            <WUIIcon name="i-heroicons-photo" class="align-middle mr-1" />
             相关相册
           </a>
           <a
@@ -71,7 +71,7 @@
             v-for="(url, index) in item.urlList"
             :key="index"
           >
-            <UIcon name="i-heroicons-link" class="align-middle mr-1" />
+            <WUIIcon name="i-heroicons-link" class="align-middle mr-1" />
             {{ url.text }}
           </a>
         </div>
@@ -98,23 +98,15 @@
             class="text-sm whitespace-pre-line text-gray-400 flex-grow"
             v-if="item.label?.length > 0"
           >
-            标记：<UBadge
+            标记：<WUIBadge
               v-for="(label, index) in item.label"
               :key="index"
               color="white"
               size="xs"
-              :ui="{
-                color: {
-                  white: {
-                    solid:
-                      'ring-1 ring-inset ring-gray-300 dark:ring-gray-700 text-gray-500 dark:text-white bg-white dark:text-gray-300'
-                  }
-                }
-              }"
               class="mr-1 mt-1"
             >
               {{ label }}
-            </UBadge>
+            </WUIBadge>
           </div>
         </div>
       </div>

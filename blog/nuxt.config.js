@@ -72,7 +72,7 @@ export default defineNuxtConfig({
     port: 8078
   },
 
-  modules: ['@nuxt/ui', 'nuxt-swiper'],
+  modules: ['@nuxtjs/tailwindcss', '@nuxtjs/color-mode', 'nuxt-swiper'],
 
   swiper: {
     // Swiper options

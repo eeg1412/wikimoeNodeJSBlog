@@ -6,7 +6,7 @@
         @click="showChildren = !showChildren"
       >
         <span>{{ item.naviname }}</span>
-        <UIcon
+        <WUIIcon
           class="ml5"
           :name="
             showChildren ? 'i-heroicons-chevron-up' : 'i-heroicons-chevron-down'
@@ -33,7 +33,7 @@
     <template v-else-if="checkActive(item)">
       <div class="blog-layout-sidebar-item active">
         <span>{{ item.naviname }}</span>
-        <UIcon
+        <WUIIcon
           class="ml5"
           name="i-heroicons-arrow-top-right-on-square"
           v-if="!item.isdefault"
@@ -56,7 +56,7 @@
         :target="item.newtab ? '_blank' : '_self'"
       >
         <span>{{ item.naviname }}</span>
-        <UIcon
+        <WUIIcon
           class="ml5"
           name="i-heroicons-arrow-top-right-on-square"
           v-if="!item.isdefault"

@@ -6,7 +6,7 @@
       ref="goTopBtnRef"
       @click="goTop"
     >
-      <UIcon name="i-heroicons-arrow-up" />
+      <WUIIcon name="i-heroicons-arrow-up" />
     </div>
   </transition>
 </template>

@@ -10,7 +10,7 @@ const props = defineProps({
   }
 })
 
-const toast = useToast()
+const toast = useWToast()
 
 const attachmentList = ref([])
 const getList = async () => {

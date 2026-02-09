@@ -1,12 +1,12 @@
 <template>
-  <UButton
+  <WUIButton
     size="2xs"
     color="primary"
     variant="soft"
     v-if="showBtn"
     :loading="isLoading"
     @click="isModalOpen = true"
-    >撤回(剩余{{ countDown }}秒)</UButton
+    >撤回(剩余{{ countDown }}秒)</WUIButton
   >
   <CommonDialog v-model:show="isModalOpen">
     <template #title>
@@ -17,9 +17,12 @@
       <div class="flex flex-col gap-4">
         <div>确定要撤回这条评论吗？</div>
         <div class="flex justify-end gap-3">
-          <UButton color="gray" @click="isModalOpen = false">取消</UButton>
-          <UButton color="primary" :loading="isLoading" @click="retractComment"
-            >确认撤回</UButton
+          <WUIButton color="gray" @click="isModalOpen = false">取消</WUIButton>
+          <WUIButton
+            color="primary"
+            :loading="isLoading"
+            @click="retractComment"
+            >确认撤回</WUIButton
           >
         </div>
       </div>
@@ -41,7 +44,7 @@ const props = defineProps({
   }
 })
 const { options } = useOptions()
-const toast = useToast()
+const toast = useWToast()
 const now = ref(Date.now())
 const { setCommentRetractAuthDecode, commentRetractAuthDecode } =
   useCommentRetractAuthDecode()

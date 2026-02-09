@@ -17,7 +17,7 @@
       v-if="contentIsLoading"
     >
       <div class="flex items-center justify-center bg-white p-2 rounded shadow">
-        <UIcon
+        <WUIIcon
           class="img-loading-icon animate-spin text-primary-500"
           name="i-heroicons-arrow-path"
         /><span class="pl-2">加载中...</span>
@@ -31,7 +31,7 @@ import { getEventDetailApiFetch } from '@/api/event'
 import 'highlight.js/styles/base16/dracula.css'
 
 const { pswpIsOpen } = usePswpIsOpen()
-const toast = useToast()
+const toast = useWToast()
 // props
 const props = defineProps({
   // content

@@ -5,41 +5,41 @@
       <div class="page-event-month-year">
         <div>
           <!-- UButton icon heroicon -->
-          <UButton
+          <WUIButton
             icon="i-heroicons-chevron-double-left"
             size="2xs"
             color="primary"
             variant="ghost"
             @click="lastYear"
             :disabled="!showLastYear"
-          ></UButton>
-          <UButton
+          ></WUIButton>
+          <WUIButton
             icon="i-heroicons-chevron-left"
             size="2xs"
             color="primary"
             variant="ghost"
             @click="lastMonth"
             :disabled="!showLastMonth"
-          ></UButton>
+          ></WUIButton>
         </div>
         {{ monthYear }}
         <div>
-          <UButton
+          <WUIButton
             icon="i-heroicons-chevron-right"
             size="2xs"
             color="primary"
             variant="ghost"
             @click="nextMonth"
             :disabled="!showNextMonth"
-          ></UButton>
-          <UButton
+          ></WUIButton>
+          <WUIButton
             icon="i-heroicons-chevron-double-right"
             size="2xs"
             color="primary"
             variant="ghost"
             @click="nextYear"
             :disabled="!showNextYear"
-          ></UButton>
+          ></WUIButton>
         </div>
       </div>
       <div class="page-event-table-body custom-scroll scroll-not-hide">
@@ -89,7 +89,7 @@
               </h4>
               <div class="flex items-center mb-1">
                 <div class="flex items-center">
-                  <UIcon name="i-heroicons-clock" />
+                  <WUIIcon name="i-heroicons-clock" />
                 </div>
                 <div class="text-gray-700 dark:text-gray-400 text-xs ml-2">
                   {{ formatDate(item.startTime) }} ~
@@ -112,7 +112,7 @@
                   v-for="(url, index) in item.urlList"
                   :key="index"
                 >
-                  <UIcon name="i-heroicons-link" class="align-middle mr-1" />
+                  <WUIIcon name="i-heroicons-link" class="align-middle mr-1" />
                   {{ url.text }}
                 </a>
               </div>
@@ -143,7 +143,7 @@ const setRouterQuery = query => {
 }
 const now = new Date()
 
-const toast = useToast()
+const toast = useWToast()
 
 const eventList = ref([])
 const rawQuery = {

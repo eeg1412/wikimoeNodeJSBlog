@@ -144,7 +144,7 @@
               name: 'postListMappoint',
               params: { mappointid: mappoint._id, page: 1 }
             }"
-            ><UIcon
+            ><WUIIcon
               name="i-heroicons-map-pin-solid"
               class="post-detail-map-pin-icon"
               size="14"
@@ -181,7 +181,7 @@
 
     <!-- 运行代码按钮 -->
     <div class="post-run-code-body mt-3 mb-5" v-if="code">
-      <UButton
+      <WUIButton
         size="md"
         color="primary"
         variant="solid"
@@ -211,7 +211,7 @@
       >
         <!-- 分享按钮 -->
         <LazySharePopover :post="postData.data" @shareadd="shareadd">
-          <UButton
+          <WUIButton
             icon="i-heroicons-share"
             size="md"
             color="primary"
@@ -225,7 +225,7 @@
       <div>
         <!-- 点赞按钮 -->
         <div class="post-detail-like-body" v-if="likeListInited">
-          <UButton
+          <WUIButton
             icon="i-heroicons-heart-solid"
             size="md"
             color="primary"
@@ -236,7 +236,7 @@
             v-if="postData.data.isLike"
             @click="likePost"
           />
-          <UButton
+          <WUIButton
             icon="i-heroicons-heart"
             size="md"
             color="primary"
@@ -249,7 +249,7 @@
           />
         </div>
         <div class="post-detail-like-body dflex flexCenter opacity-20" v-else>
-          <UButton
+          <WUIButton
             icon="i-heroicons-heart"
             size="md"
             color="primary"
@@ -351,21 +351,21 @@
             <div class="comment-list-title flex justify-between items-center">
               <div>评论：</div>
               <div class="comment-list-sort flex justify-between items-center">
-                <UButton
+                <WUIButton
                   size="2xs"
                   :color="commentSortType === 'date' ? 'primary' : 'gray'"
                   variant="link"
                   @click="changeCommentSort('date')"
-                  >按时间</UButton
+                  >按时间</WUIButton
                 >
                 <!-- 中间间隔线 -->
                 <span class="comment-list-sort-line"></span>
-                <UButton
+                <WUIButton
                   size="2xs"
                   :color="commentSortType === 'like' ? 'primary' : 'gray'"
                   variant="link"
                   @click="changeCommentSort('like')"
-                  >按点赞</UButton
+                  >按点赞</WUIButton
                 >
               </div>
             </div>
@@ -406,21 +406,21 @@
                           >{{ item.nickname }}</a
                         >
                         <span class="pr-1" v-else>{{ item.nickname }}</span>
-                        <UBadge class="mr-1" size="xs" v-if="item.isAdmin"
-                          >管理员</UBadge
+                        <WUIBadge class="mr-1" size="xs" v-if="item.isAdmin"
+                          >管理员</WUIBadge
                         >
-                        <UBadge
+                        <WUIBadge
                           size="xs"
                           color="primary"
                           variant="outline"
                           v-if="item.status === 0"
-                          >审核中</UBadge
+                          >审核中</WUIBadge
                         >
                       </div>
 
                       <div>
                         <!-- 置顶图标 -->
-                        <UIcon
+                        <WUIIcon
                           class="text-primary-500 f18"
                           name="i-heroicons-bars-arrow-up"
                           v-if="item.top"
@@ -480,7 +480,7 @@
                       class="comment-list-item-btns mr-2"
                       v-if="item.status === 1"
                     >
-                      <UButton
+                      <WUIButton
                         size="2xs"
                         icon="i-heroicons-heart-solid"
                         color="primary"
@@ -488,9 +488,9 @@
                         v-if="checkIsCommentLike(item._id)"
                         @click="likeComment(item._id)"
                         :loading="likeCommentIsLoading[item._id] === true"
-                        >{{ formatNumber(item.likes) }}</UButton
+                        >{{ formatNumber(item.likes) }}</WUIButton
                       >
-                      <UButton
+                      <WUIButton
                         size="2xs"
                         icon="i-heroicons-heart"
                         color="white"
@@ -498,28 +498,28 @@
                         @click="likeComment(item._id)"
                         :loading="likeCommentIsLoading[item._id] === true"
                         v-else
-                        >{{ formatNumber(item.likes) }}</UButton
+                        >{{ formatNumber(item.likes) }}</WUIButton
                       >
                       <template
                         v-if="
                           options.siteEnableComment && postData.data.allowRemark
                         "
                       >
-                        <UButton
+                        <WUIButton
                           size="2xs"
                           color="white"
                           variant="ghost"
                           @click="openComment(item._id)"
                           v-if="item._id !== commentid"
-                          >回复</UButton
+                          >回复</WUIButton
                         >
-                        <UButton
+                        <WUIButton
                           size="2xs"
                           color="white"
                           variant="ghost"
                           @click="closeComment"
                           v-else
-                          >取消</UButton
+                          >取消</WUIButton
                         >
                       </template>
                     </div>
@@ -548,7 +548,7 @@
           </div>
           <!-- 翻页 -->
           <div class="comment-page-body">
-            <UPagination
+            <WUIPagination
               v-model="commentPage"
               :page-count="commentSize"
               :total="commentTotal"
@@ -619,7 +619,7 @@
                   class="text-gray-500 hover:text-gray-700"
                   @click="switchShowHeaderListMenu"
                 >
-                  <UIcon name="i-heroicons-x-mark" />
+                  <WUIIcon name="i-heroicons-x-mark" />
                 </button>
               </div>
               <div class="custom-scroll common-right-tool-menu">
@@ -661,7 +661,7 @@ const { options } = useOptions()
 const route = useRoute()
 const id = route.params.id
 const routeName = route.name
-const toast = useToast()
+const toast = useWToast()
 let type = null
 switch (routeName) {
   case 'postDetail':

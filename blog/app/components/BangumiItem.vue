@@ -14,7 +14,7 @@
       <div
         class="text-sm mb-1 text-gray-400 flex-shrink-0 w_10 flex items-center"
       >
-        <UIcon
+        <WUIIcon
           name="i-heroicons-calendar-20-solid"
           class="align-middle acgn-time-icon"
         />{{ bangumi.year }}年{{ seasonToName(bangumi.season) }}
@@ -23,7 +23,7 @@
         class="text-sm mb-1 text-gray-400 flex-shrink-0 w_10 flex items-center"
         v-if="bangumi.giveUp"
       >
-        <UIcon
+        <WUIIcon
           name="i-heroicons-bookmark-slash"
           class="align-middle mr-1"
         />已弃坑

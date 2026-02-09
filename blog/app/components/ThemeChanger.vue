@@ -5,8 +5,8 @@
     class="themeBtn common-right-tool-btn opacity-70 text-white"
     @click="switchFilterMenu"
   >
-    <UIcon v-if="colorMode.value === 'light'" name="i-heroicons-sun" />
-    <UIcon v-else-if="colorMode.value === 'dark'" name="i-heroicons-moon" />
+    <WUIIcon v-if="colorMode.value === 'light'" name="i-heroicons-sun" />
+    <WUIIcon v-else-if="colorMode.value === 'dark'" name="i-heroicons-moon" />
   </div>
   <transition name="fade">
     <div
@@ -23,7 +23,7 @@
             class="text-gray-500 hover:text-gray-700"
             @click="switchFilterMenu"
           >
-            <UIcon name="i-heroicons-x-mark" />
+            <WUIIcon name="i-heroicons-x-mark" />
           </button>
         </div>
         <div class="custom-scroll common-right-tool-menu">

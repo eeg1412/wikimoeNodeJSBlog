@@ -1,21 +1,21 @@
 <template>
-  <UPopover :popper="{ arrow: true }">
-    <UButton
+  <WUIPopover :popper="{ arrow: true }">
+    <WUIButton
       color="white"
       size="xs"
       icon="i-heroicons-face-smile"
       @click="emojiBtnClick"
-      >表情</UButton
+      >表情</WUIButton
     >
     <template #panel="{ close }">
       <div class="p-2 w-[470px] flex max-w-[90vw]">
         <div>
-          <UTabs
+          <WUITabs
             v-model="seletedEmojiIndex"
             :items="emojiCom"
             orientation="vertical"
             class="w-[75px]"
-          ></UTabs>
+          ></WUITabs>
         </div>
         <div
           :key="seletedEmojiIndex"
@@ -40,7 +40,7 @@
         </div>
       </div>
     </template>
-  </UPopover>
+  </WUIPopover>
 </template>
 <script setup>
 const emits = defineEmits()

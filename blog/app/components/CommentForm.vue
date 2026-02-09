@@ -6,7 +6,7 @@
     >
       发表评论：
     </div>
-    <UForm :state="form" @submit="onSubmit">
+    <WUIForm :state="form" @submit="onSubmit">
       <div class="flex flex-col space-y-2">
         <div class="flex items-center">
           <div>
@@ -15,9 +15,9 @@
             </ClientOnly>
           </div>
           <div class="ml-2">
-            <UPopover :popper="{ arrow: true }">
+            <WUIPopover :popper="{ arrow: true }">
               <!-- 设置按钮 -->
-              <UButton
+              <WUIButton
                 size="xs"
                 :color="
                   commentSetting.commentSaveUserInfo ? 'primary' : 'white'
@@ -29,43 +29,42 @@
                 <div class="p-3">
                   <div>
                     <!-- UCheckbox  提交后保存个人信息 -->
-                    <UCheckbox
+                    <WUICheckbox
                       v-model="commentSetting.commentSaveUserInfo"
                       :label="`提交后保存此个人信息`"
-                      :ui="{ inner: 'ms-1 flex flex-col' }"
                     />
                   </div>
                   <div class="mt-2 flex justify-center items-center">
                     <!-- 立即清除个人信息 按钮 -->
-                    <UButton
+                    <WUIButton
                       size="xs"
                       color="primary"
                       icon="i-heroicons-trash"
                       @click="removeUserInfo"
                     >
                       立即清除个人信息
-                    </UButton>
+                    </WUIButton>
                   </div>
                 </div>
               </template>
-            </UPopover>
+            </WUIPopover>
           </div>
         </div>
-        <UFormGroup name="content" :error="error.content">
-          <UTextarea
+        <WUIFormGroup name="content" :error="error.content">
+          <WUITextarea
             class="comment-form-textarea"
             ref="contentRef"
             placeholder="说点什么吧..."
             v-model="form.content"
           />
-        </UFormGroup>
+        </WUIFormGroup>
 
         <div
           class="flex flex-col space-y-2 sm:flex-row sm:space-x-2 sm:space-y-0"
         >
           <div class="w-full sm:w-1/3">
-            <UFormGroup name="nickname" :error="error.nickname">
-              <UInput
+            <WUIFormGroup name="nickname" :error="error.nickname">
+              <WUIInput
                 class="flex-grow"
                 icon="i-heroicons-user-circle"
                 size="sm"
@@ -74,11 +73,11 @@
                 v-model="form.nickname"
                 placeholder="昵称"
               />
-            </UFormGroup>
+            </WUIFormGroup>
           </div>
           <div class="w-full sm:w-1/3">
-            <UFormGroup name="email" :error="error.email">
-              <UInput
+            <WUIFormGroup name="email" :error="error.email">
+              <WUIInput
                 class="flex-grow"
                 icon="i-heroicons-at-symbol"
                 size="sm"
@@ -91,11 +90,11 @@
                   }
                 "
                 placeholder="邮箱（选填）"
-            /></UFormGroup>
+            /></WUIFormGroup>
           </div>
           <div class="w-full sm:w-1/3">
-            <UFormGroup name="url" :error="error.url">
-              <UInput
+            <WUIFormGroup name="url" :error="error.url">
+              <WUIInput
                 class="flex-grow"
                 icon="i-heroicons-link"
                 size="sm"
@@ -104,24 +103,24 @@
                 name="url"
                 v-model="form.url"
                 placeholder="网址（选填）"
-            /></UFormGroup>
+            /></WUIFormGroup>
           </div>
 
           <div class="w-full sm:w-20">
-            <UButton
+            <WUIButton
               :block="true"
               type="submit"
               v-if="isInit"
               :loading="commentIsSending"
-              ><template v-if="!commentIsSending">提交</template></UButton
+              ><template v-if="!commentIsSending">提交</template></WUIButton
             >
-            <UButton :block="true" type="submit" :disabled="true" v-else
-              >提交</UButton
+            <WUIButton :block="true" type="submit" :disabled="true" v-else
+              >提交</WUIButton
             >
           </div>
         </div>
       </div>
-    </UForm>
+    </WUIForm>
   </div>
   <div class="text-center" v-else>
     <span class="text-gray-500">评论已关闭</span>
@@ -130,7 +129,7 @@
 <script setup>
 import { getCommentCreateApi } from '@/api/comment'
 
-const toast = useToast()
+const toast = useWToast()
 const { options } = useOptions()
 const { setCommentRetractAuthDecode } = useCommentRetractAuthDecode()
 

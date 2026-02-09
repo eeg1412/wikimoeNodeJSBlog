@@ -1,5 +1,5 @@
 <template>
-  <UPopover
+  <WUIPopover
     :popper="{ arrow: true }"
     v-model:open="open"
     class="share-popover"
@@ -15,7 +15,7 @@
             class="share-popover-close text-gray-400 cursor-pointer text-base"
             @click="close"
           >
-            <UIcon name="i-heroicons-x-mark" />
+            <WUIIcon name="i-heroicons-x-mark" />
           </div>
         </div>
         <div class="flex flex-wrap gap-3">
@@ -36,7 +36,7 @@
                 :src="icon.src"
                 :alt="icon.alt"
               />
-              <UIcon
+              <WUIIcon
                 v-else-if="icon.icon"
                 :name="icon.icon"
                 class="w-5 h-5 text-white"
@@ -46,7 +46,7 @@
         </div>
       </div>
     </template>
-  </UPopover>
+  </WUIPopover>
 </template>
 <script setup>
 import { putShareCountApi } from '@/api/post'
@@ -69,7 +69,7 @@ const props = defineProps({
     default: false
   }
 })
-const toast = useToast()
+const toast = useWToast()
 const emit = defineEmits(['update:open', 'shareadd'])
 
 const open = computed({

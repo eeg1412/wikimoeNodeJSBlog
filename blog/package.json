@@ -14,7 +14,8 @@
     "@types/node": "^24.10.0"
   },
   "dependencies": {
-    "@nuxt/ui": "2.22.3",
+    "@nuxtjs/color-mode": "^4.0.0",
+    "@nuxtjs/tailwindcss": "^6.14.0",
     "@photo-sphere-viewer/core": "^5.14.0",
     "@photo-sphere-viewer/gyroscope-plugin": "^5.14.0",
     "highlight.js": "^11.11.1",

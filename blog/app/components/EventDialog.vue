@@ -18,7 +18,7 @@
       <!-- 时间 -->
       <div class="flex items-center">
         <div class="flex items-center">
-          <UIcon name="i-heroicons-clock" />
+          <WUIIcon name="i-heroicons-clock" />
         </div>
         <div class="text-gray-700 dark:text-gray-400 text-md ml-2">
           {{ formatDate(currentData.startTime) }} ~
@@ -40,7 +40,7 @@
           v-for="(url, index) in currentData.urlList"
           :key="index"
         >
-          <UIcon name="i-heroicons-link" class="align-middle mr-1" />
+          <WUIIcon name="i-heroicons-link" class="align-middle mr-1" />
           {{ url.text }}
         </a>
       </div>

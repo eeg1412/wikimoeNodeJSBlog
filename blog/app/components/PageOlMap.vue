@@ -66,7 +66,7 @@
                   v-if="postTotal > postPageSize"
                   class="mt-2 flex justify-center"
                 >
-                  <UPagination
+                  <WUIPagination
                     v-model="postPage"
                     :page-count="postPageSize"
                     :total="postTotal"
@@ -136,7 +136,7 @@ const setRouterQuery = query => {
   })
 }
 
-const toast = useToast()
+const toast = useWToast()
 
 const mappointList = ref([])
 const mappointLoading = ref(true)

@@ -17,7 +17,7 @@
         <!-- 昵称 -->
         <div class="comment-latest-item-nickname-body fb">
           <span class="pr-1">{{ item.nickname }}</span
-          ><UBadge size="xs" v-if="item.isAdmin">管理员</UBadge>
+          ><WUIBadge size="xs" v-if="item.isAdmin">管理员</WUIBadge>
         </div>
         <div class="comment-latest-item-date">
           <ClientOnly

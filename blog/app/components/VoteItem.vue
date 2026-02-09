@@ -37,7 +37,7 @@
         >
           <div class="vote-item-option-title flex items-center">
             <div class="mr-2 pointer-events-none vote-item-option-checkbox">
-              <UCheckbox
+              <WUICheckbox
                 :disabled="btnDisabled && !isVoting"
                 :modelValue="optionIdList.includes(option._id)"
               />
@@ -73,12 +73,12 @@
     </div>
 
     <!-- 提交按钮 -->
-    <UButton
+    <WUIButton
       block
       :loading="isVoting"
       :disabled="btnDisabled"
       @click="doVote"
-      >{{ btnText }}</UButton
+      >{{ btnText }}</WUIButton
     >
   </div>
 </template>
@@ -96,7 +96,7 @@ const props = defineProps({
     default: null
   }
 })
-const toast = useToast()
+const toast = useWToast()
 
 const voteItemRef = ref(null)
 const itemRes = ref(null)

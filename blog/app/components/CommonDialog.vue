@@ -1,11 +1,11 @@
 <template>
-  <UModal v-model="commonDialogOpen">
+  <WUIModal v-model="commonDialogOpen">
     <div
       class="flex items-center justify-between page-commonDialog-current-commonDialog-title"
     >
       <!-- slot -->
       <slot name="title"></slot>
-      <UButton
+      <WUIButton
         color="gray"
         variant="ghost"
         icon="i-heroicons-x-mark-20-solid"
@@ -18,7 +18,7 @@
       <!-- slot -->
       <slot name="body"></slot>
     </div>
-  </UModal>
+  </WUIModal>
 </template>
 <script setup>
 const props = defineProps({

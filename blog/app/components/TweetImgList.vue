@@ -46,11 +46,11 @@
             v-show="videoPlayId !== coverImages[0]._id"
             @click.stop="videoPlay(coverImages[0]._id)"
           >
-            <UIcon
+            <WUIIcon
               class="blog-tweet-img-list-body-item-video-mask-icon text-white"
               name="i-heroicons-play-circle"
             />
-            <UIcon
+            <WUIIcon
               class="blog-tweet-img-list-body-item-video-mask-zoom-icon text-white"
               name="i-heroicons-magnifying-glass-plus"
               @click.stop="tryOpenHref(0)"
@@ -150,11 +150,11 @@
                     @click.stop="videoPlay(img._id)"
                     v-show="videoPlayId !== img._id"
                   >
-                    <UIcon
+                    <WUIIcon
                       class="blog-tweet-img-list-body-item-video-mask-icon text-white"
                       name="i-heroicons-play-circle"
                     />
-                    <UIcon
+                    <WUIIcon
                       class="blog-tweet-img-list-body-item-video-mask-zoom-icon text-white"
                       name="i-heroicons-magnifying-glass-plus"
                       @click.stop="tryOpenHref(img.dataHrefIndex)"
@@ -239,11 +239,11 @@
                     @click.stop="videoPlay(img._id)"
                     v-show="videoPlayId !== img._id"
                   >
-                    <UIcon
+                    <WUIIcon
                       class="blog-tweet-img-list-body-item-video-mask-icon text-white"
                       name="i-heroicons-play-circle"
                     />
-                    <UIcon
+                    <WUIIcon
                       class="blog-tweet-img-list-body-item-video-mask-zoom-icon text-white"
                       name="i-heroicons-magnifying-glass-plus"
                       @click.stop="tryOpenHref(img.dataHrefIndex)"

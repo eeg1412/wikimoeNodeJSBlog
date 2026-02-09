@@ -55,7 +55,7 @@
             </div>
             <div class="fr">
               <!-- 置顶图标 -->
-              <UIcon
+              <WUIIcon
                 class="text-primary-500 f18"
                 name="i-heroicons-bars-arrow-up"
                 title="置顶"
@@ -88,7 +88,7 @@
                       name: 'postListMappoint',
                       params: { mappointid: mappoint._id, page: 1 },
                     }"
-                    ><UIcon
+                    ><WUIIcon
                     name="i-heroicons-map-pin-solid"
                     class="post-detail-map-pin-icon"
                     size="14"
@@ -144,7 +144,7 @@
                   }"
                 >
                   <!-- icon book-open -->
-                  <UIcon
+                  <WUIIcon
                     class="mr5 post-list-info-bottom-icon"
                     name="i-heroicons-book-open"
                   />
@@ -163,7 +163,7 @@
                   }"
                 >
                   <!-- icon chat-bubble-left-ellipsis -->
-                  <UIcon
+                  <WUIIcon
                     class="mr5 post-list-info-bottom-icon"
                     name="i-heroicons-chat-bubble-left-ellipsis"
                   />
@@ -183,7 +183,7 @@
                       'opacity-20': !isHydrated
                     }"
                   >
-                    <UIcon
+                    <WUIIcon
                       name="i-heroicons-share"
                       class="mr5 post-list-info-bottom-icon"
                     />
@@ -203,19 +203,19 @@
                 v-if="likeListInited"
               >
                 <!-- 加载 -->
-                <UIcon
+                <WUIIcon
                   class="mr5 post-list-info-bottom-icon animate-spin"
                   name="i-heroicons-arrow-path"
                   v-if="getLikePostIsLoading(item._id)"
                 />
                 <!-- heart -->
-                <UIcon
+                <WUIIcon
                   class="mr5 post-list-info-bottom-icon"
                   name="i-heroicons-heart-solid"
                   v-else-if="item.isLike"
                 />
                 <!-- heart-outline -->
-                <UIcon
+                <WUIIcon
                   class="mr5 post-list-info-bottom-icon"
                   name="i-heroicons-heart"
                   v-else
@@ -225,7 +225,7 @@
               </div>
               <div class="dflex flexCenter opacity-20" v-else>
                 <!-- heart -->
-                <UIcon
+                <WUIIcon
                   class="mr5 post-list-info-bottom-icon"
                   name="i-heroicons-heart"
                 />
@@ -249,7 +249,7 @@
           :to="routePagination.firstRoute"
           v-if="page > 1"
         >
-          <UIcon class="mr5" name="i-heroicons-chevron-double-left" />
+          <WUIIcon class="mr5" name="i-heroicons-chevron-double-left" />
         </NuxtLink>
 
         <!-- 去上一页 -->
@@ -258,7 +258,7 @@
           :to="routePagination.prevRoute"
           v-if="page > 1"
         >
-          <UIcon class="mr5" name="i-heroicons-chevron-left" />
+          <WUIIcon class="mr5" name="i-heroicons-chevron-left" />
         </NuxtLink>
       </div>
       <div
@@ -290,7 +290,7 @@
           :to="routePagination.nextRoute"
           v-if="page < totalPage"
         >
-          <UIcon class="ml5" name="i-heroicons-chevron-right" />
+          <WUIIcon class="ml5" name="i-heroicons-chevron-right" />
         </NuxtLink>
         <!-- 去最后一页 -->
         <NuxtLink
@@ -298,7 +298,7 @@
           :to="routePagination.lastRoute"
           v-if="page < totalPage"
         >
-          <UIcon class="ml5" name="i-heroicons-chevron-double-right" />
+          <WUIIcon class="ml5" name="i-heroicons-chevron-double-right" />
         </NuxtLink>
       </div>
     </div>
@@ -325,7 +325,7 @@
                   class="text-gray-500 hover:text-gray-700"
                   @click="switchFilterMenu"
                 >
-                  <UIcon name="i-heroicons-x-mark" />
+                  <WUIIcon name="i-heroicons-x-mark" />
                 </button>
               </div>
               <div class="custom-scroll common-right-tool-menu">
@@ -376,7 +376,7 @@ const defaultCover = options.value.siteDefaultCover || ''
 const sitePageSize = computed(() => options.value.sitePageSize || 1)
 const route = useRoute()
 const router = useRouter()
-const toast = useToast()
+const toast = useWToast()
 const postRouteType = computed(() => route.params.type)
 const postType = computed(() => {
   if (postRouteType.value === 'blog') {

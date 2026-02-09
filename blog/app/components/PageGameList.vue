@@ -2,8 +2,8 @@
   <div class="pt-2 pb-2 page-game-body">
     <div class="flex items-center">
       <div class="mr-3 acgn-filter-popover">
-        <UPopover :popper="{ arrow: true }" v-model:open="filterOpen">
-          <UButton
+        <WUIPopover :popper="{ arrow: true }" v-model:open="filterOpen">
+          <WUIButton
             :label="filterText"
             size="sm"
             variant="soft"
@@ -15,16 +15,15 @@
                 <!-- 关键词输入 -->
                 <div class="mb-3">
                   <div class="text-sm font-medium mb-1">关键词</div>
-                  <UInput
+                  <WUIInput
                     v-model.trim="filterCache.keyword"
                     @keydown.enter="applyFilters(close)"
                     size="sm"
                     maxlength="20"
-                    :ui="{ icon: { trailing: { pointer: '' } } }"
                     placeholder="请输入关键词"
                   >
                     <template #trailing>
-                      <UButton
+                      <WUIButton
                         v-show="filterCache.keyword"
                         color="gray"
                         variant="link"
@@ -33,7 +32,7 @@
                         @click="filterCache.keyword = undefined"
                       />
                     </template>
-                  </UInput>
+                  </WUIInput>
                 </div>
 
                 <!-- 类型选择器 -->
@@ -41,7 +40,7 @@
                   <div class="text-sm font-medium mb-1">平台</div>
                   <div class="flex flex-wrap">
                     <div class="mr-1 mb-1">
-                      <UButton
+                      <WUIButton
                         label="全部平台"
                         size="2xs"
                         :variant="
@@ -62,7 +61,7 @@
                       :key="item._id || -1"
                       class="mr-1 mb-1"
                     >
-                      <UButton
+                      <WUIButton
                         :label="`${item.name}`"
                         size="2xs"
                         :variant="
@@ -85,7 +84,7 @@
                       :key="status.value || -1"
                       class="mr-1 mb-1"
                     >
-                      <UButton
+                      <WUIButton
                         :label="status.label"
                         size="2xs"
                         :variant="
@@ -105,7 +104,7 @@
                 class="flex justify-end p-3 border-solid border-t border-gray-200 dark:border-gray-700"
               >
                 <!-- 取消 -->
-                <UButton
+                <WUIButton
                   label="取消"
                   size="sm"
                   variant="ghost"
@@ -113,7 +112,7 @@
                   @click="close"
                 />
                 <!-- 筛选 -->
-                <UButton
+                <WUIButton
                   label="筛选"
                   size="sm"
                   variant="solid"
@@ -124,11 +123,11 @@
               </div>
             </div>
           </template>
-        </UPopover>
+        </WUIPopover>
       </div>
 
-      <UPopover :popper="{ arrow: true }">
-        <UButton
+      <WUIPopover :popper="{ arrow: true }">
+        <WUIButton
           :label="`${sortTypeMap[params.sortType]}`"
           size="sm"
           variant="soft"
@@ -145,7 +144,7 @@
                 v-for="(item, index) in sortTypeList"
                 :key="item.value"
               >
-                <UButton
+                <WUIButton
                   :label="item.label"
                   size="2xs"
                   :variant="params.sortType === item.value ? 'solid' : 'ghost'"
@@ -155,7 +154,7 @@
             </div>
           </div>
         </template>
-      </UPopover>
+      </WUIPopover>
     </div>
     <div class="relative" ref="listRef">
       <!-- 列表 -->
@@ -177,28 +176,22 @@
         >部游戏
       </div>
       <div v-show="hasPrev || hasNext">
-        <UButton
+        <WUIButton
           icon="i-heroicons-chevron-left"
           size="2xs"
           color="primary"
           square
           variant="outline"
           class="mr-1"
-          :ui="{
-            base: 'focus:outline-none focus-visible:outline-0 disabled:cursor-not-allowed disabled:opacity-40 flex-shrink-0'
-          }"
           :disabled="!hasPrev"
           @click="toPrev"
         />
-        <UButton
+        <WUIButton
           icon="i-heroicons-chevron-right"
           size="2xs"
           color="primary"
           square
           variant="outline"
-          :ui="{
-            base: 'focus:outline-none focus-visible:outline-0 disabled:cursor-not-allowed disabled:opacity-40 flex-shrink-0'
-          }"
           :disabled="!hasNext"
           @click="toNext"
         />

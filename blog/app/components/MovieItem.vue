@@ -14,7 +14,7 @@
       <div
         class="text-sm mb-1 text-gray-400 flex-shrink-0 w_10 flex items-center"
       >
-        <UIcon
+        <WUIIcon
           name="i-heroicons-star"
           class="align-middle acgn-time-icon"
           v-if="watDate"

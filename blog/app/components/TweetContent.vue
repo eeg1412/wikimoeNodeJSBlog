@@ -28,7 +28,7 @@
           name: 'postListMappoint',
           params: { mappointid: mappoint._id, page: 1 }
         }"
-        ><UIcon
+        ><WUIIcon
           name="i-heroicons-map-pin-solid"
           class="post-detail-map-pin-icon"
           size="14"
@@ -57,7 +57,7 @@
               class="text-white dark:text-primary-100 flex justify-center items-center w-full h-full"
             >
               <div class="text-2xl text-center">
-                <UIcon class="animate-spin" name="i-heroicons-arrow-path" />
+                <WUIIcon class="animate-spin" name="i-heroicons-arrow-path" />
                 <div class="text-lg">读取中</div>
               </div>
             </div>

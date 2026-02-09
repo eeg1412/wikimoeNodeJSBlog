@@ -10,7 +10,7 @@
       <span v-else-if="postRouteType === 'tweet'" class="text-sm system-ui-font"
         >推</span
       >
-      <UIcon name="i-heroicons-adjustments-horizontal" v-else />
+      <WUIIcon name="i-heroicons-adjustments-horizontal" v-else />
     </div>
   </transition>
 </template>

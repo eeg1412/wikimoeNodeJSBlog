@@ -15,7 +15,7 @@
       class="photo-swipe-photo-swipe-btn"
       @click="showDescription = !showDescription"
     >
-      <UIcon
+      <WUIIcon
         class="photo-swipe-caption-icon"
         :name="
           showDescription
@@ -29,15 +29,15 @@
     :to="`#photo-swipe-${componentId}`"
     v-if="showUI && attachmentList.length > 1"
   >
-    <UPopover :popper="{ arrow: true, offsetDistance: 0 }">
+    <WUIPopover :popper="{ arrow: true, offsetDistance: 0 }">
       <div class="photo-swipe-photo-swipe-btn" title="浏览所有媒体">
-        <UIcon name="i-heroicons-photo-solid" />
+        <WUIIcon name="i-heroicons-photo-solid" />
       </div>
       <template #panel="{ close }">
         <div class="p-4">
           <!-- 关闭按钮 -->
           <div class="flex justify-end mb-2">
-            <UButton
+            <WUIButton
               size="2xs"
               type="primary"
               variant="ghost"
@@ -77,7 +77,7 @@
                   class="w-full h-full flex items-center justify-center"
                 >
                   <div class="text-white text-4xl opacity-80">
-                    <UIcon name="i-heroicons-play-solid" size="2xl" />
+                    <WUIIcon name="i-heroicons-play-solid" size="2xl" />
                   </div>
                 </div>
               </div>
@@ -86,7 +86,7 @@
           <!-- 分页器 -->
           <div class="flex justify-center mt-4">
             <div class="flex items-center">
-              <UButton
+              <WUIButton
                 :disabled="!hasPrevGroup"
                 @click="prevGroup"
                 size="2xs"
@@ -94,7 +94,7 @@
                 icon="i-heroicons-chevron-left"
               />
               <div class="mx-2 px-1">{{ groupPage + 1 }}/{{ groupCount }}</div>
-              <UButton
+              <WUIButton
                 :disabled="!hasNextGroup"
                 @click="nextGroup"
                 size="2xs"
@@ -105,7 +105,7 @@
           </div>
         </div>
       </template>
-    </UPopover>
+    </WUIPopover>
   </Teleport>
 
   <!-- 360全景截图按钮 -->
@@ -114,7 +114,7 @@
     v-if="showUI && is360PanoramaActive"
   >
     <div class="photo-swipe-photo-swipe-btn" @click="takeScreenshot">
-      <UIcon name="i-heroicons-camera-solid" />
+      <WUIIcon name="i-heroicons-camera-solid" />
     </div>
   </Teleport>
 
@@ -275,7 +275,7 @@
           d="M272 112C272 85.5 293.5 64 320 64C346.5 64 368 85.5 368 112C368 138.5 346.5 160 320 160C293.5 160 272 138.5 272 112zM272 528C272 501.5 293.5 480 320 480C346.5 480 368 501.5 368 528C368 554.5 346.5 576 320 576C293.5 576 272 554.5 272 528zM112 272C138.5 272 160 293.5 160 320C160 346.5 138.5 368 112 368C85.5 368 64 346.5 64 320C64 293.5 85.5 272 112 272zM480 320C480 293.5 501.5 272 528 272C554.5 272 576 293.5 576 320C576 346.5 554.5 368 528 368C501.5 368 480 346.5 480 320zM139 433.1C157.8 414.3 188.1 414.3 206.9 433.1C225.7 451.9 225.7 482.2 206.9 501C188.1 519.8 157.8 519.8 139 501C120.2 482.2 120.2 451.9 139 433.1zM139 139C157.8 120.2 188.1 120.2 206.9 139C225.7 157.8 225.7 188.1 206.9 206.9C188.1 225.7 157.8 225.7 139 206.9C120.2 188.1 120.2 157.8 139 139zM501 433.1C519.8 451.9 519.8 482.2 501 501C482.2 519.8 451.9 519.8 433.1 501C414.3 482.2 414.3 451.9 433.1 433.1C451.9 414.3 482.2 414.3 501 433.1z"
         />
       </svg>
-      <!-- <UIcon
+      <!-- <WUIIcon
         class="animate-spin"
         name="i-heroicons-arrow-path"
         v-show="VRLoading"
@@ -567,7 +567,7 @@ const { options } = useOptions()
 
 const emits = defineEmits()
 
-const toast = useToast()
+const toast = useWToast()
 const showUI = ref(false)
 
 const componentId = generateRandomString(8)

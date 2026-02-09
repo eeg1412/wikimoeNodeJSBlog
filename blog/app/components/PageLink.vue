@@ -16,7 +16,7 @@
           loading="lazy"
           v-if="item.icon"
         />
-        <UAvatar :alt="item.sitename" v-else size="2xl" />
+        <WUIAvatar :alt="item.sitename" v-else size="2xl" />
       </div>
       <!-- info -->
       <div class="flex-grow ml-3">

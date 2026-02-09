@@ -1,11 +1,11 @@
 <template>
-  <UPopover
+  <WUIPopover
     :popper="{ arrow: true }"
     v-model:open="open"
     class="share-popover"
     v-if="siteEnableFooterQRCodeButton"
   >
-    <UButton
+    <WUIButton
       icon="i-heroicons-qr-code"
       size="md"
       color="primary"
@@ -21,7 +21,7 @@
             class="share-popover-close text-gray-400 cursor-pointer text-base"
             @click="close"
           >
-            <UIcon name="i-heroicons-x-mark" />
+            <WUIIcon name="i-heroicons-x-mark" />
           </div>
         </div>
         <div class="post-detail-qr-code-container">
@@ -34,23 +34,23 @@
           />
         </div>
         <div class="mt-2">
-          <UButtonGroup size="xs" orientation="horizontal" class="w-full">
-            <UInput
+          <WUIButtonGroup size="xs" orientation="horizontal" class="w-full">
+            <WUIInput
               name="url"
               readonly
               :model-value="getPostUrl"
               class="w-full"
             />
-            <UButton
+            <WUIButton
               icon="i-heroicons-clipboard-document"
               color="gray"
               @click="copyText(getPostUrl)"
             />
-          </UButtonGroup>
+          </WUIButtonGroup>
         </div>
       </div>
     </template>
-  </UPopover>
+  </WUIPopover>
 </template>
 <script setup>
 const { options } = useOptions()
@@ -69,7 +69,7 @@ const props = defineProps({
     default: false
   }
 })
-const toast = useToast()
+const toast = useWToast()
 const emit = defineEmits(['update:open', 'shareadd'])
 
 const open = computed({

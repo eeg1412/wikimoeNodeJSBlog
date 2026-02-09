@@ -34,13 +34,13 @@
             class="blog-top-bar-right-body-item menu-btn"
             @click="toggleLeftMenu"
           >
-            <UIcon name="i-heroicons-bars-3" />
+            <WUIIcon name="i-heroicons-bars-3" />
           </div>
           <div
             class="blog-top-bar-right-body-item sidebar-btn"
             @click="toggleRightSidebar"
           >
-            <UIcon name="i-heroicons-squares-2x2" />
+            <WUIIcon name="i-heroicons-squares-2x2" />
           </div>
         </div>
       </div>
@@ -60,7 +60,7 @@
         >
           <div class="text-xl font-bold">导航</div>
           <div class="text-xl cursor-pointer" @click="toggleLeftMenu">
-            <UIcon name="i-heroicons-x-mark" />
+            <WUIIcon name="i-heroicons-x-mark" />
           </div>
         </div>
         <div class="blog-layout-sticky custom-scroll blog-layout-info-menu">
@@ -114,22 +114,21 @@
           <div class="justify-between mb-5 layout-close-btn-body type-r">
             <div class="text-xl font-bold">侧边栏</div>
             <div class="text-xl cursor-pointer" @click="toggleRightSidebar">
-              <UIcon name="i-heroicons-x-mark" />
+              <WUIIcon name="i-heroicons-x-mark" />
             </div>
           </div>
           <!-- 搜索 -->
           <div class="blog-search-body">
-            <UInput
+            <WUIInput
               v-model.trim="keyword"
               placeholder="请输入关键词"
               size="lg"
               variant="none"
               @keydown.enter="goSearch"
               maxlength="20"
-              :ui="{ icon: { trailing: { pointer: '' } } }"
             >
               <template #trailing>
-                <UButton
+                <WUIButton
                   color="gray"
                   variant="link"
                   icon="i-heroicons-magnifying-glass-20-solid"
@@ -137,7 +136,7 @@
                   @click="goSearch"
                 />
               </template>
-            </UInput>
+            </WUIInput>
           </div>
         </div>
         <div class="blog-layout-right-box" ref="layoutRightBox">
