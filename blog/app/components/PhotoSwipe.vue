@@ -52,7 +52,7 @@
               :key="item._id"
             >
               <div
-                class="w-full h-full bg-cover bg-center bg-no-repeat rounded bg-primary-200"
+                class="w-full h-full bg-cover bg-center bg-no-repeat rounded bg-primary-200 cursor-pointer"
                 :class="{
                   'border-2 border-solid border-primary-500':
                     currentAttachmentId === item._id,

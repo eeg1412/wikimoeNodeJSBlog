@@ -134,7 +134,7 @@ function progressColorClass(color) {
 }
 
 .wui-toast-description {
-  @apply mt-1 text-sm text-gray-500 dark:text-gray-400;
+  @apply mt-1 text-sm text-gray-500 dark:text-gray-400 min-h-5;
 }
 
 .wui-toast-actions {
@@ -150,8 +150,7 @@ function progressColorClass(color) {
 .wui-toast-close {
   @apply flex-shrink-0 text-gray-400 hover:text-gray-500
     dark:text-gray-500 dark:hover:text-gray-400
-    cursor-pointer rounded-md h-5
-    hover:bg-gray-100 dark:hover:bg-gray-800;
+    cursor-pointer rounded-md h-5;
 }
 
 .wui-toast-progress {

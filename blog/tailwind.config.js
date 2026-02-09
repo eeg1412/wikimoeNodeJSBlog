@@ -53,11 +53,24 @@ export default {
               variables[`--color-${colorName}-${key}`] = hexToRgb(value)
             }
           }
+          // 添加 --color-primary-DEFAULT: var(--color-primary-500);
+          variables[`--color-${colorName}-DEFAULT`] =
+            `var(--color-${colorName}-500)`
         }
       })
 
       addBase({
-        ':root': variables
+        ':root': variables,
+        '.dark': {
+          '--color-primary-DEFAULT': 'var(--color-primary-400)'
+        }
+      })
+
+      addBase({
+        '.text-primary': {
+          '--tw-text-opacity': '1',
+          color: 'rgb(var(--color-primary-DEFAULT) / var(--tw-text-opacity, 1))'
+        }
       })
     })
   ]

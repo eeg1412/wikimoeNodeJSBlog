@@ -41,16 +41,17 @@ defineEmits(['update:modelValue'])
 
 .wui-checkbox-box {
   @apply w-4 h-4 rounded flex items-center justify-center flex-shrink-0
-    border border-gray-300 dark:border-gray-500
+    bg-white dark:bg-gray-900
+    border border-gray-300 dark:border-gray-700
     transition-colors duration-150;
 }
 
 .wui-checkbox-input:checked + .wui-checkbox-box {
-  @apply bg-primary-500 border-primary-500 dark:bg-primary-400 dark:border-primary-400;
+  @apply bg-primary-500 border-transparent dark:bg-primary-400 dark:border-transparent;
 }
 
 .wui-checkbox-input:focus-visible + .wui-checkbox-box {
-  @apply ring-2 ring-primary-500 ring-offset-2;
+  @apply ring-2 ring-primary-500 dark:ring-primary-400 ring-offset-2 ring-offset-white dark:ring-offset-gray-900;
 }
 
 .wui-checkbox-label {
