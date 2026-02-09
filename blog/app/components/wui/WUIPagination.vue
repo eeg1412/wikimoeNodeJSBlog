@@ -7,20 +7,10 @@
       :disabled="modelValue <= 1"
       @click="goToPage(1)"
     >
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        fill="none"
-        viewBox="0 0 24 24"
-        stroke-width="1.5"
-        stroke="currentColor"
+      <WUIIcon
+        name="i-heroicons-chevron-double-left-20-solid"
         class="w-4 h-4"
-      >
-        <path
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          d="M18.75 19.5l-7.5-7.5 7.5-7.5m-6 15L5.25 12l7.5-7.5"
-        />
-      </svg>
+      />
     </button>
     <button
       class="wui-pagination-btn"
@@ -28,20 +18,7 @@
       :disabled="modelValue <= 1"
       @click="goToPage(modelValue - 1)"
     >
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        fill="none"
-        viewBox="0 0 24 24"
-        stroke-width="1.5"
-        stroke="currentColor"
-        class="w-4 h-4"
-      >
-        <path
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          d="M15.75 19.5L8.25 12l7.5-7.5"
-        />
-      </svg>
+      <WUIIcon name="i-heroicons-chevron-left-20-solid" class="w-4 h-4" />
     </button>
 
     <template v-for="page in visiblePages" :key="page">
@@ -62,20 +39,7 @@
       :disabled="modelValue >= totalPages"
       @click="goToPage(modelValue + 1)"
     >
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        fill="none"
-        viewBox="0 0 24 24"
-        stroke-width="1.5"
-        stroke="currentColor"
-        class="w-4 h-4"
-      >
-        <path
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          d="M8.25 4.5l7.5 7.5-7.5 7.5"
-        />
-      </svg>
+      <WUIIcon name="i-heroicons-chevron-right-20-solid" class="w-4 h-4" />
     </button>
     <button
       v-if="showLast"
@@ -84,20 +48,10 @@
       :disabled="modelValue >= totalPages"
       @click="goToPage(totalPages)"
     >
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        fill="none"
-        viewBox="0 0 24 24"
-        stroke-width="1.5"
-        stroke="currentColor"
+      <WUIIcon
+        name="i-heroicons-chevron-double-right-20-solid"
         class="w-4 h-4"
-      >
-        <path
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          d="M11.25 4.5l7.5 7.5-7.5 7.5m-6-15l7.5 7.5-7.5 7.5"
-        />
-      </svg>
+      />
     </button>
   </nav>
 </template>

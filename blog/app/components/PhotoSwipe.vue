@@ -29,7 +29,7 @@
     :to="`#photo-swipe-${componentId}`"
     v-if="showUI && attachmentList.length > 1"
   >
-    <WUIPopover :popper="{ arrow: true, offsetDistance: 0 }">
+    <WUIPopover :popper="{ arrow: true, offsetDistance: 0 }" :zIndex="2000">
       <div class="photo-swipe-photo-swipe-btn" title="浏览所有媒体">
         <WUIIcon name="i-heroicons-photo-solid" />
       </div>

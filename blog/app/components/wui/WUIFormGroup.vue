@@ -6,16 +6,19 @@
     <div class="wui-form-group-content">
       <slot />
     </div>
-    <p v-if="error" class="wui-form-group-error">{{ error }}</p>
   </div>
 </template>
 
 <script setup>
-defineProps({
+import { provide } from 'vue'
+
+const props = defineProps({
   name: { type: String, default: '' },
   label: { type: String, default: '' },
   error: { type: [String, Boolean], default: '' }
 })
+
+provide('form-group', props)
 </script>
 
 <style scoped>
@@ -25,9 +28,5 @@ defineProps({
 
 .wui-form-group-label {
   @apply block text-sm font-medium text-gray-700 dark:text-gray-200;
-}
-
-.wui-form-group-error {
-  @apply text-sm text-red-500 dark:text-red-400;
 }
 </style>

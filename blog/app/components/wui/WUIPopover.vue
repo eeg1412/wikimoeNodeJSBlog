@@ -11,8 +11,15 @@
           class="wui-popover-panel"
           :style="panelStyle"
         >
-          <div v-if="arrow" class="wui-popover-arrow" :style="arrowStyle"></div>
-          <slot name="panel" :close="close" />
+          <div
+            v-if="arrow"
+            class="wui-popover-arrow"
+            :class="[side === 'top' ? '-bottom-1' : '-top-1']"
+            :style="arrowStyle"
+          ></div>
+          <div class="wui-popover-content">
+            <slot name="panel" :close="close" />
+          </div>
         </div>
       </Transition>
     </Teleport>
@@ -27,7 +34,8 @@ const props = defineProps({
   popper: {
     type: Object,
     default: () => ({})
-  }
+  },
+  zIndex: { type: Number, default: 10 }
 })
 
 const emit = defineEmits(['update:open'])
@@ -38,6 +46,7 @@ const panelRef = ref(null)
 const internalOpen = ref(false)
 const panelPosition = ref({ top: 0, left: 0 })
 const arrowPosition = ref({ left: 0 })
+const side = ref('bottom')
 
 const arrow = computed(() => props.popper?.arrow ?? false)
 
@@ -71,6 +80,7 @@ function updatePosition() {
 
   let top = rect.bottom + offsetDistance + window.scrollY
   let left = rect.left + rect.width / 2 - panelRect.width / 2 + window.scrollX
+  side.value = 'bottom'
 
   // Keep panel within viewport
   const viewportWidth = window.innerWidth
@@ -82,6 +92,7 @@ function updatePosition() {
   // Check if panel goes below viewport, flip to top
   if (rect.bottom + offsetDistance + panelRect.height > window.innerHeight) {
     top = rect.top - panelRect.height - offsetDistance + window.scrollY
+    side.value = 'top'
   }
 
   panelPosition.value = { top, left }
@@ -98,7 +109,7 @@ const panelStyle = computed(() => ({
   position: 'absolute',
   top: `${panelPosition.value.top}px`,
   left: `${panelPosition.value.left}px`,
-  zIndex: 50
+  zIndex: props.zIndex
 }))
 
 const arrowStyle = computed(() => ({
@@ -153,18 +164,21 @@ defineExpose({ close })
 }
 
 .wui-popover-panel {
+  @apply relative;
+}
+
+.wui-popover-content {
   @apply bg-white dark:bg-gray-900
     rounded-lg shadow-lg
     ring-1 ring-gray-200 dark:ring-gray-800
-    overflow-hidden;
+    relative z-10;
 }
 
 .wui-popover-arrow {
-  @apply absolute -top-1.5 w-3 h-3 -translate-x-1/2
-    bg-white dark:bg-gray-900
-    ring-1 ring-gray-200 dark:ring-gray-800
-    transform rotate-45;
-  clip-path: polygon(0 0, 100% 0, 0 100%);
+  @apply absolute w-3 h-3 -translate-x-1/2
+    bg-gray-200 dark:bg-gray-800
+    transform rotate-45
+    z-0;
 }
 
 .wui-popover-transition-enter-active,

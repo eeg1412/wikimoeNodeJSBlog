@@ -4,7 +4,7 @@
       v-if="icon && !trailing"
       class="wui-input-icon wui-input-icon-leading"
     >
-      <WUIIcon :name="icon" class="w-4 h-4 text-gray-400 dark:text-gray-500" />
+      <WUIIcon :name="icon" class="text-gray-400 dark:text-gray-500 w-4 h-4" />
     </span>
     <input
       ref="inputRef"
@@ -29,9 +29,10 @@
 </template>
 
 <script setup>
-import { computed, ref, useSlots } from 'vue'
+import { computed, ref, useSlots, inject } from 'vue'
 
 const slots = useSlots()
+const formGroup = inject('form-group', null)
 
 const props = defineProps({
   modelValue: { type: [String, Number], default: '' },
@@ -45,7 +46,8 @@ const props = defineProps({
   trailing: { type: Boolean, default: true },
   readonly: { type: Boolean, default: false },
   disabled: { type: Boolean, default: false },
-  maxlength: { type: [String, Number], default: undefined }
+  maxlength: { type: [String, Number], default: undefined },
+  error: { type: [String, Boolean], default: false }
 })
 
 defineEmits(['update:modelValue', 'keydown', 'blur', 'focus'])
@@ -61,18 +63,29 @@ const sizeClasses = {
   xl: 'text-base py-2.5'
 }
 
+const isError = computed(
+  () => !!props.error || (formGroup && !!formGroup.error)
+)
+
 const wrapperClasses = computed(() => {
   const classes = ['relative flex items-center']
 
   if (props.variant === 'none') {
     classes.push('border-0')
   } else {
-    classes.push(
-      'rounded-md shadow-sm',
-      'ring-1 ring-inset ring-gray-300 dark:ring-gray-700',
-      'focus-within:ring-2 focus-within:ring-primary-500 dark:focus-within:ring-primary-400',
-      'bg-white dark:bg-gray-900'
-    )
+    classes.push('rounded-md shadow-sm', 'bg-white dark:bg-gray-900')
+
+    if (isError.value) {
+      classes.push(
+        'ring-1 ring-inset ring-red-500 dark:ring-red-400',
+        'focus-within:ring-2 focus-within:ring-red-500 dark:focus-within:ring-red-400'
+      )
+    } else {
+      classes.push(
+        'ring-1 ring-inset ring-gray-300 dark:ring-gray-700',
+        'focus-within:ring-2 focus-within:ring-primary-500 dark:focus-within:ring-primary-400'
+      )
+    }
   }
 
   return classes.join(' ')

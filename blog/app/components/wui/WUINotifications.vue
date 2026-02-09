@@ -9,12 +9,13 @@
           :class="toastColorClass(toast.color)"
         >
           <div class="wui-toast-content">
-            <WUIIcon
-              v-if="toast.icon"
-              :name="toast.icon"
-              class="wui-toast-icon"
-              :class="iconColorClass(toast.color)"
-            />
+            <div class="h-5" :class="iconColorClass(toast.color)">
+              <WUIIcon
+                v-if="toast.icon"
+                :name="toast.icon"
+                class="wui-toast-icon"
+              />
+            </div>
             <div class="wui-toast-body">
               <p v-if="toast.title" class="wui-toast-title">
                 {{ toast.title }}
@@ -37,22 +38,15 @@
               </div>
             </div>
             <button class="wui-toast-close" @click="remove(toast.id)">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke-width="1.5"
-                stroke="currentColor"
-                class="w-4 h-4"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  d="M6 18L18 6M6 6l12 12"
-                />
-              </svg>
+              <WUIIcon name="i-heroicons-x-mark-20-solid" class="w-4 h-4" />
             </button>
           </div>
+          <div
+            v-if="toast.timeout > 0"
+            class="wui-toast-progress"
+            :class="progressColorClass(toast.color)"
+            :style="{ animationDuration: `${toast.timeout}ms` }"
+          ></div>
         </div>
       </TransitionGroup>
     </div>
@@ -86,6 +80,15 @@ function iconColorClass(color) {
   }
   return map[color] || 'text-primary-500'
 }
+
+function progressColorClass(color) {
+  const map = {
+    red: 'bg-red-500 dark:bg-red-400',
+    green: 'bg-green-500 dark:bg-green-400',
+    primary: 'bg-primary-500 dark:bg-primary-400'
+  }
+  return map[color] || 'bg-primary-500 dark:bg-primary-400'
+}
 </script>
 
 <style scoped>
@@ -99,7 +102,7 @@ function iconColorClass(color) {
     rounded-lg shadow-lg
     ring-1 ring-gray-200 dark:ring-gray-800
     pointer-events-auto
-    overflow-hidden;
+    relative overflow-hidden;
 }
 
 .wui-toast-red {
@@ -119,7 +122,7 @@ function iconColorClass(color) {
 }
 
 .wui-toast-icon {
-  @apply flex-shrink-0 w-5 h-5 mt-0.5;
+  @apply flex-shrink-0 w-5 h-5;
 }
 
 .wui-toast-body {
@@ -147,8 +150,22 @@ function iconColorClass(color) {
 .wui-toast-close {
   @apply flex-shrink-0 text-gray-400 hover:text-gray-500
     dark:text-gray-500 dark:hover:text-gray-400
-    cursor-pointer p-1 rounded-md
+    cursor-pointer rounded-md h-5
     hover:bg-gray-100 dark:hover:bg-gray-800;
+}
+
+.wui-toast-progress {
+  @apply absolute bottom-0 left-0 h-1;
+  animation: notification-progress linear forwards;
+}
+
+@keyframes notification-progress {
+  from {
+    width: 100%;
+  }
+  to {
+    width: 0%;
+  }
 }
 
 /* Transition */

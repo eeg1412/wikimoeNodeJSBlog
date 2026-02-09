@@ -10,20 +10,12 @@
       :disabled="disabled"
       @change="$emit('update:modelValue', $event.target.checked)"
     />
-    <span class="wui-checkbox-box">
-      <svg
+    <span class="wui-checkbox-box text-white h5">
+      <WUIIcon
         v-if="modelValue"
-        class="w-3 h-3 text-white"
-        xmlns="http://www.w3.org/2000/svg"
-        viewBox="0 0 20 20"
-        fill="currentColor"
-      >
-        <path
-          fill-rule="evenodd"
-          d="M16.704 4.153a.75.75 0 01.143 1.052l-8 10.5a.75.75 0 01-1.127.075l-4.5-4.5a.75.75 0 011.06-1.06l3.894 3.893 7.48-9.817a.75.75 0 011.05-.143z"
-          clip-rule="evenodd"
-        />
-      </svg>
+        name="i-heroicons-check-20-solid"
+        class="w-3 h-3"
+      />
     </span>
     <span v-if="label" class="wui-checkbox-label">{{ label }}</span>
   </label>
@@ -40,7 +32,7 @@ defineEmits(['update:modelValue'])
 
 <style scoped>
 .wui-checkbox {
-  @apply inline-flex items-center cursor-pointer select-none gap-x-2;
+  @apply items-center cursor-pointer select-none gap-x-2;
 }
 
 .wui-checkbox-input {
@@ -49,7 +41,7 @@ defineEmits(['update:modelValue'])
 
 .wui-checkbox-box {
   @apply w-4 h-4 rounded flex items-center justify-center flex-shrink-0
-    border border-gray-300 dark:border-gray-600
+    border border-gray-300 dark:border-gray-500
     transition-colors duration-150;
 }
 

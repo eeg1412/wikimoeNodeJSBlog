@@ -3,6 +3,7 @@
     <textarea
       ref="textareaRef"
       class="wui-textarea"
+      :class="{ 'wui-textarea-error': isError }"
       :value="modelValue"
       :placeholder="placeholder"
       :rows="rows"
@@ -18,20 +19,26 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, inject, computed } from 'vue'
 
-defineProps({
+const formGroup = inject('form-group', null)
+
+const props = defineProps({
   modelValue: { type: String, default: '' },
   placeholder: { type: String, default: '' },
   rows: { type: [String, Number], default: 3 },
   disabled: { type: Boolean, default: false },
   readonly: { type: Boolean, default: false },
-  maxlength: { type: [String, Number], default: undefined }
+  maxlength: { type: [String, Number], default: undefined },
+  error: { type: [String, Boolean], default: false }
 })
 
 defineEmits(['update:modelValue', 'keydown', 'blur', 'focus'])
 
 const textareaRef = ref(null)
+const isError = computed(
+  () => !!props.error || (formGroup && !!formGroup.error)
+)
 
 defineExpose({
   textarea: textareaRef
@@ -51,5 +58,9 @@ defineExpose({
     placeholder:text-gray-400 dark:placeholder:text-gray-500
     focus:outline-none focus:ring-2 focus:ring-primary-500 dark:focus:ring-primary-400
     shadow-sm resize-y;
+}
+
+.wui-textarea-error {
+  @apply ring-1 ring-red-500 dark:ring-red-400 focus:ring-red-500 dark:focus:ring-red-400;
 }
 </style>
