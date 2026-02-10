@@ -6,7 +6,7 @@
         class="wui-modal-overlay"
         @click.self="$emit('update:modelValue', false)"
       >
-        <div class="wui-modal-container" @click.stop>
+        <div class="wui-modal-container custom-scroll" @click.stop>
           <slot />
         </div>
       </div>
@@ -49,6 +49,7 @@ onUnmounted(() => {
 
 .wui-modal-container {
   @apply relative bg-white dark:bg-gray-900
+    flex flex-col 
     rounded-lg shadow-xl
     w-full sm:max-w-lg max-h-[90dvh]
     overflow-y-auto
