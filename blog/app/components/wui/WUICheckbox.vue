@@ -32,7 +32,7 @@ defineEmits(['update:modelValue'])
 
 <style scoped>
 .wui-checkbox {
-  @apply items-center cursor-pointer select-none gap-x-2;
+  @apply cursor-pointer select-none gap-x-2 relative flex items-center;
 }
 
 .wui-checkbox-input {
