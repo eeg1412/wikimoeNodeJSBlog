@@ -1,71 +1,147 @@
 <template>
   <div
-    class="wui-tabs"
-    :class="{ 'wui-tabs-vertical': orientation === 'vertical' }"
+    :class="[
+      ui.wrapper,
+      orientation === 'vertical' ? 'flex flex-row space-y-0 space-x-2' : ''
+    ]"
   >
-    <div class="wui-tabs-list" role="tablist">
+    <div
+      role="tablist"
+      :class="[
+        ui.list.base,
+        ui.list.background,
+        ui.list.rounded,
+        ui.list.shadow,
+        ui.list.padding,
+        ui.list.width,
+        orientation === 'vertical'
+          ? 'flex flex-col h-auto'
+          : [ui.list.height, 'grid items-center']
+      ]"
+      :style="listStyle"
+    >
+      <div
+        v-if="items.length"
+        :class="ui.list.marker.wrapper"
+        :style="markerStyle"
+      >
+        <div
+          :class="[
+            ui.list.marker.base,
+            ui.list.marker.background,
+            ui.list.marker.rounded,
+            ui.list.marker.shadow
+          ]"
+        />
+      </div>
+
       <button
         v-for="(item, index) in items"
         :key="index"
+        type="button"
         role="tab"
-        class="wui-tab-trigger"
-        :class="{ 'wui-tab-trigger-active': modelValue === index }"
-        @click="$emit('update:modelValue', index)"
+        :aria-selected="modelValue === index"
+        :class="[
+          ui.list.tab.base,
+          ui.list.tab.background,
+          ui.list.tab.height,
+          ui.list.tab.padding,
+          ui.list.tab.size,
+          ui.list.tab.font,
+          ui.list.tab.rounded,
+          ui.list.tab.shadow,
+          modelValue === index ? ui.list.tab.active : ui.list.tab.inactive
+        ]"
+        @click="updateModelValue(index)"
       >
+        <span v-if="item.icon" :class="[ui.list.tab.icon, item.icon]" />
         {{ item.label }}
       </button>
     </div>
-    <div class="wui-tabs-content">
+
+    <div :class="ui.container">
       <slot :selected="modelValue" :item="items[modelValue]" />
     </div>
   </div>
 </template>
 
 <script setup>
-defineProps({
-  items: { type: Array, default: () => [] },
+import { computed } from 'vue'
+
+const props = defineProps({
+  items: {
+    type: Array,
+    default: () => []
+  },
   modelValue: { type: Number, default: 0 },
   orientation: { type: String, default: 'horizontal' }
 })
-defineEmits(['update:modelValue'])
+
+const emit = defineEmits(['update:modelValue'])
+
+const ui = {
+  wrapper: 'relative space-y-2',
+  container: 'relative w-full',
+  base: 'focus:outline-none',
+  list: {
+    base: 'relative',
+    background: 'bg-gray-100 dark:bg-gray-800',
+    rounded: 'rounded-lg',
+    shadow: '',
+    padding: 'p-1',
+    height: 'h-10',
+    width: 'w-full',
+    marker: {
+      wrapper:
+        'absolute top-[4px] left-[4px] right-[4px] duration-200 ease-out focus:outline-none',
+      base: 'w-full h-full',
+      background: 'bg-white dark:bg-gray-900',
+      rounded: 'rounded-md',
+      shadow: 'shadow-sm'
+    },
+    tab: {
+      base: 'relative inline-flex items-center justify-center flex-shrink-0 w-full ui-focus-visible:outline-0 ui-focus-visible:ring-2 ui-focus-visible:ring-primary-500 dark:ui-focus-visible:ring-primary-400 ui-not-focus-visible:outline-none focus:outline-none disabled:cursor-not-allowed disabled:opacity-75 transition-colors duration-200 ease-out',
+      background: '',
+      active: 'text-gray-900 dark:text-white',
+      inactive: 'text-gray-500 dark:text-gray-400',
+      height: 'h-8',
+      padding: 'px-3',
+      size: 'text-sm',
+      font: 'font-medium',
+      rounded: 'rounded-md',
+      shadow: '',
+      icon: 'w-4 h-4 flex-shrink-0 me-2'
+    }
+  }
+}
+
+const updateModelValue = index => {
+  emit('update:modelValue', index)
+}
+
+const listStyle = computed(() => {
+  if (props.orientation === 'vertical') {
+    return {}
+  }
+  return {
+    gridTemplateColumns: `repeat(${props.items.length || 1}, minmax(0, 1fr))`
+  }
+})
+
+const markerStyle = computed(() => {
+  const count = props.items.length || 1
+  if (props.orientation === 'vertical') {
+    const step = 100 * props.modelValue
+    return {
+      height: `calc((100% - 8px) / ${count})`,
+      transform: `translate(0, ${step}%)`
+    }
+  }
+
+  const step = 100 * props.modelValue
+  return {
+    width: `calc((100% - 8px) / ${count})`, // 8px for p-1 (4px*2) padding
+    transform: `translate(${step}%, 0)`
+  }
+})
 </script>
-
-<style scoped>
-.wui-tabs {
-  @apply flex flex-col;
-}
-
-.wui-tabs-vertical {
-  @apply flex-row;
-}
-
-.wui-tabs-list {
-  @apply flex border-b border-gray-200 dark:border-gray-700;
-}
-
-.wui-tabs-vertical .wui-tabs-list {
-  @apply flex-col border-b-0 border-r border-gray-200 dark:border-gray-700;
-}
-
-.wui-tab-trigger {
-  @apply px-3 py-2 text-sm font-medium whitespace-nowrap cursor-pointer
-    text-gray-500 dark:text-gray-400
-    hover:text-gray-700 dark:hover:text-gray-200
-    hover:bg-gray-50 dark:hover:bg-gray-800
-    border-b-2 border-transparent
-    transition-colors duration-150;
-}
-
-.wui-tabs-vertical .wui-tab-trigger {
-  @apply border-b-0 border-r-2 text-left;
-}
-
-.wui-tab-trigger-active {
-  @apply text-primary-500 dark:text-primary-400
-    border-primary-500 dark:border-primary-400;
-}
-
-.wui-tabs-content {
-  @apply flex-1;
-}
-</style>
