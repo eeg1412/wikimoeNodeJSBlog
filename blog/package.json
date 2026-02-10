@@ -11,6 +11,7 @@
     "upgrade": "npx nuxt upgrade --dedupe"
   },
   "devDependencies": {
+    "@iconify-json/heroicons": "^1.2.3",
     "@types/node": "^24.10.0"
   },
   "dependencies": {

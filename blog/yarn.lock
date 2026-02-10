@@ -568,6 +568,13 @@
   resolved "https://registry.yarnpkg.com/@esbuild/win32-x64/-/win32-x64-0.25.12.tgz#9bdad8176be7811ad148d1f8772359041f46c6c5"
   integrity sha512-alJC0uCZpTFrSL0CCDjcgleBXPnCrEAhTBILpeAp7M/OFgoqtAetfBzX0xM00MUsVVPpVjlPuMbREqnZCXaTnA==
 
+"@iconify-json/heroicons@^1.2.3":
+  version "1.2.3"
+  resolved "https://registry.yarnpkg.com/@iconify-json/heroicons/-/heroicons-1.2.3.tgz#041fe0d689535dddc51e97c8b692cdff792ac4b2"
+  integrity sha512-n+vmCEgTesRsOpp5AB5ILB6srsgsYK+bieoQBNlafvoEhjVXLq8nIGN4B0v/s4DUfa0dOrjwE/cKJgIKdJXOEg==
+  dependencies:
+    "@iconify/types" "*"
+
 "@iconify/collections@^1.0.641":
   version "1.0.648"
   resolved "https://registry.yarnpkg.com/@iconify/collections/-/collections-1.0.648.tgz#5a4f92c4a8ca588c7da1a9f2d230834e0d3b554c"
