@@ -1,5 +1,5 @@
 <template>
-  <Icon :name="transformedName" class="wui-icon" :class="$attrs.class" />
+  <Icon :name="transformedName" :class="['wui-icon', props.class]" />
 </template>
 
 <script setup>
@@ -9,6 +9,10 @@ const props = defineProps({
   name: {
     type: String,
     required: true
+  },
+  class: {
+    type: [String, Object, Array],
+    default: ''
   }
 })
 
