@@ -23,10 +23,7 @@ const transformedName = computed(() => {
 
 <style scoped>
 .wui-icon {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
+  display: inline-block;
   flex-shrink: 0;
-  color: inherit;
 }
 </style>
