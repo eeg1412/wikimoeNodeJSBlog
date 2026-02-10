@@ -17,24 +17,28 @@
               />
             </div>
             <div class="wui-toast-body">
-              <p v-if="toast.title" class="wui-toast-title">
-                {{ toast.title }}
-              </p>
-              <p v-if="toast.description" class="wui-toast-description">
-                {{ toast.description }}
-              </p>
-              <div
-                v-if="toast.actions && toast.actions.length"
-                class="wui-toast-actions"
-              >
-                <button
-                  v-for="(action, idx) in toast.actions"
-                  :key="idx"
-                  class="wui-toast-action-btn"
-                  @click="onAction(action, toast.id)"
+              <div class="flex justify-between items-center">
+                <div>
+                  <p v-if="toast.title" class="wui-toast-title">
+                    {{ toast.title }}
+                  </p>
+                  <p v-if="toast.description" class="wui-toast-description">
+                    {{ toast.description }}
+                  </p>
+                </div>
+                <div
+                  v-if="toast.actions && toast.actions.length"
+                  class="wui-toast-actions"
                 >
-                  {{ action.label }}
-                </button>
+                  <WUIButton
+                    v-for="(action, idx) in toast.actions"
+                    :key="idx"
+                    color="gray"
+                    @click="onAction(action, toast.id)"
+                  >
+                    {{ action.label }}
+                  </WUIButton>
+                </div>
               </div>
             </div>
             <button class="wui-toast-close" @click="remove(toast.id)">
@@ -118,7 +122,7 @@ function progressColorClass(color) {
 }
 
 .wui-toast-content {
-  @apply flex items-start gap-3 p-4;
+  @apply flex items-center gap-3 p-4;
 }
 
 .wui-toast-icon {
@@ -138,7 +142,7 @@ function progressColorClass(color) {
 }
 
 .wui-toast-actions {
-  @apply mt-2 flex gap-2;
+  @apply flex gap-2;
 }
 
 .wui-toast-action-btn {
