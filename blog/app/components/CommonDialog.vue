@@ -30,13 +30,13 @@ const props = defineProps({
 const emits = defineEmits()
 const commonDialogOpen = computed({
   get: () => {
-    if (import.meta.client) {
-      if (props.show) {
-        addStyle()
-      } else {
-        removeStyle()
-      }
-    }
+    // if (import.meta.client) {
+    //   if (props.show) {
+    //     addStyle()
+    //   } else {
+    //     removeStyle()
+    //   }
+    // }
 
     return props.show
   },
@@ -45,30 +45,30 @@ const commonDialogOpen = computed({
   }
 })
 
-const styleId = generateRandomString(8)
-const addStyle = () => {
-  if (import.meta.client) {
-    const style = document.createElement('style')
-    style.id = styleId
-    style.innerHTML = `
-    html {
-        overflow: visible !important;
-        padding-right: 0 !important;
-      }
-    `
-    document.body.appendChild(style)
-  }
-}
-const removeStyle = () => {
-  if (import.meta.client) {
-    const style = document.getElementById(styleId)
-    if (style) {
-      document.body.removeChild(style)
-    }
-  }
-}
+// const styleId = generateRandomString(8)
+// const addStyle = () => {
+//   if (import.meta.client) {
+//     const style = document.createElement('style')
+//     style.id = styleId
+//     style.innerHTML = `
+//     html {
+//         overflow: visible !important;
+//         padding-right: 0 !important;
+//       }
+//     `
+//     document.body.appendChild(style)
+//   }
+// }
+// const removeStyle = () => {
+//   if (import.meta.client) {
+//     const style = document.getElementById(styleId)
+//     if (style) {
+//       document.body.removeChild(style)
+//     }
+//   }
+// }
 onUnmounted(() => {
-  removeStyle()
+  // removeStyle()
 })
 </script>
 <style scoped>

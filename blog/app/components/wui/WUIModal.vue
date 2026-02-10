@@ -24,19 +24,19 @@ const props = defineProps({
 defineEmits(['update:modelValue'])
 
 // Prevent body scroll when modal is open
-watch(
-  () => props.modelValue,
-  val => {
-    if (val) {
-      document.body.style.overflow = 'hidden'
-    } else {
-      document.body.style.overflow = ''
-    }
-  }
-)
+// watch(
+//   () => props.modelValue,
+//   val => {
+//     if (val) {
+//       document.body.style.overflow = 'hidden'
+//     } else {
+//       document.body.style.overflow = ''
+//     }
+//   }
+// )
 
 onUnmounted(() => {
-  document.body.style.overflow = ''
+  // document.body.style.overflow = ''
 })
 </script>
 
