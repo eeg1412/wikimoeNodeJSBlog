@@ -56,7 +56,7 @@
                 :class="{
                   'border-2 border-solid border-primary-500':
                     currentAttachmentId === item._id,
-                  'border-2 border-solid border-primary-100':
+                  'border-2 border-solid border-primary-100/80':
                     currentAttachmentId !== item._id
                 }"
                 :style="{
