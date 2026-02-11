@@ -122,6 +122,10 @@ const emojiInit = () => {
   background-color: #f3f4f6;
 }
 
+.dark .emoji-item:hover {
+  background-color: #374151;
+}
+
 .empty-emoji {
   display: flex;
   justify-content: center;
