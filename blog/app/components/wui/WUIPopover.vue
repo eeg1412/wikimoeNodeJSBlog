@@ -77,22 +77,62 @@ function updatePosition() {
   const rect = triggerEl.getBoundingClientRect()
   const panelRect = panelEl.getBoundingClientRect()
   const offsetDistance = props.popper?.offsetDistance ?? 8
+  const padding = 8
 
-  let top = rect.bottom + offsetDistance
-  let left = rect.left + rect.width / 2 - panelRect.width / 2
-  side.value = 'bottom'
+  // Calculate available space in all directions
+  const spaceTop = rect.top
+  const spaceBottom = window.innerHeight - rect.bottom
+  const spaceLeft = rect.left
+  const spaceRight = window.innerWidth - rect.right
 
-  // Keep panel within viewport
-  const viewportWidth = window.innerWidth
-  if (left < 8) left = 8
-  if (left + panelRect.width > viewportWidth - 8) {
-    left = viewportWidth - panelRect.width - 8
+  // Determine vertical position based on available space
+  let top, verticalSide
+  if (
+    spaceBottom >= panelRect.height + offsetDistance ||
+    spaceBottom >= spaceTop
+  ) {
+    // Place below if there's enough space or bottom has more space
+    top = rect.bottom + offsetDistance
+    verticalSide = 'bottom'
+  } else {
+    // Place above if top has more space
+    top = rect.top - panelRect.height - offsetDistance
+    verticalSide = 'top'
+  }
+  side.value = verticalSide
+
+  // Determine horizontal position based on available space
+  let left
+  const preferredLeft = rect.left + rect.width / 2 - panelRect.width / 2
+
+  // Check if centered position fits
+  if (
+    preferredLeft >= padding &&
+    preferredLeft + panelRect.width <= window.innerWidth - padding
+  ) {
+    left = preferredLeft
+  } else if (preferredLeft < padding) {
+    // Not enough space on left, align to left edge
+    left = padding
+  } else {
+    // Not enough space on right, align to right edge
+    left = window.innerWidth - panelRect.width - padding
   }
 
-  // Check if panel goes below viewport, flip to top
-  if (rect.bottom + offsetDistance + panelRect.height > window.innerHeight) {
-    top = rect.top - panelRect.height - offsetDistance
-    side.value = 'top'
+  // Alternative: align based on which side has more space
+  const centerLeft = rect.left + rect.width / 2 - panelRect.width / 2
+  if (centerLeft < padding) {
+    // Align left if no space on left
+    left = Math.max(padding, rect.left)
+  } else if (centerLeft + panelRect.width > window.innerWidth - padding) {
+    // Align right if no space on right
+    left = Math.min(
+      window.innerWidth - panelRect.width - padding,
+      rect.right - panelRect.width
+    )
+  } else {
+    // Center if both sides have space
+    left = centerLeft
   }
 
   panelPosition.value = { top, left }
