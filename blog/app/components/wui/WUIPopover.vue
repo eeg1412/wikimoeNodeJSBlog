@@ -78,8 +78,8 @@ function updatePosition() {
   const panelRect = panelEl.getBoundingClientRect()
   const offsetDistance = props.popper?.offsetDistance ?? 8
 
-  let top = rect.bottom + offsetDistance + window.scrollY
-  let left = rect.left + rect.width / 2 - panelRect.width / 2 + window.scrollX
+  let top = rect.bottom + offsetDistance
+  let left = rect.left + rect.width / 2 - panelRect.width / 2
   side.value = 'bottom'
 
   // Keep panel within viewport
@@ -91,7 +91,7 @@ function updatePosition() {
 
   // Check if panel goes below viewport, flip to top
   if (rect.bottom + offsetDistance + panelRect.height > window.innerHeight) {
-    top = rect.top - panelRect.height - offsetDistance + window.scrollY
+    top = rect.top - panelRect.height - offsetDistance
     side.value = 'top'
   }
 
@@ -106,9 +106,10 @@ function updatePosition() {
 }
 
 const panelStyle = computed(() => ({
-  position: 'absolute',
-  top: `${panelPosition.value.top}px`,
-  left: `${panelPosition.value.left}px`,
+  position: 'fixed',
+  top: 0,
+  left: 0,
+  transform: `translate(${panelPosition.value.left}px, ${panelPosition.value.top}px)`,
   zIndex: props.zIndex
 }))
 
@@ -183,14 +184,13 @@ defineExpose({ close })
 
 .wui-popover-transition-enter-active,
 .wui-popover-transition-leave-active {
-  transition:
-    opacity 0.15s ease,
-    transform 0.15s ease;
+  transition: opacity 0.15s ease;
+  /* transform 0.15s ease; */
 }
 
 .wui-popover-transition-enter-from,
 .wui-popover-transition-leave-to {
   opacity: 0;
-  transform: translateY(-4px);
+  /* transform: translateY(-4px); */
 }
 </style>
