@@ -157,17 +157,31 @@ const arrowStyle = computed(() => ({
   left: `${arrowPosition.value.left}px`
 }))
 
+const addListeners = () => {
+  document.addEventListener('click', handleClickOutside, true)
+  window.addEventListener('scroll', handleScrollResize, true)
+  window.addEventListener('resize', handleScrollResize)
+}
+
+const removeListeners = () => {
+  document.removeEventListener('click', handleClickOutside, true)
+  window.removeEventListener('scroll', handleScrollResize, true)
+  window.removeEventListener('resize', handleScrollResize)
+}
+
 // Update position when opened
 watch(isOpen, async val => {
   if (val) {
+    addListeners()
     await nextTick()
     updatePosition()
+  } else {
+    removeListeners()
   }
 })
 
 // Click outside to close
 function handleClickOutside(e) {
-  if (!isOpen.value) return
   if (popoverRef.value?.contains(e.target)) return
   if (panelRef.value?.contains(e.target)) return
   close()
@@ -175,21 +189,17 @@ function handleClickOutside(e) {
 
 // Update position on scroll/resize
 function handleScrollResize() {
-  if (isOpen.value) {
-    updatePosition()
-  }
+  updatePosition()
 }
 
 onMounted(() => {
-  document.addEventListener('click', handleClickOutside, true)
-  window.addEventListener('scroll', handleScrollResize, true)
-  window.addEventListener('resize', handleScrollResize)
+  if (isOpen.value) {
+    addListeners()
+  }
 })
 
 onUnmounted(() => {
-  document.removeEventListener('click', handleClickOutside, true)
-  window.removeEventListener('scroll', handleScrollResize, true)
-  window.removeEventListener('resize', handleScrollResize)
+  removeListeners()
 })
 
 defineExpose({ close })
