@@ -45,7 +45,7 @@
               @click="close"
             />
           </div>
-          <div class="grid grid-cols-3 grid-rows-3 gap-4">
+          <div class="grid grid-cols-3 grid-rows-3 gap-1">
             <div
               class="w-24 h-24"
               v-for="(item, index) in currentGroup"
