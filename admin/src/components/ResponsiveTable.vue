@@ -78,55 +78,77 @@
     <!-- 卡片列表 -->
     <div class="responsive-table-mobile__list">
       <div
-        v-for="(row, rowIndex) in data"
-        :key="getRowKey(row, rowIndex)"
-        class="responsive-table-card"
-        :class="{
-          'responsive-table-card--selected': isRowSelected(row)
-        }"
-        @click="handleCardClick(row, rowIndex, $event)"
+        v-for="(row, rowIndex) in flattenedData"
+        :key="getRowKey(row.row, rowIndex)"
+        class="responsive-table-mobile__row-container"
       >
-        <!-- 选择框 -->
-        <div v-if="hasSelection" class="responsive-table-card__selection">
-          <el-checkbox
-            :model-value="isRowSelected(row)"
-            @change="val => toggleRowSelect(row, val)"
-            @click.stop
-          />
+        <!-- 树形连接线 -->
+        <div
+          v-if="row.level > 0"
+          class="responsive-table-mobile__tree-connector"
+        >
+          <div
+            v-for="l in row.level"
+            :key="l"
+            class="responsive-table-mobile__tree-line"
+            :style="{ left: `${(l - 1) * 20 + 8}px` }"
+            :class="{ 'is-last-level': l === row.level }"
+          ></div>
         </div>
 
-        <!-- 卡片主体内容 -->
-        <div class="responsive-table-card__body">
-          <!-- 普通字段区域 -->
-          <div
-            v-for="col in normalColumns"
-            :key="col.columnId"
-            class="responsive-table-card__field"
-          >
-            <div class="responsive-table-card__label">{{ col.label }}</div>
-            <div class="responsive-table-card__value">
-              <!-- 使用列的自定义渲染 -->
-              <ResponsiveTableCardCell
-                :column="col"
-                :row="row"
-                :row-index="rowIndex"
-              />
+        <div
+          class="responsive-table-card"
+          :class="{
+            'responsive-table-card--selected': isRowSelected(row.row),
+            'responsive-table-card--has-children': row.hasChildren
+          }"
+          :style="{
+            marginLeft: row.level > 0 ? `${row.level * 20}px` : '0'
+          }"
+          @click="handleCardClick(row.row, rowIndex, $event)"
+        >
+          <!-- 选择框 -->
+          <div v-if="hasSelection" class="responsive-table-card__selection">
+            <el-checkbox
+              :model-value="isRowSelected(row.row)"
+              @change="val => toggleRowSelect(row.row, val)"
+              @click.stop
+            />
+          </div>
+
+          <!-- 卡片主体内容 -->
+          <div class="responsive-table-card__body">
+            <!-- 普通字段区域 -->
+            <div
+              v-for="col in normalColumns"
+              :key="col.columnId"
+              class="responsive-table-card__field"
+            >
+              <div class="responsive-table-card__label">{{ col.label }}</div>
+              <div class="responsive-table-card__value">
+                <!-- 使用列的自定义渲染 -->
+                <ResponsiveTableCardCell
+                  :column="col"
+                  :row="row.row"
+                  :row-index="rowIndex"
+                />
+              </div>
             </div>
           </div>
-        </div>
 
-        <!-- 操作区域 -->
-        <div
-          v-if="actionColumns.length > 0"
-          class="responsive-table-card__actions"
-        >
-          <template v-for="col in actionColumns" :key="col.columnId">
-            <ResponsiveTableCardCell
-              :column="col"
-              :row="row"
-              :row-index="rowIndex"
-            />
-          </template>
+          <!-- 操作区域 -->
+          <div
+            v-if="actionColumns.length > 0"
+            class="responsive-table-card__actions"
+          >
+            <template v-for="col in actionColumns" :key="col.columnId">
+              <ResponsiveTableCardCell
+                :column="col"
+                :row="row.row"
+                :row-index="rowIndex"
+              />
+            </template>
+          </div>
         </div>
       </div>
 
@@ -333,6 +355,47 @@ export default {
     /** 可排序列 */
     const sortableColumns = computed(() =>
       registeredColumns.filter(col => col.sortable && col.prop)
+    )
+
+    // ========== 树状表格数据扁平化 ==========
+    /**
+     * 将树状数据扁平化，添加层级信息
+     */
+    const flattenedData = computed(() => {
+      const result = []
+      const flatten = (rows, level = 0) => {
+        if (!rows) return
+        rows.forEach(row => {
+          result.push({
+            row,
+            level,
+            hasChildren: row.children && row.children.length > 0
+          })
+          if (row.children && row.children.length > 0) {
+            flatten(row.children, level + 1)
+          }
+        })
+      }
+      flatten(props.data)
+      return result
+    })
+
+    // ========== 自动滚动到顶部（移动端） ==========
+    watch(
+      () => props.data,
+      () => {
+        if (isMobile.value) {
+          // 延迟执行，确保DOM已更新
+          nextTick(() => {
+            // 滚动 .el-main 元素到顶部
+            const appElement = document.querySelector('.el-main')
+            if (appElement) {
+              appElement.scrollTo({ top: 0 })
+            }
+          })
+        }
+      },
+      { deep: false }
     )
 
     // ========== 选择功能（移动端） ==========
@@ -562,6 +625,7 @@ export default {
       mobileSortOrder,
       tableAttrs,
       tableListeners,
+      flattenedData,
       getRowKey,
       isRowSelected,
       toggleRowSelect,
@@ -606,18 +670,72 @@ export default {
 .responsive-table-mobile__list {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 12px;
+  padding: 10px;
+}
+
+.responsive-table-mobile__row-container {
+  position: relative;
+  display: flex;
+  align-items: stretch;
+}
+
+/* 树形连接线 */
+.responsive-table-mobile__tree-connector {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  pointer-events: none;
+}
+
+.responsive-table-mobile__tree-line {
+  position: absolute;
+  top: -12px; /* 向上延伸连接到上一个 Row 的 Gap */
+  bottom: 0;
+  width: 1px;
+  background-color: var(--el-border-color-lighter, #ebeef5);
+}
+
+/* 第一行不需要向上连线 */
+.responsive-table-mobile__row-container:first-child
+  .responsive-table-mobile__tree-line {
+  top: 24px;
+}
+
+.responsive-table-mobile__tree-line.is-last-level {
+  background-color: var(--el-border-color-lighter, #a0cfff);
+  width: 2px;
+}
+
+/* 最后一个层级的横向横线，形成 L 形 */
+.responsive-table-mobile__tree-line.is-last-level::after {
+  content: '';
+  position: absolute;
+  top: 24px;
+  left: 0;
+  width: 12px;
+  height: 2px;
+  background-color: var(--el-border-color-lighter, #a0cfff);
 }
 
 /* ========== 单个卡片 ========== */
 .responsive-table-card {
+  flex: 1;
+  min-width: 0;
   position: relative;
   background: var(--el-bg-color, #fff);
   border: 1px solid var(--el-border-color-lighter, #e4e7ed);
   border-radius: 8px;
   overflow: hidden;
   transition: border-color 0.2s, box-shadow 0.2s;
+  box-shadow: 0 2px 8px 0 rgba(0, 0, 0, 0.05);
 }
+
+/* 有子级的卡片 */
+/* .responsive-table-card--has-children {
+  border-left: 3px solid var(--el-border-color-lighter, #a0cfff);
+} */
 
 .responsive-table-card:hover {
   border-color: var(--el-color-primary-light-5, #a0cfff);
