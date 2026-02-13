@@ -1,27 +1,33 @@
 <template>
   <div class="wui-popover" ref="popoverRef">
-    <div ref="triggerRef" class="wui-popover-trigger" @click="toggle">
+    <div class="wui-popover-trigger" @click="toggle">
       <slot />
     </div>
     <Teleport to="body">
-      <Transition name="wui-popover-transition">
-        <div
-          v-if="isOpen"
-          ref="containerRef"
-          class="wui-popover-container"
-          :style="containerStyle"
+      <div
+        v-if="shouldRender"
+        ref="containerRef"
+        class="wui-popover-container"
+        :style="containerStyle"
+      >
+        <Transition
+          appear
+          name="wui-popover-transition"
+          @after-leave="onAfterLeave"
         >
-          <div
-            v-if="showArrow"
-            ref="arrowRef"
-            class="wui-popover-arrow"
-            data-popper-arrow
-          ></div>
-          <div class="wui-popover-content">
-            <slot name="panel" :close="close" />
+          <div v-show="isOpen">
+            <div
+              v-if="showArrow"
+              ref="arrowRef"
+              class="wui-popover-arrow"
+              data-popper-arrow
+            ></div>
+            <div class="wui-popover-content">
+              <slot name="panel" :close="close" />
+            </div>
           </div>
-        </div>
-      </Transition>
+        </Transition>
+      </div>
     </Teleport>
   </div>
 </template>
@@ -46,6 +52,8 @@ const arrowRef = ref(null)
 
 // 内部状态
 const internalOpen = ref(false)
+// shouldRender 控制容器的 v-if，过渡结束后才销毁
+const shouldRender = ref(false)
 
 const showArrow = computed(() => props.popper?.arrow ?? false)
 
@@ -88,6 +96,11 @@ function close() {
   isOpen.value = false
 }
 
+// 过渡结束后销毁容器
+function onAfterLeave() {
+  shouldRender.value = false
+}
+
 // 容器样式 — zIndex 由 prop 控制
 const containerStyle = computed(() => ({
   zIndex: props.zIndex
@@ -113,7 +126,8 @@ function removeListeners() {
 // 打开/关闭时维护事件监听 & 同步 popper reference
 watch(isOpen, async val => {
   if (val) {
-    addListeners()
+    // 先挂载容器
+    shouldRender.value = true
     await nextTick()
     // 将 triggerRef 的真实 DOM 同步给 popper 的 reference
     syncReference()
@@ -123,7 +137,9 @@ watch(isOpen, async val => {
     if (popperInstance.value) {
       popperInstance.value.forceUpdate()
     }
+    addListeners()
   } else {
+    // 关闭时仅移除监听，shouldRender 留到 @after-leave 再置 false
     removeListeners()
   }
 })
@@ -162,11 +178,12 @@ function syncArrow() {
 }
 
 onMounted(() => {
-  // 首次挂载时把 trigger DOM 赋给 popper reference
-  syncReference()
-
   if (isOpen.value) {
-    addListeners()
+    shouldRender.value = true
+    nextTick(() => {
+      syncReference()
+      addListeners()
+    })
   }
 })
 
@@ -187,7 +204,9 @@ defineExpose({ close })
 }
 
 .wui-popover-container {
-  /* popper.js 通过 style 属性控制 position/top/left/transform 等 */
+  position: fixed;
+  top: 0;
+  left: 0;
   pointer-events: auto;
 }
 
@@ -218,19 +237,27 @@ defineExpose({ close })
 }
 
 /* 根据 popper 的 placement 自动定位箭头 */
-.wui-popover-container[data-popper-placement^='top'] > .wui-popover-arrow {
+.wui-popover-container[data-popper-placement^='top']
+  > :first-child
+  > .wui-popover-arrow {
   bottom: -4px;
 }
 
-.wui-popover-container[data-popper-placement^='bottom'] > .wui-popover-arrow {
+.wui-popover-container[data-popper-placement^='bottom']
+  > :first-child
+  > .wui-popover-arrow {
   top: -4px;
 }
 
-.wui-popover-container[data-popper-placement^='left'] > .wui-popover-arrow {
+.wui-popover-container[data-popper-placement^='left']
+  > :first-child
+  > .wui-popover-arrow {
   right: -4px;
 }
 
-.wui-popover-container[data-popper-placement^='right'] > .wui-popover-arrow {
+.wui-popover-container[data-popper-placement^='right']
+  > :first-child
+  > .wui-popover-arrow {
   left: -4px;
 }
 
