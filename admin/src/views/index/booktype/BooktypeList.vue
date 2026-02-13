@@ -37,7 +37,7 @@
     </div>
     <!-- 书籍类型 -->
     <div class="mb20 list-table-body">
-      <el-table
+      <ResponsiveTable
         height="100%"
         :data="booktypeList"
         row-key="_id"
@@ -45,9 +45,9 @@
         border
       >
         <!-- 名称 -->
-        <el-table-column prop="name" label="名称" min-width="200" />
+        <ResponsiveTableColumn prop="name" label="名称" min-width="200" />
         <!-- 颜色 -->
-        <el-table-column prop="color" label="颜色" width="100">
+        <ResponsiveTableColumn prop="color" label="颜色" width="100">
           <template #default="{ row }">
             <div
               :style="{ background: row.color }"
@@ -56,8 +56,8 @@
               {{ row.color }}
             </div>
           </template>
-        </el-table-column>
-        <el-table-column label="操作" width="140" fixed="right">
+        </ResponsiveTableColumn>
+        <ResponsiveTableColumn label="操作" width="140" fixed="right">
           <template #default="{ row }">
             <el-button type="primary" size="small" @click="goEdit(row._id)"
               >编辑</el-button
@@ -66,8 +66,8 @@
               >删除</el-button
             >
           </template>
-        </el-table-column>
-      </el-table>
+        </ResponsiveTableColumn>
+      </ResponsiveTable>
     </div>
     <!-- 分页 -->
     <div class="clearfix">

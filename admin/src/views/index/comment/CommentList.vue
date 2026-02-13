@@ -64,7 +64,7 @@
     </div>
     <!-- comments -->
     <div class="mb20 list-table-body">
-      <el-table
+      <ResponsiveTable
         ref="tableRef"
         :data="commentList"
         height="100%"
@@ -72,7 +72,7 @@
         border
       >
         <!-- 评论文章 -->
-        <el-table-column label="评论文章/推文" width="180">
+        <ResponsiveTableColumn label="评论文章/推文" width="180">
           <template #default="{ row }">
             <div v-if="row.post">
               <div :title="row.post.title || row.post.excerpt" class="di">
@@ -87,8 +87,8 @@
             </div>
             <div v-else class="cRed">文章/推文已删除</div>
           </template>
-        </el-table-column>
-        <el-table-column prop="content" label="内容" min-width="300">
+        </ResponsiveTableColumn>
+        <ResponsiveTableColumn prop="content" label="内容" min-width="300">
           <template #default="{ row }">
             <div>
               <blockquote
@@ -110,9 +110,9 @@
               <div class="pre-wrap">{{ row.content }}</div>
             </div>
           </template>
-        </el-table-column>
+        </ResponsiveTableColumn>
         <!-- 状态 0未审核，1通过，2未通过 -->
-        <el-table-column prop="status" label="状态" min-width="110">
+        <ResponsiveTableColumn prop="status" label="状态" min-width="110">
           <template #default="{ row }">
             <el-dropdown
               trigger="click"
@@ -125,8 +125,8 @@
                   row.status === 0
                     ? 'info'
                     : row.status === 1
-                      ? 'success'
-                      : 'danger'
+                    ? 'success'
+                    : 'danger'
                 "
                 :disabled="!row.post"
               >
@@ -134,8 +134,8 @@
                   row.status === 0
                     ? '待审核'
                     : row.status === 1
-                      ? '通过'
-                      : '未通过'
+                    ? '通过'
+                    : '未通过'
                 }}
                 <el-icon class="el-icon--right"><arrow-down /></el-icon>
               </el-button>
@@ -160,10 +160,10 @@
               </template>
             </el-dropdown>
           </template>
-        </el-table-column>
+        </ResponsiveTableColumn>
         <!-- 点赞 -->
-        <el-table-column prop="likes" label="点赞" width="80" />
-        <el-table-column label="评论者" width="180">
+        <ResponsiveTableColumn prop="likes" label="点赞" width="80" />
+        <ResponsiveTableColumn label="评论者" width="180">
           <template #default="{ row }">
             <template v-if="row.user">
               {{ row.user.nickname }}（管理员）
@@ -174,22 +174,22 @@
               <div>{{ row.url }}</div>
             </template>
           </template>
-        </el-table-column>
+        </ResponsiveTableColumn>
         <!-- 评论时间 -->
-        <el-table-column prop="date" label="评论时间" width="180">
+        <ResponsiveTableColumn prop="date" label="评论时间" width="180">
           <template #default="{ row }">
             {{ $formatDate(row.date) }}
           </template>
-        </el-table-column>
+        </ResponsiveTableColumn>
         <!-- 是否置顶 -->
-        <el-table-column prop="top" label="置顶" width="60">
+        <ResponsiveTableColumn prop="top" label="置顶" width="60">
           <template #default="{ row }">
             <el-tag v-if="row.top" type="success">是</el-tag>
             <el-tag v-else type="info">否</el-tag>
           </template>
-        </el-table-column>
+        </ResponsiveTableColumn>
         <!-- IP信息 -->
-        <el-table-column prop="ip" label="IP信息" width="350">
+        <ResponsiveTableColumn prop="ip" label="IP信息" width="350">
           <template #default="{ row }">
             <div v-if="row.ip">
               <div class="di word-break">{{ row.ip }}</div>
@@ -210,9 +210,9 @@
             </div>
             <IpInfoDisplay :ipInfo="row.ipInfo" />
           </template>
-        </el-table-column>
+        </ResponsiveTableColumn>
         <!-- UA信息 -->
-        <el-table-column label="UA信息" width="210">
+        <ResponsiveTableColumn label="UA信息" width="210">
           <template #default="{ row }">
             <div>系统：{{ row.deviceInfo?.os?.name }}</div>
             <div>系统版本号：{{ row.deviceInfo?.os?.version }}</div>
@@ -221,9 +221,9 @@
             <!-- ua -->
             <div>UA：{{ row.deviceInfo?.ua }}</div>
           </template>
-        </el-table-column>
+        </ResponsiveTableColumn>
         <!-- uuid -->
-        <el-table-column prop="uuid" label="uuid" width="350">
+        <ResponsiveTableColumn prop="uuid" label="uuid" width="350">
           <template #default="{ row }">
             <div v-if="row.uuid">
               <div class="di">{{ row.uuid }}</div>
@@ -243,9 +243,9 @@
               </div>
             </div>
           </template>
-        </el-table-column>
+        </ResponsiveTableColumn>
 
-        <el-table-column label="操作" width="170" fixed="right">
+        <ResponsiveTableColumn label="操作" width="170" fixed="right">
           <template #default="{ row }">
             <el-button
               size="small"
@@ -264,8 +264,8 @@
               ><el-icon><Delete /></el-icon
             ></el-button>
           </template>
-        </el-table-column>
-      </el-table>
+        </ResponsiveTableColumn>
+      </ResponsiveTable>
     </div>
     <!-- 分页 -->
     <div class="clearfix">

@@ -59,7 +59,7 @@
     </div>
     <!-- 用户登录日志 -->
     <div class="mb20 list-table-body">
-      <el-table
+      <ResponsiveTable
         ref="tableRef"
         height="100%"
         :data="userLoginLogList"
@@ -67,27 +67,27 @@
         border
       >
         <!-- username -->
-        <el-table-column prop="username" label="用户名" width="150">
+        <ResponsiveTableColumn prop="username" label="用户名" width="150">
           <template #default="{ row }">
             <div>{{ row.username }}</div>
           </template>
-        </el-table-column>
+        </ResponsiveTableColumn>
         <!-- 登录状态 success -->
-        <el-table-column prop="success" label="登录状态" width="120">
+        <ResponsiveTableColumn prop="success" label="登录状态" width="120">
           <template #default="{ row }">
             <el-tag :type="row.success ? 'success' : 'danger'">
               {{ row.success ? '成功' : '失败' }}
             </el-tag>
           </template>
-        </el-table-column>
+        </ResponsiveTableColumn>
         <!-- 消息 msg -->
-        <el-table-column prop="msg" label="消息" min-width="200">
+        <ResponsiveTableColumn prop="msg" label="消息" min-width="200">
           <template #default="{ row }">
             {{ row.msg }}
           </template>
-        </el-table-column>
+        </ResponsiveTableColumn>
         <!-- IP信息 -->
-        <el-table-column prop="ip" label="IP信息" width="350">
+        <ResponsiveTableColumn prop="ip" label="IP信息" width="350">
           <template #default="{ row }">
             <div v-if="row.ip">
               <div class="di">{{ row.ip }}</div>
@@ -107,9 +107,9 @@
             </div>
             <IpInfoDisplay :ipInfo="row.ipInfo" />
           </template>
-        </el-table-column>
+        </ResponsiveTableColumn>
         <!-- UA信息 -->
-        <el-table-column label="UA信息" width="210">
+        <ResponsiveTableColumn label="UA信息" width="210">
           <template #default="{ row }">
             <div>系统：{{ row.deviceInfo?.os?.name }}</div>
             <div>系统版本号：{{ row.deviceInfo?.os?.version }}</div>
@@ -119,14 +119,14 @@
             <!-- ua -->
             <div>UA：{{ row.deviceInfo?.ua }}</div>
           </template>
-        </el-table-column>
+        </ResponsiveTableColumn>
         <!-- date -->
-        <el-table-column prop="date" label="时间" width="180">
+        <ResponsiveTableColumn prop="date" label="时间" width="180">
           <template #default="{ row }">
             {{ $formatDate(row.date) }}
           </template>
-        </el-table-column>
-      </el-table>
+        </ResponsiveTableColumn>
+      </ResponsiveTable>
     </div>
     <!-- 分页 -->
     <div class="clearfix">

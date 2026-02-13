@@ -50,23 +50,23 @@
     </div>
     <!-- 评论点赞记录 -->
     <div class="mb20 list-table-body">
-      <el-table
+      <ResponsiveTable
         ref="tableRef"
         height="100%"
         :data="commentLikeLogList"
         row-key="_id"
         border
       >
-        <el-table-column label="评论" min-width="180">
+        <ResponsiveTableColumn label="评论" min-width="180">
           <template #default="{ row }">
             <div :title="row.comment.content" v-if="row.comment">
               {{ row.comment.content }}
             </div>
             <div v-else class="cRed">评论已删除</div>
           </template>
-        </el-table-column>
+        </ResponsiveTableColumn>
         <!-- uuid -->
-        <el-table-column prop="uuid" label="uuid" width="350">
+        <ResponsiveTableColumn prop="uuid" label="uuid" width="350">
           <template #default="{ row }">
             <div v-if="row.uuid">
               <div class="di">{{ row.uuid }}</div>
@@ -86,9 +86,9 @@
               </div>
             </div>
           </template>
-        </el-table-column>
+        </ResponsiveTableColumn>
         <!-- like 内容用tag -->
-        <el-table-column prop="like" label="点赞" width="100">
+        <ResponsiveTableColumn prop="like" label="点赞" width="100">
           <template #default="{ row }">
             <!-- 根据like -->
             <el-tag
@@ -108,15 +108,15 @@
               取消点赞
             </el-tag>
           </template>
-        </el-table-column>
+        </ResponsiveTableColumn>
         <!-- 时间date -->
-        <el-table-column prop="date" label="时间" width="180">
+        <ResponsiveTableColumn prop="date" label="时间" width="180">
           <template #default="{ row }">
             {{ $formatDate(row.date) }}
           </template>
-        </el-table-column>
+        </ResponsiveTableColumn>
         <!-- IP信息 -->
-        <el-table-column prop="ip" label="IP信息" width="350">
+        <ResponsiveTableColumn prop="ip" label="IP信息" width="350">
           <template #default="{ row }">
             <div v-if="row.ip">
               <div class="di word-break">{{ row.ip }}</div>
@@ -137,9 +137,9 @@
             </div>
             <IpInfoDisplay :ipInfo="row.ipInfo" />
           </template>
-        </el-table-column>
+        </ResponsiveTableColumn>
         <!-- UA信息 -->
-        <el-table-column label="UA信息" width="210">
+        <ResponsiveTableColumn label="UA信息" width="210">
           <template #default="{ row }">
             <div>系统：{{ row.deviceInfo?.os?.name }}</div>
             <div>系统版本号：{{ row.deviceInfo?.os?.version }}</div>
@@ -148,8 +148,8 @@
             <!-- ua -->
             <div>UA：{{ row.deviceInfo?.ua }}</div>
           </template>
-        </el-table-column>
-      </el-table>
+        </ResponsiveTableColumn>
+      </ResponsiveTable>
     </div>
     <!-- 分页 -->
     <div class="clearfix">

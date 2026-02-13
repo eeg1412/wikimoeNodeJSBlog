@@ -37,7 +37,7 @@
     </div>
     <!-- 友链 -->
     <div class="mb20 list-table-body">
-      <el-table
+      <ResponsiveTable
         ref="tableRef"
         height="100%"
         :data="linkList"
@@ -45,7 +45,7 @@
         border
       >
         <!-- 图标 -->
-        <el-table-column label="图标" width="90">
+        <ResponsiveTableColumn label="图标" width="90">
           <template #default="{ row }">
             <!-- el-image -->
             <el-image
@@ -55,19 +55,31 @@
               fit="cover"
             ></el-image>
           </template>
-        </el-table-column>
-        <el-table-column prop="sitename" label="网站名称" min-width="100px" />
-        <el-table-column prop="siteurl" label="网站URL" min-width="250px" />
+        </ResponsiveTableColumn>
+        <ResponsiveTableColumn
+          prop="sitename"
+          label="网站名称"
+          min-width="100px"
+        />
+        <ResponsiveTableColumn
+          prop="siteurl"
+          label="网站URL"
+          min-width="250px"
+        />
         <!-- <el-table-column prop="rss" label="RSS地址" min-width="250px" /> -->
-        <el-table-column prop="description" label="描述" min-width="250px" />
-        <el-table-column prop="taxis" label="排序" width="100px" />
-        <el-table-column prop="status" label="状态" width="100px">
+        <ResponsiveTableColumn
+          prop="description"
+          label="描述"
+          min-width="250px"
+        />
+        <ResponsiveTableColumn prop="taxis" label="排序" width="100px" />
+        <ResponsiveTableColumn prop="status" label="状态" width="100px">
           <template #default="{ row }">
             <el-tag v-if="row.status === 1" type="success">显示</el-tag>
             <el-tag v-else type="danger">不显示</el-tag>
           </template>
-        </el-table-column>
-        <el-table-column label="操作" width="140" fixed="right">
+        </ResponsiveTableColumn>
+        <ResponsiveTableColumn label="操作" width="140" fixed="right">
           <template #default="{ row }">
             <el-button type="primary" size="small" @click="goEdit(row._id)"
               >编辑</el-button
@@ -76,8 +88,8 @@
               >删除</el-button
             >
           </template>
-        </el-table-column>
-      </el-table>
+        </ResponsiveTableColumn>
+      </ResponsiveTable>
     </div>
     <!-- 分页 -->
     <div class="clearfix">

@@ -102,7 +102,7 @@
       class="mb20 list-table-body"
       :class="{ batch: selectedRows.length > 0 }"
     >
-      <el-table
+      <ResponsiveTable
         :data="list"
         row-key="_id"
         height="100%"
@@ -128,13 +128,13 @@
           // - sortop	是否分类置顶字段
           // - status	状态字段：0草稿，1发布，99回收站
           // - allowRemark	是否允许评论字段 -->
-        <el-table-column
+        <ResponsiveTableColumn
           type="selection"
           :reserve-selection="true"
           width="55"
           fixed="left"
         />
-        <el-table-column prop="type" label="类型">
+        <ResponsiveTableColumn prop="type" label="类型">
           <!-- 1blog,2tweet,3page -->
           <template #default="{ row }">
             <el-tag v-if="row.type === 1" effect="plain" type="success"
@@ -145,16 +145,16 @@
               >页面</el-tag
             >
           </template>
-        </el-table-column>
-        <el-table-column prop="status" label="状态">
+        </ResponsiveTableColumn>
+        <ResponsiveTableColumn prop="status" label="状态">
           <!-- 0草稿，1发布，99回收站 -->
           <template #default="{ row }">
             <el-tag v-if="row.status === 0" type="info">草稿</el-tag>
             <el-tag v-else-if="row.status === 1" type="success">发布</el-tag>
             <el-tag v-else-if="row.status === 99" type="danger">回收站</el-tag>
           </template>
-        </el-table-column>
-        <el-table-column prop="title" label="标题/推文" width="320">
+        </ResponsiveTableColumn>
+        <ResponsiveTableColumn prop="title" label="标题/推文" width="320">
           <template #default="{ row }">
             <div>
               <div :title="row.title || row.excerpt" class="di">
@@ -174,8 +174,8 @@
               </div>
             </div>
           </template>
-        </el-table-column>
-        <el-table-column
+        </ResponsiveTableColumn>
+        <ResponsiveTableColumn
           prop="date"
           label="发表时间"
           sortable="custom"
@@ -184,16 +184,16 @@
           <template #default="{ row }">
             {{ $formatDate(row.date) }}
           </template>
-        </el-table-column>
-        <el-table-column prop="alias" label="别名" min-width="100" />
-        <el-table-column prop="author" label="作者" width="100">
+        </ResponsiveTableColumn>
+        <ResponsiveTableColumn prop="alias" label="别名" min-width="100" />
+        <ResponsiveTableColumn prop="author" label="作者" width="100">
           <template #default="{ row }">
             {{ row.author.nickname }}
           </template>
-        </el-table-column>
-        <el-table-column prop="sort.sortname" label="分类" />
+        </ResponsiveTableColumn>
+        <ResponsiveTableColumn prop="sort.sortname" label="分类" />
 
-        <el-table-column prop="tags" label="标签" width="200">
+        <ResponsiveTableColumn prop="tags" label="标签" width="200">
           <template #default="{ row }">
             <div
               class="postlist-content-item"
@@ -205,9 +205,9 @@
               #{{ tag.tagname }}
             </div>
           </template>
-        </el-table-column>
+        </ResponsiveTableColumn>
         <!-- 地点 -->
-        <el-table-column prop="mappointList" label="地点" width="200">
+        <ResponsiveTableColumn prop="mappointList" label="地点" width="200">
           <template #default="{ row }">
             <div
               class="postlist-content-item"
@@ -221,9 +221,13 @@
               </span>
             </div>
           </template>
-        </el-table-column>
+        </ResponsiveTableColumn>
         <!-- 关联内容 -->
-        <el-table-column prop="related" label="关联与相关内容" min-width="400">
+        <ResponsiveTableColumn
+          prop="related"
+          label="关联与相关内容"
+          min-width="400"
+        >
           <template #default="{ row }">
             <div
               class="post-list-about-body"
@@ -380,53 +384,53 @@
               </div>
             </div>
           </template>
-        </el-table-column>
-        <el-table-column
+        </ResponsiveTableColumn>
+        <ResponsiveTableColumn
           prop="views"
           label="查看数"
           width="100"
           sortable="custom"
         />
-        <el-table-column
+        <ResponsiveTableColumn
           prop="comnum"
           label="评论数"
           width="100"
           sortable="custom"
         />
         <!-- likes -->
-        <el-table-column
+        <ResponsiveTableColumn
           prop="likes"
           label="点赞数"
           width="100"
           sortable="likes"
         />
         <!-- shares -->
-        <el-table-column
+        <ResponsiveTableColumn
           prop="shares"
           label="分享数"
           width="100"
           sortable="shares"
         />
-        <el-table-column prop="top" label="置顶">
+        <ResponsiveTableColumn prop="top" label="置顶">
           <template #default="{ row }">
             <el-tag v-if="row.top" type="success">是</el-tag>
             <el-tag v-else type="info">否</el-tag>
           </template>
-        </el-table-column>
-        <el-table-column prop="sortop" label="分类置顶" width="100">
+        </ResponsiveTableColumn>
+        <ResponsiveTableColumn prop="sortop" label="分类置顶" width="100">
           <template #default="{ row }">
             <el-tag v-if="row.sortop" type="success">是</el-tag>
             <el-tag v-else type="info">否</el-tag>
           </template>
-        </el-table-column>
-        <el-table-column prop="allowRemark" label="允许评论" width="100">
+        </ResponsiveTableColumn>
+        <ResponsiveTableColumn prop="allowRemark" label="允许评论" width="100">
           <template #default="{ row }">
             <el-tag v-if="row.allowRemark" type="success">是</el-tag>
             <el-tag v-else type="info">否</el-tag>
           </template>
-        </el-table-column>
+        </ResponsiveTableColumn>
         <!-- 更新时间 -->
-        <el-table-column
+        <ResponsiveTableColumn
           prop="updatedAt"
           label="更新日期"
           sortable="custom"
@@ -435,8 +439,8 @@
           <template #default="{ row }">
             {{ $formatDate(row.updatedAt) }}
           </template>
-        </el-table-column>
-        <el-table-column
+        </ResponsiveTableColumn>
+        <ResponsiveTableColumn
           label="操作"
           width="170"
           fixed="right"
@@ -453,8 +457,8 @@
               ><el-icon><Delete /></el-icon
             ></el-button>
           </template>
-        </el-table-column>
-      </el-table>
+        </ResponsiveTableColumn>
+      </ResponsiveTable>
     </div>
     <!-- 分页 -->
     <div class="clearfix">

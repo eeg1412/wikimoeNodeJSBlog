@@ -71,14 +71,14 @@
     </div>
     <!-- 活动 -->
     <div class="mb20 list-table-body">
-      <el-table
+      <ResponsiveTable
         height="100%"
         :data="eventList"
         row-key="_id"
         ref="tableRef"
         border
       >
-        <el-table-column
+        <ResponsiveTableColumn
           prop="eventtype.name"
           label="活动类型"
           min-width="160px"
@@ -92,14 +92,18 @@
               {{ row.eventtype.name }}
             </div>
           </template>
-        </el-table-column>
-        <el-table-column
+        </ResponsiveTableColumn>
+        <ResponsiveTableColumn
           prop="title"
           label="标题"
           min-width="200px"
-        ></el-table-column>
+        ></ResponsiveTableColumn>
         <!-- urlList 附加链接列表 -->
-        <el-table-column prop="urlList" label="附加链接" min-width="150px">
+        <ResponsiveTableColumn
+          prop="urlList"
+          label="附加链接"
+          min-width="150px"
+        >
           <template #default="{ row }">
             <div v-for="(item, index) in row.urlList" :key="index">
               <el-link
@@ -111,31 +115,31 @@
               >
             </div>
           </template>
-        </el-table-column>
-        <el-table-column prop="startTime" label="时间" width="320px">
+        </ResponsiveTableColumn>
+        <ResponsiveTableColumn prop="startTime" label="时间" width="320px">
           <template #default="{ row }">
             <span v-if="row.startTime || row.endTime"
               >{{ $formatDate(row.startTime) }} ~
               {{ $formatDate(row.endTime) }}</span
             >
           </template>
-        </el-table-column>
+        </ResponsiveTableColumn>
         <!-- 专属颜色 -->
-        <el-table-column prop="color" label="专属颜色" min-width="90px">
+        <ResponsiveTableColumn prop="color" label="专属颜色" min-width="90px">
           <template #default="{ row }">
             <div :style="{ background: row.color }" class="event-list-block">
               {{ row.color }}
             </div>
           </template>
-        </el-table-column>
+        </ResponsiveTableColumn>
         <!-- 状态 -->
-        <el-table-column prop="status" label="状态" width="120px">
+        <ResponsiveTableColumn prop="status" label="状态" width="120px">
           <template #default="{ row }">
             <el-tag v-if="row.status === 1" type="success">显示</el-tag>
             <el-tag v-else type="danger">不显示</el-tag>
           </template>
-        </el-table-column>
-        <el-table-column label="操作" width="140" fixed="right">
+        </ResponsiveTableColumn>
+        <ResponsiveTableColumn label="操作" width="140" fixed="right">
           <template #default="{ row }">
             <el-button type="primary" size="small" @click="goEdit(row._id)"
               >编辑</el-button
@@ -144,8 +148,8 @@
               >删除</el-button
             >
           </template>
-        </el-table-column>
-      </el-table>
+        </ResponsiveTableColumn>
+      </ResponsiveTable>
     </div>
     <!-- 分页 -->
     <div class="clearfix">

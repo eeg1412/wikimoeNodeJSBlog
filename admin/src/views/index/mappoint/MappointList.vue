@@ -43,7 +43,7 @@
     </div>
     <!-- mappoints -->
     <div class="mb20 list-table-body">
-      <el-table
+      <ResponsiveTable
         height="100%"
         :data="mappointList"
         row-key="_id"
@@ -51,36 +51,36 @@
         default-expand-all
         ref="tableRef"
       >
-        <el-table-column prop="title" label="地点名称" min-width="100">
+        <ResponsiveTableColumn prop="title" label="地点名称" min-width="100">
           <template #default="{ row }">
             <div class="di">{{ row.title }}</div>
           </template>
-        </el-table-column>
-        <el-table-column prop="summary" label="简介" min-width="200">
+        </ResponsiveTableColumn>
+        <ResponsiveTableColumn prop="summary" label="简介" min-width="200">
           <template #default="{ row }">
             {{ row.summary || '' }}
           </template>
-        </el-table-column>
-        <el-table-column prop="latitude" label="纬度" min-width="100">
+        </ResponsiveTableColumn>
+        <ResponsiveTableColumn prop="latitude" label="纬度" min-width="100">
           <template #default="{ row }">
             {{ row.latitude }}
           </template>
-        </el-table-column>
-        <el-table-column prop="longitude" label="经度" min-width="100">
+        </ResponsiveTableColumn>
+        <ResponsiveTableColumn prop="longitude" label="经度" min-width="100">
           <template #default="{ row }">
             {{ row.longitude }}
           </template>
-        </el-table-column>
+        </ResponsiveTableColumn>
 
         <!-- zIndex -->
-        <el-table-column prop="zIndex" label="层叠顺序" min-width="100">
+        <ResponsiveTableColumn prop="zIndex" label="层叠顺序" min-width="100">
           <template #default="{ row }">
             {{ row.zIndex || 0 }}
           </template>
-        </el-table-column>
+        </ResponsiveTableColumn>
 
         <!-- totalPostCount -->
-        <el-table-column
+        <ResponsiveTableColumn
           prop="totalPostCount"
           label="总文章数"
           min-width="100"
@@ -89,9 +89,9 @@
           <template #default="{ row }">
             {{ row.totalPostCount || 0 }}
           </template>
-        </el-table-column>
+        </ResponsiveTableColumn>
         <!-- publicPostCount -->
-        <el-table-column
+        <ResponsiveTableColumn
           prop="publicPostCount"
           label="公开文章数"
           min-width="100"
@@ -100,16 +100,16 @@
           <template #default="{ row }">
             {{ row.publicPostCount || 0 }}
           </template>
-        </el-table-column>
+        </ResponsiveTableColumn>
 
-        <el-table-column prop="status" label="状态" width="100px">
+        <ResponsiveTableColumn prop="status" label="状态" width="100px">
           <template #default="{ row }">
             <el-tag v-if="row.status === 1" type="success">显示</el-tag>
             <el-tag v-else type="danger">不显示</el-tag>
           </template>
-        </el-table-column>
+        </ResponsiveTableColumn>
 
-        <el-table-column label="操作" width="140">
+        <ResponsiveTableColumn label="操作" width="140">
           <template #default="{ row }">
             <el-button type="primary" size="small" @click="goEdit(row._id)"
               >编辑</el-button
@@ -118,8 +118,8 @@
               >删除</el-button
             >
           </template>
-        </el-table-column>
-      </el-table>
+        </ResponsiveTableColumn>
+      </ResponsiveTable>
     </div>
     <!-- 分页 -->
     <div class="clearfix">

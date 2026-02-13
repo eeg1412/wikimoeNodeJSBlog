@@ -43,7 +43,7 @@
     </div>
     <!-- 投票 -->
     <div class="mb20 list-table-body">
-      <el-table
+      <ResponsiveTable
         height="100%"
         :data="listCom"
         row-key="_id"
@@ -52,9 +52,9 @@
         border
       >
         <!-- title -->
-        <el-table-column prop="title" label="标题/内容" min-width="200" />
+        <ResponsiveTableColumn prop="title" label="标题/内容" min-width="200" />
         <!-- 投票数 votes -->
-        <el-table-column prop="votes" label="投票数" width="200">
+        <ResponsiveTableColumn prop="votes" label="投票数" width="200">
           <template #default="{ row }">
             <div v-if="row.isParent === true">{{ row.votes || 0 }}</div>
             <div class="vote-item-votes" v-else>
@@ -73,15 +73,15 @@
               </div>
             </div>
           </template>
-        </el-table-column>
+        </ResponsiveTableColumn>
         <!-- maxSelect -->
-        <el-table-column
+        <ResponsiveTableColumn
           prop="maxSelect"
           label="最多可选择的选项数"
           width="200"
         />
         <!-- showResultAfter -->
-        <el-table-column
+        <ResponsiveTableColumn
           prop="showResultAfter"
           label="投票后才显示结果"
           width="200"
@@ -94,17 +94,17 @@
               >{{ row.showResultAfter === true ? '是' : '不是' }}</el-tag
             >
           </template>
-        </el-table-column>
+        </ResponsiveTableColumn>
         <!-- endTime -->
-        <el-table-column prop="endTime" label="结束时间" width="200">
+        <ResponsiveTableColumn prop="endTime" label="结束时间" width="200">
           <template #default="{ row }">
             {{ $formatDate(row.endTime) }}
           </template>
-        </el-table-column>
+        </ResponsiveTableColumn>
         <!-- 排序 sort -->
-        <el-table-column prop="sort" label="排序" width="100" />
+        <ResponsiveTableColumn prop="sort" label="排序" width="100" />
         <!-- 状态 -->
-        <el-table-column prop="status" label="状态" width="100">
+        <ResponsiveTableColumn prop="status" label="状态" width="100">
           <template #default="{ row }">
             <el-tag
               v-if="row.isParent === true"
@@ -113,8 +113,8 @@
               >{{ row.status === 1 ? '显示' : '不显示' }}</el-tag
             >
           </template>
-        </el-table-column>
-        <el-table-column label="操作" width="140" fixed="right">
+        </ResponsiveTableColumn>
+        <ResponsiveTableColumn label="操作" width="140" fixed="right">
           <template #default="{ row }">
             <template v-if="row.isParent === true">
               <el-button type="primary" size="small" @click="goEdit(row._id)"
@@ -125,8 +125,8 @@
               >
             </template>
           </template>
-        </el-table-column>
-      </el-table>
+        </ResponsiveTableColumn>
+      </ResponsiveTable>
     </div>
     <!-- 分页 -->
     <div class="clearfix">

@@ -50,7 +50,7 @@
     </div>
     <!-- 邮件发送记录 -->
     <div class="mb20 list-table-body">
-      <el-table
+      <ResponsiveTable
         ref="tableRef"
         height="100%"
         :data="emailSendHistoryList"
@@ -73,7 +73,7 @@
           type: Number,
           default: 0
         }, -->
-        <el-table-column label="发送对象" prop="to" min-width="150px">
+        <ResponsiveTableColumn label="发送对象" prop="to" min-width="150px">
           <template #default="{ row }">
             <div v-if="row.to">
               <div class="di word-break">{{ row.to }}</div>
@@ -93,10 +93,14 @@
               </div>
             </div>
           </template>
-        </el-table-column>
+        </ResponsiveTableColumn>
         <!-- subject -->
-        <el-table-column label="发送主题" prop="subject" min-width="150px" />
-        <el-table-column label="发送内容" prop="content" width="100px">
+        <ResponsiveTableColumn
+          label="发送主题"
+          prop="subject"
+          min-width="150px"
+        />
+        <ResponsiveTableColumn label="发送内容" prop="content" width="100px">
           <template #default="{ row }">
             <!-- <div v-html="row.content"></div> -->
             <!-- 点击查看内容按钮 -->
@@ -104,13 +108,13 @@
               >查看内容</el-link
             >
           </template>
-        </el-table-column>
-        <el-table-column
+        </ResponsiveTableColumn>
+        <ResponsiveTableColumn
           label="错误信息"
           prop="errInfo"
           min-width="150px"
-        ></el-table-column>
-        <el-table-column label="发送状态" prop="status" width="100px">
+        ></ResponsiveTableColumn>
+        <ResponsiveTableColumn label="发送状态" prop="status" width="100px">
           <template #default="{ row }">
             <!-- tag -->
             <el-tag v-if="row.status === 0" type="danger" effect="dark">
@@ -120,22 +124,22 @@
               发送成功
             </el-tag>
           </template>
-        </el-table-column>
-        <el-table-column label="发送时间" prop="createdAt" width="180px">
+        </ResponsiveTableColumn>
+        <ResponsiveTableColumn label="发送时间" prop="createdAt" width="180px">
           <template #default="{ row }">
             {{ $formatDate(row.createdAt) }}
           </template>
-        </el-table-column>
+        </ResponsiveTableColumn>
         <!-- 重新发送按钮 -->
-        <el-table-column label="操作" width="100px">
+        <ResponsiveTableColumn label="操作" width="100px">
           <template #default="{ row }">
             <!-- 重新发送 -->
             <el-button type="primary" size="small" @click="resend(row._id)"
               >重发</el-button
             >
           </template>
-        </el-table-column>
-      </el-table>
+        </ResponsiveTableColumn>
+      </ResponsiveTable>
     </div>
     <!-- 分页 -->
     <div class="clearfix">

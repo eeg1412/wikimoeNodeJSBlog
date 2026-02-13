@@ -50,7 +50,7 @@
     </div>
     <!-- 投票日志 -->
     <div class="mb20 list-table-body">
-      <el-table
+      <ResponsiveTable
         ref="tableRef"
         height="100%"
         :data="voteLogList"
@@ -58,7 +58,7 @@
         border
       >
         <!-- 投票 -->
-        <el-table-column label="投票" min-width="180">
+        <ResponsiveTableColumn label="投票" min-width="180">
           <template #default="{ row }">
             <!-- 需要判断是否存在Vote -->
             <div v-if="row.vote">
@@ -66,9 +66,9 @@
             </div>
             <div v-else class="cRed">投票已删除</div>
           </template>
-        </el-table-column>
+        </ResponsiveTableColumn>
         <!-- 选项 -->
-        <el-table-column label="选择选项" min-width="180">
+        <ResponsiveTableColumn label="选择选项" min-width="180">
           <template #default="{ row }">
             <div v-if="row.vote">
               <template v-for="optionId in row.options" :key="optionId">
@@ -77,8 +77,8 @@
             </div>
             <div v-else class="cRed">投票已删除</div>
           </template>
-        </el-table-column>
-        <el-table-column label="推文" min-width="180">
+        </ResponsiveTableColumn>
+        <ResponsiveTableColumn label="推文" min-width="180">
           <template #default="{ row }">
             <div v-if="row.post">
               <div :title="row.post.title || row.post.excerpt" class="di">
@@ -93,9 +93,9 @@
             </div>
             <div v-else class="cRed">推文未指定或已删除</div>
           </template>
-        </el-table-column>
+        </ResponsiveTableColumn>
         <!-- uuid -->
-        <el-table-column prop="uuid" label="uuid" width="350">
+        <ResponsiveTableColumn prop="uuid" label="uuid" width="350">
           <template #default="{ row }">
             <div v-if="row.uuid">
               <div class="di">{{ row.uuid }}</div>
@@ -115,15 +115,15 @@
               </div>
             </div>
           </template>
-        </el-table-column>
+        </ResponsiveTableColumn>
         <!-- 时间date -->
-        <el-table-column prop="date" label="时间" width="180">
+        <ResponsiveTableColumn prop="date" label="时间" width="180">
           <template #default="{ row }">
             {{ $formatDate(row.expireAt) }}
           </template>
-        </el-table-column>
+        </ResponsiveTableColumn>
         <!-- IP信息 -->
-        <el-table-column prop="ip" label="IP信息" width="350">
+        <ResponsiveTableColumn prop="ip" label="IP信息" width="350">
           <template #default="{ row }">
             <div v-if="row.ip">
               <div class="di word-break">{{ row.ip }}</div>
@@ -144,9 +144,9 @@
             </div>
             <IpInfoDisplay :ipInfo="row.ipInfo" />
           </template>
-        </el-table-column>
+        </ResponsiveTableColumn>
         <!-- UA信息 -->
-        <el-table-column label="UA信息" width="210">
+        <ResponsiveTableColumn label="UA信息" width="210">
           <template #default="{ row }">
             <div>系统：{{ row.deviceInfo?.os?.name }}</div>
             <div>系统版本号：{{ row.deviceInfo?.os?.version }}</div>
@@ -155,8 +155,8 @@
             <!-- ua -->
             <div>UA：{{ row.deviceInfo?.ua }}</div>
           </template>
-        </el-table-column>
-      </el-table>
+        </ResponsiveTableColumn>
+      </ResponsiveTable>
     </div>
     <!-- 分页 -->
     <div class="clearfix">

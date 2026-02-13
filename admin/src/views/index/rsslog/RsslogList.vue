@@ -54,7 +54,7 @@
     </div>
     <!-- RSS访问记录 -->
     <div class="mb20 list-table-body">
-      <el-table
+      <ResponsiveTable
         ref="tableRef"
         height="100%"
         :data="rsslogList"
@@ -62,7 +62,7 @@
         border
       >
         <!-- IP信息 -->
-        <el-table-column prop="ip" label="IP信息" width="350">
+        <ResponsiveTableColumn prop="ip" label="IP信息" width="350">
           <template #default="{ row }">
             <div v-if="row.ip">
               <div class="di word-break">{{ row.ip }}</div>
@@ -83,9 +83,9 @@
             </div>
             <IpInfoDisplay :ipInfo="row.ipInfo" />
           </template>
-        </el-table-column>
+        </ResponsiveTableColumn>
         <!-- UA信息 -->
-        <el-table-column label="UA信息" min-width="210">
+        <ResponsiveTableColumn label="UA信息" min-width="210">
           <template #default="{ row }">
             <div>系统：{{ row.deviceInfo?.os?.name }}</div>
             <div>系统版本号：{{ row.deviceInfo?.os?.version }}</div>
@@ -94,9 +94,9 @@
             <!-- ua -->
             <div>UA：{{ row.deviceInfo?.ua }}</div>
           </template>
-        </el-table-column>
+        </ResponsiveTableColumn>
         <!-- 阅读器 -->
-        <el-table-column prop="reader" label="阅读器" min-width="300">
+        <ResponsiveTableColumn prop="reader" label="阅读器" min-width="300">
           <template #default="{ row }">
             <div v-if="row.reader">
               <div class="dib word-break">{{ row.reader }}</div>
@@ -110,9 +110,9 @@
               </div>
             </div>
           </template>
-        </el-table-column>
+        </ResponsiveTableColumn>
         <!-- rssPath -->
-        <el-table-column prop="rssPath" label="RSS路径" min-width="86">
+        <ResponsiveTableColumn prop="rssPath" label="RSS路径" min-width="86">
           <template #default="{ row }">
             <div v-if="row.rssPath">
               <div class="di">{{ row.rssPath }}</div>
@@ -126,14 +126,14 @@
               </div>
             </div>
           </template>
-        </el-table-column>
+        </ResponsiveTableColumn>
         <!-- createdAt -->
-        <el-table-column prop="createdAt" label="创建时间" width="180">
+        <ResponsiveTableColumn prop="createdAt" label="创建时间" width="180">
           <template #default="{ row }">
             {{ $formatDate(row.createdAt) }}
           </template>
-        </el-table-column>
-      </el-table>
+        </ResponsiveTableColumn>
+      </ResponsiveTable>
     </div>
     <!-- 分页 -->
     <div class="clearfix">

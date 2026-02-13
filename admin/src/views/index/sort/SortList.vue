@@ -16,14 +16,14 @@
       </div>
     </div>
     <div class="list-table-body no-search no-page">
-      <el-table
+      <ResponsiveTable
         height="100%"
         :data="list"
         row-key="_id"
         border
         default-expand-all
       >
-        <el-table-column prop="sortname" label="分类名称" min-width="300">
+        <ResponsiveTableColumn prop="sortname" label="分类名称" min-width="300">
           <template #default="{ row }">
             <div class="di">{{ row.sortname }}</div>
             <!-- 点击打开按钮 -->
@@ -39,11 +39,15 @@
               ></el-link>
             </div>
           </template>
-        </el-table-column>
-        <el-table-column prop="alias" label="分类别名" />
-        <el-table-column prop="taxis" label="排序值" />
+        </ResponsiveTableColumn>
+        <ResponsiveTableColumn prop="alias" label="分类别名" />
+        <ResponsiveTableColumn prop="taxis" label="排序值" />
         <!-- totalPostCount -->
-        <el-table-column prop="totalPostCount" label="总文章数" min-width="100">
+        <ResponsiveTableColumn
+          prop="totalPostCount"
+          label="总文章数"
+          min-width="100"
+        >
           <template #default="{ row }">
             <span>{{ row.totalPostCount }}</span>
             <span v-if="row.children && row.children.length > 0">
@@ -52,9 +56,9 @@
               }})
             </span>
           </template>
-        </el-table-column>
+        </ResponsiveTableColumn>
         <!-- publicPostCount 公开文章数 -->
-        <el-table-column
+        <ResponsiveTableColumn
           prop="publicPostCount"
           label="公开文章数"
           min-width="100"
@@ -67,9 +71,9 @@
               }})
             </span>
           </template>
-        </el-table-column>
-        <el-table-column prop="description" label="分类描述" />
-        <el-table-column label="操作" width="140">
+        </ResponsiveTableColumn>
+        <ResponsiveTableColumn prop="description" label="分类描述" />
+        <ResponsiveTableColumn label="操作" width="140">
           <template #default="{ row }">
             <el-button type="primary" size="small" @click="goEdit(row._id)"
               >编辑</el-button
@@ -78,8 +82,8 @@
               >删除</el-button
             >
           </template>
-        </el-table-column>
-      </el-table>
+        </ResponsiveTableColumn>
+      </ResponsiveTable>
     </div>
   </div>
 </template>

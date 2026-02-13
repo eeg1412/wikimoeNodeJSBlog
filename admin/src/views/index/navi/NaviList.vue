@@ -17,44 +17,52 @@
     </div>
     <!-- 导航 -->
     <div class="mb20 list-table-body no-page">
-      <el-table
+      <ResponsiveTable
         height="100%"
         :data="naviList"
         row-key="_id"
         border
         default-expand-all
       >
-        <el-table-column prop="naviname" label="导航名称" min-width="150px" />
-        <el-table-column prop="url" label="导航URL" min-width="250px" />
-        <el-table-column prop="newtab" label="新标签打开" width="110px">
+        <ResponsiveTableColumn
+          prop="naviname"
+          label="导航名称"
+          min-width="150px"
+        />
+        <ResponsiveTableColumn prop="url" label="导航URL" min-width="250px" />
+        <ResponsiveTableColumn prop="newtab" label="新标签打开" width="110px">
           <template #default="{ row }">
             <el-tag v-if="row.newtab" type="success">是</el-tag>
             <el-tag v-else type="danger">否</el-tag>
           </template>
-        </el-table-column>
-        <el-table-column prop="status" label="状态" width="90px">
+        </ResponsiveTableColumn>
+        <ResponsiveTableColumn prop="status" label="状态" width="90px">
           <template #default="{ row }">
             <el-tag v-if="row.status === 1" type="success">显示</el-tag>
             <el-tag v-else type="danger">不显示</el-tag>
           </template>
-        </el-table-column>
-        <el-table-column prop="taxis" label="排序" width="80px" />
+        </ResponsiveTableColumn>
+        <ResponsiveTableColumn prop="taxis" label="排序" width="80px" />
 
-        <el-table-column prop="isdefault" label="本站链接" width="110px">
+        <ResponsiveTableColumn prop="isdefault" label="本站链接" width="110px">
           <template #default="{ row }">
             <el-tag v-if="row.isdefault" type="success">是</el-tag>
             <el-tag v-else type="danger">否</el-tag>
           </template>
-        </el-table-column>
+        </ResponsiveTableColumn>
         <!-- deepmatch -->
-        <el-table-column prop="deepmatch" label="深度匹配" min-width="110px">
+        <ResponsiveTableColumn
+          prop="deepmatch"
+          label="深度匹配"
+          min-width="110px"
+        >
           <template #default="{ row }">
             <el-tag v-if="row.deepmatch" type="success">是</el-tag>
             <el-tag v-else type="danger">否</el-tag>
           </template>
-        </el-table-column>
-        <el-table-column prop="query" label="参数" min-width="150px" />
-        <el-table-column label="操作" width="140" fixed="right">
+        </ResponsiveTableColumn>
+        <ResponsiveTableColumn prop="query" label="参数" min-width="150px" />
+        <ResponsiveTableColumn label="操作" width="140" fixed="right">
           <template #default="{ row }">
             <el-button type="primary" size="small" @click="goEdit(row._id)"
               >编辑</el-button
@@ -63,8 +71,8 @@
               >删除</el-button
             >
           </template>
-        </el-table-column>
-      </el-table>
+        </ResponsiveTableColumn>
+      </ResponsiveTable>
     </div>
   </div>
 </template>

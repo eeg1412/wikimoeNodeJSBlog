@@ -73,7 +73,7 @@
     </div>
     <!-- 番剧 -->
     <div class="mb20 list-table-body">
-      <el-table
+      <ResponsiveTable
         ref="tableRef"
         height="100%"
         :data="bangumiList"
@@ -81,7 +81,7 @@
         border
       >
         <!-- 封面 cover -->
-        <el-table-column label="封面" width="90">
+        <ResponsiveTableColumn label="封面" width="90">
           <template #default="{ row }">
             <!-- el-image -->
             <el-image
@@ -93,23 +93,27 @@
               :preview-teleported="true"
             ></el-image>
           </template>
-        </el-table-column>
+        </ResponsiveTableColumn>
         <!-- 标题 title -->
-        <el-table-column prop="title" label="标题" min-width="200px" />
+        <ResponsiveTableColumn prop="title" label="标题" min-width="200px" />
         <!-- 介绍文/简评 -->
-        <el-table-column prop="summary" label="介绍文/简评" min-width="250px">
+        <ResponsiveTableColumn
+          prop="summary"
+          label="介绍文/简评"
+          min-width="250px"
+        >
           <template #default="{ row }">
             <div :title="row.summary" class="pre-wrap">
               {{ $limitStr(row.summary, 50) }}
             </div>
           </template>
-        </el-table-column>
+        </ResponsiveTableColumn>
         <!-- 评分 rating -->
-        <el-table-column prop="rating" label="评分" width="60px" />
+        <ResponsiveTableColumn prop="rating" label="评分" width="60px" />
         <!-- 年份 year -->
-        <el-table-column prop="year" label="年份" width="60px" />
+        <ResponsiveTableColumn prop="year" label="年份" width="60px" />
         <!-- 季度 season -->
-        <el-table-column prop="season" label="季度" width="110px">
+        <ResponsiveTableColumn prop="season" label="季度" width="110px">
           <!-- 1冬季新番 2春季新番 3夏季新番 4秋季新番 -->
           <template #default="{ row }">
             <span v-if="row.season === 1">冬季新番</span>
@@ -117,9 +121,13 @@
             <span v-else-if="row.season === 3">夏季新番</span>
             <span v-else-if="row.season === 4">秋季新番</span>
           </template>
-        </el-table-column>
+        </ResponsiveTableColumn>
         <!-- urlList 附加链接列表 -->
-        <el-table-column prop="urlList" label="附加链接" min-width="150px">
+        <ResponsiveTableColumn
+          prop="urlList"
+          label="附加链接"
+          min-width="150px"
+        >
           <template #default="{ row }">
             <div v-for="(item, index) in row.urlList" :key="index">
               <el-link
@@ -131,9 +139,9 @@
               >
             </div>
           </template>
-        </el-table-column>
+        </ResponsiveTableColumn>
         <!-- 标记 字符串数组 label -->
-        <el-table-column prop="label" label="标记">
+        <ResponsiveTableColumn prop="label" label="标记">
           <template #default="{ row }">
             <div class="list-table-label">
               <el-tag v-for="item in row.label" :key="item" type="success">{{
@@ -141,32 +149,36 @@
               }}</el-tag>
             </div>
           </template>
-        </el-table-column>
+        </ResponsiveTableColumn>
         <!-- giveUp 已弃坑 -->
-        <el-table-column label="弃坑" width="100px">
+        <ResponsiveTableColumn label="弃坑" width="100px">
           <template #default="{ row }">
             <el-tag v-if="row.giveUp" type="danger">已弃坑</el-tag>
           </template>
-        </el-table-column>
+        </ResponsiveTableColumn>
         <!-- 文章统计 -->
-        <el-table-column label="相关文章数" width="120px">
+        <ResponsiveTableColumn label="相关文章数" width="120px">
           <template #default="{ row }">
             <div v-if="row.totalNormalPostCount !== undefined">
               <div>总计: {{ row.totalNormalPostCount }}</div>
               <div>公开: {{ row.publicNormalPostCount }}</div>
             </div>
           </template>
-        </el-table-column>
-        <el-table-column label="推文内容数" width="120px">
+        </ResponsiveTableColumn>
+        <ResponsiveTableColumn label="推文内容数" width="120px">
           <template #default="{ row }">
             <div v-if="row.totalContentPostCount !== undefined">
               <div>总计: {{ row.totalContentPostCount }}</div>
               <div>公开: {{ row.publicContentPostCount }}</div>
             </div>
           </template>
-        </el-table-column>
+        </ResponsiveTableColumn>
         <!-- postLinkOpen 是否开启文章链接 -->
-        <el-table-column prop="postLinkOpen" label="文章链接开关" width="120px">
+        <ResponsiveTableColumn
+          prop="postLinkOpen"
+          label="文章链接开关"
+          width="120px"
+        >
           <template #default="{ row }">
             <el-switch
               v-model="row.postLinkOpen"
@@ -174,16 +186,16 @@
               :before-change="() => updatePostLinkOpen(row)"
             ></el-switch>
           </template>
-        </el-table-column>
+        </ResponsiveTableColumn>
         <!-- 状态 -->
-        <el-table-column prop="status" label="状态" width="100px">
+        <ResponsiveTableColumn prop="status" label="状态" width="100px">
           <template #default="{ row }">
             <el-tag v-if="row.status === 1" type="success">显示</el-tag>
             <el-tag v-else type="danger">不显示</el-tag>
           </template>
-        </el-table-column>
+        </ResponsiveTableColumn>
 
-        <el-table-column label="操作" width="140" fixed="right">
+        <ResponsiveTableColumn label="操作" width="140" fixed="right">
           <template #default="{ row }">
             <el-button type="primary" size="small" @click="goEdit(row._id)"
               >编辑</el-button
@@ -192,8 +204,8 @@
               >删除</el-button
             >
           </template>
-        </el-table-column>
-      </el-table>
+        </ResponsiveTableColumn>
+      </ResponsiveTable>
     </div>
     <!-- 分页 -->
     <div class="clearfix">

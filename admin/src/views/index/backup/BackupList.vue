@@ -46,31 +46,31 @@
     </div>
     <!-- 备份 -->
     <div class="mb20 list-table-body">
-      <el-table
+      <ResponsiveTable
         height="100%"
         :data="backupList"
         row-key="_id"
         ref="tableRef"
         border
       >
-        <el-table-column
+        <ResponsiveTableColumn
           prop="name"
           label="备份名称"
           min-width="180"
-        ></el-table-column>
-        <el-table-column label="备份类型" width="120">
+        ></ResponsiveTableColumn>
+        <ResponsiveTableColumn label="备份类型" width="120">
           <template #default="{ row }">
             <el-tag :type="getBackupType(row.type).tagType">
               {{ getBackupType(row.type).text }}
             </el-tag>
           </template>
-        </el-table-column>
-        <el-table-column
+        </ResponsiveTableColumn>
+        <ResponsiveTableColumn
           prop="filename"
           label="备份文件名"
           min-width="200"
-        ></el-table-column>
-        <el-table-column label="备份文件状态" width="150">
+        ></ResponsiveTableColumn>
+        <ResponsiveTableColumn label="备份文件状态" width="150">
           <template #default="{ row }">
             <el-tag
               :type="getFileStatus(row.fileStatus).tagType"
@@ -79,37 +79,37 @@
               {{ getFileStatus(row.fileStatus).text }}
             </el-tag>
           </template>
-        </el-table-column>
+        </ResponsiveTableColumn>
         <!-- fileSize -->
-        <el-table-column prop="fileSize" label="文件大小" width="120">
+        <ResponsiveTableColumn prop="fileSize" label="文件大小" width="120">
           <template #default="{ row }">
             <span v-if="row.fileSize">{{ formatSize(row.fileSize) }}</span>
           </template>
-        </el-table-column>
-        <el-table-column label="备份状态" width="120">
+        </ResponsiveTableColumn>
+        <ResponsiveTableColumn label="备份状态" width="120">
           <template #default="{ row }">
             <el-tag :type="getBackupStatus(row.status, row.type).tagType">
               {{ getBackupStatus(row.status, row.type).text }}
             </el-tag>
           </template>
-        </el-table-column>
-        <el-table-column
+        </ResponsiveTableColumn>
+        <ResponsiveTableColumn
           prop="reason"
           label="原因"
           width="200"
-        ></el-table-column>
-        <el-table-column
+        ></ResponsiveTableColumn>
+        <ResponsiveTableColumn
           prop="remark"
           label="备份备注"
           min-width="200"
-        ></el-table-column>
+        ></ResponsiveTableColumn>
         <!-- createdAt -->
-        <el-table-column prop="createdAt" label="创建时间" width="200">
+        <ResponsiveTableColumn prop="createdAt" label="创建时间" width="200">
           <template #default="{ row }">
             {{ $formatDate(row.createdAt) }}
           </template>
-        </el-table-column>
-        <el-table-column label="操作" width="190" fixed="right">
+        </ResponsiveTableColumn>
+        <ResponsiveTableColumn label="操作" width="190" fixed="right">
           <template #default="{ row }">
             <div class="dflex flexMiddle">
               <div>
@@ -193,8 +193,8 @@
               </div>
             </div>
           </template>
-        </el-table-column>
-      </el-table>
+        </ResponsiveTableColumn>
+      </ResponsiveTable>
     </div>
     <!-- 分页 -->
     <div class="clearfix">

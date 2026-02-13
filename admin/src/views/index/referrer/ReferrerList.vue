@@ -51,7 +51,7 @@
     </div>
     <!-- 引用记录 -->
     <div class="mb20 list-table-body">
-      <el-table
+      <ResponsiveTable
         ref="tableRef"
         height="100%"
         :data="referrerList"
@@ -59,24 +59,24 @@
         border
       >
         <!-- 来源 referrer -->
-        <el-table-column prop="referrer" label="来源" min-width="200">
+        <ResponsiveTableColumn prop="referrer" label="来源" min-width="200">
           <template #default="{ row }">
             <div>{{ row.referrer }}</div>
           </template>
-        </el-table-column>
+        </ResponsiveTableColumn>
         <!-- 来源类型 referrerType -->
-        <el-table-column prop="referrerType" label="类型">
+        <ResponsiveTableColumn prop="referrerType" label="类型">
           <template #default="{ row }">
             {{ referrerTypeMap[row.referrerType] }}
           </template>
-        </el-table-column>
+        </ResponsiveTableColumn>
         <!-- 日期 creatAt -->
-        <el-table-column prop="createdAt" label="创建时间" width="180">
+        <ResponsiveTableColumn prop="createdAt" label="创建时间" width="180">
           <template #default="{ row }">
             {{ $formatDate(row.createdAt) }}
           </template>
-        </el-table-column>
-      </el-table>
+        </ResponsiveTableColumn>
+      </ResponsiveTable>
     </div>
     <!-- 分页 -->
     <div class="clearfix">

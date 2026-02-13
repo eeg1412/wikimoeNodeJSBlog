@@ -35,7 +35,7 @@
     </div>
     <!-- tags -->
     <div class="mb20 list-table-body">
-      <el-table
+      <ResponsiveTable
         height="100%"
         :data="tagList"
         row-key="_id"
@@ -43,7 +43,7 @@
         default-expand-all
         ref="tableRef"
       >
-        <el-table-column prop="tagname" label="标签名称" min-width="300">
+        <ResponsiveTableColumn prop="tagname" label="标签名称" min-width="300">
           <template #default="{ row }">
             <div class="di">{{ row.tagname }}</div>
             <!-- 点击打开按钮 -->
@@ -59,15 +59,19 @@
               ></el-link>
             </div>
           </template>
-        </el-table-column>
+        </ResponsiveTableColumn>
         <!-- totalPostCount -->
-        <el-table-column prop="totalPostCount" label="总文章数" min-width="100">
+        <ResponsiveTableColumn
+          prop="totalPostCount"
+          label="总文章数"
+          min-width="100"
+        >
           <template #default="{ row }">
             {{ row.totalPostCount }}
           </template>
-        </el-table-column>
+        </ResponsiveTableColumn>
         <!-- publicPostCount -->
-        <el-table-column
+        <ResponsiveTableColumn
           prop="publicPostCount"
           label="公开文章数"
           min-width="100"
@@ -75,15 +79,15 @@
           <template #default="{ row }">
             {{ row.publicPostCount }}
           </template>
-        </el-table-column>
+        </ResponsiveTableColumn>
         <!-- 最后一次使用时间 -->
-        <el-table-column prop="last_use_time" label="最终使用时间">
+        <ResponsiveTableColumn prop="last_use_time" label="最终使用时间">
           <template #default="{ row }">
             {{ $formatDate(row.lastusetime) }}
           </template>
-        </el-table-column>
+        </ResponsiveTableColumn>
 
-        <el-table-column label="操作" width="140">
+        <ResponsiveTableColumn label="操作" width="140">
           <template #default="{ row }">
             <el-button type="primary" size="small" @click="goEdit(row._id)"
               >编辑</el-button
@@ -92,8 +96,8 @@
               >删除</el-button
             >
           </template>
-        </el-table-column>
-      </el-table>
+        </ResponsiveTableColumn>
+      </ResponsiveTable>
     </div>
     <!-- 分页 -->
     <div class="clearfix">

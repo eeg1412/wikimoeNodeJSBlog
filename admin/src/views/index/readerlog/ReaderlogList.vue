@@ -75,7 +75,7 @@
     </div>
     <!-- 读者操作日志 -->
     <div class="mb20 list-table-body">
-      <el-table
+      <ResponsiveTable
         ref="tableRef"
         height="100%"
         :data="readerlogList"
@@ -83,7 +83,7 @@
         border
       >
         <!-- uuid -->
-        <el-table-column prop="uuid" label="uuid" width="350">
+        <ResponsiveTableColumn prop="uuid" label="uuid" width="350">
           <template #default="{ row }">
             <div v-if="row.uuid">
               <div class="di">{{ row.uuid }}</div>
@@ -103,15 +103,15 @@
               </div>
             </div>
           </template>
-        </el-table-column>
+        </ResponsiveTableColumn>
         <!-- 动作 action -->
-        <el-table-column prop="action" label="动作" width="200">
+        <ResponsiveTableColumn prop="action" label="动作" width="200">
           <template #default="{ row }">
             {{ actionMap[row.action] }}
           </template>
-        </el-table-column>
+        </ResponsiveTableColumn>
         <!-- 操作内容 data -->
-        <el-table-column prop="data" label="操作对象内容" min-width="200">
+        <ResponsiveTableColumn prop="data" label="操作对象内容" min-width="200">
           <template #default="{ row }">
             <div v-if="row.data">
               <!-- 显示分享方式 -->
@@ -156,9 +156,9 @@
               </div>
             </div>
           </template>
-        </el-table-column>
+        </ResponsiveTableColumn>
         <!-- IP信息 -->
-        <el-table-column prop="ip" label="IP信息" width="350">
+        <ResponsiveTableColumn prop="ip" label="IP信息" width="350">
           <template #default="{ row }">
             <div v-if="row.ip">
               <div class="di word-break">{{ row.ip }}</div>
@@ -179,9 +179,9 @@
             </div>
             <IpInfoDisplay :ipInfo="row.ipInfo" />
           </template>
-        </el-table-column>
+        </ResponsiveTableColumn>
         <!-- 客户端信息 -->
-        <el-table-column label="客户端信息" width="210">
+        <ResponsiveTableColumn label="客户端信息" width="210">
           <template #default="{ row }">
             <div>
               <div>系统：{{ row.deviceInfo?.os?.name }}</div>
@@ -214,9 +214,9 @@
               </div>
             </div>
           </template>
-        </el-table-column>
+        </ResponsiveTableColumn>
 
-        <el-table-column label="性能统计" min-width="230">
+        <ResponsiveTableColumn label="性能统计" min-width="230">
           <template #default="{ row }">
             <div v-if="row.data?.performanceNavigationTiming">
               <!-- 性能统计 performanceNavigationTiming -->
@@ -268,16 +268,16 @@
               <div>类型：{{ row.data.performanceNavigationTiming.type }}</div>
             </div>
           </template>
-        </el-table-column>
+        </ResponsiveTableColumn>
         <!-- 来源 referrer -->
-        <el-table-column prop="referrer" label="来源" min-width="200" />
+        <ResponsiveTableColumn prop="referrer" label="来源" min-width="200" />
         <!-- createdAt -->
-        <el-table-column prop="createdAt" label="创建时间" width="180">
+        <ResponsiveTableColumn prop="createdAt" label="创建时间" width="180">
           <template #default="{ row }">
             {{ $formatDate(row.createdAt) }}
           </template>
-        </el-table-column>
-      </el-table>
+        </ResponsiveTableColumn>
+      </ResponsiveTable>
     </div>
     <!-- 分页 -->
     <div class="clearfix">
