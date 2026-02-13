@@ -3,6 +3,8 @@
     <div class="post-list-body">
       <div v-if="postsData?.list.length > 0">
         <div
+          role="button"
+          tabindex="-1"
           v-for="(item, index) in postsData.list"
           :key="item._id"
           class="post-list-body-item hover:bg-gray-50 dark:hover:bg-gray-800/30"
@@ -13,6 +15,7 @@
           @click="e => goPostDetail(e, item)"
           @click.middle="e => goPostDetail(e, item, true)"
           @mousedown="preventDefaultMiddleClick"
+          @keydown.enter="e => goPostDetail(e, item)"
         >
           <!-- seo 为了抓取链接 -->
           <NuxtLink
