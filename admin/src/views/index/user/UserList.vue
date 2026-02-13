@@ -38,7 +38,7 @@
     </div>
     <!-- 管理员 -->
     <div class="mb20 list-table-body">
-      <el-table
+      <ResponsiveTable
         height="100%"
         :data="userList"
         row-key="_id"
@@ -46,7 +46,7 @@
         border
       >
         <!-- photo -->
-        <el-table-column label="头像" width="80">
+        <ResponsiveTableColumn label="头像" width="80">
           <template #default="{ row }">
             <el-avatar
               :src="row.photo"
@@ -55,48 +55,57 @@
               v-if="row.photo"
             />
           </template>
-        </el-table-column>
+        </ResponsiveTableColumn>
         <!-- username -->
-        <el-table-column label="账号" prop="username" width="180">
+        <ResponsiveTableColumn label="账号" prop="username" width="180">
           <template #default="{ row }">
             <span>{{ row.username }}</span>
             <span v-if="adminInfo.id === row._id">（我）</span>
           </template>
-        </el-table-column>
+        </ResponsiveTableColumn>
         <!-- nickname -->
-        <el-table-column label="昵称" prop="nickname" width="120" />
+        <ResponsiveTableColumn label="昵称" prop="nickname" width="120" />
         <!-- email -->
-        <el-table-column label="邮箱" prop="email" width="200" />
+        <ResponsiveTableColumn label="邮箱" prop="email" width="200" />
         <!-- role 999是站长 990是管理员-->
-        <el-table-column label="角色" prop="role" width="100">
+        <ResponsiveTableColumn label="角色" prop="role" width="100">
           <template #default="{ row }">
             <span v-if="row.role === 999">站长</span>
             <span v-else-if="row.role === 990">管理员</span>
           </template>
-        </el-table-column>
+        </ResponsiveTableColumn>
         <!-- disabled -->
-        <el-table-column label="状态" prop="disabled" width="75">
+        <ResponsiveTableColumn label="状态" prop="disabled" width="75">
           <template #default="{ row }">
             <el-tag v-if="row.disabled" type="danger">禁用</el-tag>
             <el-tag v-else type="success">正常</el-tag>
           </template>
-        </el-table-column>
+        </ResponsiveTableColumn>
         <!-- description -->
-        <el-table-column label="描述" prop="description" min-width="200" />
+        <ResponsiveTableColumn
+          label="描述"
+          prop="description"
+          min-width="200"
+        />
         <!-- IP -->
-        <el-table-column label="操作IP" prop="IP" width="350">
+        <ResponsiveTableColumn
+          label="操作IP"
+          prop="IP"
+          width="350"
+          :card-hidden="true"
+        >
           <template #default="{ row }">
             <div>{{ row.IP }}</div>
             <IpInfoDisplay :ipInfo="row.ipInfo" />
           </template>
-        </el-table-column>
+        </ResponsiveTableColumn>
         <!-- createdAt -->
-        <el-table-column label="创建时间" prop="createdAt" width="160">
+        <ResponsiveTableColumn label="创建时间" prop="createdAt" width="160">
           <template #default="{ row }">
             {{ $formatDate(row.createdAt) }}
           </template>
-        </el-table-column>
-        <el-table-column label="操作" width="140" fixed="right">
+        </ResponsiveTableColumn>
+        <ResponsiveTableColumn label="操作" width="140" fixed="right">
           <template #default="{ row }">
             <el-button type="primary" size="small" @click="goEdit(row._id)"
               >编辑</el-button
@@ -109,8 +118,8 @@
               >删除</el-button
             >
           </template>
-        </el-table-column>
-      </el-table>
+        </ResponsiveTableColumn>
+      </ResponsiveTable>
     </div>
     <!-- 分页 -->
     <div class="clearfix">

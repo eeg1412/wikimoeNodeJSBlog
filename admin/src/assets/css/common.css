@@ -952,6 +952,12 @@ input[type='password'] {
   height: calc(100dvh - 300px);
   min-height: 200px;
 }
+/* 小于等于768px */
+@media (max-width: 768px) {
+  #app .el-main .list-table-body {
+    height: auto;
+  }
+}
 .previewer-video-body {
   width: 100%;
   height: 100%;
