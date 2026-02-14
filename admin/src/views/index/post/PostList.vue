@@ -1045,6 +1045,11 @@ export default {
 .post-list-action-group :deep(.el-dropdown .el-dropdown__caret-button) {
   width: 18px;
 }
+@media (max-width: 768px) {
+  .post-list-action-group :deep(.el-dropdown .el-dropdown__caret-button) {
+    width: 24px;
+  }
+}
 .postlist-content-item {
   margin-right: 5px;
   margin-bottom: 5px;

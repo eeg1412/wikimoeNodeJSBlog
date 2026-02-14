@@ -957,6 +957,9 @@ input[type='password'] {
   #app .el-main .list-table-body {
     height: auto;
   }
+  .el-main {
+    padding: 10px;
+  }
 }
 .previewer-video-body {
   width: 100%;

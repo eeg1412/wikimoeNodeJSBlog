@@ -781,7 +781,6 @@ export default {
   display: flex;
   flex-direction: column;
   gap: 12px;
-  padding: 10px;
 }
 
 .responsive-table-mobile__row-container {
@@ -858,15 +857,13 @@ export default {
 
 /* 选择框 */
 .responsive-table-card__selection {
-  position: absolute;
-  top: 10px;
-  right: 10px;
-  z-index: 1;
+  padding: 0 10px;
+  margin-bottom: -10px;
 }
 
 /* 卡片主体 */
 .responsive-table-card__body {
-  padding: 12px 14px;
+  padding: 8px 10px;
 }
 
 /* 单个字段行 */
@@ -885,8 +882,7 @@ export default {
 /* 字段标签 */
 .responsive-table-card__label {
   flex-shrink: 0;
-  width: 80px;
-  min-width: 80px;
+  width: 70px;
   color: var(--el-text-color-secondary, #909399);
   font-size: 13px;
   /* word-break: keep-all; */
