@@ -445,6 +445,12 @@ export default function (api) {
         shouldAdminJWT: true
       })
     },
+    // put /post/update/status
+    updatePostStatus(data) {
+      return api.put('/post/update/status', data, {
+        shouldAdminJWT: true
+      })
+    },
     // put '/post/update/editorversion'
     updatePostEditorVersion(data) {
       return api.put('/post/update/editorversion', data, {

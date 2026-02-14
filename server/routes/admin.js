@@ -423,6 +423,15 @@ const adminRouteSetting = [
     roleType: null,
     role: null
   },
+  // put /post/update/status
+  {
+    path: '/post/update/status',
+    method: 'put',
+    middleware: [checkAuth],
+    controller: require('../api/admin/post/updateStatus'),
+    roleType: null,
+    role: null
+  },
   // put updatePostEditorVersion
   {
     path: '/post/update/editorversion',

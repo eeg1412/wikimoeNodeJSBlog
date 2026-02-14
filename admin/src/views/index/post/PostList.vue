@@ -442,20 +442,46 @@
         </ResponsiveTableColumn>
         <ResponsiveTableColumn
           label="操作"
-          width="170"
+          width="200"
           fixed="right"
           v-if="selectedRows.length <= 0"
         >
           <template #default="{ row }">
-            <el-button size="small" @click="openCommentForm(row._id, row.title)"
-              ><el-icon><ChatLineSquare /></el-icon
-            ></el-button>
-            <el-button type="primary" size="small" @click="goEdit(row._id)"
-              ><el-icon><Edit /></el-icon
-            ></el-button>
-            <el-button type="danger" size="small" @click="deletePost(row)"
-              ><el-icon><Delete /></el-icon
-            ></el-button>
+            <div class="post-list-action-group">
+              <el-button
+                size="small"
+                @click="openCommentForm(row._id, row.title)"
+                ><el-icon><ChatLineSquare /></el-icon
+              ></el-button>
+              <el-dropdown
+                split-button
+                type="primary"
+                size="small"
+                @click="goEdit(row._id)"
+                trigger="click"
+                @command="handleStatusChange($event, row)"
+              >
+                <el-icon><Edit /></el-icon>
+                <template #dropdown>
+                  <el-dropdown-menu>
+                    <el-dropdown-item
+                      v-if="row.status === 0"
+                      command="publishWithCurrentTime"
+                      >以当前时间发布</el-dropdown-item
+                    >
+                    <el-dropdown-item v-if="row.status === 0" command="publish"
+                      >发布</el-dropdown-item
+                    >
+                    <el-dropdown-item v-if="row.status === 1" command="setDraft"
+                      >设为草稿</el-dropdown-item
+                    >
+                  </el-dropdown-menu>
+                </template>
+              </el-dropdown>
+              <el-button type="danger" size="small" @click="deletePost(row)"
+                ><el-icon><Delete /></el-icon
+              ></el-button>
+            </div>
           </template>
         </ResponsiveTableColumn>
       </ResponsiveTable>
@@ -679,6 +705,13 @@ export default {
 
     const handlePostCommand = command => {
       handleAdd(command)
+    }
+
+    const handleStatusChange = (action, row) => {
+      authApi.updatePostStatus({ id: row._id, action }).then(res => {
+        ElMessage.success('操作成功')
+        getPostList(false, false, false)
+      })
     }
 
     const tableSortChange = ({ column, prop, order }) => {
@@ -966,6 +999,7 @@ export default {
       getPostList,
       handleAdd,
       handlePostCommand,
+      handleStatusChange,
       tableSortChange,
       defaultSort,
       titleLimit,
@@ -997,6 +1031,13 @@ export default {
 }
 </script>
 <style scoped>
+.post-list-action-group {
+  display: flex;
+  gap: 5px;
+}
+.post-list-action-group :deep(.el-dropdown .el-dropdown__caret-button) {
+  width: 18px;
+}
 .postlist-content-item {
   margin-right: 5px;
   margin-bottom: 5px;
