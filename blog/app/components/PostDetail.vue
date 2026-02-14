@@ -382,6 +382,7 @@
               <div class="flex">
                 <div class="comment-list-item-avatar-body">
                   <a
+                    class="comment-list-item-avatar-link"
                     :href="item.url"
                     rel="ugc nofollow"
                     target="_blank"
@@ -1312,5 +1313,8 @@ onUnmounted(() => {
   width: 1px;
   height: 0.75rem;
   background-color: #949494;
+}
+.comment-list-item-avatar-link:focus-visible {
+  @apply ring-0 block outline-2 outline-primary-500 outline rounded;
 }
 </style>
