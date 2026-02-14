@@ -150,7 +150,7 @@ const inactiveBtnClasses = computed(() => {
 
 const navBtnBase = computed(
   () =>
-    `${sizeClasses.value} text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 disabled:opacity-50 disabled:cursor-not-allowed`
+    `${sizeClasses.value} text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800`
 )
 
 const prevBtnClasses = computed(() => navBtnBase.value)
@@ -171,5 +171,11 @@ const lastBtnClasses = computed(() => navBtnBase.value)
 
 .wui-pagination-ellipsis {
   @apply inline-flex items-center justify-center px-1 text-gray-400;
+}
+.wui-pagination-btn:disabled {
+  @apply cursor-not-allowed opacity-50;
+}
+.wui-pagination-btn:disabled:hover {
+  @apply bg-transparent;
 }
 </style>
