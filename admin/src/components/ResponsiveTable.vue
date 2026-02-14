@@ -428,26 +428,57 @@ export default {
       { deep: false }
     )
 
-    // ========== 桌面端/移动端切换时同步选中状态 ==========
+    // ========== 状态定义 ==========
+    const selectedRows = ref([])
+
+    // 排序状态持久化
+    const sortState = reactive({
+      prop: '',
+      order: null
+    })
+
+    // 移动端排序所需的 refs
+    const mobileSortProp = ref('')
+    const mobileSortOrder = ref('ascending')
+
+    // 监听并通过父组件传入的初始排序更新状态
+    watch(
+      () => attrs['default-sort'],
+      newVal => {
+        if (newVal) {
+          sortState.prop = newVal.prop || ''
+          sortState.order = newVal.order || null
+          mobileSortProp.value = sortState.prop
+          mobileSortOrder.value = sortState.order || 'ascending'
+        }
+      },
+      { immediate: true, deep: true }
+    )
+
+    // ========== 桌面端/移动端切换时状态同步 ==========
     watch(
       isMobile,
       (newIsMobile, oldIsMobile) => {
-        if (!hasSelection.value) return
+        if (newIsMobile === oldIsMobile) return
 
         nextTick(() => {
-          if (newIsMobile && !oldIsMobile) {
-            // 从桌面端切换到移动端：从 el-table 同步选中状态到 selectedRows
-            if (elTableRef.value && elTableRef.value.getSelectionRows) {
+          if (newIsMobile) {
+            // 桌面端 -> 移动端：同步选中状态
+            if (hasSelection.value && elTableRef.value) {
               const tableSelection = elTableRef.value.getSelectionRows()
               selectedRows.value = [...tableSelection]
             }
-          } else if (!newIsMobile && oldIsMobile) {
-            // 从移动端切换到桌面端：将 selectedRows 同步到 el-table
-            if (elTableRef.value && selectedRows.value.length > 0) {
-              nextTick(() => {
-                selectedRows.value.forEach(row => {
-                  elTableRef.value.toggleRowSelection(row, true)
-                })
+          } else {
+            // 移动端 -> 桌面端
+            // 1. 恢复排序状态
+            if (elTableRef.value && sortState.prop) {
+              elTableRef.value.sort(sortState.prop, sortState.order)
+            }
+            // 2. 恢复选中状态（确保原子性：清空并重新勾选）
+            if (hasSelection.value && elTableRef.value) {
+              elTableRef.value.clearSelection()
+              selectedRows.value.forEach(row => {
+                elTableRef.value.toggleRowSelection(row, true)
               })
             }
           }
@@ -457,8 +488,6 @@ export default {
     )
 
     // ========== 选择功能（移动端） ==========
-    const selectedRows = ref([])
-
     const getRowKey = (row, index) => {
       if (typeof props.rowKey === 'function') {
         return props.rowKey(row)
@@ -494,13 +523,13 @@ export default {
         if (!props.data || props.data.length === 0) return false
         return props.data.every(row => isRowSelected(row))
       },
-      set: () => {} // 由 handleSelectAll 控制
+      set: val => handleSelectAll(val)
     })
 
     const isIndeterminate = computed(() => {
-      if (!props.data || props.data.length === 0) return false
-      const count = props.data.filter(row => isRowSelected(row)).length
-      return count > 0 && count < props.data.length
+      // 修正逻辑：如果全选则不显示半选；否则如果 selectedRows 不为空，则显示半选
+      if (isAllSelected.value) return false
+      return selectedRows.value.length > 0
     })
 
     const handleSelectAll = val => {
@@ -522,25 +551,25 @@ export default {
     }
 
     // ========== 排序功能（移动端） ==========
-    const mobileSortProp = ref('')
-    const mobileSortOrder = ref('ascending')
+    const handleMobileSortChange = val => {
+      const prop = val || ''
+      const order = prop ? mobileSortOrder.value : null
 
-    const handleMobileSortChange = () => {
-      if (!mobileSortProp.value) {
-        emit('sort-change', { column: null, prop: null, order: null })
-        return
-      }
+      // 同步到统一状态
+      sortState.prop = prop
+      sortState.order = order
+
       emit('sort-change', {
-        column: { property: mobileSortProp.value },
-        prop: mobileSortProp.value,
-        order: mobileSortOrder.value
+        column: prop ? { property: prop } : null,
+        prop: prop || null,
+        order: order
       })
     }
 
     const toggleMobileSortOrder = () => {
       mobileSortOrder.value =
         mobileSortOrder.value === 'ascending' ? 'descending' : 'ascending'
-      handleMobileSortChange()
+      handleMobileSortChange(mobileSortProp.value)
     }
 
     // ========== 事件处理 ==========
@@ -558,6 +587,25 @@ export default {
             const [selection] = args
             // 同步到 selectedRows，保持状态一致
             selectedRows.value = [...selection]
+            emit(event, ...args)
+          }
+        } else if (event === 'sort-change') {
+          // 拦截 sort-change 事件，同步排序状态到统一对象和移动端 refs
+          listeners[event] = (...args) => {
+            const sortInfo = args[0] || {}
+            const { prop, order } = sortInfo
+
+            // 严谨同步：如果 order 为空（取消排序），则清空所有排序状态
+            if (!order) {
+              sortState.prop = ''
+              sortState.order = null
+              mobileSortProp.value = ''
+            } else {
+              sortState.prop = prop || ''
+              sortState.order = order
+              mobileSortProp.value = prop || ''
+              mobileSortOrder.value = order || 'ascending'
+            }
             emit(event, ...args)
           }
         } else {
@@ -579,6 +627,14 @@ export default {
           filtered[key] = rest[key]
         }
       })
+
+      // 关键修复：动态覆盖 default-sort，解决桌面/移动模式切换时丢失排序箭头的问题
+      // 当表格重新加载（v-if 切换）时，el-table 会读取最新的 default-sort
+      filtered['default-sort'] = {
+        prop: sortState.prop,
+        order: sortState.order
+      }
+
       return {
         ...filtered,
         rowKey: props.rowKey
@@ -633,10 +689,11 @@ export default {
       clearSort: () => {
         if (elTableRef.value) {
           elTableRef.value.clearSort()
-        } else {
-          mobileSortProp.value = ''
-          mobileSortOrder.value = 'ascending'
         }
+        sortState.prop = ''
+        sortState.order = null
+        mobileSortProp.value = ''
+        mobileSortOrder.value = 'ascending'
       },
       /** 清空过滤 */
       clearFilter: columnKeys => {
@@ -651,7 +708,7 @@ export default {
         } else {
           mobileSortProp.value = prop
           mobileSortOrder.value = order || 'ascending'
-          handleMobileSortChange()
+          handleMobileSortChange(prop)
         }
       },
       /** 获取 el-table 原始 ref（桌面端） */
