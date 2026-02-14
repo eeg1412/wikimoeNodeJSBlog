@@ -4,6 +4,8 @@
       <div
         class="blog-layout-sidebar-item pointer"
         @click="showChildren = !showChildren"
+        tabindex="0"
+        @keydown.enter="showChildren = !showChildren"
       >
         <span>{{ item.naviname }}</span>
         <WUIIcon
@@ -155,5 +157,8 @@ const afterLeave = el => {
 }
 .blog-layout-sidebar-item-children-body .blog-layout-sidebar-item {
   padding-left: 35px;
+}
+div.blog-layout-sidebar-item:focus-visible {
+  @apply ring-2 ring-primary-500 ring-inset;
 }
 </style>

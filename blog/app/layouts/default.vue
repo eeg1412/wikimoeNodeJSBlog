@@ -526,6 +526,9 @@ onUnmounted(() => {
 .blog-layout-sitelogo {
   width: 100%;
 }
+a:focus-visible .blog-layout-sitelogo {
+  @apply outline-2 outline-primary-500 outline;
+}
 .blog-layout-desc {
   padding: 15px 0;
   border-bottom: 1px solid #e2e2e2;
