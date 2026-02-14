@@ -473,6 +473,14 @@
             placeholder="选择日期时间"
             style="width: 100%"
           ></el-date-picker>
+          <!-- 此刻 -->
+          <el-button
+            type="primary"
+            size="small"
+            class="mt10"
+            @click="form.date = new Date()"
+            >此刻</el-button
+          >
         </el-form-item>
         <!-- 允许评论 -->
         <el-form-item label="允许评论" prop="allowRemark">
