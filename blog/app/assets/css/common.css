@@ -93,6 +93,10 @@ a {
 a {
   cursor: pointer;
 }
+a:focus-visible,
+button:focus-visible {
+  @apply ring-2 ring-primary-500 ring-inset;
+}
 a,
 li,
 input {

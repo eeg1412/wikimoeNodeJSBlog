@@ -67,6 +67,9 @@ const image = computed(() => {
   height: 6.5rem;
   isolation: isolate;
 }
+a:focus-visible .tweet-content-lite-item-body {
+  @apply outline-2 outline-primary-500 outline;
+}
 .tweet-content-lite-item-left {
   position: relative;
   z-index: 1;

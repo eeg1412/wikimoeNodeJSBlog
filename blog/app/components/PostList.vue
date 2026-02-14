@@ -4,10 +4,10 @@
       <div v-if="postsData?.list.length > 0">
         <div
           role="button"
-          tabindex="-1"
+          tabindex="0"
           v-for="(item, index) in postsData.list"
           :key="item._id"
-          class="post-list-body-item hover:bg-gray-50 dark:hover:bg-gray-800/30"
+          class="post-list-body-item hover:bg-gray-50 dark:hover:bg-gray-800/30 focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-inset"
           :class="{
             pointer: isHydrated,
             'cursor-progress': !isHydrated
@@ -24,6 +24,7 @@
               name: 'postDetail',
               params: { id: item.alias || item._id }
             }"
+            tabindex="-1"
           >
             {{ item.title || item.excerpt }}
           </NuxtLink>
@@ -176,6 +177,7 @@
               <div
                 class="mr15"
                 @click.stop
+                @keydown.enter.stop
                 v-if="options.siteEnableShareButton"
               >
                 <LazySharePopover :post="item" @shareadd="shareadd(item)">
@@ -199,10 +201,12 @@
 
             <div class="dflex flexCenter">
               <div
-                class="dflex flexCenter cursor-pointer hover:text-primary-500"
+                class="dflex flexCenter cursor-pointer hover:text-primary-500 focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-inset"
                 :class="item.isLike ? 'text-primary-500' : 'cGray94'"
+                tabindex="0"
                 @click.stop="likePost(item._id)"
                 @click.middle.stop
+                @keydown.enter.stop="likePost(item._id)"
                 v-if="likeListInited"
               >
                 <!-- 加载 -->

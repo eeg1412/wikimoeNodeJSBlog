@@ -54,4 +54,7 @@ const defaultCover = options.value.siteDefaultCover || ''
   box-sizing: border-box;
   font-size: 15px;
 }
+a:focus-visible .post-list-blog-panel {
+  @apply outline-2 outline-primary-500 outline rounded-[0.75rem];
+}
 </style>

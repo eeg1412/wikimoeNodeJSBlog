@@ -193,7 +193,7 @@ const buttonClasses = computed(() => {
 <style scoped>
 .wui-button {
   @apply inline-flex items-center flex-shrink-0 font-medium rounded-md cursor-pointer
-    focus:outline-none focus-visible:outline-0
+    focus-visible:outline-2 focus-visible:outline-primary-500 focus-visible:outline
     transition-colors duration-200
     disabled:cursor-not-allowed disabled:opacity-75;
 }
