@@ -73,7 +73,7 @@
           </template>
         </ResponsiveTableColumn>
         <ResponsiveTableColumn prop="description" label="分类描述" />
-        <ResponsiveTableColumn label="操作" width="140">
+        <ResponsiveTableColumn label="操作" width="140" fixed="right">
           <template #default="{ row }">
             <el-button type="primary" size="small" @click="goEdit(row._id)"
               >编辑</el-button
