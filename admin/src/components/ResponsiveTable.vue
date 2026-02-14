@@ -277,6 +277,36 @@ export default {
     const elTableRef = ref(null)
     const mobileContainerRef = ref(null)
 
+    // ========== 事件名到监听器属性名的映射 ==========
+    const eventToListenerMap = new Map()
+    const emitEvents = [
+      'selection-change',
+      'sort-change',
+      'row-click',
+      'row-dblclick',
+      'row-contextmenu',
+      'cell-click',
+      'cell-dblclick',
+      'cell-contextmenu',
+      'header-click',
+      'header-contextmenu',
+      'header-dragend',
+      'expand-change',
+      'current-change',
+      'select',
+      'select-all',
+      'filter-change'
+    ]
+    emitEvents.forEach(event => {
+      const listenerName =
+        'on' +
+        event
+          .split('-')
+          .map(s => s.charAt(0).toUpperCase() + s.slice(1))
+          .join('')
+      eventToListenerMap.set(listenerName, event)
+    })
+
     // ========== 列注册系统 ==========
     // 已注册的列定义列表（由 ResponsiveTableColumn 子组件注册）
     const registeredColumns = reactive([])
@@ -398,6 +428,34 @@ export default {
       { deep: false }
     )
 
+    // ========== 桌面端/移动端切换时同步选中状态 ==========
+    watch(
+      isMobile,
+      (newIsMobile, oldIsMobile) => {
+        if (!hasSelection.value) return
+
+        nextTick(() => {
+          if (newIsMobile && !oldIsMobile) {
+            // 从桌面端切换到移动端：从 el-table 同步选中状态到 selectedRows
+            if (elTableRef.value && elTableRef.value.getSelectionRows) {
+              const tableSelection = elTableRef.value.getSelectionRows()
+              selectedRows.value = [...tableSelection]
+            }
+          } else if (!newIsMobile && oldIsMobile) {
+            // 从移动端切换到桌面端：将 selectedRows 同步到 el-table
+            if (elTableRef.value && selectedRows.value.length > 0) {
+              nextTick(() => {
+                selectedRows.value.forEach(row => {
+                  elTableRef.value.toggleRowSelection(row, true)
+                })
+              })
+            }
+          }
+        })
+      },
+      { immediate: false }
+    )
+
     // ========== 选择功能（移动端） ==========
     const selectedRows = ref([])
 
@@ -493,41 +551,36 @@ export default {
     // 构建传递给 el-table 的事件监听器
     const tableListeners = computed(() => {
       const listeners = {}
-      const events = [
-        'selection-change',
-        'sort-change',
-        'row-click',
-        'row-dblclick',
-        'row-contextmenu',
-        'cell-click',
-        'cell-dblclick',
-        'cell-contextmenu',
-        'header-click',
-        'header-contextmenu',
-        'header-dragend',
-        'expand-change',
-        'current-change',
-        'select',
-        'select-all',
-        'filter-change'
-      ]
-      events.forEach(event => {
-        const handlerName =
-          'on' +
-          event
-            .split('-')
-            .map(s => s.charAt(0).toUpperCase() + s.slice(1))
-            .join('')
-        listeners[handlerName] = (...args) => emit(event, ...args)
+      emitEvents.forEach(event => {
+        if (event === 'selection-change') {
+          // 拦截 selection-change 事件，同步选中状态
+          listeners[event] = (...args) => {
+            const [selection] = args
+            // 同步到 selectedRows，保持状态一致
+            selectedRows.value = [...selection]
+            emit(event, ...args)
+          }
+        } else {
+          listeners[event] = (...args) => emit(event, ...args)
+        }
       })
       return listeners
     })
 
-    // 过滤掉自定义 props，其余传递给 el-table
+    // 过滤掉自定义 props 和事件监听器，其余传递给 el-table
     const tableAttrs = computed(() => {
+      console.log('attrs', attrs)
       const { mobileBreakpoint, ...rest } = attrs
+      // 过滤掉已声明的事件监听器，事件由 tableListeners 统一处理
+      const filtered = {}
+      Object.keys(rest).forEach(key => {
+        // 只过滤掉映射表中定义的事件监听器
+        if (!eventToListenerMap.has(key)) {
+          filtered[key] = rest[key]
+        }
+      })
       return {
-        ...rest,
+        ...filtered,
         rowKey: props.rowKey
       }
     })

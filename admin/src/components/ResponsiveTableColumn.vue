@@ -16,12 +16,15 @@
     <template v-if="$slots.default" #default="scope">
       <slot name="default" v-bind="scope" />
     </template>
+    <!-- <template v-else #default="scope">
+      {{ getNestedValue(scope.row, columnProps.prop) }}
+    </template> -->
     <!-- 传递 header slot -->
     <template v-if="$slots.header" #header="scope">
       <slot name="header" v-bind="scope" />
     </template>
     <!-- 嵌套子列 slot -->
-    <slot name="nested" />
+    <!-- <slot name="nested" /> -->
   </el-table-column>
 
   <!-- 移动端：不渲染可见内容，仅注册列定义 -->
@@ -41,6 +44,17 @@ import {
 
 // 全局自增ID生成器
 let columnIdCounter = 0
+
+/**
+ * 根据点号路径获取嵌套属性值
+ * 例如 getNestedValue(row, 'author.nickname') => row.author.nickname
+ */
+// function getNestedValue(obj, path) {
+//   if (!path || !obj) return ''
+//   return path.split('.').reduce((acc, key) => {
+//     return acc && acc[key] !== undefined ? acc[key] : ''
+//   }, obj)
+// }
 
 export default {
   name: 'ResponsiveTableColumn',
@@ -229,6 +243,7 @@ export default {
     return {
       parentIsMobile,
       columnProps
+      // getNestedValue
     }
   }
 }

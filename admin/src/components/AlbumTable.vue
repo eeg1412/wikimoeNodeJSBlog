@@ -32,7 +32,7 @@
     </div>
     <!-- albums -->
     <div class="mb20 list-table-body">
-      <el-table
+      <ResponsiveTable
         height="100%"
         :data="albumList"
         row-key="_id"
@@ -40,10 +40,10 @@
         default-expand-all
         ref="tableRef"
       >
-        <el-table-column prop="name" label="相册名称" />
-        <el-table-column prop="count" label="媒体数" width="80" />
+        <ResponsiveTableColumn prop="name" label="相册名称" />
+        <ResponsiveTableColumn prop="count" label="媒体数" width="80" />
 
-        <el-table-column label="操作" width="200">
+        <ResponsiveTableColumn label="操作" width="200">
           <template #default="{ row }">
             <!-- 查看 -->
             <el-button size="small" @click="openAttachementDialog(row._id)"
@@ -56,8 +56,8 @@
               >删除</el-button
             >
           </template>
-        </el-table-column>
-      </el-table>
+        </ResponsiveTableColumn>
+      </ResponsiveTable>
     </div>
     <!-- 分页 -->
     <div class="clearfix">
