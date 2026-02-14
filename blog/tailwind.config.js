@@ -70,6 +70,11 @@ export default {
         '.text-primary': {
           '--tw-text-opacity': '1',
           color: 'rgb(var(--color-primary-DEFAULT) / var(--tw-text-opacity, 1))'
+        },
+        '.bg-primary': {
+          '--tw-bg-opacity': '1',
+          backgroundColor:
+            'rgb(var(--color-primary-DEFAULT) / var(--tw-bg-opacity, 1))'
         }
       })
     })
