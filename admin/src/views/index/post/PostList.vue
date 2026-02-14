@@ -596,6 +596,7 @@ export default {
         params.tags = sessionParams.tags || []
       }
     }
+    initParams()
     const list = ref([])
     const goEdit = id => {
       router.push({
@@ -723,7 +724,14 @@ export default {
       }
       getPostList()
     }
-    const defaultSort = { prop: 'date', order: 'descending' }
+    const defaultSort = reactive({ prop: 'date', order: 'descending' })
+    if (params.sorttype) {
+      const lastIndex = params.sorttype.lastIndexOf('_')
+      if (lastIndex !== -1) {
+        defaultSort.prop = params.sorttype.substring(0, lastIndex)
+        defaultSort.order = params.sorttype.substring(lastIndex + 1)
+      }
+    }
 
     const titleLimit = title => {
       let title_ = Array.from(title || '')
@@ -971,7 +979,6 @@ export default {
     }
 
     onMounted(() => {
-      initParams()
       getPostList()
       if (params.tags.length) {
         // 获取已选择的标签数据
