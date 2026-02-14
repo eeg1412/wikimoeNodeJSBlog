@@ -6,7 +6,10 @@
         class="wui-modal-overlay"
         @click.self="$emit('update:modelValue', false)"
       >
-        <div class="wui-modal-container custom-scroll" @click.stop>
+        <div
+          class="wui-modal-container overscroll-contain custom-scroll"
+          @click.stop
+        >
           <slot />
         </div>
       </div>
