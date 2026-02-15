@@ -94,7 +94,9 @@ a {
   cursor: pointer;
 }
 a:focus-visible,
-button:focus-visible {
+button:focus-visible,
+button.pswp__button:focus-visible,
+button.pswp__button [tabindex]:focus-visible {
   @apply ring-2 ring-primary-500 ring-inset;
 }
 a,

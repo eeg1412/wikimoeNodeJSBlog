@@ -14,6 +14,8 @@
     <div
       class="photo-swipe-photo-swipe-btn"
       @click="showDescription = !showDescription"
+      tabindex="0"
+      @keydown.enter="e => e.target.click()"
     >
       <WUIIcon
         class="photo-swipe-caption-icon"
@@ -30,7 +32,12 @@
     v-if="showUI && attachmentList.length > 1"
   >
     <WUIPopover :popper="{ arrow: true, offsetDistance: 0 }" :zIndex="2000">
-      <div class="photo-swipe-photo-swipe-btn" title="浏览所有媒体">
+      <div
+        class="photo-swipe-photo-swipe-btn"
+        title="浏览所有媒体"
+        tabindex="0"
+        @keydown.enter="e => e.target.click()"
+      >
         <WUIIcon name="i-heroicons-photo-solid" />
       </div>
       <template #panel="{ close }">
@@ -113,7 +120,12 @@
     :to="`#photo-swipe-screenshot-${componentId}`"
     v-if="showUI && is360PanoramaActive"
   >
-    <div class="photo-swipe-photo-swipe-btn" @click="takeScreenshot">
+    <div
+      class="photo-swipe-photo-swipe-btn"
+      @click="takeScreenshot"
+      tabindex="0"
+      @keydown.enter="e => e.target.click()"
+    >
       <WUIIcon name="i-heroicons-camera-solid" />
     </div>
   </Teleport>
@@ -123,7 +135,12 @@
     :to="`#photo-swipe-fisheye-${componentId}`"
     v-if="showUI && is360PanoramaActive"
   >
-    <div class="photo-swipe-photo-swipe-btn" @click="toggleFisheye">
+    <div
+      class="photo-swipe-photo-swipe-btn"
+      @click="toggleFisheye"
+      tabindex="0"
+      @keydown.enter="e => e.target.click()"
+    >
       <div v-if="fisheyeMode" class="fisheye-icon fisheye-on">
         <svg
           width="23"
@@ -213,6 +230,8 @@
       class="photo-swipe-photo-swipe-btn"
       title="动态体感视角"
       @click="toggleGyroscope"
+      tabindex="0"
+      @keydown.enter="e => e.target.click()"
     >
       <!-- 实心罗盘：根据 gyroscopeIsEnabled 切换样式 -->
       <template v-if="gyroscopeIsEnabled">
@@ -249,7 +268,13 @@
     :to="`#photo-swipe-vr-${componentId}`"
     v-if="showUI && is360PanoramaActive && isVRSupported"
   >
-    <div class="photo-swipe-photo-swipe-btn" title="VR模式" @click="enterVR">
+    <div
+      class="photo-swipe-photo-swipe-btn"
+      title="VR模式"
+      @click="enterVR"
+      tabindex="0"
+      @keydown.enter="e => e.target.click()"
+    >
       <svg
         xmlns="http://www.w3.org/2000/svg"
         width="23"
@@ -1090,6 +1115,10 @@ const initLightbox = async () => {
       title: 'VR模式',
       order: 9,
       isButton: true,
+      onInit: function (el, pswp) {
+        // 设置tabIndex为-1，禁止其被Tab键聚焦
+        el.tabIndex = -1
+      },
       html: `<div id="photo-swipe-vr-${componentId}"></div>`
     })
     // 注册陀螺仪按钮
@@ -1098,6 +1127,10 @@ const initLightbox = async () => {
       title: '动态体感视角',
       order: 9,
       isButton: true,
+      onInit: function (el, pswp) {
+        // 设置tabIndex为-1，禁止其被Tab键聚焦
+        el.tabIndex = -1
+      },
       html: `<div id="photo-swipe-gyroscope-${componentId}"></div>`
     })
     // 注册360度全景截图按钮
@@ -1106,6 +1139,10 @@ const initLightbox = async () => {
       title: '截图',
       order: 9,
       isButton: true,
+      onInit: function (el, pswp) {
+        // 设置tabIndex为-1，禁止其被Tab键聚焦
+        el.tabIndex = -1
+      },
       html: `<div id="photo-swipe-screenshot-${componentId}"></div>`
     })
 
@@ -1115,6 +1152,10 @@ const initLightbox = async () => {
       title: '切换镜头模式',
       order: 9,
       isButton: true,
+      onInit: function (el, pswp) {
+        // 设置tabIndex为-1，禁止其被Tab键聚焦
+        el.tabIndex = -1
+      },
       html: `<div id="photo-swipe-fisheye-${componentId}"></div>`
     })
 
@@ -1124,6 +1165,10 @@ const initLightbox = async () => {
       title: '描述开关',
       order: 9,
       isButton: true,
+      onInit: function (el, pswp) {
+        // 设置tabIndex为-1，禁止其被Tab键聚焦
+        el.tabIndex = -1
+      },
       html: `<div id="photo-swipe-caption-${componentId}"></div>`
     })
     if (attachmentList.value.length > 1) {
@@ -1131,6 +1176,10 @@ const initLightbox = async () => {
         name: 'photo-swipe-button',
         order: 9,
         isButton: true,
+        onInit: function (el, pswp) {
+          // 设置tabIndex为-1，禁止其被Tab键聚焦
+          el.tabIndex = -1
+        },
         html: `<div id="photo-swipe-${componentId}"></div>`
       })
     }
@@ -1201,7 +1250,7 @@ onUnmounted(() => {
 </script>
 <style scoped>
 .photo-swipe-photo-swipe-btn {
-  width: 100%;
+  width: 45px;
   height: 60px;
   color: #ffffff;
   font-size: 23px;
@@ -1209,6 +1258,11 @@ onUnmounted(() => {
   align-items: center;
   justify-content: center;
   filter: drop-shadow(0px 0px 2px #000);
+}
+@media (max-width: 768px) {
+  .photo-swipe-photo-swipe-btn {
+    width: 38px;
+  }
 }
 .photo-swipe-photo-swipe-caption {
   max-width: 1280px;
