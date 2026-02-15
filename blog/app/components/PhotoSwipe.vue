@@ -45,7 +45,7 @@
         <WUIIcon name="i-heroicons-photo-solid" />
       </div>
       <template #panel="{ close }">
-        <div class="p-4">
+        <div class="p-4" @wheel.stop.prevent @touchmove.stop.prevent>
           <!-- 关闭按钮 -->
           <div class="flex justify-end mb-2">
             <WUIButton
