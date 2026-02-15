@@ -31,7 +31,11 @@
     :to="`#photo-swipe-${componentId}`"
     v-if="showUI && attachmentList.length > 1"
   >
-    <WUIPopover :popper="{ arrow: true, offsetDistance: 0 }" :zIndex="2000">
+    <WUIPopover
+      :popper="{ arrow: true, offsetDistance: 0 }"
+      :zIndex="2000"
+      :to="`#photo-swipe-${componentId}`"
+    >
       <div
         class="photo-swipe-photo-swipe-btn"
         title="浏览所有媒体"
@@ -41,7 +45,7 @@
         <WUIIcon name="i-heroicons-photo-solid" />
       </div>
       <template #panel="{ close }">
-        <div class="p-4" @wheel.stop.prevent @touchmove.stop.prevent>
+        <div class="p-4">
           <!-- 关闭按钮 -->
           <div class="flex justify-end mb-2">
             <WUIButton
@@ -70,6 +74,8 @@
                   backgroundImage: `url(${item.thumfor || item.filepath})`
                 }"
                 @click="() => goTo(index + groupPage * 9, close)"
+                tabindex="0"
+                @keydown.enter="e => e.target.click()"
               >
                 <!-- 如果is360Panorama为true加上360°的字样 -->
                 <div
@@ -700,6 +706,8 @@ const loadNoSizeImage = (src, index) => {
     })
 }
 
+let lastFocusedElement = null
+
 const open = async (
   list = [],
   showIndex = 0,
@@ -710,6 +718,8 @@ const open = async (
   if (pswpIsOpen.value) {
     return
   }
+
+  lastFocusedElement = document.activeElement
 
   setPswpIsOpen(true)
   const pswpopen = route.query.pswpopen
@@ -929,6 +939,10 @@ const initLightbox = async () => {
     }
     nextTick(() => {
       setPswpIsOpen(false)
+      if (lastFocusedElement && lastFocusedElement.focus) {
+        lastFocusedElement.focus()
+        lastFocusedElement = null
+      }
     })
   })
   lightbox.on('change', async () => {

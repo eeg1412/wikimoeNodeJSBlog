@@ -3,7 +3,7 @@
     <div class="wui-popover-trigger" @click="toggle">
       <slot />
     </div>
-    <Teleport to="body">
+    <Teleport :to="props.to">
       <div
         v-if="shouldRender"
         ref="containerRef"
@@ -22,7 +22,11 @@
               class="wui-popover-arrow"
               data-popper-arrow
             ></div>
-            <div class="wui-popover-content">
+            <div
+              ref="contentRef"
+              class="wui-popover-content outline-none ring-0"
+              tabindex="-1"
+            >
               <slot name="panel" :close="close" />
             </div>
           </div>
@@ -42,13 +46,16 @@ const props = defineProps({
     type: Object,
     default: () => ({})
   },
-  zIndex: { type: Number, default: 10 }
+  zIndex: { type: Number, default: 10 },
+  to: { type: String, default: 'body' }
 })
 
 const emit = defineEmits(['update:open'])
 
 const popoverRef = ref(null)
 const arrowRef = ref(null)
+const contentRef = ref(null)
+const previouslyFocusedElement = ref(null)
 
 // 内部状态
 const internalOpen = ref(false)
@@ -113,19 +120,29 @@ function handleClickOutside(e) {
   close()
 }
 
+// 键盘事件处理
+function handleKeydown(e) {
+  if (e.key === 'Escape') {
+    close()
+  }
+}
+
 function addListeners() {
   document.addEventListener('mousedown', handleClickOutside, true)
   document.addEventListener('touchstart', handleClickOutside, true)
+  document.addEventListener('keydown', handleKeydown, true)
 }
 
 function removeListeners() {
   document.removeEventListener('mousedown', handleClickOutside, true)
   document.removeEventListener('touchstart', handleClickOutside, true)
+  document.removeEventListener('keydown', handleKeydown, true)
 }
 
 // 打开/关闭时维护事件监听 & 同步 popper reference
 watch(isOpen, async val => {
   if (val) {
+    previouslyFocusedElement.value = document.activeElement
     // 先挂载容器
     shouldRender.value = true
     await nextTick()
@@ -138,9 +155,13 @@ watch(isOpen, async val => {
       popperInstance.value.forceUpdate()
     }
     addListeners()
+    // 聚焦到内容区域
+    await nextTick()
+    contentRef.value?.focus()
   } else {
     // 关闭时仅移除监听，shouldRender 留到 @after-leave 再置 false
     removeListeners()
+    previouslyFocusedElement.value?.focus()
   }
 })
 
@@ -179,10 +200,14 @@ function syncArrow() {
 
 onMounted(() => {
   if (isOpen.value) {
+    previouslyFocusedElement.value = document.activeElement
     shouldRender.value = true
     nextTick(() => {
       syncReference()
       addListeners()
+      nextTick(() => {
+        contentRef.value?.focus()
+      })
     })
   }
 })

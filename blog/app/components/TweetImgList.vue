@@ -45,6 +45,8 @@
             class="blog-tweet-img-list-body-item-video-mask absolute inset-0 flex items-center justify-center z-10"
             v-show="videoPlayId !== coverImages[0]._id"
             @click.stop="videoPlay(coverImages[0]._id)"
+            @keydown.enter.stop="videoPlay(coverImages[0]._id)"
+            tabindex="0"
           >
             <WUIIcon
               class="blog-tweet-img-list-body-item-video-mask-icon text-white"
@@ -54,6 +56,8 @@
               class="blog-tweet-img-list-body-item-video-mask-zoom-icon text-white"
               name="i-heroicons-magnifying-glass-plus"
               @click.stop="tryOpenHref(0)"
+              @keydown.enter.stop="tryOpenHref(0)"
+              tabindex="0"
             />
           </div>
         </template>
@@ -73,6 +77,8 @@
             videoPlayId !== coverImages[0]._id &&
             !videoPlayedIdList.includes(coverImages[0]._id)
           "
+          @keydown.enter.stop="e => e.target.click()"
+          :tabindex="coverImages[0].mimetype.includes('video') ? '-1' : '0'"
         />
 
         <div
@@ -117,6 +123,7 @@
           }"
           @slideChangeTransitionStart="slideChangeTransitionStart"
           @slideChangeTransitionEnd="slideChangeTransitionEnd"
+          @swiper="onSwiper"
         >
           <SwiperSlide v-for="(item, index) in imageGroup" :key="item._id">
             <!-- 幻灯片模式 -->
@@ -124,6 +131,7 @@
               class="blog-tweet-img-list-body"
               :class="`cover-count-${item.length}`"
               v-if="item.length > 0"
+              @focusin="onFocusSlide(index)"
             >
               <template v-for="(img, indexChild) in item" :key="index">
                 <template v-if="img.mimetype.includes('video')">
@@ -148,6 +156,8 @@
                   <div
                     class="blog-tweet-img-list-body-item-video-mask absolute inset-0 flex items-center justify-center z-10"
                     @click.stop="videoPlay(img._id)"
+                    @keydown.enter.stop="videoPlay(img._id)"
+                    tabindex="0"
                     v-show="videoPlayId !== img._id"
                   >
                     <WUIIcon
@@ -158,6 +168,8 @@
                       class="blog-tweet-img-list-body-item-video-mask-zoom-icon text-white"
                       name="i-heroicons-magnifying-glass-plus"
                       @click.stop="tryOpenHref(img.dataHrefIndex)"
+                      @keydown.enter.stop="tryOpenHref(img.dataHrefIndex)"
+                      tabindex="0"
                     />
                   </div>
                 </template>
@@ -174,6 +186,8 @@
                   :clickStop="true"
                   :updatedAt="img.updatedAt"
                   :mimetype="img.mimetype"
+                  @keydown.enter.stop="e => e.target.click()"
+                  :tabindex="img.mimetype.includes('video') ? '-1' : '0'"
                   v-if="
                     videoPlayId !== img._id &&
                     !videoPlayedIdList.includes(img._id)
@@ -237,6 +251,8 @@
                   <div
                     class="blog-tweet-img-list-body-item-video-mask absolute inset-0 flex items-center justify-center z-10"
                     @click.stop="videoPlay(img._id)"
+                    @keydown.enter.stop="videoPlay(img._id)"
+                    tabindex="0"
                     v-show="videoPlayId !== img._id"
                   >
                     <WUIIcon
@@ -247,6 +263,8 @@
                       class="blog-tweet-img-list-body-item-video-mask-zoom-icon text-white"
                       name="i-heroicons-magnifying-glass-plus"
                       @click.stop="tryOpenHref(img.dataHrefIndex)"
+                      @keydown.enter.stop="tryOpenHref(img.dataHrefIndex)"
+                      tabindex="0"
                     />
                   </div>
                 </template>
@@ -263,6 +281,8 @@
                   :clickStop="true"
                   :updatedAt="img.updatedAt"
                   :mimetype="img.mimetype"
+                  @keydown.enter.stop="e => e.target.click()"
+                  :tabindex="img.mimetype.includes('video') ? '-1' : '0'"
                   v-if="
                     videoPlayId !== img._id &&
                     !videoPlayedIdList.includes(img._id)
@@ -396,6 +416,16 @@ const slideChangeTransitionEnd = swiper => {
   videoPlayId.value = null
 }
 
+const swiperInstance = ref(null)
+const onSwiper = swiper => {
+  swiperInstance.value = swiper
+}
+const onFocusSlide = index => {
+  if (swiperInstance.value) {
+    swiperInstance.value.slideTo(index)
+  }
+}
+
 const videoPlayId = ref(null)
 const videoPlayedIdList = ref([])
 const videoPlay = async id => {
@@ -468,9 +498,6 @@ const getImgList = () => {
   return dataSource
 }
 const tryOpenHref = async index => {
-  if (props.clickStop) {
-    e.stopPropagation()
-  }
   const dataSource = getImgList()
   const { imgListHash } = getImgListHash(dataSource)
   openPhotoSwipe(dataSource, index, undefined, imgListHash, componentNameLower)
@@ -714,6 +741,16 @@ onUnmounted(() => {})
   right: 13px;
   font-size: 1.25rem;
   cursor: pointer;
+}
+.blog-tweet-img-list-body-item-video-mask:focus-visible,
+.blog-tweet-img-list-body-item-video-mask-zoom-icon:focus-visible,
+.blog-tweet-img-list-body-item:focus-visible,
+.blog-tweet-img-list-body.cover-count-1-1 .wikimoe-image:focus-visible {
+  @apply outline outline-2 outline-primary-500 outline-offset-[-2px];
+  border-radius: 0.75rem;
+}
+.blog-tweet-img-list-body-item-video-mask-zoom-icon:focus-visible {
+  @apply text-primary-500;
 }
 /* 手机 */
 @media (max-width: 767px) {

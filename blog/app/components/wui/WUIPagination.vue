@@ -27,7 +27,7 @@
         v-else
         class="wui-pagination-btn"
         :class="page === modelValue ? activeBtnClasses : inactiveBtnClasses"
-        :tabindex="page === modelValue ? -1 : 0"
+        :tabindex="page === modelValue ? '-1' : '0'"
         @click="goToPage(page)"
       >
         {{ page }}

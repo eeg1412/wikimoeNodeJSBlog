@@ -25,8 +25,10 @@
             <div
               v-for="(item, index) in emojiCom[seletedEmojiIndex].emojis"
               :key="index"
-              class="p-2 mb-1 mr-1 inline-block hover:shadow cursor-pointer rounded-lg min-w-[40px] min-h-[40px] text-center"
+              class="p-2 mb-1 mr-1 inline-block hover:shadow cursor-pointer rounded-lg min-w-[40px] min-h-[40px] text-center common-focus-visible-btn"
               @click="handleEmojiClick(item, close)"
+              tabindex="0"
+              @keyup.enter="e => e.target.click()"
             >
               {{ item }}
             </div>

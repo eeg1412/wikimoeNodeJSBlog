@@ -6,7 +6,7 @@
           class="acgn-item-cover-body content-h-131 relative flex justify-center items-center border border-solid border-gray-200 rounded-md p-1 bg-white dark:bg-black/30"
         >
           <WikimoeImage
-            class="max-image rounded item-cover"
+            class="max-image rounded item-cover common-focus-visible-btn-outline"
             :class="{ 'movie-cover-none': !item.cover }"
             :src="item.cover || '/img/nopic400-565.png'"
             :alt="item.title"
@@ -14,6 +14,8 @@
             :data-href-list="item.cover ? setDataHrefList(item.cover) : null"
             loading="lazy"
             fit="contain"
+            :tabindex="item.cover ? '0' : '-1'"
+            @keydown.enter.stop="e => e.target.click()"
           />
         </div>
         <Rating :rating="item.rating" />
