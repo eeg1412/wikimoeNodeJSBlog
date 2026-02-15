@@ -441,6 +441,15 @@ const adminRouteSetting = [
     roleType: null,
     role: null
   },
+  // post /post/analyze
+  {
+    path: '/post/analyze',
+    method: 'post',
+    middleware: [checkAuth],
+    controller: require('../api/admin/post/analyzePostContent'),
+    roleType: null,
+    role: null
+  },
   // delete /post/delete
   {
     path: '/post/delete',

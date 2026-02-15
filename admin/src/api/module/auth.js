@@ -457,6 +457,12 @@ export default function (api) {
         shouldAdminJWT: true
       })
     },
+    // post /post/analyze
+    analyzePostContent(data) {
+      return api.post('/post/analyze', data, {
+        shouldAdminJWT: true
+      })
+    },
     // get /readerlog/list
     getReaderlogList(data) {
       return api.get('/readerlog/list', {

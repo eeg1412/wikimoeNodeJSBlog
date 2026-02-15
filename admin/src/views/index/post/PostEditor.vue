@@ -182,6 +182,31 @@
             <p v-if="coverImagesDataList.length > 1">※可以拖动改变顺序</p>
           </div>
         </el-form-item>
+        <!-- 智能推荐按钮 -->
+        <el-form-item>
+          <el-button
+            type="warning"
+            @click="analyzeContent"
+            :disabled="!form.title && !form.content && !form.excerpt"
+            :loading="analyzingContent"
+          >
+            <el-icon class="mr5" v-if="!analyzingContent"
+              ><MagicStick /></el-icon
+            >{{ analyzingContent ? '分析中...' : '智能填写推荐' }}
+          </el-button>
+          <span class="f12 cGray666 ml10"
+            >分析文章内容，自动推荐标签、地点、关联内容等</span
+          >
+          <el-button
+            v-if="hasRecommendations"
+            type="info"
+            link
+            size="small"
+            @click="clearRecommendations"
+            class="ml10"
+            >清除推荐</el-button
+          >
+        </el-form-item>
         <!-- 分类 -->
         <el-form-item label="分类" prop="sort" v-if="type !== 3">
           <el-select v-model="form.sort" clearable placeholder="请选择分类">
@@ -205,6 +230,86 @@
               :addNew="true"
               :sortable="true"
             />
+            <!-- 标签推荐 -->
+            <div
+              v-if="
+                recommendations.tags?.existing?.length ||
+                recommendations.tags?.suggested?.length
+              "
+              class="recommendation-box"
+            >
+              <div class="recommendation-header">
+                <span class="recommendation-title">推荐标签</span>
+              </div>
+              <!-- 已有标签 -->
+              <div
+                v-if="recommendations.tags?.existing?.length"
+                class="recommendation-section"
+              >
+                <div class="recommendation-section-title">已有标签</div>
+                <div class="recommendation-tags">
+                  <el-tag
+                    v-for="tag in recommendations.tags.existing"
+                    :key="tag._id"
+                    :type="form.tags.includes(tag._id) ? 'info' : 'primary'"
+                    :effect="form.tags.includes(tag._id) ? 'plain' : 'light'"
+                    class="recommendation-tag"
+                    :class="{ 'tag-applied': form.tags.includes(tag._id) }"
+                    @click="applyExistingTag(tag)"
+                    :title="form.tags.includes(tag._id) ? '已添加' : '点击添加'"
+                  >
+                    <el-icon v-if="form.tags.includes(tag._id)"
+                      ><Check
+                    /></el-icon>
+                    {{ tag.tagname }}
+                  </el-tag>
+                  <el-button
+                    type="primary"
+                    link
+                    size="small"
+                    @click="applyAllExistingTags"
+                    class="ml10"
+                    >全部添加</el-button
+                  >
+                </div>
+              </div>
+              <!-- 新建标签 -->
+              <div
+                v-if="recommendations.tags?.suggested?.length"
+                class="recommendation-section"
+              >
+                <div class="recommendation-section-title">新建标签建议</div>
+                <div class="recommendation-tags">
+                  <el-tag
+                    v-for="(tag, index) in recommendations.tags.suggested"
+                    :key="'new-' + index"
+                    type="success"
+                    :effect="form.tags.includes(tag.tagname) ? 'dark' : 'light'"
+                    class="recommendation-tag"
+                    :class="{ 'tag-applied': form.tags.includes(tag.tagname) }"
+                    @click="applySuggestedTag(tag)"
+                    :title="
+                      form.tags.includes(tag.tagname)
+                        ? '已添加'
+                        : '点击添加新标签'
+                    "
+                  >
+                    <el-icon v-if="form.tags.includes(tag.tagname)"
+                      ><Check
+                    /></el-icon>
+                    <el-icon><Plus /></el-icon> {{ tag.tagname }}
+                  </el-tag>
+                  <el-button
+                    type="success"
+                    link
+                    size="small"
+                    @click="applyAllSuggestedTags"
+                    class="ml10"
+                    >全部添加</el-button
+                  >
+                </div>
+              </div>
+            </div>
           </el-form-item>
         </template>
 
@@ -218,6 +323,57 @@
               width="100%"
               :sortable="true"
             />
+            <!-- 地点推荐 -->
+            <div
+              v-if="recommendations.mappoints?.length"
+              class="recommendation-box"
+            >
+              <div class="recommendation-header">
+                <span class="recommendation-title">推荐地点</span>
+                <el-button
+                  type="primary"
+                  link
+                  size="small"
+                  @click="
+                    applyAllRecommendations(
+                      'mappoints',
+                      'mappointList',
+                      'mappointList'
+                    )
+                  "
+                  >全部添加</el-button
+                >
+              </div>
+              <div class="recommendation-items">
+                <div
+                  v-for="item in recommendations.mappoints"
+                  :key="item._id"
+                  class="recommendation-item"
+                  :class="{
+                    'item-applied': form.mappointList.includes(item._id)
+                  }"
+                  @click="
+                    applyRecommendation(
+                      'mappoints',
+                      'mappointList',
+                      'mappointList',
+                      item
+                    )
+                  "
+                  :title="
+                    form.mappointList.includes(item._id) ? '已添加' : '点击添加'
+                  "
+                >
+                  <el-icon v-if="form.mappointList.includes(item._id)"
+                    ><Check
+                  /></el-icon>
+                  <span>{{ item.title }}</span>
+                  <el-tag v-if="item.status === 0" type="warning" size="small"
+                    >不显示</el-tag
+                  >
+                </div>
+              </div>
+            </div>
           </el-form-item>
         </template>
 
@@ -225,6 +381,93 @@
           <div class="config-border-item-title">
             <div>推文内关联内容设定</div>
             <div class="f12 cGray666">※会显示在文章列表页和详情页的正文中</div>
+          </div>
+          <!-- 关联内容推荐 -->
+          <div
+            v-if="
+              hasRecommendations &&
+              (recommendations.events?.length ||
+                recommendations.votes?.length ||
+                recommendations.posts?.length ||
+                recommendations.tweets?.length ||
+                recommendations.bangumis?.length ||
+                recommendations.movies?.length ||
+                recommendations.games?.length ||
+                recommendations.books?.length)
+            "
+            class="recommendation-box mb20"
+          >
+            <div class="recommendation-header">
+              <span class="recommendation-title"
+                >推荐关联内容（点击下方推荐项添加）</span
+              >
+            </div>
+            <div class="recommendation-categories">
+              <div
+                v-if="recommendations.events?.length"
+                class="recommendation-category"
+              >
+                <div class="recommendation-category-title">
+                  活动 ({{ recommendations.events.length }})
+                </div>
+              </div>
+              <div
+                v-if="recommendations.votes?.length"
+                class="recommendation-category"
+              >
+                <div class="recommendation-category-title">
+                  投票 ({{ recommendations.votes.length }})
+                </div>
+              </div>
+              <div
+                v-if="recommendations.posts?.length"
+                class="recommendation-category"
+              >
+                <div class="recommendation-category-title">
+                  博文 ({{ recommendations.posts.length }})
+                </div>
+              </div>
+              <div
+                v-if="recommendations.tweets?.length"
+                class="recommendation-category"
+              >
+                <div class="recommendation-category-title">
+                  推文 ({{ recommendations.tweets.length }})
+                </div>
+              </div>
+              <div
+                v-if="recommendations.bangumis?.length"
+                class="recommendation-category"
+              >
+                <div class="recommendation-category-title">
+                  番剧 ({{ recommendations.bangumis.length }})
+                </div>
+              </div>
+              <div
+                v-if="recommendations.movies?.length"
+                class="recommendation-category"
+              >
+                <div class="recommendation-category-title">
+                  电影 ({{ recommendations.movies.length }})
+                </div>
+              </div>
+              <div
+                v-if="recommendations.games?.length"
+                class="recommendation-category"
+              >
+                <div class="recommendation-category-title">
+                  游戏 ({{ recommendations.games.length }})
+                </div>
+              </div>
+              <div
+                v-if="recommendations.books?.length"
+                class="recommendation-category"
+              >
+                <div class="recommendation-category-title">
+                  书籍 ({{ recommendations.books.length }})
+                </div>
+              </div>
+            </div>
           </div>
           <!-- event -->
           <el-form-item label="关联活动" prop="event">
@@ -234,6 +477,49 @@
               placeholder="请选择活动"
               :sortable="true"
             />
+            <div
+              v-if="recommendations.events?.length"
+              class="recommendation-inline"
+            >
+              <span class="recommendation-inline-label">推荐:</span>
+              <div
+                v-for="item in recommendations.events"
+                :key="item._id"
+                class="recommendation-item-inline"
+                :class="{
+                  'item-applied': form.contentEventList.includes(item._id)
+                }"
+                @click="
+                  applyRecommendation(
+                    'events',
+                    'contentEventList',
+                    'contentEventList',
+                    item
+                  )
+                "
+              >
+                <el-icon v-if="form.contentEventList.includes(item._id)"
+                  ><Check
+                /></el-icon>
+                <span>{{ item.title }}</span>
+                <el-tag v-if="item.status === 0" type="warning" size="small"
+                  >不显示</el-tag
+                >
+              </div>
+              <el-button
+                type="primary"
+                link
+                size="small"
+                @click="
+                  applyAllRecommendations(
+                    'events',
+                    'contentEventList',
+                    'contentEventList'
+                  )
+                "
+                >全部添加</el-button
+              >
+            </div>
           </el-form-item>
           <!-- 关联投票 -->
           <el-form-item label="关联投票" prop="vote">
@@ -243,6 +529,49 @@
               placeholder="请选择投票"
               :sortable="true"
             />
+            <div
+              v-if="recommendations.votes?.length"
+              class="recommendation-inline"
+            >
+              <span class="recommendation-inline-label">推荐:</span>
+              <div
+                v-for="item in recommendations.votes"
+                :key="item._id"
+                class="recommendation-item-inline"
+                :class="{
+                  'item-applied': form.contentVoteList.includes(item._id)
+                }"
+                @click="
+                  applyRecommendation(
+                    'votes',
+                    'contentVoteList',
+                    'contentVoteList',
+                    item
+                  )
+                "
+              >
+                <el-icon v-if="form.contentVoteList.includes(item._id)"
+                  ><Check
+                /></el-icon>
+                <span>{{ item.title }}</span>
+                <el-tag v-if="item.status === 0" type="warning" size="small"
+                  >不显示</el-tag
+                >
+              </div>
+              <el-button
+                type="primary"
+                link
+                size="small"
+                @click="
+                  applyAllRecommendations(
+                    'votes',
+                    'contentVoteList',
+                    'contentVoteList'
+                  )
+                "
+                >全部添加</el-button
+              >
+            </div>
           </el-form-item>
           <!-- post -->
           <el-form-item label="关联博文" prop="post">
@@ -254,6 +583,49 @@
               placeholder="请选择博文"
               :sortable="true"
             />
+            <div
+              v-if="recommendations.posts?.length"
+              class="recommendation-inline"
+            >
+              <span class="recommendation-inline-label">推荐:</span>
+              <div
+                v-for="item in recommendations.posts"
+                :key="item._id"
+                class="recommendation-item-inline"
+                :class="{
+                  'item-applied': form.contentPostList.includes(item._id)
+                }"
+                @click="
+                  applyRecommendation(
+                    'posts',
+                    'contentPostList',
+                    'contentPostList',
+                    item
+                  )
+                "
+              >
+                <el-icon v-if="form.contentPostList.includes(item._id)"
+                  ><Check
+                /></el-icon>
+                <span>{{ item.title || '(无标题)' }}</span>
+                <el-tag v-if="item.status === 0" type="info" size="small"
+                  >草稿</el-tag
+                >
+              </div>
+              <el-button
+                type="primary"
+                link
+                size="small"
+                @click="
+                  applyAllRecommendations(
+                    'posts',
+                    'contentPostList',
+                    'contentPostList'
+                  )
+                "
+                >全部添加</el-button
+              >
+            </div>
           </el-form-item>
           <!-- tweet -->
           <el-form-item label="关联推文" prop="tweet">
@@ -266,6 +638,51 @@
               placeholder="请选择推文"
               :sortable="true"
             />
+            <div
+              v-if="recommendations.tweets?.length"
+              class="recommendation-inline"
+            >
+              <span class="recommendation-inline-label">推荐:</span>
+              <div
+                v-for="item in recommendations.tweets"
+                :key="item._id"
+                class="recommendation-item-inline"
+                :class="{
+                  'item-applied': form.contentTweetList.includes(item._id)
+                }"
+                @click="
+                  applyRecommendation(
+                    'tweets',
+                    'contentTweetList',
+                    'contentTweetList',
+                    item
+                  )
+                "
+              >
+                <el-icon v-if="form.contentTweetList.includes(item._id)"
+                  ><Check
+                /></el-icon>
+                <span>{{
+                  (item.excerpt || '').substring(0, 30) || '(无内容)'
+                }}</span>
+                <el-tag v-if="item.status === 0" type="info" size="small"
+                  >草稿</el-tag
+                >
+              </div>
+              <el-button
+                type="primary"
+                link
+                size="small"
+                @click="
+                  applyAllRecommendations(
+                    'tweets',
+                    'contentTweetList',
+                    'contentTweetList'
+                  )
+                "
+                >全部添加</el-button
+              >
+            </div>
           </el-form-item>
           <!-- bangumi -->
           <el-form-item label="关联番剧" prop="bangumi">
@@ -275,6 +692,49 @@
               placeholder="请选择番剧"
               :sortable="true"
             />
+            <div
+              v-if="recommendations.bangumis?.length"
+              class="recommendation-inline"
+            >
+              <span class="recommendation-inline-label">推荐:</span>
+              <div
+                v-for="item in recommendations.bangumis"
+                :key="item._id"
+                class="recommendation-item-inline"
+                :class="{
+                  'item-applied': form.contentBangumiList.includes(item._id)
+                }"
+                @click="
+                  applyRecommendation(
+                    'bangumis',
+                    'contentBangumiList',
+                    'contentBangumiList',
+                    item
+                  )
+                "
+              >
+                <el-icon v-if="form.contentBangumiList.includes(item._id)"
+                  ><Check
+                /></el-icon>
+                <span>{{ item.title }}</span>
+                <el-tag v-if="item.status === 0" type="warning" size="small"
+                  >不显示</el-tag
+                >
+              </div>
+              <el-button
+                type="primary"
+                link
+                size="small"
+                @click="
+                  applyAllRecommendations(
+                    'bangumis',
+                    'contentBangumiList',
+                    'contentBangumiList'
+                  )
+                "
+                >全部添加</el-button
+              >
+            </div>
           </el-form-item>
           <el-form-item label="关联电影" prop="movie">
             <movie-selector
@@ -283,6 +743,49 @@
               placeholder="请选择电影"
               :sortable="true"
             />
+            <div
+              v-if="recommendations.movies?.length"
+              class="recommendation-inline"
+            >
+              <span class="recommendation-inline-label">推荐:</span>
+              <div
+                v-for="item in recommendations.movies"
+                :key="item._id"
+                class="recommendation-item-inline"
+                :class="{
+                  'item-applied': form.contentMovieList.includes(item._id)
+                }"
+                @click="
+                  applyRecommendation(
+                    'movies',
+                    'contentMovieList',
+                    'contentMovieList',
+                    item
+                  )
+                "
+              >
+                <el-icon v-if="form.contentMovieList.includes(item._id)"
+                  ><Check
+                /></el-icon>
+                <span>{{ item.title }}</span>
+                <el-tag v-if="item.status === 0" type="warning" size="small"
+                  >不显示</el-tag
+                >
+              </div>
+              <el-button
+                type="primary"
+                link
+                size="small"
+                @click="
+                  applyAllRecommendations(
+                    'movies',
+                    'contentMovieList',
+                    'contentMovieList'
+                  )
+                "
+                >全部添加</el-button
+              >
+            </div>
           </el-form-item>
           <!-- book -->
           <el-form-item label="关联书籍" prop="book">
@@ -292,6 +795,49 @@
               placeholder="请选择书籍"
               :sortable="true"
             />
+            <div
+              v-if="recommendations.books?.length"
+              class="recommendation-inline"
+            >
+              <span class="recommendation-inline-label">推荐:</span>
+              <div
+                v-for="item in recommendations.books"
+                :key="item._id"
+                class="recommendation-item-inline"
+                :class="{
+                  'item-applied': form.contentBookList.includes(item._id)
+                }"
+                @click="
+                  applyRecommendation(
+                    'books',
+                    'contentBookList',
+                    'contentBookList',
+                    item
+                  )
+                "
+              >
+                <el-icon v-if="form.contentBookList.includes(item._id)"
+                  ><Check
+                /></el-icon>
+                <span>{{ item.title }}</span>
+                <el-tag v-if="item.status === 0" type="warning" size="small"
+                  >不显示</el-tag
+                >
+              </div>
+              <el-button
+                type="primary"
+                link
+                size="small"
+                @click="
+                  applyAllRecommendations(
+                    'books',
+                    'contentBookList',
+                    'contentBookList'
+                  )
+                "
+                >全部添加</el-button
+              >
+            </div>
           </el-form-item>
           <!-- game -->
           <el-form-item label="关联游戏" prop="game">
@@ -301,6 +847,49 @@
               placeholder="请选择游戏"
               :sortable="true"
             />
+            <div
+              v-if="recommendations.games?.length"
+              class="recommendation-inline"
+            >
+              <span class="recommendation-inline-label">推荐:</span>
+              <div
+                v-for="item in recommendations.games"
+                :key="item._id"
+                class="recommendation-item-inline"
+                :class="{
+                  'item-applied': form.contentGameList.includes(item._id)
+                }"
+                @click="
+                  applyRecommendation(
+                    'games',
+                    'contentGameList',
+                    'contentGameList',
+                    item
+                  )
+                "
+              >
+                <el-icon v-if="form.contentGameList.includes(item._id)"
+                  ><Check
+                /></el-icon>
+                <span>{{ item.title }}</span>
+                <el-tag v-if="item.status === 0" type="warning" size="small"
+                  >不显示</el-tag
+                >
+              </div>
+              <el-button
+                type="primary"
+                link
+                size="small"
+                @click="
+                  applyAllRecommendations(
+                    'games',
+                    'contentGameList',
+                    'contentGameList'
+                  )
+                "
+                >全部添加</el-button
+              >
+            </div>
           </el-form-item>
           <el-form-item label="更改排序" prop="contentSeriesSortListTurnOn">
             <el-switch
@@ -336,6 +925,93 @@
             <div>详情页相关内容设定</div>
             <div class="f12 cGray666">※仅显示在详情页下方的相关内容</div>
           </div>
+          <!-- 相关内容推荐 -->
+          <div
+            v-if="
+              hasRecommendations &&
+              (recommendations.events?.length ||
+                recommendations.votes?.length ||
+                recommendations.posts?.length ||
+                recommendations.tweets?.length ||
+                recommendations.bangumis?.length ||
+                recommendations.movies?.length ||
+                recommendations.games?.length ||
+                recommendations.books?.length)
+            "
+            class="recommendation-box mb20"
+          >
+            <div class="recommendation-header">
+              <span class="recommendation-title"
+                >推荐相关内容（点击下方推荐项添加）</span
+              >
+            </div>
+            <div class="recommendation-categories">
+              <div
+                v-if="recommendations.events?.length"
+                class="recommendation-category"
+              >
+                <div class="recommendation-category-title">
+                  活动 ({{ recommendations.events.length }})
+                </div>
+              </div>
+              <div
+                v-if="recommendations.votes?.length"
+                class="recommendation-category"
+              >
+                <div class="recommendation-category-title">
+                  投票 ({{ recommendations.votes.length }})
+                </div>
+              </div>
+              <div
+                v-if="recommendations.posts?.length"
+                class="recommendation-category"
+              >
+                <div class="recommendation-category-title">
+                  博文 ({{ recommendations.posts.length }})
+                </div>
+              </div>
+              <div
+                v-if="recommendations.tweets?.length"
+                class="recommendation-category"
+              >
+                <div class="recommendation-category-title">
+                  推文 ({{ recommendations.tweets.length }})
+                </div>
+              </div>
+              <div
+                v-if="recommendations.bangumis?.length"
+                class="recommendation-category"
+              >
+                <div class="recommendation-category-title">
+                  番剧 ({{ recommendations.bangumis.length }})
+                </div>
+              </div>
+              <div
+                v-if="recommendations.movies?.length"
+                class="recommendation-category"
+              >
+                <div class="recommendation-category-title">
+                  电影 ({{ recommendations.movies.length }})
+                </div>
+              </div>
+              <div
+                v-if="recommendations.games?.length"
+                class="recommendation-category"
+              >
+                <div class="recommendation-category-title">
+                  游戏 ({{ recommendations.games.length }})
+                </div>
+              </div>
+              <div
+                v-if="recommendations.books?.length"
+                class="recommendation-category"
+              >
+                <div class="recommendation-category-title">
+                  书籍 ({{ recommendations.books.length }})
+                </div>
+              </div>
+            </div>
+          </div>
           <!-- event -->
           <el-form-item label="相关活动" prop="event">
             <event-selector
@@ -344,6 +1020,38 @@
               placeholder="请选择活动"
               :sortable="true"
             />
+            <div
+              v-if="recommendations.events?.length"
+              class="recommendation-inline"
+            >
+              <span class="recommendation-inline-label">推荐:</span>
+              <div
+                v-for="item in recommendations.events"
+                :key="item._id"
+                class="recommendation-item-inline"
+                :class="{ 'item-applied': form.eventList.includes(item._id) }"
+                @click="
+                  applyRecommendation('events', 'eventList', 'eventList', item)
+                "
+              >
+                <el-icon v-if="form.eventList.includes(item._id)"
+                  ><Check
+                /></el-icon>
+                <span>{{ item.title }}</span>
+                <el-tag v-if="item.status === 0" type="warning" size="small"
+                  >不显示</el-tag
+                >
+              </div>
+              <el-button
+                type="primary"
+                link
+                size="small"
+                @click="
+                  applyAllRecommendations('events', 'eventList', 'eventList')
+                "
+                >全部添加</el-button
+              >
+            </div>
           </el-form-item>
           <!-- 关联投票 -->
           <el-form-item label="相关投票" prop="vote">
@@ -353,6 +1061,38 @@
               placeholder="请选择投票"
               :sortable="true"
             />
+            <div
+              v-if="recommendations.votes?.length"
+              class="recommendation-inline"
+            >
+              <span class="recommendation-inline-label">推荐:</span>
+              <div
+                v-for="item in recommendations.votes"
+                :key="item._id"
+                class="recommendation-item-inline"
+                :class="{ 'item-applied': form.voteList.includes(item._id) }"
+                @click="
+                  applyRecommendation('votes', 'voteList', 'voteList', item)
+                "
+              >
+                <el-icon v-if="form.voteList.includes(item._id)"
+                  ><Check
+                /></el-icon>
+                <span>{{ item.title }}</span>
+                <el-tag v-if="item.status === 0" type="warning" size="small"
+                  >不显示</el-tag
+                >
+              </div>
+              <el-button
+                type="primary"
+                link
+                size="small"
+                @click="
+                  applyAllRecommendations('votes', 'voteList', 'voteList')
+                "
+                >全部添加</el-button
+              >
+            </div>
           </el-form-item>
           <!-- post -->
           <el-form-item label="相关博文" prop="post">
@@ -364,6 +1104,38 @@
               placeholder="请选择博文"
               :sortable="true"
             />
+            <div
+              v-if="recommendations.posts?.length"
+              class="recommendation-inline"
+            >
+              <span class="recommendation-inline-label">推荐:</span>
+              <div
+                v-for="item in recommendations.posts"
+                :key="item._id"
+                class="recommendation-item-inline"
+                :class="{ 'item-applied': form.postList.includes(item._id) }"
+                @click="
+                  applyRecommendation('posts', 'postList', 'postList', item)
+                "
+              >
+                <el-icon v-if="form.postList.includes(item._id)"
+                  ><Check
+                /></el-icon>
+                <span>{{ item.title || '(无标题)' }}</span>
+                <el-tag v-if="item.status === 0" type="info" size="small"
+                  >草稿</el-tag
+                >
+              </div>
+              <el-button
+                type="primary"
+                link
+                size="small"
+                @click="
+                  applyAllRecommendations('posts', 'postList', 'postList')
+                "
+                >全部添加</el-button
+              >
+            </div>
           </el-form-item>
           <!-- tweet -->
           <el-form-item label="相关推文" prop="tweet">
@@ -376,6 +1148,40 @@
               placeholder="请选择推文"
               :sortable="true"
             />
+            <div
+              v-if="recommendations.tweets?.length"
+              class="recommendation-inline"
+            >
+              <span class="recommendation-inline-label">推荐:</span>
+              <div
+                v-for="item in recommendations.tweets"
+                :key="item._id"
+                class="recommendation-item-inline"
+                :class="{ 'item-applied': form.tweetList.includes(item._id) }"
+                @click="
+                  applyRecommendation('tweets', 'tweetList', 'tweetList', item)
+                "
+              >
+                <el-icon v-if="form.tweetList.includes(item._id)"
+                  ><Check
+                /></el-icon>
+                <span>{{
+                  (item.excerpt || '').substring(0, 30) || '(无内容)'
+                }}</span>
+                <el-tag v-if="item.status === 0" type="info" size="small"
+                  >草稿</el-tag
+                >
+              </div>
+              <el-button
+                type="primary"
+                link
+                size="small"
+                @click="
+                  applyAllRecommendations('tweets', 'tweetList', 'tweetList')
+                "
+                >全部添加</el-button
+              >
+            </div>
           </el-form-item>
           <!-- bangumi -->
           <el-form-item label="相关番剧" prop="bangumi">
@@ -385,6 +1191,47 @@
               placeholder="请选择番剧"
               :sortable="true"
             />
+            <div
+              v-if="recommendations.bangumis?.length"
+              class="recommendation-inline"
+            >
+              <span class="recommendation-inline-label">推荐:</span>
+              <div
+                v-for="item in recommendations.bangumis"
+                :key="item._id"
+                class="recommendation-item-inline"
+                :class="{ 'item-applied': form.bangumiList.includes(item._id) }"
+                @click="
+                  applyRecommendation(
+                    'bangumis',
+                    'bangumiList',
+                    'bangumiList',
+                    item
+                  )
+                "
+              >
+                <el-icon v-if="form.bangumiList.includes(item._id)"
+                  ><Check
+                /></el-icon>
+                <span>{{ item.title }}</span>
+                <el-tag v-if="item.status === 0" type="warning" size="small"
+                  >不显示</el-tag
+                >
+              </div>
+              <el-button
+                type="primary"
+                link
+                size="small"
+                @click="
+                  applyAllRecommendations(
+                    'bangumis',
+                    'bangumiList',
+                    'bangumiList'
+                  )
+                "
+                >全部添加</el-button
+              >
+            </div>
           </el-form-item>
           <el-form-item label="相关电影" prop="movie">
             <movie-selector
@@ -393,6 +1240,38 @@
               placeholder="请选择电影"
               :sortable="true"
             />
+            <div
+              v-if="recommendations.movies?.length"
+              class="recommendation-inline"
+            >
+              <span class="recommendation-inline-label">推荐:</span>
+              <div
+                v-for="item in recommendations.movies"
+                :key="item._id"
+                class="recommendation-item-inline"
+                :class="{ 'item-applied': form.movieList.includes(item._id) }"
+                @click="
+                  applyRecommendation('movies', 'movieList', 'movieList', item)
+                "
+              >
+                <el-icon v-if="form.movieList.includes(item._id)"
+                  ><Check
+                /></el-icon>
+                <span>{{ item.title }}</span>
+                <el-tag v-if="item.status === 0" type="warning" size="small"
+                  >不显示</el-tag
+                >
+              </div>
+              <el-button
+                type="primary"
+                link
+                size="small"
+                @click="
+                  applyAllRecommendations('movies', 'movieList', 'movieList')
+                "
+                >全部添加</el-button
+              >
+            </div>
           </el-form-item>
           <!-- book -->
           <el-form-item label="相关书籍" prop="book">
@@ -402,6 +1281,38 @@
               placeholder="请选择书籍"
               :sortable="true"
             />
+            <div
+              v-if="recommendations.books?.length"
+              class="recommendation-inline"
+            >
+              <span class="recommendation-inline-label">推荐:</span>
+              <div
+                v-for="item in recommendations.books"
+                :key="item._id"
+                class="recommendation-item-inline"
+                :class="{ 'item-applied': form.bookList.includes(item._id) }"
+                @click="
+                  applyRecommendation('books', 'bookList', 'bookList', item)
+                "
+              >
+                <el-icon v-if="form.bookList.includes(item._id)"
+                  ><Check
+                /></el-icon>
+                <span>{{ item.title }}</span>
+                <el-tag v-if="item.status === 0" type="warning" size="small"
+                  >不显示</el-tag
+                >
+              </div>
+              <el-button
+                type="primary"
+                link
+                size="small"
+                @click="
+                  applyAllRecommendations('books', 'bookList', 'bookList')
+                "
+                >全部添加</el-button
+              >
+            </div>
           </el-form-item>
           <!-- game -->
           <el-form-item label="相关游戏" prop="game">
@@ -411,6 +1322,38 @@
               placeholder="请选择游戏"
               :sortable="true"
             />
+            <div
+              v-if="recommendations.games?.length"
+              class="recommendation-inline"
+            >
+              <span class="recommendation-inline-label">推荐:</span>
+              <div
+                v-for="item in recommendations.games"
+                :key="item._id"
+                class="recommendation-item-inline"
+                :class="{ 'item-applied': form.gameList.includes(item._id) }"
+                @click="
+                  applyRecommendation('games', 'gameList', 'gameList', item)
+                "
+              >
+                <el-icon v-if="form.gameList.includes(item._id)"
+                  ><Check
+                /></el-icon>
+                <span>{{ item.title }}</span>
+                <el-tag v-if="item.status === 0" type="warning" size="small"
+                  >不显示</el-tag
+                >
+              </div>
+              <el-button
+                type="primary"
+                link
+                size="small"
+                @click="
+                  applyAllRecommendations('games', 'gameList', 'gameList')
+                "
+                >全部添加</el-button
+              >
+            </div>
           </el-form-item>
           <el-form-item label="更改排序" prop="seriesSortListTurnOn">
             <el-switch
@@ -1139,6 +2082,147 @@ export default {
     // attachments
     const attachmentsDialogRef = ref(null)
     const coverImageListObj = reactive({})
+
+    // 智能推荐
+    const analyzingContent = ref(false)
+    const recommendations = ref({
+      tags: { existing: [], suggested: [] },
+      mappoints: [],
+      bangumis: [],
+      movies: [],
+      games: [],
+      books: [],
+      posts: [],
+      tweets: [],
+      events: [],
+      votes: []
+    })
+
+    const hasRecommendations = computed(() => {
+      const r = recommendations.value
+      return (
+        r.tags?.existing?.length > 0 ||
+        r.tags?.suggested?.length > 0 ||
+        r.mappoints?.length > 0 ||
+        r.bangumis?.length > 0 ||
+        r.movies?.length > 0 ||
+        r.games?.length > 0 ||
+        r.books?.length > 0 ||
+        r.posts?.length > 0 ||
+        r.tweets?.length > 0 ||
+        r.events?.length > 0 ||
+        r.votes?.length > 0
+      )
+    })
+
+    // 过滤HTML标签
+    const stripHtml = text => {
+      if (!text) return ''
+      return text
+        .replace(/<[^>]+>/g, ' ')
+        .replace(/&[a-zA-Z]+;/g, ' ')
+        .replace(/\s+/g, ' ')
+        .trim()
+    }
+
+    const analyzeContent = () => {
+      analyzingContent.value = true
+      const data = {
+        title: stripHtml(form.title) || '',
+        content: stripHtml(form.content) || '',
+        excerpt: stripHtml(form.excerpt) || '',
+        type: type.value,
+        postId: id.value
+      }
+      authApi
+        .analyzePostContent(data)
+        .then(res => {
+          recommendations.value = res.data.data || {}
+          ElMessage.success('分析完成')
+        })
+        .catch(err => {
+          console.error(err)
+          ElMessage.error('分析内容失败')
+        })
+        .finally(() => {
+          analyzingContent.value = false
+        })
+    }
+
+    const clearRecommendations = () => {
+      recommendations.value = {
+        tags: { existing: [], suggested: [] },
+        mappoints: [],
+        bangumis: [],
+        movies: [],
+        games: [],
+        books: [],
+        posts: [],
+        tweets: [],
+        events: [],
+        votes: []
+      }
+    }
+
+    // 应用推荐 - 标签
+    const applyExistingTag = tag => {
+      if (form.tags.includes(tag._id)) return
+      form.tags.push(tag._id)
+      tagList.value.push(tag)
+    }
+
+    const applySuggestedTag = tag => {
+      if (form.tags.includes(tag.tagname)) return
+      form.tags.push(tag.tagname)
+    }
+
+    const applyAllExistingTags = () => {
+      recommendations.value.tags?.existing?.forEach(tag => {
+        applyExistingTag(tag)
+      })
+    }
+
+    const applyAllSuggestedTags = () => {
+      recommendations.value.tags?.suggested?.forEach(tag => {
+        applySuggestedTag(tag)
+      })
+    }
+
+    // 应用推荐 - 通用
+    const applyRecommendation = (category, formKey, listKey, item) => {
+      if (form[formKey].includes(item._id)) return
+      form[formKey].push(item._id)
+      // 根据不同的 listKey 获取对应的 list
+      const lists = {
+        mappointList,
+        bangumiList,
+        movieList,
+        gameList,
+        bookList,
+        postList,
+        tweetList,
+        eventList,
+        voteList,
+        contentBangumiList,
+        contentMovieList,
+        contentGameList,
+        contentBookList,
+        contentPostList,
+        contentTweetList,
+        contentEventList,
+        contentVoteList
+      }
+      if (lists[listKey]) {
+        lists[listKey].value.push(item)
+      }
+    }
+
+    const applyAllRecommendations = (category, formKey, listKey) => {
+      recommendations.value[category]?.forEach(item => {
+        applyRecommendation(category, formKey, listKey, item)
+      })
+    }
+
     // attachments可选择类型，文章和页面的封面图只能是图片
     const attachmentsDialogType = computed(() => {
       if (type.value === 3 || type.value === 1) {
@@ -1504,6 +2588,18 @@ export default {
       selectAttachments,
       coverImagesDataList,
       attachmentDrag,
+      // 智能推荐
+      analyzingContent,
+      recommendations,
+      hasRecommendations,
+      analyzeContent,
+      clearRecommendations,
+      applyExistingTag,
+      applySuggestedTag,
+      applyAllExistingTags,
+      applyAllSuggestedTags,
+      applyRecommendation,
+      applyAllRecommendations,
       // template
       templateList,
 
@@ -1521,6 +2617,94 @@ export default {
 }
 </script>
 <style scoped>
+/* 推荐内容样式 */
+.recommendation-box {
+  margin-top: 10px;
+  padding: 12px;
+  background-color: #f5f7fa;
+  border: 1px solid #e4e7ed;
+  border-radius: 4px;
+}
+.recommendation-box h4 {
+  margin: 0 0 10px 0;
+  font-size: 14px;
+  color: #606266;
+  font-weight: 500;
+}
+.recommendation-inline {
+  margin-top: 8px;
+  padding: 8px;
+  background-color: #f0f9ff;
+  border-left: 3px solid #409eff;
+  border-radius: 3px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+}
+.recommendation-inline-label {
+  font-size: 13px;
+  color: #606266;
+  font-weight: 500;
+  margin-right: 4px;
+}
+.recommendation-item-inline {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 10px;
+  background-color: #fff;
+  border: 1px solid #dcdfe6;
+  border-radius: 3px;
+  font-size: 13px;
+  color: #606266;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.recommendation-item-inline:hover {
+  background-color: #ecf5ff;
+  border-color: #409eff;
+  color: #409eff;
+}
+.recommendation-item-inline.item-applied {
+  background-color: #f0f9ff;
+  border-color: #409eff;
+  color: #409eff;
+  cursor: default;
+}
+.recommendation-item-inline .el-icon {
+  font-size: 14px;
+  color: #67c23a;
+}
+.recommendation-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 10px;
+  background-color: #fff;
+  border: 1px solid #dcdfe6;
+  border-radius: 3px;
+  font-size: 13px;
+  color: #606266;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.recommendation-tag:hover {
+  background-color: #ecf5ff;
+  border-color: #409eff;
+  color: #409eff;
+}
+.recommendation-tag.tag-applied {
+  background-color: #f0f9ff;
+  border-color: #409eff;
+  color: #409eff;
+  cursor: default;
+}
+.recommendation-tag .el-icon {
+  font-size: 14px;
+  color: #67c23a;
+}
+
 .post-cover-image-item {
   width: 100px;
   height: 100px;

@@ -41,6 +41,7 @@
     "morgan": "1.10.1",
     "multer": "2.0.2",
     "nodemailer": "7.0.11",
+    "nodejieba": "v3.4.4",
     "sharp": "^0.34.4",
     "sitemap": "^8.0.0",
     "ua-parser-js": "^1.0.37",
