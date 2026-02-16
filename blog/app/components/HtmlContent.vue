@@ -384,6 +384,27 @@ const initImgs = () => {
     if (!img.getAttribute('data-href')) {
       img.removeAttribute('data-href')
     }
+    img.classList.add('common-focus-visible-btn-outline')
+    img.tabIndex = 0
+    img.addEventListener('keydown', e => {
+      if (e.key === 'Enter') {
+        clickOnImg(e)
+      }
+    })
+  })
+}
+const initSpans = () => {
+  const spanList = htmlContent.value.querySelectorAll(
+    'span[data-w-e-type="eventspan"]'
+  )
+  spanList.forEach(span => {
+    span.classList.add('common-focus-visible-btn-outline')
+    span.tabIndex = 0
+    span.addEventListener('keydown', e => {
+      if (e.key === 'Enter') {
+        clickOnSpan(e)
+      }
+    })
   })
 }
 
@@ -394,6 +415,7 @@ const init = () => {
     nextTick(async () => {
       await initHljs()
       initImgs()
+      initSpans()
       if (!initFlag.value) {
         initFlag.value = true
       }

@@ -100,8 +100,12 @@ button.pswp__button [tabindex='0']:focus-visible,
 .common-focus-visible-btn:focus-visible {
   @apply ring-2 ring-primary-500 ring-inset;
 }
-.common-focus-visible-btn-outline:focus-visible {
+.common-focus-visible-btn-outline:focus-visible,
+.html-content-body a:focus-visible img {
   @apply outline outline-2 outline-primary-500 outline-offset-[-2px];
+}
+.html-content-body a img:focus-visible {
+  @apply outline outline-4 outline-primary-500 outline-offset-[-4px];
 }
 a,
 li,

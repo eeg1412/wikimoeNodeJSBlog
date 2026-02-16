@@ -40,6 +40,7 @@
               <WUICheckbox
                 :disabled="btnDisabled && !isVoting"
                 :modelValue="optionIdList.includes(option._id)"
+                @keydown.enter.stop.prevent="handleSelect(option)"
               />
             </div>
             <span>{{ option.title }}</span>
@@ -78,6 +79,7 @@
       :loading="isVoting"
       :disabled="btnDisabled"
       @click="doVote"
+      @keydown.enter.stop.prevent="doVote"
       >{{ btnText }}</WUIButton
     >
   </div>

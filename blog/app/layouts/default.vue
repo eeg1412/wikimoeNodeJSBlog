@@ -50,7 +50,7 @@
       <!-- 左侧菜单 -->
       <div
         class="blog-layout-left-body"
-        @focusin="leftMenuActive = true"
+        @focusin="focusinLeftMenu"
         :class="{
           active: leftMenuActive
         }"
@@ -106,7 +106,7 @@
       <!-- 右侧工具栏 -->
       <div
         class="blog-layout-right-body custom-scroll blog-layout-right-body-full-height"
-        @focusin="rightSidebarActive = true"
+        @focusin="focusinRightSidebar"
         :class="{
           active: rightSidebarActive
         }"
@@ -195,7 +195,7 @@
       <div
         class="blog-layout-content-body"
         ref="layoutContentBody"
-        @focusin="closeAllSidebar"
+        @focusin="focusinContentBody"
         :class="{
           'page-leave-active': pageTransition,
           'page-enter-active': !pageTransition
@@ -420,7 +420,17 @@ watch(
   }
 )
 
-const closeAllSidebar = () => {
+const focusinLeftMenu = () => {
+  leftMenuActive.value = true
+  rightSidebarActive.value = false
+}
+
+const focusinRightSidebar = () => {
+  rightSidebarActive.value = true
+  leftMenuActive.value = false
+}
+
+const focusinContentBody = () => {
   leftMenuActive.value = false
   rightSidebarActive.value = false
 }
