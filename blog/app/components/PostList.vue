@@ -3,7 +3,6 @@
     <div class="post-list-body">
       <div v-if="postsData?.list.length > 0">
         <div
-          role="button"
           tabindex="0"
           v-for="(item, index) in postsData.list"
           :key="item._id"
@@ -352,7 +351,6 @@
                       :tabindex="
                         postType !== '1' && postType !== '2' ? '-1' : '0'
                       "
-                      role="button"
                     >
                       全部类型
                     </div>
@@ -364,7 +362,6 @@
                       @click="switchPostType('blog')"
                       @keydown.enter="switchPostType('blog')"
                       :tabindex="postType === '1' ? '-1' : '0'"
-                      role="button"
                     >
                       博文
                     </div>
@@ -376,7 +373,6 @@
                       @click="switchPostType('tweet')"
                       @keydown.enter="switchPostType('tweet')"
                       :tabindex="postType === '2' ? '-1' : '0'"
-                      role="button"
                     >
                       推文
                     </div>

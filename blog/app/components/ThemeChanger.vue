@@ -6,7 +6,6 @@
     @click="switchFilterMenu"
     @keydown.enter="switchFilterMenu"
     tabindex="0"
-    role="button"
   >
     <WUIIcon v-if="colorMode.value === 'light'" name="i-heroicons-sun" />
     <WUIIcon v-else-if="colorMode.value === 'dark'" name="i-heroicons-moon" />
@@ -41,7 +40,6 @@
                 @click="setColorMode('system')"
                 @keydown.enter="setColorMode('system')"
                 :tabindex="colorMode.preference === 'system' ? '-1' : '0'"
-                role="button"
               >
                 跟随系统
               </div>
@@ -55,7 +53,6 @@
                 @click="setColorMode('light')"
                 @keydown.enter="setColorMode('light')"
                 :tabindex="colorMode.preference === 'light' ? '-1' : '0'"
-                role="button"
               >
                 浅色模式
               </div>
@@ -67,7 +64,6 @@
                 @click="setColorMode('dark')"
                 @keydown.enter="setColorMode('dark')"
                 :tabindex="colorMode.preference === 'dark' ? '-1' : '0'"
-                role="button"
               >
                 深色模式
               </div>

@@ -7,7 +7,6 @@
       @click="goTop"
       @keydown.enter="goTop"
       tabindex="0"
-      role="button"
     >
       <WUIIcon name="i-heroicons-arrow-up" />
     </div>

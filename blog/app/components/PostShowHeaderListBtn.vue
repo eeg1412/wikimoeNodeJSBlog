@@ -6,7 +6,6 @@
       @keydown.enter="onClick"
       @keydown.esc="onEsc"
       tabindex="0"
-      role="button"
     >
       <WUIIcon name="i-heroicons-list-bullet" />
     </div>

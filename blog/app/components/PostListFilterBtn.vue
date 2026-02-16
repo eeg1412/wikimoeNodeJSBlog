@@ -6,7 +6,6 @@
       @keydown.enter="onClick"
       @keydown.esc="onEsc"
       tabindex="0"
-      role="button"
     >
       <span v-if="postRouteType === 'blog'" class="text-sm system-ui-font"
         >博</span

@@ -7,7 +7,6 @@
         @click="goToHeader(item.dom)"
         @keydown.enter="goToHeader(item.dom)"
         tabindex="0"
-        role="button"
         :class="{
           active: activeHeaderDom === item.dom
         }"
