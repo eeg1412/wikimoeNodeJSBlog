@@ -313,6 +313,7 @@
       <Teleport to="#rightToolBar">
         <LazyPostListFilterBtn
           @btnClick="switchFilterMenu"
+          @close="showFilterMenu = false"
           ref="filterTriggerRef"
         />
       </Teleport>
@@ -322,6 +323,9 @@
             class="common-right-tool-menu-body"
             v-show="showFilterMenu"
             ref="filterMenuRef"
+            @keydown.tab="e => trapFocus(filterMenuRef, e)"
+            @keydown.esc="showFilterMenu = false"
+            tabindex="-1"
           >
             <div class="common-right-tool-menu-box">
               <div
@@ -329,7 +333,7 @@
               >
                 <div>类型筛选</div>
                 <button
-                  class="text-gray-500 hover:text-gray-700"
+                  class="text-gray-500 hover:text-gray-700 common-focus-visible-btn-outline"
                   @click="switchFilterMenu"
                 >
                   <WUIIcon name="i-heroicons-x-mark" />
@@ -339,29 +343,40 @@
                 <ul class="common-right-tool-menu-item-ul">
                   <li>
                     <div
-                      class="m-2 px-3 py-1 transition duration-300 hover:text-primary-400 hover:border-primary-400 border-solid border border-transparent cursor-pointer common-right-tool-menu-item-text rounded"
+                      class="m-2 px-3 py-1 transition duration-300 hover:text-primary-400 hover:border-primary-400 border-solid border border-transparent cursor-pointer common-right-tool-menu-item-text rounded common-focus-visible-btn-outline"
                       :class="{
                         active: postType !== '1' && postType !== '2'
                       }"
                       @click="switchPostType(null)"
+                      @keydown.enter="switchPostType(null)"
+                      :tabindex="
+                        postType !== '1' && postType !== '2' ? '-1' : '0'
+                      "
+                      role="button"
                     >
                       全部类型
                     </div>
                   </li>
                   <li>
                     <div
-                      class="m-2 px-3 py-1 transition duration-300 hover:text-primary-400 hover:border-primary-400 border-solid border border-transparent cursor-pointer common-right-tool-menu-item-text rounded"
+                      class="m-2 px-3 py-1 transition duration-300 hover:text-primary-400 hover:border-primary-400 border-solid border border-transparent cursor-pointer common-right-tool-menu-item-text rounded common-focus-visible-btn-outline"
                       :class="{ active: postType === '1' }"
                       @click="switchPostType('blog')"
+                      @keydown.enter="switchPostType('blog')"
+                      :tabindex="postType === '1' ? '-1' : '0'"
+                      role="button"
                     >
                       博文
                     </div>
                   </li>
                   <li>
                     <div
-                      class="m-2 px-3 py-1 transition duration-300 hover:text-primary-400 hover:border-primary-400 border-solid border border-transparent cursor-pointer common-right-tool-menu-item-text rounded"
+                      class="m-2 px-3 py-1 transition duration-300 hover:text-primary-400 hover:border-primary-400 border-solid border border-transparent cursor-pointer common-right-tool-menu-item-text rounded common-focus-visible-btn-outline"
                       :class="{ active: postType === '2' }"
                       @click="switchPostType('tweet')"
+                      @keydown.enter="switchPostType('tweet')"
+                      :tabindex="postType === '2' ? '-1' : '0'"
+                      role="button"
                     >
                       推文
                     </div>
@@ -746,6 +761,18 @@ const switchFilterMenu = () => {
   console.log(filterTriggerRef.value, '外部点击，关闭菜单')
   showFilterMenu.value = !showFilterMenu.value
 }
+
+// 监听菜单显示状态，自动聚焦
+watch(showFilterMenu, val => {
+  if (val) {
+    nextTick(() => {
+      filterMenuRef.value?.focus()
+    })
+  } else {
+    filterTriggerRef.value?.$el?.focus()
+  }
+})
+
 const switchPostType = type => {
   if (type === postType.value) {
     return

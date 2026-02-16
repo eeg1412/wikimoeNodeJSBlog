@@ -610,6 +610,9 @@
             class="common-right-tool-menu-body"
             v-show="showHeaderListMenu"
             ref="headerListMenuRef"
+            @keydown.tab="e => trapFocus(headerListMenuRef, e)"
+            @keydown.esc="showHeaderListMenu = false"
+            tabindex="-1"
           >
             <div class="common-right-tool-menu-box">
               <div
@@ -617,7 +620,7 @@
               >
                 <div>文章目录</div>
                 <button
-                  class="text-gray-500 hover:text-gray-700"
+                  class="text-gray-500 hover:text-gray-700 common-focus-visible-btn-outline"
                   @click="switchShowHeaderListMenu"
                 >
                   <WUIIcon name="i-heroicons-x-mark" />
@@ -637,6 +640,7 @@
       <Teleport to="#rightToolBar">
         <LazyPostShowHeaderListBtn
           @btnClick="switchShowHeaderListMenu"
+          @close="showHeaderListMenu = false"
           ref="headerListTriggerRef"
           v-if="headerList.length > 0"
         />
@@ -1000,6 +1004,18 @@ useOutsideClick(
 const switchShowHeaderListMenu = () => {
   showHeaderListMenu.value = !showHeaderListMenu.value
 }
+
+// 监听菜单显示状态，自动聚焦
+watch(showHeaderListMenu, val => {
+  if (val) {
+    nextTick(() => {
+      headerListMenuRef.value?.focus()
+    })
+  } else {
+    headerListTriggerRef.value?.$el?.focus()
+  }
+})
+
 const activeHeaderDom = ref(null)
 const parseHeaders = () => {
   const parentElement = document.querySelector(

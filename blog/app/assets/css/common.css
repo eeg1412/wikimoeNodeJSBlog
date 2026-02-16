@@ -1103,7 +1103,9 @@ ins.adsbygoogle[data-ad-status='unfilled'] {
   border-radius: 33px;
   margin-top: 8px;
 }
-
+.common-right-tool-btn:focus-visible {
+  opacity: 1;
+}
 @media (hover: hover) {
   .common-right-tool-btn:hover {
     opacity: 1;

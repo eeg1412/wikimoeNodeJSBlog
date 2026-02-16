@@ -1,8 +1,12 @@
 <template>
   <transition name="fade">
     <div
-      class="common-right-tool-btn opacity-70 text-white hover:opacity-100"
+      class="common-right-tool-btn opacity-70 text-white hover:opacity-100 common-focus-visible-btn-outline"
       @click="onClick"
+      @keydown.enter="onClick"
+      @keydown.esc="onEsc"
+      tabindex="0"
+      role="button"
     >
       <span v-if="postRouteType === 'blog'" class="text-sm system-ui-font"
         >博</span
@@ -17,11 +21,14 @@
 
 <script setup>
 const route = useRoute()
-const emits = defineEmits()
+const emits = defineEmits(['btnClick', 'close'])
 const postRouteType = computed(() => route.params.type)
 const onClick = () => {
   // emit
   emits('btnClick')
+}
+const onEsc = () => {
+  emits('close')
 }
 </script>
 

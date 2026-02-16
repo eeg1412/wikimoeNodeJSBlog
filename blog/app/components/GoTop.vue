@@ -1,10 +1,13 @@
 <template>
   <transition name="fade">
     <div
-      class="goTopBtn common-right-tool-btn opacity-70 text-white"
+      class="goTopBtn common-right-tool-btn opacity-70 text-white common-focus-visible-btn-outline"
       v-show="showButton"
       ref="goTopBtnRef"
       @click="goTop"
+      @keydown.enter="goTop"
+      tabindex="0"
+      role="button"
     >
       <WUIIcon name="i-heroicons-arrow-up" />
     </div>

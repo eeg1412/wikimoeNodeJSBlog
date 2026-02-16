@@ -2,8 +2,11 @@
   <!-- 主题切换按钮 -->
   <div
     ref="triggerRef"
-    class="themeBtn common-right-tool-btn opacity-70 text-white"
+    class="themeBtn common-right-tool-btn opacity-70 text-white common-focus-visible-btn-outline"
     @click="switchFilterMenu"
+    @keydown.enter="switchFilterMenu"
+    tabindex="0"
+    role="button"
   >
     <WUIIcon v-if="colorMode.value === 'light'" name="i-heroicons-sun" />
     <WUIIcon v-else-if="colorMode.value === 'dark'" name="i-heroicons-moon" />
@@ -13,6 +16,9 @@
       class="common-right-tool-menu-body"
       v-show="showFilterMenu"
       ref="menuRef"
+      @keydown.tab="e => trapFocus(menuRef, e)"
+      @keydown.esc="showFilterMenu = false"
+      tabindex="-1"
     >
       <div class="common-right-tool-menu-box">
         <div
@@ -20,7 +26,7 @@
         >
           <div>主题模式</div>
           <button
-            class="text-gray-500 hover:text-gray-700"
+            class="text-gray-500 hover:text-gray-700 common-focus-visible-btn-outline"
             @click="switchFilterMenu"
           >
             <WUIIcon name="i-heroicons-x-mark" />
@@ -30,29 +36,38 @@
           <ul class="common-right-tool-menu-item-ul">
             <li>
               <div
-                class="m-2 px-3 py-1 transition duration-300 hover:text-primary-400 hover:border-primary-400 border-solid border border-transparent cursor-pointer common-right-tool-menu-item-text rounded"
+                class="m-2 px-3 py-1 transition duration-300 hover:text-primary-400 hover:border-primary-400 border-solid border border-transparent cursor-pointer common-right-tool-menu-item-text rounded common-focus-visible-btn-outline"
                 :class="{ active: colorMode.preference === 'system' }"
                 @click="setColorMode('system')"
+                @keydown.enter="setColorMode('system')"
+                :tabindex="colorMode.preference === 'system' ? '-1' : '0'"
+                role="button"
               >
                 跟随系统
               </div>
             </li>
             <li>
               <div
-                class="m-2 px-3 py-1 transition duration-300 hover:text-primary-400 hover:border-primary-400 border-solid border border-transparent cursor-pointer common-right-tool-menu-item-text rounded"
+                class="m-2 px-3 py-1 transition duration-300 hover:text-primary-400 hover:border-primary-400 border-solid border border-transparent cursor-pointer common-right-tool-menu-item-text rounded common-focus-visible-btn-outline"
                 :class="{
                   active: colorMode.preference === 'light'
                 }"
                 @click="setColorMode('light')"
+                @keydown.enter="setColorMode('light')"
+                :tabindex="colorMode.preference === 'light' ? '-1' : '0'"
+                role="button"
               >
                 浅色模式
               </div>
             </li>
             <li>
               <div
-                class="m-2 px-3 py-1 transition duration-300 hover:text-primary-400 hover:border-primary-400 border-solid border border-transparent cursor-pointer common-right-tool-menu-item-text rounded"
+                class="m-2 px-3 py-1 transition duration-300 hover:text-primary-400 hover:border-primary-400 border-solid border border-transparent cursor-pointer common-right-tool-menu-item-text rounded common-focus-visible-btn-outline"
                 :class="{ active: colorMode.preference === 'dark' }"
                 @click="setColorMode('dark')"
+                @keydown.enter="setColorMode('dark')"
+                :tabindex="colorMode.preference === 'dark' ? '-1' : '0'"
+                role="button"
               >
                 深色模式
               </div>
@@ -96,6 +111,17 @@ const setColorMode = mode => {
 const switchFilterMenu = () => {
   showFilterMenu.value = !showFilterMenu.value
 }
+
+// 监听菜单显示状态，自动聚焦
+watch(showFilterMenu, val => {
+  if (val) {
+    nextTick(() => {
+      menuRef.value?.focus()
+    })
+  } else {
+    triggerRef.value?.focus()
+  }
+})
 </script>
 
 <style scoped></style>
