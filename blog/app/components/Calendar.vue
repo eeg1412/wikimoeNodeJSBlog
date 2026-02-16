@@ -18,25 +18,29 @@
           :key="index"
         >
           <div
-            class="calendar-day"
+            class="calendar-day common-focus-visible-btn-outline"
             :class="{
               'is-now': day.month === nowMonth && day.day === nowDay,
               pointer: dayHaveEvent(day)
             }"
             @click="dayClick(day)"
+            tabindex="0"
+            @keydown.enter="dayClick(day)"
           >
             {{ day.day }}
           </div>
           <div v-for="dayEvent in day.dayEvents" :key="dayEvent.id">
             <div
               v-if="dayEvent.width"
-              class="calendar-event"
+              class="calendar-event common-focus-visible-btn-outline"
               :style="`width:calc(${dayEvent.width}% + ${
                 dayEvent.width / 100 - 1
               }px);background-color:${
                 dayEvent.color || dayEvent.eventtype?.color || '#000000'
               }`"
               @click="eventClick(dayEvent)"
+              tabindex="0"
+              @keydown.enter="eventClick(dayEvent)"
             >
               {{ dayEvent.title }}
             </div>

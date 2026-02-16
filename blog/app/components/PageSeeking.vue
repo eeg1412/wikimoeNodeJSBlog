@@ -15,11 +15,14 @@
         <tbody>
           <tr>
             <td
+              class="common-focus-visible-btn-outline"
               v-for="(item, index) in items"
               :key="index"
               :class="item.class"
               :data-event="item.event"
               @click="eventClik(item)"
+              tabindex="0"
+              @keydown.enter="eventClik(item)"
             >
               {{ item.text }}
             </td>
@@ -30,7 +33,13 @@
     <div class="roll">
       <div class="card" style="top: -1px; font-size: 20pt">请点击所求之事</div>
       <transition name="slide">
-        <div class="card clickable" v-if="showQiu" @click="startSeeking">
+        <div
+          class="card clickable common-focus-visible-btn-outline"
+          v-if="showQiu"
+          @click="startSeeking"
+          tabindex="0"
+          @keydown.enter="startSeeking"
+        >
           <div class="title">求</div>
         </div>
       </transition>
@@ -160,6 +169,7 @@ const cardList = ref([])
 
 const startSeeking = () => {
   slidecount = 0
+  showQiu.value = false
   slide()
 }
 

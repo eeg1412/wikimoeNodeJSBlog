@@ -124,6 +124,8 @@ function handleClickOutside(e) {
 function handleKeydown(e) {
   if (e.key === 'Escape') {
     close()
+  } else if (e.key === 'Tab') {
+    trapFocus(contentRef.value, e)
   }
 }
 

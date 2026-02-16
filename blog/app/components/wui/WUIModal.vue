@@ -5,8 +5,11 @@
         v-if="modelValue"
         class="wui-modal-overlay"
         @click.self="$emit('update:modelValue', false)"
+        @keydown="handleKeydown"
+        tabindex="-1"
       >
         <div
+          ref="modalContainer"
           class="wui-modal-container overscroll-contain custom-scroll"
           @click.stop
         >
@@ -18,13 +21,23 @@
 </template>
 
 <script setup>
-import { watch, onUnmounted } from 'vue'
+import { watch, onUnmounted, ref, nextTick } from 'vue'
 
 const props = defineProps({
   modelValue: { type: Boolean, default: false }
 })
 
-defineEmits(['update:modelValue'])
+const emit = defineEmits(['update:modelValue'])
+
+const modalContainer = ref(null)
+
+const handleKeydown = e => {
+  if (e.key === 'Escape') {
+    emit('update:modelValue', false)
+  } else if (e.key === 'Tab') {
+    trapFocus(modalContainer.value, e)
+  }
+}
 
 // Prevent body scroll when modal is open
 // watch(

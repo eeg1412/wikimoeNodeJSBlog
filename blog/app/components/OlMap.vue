@@ -1,11 +1,28 @@
 <template>
   <div class="ol-map-container">
-    <div ref="mapContainer" class="ol-map"></div>
+    <div ref="mapContainer" class="ol-map" tabindex="0"></div>
+    <!-- 增加无障碍访问列表 -->
+    <div v-if="props.markers.length" class="sr-only">
+      <h2 :id="`map-markers-label-${instanceId}`">地图标记点列表</h2>
+      <ul :aria-labelledby="`map-markers-label-${instanceId}`">
+        <li v-for="marker in props.markers" :key="marker._id">
+          <button
+            @focus="handleMarkerFocus(marker)"
+            @blur="handleMarkerBlur"
+            @click="emit('markerClick', marker)"
+          >
+            {{ marker.title }} - 点击查看详情
+          </button>
+        </li>
+      </ul>
+    </div>
   </div>
 </template>
 
 <script setup>
 import { ref, onMounted, onUnmounted, watch, nextTick } from 'vue'
+
+const instanceId = generateRandomString(8)
 
 // Props - 接收父组件传入的标记点数据
 const props = defineProps({
@@ -33,6 +50,8 @@ let labelSource = null
 let labelLayer = null
 let worldSource = null
 let worldLayer = null
+let focusSource = null
+let focusLayer = null
 
 // OpenLayers 相关类
 let olClasses = null
@@ -155,6 +174,12 @@ const createStyles = classes => {
     world: new classes.Style({
       fill: new classes.Fill({ color: '#ef8fa750' }),
       stroke: new classes.Stroke({ color: '#ef8fa750', width: 1 })
+    }),
+    focus: new classes.Style({
+      image: new classes.Circle({
+        radius: radius + 4,
+        stroke: new classes.Stroke({ color: '#d85f85', width: 3 })
+      })
     })
   }
 }
@@ -196,6 +221,13 @@ const initMap = async () => {
       style: STYLES.world
     })
 
+    // 创建焦点图层
+    focusSource = new olClasses.VectorSource()
+    focusLayer = new olClasses.VectorLayer({
+      source: focusSource,
+      zIndex: 1000
+    })
+
     // 创建缩放控件
     const zoomControl = new olClasses.Zoom({
       zoomInLabel: '+', // 按钮可见文本（也可用 HTML 节点）
@@ -215,7 +247,7 @@ const initMap = async () => {
       controls: olClasses
         .controlDefaults({ zoom: false })
         .extend([zoomControl]),
-      layers: [worldLayer, markerLayer, labelLayer],
+      layers: [worldLayer, markerLayer, labelLayer, focusLayer],
       view: new olClasses.View({
         center: olClasses.fromLonLat(CONFIG.INITIAL_CENTER),
         zoom: CONFIG.INITIAL_ZOOM,
@@ -316,6 +348,37 @@ const setupEventListeners = () => {
     })
     map.getTargetElement().style.cursor = hit ? 'pointer' : ''
   })
+}
+
+// 键盘聚焦标记点时的处理
+const handleMarkerFocus = markerData => {
+  if (!map || !olClasses || !focusSource) return
+
+  const position = olClasses.fromLonLat([
+    markerData.longitude,
+    markerData.latitude
+  ])
+
+  // 移动视角到标记点
+  map.getView().animate({
+    center: position,
+    duration: 300
+  })
+
+  // 显示焦点标记
+  focusSource.clear()
+  const focusFeature = new olClasses.Feature({
+    geometry: new olClasses.Point(position)
+  })
+  if (STYLES && STYLES.focus) {
+    focusFeature.setStyle(STYLES.focus)
+  }
+  focusSource.addFeature(focusFeature)
+}
+
+// 失去聚焦时的处理
+const handleMarkerBlur = () => {
+  if (focusSource) focusSource.clear()
 }
 
 // 添加单个标记点
@@ -421,6 +484,8 @@ onUnmounted(() => {
   labelLayer = null
   worldSource = null
   worldLayer = null
+  focusSource = null
+  focusLayer = null
   olClasses = null
   STYLES = null
   if (markersUpdateTimer) {

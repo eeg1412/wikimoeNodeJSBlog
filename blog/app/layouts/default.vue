@@ -50,6 +50,7 @@
       <!-- 左侧菜单 -->
       <div
         class="blog-layout-left-body"
+        @focusin="leftMenuActive = true"
         :class="{
           active: leftMenuActive
         }"
@@ -105,6 +106,7 @@
       <!-- 右侧工具栏 -->
       <div
         class="blog-layout-right-body custom-scroll blog-layout-right-body-full-height"
+        @focusin="rightSidebarActive = true"
         :class="{
           active: rightSidebarActive
         }"
@@ -193,6 +195,7 @@
       <div
         class="blog-layout-content-body"
         ref="layoutContentBody"
+        @focusin="closeAllSidebar"
         :class="{
           'page-leave-active': pageTransition,
           'page-enter-active': !pageTransition
@@ -416,6 +419,11 @@ watch(
     }, 100)
   }
 )
+
+const closeAllSidebar = () => {
+  leftMenuActive.value = false
+  rightSidebarActive.value = false
+}
 
 // let observer
 onMounted(async () => {

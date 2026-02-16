@@ -10,6 +10,9 @@
         variant="ghost"
         icon="i-heroicons-x-mark-20-solid"
         @click="commonDialogOpen = false"
+        @keydown.enter="commonDialogOpen = false"
+        tabindex="0"
+        ref="closeBtn"
       />
     </div>
     <div
@@ -44,6 +47,33 @@ const commonDialogOpen = computed({
     emits('update:show', val)
   }
 })
+const closeBtn = ref(null)
+let lastFocusedElement = null
+watch(
+  () => commonDialogOpen.value,
+  val => {
+    if (val) {
+      // 记录打开对话框前的焦点元素
+      lastFocusedElement = document.activeElement
+      // 打开对话框后将焦点移到关闭按钮
+      nextTick(() => {
+        if (closeBtn.value && closeBtn.value.$el) {
+          closeBtn.value.$el.focus({
+            preventScroll: true
+          })
+        }
+      })
+    } else {
+      // 对话框关闭后恢复焦点
+      if (lastFocusedElement && lastFocusedElement.focus) {
+        lastFocusedElement.focus({
+          preventScroll: true
+        })
+        lastFocusedElement = null
+      }
+    }
+  }
+)
 
 // const styleId = generateRandomString(8)
 // const addStyle = () => {

@@ -940,7 +940,9 @@ const initLightbox = async () => {
     nextTick(() => {
       setPswpIsOpen(false)
       if (lastFocusedElement && lastFocusedElement.focus) {
-        lastFocusedElement.focus()
+        lastFocusedElement.focus({
+          preventScroll: true
+        })
         lastFocusedElement = null
       }
     })

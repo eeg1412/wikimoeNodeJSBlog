@@ -421,3 +421,54 @@ export const changedParams = (checkedParams, paramsValue) => {
   console.log(list)
   return list
 }
+
+/**
+ * 焦点锁定函数，用于弹窗或下拉菜单等组件
+ * @param {HTMLElement} container - 包含可聚焦元素的容器
+ * @param {KeyboardEvent} event - 键盘事件对象
+ */
+export function trapFocus(container, event) {
+  if (!container || event.key !== 'Tab') return
+
+  const focusableSelectors = [
+    'a[href]',
+    'area[href]',
+    'input:not([disabled])',
+    'select:not([disabled])',
+    'textarea:not([disabled])',
+    'button:not([disabled])',
+    'iframe',
+    '[tabindex]',
+    '[contentEditable=true]'
+  ]
+
+  const focusableElements = Array.from(
+    container.querySelectorAll(focusableSelectors.join(','))
+  ).filter(el => {
+    // 过滤掉 tabindex 为 -1 的元素，除非它是当前聚焦的元素
+    const tabindex = parseInt(el.getAttribute('tabindex') || '0', 10)
+    return tabindex >= 0
+  })
+
+  if (focusableElements.length === 0) {
+    event.preventDefault()
+    return
+  }
+
+  const firstElement = focusableElements[0]
+  const lastElement = focusableElements[focusableElements.length - 1]
+
+  if (event.shiftKey) {
+    // Shift + Tab (向前)
+    if (document.activeElement === firstElement) {
+      lastElement.focus()
+      event.preventDefault()
+    }
+  } else {
+    // Tab (向后)
+    if (document.activeElement === lastElement) {
+      firstElement.focus()
+      event.preventDefault()
+    }
+  }
+}
