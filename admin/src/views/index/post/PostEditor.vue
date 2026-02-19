@@ -2026,10 +2026,10 @@ export default {
   border: 1px dashed var(--el-border-color);
 }
 .wikimoe-suggestion-container {
-  margin-top: 5px;
+  /* margin-top: 5px; */
   display: flex;
   flex-wrap: wrap;
-  gap: 5px;
+  column-gap: 5px;
   width: 100%;
 }
 :deep(.el-tag).wikimoe-suggestion-tag {
@@ -2037,6 +2037,7 @@ export default {
   height: auto;
   min-height: 24px;
   line-height: 18px;
+  margin-top: 5px;
 }
 .wikimoe-suggestion-tag :deep(.el-tag__content) {
   white-space: normal;
