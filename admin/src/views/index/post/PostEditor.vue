@@ -2036,8 +2036,14 @@ export default {
   gap: 5px;
   width: 100%;
 }
-.wikimoe-suggestion-tag {
+:deep(.el-tag).wikimoe-suggestion-tag {
   cursor: pointer;
+  height: auto;
+  min-height: 24px;
+  line-height: 18px;
+}
+.wikimoe-suggestion-tag :deep(.el-tag__content) {
+  white-space: normal;
 }
 .old-content-body {
   border: 1px solid #dcdfe6;
