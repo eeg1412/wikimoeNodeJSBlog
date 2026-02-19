@@ -537,7 +537,7 @@ export const limitStr = (str = '', len = 20) => {
 
 export const extractKeywords = (text, limit = 100) => {
   const SPLIT_PATTERN =
-    /[ 0-9\uff10-\uff19\u3000\-—:：,，;；.。/／\\｜|!！?？_＿\+＋=＝~～^×·\s\t\n\r*＊&＆%％$＄#＃@＠…的是了和与或于在及有着以对就等]+/
+    /[ 0-9\uff10-\uff19\u3000\-—:：,，;；.。/／\\｜|!！?？_＿\+＋=＝~～^×·\s\t\n\r*＊&＆%％$＄#＃@＠…的是了和与或于在及以对就等]+/
 
   const splitInner = str => {
     return str
@@ -605,7 +605,7 @@ export const extractKeywords = (text, limit = 100) => {
   // 11. 去除 时长表达
   cleanedText = cleanedText.replace(/\d+(小时\d+分?|分\d+秒|分钟|秒)/g, ' ')
   // 去除常见的无意义词
-  cleanedText = cleanedText.replace(/[的是了和与或于在及有着以对就等]/g, ' ')
+  cleanedText = cleanedText.replace(/[的是了和与或于在及以对就等]/g, ' ')
 
   // 12. 合并多余空格
   cleanedText = cleanedText.replace(/\s+/g, ' ').trim()
