@@ -12,6 +12,7 @@
       :defaultConfig="editorConfig"
       :mode="mode"
       @onCreated="handleCreated"
+      @onBlur="handleBlur"
     />
     <AttachmentsDialog
       :shouldSelectOk="true"
@@ -478,6 +479,7 @@ export default {
       const editor = editorRef.value
       const toolbar = DomEditor.getToolbar(editor)
       console.log(JSON.stringify(toolbar.getConfig().toolbarKeys))
+      emit('blur')
     }
 
     const showEventDialog = ref(false)

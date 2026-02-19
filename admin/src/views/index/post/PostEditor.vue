@@ -15,7 +15,11 @@
         </template>
         <template v-else>
           <el-form-item label="标题" prop="title">
-            <el-input v-model="form.title" placeholder="请输入标题"></el-input>
+            <el-input
+              v-model="form.title"
+              placeholder="请输入标题"
+              @blur="handleInputBlur"
+            ></el-input>
           </el-form-item>
         </template>
         <template v-if="type === 2">
@@ -25,6 +29,7 @@
               v-model:value="form.excerpt"
               placeholder="请输入推文"
               :rows="10"
+              @blur="handleInputBlur"
             />
             <div
               v-if="tweetContentParseRes && coverImagesDataList.length === 0"
@@ -62,6 +67,7 @@
                 <RichEditor5
                   v-model:content="form.content"
                   :isPost="true"
+                  @blur="handleInputBlur"
                   v-else-if="postEditorVersion === 5"
                 />
               </el-tab-pane>
@@ -70,7 +76,6 @@
                   type="textarea"
                   v-model="contentSource"
                   rows="30"
-                  @blur="resetRichEditor"
                   placeholder="请输入源代码"
                 ></el-input>
               </el-tab-pane>
@@ -97,6 +102,7 @@
               v-model="form.excerpt"
               rows="5"
               placeholder="请输入摘要"
+              @blur="handleInputBlur"
             ></el-input>
           </el-form-item>
           <!-- 插入code -->
@@ -205,6 +211,33 @@
               :addNew="true"
               :sortable="true"
             />
+            <div
+              v-if="
+                suggestions.tag.length > 0 || suggestions.newTags.length > 0
+              "
+              class="wikimoe-suggestion-container"
+            >
+              <el-tag
+                v-for="item in suggestions.tag"
+                :key="item._id"
+                v-show="!form.tags.includes(item._id)"
+                class="wikimoe-suggestion-tag"
+                type="primary"
+                @click="addSuggestion('tag', item, 'tags', tagList)"
+              >
+                {{ item.tagname }}
+              </el-tag>
+              <el-tag
+                v-for="item in suggestions.newTags"
+                :key="item"
+                v-show="!form.tags.includes(item)"
+                class="wikimoe-suggestion-tag"
+                type="primary"
+                @click="addNewTagSuggestion(item, 'tags', tagList)"
+              >
+                + {{ item }}
+              </el-tag>
+            </div>
           </el-form-item>
         </template>
 
@@ -218,6 +251,23 @@
               width="100%"
               :sortable="true"
             />
+            <div
+              v-if="suggestions.mappoint.length > 0"
+              class="wikimoe-suggestion-container"
+            >
+              <el-tag
+                v-for="item in suggestions.mappoint"
+                :key="item._id"
+                v-show="!form.mappointList.includes(item._id)"
+                class="wikimoe-suggestion-tag"
+                type="primary"
+                @click="
+                  addSuggestion('mappoint', item, 'mappointList', mappointList)
+                "
+              >
+                {{ item.title }}
+              </el-tag>
+            </div>
           </el-form-item>
         </template>
 
@@ -234,6 +284,28 @@
               placeholder="请选择活动"
               :sortable="true"
             />
+            <div
+              v-if="suggestions.event.length > 0"
+              class="wikimoe-suggestion-container"
+            >
+              <el-tag
+                v-for="item in suggestions.event"
+                :key="item._id"
+                v-show="!form.contentEventList.includes(item._id)"
+                class="wikimoe-suggestion-tag"
+                type="primary"
+                @click="
+                  addSuggestion(
+                    'event',
+                    item,
+                    'contentEventList',
+                    contentEventList
+                  )
+                "
+              >
+                {{ item.title }}
+              </el-tag>
+            </div>
           </el-form-item>
           <!-- 关联投票 -->
           <el-form-item label="关联投票" prop="vote">
@@ -275,6 +347,28 @@
               placeholder="请选择番剧"
               :sortable="true"
             />
+            <div
+              v-if="suggestions.bangumi.length > 0"
+              class="wikimoe-suggestion-container"
+            >
+              <el-tag
+                v-for="item in suggestions.bangumi"
+                :key="item._id"
+                v-show="!form.contentBangumiList.includes(item._id)"
+                class="wikimoe-suggestion-tag"
+                type="primary"
+                @click="
+                  addSuggestion(
+                    'bangumi',
+                    item,
+                    'contentBangumiList',
+                    contentBangumiList
+                  )
+                "
+              >
+                {{ item.title }}
+              </el-tag>
+            </div>
           </el-form-item>
           <el-form-item label="关联电影" prop="movie">
             <movie-selector
@@ -283,6 +377,28 @@
               placeholder="请选择电影"
               :sortable="true"
             />
+            <div
+              v-if="suggestions.movie.length > 0"
+              class="wikimoe-suggestion-container"
+            >
+              <el-tag
+                v-for="item in suggestions.movie"
+                :key="item._id"
+                v-show="!form.contentMovieList.includes(item._id)"
+                class="wikimoe-suggestion-tag"
+                type="primary"
+                @click="
+                  addSuggestion(
+                    'movie',
+                    item,
+                    'contentMovieList',
+                    contentMovieList
+                  )
+                "
+              >
+                {{ item.title }}
+              </el-tag>
+            </div>
           </el-form-item>
           <!-- book -->
           <el-form-item label="关联书籍" prop="book">
@@ -292,6 +408,28 @@
               placeholder="请选择书籍"
               :sortable="true"
             />
+            <div
+              v-if="suggestions.book.length > 0"
+              class="wikimoe-suggestion-container"
+            >
+              <el-tag
+                v-for="item in suggestions.book"
+                :key="item._id"
+                v-show="!form.contentBookList.includes(item._id)"
+                class="wikimoe-suggestion-tag"
+                type="primary"
+                @click="
+                  addSuggestion(
+                    'book',
+                    item,
+                    'contentBookList',
+                    contentBookList
+                  )
+                "
+              >
+                {{ item.title }}
+              </el-tag>
+            </div>
           </el-form-item>
           <!-- game -->
           <el-form-item label="关联游戏" prop="game">
@@ -301,6 +439,28 @@
               placeholder="请选择游戏"
               :sortable="true"
             />
+            <div
+              v-if="suggestions.game.length > 0"
+              class="wikimoe-suggestion-container"
+            >
+              <el-tag
+                v-for="item in suggestions.game"
+                :key="item._id"
+                v-show="!form.contentGameList.includes(item._id)"
+                class="wikimoe-suggestion-tag"
+                type="primary"
+                @click="
+                  addSuggestion(
+                    'game',
+                    item,
+                    'contentGameList',
+                    contentGameList
+                  )
+                "
+              >
+                {{ item.title }}
+              </el-tag>
+            </div>
           </el-form-item>
           <el-form-item label="更改排序" prop="contentSeriesSortListTurnOn">
             <el-switch
@@ -344,6 +504,21 @@
               placeholder="请选择活动"
               :sortable="true"
             />
+            <div
+              v-if="suggestions.event.length > 0"
+              class="wikimoe-suggestion-container"
+            >
+              <el-tag
+                v-for="item in suggestions.event"
+                :key="item._id"
+                v-show="!form.eventList.includes(item._id)"
+                class="wikimoe-suggestion-tag"
+                type="primary"
+                @click="addSuggestion('event', item, 'eventList', eventList)"
+              >
+                {{ item.title }}
+              </el-tag>
+            </div>
           </el-form-item>
           <!-- 关联投票 -->
           <el-form-item label="相关投票" prop="vote">
@@ -385,6 +560,23 @@
               placeholder="请选择番剧"
               :sortable="true"
             />
+            <div
+              v-if="suggestions.bangumi.length > 0"
+              class="wikimoe-suggestion-container"
+            >
+              <el-tag
+                v-for="item in suggestions.bangumi"
+                :key="item._id"
+                v-show="!form.bangumiList.includes(item._id)"
+                class="wikimoe-suggestion-tag"
+                type="primary"
+                @click="
+                  addSuggestion('bangumi', item, 'bangumiList', bangumiList)
+                "
+              >
+                {{ item.title }}
+              </el-tag>
+            </div>
           </el-form-item>
           <el-form-item label="相关电影" prop="movie">
             <movie-selector
@@ -393,6 +585,21 @@
               placeholder="请选择电影"
               :sortable="true"
             />
+            <div
+              v-if="suggestions.movie.length > 0"
+              class="wikimoe-suggestion-container"
+            >
+              <el-tag
+                v-for="item in suggestions.movie"
+                :key="item._id"
+                v-show="!form.movieList.includes(item._id)"
+                class="wikimoe-suggestion-tag"
+                type="primary"
+                @click="addSuggestion('movie', item, 'movieList', movieList)"
+              >
+                {{ item.title }}
+              </el-tag>
+            </div>
           </el-form-item>
           <!-- book -->
           <el-form-item label="相关书籍" prop="book">
@@ -402,6 +609,21 @@
               placeholder="请选择书籍"
               :sortable="true"
             />
+            <div
+              v-if="suggestions.book.length > 0"
+              class="wikimoe-suggestion-container"
+            >
+              <el-tag
+                v-for="item in suggestions.book"
+                :key="item._id"
+                v-show="!form.bookList.includes(item._id)"
+                class="wikimoe-suggestion-tag"
+                type="primary"
+                @click="addSuggestion('book', item, 'bookList', bookList)"
+              >
+                {{ item.title }}
+              </el-tag>
+            </div>
           </el-form-item>
           <!-- game -->
           <el-form-item label="相关游戏" prop="game">
@@ -411,6 +633,21 @@
               placeholder="请选择游戏"
               :sortable="true"
             />
+            <div
+              v-if="suggestions.game.length > 0"
+              class="wikimoe-suggestion-container"
+            >
+              <el-tag
+                v-for="item in suggestions.game"
+                :key="item._id"
+                v-show="!form.gameList.includes(item._id)"
+                class="wikimoe-suggestion-tag"
+                type="primary"
+                @click="addSuggestion('game', item, 'gameList', gameList)"
+              >
+                {{ item.title }}
+              </el-tag>
+            </div>
           </el-form-item>
           <el-form-item label="更改排序" prop="seriesSortListTurnOn">
             <el-switch
@@ -565,7 +802,9 @@ import {
   loadAndOpenImg,
   replaceSpacesWithUnderscores,
   seasonToStr,
-  nowTimestampToBase36WithRandom
+  nowTimestampToBase36WithRandom,
+  extractKeywords,
+  stringHash
 } from '@/utils/utils'
 import store from '@/store'
 
@@ -1424,6 +1663,117 @@ export default {
       { deep: true }
     )
 
+    const suggestions = reactive({
+      bangumi: [],
+      game: [],
+      movie: [],
+      mappoint: [],
+      book: [],
+      tag: [],
+      event: [],
+      newTags: []
+    })
+    const lastContentHash = ref('')
+    let suggestionDebounceTimer = null
+    const handleInputBlur = () => {
+      if (suggestionDebounceTimer) {
+        clearTimeout(suggestionDebounceTimer)
+      }
+      suggestionDebounceTimer = setTimeout(() => {
+        getSuggestions()
+      }, 500)
+    }
+
+    const getSuggestions = () => {
+      const concatenatedText = `${form.title} ${form.excerpt} ${form.content}`
+      const currentHash = stringHash(concatenatedText)
+
+      if (
+        concatenatedText.trim().length > 0 &&
+        currentHash !== lastContentHash.value
+      ) {
+        lastContentHash.value = currentHash
+        const extraction = extractKeywords(concatenatedText)
+        authApi
+          .getPostSuggestions({ keywords: extraction.keyword })
+          .then(res => {
+            const data = res.data
+            suggestions.bangumi = data.bangumi || []
+            suggestions.game = data.game || []
+            suggestions.movie = data.movie || []
+            suggestions.mappoint = data.mappoint || []
+            suggestions.book = data.book || []
+            suggestions.tag = data.tag || []
+            suggestions.event = data.event || []
+
+            // 处理新标签
+            const existingTagNames = suggestions.tag.map(t =>
+              t.tagname.toLowerCase()
+            )
+            const formattedTitles = extraction.title.map(t =>
+              t.replace(/[\s\u3000]+/g, '-').trim()
+            )
+            suggestions.newTags = formattedTitles.filter(
+              t => t && !existingTagNames.includes(t.toLowerCase())
+            )
+          })
+      }
+    }
+
+    const addSuggestion = (type, item, targetField, targetList) => {
+      // 检查 item 是否已经在 targetField 中
+      if (targetField && !form[targetField].includes(item._id)) {
+        if (targetList) {
+          // 在 Vue 3 模板中传递的 ref 会被自动解包为原始数组
+          const list = targetList
+          // 检查 item 是否已经在 targetList 中
+          const hasItem = list.some(i => i._id === item._id)
+          if (!hasItem) {
+            // 根据不同类型补充必要字段，防止 Selector 组件计算 Label 时出现 undefined
+            const newItem = { ...item }
+            if (type === 'bangumi') {
+              newItem.year = newItem.year ?? ''
+              newItem.season = newItem.season ?? ''
+            } else if (type === 'movie') {
+              newItem.year = newItem.year ?? ''
+              newItem.month = newItem.month ?? ''
+              newItem.day = newItem.day ?? ''
+            }
+            if (newItem.status === undefined) {
+              newItem.status = 1
+            }
+            // 向数组中添加完整对象
+            list.push(newItem)
+          }
+        }
+        // 使用 nextTick 确保 Select 组件的子项 el-option 已经渲染后再更新 v-model 值
+        // 这样 el-select 就能在 options 列表中找到对应的 ID 并显示正确的 Label
+        nextTick(() => {
+          if (!form[targetField].includes(item._id)) {
+            form[targetField].push(item._id)
+          }
+        })
+      }
+    }
+
+    const addNewTagSuggestion = (tagName, targetField, targetList) => {
+      if (targetField && !form[targetField].includes(tagName)) {
+        if (targetList) {
+          const list = targetList
+          const hasItem = list.some(i => i._id === tagName)
+          if (!hasItem) {
+            list.push({ tagname: tagName, _id: tagName })
+          }
+        }
+        // 使用 nextTick 确保渲染完成
+        nextTick(() => {
+          if (!form[targetField].includes(tagName)) {
+            form[targetField].push(tagName)
+          }
+        })
+      }
+    }
+
     onMounted(() => {
       getPostDetail()
       getSortList()
@@ -1515,7 +1865,12 @@ export default {
       openPreviewer,
       // tweetContentParse
       tweetContentParseRes,
-      checkShowText
+      checkShowText,
+      // suggestions
+      handleInputBlur,
+      suggestions,
+      addSuggestion,
+      addNewTagSuggestion
     }
   }
 }
@@ -1569,6 +1924,16 @@ export default {
 }
 .post-cover-image-item.type-add {
   border: 1px dashed var(--el-border-color);
+}
+.wikimoe-suggestion-container {
+  margin-top: 5px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  width: 100%;
+}
+.wikimoe-suggestion-tag {
+  cursor: pointer;
 }
 .old-content-body {
   border: 1px solid #dcdfe6;

@@ -8,6 +8,7 @@
       v-model="textAreacontent"
       :rows="rows"
       ref="contentRef"
+      @blur="$emit('blur')"
     ></el-input>
   </div>
 </template>
@@ -18,6 +19,7 @@ export default {
   components: {
     Emoji
   },
+  emits: ['blur', 'update:value'],
   props: {
     // value
     value: {

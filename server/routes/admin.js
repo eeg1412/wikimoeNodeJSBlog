@@ -414,6 +414,15 @@ const adminRouteSetting = [
     roleType: null,
     role: null
   },
+  // post /post/suggestions
+  {
+    path: '/post/suggestions',
+    method: 'post',
+    middleware: [checkAuth],
+    controller: require('../api/admin/post/getRelatedContentSuggestions'),
+    roleType: null,
+    role: null
+  },
   // put /post/update
   {
     path: '/post/update',

@@ -534,3 +534,119 @@ export const limitStr = (str = '', len = 20) => {
   }
   return str
 }
+
+export const extractKeywords = (text, limit = 100) => {
+  const splitInner = str => {
+    return str
+      .split(/[ \u3000\-—:：]+/)
+      .map(s => s.trim())
+      .filter(Boolean)
+  }
+
+  let cleanedText = text
+
+  // 1. 移除 HTML 标签
+  cleanedText = cleanedText.replace(/<\/?[a-z][^>]*>/gi, ' ')
+
+  // 2. 提取《》原始标题
+  const bookMatches = [...cleanedText.matchAll(/《([^》]+)》/g)]
+  const bookTitlesRaw = bookMatches.map(m => m[1].trim())
+
+  // title 去重
+  const uniqueTitles = []
+  const seenTitles = new Set()
+  for (const t of bookTitlesRaw) {
+    if (!seenTitles.has(t) && t.length > 0) {
+      seenTitles.add(t)
+      uniqueTitles.push(t)
+    }
+  }
+
+  const bookTitlesSplit = bookMatches.flatMap(m => splitInner(m[1]))
+
+  // 3. 提取 <> 内容
+  const angleMatches = [...cleanedText.matchAll(/<([^<>]+)>/g)]
+  const angleTitles = angleMatches.flatMap(m => splitInner(m[1]))
+
+  // 4. 去除结构内容
+  cleanedText = cleanedText
+    .replace(/《[^》]+》/g, ' ')
+    .replace(/<[^<>]+>/g, ' ')
+
+  // 5. 去除 URL
+  cleanedText = cleanedText.replace(/https?:\/\/[^\s]+|www\.[^\s]+/gi, ' ')
+
+  // 6. 去除邮箱
+  cleanedText = cleanedText.replace(
+    /[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}/gi,
+    ' '
+  )
+
+  // 7. 去除完整中文日期
+  cleanedText = cleanedText.replace(/\d{4}年\d{1,2}月\d{1,2}日/g, ' ')
+  cleanedText = cleanedText.replace(/\d{4}年\d{1,2}月/g, ' ')
+  cleanedText = cleanedText.replace(/\d{1,2}月\d{1,2}日/g, ' ')
+
+  // 8. 去除 年、月、日 单独表达
+  cleanedText = cleanedText.replace(/\d{4}年/g, ' ')
+  cleanedText = cleanedText.replace(/\d{1,2}(月|日)/g, ' ')
+
+  // 9. 去除 分隔符日期
+  cleanedText = cleanedText.replace(/\d{4}[-/.]\d{1,2}[-/.]\d{1,2}/g, ' ')
+
+  // 10. 去除 时间表达
+  cleanedText = cleanedText.replace(/\d{1,2}:\d{2}(:\d{2})?/g, ' ')
+  cleanedText = cleanedText.replace(/\d{1,2}点/g, ' ')
+  cleanedText = cleanedText.replace(/\d{1,2}分/g, ' ')
+
+  // 11. 去除 时长表达
+  cleanedText = cleanedText.replace(/\d+(小时\d+分?|分\d+秒|分钟|秒)/g, ' ')
+
+  // 12. 合并多余空格
+  cleanedText = cleanedText.replace(/\s+/g, ' ').trim()
+
+  // 13. 提取剩余关键词
+  let otherKeywords = cleanedText.match(/[\p{L}\p{N}]+/gu) || []
+
+  // 14. 过滤规则
+  otherKeywords = otherKeywords.filter(word => {
+    const length = [...word].length
+    if (/^\p{N}+$/u.test(word)) return false
+    if (length <= 1) return false
+    if (length > 20) return false
+    return true
+  })
+
+  // 合并顺序
+  const merged = [...bookTitlesSplit, ...angleTitles, ...otherKeywords]
+
+  // keyword 去重
+  const uniqueKeywords = []
+  const seen = new Set()
+
+  for (const word of merged) {
+    if (!seen.has(word)) {
+      seen.add(word)
+      uniqueKeywords.push(word)
+    }
+  }
+
+  return {
+    keyword: uniqueKeywords.slice(0, limit),
+    title: uniqueTitles
+  }
+}
+
+/**
+ * 快速生成字符串 hash
+ */
+export const stringHash = str => {
+  let hash = 0
+  if (str.length === 0) return hash
+  for (let i = 0; i < str.length; i++) {
+    const char = str.charCodeAt(i)
+    hash = (hash << 5) - hash + char
+    hash = hash & hash // Convert to 32bit integer
+  }
+  return hash.toString(16)
+}

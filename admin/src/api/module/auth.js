@@ -1037,6 +1037,13 @@ export default function (api) {
       return api.get('/votelog/stats', {
         shouldAdminJWT: true
       })
+    },
+    // post /post/suggestions
+    getPostSuggestions(data) {
+      return api.post('/post/suggestions', data, {
+        shouldAdminJWT: true,
+        noLoading: true
+      })
     }
   }
 }
