@@ -536,9 +536,12 @@ export const limitStr = (str = '', len = 20) => {
 }
 
 export const extractKeywords = (text, limit = 100) => {
+  const SPLIT_PATTERN =
+    /[ 0-9\uff10-\uff19\u3000\-—:：,，;；.。/／\\｜|!！?？_＿\+＋=＝~～^×·\s\t\n\r*＊&＆%％$＄#＃@＠…的是了和与或于在及有着以对就等]+/
+
   const splitInner = str => {
     return str
-      .split(/[ \u3000\-—:：]+/)
+      .split(SPLIT_PATTERN)
       .map(s => s.trim())
       .filter(Boolean)
   }
@@ -601,24 +604,25 @@ export const extractKeywords = (text, limit = 100) => {
 
   // 11. 去除 时长表达
   cleanedText = cleanedText.replace(/\d+(小时\d+分?|分\d+秒|分钟|秒)/g, ' ')
+  // 去除常见的无意义词
+  cleanedText = cleanedText.replace(/[的是了和与或于在及有着以对就等]/g, ' ')
 
   // 12. 合并多余空格
   cleanedText = cleanedText.replace(/\s+/g, ' ').trim()
 
   // 13. 提取剩余关键词
-  let otherKeywords = cleanedText.match(/[\p{L}\p{N}]+/gu) || []
+  const otherKeywords = cleanedText.match(/[\p{L}\p{N}]+/gu) || []
+  // 合并顺序
+  let merged = [...bookTitlesSplit, ...angleTitles, ...otherKeywords]
 
   // 14. 过滤规则
-  otherKeywords = otherKeywords.filter(word => {
+  merged = merged.filter(word => {
     const length = [...word].length
     if (/^\p{N}+$/u.test(word)) return false
     if (length <= 1) return false
     if (length > 20) return false
     return true
   })
-
-  // 合并顺序
-  const merged = [...bookTitlesSplit, ...angleTitles, ...otherKeywords]
 
   // keyword 去重，并排除与 title 重复的项
   const uniqueKeywords = []
@@ -639,7 +643,7 @@ export const extractKeywords = (text, limit = 100) => {
 
   return {
     keyword: uniqueKeywords.slice(0, limit),
-    title: uniqueTitles
+    title: uniqueTitles.slice(0, limit)
   }
 }
 
