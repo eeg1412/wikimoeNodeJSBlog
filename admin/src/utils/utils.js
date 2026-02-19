@@ -605,7 +605,10 @@ export const extractKeywords = (text, limit = 100) => {
   // 11. 去除 时长表达
   cleanedText = cleanedText.replace(/\d+(小时\d+分?|分\d+秒|分钟|秒)/g, ' ')
   // 去除常见的无意义词
-  cleanedText = cleanedText.replace(/[的是了和与或于在及以对就等]/g, ' ')
+  cleanedText = cleanedText.replace(
+    /[的是了和与或于在及以对就等啊呢吧嘛呀哒滴哩哦哈哟喔]/g,
+    ' '
+  )
 
   // 12. 合并多余空格
   cleanedText = cleanedText.replace(/\s+/g, ' ').trim()
