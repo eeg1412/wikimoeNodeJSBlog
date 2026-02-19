@@ -63,3 +63,8 @@ exports.count = async function (filters) {
   // document查询
   return await eventsModel.countDocuments(filters)
 }
+
+// 聚合查询
+exports.aggregate = async function (pipeline) {
+  return await eventsModel.aggregate(pipeline)
+}

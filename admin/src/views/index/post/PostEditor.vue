@@ -1701,6 +1701,25 @@ export default {
       return ranked.map(s => (s && s.original ? s.original : s))
     }
 
+    const mergeAndRankSuggestions = (
+      titles,
+      keywords,
+      titleMatched,
+      keywordMatched,
+      prop = 'title'
+    ) => {
+      const titleRanked = rankResults(titles, titleMatched, prop)
+      const keywordRanked = rankResults(keywords, keywordMatched, prop)
+
+      const titleIds = new Set(titleRanked.map(item => item._id))
+      const merged = [
+        ...titleRanked,
+        ...keywordRanked.filter(item => !titleIds.has(item._id))
+      ]
+
+      return merged
+    }
+
     const getSuggestions = () => {
       const concatenatedText = `${form.title} ${form.excerpt} ${form.content}`
       const currentHash = stringHash(concatenatedText)
@@ -1711,32 +1730,96 @@ export default {
       ) {
         lastContentHash.value = currentHash
         const extraction = extractKeywords(concatenatedText)
+
         authApi
-          .getPostSuggestions({ keywords: extraction.keyword })
+          .getPostSuggestions({
+            keywords: extraction.keyword,
+            titles: extraction.title
+          })
           .then(res => {
             const data = res.data
+            const titles = extraction.title
             const keywords = extraction.keyword
-            // 对各类建议项应用排序
-            suggestions.bangumi = rankResults(keywords, data.bangumi, 'title')
-            suggestions.game = rankResults(keywords, data.game, 'title')
-            suggestions.movie = rankResults(keywords, data.movie, 'title')
-            suggestions.mappoint = rankResults(keywords, data.mappoint, 'title')
-            suggestions.book = rankResults(keywords, data.book, 'title')
-            suggestions.tag = rankResults(keywords, data.tag, 'tagname')
-            suggestions.event = rankResults(keywords, data.event, 'title')
+
+            // 合并 titleMatched 和 keywordMatched，title优先
+            suggestions.bangumi = mergeAndRankSuggestions(
+              titles,
+              keywords,
+              data.bangumi.titleMatched,
+              data.bangumi.keywordMatched,
+              'title'
+            )
+            suggestions.game = mergeAndRankSuggestions(
+              titles,
+              keywords,
+              data.game.titleMatched,
+              data.game.keywordMatched,
+              'title'
+            )
+            suggestions.movie = mergeAndRankSuggestions(
+              titles,
+              keywords,
+              data.movie.titleMatched,
+              data.movie.keywordMatched,
+              'title'
+            )
+            suggestions.mappoint = mergeAndRankSuggestions(
+              titles,
+              keywords,
+              data.mappoint.titleMatched,
+              data.mappoint.keywordMatched,
+              'title'
+            )
+            suggestions.book = mergeAndRankSuggestions(
+              titles,
+              keywords,
+              data.book.titleMatched,
+              data.book.keywordMatched,
+              'title'
+            )
+            suggestions.tag = mergeAndRankSuggestions(
+              titles,
+              keywords,
+              data.tag.titleMatched,
+              data.tag.keywordMatched,
+              'tagname'
+            )
+            suggestions.event = mergeAndRankSuggestions(
+              titles,
+              keywords,
+              data.event.titleMatched,
+              data.event.keywordMatched,
+              'title'
+            )
 
             // 处理新标签
-            const existingTagNames = suggestions.tag.map(t =>
-              t.tagname.toLowerCase()
-            )
+            const existingTagNames = new Set()
+            suggestions.tag.forEach(t => {
+              existingTagNames.add(t.tagname.toLowerCase())
+            })
+
             const formattedTitles = extraction.title.map(t =>
               t.replace(/[\s\u3000]+/g, '-').trim()
             )
             const filteredNewTags = formattedTitles.filter(
-              t => t && !existingTagNames.includes(t.toLowerCase())
+              t => t && !existingTagNames.has(t.toLowerCase())
             )
-            // 字符串数组可以直接排序
-            suggestions.newTags = rankKeywordsResults(keywords, filteredNewTags)
+
+            // 对新标签进行排序（titles 优先，然后 keywords）
+            const titleRankedNewTags = rankKeywordsResults(
+              titles,
+              filteredNewTags
+            )
+            const titleTagIds = new Set(titleRankedNewTags)
+            const keywordRankedNewTags = rankKeywordsResults(
+              keywords,
+              filteredNewTags
+            )
+            const mergedNewTags = [
+              ...titleRankedNewTags,
+              ...keywordRankedNewTags.filter(tag => !titleTagIds.has(tag))
+            ]
+            suggestions.newTags = mergedNewTags
           })
       }
     }

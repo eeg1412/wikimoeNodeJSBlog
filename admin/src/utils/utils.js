@@ -620,14 +620,20 @@ export const extractKeywords = (text, limit = 100) => {
   // 合并顺序
   const merged = [...bookTitlesSplit, ...angleTitles, ...otherKeywords]
 
-  // keyword 去重
+  // keyword 去重，并排除与 title 重复的项
   const uniqueKeywords = []
   const seen = new Set()
 
   for (const word of merged) {
     if (!seen.has(word)) {
       seen.add(word)
-      uniqueKeywords.push(word)
+      // 检查是否与 title 重复，如果重复则跳过
+      const isDuplicate = uniqueTitles.some(
+        t => t.toLowerCase() === word.toLowerCase()
+      )
+      if (!isDuplicate) {
+        uniqueKeywords.push(word)
+      }
     }
   }
 
