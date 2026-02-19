@@ -15,11 +15,7 @@
         </template>
         <template v-else>
           <el-form-item label="标题" prop="title">
-            <el-input
-              v-model="form.title"
-              placeholder="请输入标题"
-              @blur="handleInputBlur"
-            ></el-input>
+            <el-input v-model="form.title" placeholder="请输入标题"></el-input>
           </el-form-item>
         </template>
         <template v-if="type === 2">
@@ -29,7 +25,6 @@
               v-model:value="form.excerpt"
               placeholder="请输入推文"
               :rows="10"
-              @blur="handleInputBlur"
             />
             <div
               v-if="tweetContentParseRes && coverImagesDataList.length === 0"
@@ -67,7 +62,6 @@
                 <RichEditor5
                   v-model:content="form.content"
                   :isPost="true"
-                  @blur="handleInputBlur"
                   v-else-if="postEditorVersion === 5"
                 />
               </el-tab-pane>
@@ -102,7 +96,6 @@
               v-model="form.excerpt"
               rows="5"
               placeholder="请输入摘要"
-              @blur="handleInputBlur"
             ></el-input>
           </el-form-item>
           <!-- 插入code -->
@@ -115,6 +108,15 @@
             ></el-input>
           </el-form-item>
         </template>
+        <el-form-item>
+          <el-button
+            type="primary"
+            size="small"
+            @click="getSuggestions"
+            :loading="isSuggestionLoading"
+            >生成候补内容</el-button
+          >
+        </el-form-item>
         <!-- coverImages 选择封面图 -->
         <el-form-item
           :label="type === 2 ? '媒体内容' : '封面图'"
@@ -1674,16 +1676,8 @@ export default {
       event: [],
       newTags: []
     })
-    const lastContentHash = ref('')
-    let suggestionDebounceTimer = null
-    const handleInputBlur = () => {
-      if (suggestionDebounceTimer) {
-        clearTimeout(suggestionDebounceTimer)
-      }
-      suggestionDebounceTimer = setTimeout(() => {
-        getSuggestions()
-      }, 500)
-    }
+    const isSuggestionLoading = ref(false)
+    // const lastContentHash = ref('')
 
     const rankResults = (keywords, list, prop = 'title') => {
       if (!list || list.length === 0 || !keywords || keywords.length === 0) {
@@ -1722,13 +1716,11 @@ export default {
 
     const getSuggestions = () => {
       const concatenatedText = `${form.title} ${form.excerpt} ${form.content}`
-      const currentHash = stringHash(concatenatedText)
-
-      if (
-        concatenatedText.trim().length > 0 &&
-        currentHash !== lastContentHash.value
-      ) {
-        lastContentHash.value = currentHash
+      // const currentHash = stringHash(concatenatedText)
+      // currentHash !== lastContentHash.value
+      if (concatenatedText.trim().length > 0) {
+        // lastContentHash.value = currentHash
+        isSuggestionLoading.value = true
         const extraction = extractKeywords(concatenatedText)
 
         authApi
@@ -1820,6 +1812,9 @@ export default {
               ...keywordRankedNewTags.filter(tag => !titleTagIds.has(tag))
             ]
             suggestions.newTags = mergedNewTags
+          })
+          .finally(() => {
+            isSuggestionLoading.value = false
           })
       }
     }
@@ -1971,8 +1966,9 @@ export default {
       tweetContentParseRes,
       checkShowText,
       // suggestions
-      handleInputBlur,
       suggestions,
+      getSuggestions,
+      isSuggestionLoading,
       addSuggestion,
       addNewTagSuggestion
     }
