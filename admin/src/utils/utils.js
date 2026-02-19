@@ -658,33 +658,69 @@ export const stringHash = str => {
 }
 
 export const rankKeywordsResults = (keywords, results) => {
+  function calcMatchRate(keyword, item) {
+    const itemChars = item.split('')
+    const used = new Array(itemChars.length).fill(false)
+
+    let matchCount = 0
+
+    // 遍历关键词的每个字符
+    for (let kChar of keyword) {
+      // 在结果字符串中查找可用匹配字符
+      for (let i = 0; i < itemChars.length; i++) {
+        if (!used[i] && itemChars[i] === kChar) {
+          used[i] = true
+          matchCount++
+          break
+        }
+      }
+    }
+
+    return matchCount / item.length
+  }
+
+  // 如果传入的是单字符串，统一转为数组处理
+  if (typeof keywords === 'string') {
+    keywords = [keywords]
+  }
+
+  // 拼接完整短语（用于连续匹配和匹配率计算）
   const fullPhrase = keywords.join('')
 
   return results
     .map(item => {
       let score = 0
 
-      // 1. 单个关键词匹配
+      /* 原有加权规则 */
+
+      // 单个关键词命中
       keywords.forEach(keyword => {
         if (item.includes(keyword)) {
           score += 10
         }
       })
 
-      // 2. 同时包含全部关键词
+      // 同时包含全部关键词
       if (keywords.every(k => item.includes(k))) {
         score += 20
       }
 
-      // 3. 连续完整匹配
+      // 连续完整匹配
       if (item.includes(fullPhrase)) {
         score += 30
       }
 
-      // 4. 开头匹配
+      // 开头匹配
       if (item.startsWith(fullPhrase)) {
         score += 15
       }
+
+      /* 新增：匹配率加权 */
+
+      const matchRate = calcMatchRate(fullPhrase, item)
+
+      // 将匹配率放大，避免被整数权重淹没
+      score += matchRate * 50
 
       return { item, score }
     })
