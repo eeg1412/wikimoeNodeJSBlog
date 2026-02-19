@@ -650,3 +650,38 @@ export const stringHash = str => {
   }
   return hash.toString(16)
 }
+
+export const rankKeywordsResults = (keywords, results) => {
+  const fullPhrase = keywords.join('')
+
+  return results
+    .map(item => {
+      let score = 0
+
+      // 1. 单个关键词匹配
+      keywords.forEach(keyword => {
+        if (item.includes(keyword)) {
+          score += 10
+        }
+      })
+
+      // 2. 同时包含全部关键词
+      if (keywords.every(k => item.includes(k))) {
+        score += 20
+      }
+
+      // 3. 连续完整匹配
+      if (item.includes(fullPhrase)) {
+        score += 30
+      }
+
+      // 4. 开头匹配
+      if (item.startsWith(fullPhrase)) {
+        score += 15
+      }
+
+      return { item, score }
+    })
+    .sort((a, b) => b.score - a.score)
+    .map(obj => obj.item)
+}

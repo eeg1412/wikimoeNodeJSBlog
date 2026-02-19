@@ -804,7 +804,8 @@ import {
   seasonToStr,
   nowTimestampToBase36WithRandom,
   extractKeywords,
-  stringHash
+  stringHash,
+  rankKeywordsResults
 } from '@/utils/utils'
 import store from '@/store'
 
@@ -1684,6 +1685,22 @@ export default {
       }, 500)
     }
 
+    const rankResults = (keywords, list, prop = 'title') => {
+      if (!list || list.length === 0 || !keywords || keywords.length === 0) {
+        return list || []
+      }
+      // 由于 rankKeywordsResults 针对字符串设计，且禁止修改。
+      // 我们包装对象使其具有 .includes 和 .startsWith 方法，并指向原始项。
+      const stringWrappedList = list.map(item => {
+        const val = (item[prop] || '').toString()
+        const s = new String(val)
+        s.original = item
+        return s
+      })
+      const ranked = rankKeywordsResults(keywords, stringWrappedList)
+      return ranked.map(s => (s && s.original ? s.original : s))
+    }
+
     const getSuggestions = () => {
       const concatenatedText = `${form.title} ${form.excerpt} ${form.content}`
       const currentHash = stringHash(concatenatedText)
@@ -1698,13 +1715,15 @@ export default {
           .getPostSuggestions({ keywords: extraction.keyword })
           .then(res => {
             const data = res.data
-            suggestions.bangumi = data.bangumi || []
-            suggestions.game = data.game || []
-            suggestions.movie = data.movie || []
-            suggestions.mappoint = data.mappoint || []
-            suggestions.book = data.book || []
-            suggestions.tag = data.tag || []
-            suggestions.event = data.event || []
+            const keywords = extraction.keyword
+            // 对各类建议项应用排序
+            suggestions.bangumi = rankResults(keywords, data.bangumi, 'title')
+            suggestions.game = rankResults(keywords, data.game, 'title')
+            suggestions.movie = rankResults(keywords, data.movie, 'title')
+            suggestions.mappoint = rankResults(keywords, data.mappoint, 'title')
+            suggestions.book = rankResults(keywords, data.book, 'title')
+            suggestions.tag = rankResults(keywords, data.tag, 'tagname')
+            suggestions.event = rankResults(keywords, data.event, 'title')
 
             // 处理新标签
             const existingTagNames = suggestions.tag.map(t =>
@@ -1713,9 +1732,11 @@ export default {
             const formattedTitles = extraction.title.map(t =>
               t.replace(/[\s\u3000]+/g, '-').trim()
             )
-            suggestions.newTags = formattedTitles.filter(
+            const filteredNewTags = formattedTitles.filter(
               t => t && !existingTagNames.includes(t.toLowerCase())
             )
+            // 字符串数组可以直接排序
+            suggestions.newTags = rankKeywordsResults(keywords, filteredNewTags)
           })
       }
     }
