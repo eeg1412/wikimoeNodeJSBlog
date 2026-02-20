@@ -79,7 +79,7 @@
 </template>
 
 <script>
-import { ref, computed } from 'vue'
+import { ref, computed, nextTick } from 'vue'
 import { Sort, Check, Close } from '@element-plus/icons-vue'
 import { authApi } from '@/api'
 import { replaceSpacesWithUnderscores } from '@/utils/utils'
@@ -162,11 +162,16 @@ export default {
     }
 
     const queryTags = query => {
+      console.log('queryTags', query)
       if (queryTagsTimer) {
+        console.log('clearTimeout', queryTagsTimer)
         clearTimeout(queryTagsTimer)
+        queryTagsTimer = null
       }
       queryTagsTimer = setTimeout(() => {
+        console.log('getTagList', query)
         getTagList(query)
+        queryTagsTimer = null
       }, 100)
     }
 
@@ -203,6 +208,20 @@ export default {
       return tagSelectorRef.value?.showTagList || []
     }
 
+    const doAutoInput = text => {
+      if (tagSelectorRef.value?.inputRef) {
+        tagSelectorRef.value.focus()
+        tagSelectorRef.value.inputRef.value = text
+        const inputEvent = new InputEvent('input', {
+          bubbles: true,
+          cancelable: true,
+          inputType: 'insertText',
+          data: text
+        })
+        tagSelectorRef.value.inputRef.dispatchEvent(inputEvent)
+      }
+    }
+
     return {
       getTagList,
       tagOptions,
@@ -218,7 +237,8 @@ export default {
       Sort,
       Check,
       Close,
-      selectorTagList
+      selectorTagList,
+      doAutoInput
     }
   }
 }

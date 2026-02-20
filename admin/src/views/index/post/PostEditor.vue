@@ -212,6 +212,7 @@
               width="100%"
               :addNew="true"
               :sortable="true"
+              ref="tagSelectorRef"
             />
             <div
               v-if="
@@ -1855,22 +1856,11 @@ export default {
       }
     }
 
+    const tagSelectorRef = ref(null)
+
     const addNewTagSuggestion = (tagName, targetField, targetList) => {
-      if (targetField && !form[targetField].includes(tagName)) {
-        if (targetList) {
-          const list = targetList
-          const hasItem = list.some(i => i._id === tagName)
-          if (!hasItem) {
-            list.push({ tagname: tagName, _id: tagName })
-          }
-        }
-        // 使用 nextTick 确保渲染完成
-        nextTick(() => {
-          if (!form[targetField].includes(tagName)) {
-            form[targetField].push(tagName)
-          }
-        })
-      }
+      // 自动输入新标签
+      tagSelectorRef.value?.doAutoInput(tagName)
     }
 
     onMounted(() => {
@@ -1970,6 +1960,7 @@ export default {
       getSuggestions,
       isSuggestionLoading,
       addSuggestion,
+      tagSelectorRef,
       addNewTagSuggestion
     }
   }
