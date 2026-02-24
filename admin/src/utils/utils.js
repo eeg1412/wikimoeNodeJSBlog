@@ -539,7 +539,29 @@ export const extractKeywords = (text, limit = 100) => {
   const SPLIT_PATTERN =
     /[ 0-9\uff10-\uff19\u3000\-—:：,，;；.。/／\\｜|!！?？_＿\+＋=＝~～^×·\s\t\n\r*＊&＆%％$＄#＃@＠…的是了和与或于在及以对就等]+/
 
+  function segmentText(text, locale = undefined) {
+    const segmenter = new Intl.Segmenter(locale, {
+      granularity: 'word'
+    })
+
+    return [...segmenter.segment(text)]
+      .filter(s => s.isWordLike)
+      .map(s => s.segment)
+  }
+
   const splitInner = str => {
+    if (typeof Intl !== 'undefined' && typeof Intl.Segmenter === 'function') {
+      try {
+        return segmentText(str)
+          .map(s => s.trim())
+          .filter(Boolean)
+      } catch (e) {
+        return str
+          .split(SPLIT_PATTERN)
+          .map(s => s.trim())
+          .filter(Boolean)
+      }
+    }
     return str
       .split(SPLIT_PATTERN)
       .map(s => s.trim())
@@ -550,6 +572,22 @@ export const extractKeywords = (text, limit = 100) => {
 
   // 1. 移除 HTML 标签
   cleanedText = cleanedText.replace(/<\/?[a-z][^>]*>/gi, ' ')
+
+  // 1.1 移除 HTML 转义字符
+  cleanedText = cleanedText
+    // 先处理常见命名实体
+    .replace(/&nbsp;/gi, ' ')
+    .replace(/&amp;/gi, '&')
+    .replace(/&lt;/gi, '<')
+    .replace(/&gt;/gi, '>')
+    .replace(/&quot;/gi, '"')
+    .replace(/&#39;/gi, "'")
+    // 处理十进制数字实体 例如 &#1234;
+    .replace(/&#(\d+);/g, (_, code) => String.fromCharCode(parseInt(code, 10)))
+    // 处理十六进制数字实体 例如 &#x4E2D;
+    .replace(/&#x([0-9a-f]+);/gi, (_, code) =>
+      String.fromCharCode(parseInt(code, 16))
+    )
 
   // 2. 提取《》原始标题
   const bookMatches = [...cleanedText.matchAll(/《([^》]+)》/g)]
@@ -613,8 +651,17 @@ export const extractKeywords = (text, limit = 100) => {
   // 12. 合并多余空格
   cleanedText = cleanedText.replace(/\s+/g, ' ').trim()
 
-  // 13. 提取剩余关键词
-  const otherKeywords = cleanedText.match(/[\p{L}\p{N}]+/gu) || []
+  // 13. 提取剩余关键词（优先使用 Intl.Segmenter）
+  let otherKeywords = []
+  if (typeof Intl !== 'undefined' && typeof Intl.Segmenter === 'function') {
+    try {
+      otherKeywords = segmentText(cleanedText)
+    } catch (e) {
+      otherKeywords = cleanedText.match(/[\p{L}\p{N}]+/gu) || []
+    }
+  } else {
+    otherKeywords = cleanedText.match(/[\p{L}\p{N}]+/gu) || []
+  }
   // 合并顺序
   let merged = [...bookTitlesSplit, ...angleTitles, ...otherKeywords]
 
