@@ -174,9 +174,12 @@ const getBackgroundImage = item => {
   width: 100%;
   height: 100%;
   z-index: -1;
-  opacity: 0.1;
+  opacity: 0.15;
   object-fit: cover;
   @apply bg-primary-100;
+}
+:global(.dark .trend-item-left-image) {
+  opacity: 0.2;
 }
 .trend-item-body:hover,
 .trend-item-body:hover .trend-item-left {

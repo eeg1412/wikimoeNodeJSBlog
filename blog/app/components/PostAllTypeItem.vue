@@ -147,8 +147,11 @@ const getBackgroundImage = item => {
   height: 100%;
   z-index: -1;
   object-fit: cover;
-  opacity: 0.1;
+  opacity: 0.15;
   @apply bg-primary-100;
+}
+:global(.dark .post-all-type-item-left-image) {
+  opacity: 0.2;
 }
 .post-all-type-item-body:hover,
 .post-all-type-item-body:hover .post-all-type-item-left {
