@@ -1,170 +1,104 @@
-# WikimoeNodeJSBlog Project Development Guidelines
+# WikimoeNodeJSBlog 项目开发规范
 
-This document outlines the development standards and conventions for the WikimoeNodeJSBlog project across all three components: Server, Blog Frontend, and Admin Panel.
+## 通用规范
 
-## Table of Contents
+### 命名规范
 
-1. [Common Guidelines](#common-guidelines)
+#### 文件与目录
 
-   - [Project Structure Philosophy](#project-structure-philosophy)
-   - [Naming Conventions](#naming-conventions)
-   - [Code Organization](#code-organization)
-   - [Error Handling](#error-handling)
-   - [Documentation](#documentation)
-   - [Development Process](#development-process)
-   - [Performance Considerations](#performance-considerations)
+- 目录统一使用 **小写**：`api/`、`components/`、`utils/`
+- 表示实体的模块使用 **单数名词**：`user.js` 而不是 `users.js`
+- 表示集合或分组的目录使用 **复数名词**：`models/`、`utils/`
+- admin 的页面与组件文件名使用 **PascalCase**：`UserList.vue`、`PostEditor.vue`
+- blog 的组件名使用 **PascalCase**：`PostCard.vue`、`CommentSection.vue`，页面文件使用 **kebab-case**：`post-list.vue`、`user-profile.vue`
 
-2. [Server-Specific Guidelines](#server-specific-guidelines)
+#### 变量与函数
 
-   - [Project Structure](#server-project-structure)
-   - [Database Operations](#database-operations)
-   - [API Endpoints](#api-endpoints)
-   - [Worker Threads](#worker-threads)
-   - [Cache Management](#cache-management)
-   - [Security Practices](#server-security-practices)
+- 变量和函数使用 **camelCase（小驼峰）**：`userSettings`、`getPostList()`
+- 类、组件、构造函数使用 **PascalCase（大驼峰）**：`UserModel`、`PostEditor`
+- 常量使用 **UPPER_SNAKE_CASE（全大写下划线）**：`MAX_FILE_SIZE`、`DEFAULT_PORT`
+- 布尔变量应使用 `is`、`has`、`should` 等前缀：`isLoading`、`hasError`
 
-3. [Blog Frontend Guidelines](#blog-frontend-guidelines)
+---
 
-   - [Project Structure](#blog-project-structure)
-   - [Component Organization](#blog-component-organization)
-   - [State Management](#blog-state-management)
-   - [API Integration](#blog-api-integration)
-   - [Image Handling](#blog-image-handling)
+### 代码组织
 
-4. [Admin Panel Guidelines](#admin-panel-guidelines)
-   - [Project Structure](#admin-project-structure)
-   - [Component Organization](#admin-component-organization)
-   - [State Management](#admin-state-management)
-   - [API Integration](#admin-api-integration)
-   - [CRUD Implementation](#crud-implementation)
-   - [Rich Editor Integration](#rich-editor-integration)
+- 将相关功能进行分组，拆分成小模块
+- 遵循单一职责原则（Single Responsibility Principle）
+- 导出函数与组件时使用清晰、具描述性的名称
+- 在相似文件之间保持一致的实现模式
 
-## Common Guidelines
+---
 
-### Project Structure Philosophy
+### 错误处理
 
-- Organize code by domain and functionality
-- Keep related files together
-- Use consistent directory naming across the project
-- Follow the principle of separation of concerns
-
-### Naming Conventions
-
-#### Files and Directories
-
-- Use **lowercase** for directories: `api/`, `components/`, `utils/`
-- Use **singular nouns** for modules representing entities: `user.js` not `users.js`
-- Use **plural nouns** for collections or groups: `models/`, `utils/`
-
-#### Variables and Functions
-
-- Use **camelCase** for variables and functions: `userSettings`, `getPostList()`
-- Use **PascalCase** for classes, components, and constructor functions: `UserModel`, `PostEditor`
-- Use **UPPER_SNAKE_CASE** for constants: `MAX_FILE_SIZE`, `DEFAULT_PORT`
-- Boolean variables should use prefixes like `is`, `has`, `should`: `isLoading`, `hasError`
-
-### Code Organization
-
-- Group related functionality together
-- Follow the single responsibility principle
-- Export functions and components with clear, descriptive names
-- Use consistent patterns across similar files
-
-### Error Handling
-
-- Use try/catch blocks for asynchronous operations
-- Provide meaningful error messages
-- Log errors appropriately
-- Return consistent error response formats
-- Handle both expected and unexpected errors gracefully
+- 异步操作使用 try/catch
+- 提供有意义的错误信息
+- 合理记录错误日志
+- 返回统一格式的错误响应
+- 优雅处理预期与非预期错误
 
 ```javascript
 try {
-  // Asynchronous operation
   const result = await someAsyncFunction()
 } catch (error) {
-  // Error handling
   logger.error(`Error in operation: ${error.message}`)
   return errorResponse(error)
 } finally {
-  // Cleanup if necessary
+  // 如有必要进行清理
 }
 ```
 
-### Documentation
+---
 
-- Add comments for complex logic or business rules
-- Use JSDoc style for function documentation:
+### 文档规范
+
+- 对复杂逻辑或业务规则添加注释
+- 使用 JSDoc 风格为函数编写说明：
 
 ```javascript
 /**
- * Does something important with the provided data
- * @param {Object} data - The data to process
- * @param {Object} options - Processing options
- * @returns {Promise<Result>} The processed result
+ * 使用提供的数据执行重要处理
+ * @param {Object} data - 需要处理的数据
+ * @param {Object} options - 处理选项
+ * @returns {Promise<Result>} 处理后的结果
  */
 function processData(data, options) {
-  // Implementation
+  // 实现逻辑
 }
 ```
 
-- Document component props and emits
-- Maintain up-to-date README.md files with setup instructions
+- 为组件的 props 和 emits 添加说明
+- 保持 README.md 最新并包含完整的启动说明
 
-### Development Process
+---
 
-1. **Code Contribution**:
+## Server 端规范
 
-   - Create feature branches from `main`
-   - Follow established code style guidelines
-   - Write or update tests when necessary
-   - Submit pull requests
-
-2. **Code Review**:
-   - All pull requests must be reviewed by at least one developer
-   - CI checks must pass before merging
-   - Review should check for:
-     - Consistent naming
-     - Proper error handling
-     - Performance concerns
-     - Security issues
-     - Code quality and maintainability
-
-### Performance Considerations
-
-- Optimize expensive operations
-- Implement caching for frequently accessed data
-- Use pagination for large data sets
-- Optimize asset sizes (images, scripts, styles)
-- Minimize unnecessary re-renders in UI components
-- Profile and benchmark where necessary
-
-## Server-Specific Guidelines
-
-### Server Project Structure
+### Server 项目结构
 
 ```
 server/
-├── api/               # API controllers organized by domain
-│   ├── admin/         # Admin panel API endpoints
-│   └── blog/          # Public blog API endpoints
-├── bin/               # Server startup scripts
-├── config/            # Configuration files
-├── mongodb/           # Database related code
-│   ├── index.js       # Database connection
-│   ├── models/        # MongoDB schema definitions
-│   └── utils/         # Database utility functions
-├── routes/            # Express route definitions
-├── utils/             # Utility functions
-│   └── workers/       # Worker thread modules
-└── [other directories]
+├── api/
+│   ├── admin/
+│   └── blog/
+├── bin/
+├── config/
+├── mongodb/
+│   ├── index.js
+│   ├── models/
+│   └── utils/
+├── routes/
+├── utils/
+│   └── workers/
+└── [其他目录]
 ```
 
-### Database Operations
+---
 
-- Models should be named in **PascalCase** and singular: `PostModel`, `UserModel`
-- Model utilities should be named in **camelCase** and plural: `postsUtils.js`, `usersUtils.js`
-- Implement standard CRUD operations with consistent naming:
+### 数据库操作
+
+- 实现统一 CRUD 命名规范
 
 ```javascript
 exports.findPage = async function (
@@ -191,15 +125,16 @@ exports.findPage = async function (
 }
 ```
 
-### API Endpoints
+---
 
-- Each API endpoint should be defined in a separate file
-- Each endpoint file should export a single function:
+### API 接口规范
+
+- 每个接口单独一个文件
+- 每个文件只导出一个函数
 
 ```javascript
 module.exports = async function (req, res, next) {
   try {
-    // Implementation
     res.json({ data: result })
   } catch (err) {
     next(err)
@@ -207,131 +142,76 @@ module.exports = async function (req, res, next) {
 }
 ```
 
-### Worker Threads
-
-- Use worker threads for CPU-intensive tasks
-- Worker files should follow this pattern:
-
-```javascript
-const { parentPort } = require('worker_threads')
-
-// Define action functions
-const action = {
-  actionName: async (param1, param2) => {
-    // Implementation
-    return result
-  }
-}
-
-// Handle messages
-parentPort.on('message', async params => {
-  try {
-    const result = await action[params.action](...params.data)
-    parentPort.postMessage({ status: 'success', data: result })
-  } catch (err) {
-    parentPort.postMessage({ status: 'error', error: err })
-  } finally {
-    parentPort.close()
-  }
-})
-```
-
-### Cache Management
-
-- Use `global.$cacheData` for application-level caching
-- Implement cache refresh functions for each cached entity
-- Use async locks for concurrent cache updates:
+### 缓存管理
 
 ```javascript
 utils.executeInLock('cacheKey', async () => {
-  // Cache update operations
+  // 缓存更新逻辑
 })
 ```
 
-### Server Security Practices
+---
 
-- Sanitize user inputs
-- Use JWT for authentication
-- Verify MongoDB ObjectIds
-- Implement proper authorization checks
-- Rate limit API endpoints
+### 安全实践
 
-## Blog Frontend Guidelines
+- 清理与校验用户输入
+- 使用 JWT
+- 验证 MongoDB ObjectId
+- 严格权限控制
+- 接口限流
 
-### Blog Project Structure
+---
 
-```
-blog/
-├── api/                # API request modules
-├── assets/             # Static assets
-├── components/         # Vue components
-├── composables/        # Vue composables (useState, custom hooks)
-├── layouts/            # Layout components
-├── pages/              # Page components (auto-routed)
-├── plugins/            # Nuxt plugins
-└── utils/              # Utility functions
-```
+## Blog 前端规范
 
-### Blog Component Organization
+### 说明
 
-- Use **PascalCase** for Vue component files: `WikimoeImage.vue`
-- Component structure should follow this pattern:
+- 使用tailwindcss进行样式开发
+- Blog为Nuxt4
+- UI组件定义在 blog\app\components\wui 目录下
+
+---
+
+### Blog 组件结构
 
 ```vue
-<template>
-  <!-- Properly structured and organized HTML -->
-</template>
+<template></template>
 
 <script setup>
 // Imports
-// Props and emits
-// Store
-// Refs and reactivity
-// Computed properties
+// Props & Emits
+// State
+// Refs
+// Computed
 // Methods
-// Watchers
-// Lifecycle hooks
+// Watch
+// Lifecycle
 </script>
 
-<style scoped>
-/* Component-specific styles */
-</style>
+<style scoped></style>
 ```
 
-### Blog State Management
+---
 
-- Use Nuxt `useState` composable for state management
-- Create separate composables for different domains in `composables/` directory
-- Follow consistent pattern:
+### Blog 状态管理
 
 ```typescript
 export function useStoreName() {
-  const state = useState('storeName', () => ({
-    // State properties with default values
-  }))
+  const state = useState('storeName', () => ({}))
 
   function updateState(newValue) {
     state.value = newValue
   }
 
-  async function fetchData() {
-    // Implementation
-  }
+  async function fetchData() {}
 
   return { state, updateState, fetchData }
 }
 ```
 
-- Key advantages of `useState`:
-  - SSR-friendly: automatically serializes/deserializes state between server and client
-  - Reactive: state is reactive across the entire application
-  - Shared state: identified by a unique key string
+---
 
-### Blog API Integration
-
-- Use Nuxt's `$fetch` for API calls
-- Place API calls in dedicated files in the `api/` directory
-- Use consistent naming: `getEntityNameApi`, `postEntityNameApi`, etc.
+### Blog API 集成
 
 ```typescript
 export const getPostListApi = params => {
@@ -342,83 +222,61 @@ export const getPostListApi = params => {
 }
 ```
 
-### Blog Image Handling
+---
 
-- Use dedicated image components for consistency
-- Implement lazy loading for images
-- Provide appropriate alt text for accessibility
-- Handle responsive images correctly
+### Blog 图片处理
 
-## Admin Panel Guidelines
+- 使用统一图片组件
+- 懒加载
+- 提供 alt
+- 响应式适配
 
-### Admin Project Structure
+---
+
+## Admin 管理端规范
+
+### Admin 项目结构
 
 ```
 admin/
-├── public/              # Static assets
+├── public/
 ├── src/
-│   ├── api/             # API request modules
-│   ├── assets/          # Project assets
-│   ├── components/      # Vue components
-│   ├── router/          # Vue Router configuration
-│   ├── store/           # Vuex store modules
-│   ├── utils/           # Utility functions
-│   ├── views/           # Page components (routed)
-│   ├── App.vue          # Root component
-│   └── main.js          # Entry point
-└── tools/               # Development tools
+│   ├── api/
+│   ├── assets/
+│   ├── components/
+│   ├── router/
+│   ├── store/
+│   ├── utils/
+│   ├── views/
+│   ├── App.vue
+│   └── main.js
+└── tools/
 ```
 
-### Admin Component Organization
+---
 
-- Use **PascalCase** for Vue component files
-- Component structure should follow this pattern:
+### Admin 组件结构
 
 ```vue
-<template>
-  <!-- Organized HTML structure -->
-</template>
+<template></template>
 
 <script>
 export default {
   name: 'ComponentName',
-
-  props: {
-    // Props definitions
-  },
-
+  props: {},
   emits: ['update:modelValue', 'custom-event'],
-
   setup(props, { emit }) {
-    // Component logic
-
-    return {
-      // Exposed properties and methods
-    }
+    return {}
   }
 }
 </script>
 
-<style scoped>
-/* Component-specific styles */
-</style>
+<style scoped></style>
 ```
 
-### Admin State Management
+---
 
-- Use Vuex for state management
-- Follow consistent pattern for mutations: `setState`
-- Follow consistent pattern for actions: `fetchData`, `updateData`
-
-### Admin API Integration
-
-- Create API modules in `api/module/` directory
-- Use consistent naming for API functions:
-  - `getEntityList`
-  - `getEntityDetail`
-  - `createEntity`
-  - `updateEntity`
-  - `deleteEntity`
+### Admin API 模块示例
 
 ```javascript
 export default function (api) {
@@ -430,75 +288,67 @@ export default function (api) {
         noLoading
       })
     }
-
-    // Other API functions
   }
 }
 ```
 
-### CRUD Implementation
+---
 
-- Use consistent table layouts with El-Table
-- Implement pagination
-- Include search/filter functionality
-- Save filter state in sessionStorage
-- Use consistent form layouts with El-Form
+## CSS 命名规范
 
-### Rich Editor Integration
+### 全局工具类
 
-- Use editor extensions in `utils/editorMenu/`
-- Register custom elements, menus, and plugins systematically
-- Follow modular architecture for custom editor elements
+- `w_05`
+- `mt10`
+- `tc`
+- `fb`
+- `db`
+- `cWhite`
 
-## CSS Naming Conventions
+---
 
-### Global Utility Classes
+### 组件类名
 
-- Size: `w_05` (width 50%), `h_10` (height 100%)
-- Margin/Padding: `mt10` (margin-top 10px), `pl20` (padding-left 20px)
-- Text alignment: `tc` (text-center), `tr` (text-right)
-- Text styles: `fb` (font-bold), `fs16` (font-size 16px)
-- Display: `db` (display: block), `dib` (display: inline-block)
-- Colors: `cWhite` (color: white), `bcGrayF2` (background-color: #f2f2f2)
+- `[component]-[element]-[modifier]`
+- `blog-tweet-img-list-body`
+- `attachments-dialog-header`
 
-### Component-Specific Classes
+---
 
-- Use BEM-like naming: `[component]-[element]-[modifier]`
-- Examples: `blog-tweet-img-list-body`, `attachments-dialog-header`
+## 响应式设计
 
-## Responsive Design
+```
+Mobile: max-width: 767px
+Tablet: 768px - 1023px
+Desktop: min-width: 1024px
+```
 
-- Use mobile-first approach
-- Use standard breakpoints consistently:
-  ```
-  - Mobile: max-width: 767px
-  - Tablet: 768px to 1023px
-  - Desktop: min-width: 1024px
-  ```
-- Test on various device sizes
+---
 
-## Accessibility
+## 最后提醒
 
-- Use semantic HTML elements
-- Provide alt text for images
-- Ensure keyboard navigation works
-- Maintain sufficient color contrast
-- Test with screen readers
+- 这是一个产品级项目，务必遵守以上规范，以开发产品的思维进行开发
+- 从开发产品的角度出发，编写合格的代码，注重代码的可读性和可维护性
+- 尽可能不要使用三元表达式，保持代码清晰易读
+- 前端代码必须保证闭合标签的正确性，避免出现未闭合的标签
+- 前端注重手机端适配。
+- 前端注意暗黑模式的适配。
+- 管理端前端列表页的表格使用ResponsiveTable和ResponsiveTableColumn组件替代element-plus的Table组件，在小屏幕设备上能够正常显示。
+- 管理端前端使用IpInfoDisplay组件显示IP地址的地理位置信息。
+- 管理端前端使用DeviceInfoDisplay组件显示设备信息。
+- 除非用户明确指示，否则禁止使用 terminal command 来修改文件。
+- 分析哪些代码可以作为通用组件或函数提取出来，并将它们放在适当的目录中，以便在整个项目中重用。
 
-# Git Commit Conventions
+## Git 提交规范
 
-To maintain a clear and organized commit history, all commits must follow these conventions:
+### 提交前缀
 
-## Commit Message Prefixes
-
-Based on which part of the system is being modified, each commit message must start with an appropriate prefix:
-
-- **【博客端】**: Blog frontend related changes
-- **【API】**: Server API related changes
-- **【管理端】**: Admin panel related changes
-- **【文档】**: Documentation related changes
-- **【配置】**: Configuration file related changes
-- **【工具】**: Development tools related changes
-- **【通用】**: Common changes affecting multiple systems
-- **【部署】**: Deployment or CI/CD related changes
-- **【数据库】**: Database structure or migration related changes
+- 【博客端】
+- 【API】
+- 【管理端】
+- 【文档】
+- 【配置】
+- 【工具】
+- 【通用】
+- 【部署】
+- 【数据库】
