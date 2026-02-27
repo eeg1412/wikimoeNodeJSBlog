@@ -12,10 +12,12 @@ const props = defineProps({
 
 const toast = useWToast()
 
+const activeAlbumId = ref('')
 const attachmentList = ref([])
+
 const getList = async () => {
   const res = await getAttachmentListApiFetch({
-    album: props.albumId
+    album: activeAlbumId.value
   }).catch(err => {
     console.log(err)
     return null
@@ -33,7 +35,12 @@ const getList = async () => {
   attachmentList.value = res.data
 }
 
-const open = async () => {
+/**
+ * 打开相册
+ * @param {string} [id] - 相册ID，不传则使用 albumId prop
+ */
+const open = async id => {
+  activeAlbumId.value = id || props.albumId
   attachmentList.value = []
   await getList()
   if (attachmentList.value.length <= 0) {

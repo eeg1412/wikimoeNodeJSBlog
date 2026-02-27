@@ -253,11 +253,18 @@
         <ThemeChanger />
       </ClientOnly>
     </div>
+    <!-- 全局单例弹窗：整个应用共享同一实例，避免每个使用方重复挂载 -->
+    <ClientOnly>
+      <AlbumPhotoSwipe ref="albumPhotoSwipeRef" />
+      <SeriesDialog ref="seriesDialogRef" />
+    </ClientOnly>
   </div>
 </template>
 <script setup>
 import { getNaviListApi } from '@/api/navi'
 import { getSidebarListApi } from '@/api/sidebar'
+import { useAlbumPhotoSwipe } from '@/composables/useAlbumPhotoSwipe'
+import { useSeriesDialog } from '@/composables/useSeriesDialog'
 
 const route = useRoute()
 const router = useRouter()
@@ -436,8 +443,15 @@ const focusinContentBody = () => {
 }
 
 // let observer
+const albumPhotoSwipeRef = ref(null)
+const seriesDialogRef = ref(null)
+const { register: registerAlbumPhotoSwipe } = useAlbumPhotoSwipe()
+const { register: registerSeriesDialog } = useSeriesDialog()
+
 onMounted(async () => {
   pageLoading.value = false
+  registerAlbumPhotoSwipe(id => albumPhotoSwipeRef.value?.open(id))
+  registerSeriesDialog(id => seriesDialogRef.value?.open(id))
 })
 onUnmounted(() => {
   if (pageTransitionTimer) {

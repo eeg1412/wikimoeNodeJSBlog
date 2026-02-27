@@ -153,6 +153,7 @@ const props = defineProps({
 })
 
 const isOpen = ref(false)
+const activeSeriesId = ref('')
 const seriesData = ref(null)
 const countsData = ref(null)
 const loading = ref(false)
@@ -202,11 +203,11 @@ const totalPages = computed(() => {
  * 获取系列详情
  */
 const fetchDetail = async () => {
-  if (!props.seriesId) {
+  if (!activeSeriesId.value) {
     return false
   }
   try {
-    const res = await getAcgnSeriesDetailApiFetch({ id: props.seriesId })
+    const res = await getAcgnSeriesDetailApiFetch({ id: activeSeriesId.value })
     seriesData.value = res.data.series
     countsData.value = res.data.counts
     return true
@@ -226,14 +227,14 @@ const fetchDetail = async () => {
  * 获取系列下的项目列表
  */
 const fetchItems = async () => {
-  if (!props.seriesId || !currentType.value) {
+  if (!activeSeriesId.value || !currentType.value) {
     return
   }
   loading.value = true
   hasError.value = false
   try {
     const res = await getAcgnSeriesItemsApiFetch({
-      seriesId: props.seriesId,
+      seriesId: activeSeriesId.value,
       type: currentType.value,
       page: currentPage.value
     })
@@ -278,8 +279,10 @@ watch(currentPage, () => {
 
 /**
  * 打开对话框（先加载数据再弹出，避免抖动）
+ * @param {string} [id] - 系列ID，不传则使用 seriesId prop
  */
-const open = async () => {
+const open = async id => {
+  activeSeriesId.value = id || props.seriesId
   activeTab.value = 0
   currentPage.value = 1
   itemList.value = []

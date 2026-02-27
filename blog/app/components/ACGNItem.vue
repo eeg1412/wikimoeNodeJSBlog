@@ -131,10 +131,6 @@
       </div>
     </div>
   </div>
-  <ClientOnly>
-    <AlbumPhotoSwipe ref="AlbumPhotoSwipeRef" :albumId="activeAlbumId" />
-    <SeriesDialog ref="SeriesDialogRef" :seriesId="activeSeriesId" />
-  </ClientOnly>
 </template>
 <script setup>
 const props = defineProps({
@@ -173,28 +169,20 @@ const setDataHrefList = cover => {
 }
 
 // 相册
-const activeAlbumId = ref('')
-const AlbumPhotoSwipeRef = ref(null)
+const { openAlbum } = useAlbumPhotoSwipe()
 
 const showAlbum = id => {
-  activeAlbumId.value = id
-  nextTick(() => {
-    AlbumPhotoSwipeRef.value.open()
-  })
+  openAlbum(id)
 }
 
 // 系列
-const activeSeriesId = ref('')
-const SeriesDialogRef = ref(null)
+const { openSeries } = useSeriesDialog()
 
 const openSeriesDialog = () => {
   if (!props.item.series) {
     return
   }
-  activeSeriesId.value = props.item.series._id
-  nextTick(() => {
-    SeriesDialogRef.value.open()
-  })
+  openSeries(props.item.series._id)
 }
 
 // postLinkName
