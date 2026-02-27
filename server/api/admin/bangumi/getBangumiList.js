@@ -172,6 +172,24 @@ module.exports = async function (req, res, next) {
   }
 
   pipeline.push(
+    // 关联系列
+    {
+      $lookup: {
+        from: 'acgnseries',
+        localField: 'series',
+        foreignField: '_id',
+        as: 'series'
+      }
+    },
+    {
+      $unwind: {
+        path: '$series',
+        preserveNullAndEmptyArrays: true
+      }
+    }
+  )
+
+  pipeline.push(
     // 排序
     {
       $sort: sort

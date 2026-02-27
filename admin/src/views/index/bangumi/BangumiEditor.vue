@@ -173,6 +173,7 @@ import Cropper from '@/components/Cropper'
 import SeriesSelector from '@/components/SeriesSelector.vue'
 
 export default {
+  components: { Cropper, SeriesSelector },
   setup() {
     const router = useRouter()
     const route = useRoute()

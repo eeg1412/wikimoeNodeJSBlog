@@ -15,7 +15,7 @@
         <el-select
           v-model="params.action"
           placeholder="请选择操作"
-          style="width: 140px"
+          style="width: 120px"
         >
           <el-option
             v-for="item in actionList"
@@ -248,7 +248,7 @@ export default {
   margin-bottom: 0;
 }
 .acgn-batch-form-title {
-  margin-left: 10px;
+  /* margin-left: 10px; */
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;

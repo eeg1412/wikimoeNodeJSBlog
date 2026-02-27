@@ -5,7 +5,7 @@
         <el-breadcrumb-item>游戏列表</el-breadcrumb-item>
       </el-breadcrumb>
     </div>
-    <div class="clearfix pb20">
+    <div class="clearfix" :class="{ mb20: selectedRows.length <= 0 }">
       <div class="fl common-top-search-form-body">
         <!-- 检索用 -->
         <el-form
@@ -127,6 +127,12 @@
         </ResponsiveTableColumn>
         <!-- 标题 title -->
         <ResponsiveTableColumn prop="title" label="标题" min-width="200px" />
+        <!-- 系列 series -->
+        <ResponsiveTableColumn label="系列" width="140px">
+          <template #default="{ row }">
+            <span v-if="row.series">{{ row.series.name }}</span>
+          </template>
+        </ResponsiveTableColumn>
         <!-- 平台 -->
         <ResponsiveTableColumn label="平台" width="100px">
           <template #default="{ row }">
@@ -247,6 +253,7 @@
               split-button
               type="primary"
               size="small"
+              trigger="click"
               @click="goEdit(row._id)"
               @command="handleCommand($event, row)"
             >
@@ -297,6 +304,7 @@ import { setSessionParams, getSessionParams, escapeHtml } from '@/utils/utils'
 import CheckDialogService from '@/services/CheckDialogService'
 import AcgnBatchForm from '@/components/AcgnBatchForm.vue'
 export default {
+  components: { AcgnBatchForm },
   setup() {
     const route = useRoute()
     const router = useRouter()
@@ -482,23 +490,14 @@ export default {
       if (!config) {
         return
       }
-      CheckDialogService.open({
-        correctAnswer: '是',
-        content: `确定要将【${escapeHtml(row.title) || '未命名'}】的${
-          config.label
-        }时间设置为当前时间吗？`,
-        success: () => {
-          return authApi
-            .updateGameTime({ id: row._id, type: config.type })
-            .then(() => {
-              ElMessage.success(`${config.label}时间设置成功`)
-              getGameList()
-            })
-        }
-      })
-        .then(() => {})
-        .catch(error => {
-          console.log('Dialog closed:', error)
+      authApi
+        .updateGameTime({ id: row._id, type: config.type })
+        .then(() => {
+          ElMessage.success(`${config.label}时间设置成功`)
+          getGameList()
+        })
+        .catch(err => {
+          console.log(err)
         })
     }
 

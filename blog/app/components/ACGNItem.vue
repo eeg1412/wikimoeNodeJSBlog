@@ -33,12 +33,24 @@
             >{{ badge.name }}</span
           >{{ item.title }}
         </div>
-        <!-- 系列 -->
-        <div class="text-sm mb-1 flex-shrink-0" v-if="item.series">
+
+        <!-- 链接 -->
+        <slot name="options"></slot>
+        <div
+          class="text-sm mb-1 text-gray-500 flex-shrink-0"
+          v-if="
+            item.urlList.length > 0 ||
+            item.screenshotAlbum ||
+            item.postLinkOpen ||
+            (showSeries && item.series)
+          "
+        >
+          <!-- 系列 -->
           <a
             href="javascript:;"
-            class="inline-flex items-center text-primary underline"
+            class="inline-flex items-center text-primary mr-2"
             @click="openSeriesDialog"
+            v-if="showSeries && item.series"
           >
             <WUIIcon
               name="i-heroicons-bookmark-square"
@@ -46,15 +58,6 @@
             />
             {{ item.series.name }}
           </a>
-        </div>
-        <!-- 链接 -->
-        <slot name="options"></slot>
-        <div
-          class="text-sm mb-1 text-gray-500 flex-shrink-0"
-          v-if="
-            item.urlList.length > 0 || item.screenshotAlbum || item.postLinkOpen
-          "
-        >
           <!-- postLinkOpen 相关文章链接 nuxt link -->
           <NuxtLink
             v-if="item.postLinkOpen"
@@ -154,6 +157,10 @@ const props = defineProps({
   summaryToggleThreshold: {
     type: Number,
     default: 160
+  },
+  showSeries: {
+    type: Boolean,
+    default: true
   }
 })
 

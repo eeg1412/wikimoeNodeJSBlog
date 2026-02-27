@@ -3,6 +3,10 @@ const utils = require('../../../utils/utils')
 const log4js = require('log4js')
 const userApiLog = log4js.getLogger('userApi')
 const mongoose = require('mongoose')
+const bangumiModel = require('../../../mongodb/models/bangumis')
+const movieModel = require('../../../mongodb/models/movies')
+const bookModel = require('../../../mongodb/models/books')
+const gameModel = require('../../../mongodb/models/games')
 
 module.exports = async function (req, res, next) {
   const { id } = req.query
@@ -25,10 +29,6 @@ module.exports = async function (req, res, next) {
     const seriesId = new mongoose.Types.ObjectId(id)
 
     // 统计各类别公开显示的数量
-    const bangumiModel = require('../../../mongodb/models/bangumis')
-    const movieModel = require('../../../mongodb/models/movies')
-    const bookModel = require('../../../mongodb/models/books')
-    const gameModel = require('../../../mongodb/models/games')
 
     const [bangumiCount, movieCount, bookCount, gameCount] = await Promise.all([
       bangumiModel.countDocuments({ series: seriesId, status: 1 }),

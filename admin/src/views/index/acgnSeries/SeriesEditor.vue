@@ -15,24 +15,7 @@
           <el-input v-model="form.name"></el-input>
         </el-form-item>
         <el-form-item label="别名" prop="alias">
-          <el-tag
-            class="mr5 mb5"
-            v-for="(item, index) in form.alias"
-            :key="index"
-            closable
-            @close="handleAliasClose(item)"
-          >
-            {{ item }}
-          </el-tag>
-          <el-input
-            class="input-new-tag"
-            v-model="aliasInputValue"
-            ref="aliasInputRef"
-            size="small"
-            placeholder="添加别名"
-            @keyup.enter="handleAliasInputConfirm"
-            @blur="handleAliasInputConfirm"
-          ></el-input>
+          <TagsInput v-model="aliasString" placeholder="添加别名" />
         </el-form-item>
         <el-form-item label="简介" prop="summary">
           <el-input type="textarea" :rows="5" v-model="form.summary"></el-input>
@@ -46,10 +29,12 @@
 </template>
 <script>
 import { useRouter, useRoute } from 'vue-router'
-import { onMounted, reactive, ref } from 'vue'
+import { computed, onMounted, reactive, ref } from 'vue'
 import { authApi } from '@/api'
+import TagsInput from '@/components/TagsInput.vue'
 
 export default {
+  components: { TagsInput },
   setup() {
     const router = useRouter()
     const route = useRoute()
@@ -107,18 +92,15 @@ export default {
         .catch(() => {})
     }
 
-    // 别名 tag 输入
-    const aliasInputValue = ref('')
-    const aliasInputRef = ref(null)
-    const handleAliasClose = tag => {
-      form.alias.splice(form.alias.indexOf(tag), 1)
-    }
-    const handleAliasInputConfirm = () => {
-      if (aliasInputValue.value) {
-        form.alias.push(aliasInputValue.value)
+    // 别名：TagsInput 使用逗号字符串，form.alias 保持数组
+    const aliasString = computed({
+      get() {
+        return (form.alias || []).join(',')
+      },
+      set(v) {
+        form.alias = v ? v.split(',') : []
       }
-      aliasInputValue.value = ''
-    }
+    })
 
     onMounted(() => {
       if (id.value) {
@@ -132,19 +114,9 @@ export default {
       rules,
       formRef,
       submit,
-      aliasInputValue,
-      aliasInputRef,
-      handleAliasClose,
-      handleAliasInputConfirm
+      aliasString
     }
   }
 }
 </script>
-<style scoped>
-.input-new-tag {
-  width: 120px;
-  margin-right: 5px;
-  margin-bottom: 5px;
-  vertical-align: bottom;
-}
-</style>
+<style scoped></style>

@@ -59,7 +59,7 @@
       </button>
     </div>
 
-    <div :class="ui.container">
+    <div v-if="$slots.default" :class="ui.container">
       <slot :selected="modelValue" :item="items[modelValue]" />
     </div>
   </div>

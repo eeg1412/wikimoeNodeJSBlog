@@ -2,6 +2,7 @@
   <ClientOnly>
     <WUIModal v-model="isOpen">
       <div class="series-dialog-body">
+        <DivLoading class="!z-20" :loading="loading" />
         <!-- 头部 -->
         <div
           class="flex items-center justify-between px-4 pt-4 pb-2 border-b border-gray-200 dark:border-gray-700 flex-shrink-0"
@@ -19,76 +20,117 @@
 
         <!-- 别名 & 简介 -->
         <div
-          class="px-4 py-2 flex-shrink-0"
+          class="px-4 flex-shrink-0 space-y-2"
           v-if="
             seriesData && (seriesData.alias?.length > 0 || seriesData.summary)
           "
         >
+          <!-- 别名：标签形式 -->
           <div
-            class="text-sm text-gray-500 dark:text-gray-400 mb-1"
             v-if="seriesData.alias?.length > 0"
+            class="flex flex-wrap items-center gap-1.5"
           >
-            别名：{{ seriesData.alias.join('、') }}
+            <span
+              class="text-xs font-medium text-gray-400 dark:text-gray-500 shrink-0"
+              >别名</span
+            >
+            <WUIBadge
+              v-for="(alias, i) in seriesData.alias"
+              :key="i"
+              color="white"
+              size="xs"
+              >{{ alias }}</WUIBadge
+            >
           </div>
+          <!-- 简介 -->
           <div
-            class="text-sm text-gray-500 dark:text-gray-400 whitespace-pre-line"
             v-if="seriesData.summary"
+            class="text-sm text-gray-500 dark:text-gray-400 whitespace-pre-line leading-relaxed rounded-lg"
           >
             {{ seriesData.summary }}
           </div>
         </div>
 
-        <!-- Tabs -->
-        <div class="px-4 pt-2 flex-shrink-0" v-if="visibleTabs.length > 0">
-          <WUITabs v-model="activeTab" :items="visibleTabs">
-            <template #default="{ selected }">
-              <!-- 内容区域 -->
-            </template>
-          </WUITabs>
-        </div>
-
-        <!-- 列表内容 -->
+        <!-- 分割线 -->
         <div
-          class="px-4 pb-4 overflow-y-auto flex-grow series-dialog-content"
+          class="border-t border-solid border-gray-200/60 dark:border-gray-700/50 my-2"
+        ></div>
+
+        <!-- Tabs + 列表内容（同一滚动容器，Tabs sticky，保证宽度一致） -->
+        <div
+          class="flex-grow overflow-y-auto series-dialog-content custom-scroll scroll-not-hide relative [scrollbar-gutter:stable_both-edges]"
           v-if="visibleTabs.length > 0"
+          ref="contentBody"
         >
-          <div v-if="loading" class="py-8 text-center text-gray-400">
-            加载中...
-          </div>
+          <!-- Sticky Tabs -->
           <div
-            v-else-if="itemList.length === 0"
-            class="py-8 text-center text-gray-400"
+            class="px-3 sticky top-0 z-10 bg-white dark:bg-gray-900 pb-2 border-b border-gray-100 dark:border-gray-800"
           >
-            暂无内容
+            <WUITabs v-model="activeTab" :items="visibleTabs" />
           </div>
-          <div v-else>
+
+          <!-- 列表 -->
+          <div class="px-3 pb-4">
             <div
-              v-for="item in itemList"
-              :key="item._id"
-              class="py-2 border-b border-gray-100 dark:border-gray-800 last:border-b-0"
+              v-if="!loading && hasError"
+              class="py-8 text-center text-gray-400"
             >
-              <ACGNItem
-                :item="item"
-                :badge="getBadge(item)"
-                :type="currentType"
-                :enableSummaryToggle="true"
-                :summaryToggleThreshold="80"
+              获取失败，请稍后重试
+            </div>
+            <div
+              v-else-if="!loading && itemList.length === 0"
+              class="py-8 text-center text-gray-400"
+            >
+              暂无内容
+            </div>
+            <div v-else>
+              <div
+                v-for="item in itemList"
+                :key="item._id"
+                class="py-2 border-b border-gray-100 dark:border-gray-800 last:border-b-0"
+              >
+                <BangumiItem
+                  v-if="loadedType === 'bangumi'"
+                  :bangumi="item"
+                  :enableSummaryToggle="true"
+                  :summaryToggleThreshold="80"
+                  :showSeries="false"
+                />
+                <MovieItem
+                  v-else-if="loadedType === 'movie'"
+                  :movie="item"
+                  :enableSummaryToggle="true"
+                  :summaryToggleThreshold="80"
+                  :showSeries="false"
+                />
+                <BookItem
+                  v-else-if="loadedType === 'book'"
+                  :book="item"
+                  :enableSummaryToggle="true"
+                  :summaryToggleThreshold="80"
+                  :showAnimeDot="false"
+                  :showSeries="false"
+                />
+                <GameItem
+                  v-else-if="loadedType === 'game'"
+                  :game="item"
+                  :enableSummaryToggle="true"
+                  :summaryToggleThreshold="80"
+                  :showAnimeDot="false"
+                  :showSeries="false"
+                />
+              </div>
+            </div>
+            <!-- 分页 -->
+            <div class="flex justify-center pt-3" v-if="totalPages > 1">
+              <WUIPagination
+                v-model="currentPage"
+                :total="total"
+                :page-count="pageSize"
+                :max="5"
               />
             </div>
           </div>
-          <!-- 分页 -->
-          <div class="flex justify-center pt-3" v-if="totalPages > 1">
-            <WUIPagination
-              v-model="currentPage"
-              :total="total"
-              :page-count="pageSize"
-              :max="5"
-            />
-          </div>
-        </div>
-
-        <div class="px-4 py-8 text-center text-gray-400" v-if="detailLoading">
-          加载中...
         </div>
       </div>
     </WUIModal>
@@ -96,7 +138,12 @@
 </template>
 
 <script setup>
-import { getAcgnSeriesDetailApi, getAcgnSeriesItemsApi } from '~/api/acgnSeries'
+import {
+  getAcgnSeriesDetailApiFetch,
+  getAcgnSeriesItemsApiFetch
+} from '~/api/acgnSeries'
+
+const { add: addToast } = useWToast()
 
 const props = defineProps({
   seriesId: {
@@ -108,13 +155,15 @@ const props = defineProps({
 const isOpen = ref(false)
 const seriesData = ref(null)
 const countsData = ref(null)
-const detailLoading = ref(false)
 const loading = ref(false)
+const hasError = ref(false)
 const activeTab = ref(0)
 const itemList = ref([])
+const loadedType = ref('')
 const currentPage = ref(1)
 const total = ref(0)
 const pageSize = 5
+const contentBody = ref(null)
 
 // 类型配置
 const typeConfig = [
@@ -132,7 +181,7 @@ const visibleTabs = computed(() => {
   return typeConfig
     .filter(tc => (countsData.value[tc.key] || 0) > 0)
     .map(tc => ({
-      label: `${tc.label} (${countsData.value[tc.key]})`,
+      label: `${tc.label}`,
       key: tc.key
     }))
 })
@@ -150,34 +199,26 @@ const totalPages = computed(() => {
 })
 
 /**
- * 获取 badge（平台/类型）
- */
-const getBadge = item => {
-  if (currentType.value === 'book' && item.booktype) {
-    return { name: item.booktype.name, color: item.booktype.color }
-  }
-  if (currentType.value === 'game' && item.gamePlatform) {
-    return { name: item.gamePlatform.name, color: item.gamePlatform.color }
-  }
-  return null
-}
-
-/**
  * 获取系列详情
  */
 const fetchDetail = async () => {
   if (!props.seriesId) {
-    return
+    return false
   }
-  detailLoading.value = true
   try {
-    const res = await getAcgnSeriesDetailApi({ id: props.seriesId })
-    seriesData.value = res.data.value.data.series
-    countsData.value = res.data.value.data.counts
+    const res = await getAcgnSeriesDetailApiFetch({ id: props.seriesId })
+    seriesData.value = res.data.series
+    countsData.value = res.data.counts
+    return true
   } catch (err) {
     console.error('获取系列详情失败', err)
-  } finally {
-    detailLoading.value = false
+    addToast({
+      title: '获取失败',
+      description: '系列详情获取失败，请稍后重试',
+      color: 'red',
+      icon: 'i-heroicons-exclamation-circle'
+    })
+    return false
   }
 }
 
@@ -189,18 +230,35 @@ const fetchItems = async () => {
     return
   }
   loading.value = true
+  hasError.value = false
   try {
-    const res = await getAcgnSeriesItemsApi({
+    const res = await getAcgnSeriesItemsApiFetch({
       seriesId: props.seriesId,
       type: currentType.value,
       page: currentPage.value
     })
-    itemList.value = res.data.value.data.list || []
-    total.value = res.data.value.data.total || 0
+    itemList.value = res.data.list || []
+    total.value = res.data.total || 0
+    loadedType.value = currentType.value
+    nextTick(() => {
+      if (contentBody.value) {
+        // smooth scroll to top after loading data, only if not already at top
+        if (contentBody.value.scrollTop > 0) {
+          contentBody.value.scrollTo({ top: 0, behavior: 'smooth' })
+        }
+      }
+    })
   } catch (err) {
     console.error('获取系列项目失败', err)
+    hasError.value = true
     itemList.value = []
     total.value = 0
+    addToast({
+      title: '获取失败',
+      description: '系列内容获取失败，请稍后重试',
+      color: 'red',
+      icon: 'i-heroicons-exclamation-circle'
+    })
   } finally {
     loading.value = false
   }
@@ -209,8 +267,7 @@ const fetchItems = async () => {
 // 切换 tab 时重新加载
 watch(activeTab, () => {
   currentPage.value = 1
-  itemList.value = []
-  total.value = 0
+  hasError.value = false
   fetchItems()
 })
 
@@ -220,17 +277,22 @@ watch(currentPage, () => {
 })
 
 /**
- * 打开对话框
+ * 打开对话框（先加载数据再弹出，避免抖动）
  */
 const open = async () => {
-  isOpen.value = true
   activeTab.value = 0
   currentPage.value = 1
   itemList.value = []
+  loadedType.value = ''
   total.value = 0
+  hasError.value = false
   seriesData.value = null
   countsData.value = null
-  await fetchDetail()
+  const success = await fetchDetail()
+  if (!success) {
+    return
+  }
+  isOpen.value = true
   if (visibleTabs.value.length > 0) {
     fetchItems()
   }
@@ -247,9 +309,6 @@ defineExpose({ open, close })
 .series-dialog-body {
   display: flex;
   flex-direction: column;
-  max-height: 80dvh;
-}
-.series-dialog-content {
-  min-height: 100px;
+  height: 80dvh;
 }
 </style>

@@ -220,7 +220,8 @@ import GamePlatformEditor from '@/components/GamePlatformEditor.vue'
 import SeriesSelector from '@/components/SeriesSelector.vue'
 export default {
   components: {
-    GamePlatformEditor
+    GamePlatformEditor,
+    SeriesSelector
   },
   setup() {
     const router = useRouter()

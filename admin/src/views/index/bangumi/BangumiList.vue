@@ -5,7 +5,7 @@
         <el-breadcrumb-item>番剧列表</el-breadcrumb-item>
       </el-breadcrumb>
     </div>
-    <div class="clearfix pb20">
+    <div class="clearfix" :class="{ mb20: selectedRows.length <= 0 }">
       <div class="fl common-top-search-form-body">
         <!-- 检索用 -->
         <el-form
@@ -114,6 +114,12 @@
         </ResponsiveTableColumn>
         <!-- 标题 title -->
         <ResponsiveTableColumn prop="title" label="标题" min-width="200px" />
+        <!-- 系列 series -->
+        <ResponsiveTableColumn label="系列" width="140px">
+          <template #default="{ row }">
+            <span v-if="row.series">{{ row.series.name }}</span>
+          </template>
+        </ResponsiveTableColumn>
         <!-- 介绍文/简评 -->
         <ResponsiveTableColumn
           prop="summary"
@@ -250,6 +256,7 @@ import CheckDialogService from '@/services/CheckDialogService'
 import AcgnBatchForm from '@/components/AcgnBatchForm.vue'
 
 export default {
+  components: { AcgnBatchForm },
   setup() {
     const route = useRoute()
     const router = useRouter()

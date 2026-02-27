@@ -6,6 +6,7 @@
     type="book"
     :enableSummaryToggle="enableSummaryToggle"
     :summaryToggleThreshold="summaryToggleThreshold"
+    :showSeries="showSeries"
   >
     <template #options>
       <div
@@ -84,6 +85,10 @@ const props = defineProps({
   summaryToggleThreshold: {
     type: Number,
     default: undefined
+  },
+  showSeries: {
+    type: Boolean,
+    default: true
   }
 })
 </script>

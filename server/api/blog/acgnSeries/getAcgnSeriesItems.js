@@ -1,6 +1,33 @@
 const utils = require('../../../utils/utils')
+const bangumiUtils = require('../../../mongodb/utils/bangumis')
+const movieUtils = require('../../../mongodb/utils/movies')
+const bookUtils = require('../../../mongodb/utils/books')
+const gameUtils = require('../../../mongodb/utils/games')
 const log4js = require('log4js')
 const userApiLog = log4js.getLogger('userApi')
+
+const TYPE_CONFIG = {
+  bangumi: {
+    utils: bangumiUtils,
+    projection:
+      '_id cover label rating season status summary title year giveUp urlList postLinkOpen series'
+  },
+  movie: {
+    utils: movieUtils,
+    projection:
+      '_id cover label rating status summary title year month day urlList postLinkOpen series'
+  },
+  book: {
+    utils: bookUtils,
+    projection:
+      '_id cover label rating status summary title urlList postLinkOpen startTime endTime giveUp booktype series'
+  },
+  game: {
+    utils: gameUtils,
+    projection:
+      '_id cover label rating status summary title urlList postLinkOpen startTime endTime giveUp gamePlatform screenshotAlbum series'
+  }
+}
 
 module.exports = async function (req, res, next) {
   let { seriesId, type, page } = req.query
@@ -21,8 +48,7 @@ module.exports = async function (req, res, next) {
     return
   }
 
-  const validTypes = ['bangumi', 'movie', 'book', 'game']
-  if (!validTypes.includes(type)) {
+  if (!TYPE_CONFIG[type]) {
     res.status(400).json({
       errors: [{ message: '类别参数错误' }]
     })
@@ -30,51 +56,18 @@ module.exports = async function (req, res, next) {
   }
 
   try {
-    let utilsModule
-    let projection
-    let populateFields = []
-    switch (type) {
-      case 'bangumi':
-        utilsModule = require('../../../mongodb/utils/bangumis')
-        projection =
-          '_id cover label rating season status summary title year giveUp urlList postLinkOpen series'
-        break
-      case 'movie':
-        utilsModule = require('../../../mongodb/utils/movies')
-        projection =
-          '_id cover label rating status summary title year month day urlList postLinkOpen series'
-        break
-      case 'book':
-        utilsModule = require('../../../mongodb/utils/books')
-        projection =
-          '_id cover label rating status summary title urlList postLinkOpen startTime endTime giveUp booktype series'
-        populateFields = [{ path: 'booktype', select: '_id name color' }]
-        break
-      case 'game':
-        utilsModule = require('../../../mongodb/utils/games')
-        projection =
-          '_id cover label rating status summary title urlList postLinkOpen startTime endTime giveUp gamePlatform screenshotAlbum series'
-        populateFields = [
-          { path: 'gamePlatform', select: '_id name color' },
-          { path: 'screenshotAlbum', select: '_id name' }
-        ]
-        break
-    }
+    const { utils: utilsModule, projection } = TYPE_CONFIG[type]
 
     const params = { series: seriesId, status: 1 }
     const sort = { _id: -1 }
 
-    const model = utilsModule
-    const result = await model.findPage(params, sort, page, size, projection)
-
-    // 如果有需要 populate 的字段，手动 populate
-    if (populateFields.length > 0) {
-      const modelRef = require(
-        `../../../mongodb/models/${type === 'book' ? 'books' : 'games'}`
-      )
-      const populatedList = await modelRef.populate(result.list, populateFields)
-      result.list = populatedList
-    }
+    const result = await utilsModule.findPage(
+      params,
+      sort,
+      page,
+      size,
+      projection
+    )
 
     res.send({
       data: result

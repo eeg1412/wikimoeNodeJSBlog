@@ -200,7 +200,8 @@ import BooktypeEditor from '@/components/BooktypeEditor.vue'
 import SeriesSelector from '@/components/SeriesSelector.vue'
 export default {
   components: {
-    BooktypeEditor
+    BooktypeEditor,
+    SeriesSelector
   },
   setup() {
     const router = useRouter()

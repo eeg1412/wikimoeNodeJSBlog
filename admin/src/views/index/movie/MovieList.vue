@@ -5,7 +5,7 @@
         <el-breadcrumb-item>电影列表</el-breadcrumb-item>
       </el-breadcrumb>
     </div>
-    <div class="clearfix pb20">
+    <div class="clearfix" :class="{ mb20: selectedRows.length <= 0 }">
       <div class="fl common-top-search-form-body">
         <!-- 检索用 -->
         <el-form
@@ -92,6 +92,12 @@
         </ResponsiveTableColumn>
         <!-- 标题 title -->
         <ResponsiveTableColumn prop="title" label="标题" min-width="200px" />
+        <!-- 系列 series -->
+        <ResponsiveTableColumn label="系列" width="140px">
+          <template #default="{ row }">
+            <span v-if="row.series">{{ row.series.name }}</span>
+          </template>
+        </ResponsiveTableColumn>
         <!-- 介绍文/简评 -->
         <ResponsiveTableColumn
           prop="summary"
@@ -189,6 +195,7 @@
               split-button
               type="primary"
               size="small"
+              trigger="click"
               @click="goEdit(row._id)"
               @command="handleCommand($event, row)"
             >
@@ -237,6 +244,7 @@ import CheckDialogService from '@/services/CheckDialogService'
 import AcgnBatchForm from '@/components/AcgnBatchForm.vue'
 
 export default {
+  components: { AcgnBatchForm },
   setup() {
     const route = useRoute()
     const router = useRouter()
@@ -360,21 +368,14 @@ export default {
 
     const handleCommand = (command, row) => {
       if (command === 'setWatchDate') {
-        CheckDialogService.open({
-          correctAnswer: '是',
-          content: `确定要将【${
-            escapeHtml(row.title) || '未命名'
-          }】的观看日期设置为今天吗？`,
-          success: () => {
-            return authApi.updateMovieWatchDate({ id: row._id }).then(() => {
-              ElMessage.success('观看日期设置成功')
-              getMovieList()
-            })
-          }
-        })
-          .then(() => {})
-          .catch(error => {
-            console.log('Dialog closed:', error)
+        authApi
+          .updateMovieWatchDate({ id: row._id })
+          .then(() => {
+            ElMessage.success('观看日期设置成功')
+            getMovieList()
+          })
+          .catch(err => {
+            console.log(err)
           })
       }
     }
