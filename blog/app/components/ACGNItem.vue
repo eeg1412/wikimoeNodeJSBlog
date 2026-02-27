@@ -33,6 +33,20 @@
             >{{ badge.name }}</span
           >{{ item.title }}
         </div>
+        <!-- 系列 -->
+        <div class="text-sm mb-1 flex-shrink-0" v-if="item.series">
+          <a
+            href="javascript:;"
+            class="inline-flex items-center text-primary underline"
+            @click="openSeriesDialog"
+          >
+            <WUIIcon
+              name="i-heroicons-bookmark-square"
+              class="align-middle mr-1"
+            />
+            {{ item.series.name }}
+          </a>
+        </div>
         <!-- 链接 -->
         <slot name="options"></slot>
         <div
@@ -116,6 +130,7 @@
   </div>
   <ClientOnly>
     <AlbumPhotoSwipe ref="AlbumPhotoSwipeRef" :albumId="activeAlbumId" />
+    <SeriesDialog ref="SeriesDialogRef" :seriesId="activeSeriesId" />
   </ClientOnly>
 </template>
 <script setup>
@@ -158,6 +173,20 @@ const showAlbum = id => {
   activeAlbumId.value = id
   nextTick(() => {
     AlbumPhotoSwipeRef.value.open()
+  })
+}
+
+// 系列
+const activeSeriesId = ref('')
+const SeriesDialogRef = ref(null)
+
+const openSeriesDialog = () => {
+  if (!props.item.series) {
+    return
+  }
+  activeSeriesId.value = props.item.series._id
+  nextTick(() => {
+    SeriesDialogRef.value.open()
   })
 }
 

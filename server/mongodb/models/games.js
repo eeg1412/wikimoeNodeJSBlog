@@ -75,6 +75,13 @@ var games = new Schema(
       type: Boolean,
       default: false
     },
+    // 系列
+    series: {
+      type: Schema.Types.ObjectId,
+      ref: 'acgnSeries',
+      default: null,
+      index: true
+    },
     // 状态 0: 不显示 1: 显示
     status: {
       type: Number,

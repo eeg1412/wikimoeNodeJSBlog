@@ -49,15 +49,33 @@
         <el-button type="primary" @click="handleAdd">追加</el-button>
       </div>
     </div>
+    <div v-if="selectedRows.length > 0">
+      <AcgnBatchForm
+        :itemList="selectedRows"
+        acgnType="movie"
+        @success="batchSuccess()"
+        @cancel="clearSelection"
+      />
+    </div>
     <!-- 电影 -->
-    <div class="mb20 list-table-body">
+    <div
+      class="mb20 list-table-body"
+      :class="{ batch: selectedRows.length > 0 }"
+    >
       <ResponsiveTable
         ref="tableRef"
         height="100%"
         :data="movieList"
         row-key="_id"
         border
+        @selection-change="handleSelectionChange"
       >
+        <ResponsiveTableColumn
+          type="selection"
+          :reserve-selection="true"
+          width="55"
+          fixed="left"
+        />
         <!-- 封面 cover -->
         <ResponsiveTableColumn label="封面" width="90">
           <template #default="{ row }">
@@ -165,12 +183,29 @@
           </template>
         </ResponsiveTableColumn>
 
-        <ResponsiveTableColumn label="操作" width="140" fixed="right">
+        <ResponsiveTableColumn label="操作" width="160" fixed="right">
           <template #default="{ row }">
-            <el-button type="primary" size="small" @click="goEdit(row._id)"
-              >编辑</el-button
+            <el-dropdown
+              split-button
+              type="primary"
+              size="small"
+              @click="goEdit(row._id)"
+              @command="handleCommand($event, row)"
             >
-            <el-button type="danger" size="small" @click="deleteMovie(row)"
+              编辑
+              <template #dropdown>
+                <el-dropdown-menu>
+                  <el-dropdown-item command="setWatchDate"
+                    >设置当前日期为观看日期</el-dropdown-item
+                  >
+                </el-dropdown-menu>
+              </template>
+            </el-dropdown>
+            <el-button
+              type="danger"
+              size="small"
+              class="ml5"
+              @click="deleteMovie(row)"
               >删除</el-button
             >
           </template>
@@ -199,6 +234,7 @@ import { ElMessage, ElMessageBox } from 'element-plus'
 import { onMounted, reactive, ref, watch } from 'vue'
 import { setSessionParams, getSessionParams, escapeHtml } from '@/utils/utils'
 import CheckDialogService from '@/services/CheckDialogService'
+import AcgnBatchForm from '@/components/AcgnBatchForm.vue'
 
 export default {
   setup() {
@@ -309,6 +345,40 @@ export default {
       initParams()
       getMovieList()
     })
+
+    const selectedRows = ref([])
+    const handleSelectionChange = rows => {
+      selectedRows.value = rows
+    }
+    const clearSelection = () => {
+      tableRef.value.clearSelection()
+    }
+    const batchSuccess = () => {
+      clearSelection()
+      getMovieList()
+    }
+
+    const handleCommand = (command, row) => {
+      if (command === 'setWatchDate') {
+        CheckDialogService.open({
+          correctAnswer: '是',
+          content: `确定要将【${
+            escapeHtml(row.title) || '未命名'
+          }】的观看日期设置为今天吗？`,
+          success: () => {
+            return authApi.updateMovieWatchDate({ id: row._id }).then(() => {
+              ElMessage.success('观看日期设置成功')
+              getMovieList()
+            })
+          }
+        })
+          .then(() => {})
+          .catch(error => {
+            console.log('Dialog closed:', error)
+          })
+      }
+    }
+
     return {
       movieList,
       loadingMap,
@@ -319,7 +389,12 @@ export default {
       handleAdd,
       goEdit,
       deleteMovie,
-      updatePostLinkOpen
+      updatePostLinkOpen,
+      selectedRows,
+      handleSelectionChange,
+      clearSelection,
+      batchSuccess,
+      handleCommand
     }
   }
 }

@@ -1539,6 +1539,114 @@ const adminRouteSetting = [
     controller: require('../api/admin/votelog/getVotelogStats'),
     roleType: null,
     role: null
+  },
+  // createAcgnSeries
+  {
+    path: '/acgnseries/create',
+    method: 'post',
+    middleware: [checkAuth],
+    controller: require('../api/admin/acgnSeries/createAcgnSeries'),
+    roleType: null,
+    role: null
+  },
+  // deleteAcgnSeries
+  {
+    path: '/acgnseries/delete',
+    method: 'delete',
+    middleware: [checkAuth],
+    controller: require('../api/admin/acgnSeries/deleteAcgnSeries'),
+    roleType: null,
+    role: null
+  },
+  // getAcgnSeriesDetail
+  {
+    path: '/acgnseries/detail',
+    method: 'get',
+    middleware: [checkAuth],
+    controller: require('../api/admin/acgnSeries/getAcgnSeriesDetail'),
+    roleType: null,
+    role: null
+  },
+  // getAcgnSeriesList
+  {
+    path: '/acgnseries/list',
+    method: 'get',
+    middleware: [checkAuth],
+    controller: require('../api/admin/acgnSeries/getAcgnSeriesList'),
+    roleType: null,
+    role: null
+  },
+  // updateAcgnSeries
+  {
+    path: '/acgnseries/update',
+    method: 'put',
+    middleware: [checkAuth],
+    controller: require('../api/admin/acgnSeries/updateAcgnSeries'),
+    roleType: null,
+    role: null
+  },
+  // batchBangumi
+  {
+    path: '/bangumi/batch',
+    method: 'post',
+    middleware: [checkAuth],
+    controller: require('../api/admin/bangumi/batchBangumi'),
+    roleType: null,
+    role: null
+  },
+  // batchMovie
+  {
+    path: '/movie/batch',
+    method: 'post',
+    middleware: [checkAuth],
+    controller: require('../api/admin/movie/batchMovie'),
+    roleType: null,
+    role: null
+  },
+  // updateMovieWatchDate
+  {
+    path: '/movie/update/watchdate',
+    method: 'put',
+    middleware: [checkAuth],
+    controller: require('../api/admin/movie/updateMovieWatchDate'),
+    roleType: null,
+    role: null
+  },
+  // batchBook
+  {
+    path: '/book/batch',
+    method: 'post',
+    middleware: [checkAuth],
+    controller: require('../api/admin/book/batchBook'),
+    roleType: null,
+    role: null
+  },
+  // updateBookTime
+  {
+    path: '/book/update/time',
+    method: 'put',
+    middleware: [checkAuth],
+    controller: require('../api/admin/book/updateBookTime'),
+    roleType: null,
+    role: null
+  },
+  // batchGame
+  {
+    path: '/game/batch',
+    method: 'post',
+    middleware: [checkAuth],
+    controller: require('../api/admin/game/batchGame'),
+    roleType: null,
+    role: null
+  },
+  // updateGameTime
+  {
+    path: '/game/update/time',
+    method: 'put',
+    middleware: [checkAuth],
+    controller: require('../api/admin/game/updateGameTime'),
+    roleType: null,
+    role: null
   }
 ]
 

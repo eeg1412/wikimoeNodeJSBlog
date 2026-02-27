@@ -383,6 +383,20 @@ const blogRouteSetting = [
     method: 'post',
     middleware: [],
     controller: require('../api/blog/vote/postVote')
+  },
+  // getAcgnSeriesDetail
+  {
+    path: '/acgnseries/detail',
+    method: 'get',
+    middleware: [],
+    controller: require('../api/blog/acgnSeries/getAcgnSeriesDetail')
+  },
+  // getAcgnSeriesItems
+  {
+    path: '/acgnseries/items',
+    method: 'get',
+    middleware: [],
+    controller: require('../api/blog/acgnSeries/getAcgnSeriesItems')
   }
 ]
 

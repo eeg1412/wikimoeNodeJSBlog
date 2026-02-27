@@ -411,6 +411,33 @@ const routes = [
             /* webpackChunkName: "BookEditor" */ '../views/index/book/BookEditor.vue'
           )
       },
+      // AcgnSeriesList
+      {
+        path: '/acgnseries/list',
+        name: 'AcgnSeriesList',
+        component: () =>
+          import(
+            /* webpackChunkName: "AcgnSeriesList" */ '../views/index/acgnSeries/SeriesList.vue'
+          )
+      },
+      // AcgnSeriesEditor
+      {
+        path: '/acgnseries/editor/:id',
+        name: 'AcgnSeriesEdit',
+        component: () =>
+          import(
+            /* webpackChunkName: "AcgnSeriesEditor" */ '../views/index/acgnSeries/SeriesEditor.vue'
+          )
+      },
+      // AcgnSeriesEditor
+      {
+        path: '/acgnseries/add',
+        name: 'AcgnSeriesAdd',
+        component: () =>
+          import(
+            /* webpackChunkName: "AcgnSeriesEditor" */ '../views/index/acgnSeries/SeriesEditor.vue'
+          )
+      },
       // EventtypeList
       {
         path: '/eventtype/list',

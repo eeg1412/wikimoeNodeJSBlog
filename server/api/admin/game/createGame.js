@@ -19,7 +19,8 @@ module.exports = async function (req, res, next) {
     endTime,
     status,
     postLinkOpen,
-    giveUp
+    giveUp,
+    series
   } = req.body
   const params = {
     gamePlatform,
@@ -34,7 +35,8 @@ module.exports = async function (req, res, next) {
     endTime,
     status,
     postLinkOpen,
-    giveUp
+    giveUp,
+    series: series || null
   }
   const rule = [
     {

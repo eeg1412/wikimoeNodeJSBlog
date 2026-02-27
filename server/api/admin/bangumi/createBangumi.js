@@ -18,7 +18,8 @@ module.exports = async function (req, res, next) {
     urlList,
     giveUp,
     postLinkOpen,
-    status
+    status,
+    series
   } = req.body
   // 校验格式
   const params = {
@@ -32,7 +33,8 @@ module.exports = async function (req, res, next) {
     urlList,
     giveUp,
     postLinkOpen,
-    status
+    status,
+    series: series || null
   }
   const rule = [
     {

@@ -9,7 +9,9 @@ exports.save = async function (parmas) {
 
 exports.findOne = async function (parmas, projection, options = {}) {
   // document查询
-  const q = moviesModel.findOne(parmas, projection)
+  const q = moviesModel
+    .findOne(parmas, projection)
+    .populate('series', '_id name')
   if (options.lean) {
     q.lean()
   }
@@ -19,7 +21,10 @@ exports.findOne = async function (parmas, projection, options = {}) {
 // 查找所有
 exports.find = async function (parmas, sort, projection, options = {}) {
   // document查询
-  const q = moviesModel.find(parmas, projection).sort(sort)
+  const q = moviesModel
+    .find(parmas, projection)
+    .populate('series', '_id name')
+    .sort(sort)
   if (options.lean) {
     q.lean()
   }
@@ -38,6 +43,7 @@ exports.findPage = async function (
   // document查询
   const q = moviesModel
     .find(parmas, projection)
+    .populate('series', '_id name')
     .sort(sort)
     .skip((page - 1) * limit)
     .limit(limit)

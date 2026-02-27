@@ -13,6 +13,7 @@ exports.findOne = async function (parmas, projection) {
     .findOne(parmas, projection)
     .populate('gamePlatform', '_id name color')
     .populate('screenshotAlbum', '_id name')
+    .populate('series', '_id name')
 }
 
 // 查找所有
@@ -22,6 +23,7 @@ exports.find = async function (parmas, sort, projection) {
     .find(parmas, projection)
     .populate('gamePlatform', '_id name color')
     .populate('screenshotAlbum', '_id name')
+    .populate('series', '_id name')
     .sort(sort)
 }
 
@@ -39,6 +41,7 @@ exports.findPage = async function (
     .find(parmas, projection)
     .populate('gamePlatform', '_id name color')
     .populate('screenshotAlbum', '_id name')
+    .populate('series', '_id name')
     .sort(sort)
     .skip((page - 1) * limit)
     .limit(limit)

@@ -194,6 +194,9 @@
             弃坑：弃坑状态
           </div>
         </el-form-item>
+        <el-form-item label="系列" prop="series">
+          <SeriesSelector v-model="form.series" width="100%" />
+        </el-form-item>
         <el-form-item label="状态" prop="status">
           <!-- radio 分别对应 0 1 不显示 显示 -->
           <el-radio-group v-model="form.status">
@@ -214,6 +217,7 @@ import { useRouter, useRoute } from 'vue-router'
 import { onMounted, reactive, ref, computed } from 'vue'
 import { authApi } from '@/api'
 import GamePlatformEditor from '@/components/GamePlatformEditor.vue'
+import SeriesSelector from '@/components/SeriesSelector.vue'
 export default {
   components: {
     GamePlatformEditor
@@ -236,6 +240,7 @@ export default {
       endTime: null,
       giveUp: false,
       postLinkOpen: false,
+      series: null,
       status: 0
     })
     const rules = reactive({
@@ -339,6 +344,7 @@ export default {
           form.endTime = res.data.data.endTime
           form.giveUp = res.data.data.giveUp
           form.postLinkOpen = res.data.data.postLinkOpen
+          form.series = res.data.data.series
           form.status = res.data.data.status
         })
         .catch(() => {})

@@ -21,7 +21,8 @@ module.exports = async function (req, res, next) {
     id,
     urlList,
     postLinkOpen,
-    __v
+    __v,
+    series
   } = req.body
   // 校验格式
   const params = {
@@ -34,7 +35,8 @@ module.exports = async function (req, res, next) {
     label,
     status,
     urlList,
-    postLinkOpen
+    postLinkOpen,
+    series: series || null
   }
   const formCheck = {
     id,

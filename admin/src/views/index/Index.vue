@@ -205,6 +205,16 @@
                 <template #title>书籍列表</template>
               </el-menu-item>
             </el-sub-menu>
+            <!-- 系列 AcgnSeriesList -->
+            <el-menu-item
+              index="AcgnSeriesList"
+              @click="removeParam('AcgnSeriesList')"
+              @click.middle="openNewTab('AcgnSeriesList')"
+              :route="{ name: 'AcgnSeriesList' }"
+            >
+              <i class="fas fa-fw fa-bookmark pr10"></i>
+              <template #title>系列</template>
+            </el-menu-item>
             <el-sub-menu index="event">
               <template #title>
                 <!-- 活动 -->

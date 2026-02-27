@@ -1044,6 +1044,82 @@ export default function (api) {
         shouldAdminJWT: true,
         noLoading: true
       })
+    },
+    // post /acgnseries/create
+    createAcgnSeries(data) {
+      return api.post('/acgnseries/create', data, {
+        shouldAdminJWT: true
+      })
+    },
+    // delete /acgnseries/delete
+    deleteAcgnSeries(data) {
+      return api.delete('/acgnseries/delete', {
+        params: data,
+        shouldAdminJWT: true
+      })
+    },
+    // get /acgnseries/list
+    getAcgnSeriesList(data, noLoading = false) {
+      return api.get('/acgnseries/list', {
+        params: data,
+        shouldAdminJWT: true,
+        noLoading
+      })
+    },
+    // get /acgnseries/detail
+    getAcgnSeriesDetail(data) {
+      return api.get('/acgnseries/detail', {
+        params: data,
+        shouldAdminJWT: true
+      })
+    },
+    // put /acgnseries/update
+    updateAcgnSeries(data) {
+      return api.put('/acgnseries/update', data, {
+        shouldAdminJWT: true
+      })
+    },
+    // post /bangumi/batch
+    batchBangumi(data) {
+      return api.post('/bangumi/batch', data, {
+        shouldAdminJWT: true
+      })
+    },
+    // post /movie/batch
+    batchMovie(data) {
+      return api.post('/movie/batch', data, {
+        shouldAdminJWT: true
+      })
+    },
+    // put /movie/update/watchdate
+    updateMovieWatchDate(data) {
+      return api.put('/movie/update/watchdate', data, {
+        shouldAdminJWT: true
+      })
+    },
+    // post /book/batch
+    batchBook(data) {
+      return api.post('/book/batch', data, {
+        shouldAdminJWT: true
+      })
+    },
+    // put /book/update/time
+    updateBookTime(data) {
+      return api.put('/book/update/time', data, {
+        shouldAdminJWT: true
+      })
+    },
+    // post /game/batch
+    batchGame(data) {
+      return api.post('/game/batch', data, {
+        shouldAdminJWT: true
+      })
+    },
+    // put /game/update/time
+    updateGameTime(data) {
+      return api.put('/game/update/time', data, {
+        shouldAdminJWT: true
+      })
     }
   }
 }

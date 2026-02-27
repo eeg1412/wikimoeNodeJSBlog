@@ -41,6 +41,7 @@ const userLoginLogsUtil = require('../mongodb/utils/userLoginLogs')
 const votesUtil = require('../mongodb/utils/votes')
 const votelogsUtil = require('../mongodb/utils/votelogs')
 const mappointsUtil = require('../mongodb/utils/mappoints')
+const acgnSeriesUtil = require('../mongodb/utils/acgnSeries')
 
 // 创建一个映射，键是模型的名称（全部小写），值是对应的工具
 const modelUtilMap = {
@@ -74,7 +75,8 @@ const modelUtilMap = {
   userloginlogs: userLoginLogsUtil,
   votes: votesUtil,
   votelogs: votelogsUtil,
-  mappoints: mappointsUtil
+  mappoints: mappointsUtil,
+  acgnseries: acgnSeriesUtil
 }
 
 const noDropCollections = ['backups']

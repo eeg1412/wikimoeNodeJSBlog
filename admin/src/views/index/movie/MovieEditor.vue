@@ -137,6 +137,9 @@
         <el-form-item label="文章链接开关" prop="postLinkOpen">
           <el-switch v-model="form.postLinkOpen"></el-switch>
         </el-form-item>
+        <el-form-item label="系列" prop="series">
+          <SeriesSelector v-model="form.series" width="100%" />
+        </el-form-item>
         <el-form-item label="状态" prop="status">
           <!-- radio 分别对应 0 1 不显示 显示 -->
           <el-radio-group v-model="form.status">
@@ -156,6 +159,7 @@ import { useRouter, useRoute } from 'vue-router'
 import { onMounted, reactive, ref } from 'vue'
 import { authApi } from '@/api'
 import Cropper from '@/components/Cropper'
+import SeriesSelector from '@/components/SeriesSelector.vue'
 
 export default {
   setup() {
@@ -172,6 +176,7 @@ export default {
       urlList: [],
       status: 0,
       postLinkOpen: false,
+      series: null,
       __v: null
     })
     const rules = reactive({})

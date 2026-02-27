@@ -71,15 +71,33 @@
         <el-button type="primary" @click="handleAdd">追加</el-button>
       </div>
     </div>
+    <div v-if="selectedRows.length > 0">
+      <AcgnBatchForm
+        :itemList="selectedRows"
+        acgnType="bangumi"
+        @success="batchSuccess()"
+        @cancel="clearSelection"
+      />
+    </div>
     <!-- 番剧 -->
-    <div class="mb20 list-table-body">
+    <div
+      class="mb20 list-table-body"
+      :class="{ batch: selectedRows.length > 0 }"
+    >
       <ResponsiveTable
         ref="tableRef"
         height="100%"
         :data="bangumiList"
         row-key="_id"
         border
+        @selection-change="handleSelectionChange"
       >
+        <ResponsiveTableColumn
+          type="selection"
+          :reserve-selection="true"
+          width="55"
+          fixed="left"
+        />
         <!-- 封面 cover -->
         <ResponsiveTableColumn label="封面" width="90">
           <template #default="{ row }">
@@ -229,6 +247,7 @@ import { ElMessage, ElMessageBox } from 'element-plus'
 import { onMounted, reactive, ref, watch } from 'vue'
 import { setSessionParams, getSessionParams, escapeHtml } from '@/utils/utils'
 import CheckDialogService from '@/services/CheckDialogService'
+import AcgnBatchForm from '@/components/AcgnBatchForm.vue'
 
 export default {
   setup() {
@@ -339,6 +358,19 @@ export default {
       initParams()
       getBangumiList()
     })
+
+    const selectedRows = ref([])
+    const handleSelectionChange = rows => {
+      selectedRows.value = rows
+    }
+    const clearSelection = () => {
+      tableRef.value.clearSelection()
+    }
+    const batchSuccess = () => {
+      clearSelection()
+      getBangumiList()
+    }
+
     return {
       bangumiList,
       loadingMap,
@@ -349,7 +381,11 @@ export default {
       handleAdd,
       goEdit,
       deleteBangumi,
-      updatePostLinkOpen
+      updatePostLinkOpen,
+      selectedRows,
+      handleSelectionChange,
+      clearSelection,
+      batchSuccess
     }
   }
 }

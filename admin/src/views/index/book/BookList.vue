@@ -86,15 +86,33 @@
         <el-button type="primary" @click="handleAdd">追加</el-button>
       </div>
     </div>
+    <div v-if="selectedRows.length > 0">
+      <AcgnBatchForm
+        :itemList="selectedRows"
+        acgnType="book"
+        @success="batchSuccess()"
+        @cancel="clearSelection"
+      />
+    </div>
     <!-- 书籍 -->
-    <div class="mb20 list-table-body">
+    <div
+      class="mb20 list-table-body"
+      :class="{ batch: selectedRows.length > 0 }"
+    >
       <ResponsiveTable
         height="100%"
         :data="bookList"
         row-key="_id"
         ref="tableRef"
         border
+        @selection-change="handleSelectionChange"
       >
+        <ResponsiveTableColumn
+          type="selection"
+          :reserve-selection="true"
+          width="55"
+          fixed="left"
+        />
         <!-- 封面 cover -->
         <ResponsiveTableColumn label="封面" width="90">
           <template #default="{ row }">
@@ -219,12 +237,32 @@
           </template>
         </ResponsiveTableColumn>
 
-        <ResponsiveTableColumn label="操作" width="140" fixed="right">
+        <ResponsiveTableColumn label="操作" width="180" fixed="right">
           <template #default="{ row }">
-            <el-button type="primary" size="small" @click="goEdit(row._id)"
-              >编辑</el-button
+            <el-dropdown
+              split-button
+              type="primary"
+              size="small"
+              @click="goEdit(row._id)"
+              @command="handleCommand($event, row)"
             >
-            <el-button type="danger" size="small" @click="deleteBook(row)"
+              编辑
+              <template #dropdown>
+                <el-dropdown-menu>
+                  <el-dropdown-item command="setStartTime"
+                    >设置当前时间为开始时间</el-dropdown-item
+                  >
+                  <el-dropdown-item command="setEndTime"
+                    >设置当前时间为结束时间</el-dropdown-item
+                  >
+                </el-dropdown-menu>
+              </template>
+            </el-dropdown>
+            <el-button
+              type="danger"
+              size="small"
+              class="ml5"
+              @click="deleteBook(row)"
               >删除</el-button
             >
           </template>
@@ -253,6 +291,7 @@ import { ElMessage, ElMessageBox } from 'element-plus'
 import { onMounted, reactive, ref, watch } from 'vue'
 import { setSessionParams, getSessionParams, escapeHtml } from '@/utils/utils'
 import CheckDialogService from '@/services/CheckDialogService'
+import AcgnBatchForm from '@/components/AcgnBatchForm.vue'
 
 export default {
   setup() {
@@ -419,6 +458,48 @@ export default {
       initParams()
       getBookList()
     })
+
+    const selectedRows = ref([])
+    const handleSelectionChange = rows => {
+      selectedRows.value = rows
+    }
+    const clearSelection = () => {
+      tableRef.value.clearSelection()
+    }
+    const batchSuccess = () => {
+      clearSelection()
+      getBookList()
+    }
+
+    const handleCommand = (command, row) => {
+      const typeMap = {
+        setStartTime: { type: 'startTime', label: '开始阅读' },
+        setEndTime: { type: 'endTime', label: '结束阅读' }
+      }
+      const config = typeMap[command]
+      if (!config) {
+        return
+      }
+      CheckDialogService.open({
+        correctAnswer: '是',
+        content: `确定要将【${escapeHtml(row.title) || '未命名'}】的${
+          config.label
+        }时间设置为当前时间吗？`,
+        success: () => {
+          return authApi
+            .updateBookTime({ id: row._id, type: config.type })
+            .then(() => {
+              ElMessage.success(`${config.label}时间设置成功`)
+              getBookList()
+            })
+        }
+      })
+        .then(() => {})
+        .catch(error => {
+          console.log('Dialog closed:', error)
+        })
+    }
+
     return {
       bookList,
       loadingMap,
@@ -433,7 +514,12 @@ export default {
       booktypeList,
       booktypeListIsLoading,
       queryBooktypeList,
-      readStatusList
+      readStatusList,
+      selectedRows,
+      handleSelectionChange,
+      clearSelection,
+      batchSuccess,
+      handleCommand
     }
   }
 }

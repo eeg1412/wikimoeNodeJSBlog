@@ -9,13 +9,18 @@ exports.save = async function (parmas) {
 
 exports.findOne = async function (parmas, projection) {
   // document查询
-  return await bangumisModel.findOne(parmas, projection)
+  return await bangumisModel
+    .findOne(parmas, projection)
+    .populate('series', '_id name')
 }
 
 // 查找所有
 exports.find = async function (parmas, sort, projection) {
   // document查询
-  return await bangumisModel.find(parmas, projection).sort(sort)
+  return await bangumisModel
+    .find(parmas, projection)
+    .populate('series', '_id name')
+    .sort(sort)
 }
 
 // 分页查询
@@ -30,6 +35,7 @@ exports.findPage = async function (
   // document查询
   const q = bangumisModel
     .find(parmas, projection)
+    .populate('series', '_id name')
     .sort(sort)
     .skip((page - 1) * limit)
     .limit(limit)

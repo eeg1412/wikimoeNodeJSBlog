@@ -12,6 +12,7 @@ exports.findOne = async function (parmas, projection) {
   return await booksModel
     .findOne(parmas, projection)
     .populate('booktype', '_id name color')
+    .populate('series', '_id name')
 }
 
 // 查找所有
@@ -20,6 +21,7 @@ exports.find = async function (parmas, sort, projection) {
   return await booksModel
     .find(parmas, projection)
     .populate('booktype', '_id name color')
+    .populate('series', '_id name')
     .sort(sort)
 }
 
@@ -36,6 +38,7 @@ exports.findPage = async function (
   const q = booksModel
     .find(parmas, projection)
     .populate('booktype', '_id name color')
+    .populate('series', '_id name')
     .sort(sort)
     .skip((page - 1) * limit)
     .limit(limit)
