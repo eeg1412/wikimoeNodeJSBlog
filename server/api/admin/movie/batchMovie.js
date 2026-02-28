@@ -1,4 +1,5 @@
 const movieUtils = require('../../../mongodb/utils/movies')
+const postUtils = require('../../../mongodb/utils/posts')
 const utils = require('../../../utils/utils')
 const log4js = require('log4js')
 const adminApiLog = log4js.getLogger('adminApi')
@@ -33,7 +34,6 @@ module.exports = async function (req, res, next) {
   }
 
   try {
-    const movieModel = require('../../../mongodb/models/movies')
     switch (action) {
       case 'addSeries': {
         if (!seriesId || !utils.isObjectId(seriesId)) {
@@ -42,14 +42,14 @@ module.exports = async function (req, res, next) {
           })
           return
         }
-        await movieModel.updateMany(
+        await movieUtils.updateMany(
           { _id: { $in: idList } },
           { $set: { series: seriesId } }
         )
         break
       }
       case 'removeSeries': {
-        await movieModel.updateMany(
+        await movieUtils.updateMany(
           { _id: { $in: idList } },
           { $set: { series: null } }
         )
@@ -69,7 +69,7 @@ module.exports = async function (req, res, next) {
           })
           return
         }
-        await movieModel.updateMany(
+        await movieUtils.updateMany(
           { _id: { $in: idList } },
           { $set: { status: statusNum } }
         )
@@ -92,7 +92,6 @@ module.exports = async function (req, res, next) {
           }
           await movieUtils.deleteOne({ _id: id })
         }
-        const postUtils = require('../../../mongodb/utils/posts')
         await postUtils
           .updateMany(
             {

@@ -65,6 +65,10 @@ exports.updateOne = async function (filters, parmas) {
   parmas.$inc = { __v: 1, ...parmas.$inc }
   return await gamesModel.updateOne(filters, parmas)
 }
+// updateMany
+exports.updateMany = async function (filters, parmas) {
+  return await gamesModel.updateMany(filters, parmas)
+}
 // 删除
 exports.deleteOne = async function (filters) {
   // document查询

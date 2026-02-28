@@ -67,6 +67,10 @@ exports.updateOne = async function (filters, parmas) {
   parmas.$inc = { __v: 1, ...parmas.$inc }
   return await moviesModel.updateOne(filters, parmas)
 }
+// updateMany
+exports.updateMany = async function (filters, parmas) {
+  return await moviesModel.updateMany(filters, parmas)
+}
 // deleteMany
 exports.deleteMany = async function (filters) {
   return await moviesModel.deleteMany(filters)

@@ -62,6 +62,10 @@ exports.updateOne = async function (filters, parmas) {
   parmas.$inc = { __v: 1, ...parmas.$inc }
   return await booksModel.updateOne(filters, parmas)
 }
+// updateMany
+exports.updateMany = async function (filters, parmas) {
+  return await booksModel.updateMany(filters, parmas)
+}
 // 删除
 exports.deleteOne = async function (filters) {
   // document查询

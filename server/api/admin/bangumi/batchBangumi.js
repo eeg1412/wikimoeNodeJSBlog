@@ -1,4 +1,5 @@
 const bangumiUtils = require('../../../mongodb/utils/bangumis')
+const postUtils = require('../../../mongodb/utils/posts')
 const utils = require('../../../utils/utils')
 const log4js = require('log4js')
 const adminApiLog = log4js.getLogger('adminApi')
@@ -50,16 +51,14 @@ module.exports = async function (req, res, next) {
           })
           return
         }
-        const bangumiModel = require('../../../mongodb/models/bangumis')
-        await bangumiModel.updateMany(
+        await bangumiUtils.updateMany(
           { _id: { $in: idList } },
           { $set: { series: seriesId } }
         )
         break
       }
       case 'removeSeries': {
-        const bangumiModel = require('../../../mongodb/models/bangumis')
-        await bangumiModel.updateMany(
+        await bangumiUtils.updateMany(
           { _id: { $in: idList } },
           { $set: { series: null } }
         )
@@ -79,8 +78,7 @@ module.exports = async function (req, res, next) {
           })
           return
         }
-        const bangumiModel = require('../../../mongodb/models/bangumis')
-        await bangumiModel.updateMany(
+        await bangumiUtils.updateMany(
           { _id: { $in: idList } },
           { $set: { status: statusNum } }
         )
@@ -105,7 +103,6 @@ module.exports = async function (req, res, next) {
           await bangumiUtils.deleteOne({ _id: id })
         }
         // 清理文章关联
-        const postUtils = require('../../../mongodb/utils/posts')
         await postUtils
           .updateMany(
             {
