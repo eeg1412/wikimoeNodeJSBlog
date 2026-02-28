@@ -86,6 +86,12 @@
               :key="item._id"
               class="acgn-batch-form-item"
             >
+              <span
+                v-if="getItemTag(item)"
+                class="acgn-batch-form-tag"
+                :style="{ backgroundColor: getItemTag(item).color }"
+                >{{ getItemTag(item).name }}</span
+              >
               <span class="acgn-batch-form-title">{{
                 item.title || '未命名'
               }}</span>
@@ -204,6 +210,39 @@ export default {
       })
     }
 
+    /**
+     * 获取项目的标签信息（name + color）
+     * @param {Object} item - 列表项
+     * @returns {{ name: string, color: string } | null}
+     */
+    const getItemTag = item => {
+      switch (props.acgnType) {
+        case 'bangumi':
+          return { name: '番剧', color: 'rgb(244, 114, 182)' }
+        case 'movie':
+          return { name: '电影', color: 'rgb(251, 146, 60)' }
+        case 'book':
+          if (item.booktype && item.booktype.name && item.booktype.color) {
+            return { name: item.booktype.name, color: item.booktype.color }
+          }
+          return null
+        case 'game':
+          if (
+            item.gamePlatform &&
+            item.gamePlatform.name &&
+            item.gamePlatform.color
+          ) {
+            return {
+              name: item.gamePlatform.name,
+              color: item.gamePlatform.color
+            }
+          }
+          return null
+        default:
+          return null
+      }
+    }
+
     const cancel = () => {
       emit('cancel')
     }
@@ -216,7 +255,8 @@ export default {
       tryBatch,
       dialogOpen,
       doBatch,
-      cancel
+      cancel,
+      getItemTag
     }
   }
 }
@@ -246,6 +286,18 @@ export default {
 }
 .acgn-batch-form-item:last-child {
   margin-bottom: 0;
+}
+.acgn-batch-form-tag {
+  display: inline-flex;
+  align-items: center;
+  flex-shrink: 0;
+  padding: 0 6px;
+  height: 20px;
+  line-height: 20px;
+  border-radius: 3px;
+  font-size: 12px;
+  color: #fff;
+  margin-right: 6px;
 }
 .acgn-batch-form-title {
   /* margin-left: 10px; */
