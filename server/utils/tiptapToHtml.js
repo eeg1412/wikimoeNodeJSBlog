@@ -114,15 +114,15 @@ const renderNode = (node) => {
     }
 
     case 'blockquote':
-      return `<blockquote>${children}</blockquote>`
+      return `<blockquote style="border-left:3px solid #ccc;padding-left:1em;margin-left:0;color:#666;">${children}</blockquote>`
 
     case 'bulletList':
-      return `<ul>${children}</ul>`
+      return `<ul style="list-style:disc;padding-left:1.5em;">${children}</ul>`
 
     case 'orderedList': {
       const start = node.attrs?.start || 1
       const startAttr = start !== 1 ? ` start="${start}"` : ''
-      return `<ol${startAttr}>${children}</ol>`
+      return `<ol${startAttr} style="list-style:decimal;padding-left:1.5em;">${children}</ol>`
     }
 
     case 'listItem':
@@ -140,11 +140,11 @@ const renderNode = (node) => {
       const language = node.attrs?.language || ''
       const langClass = language ? ` class="language-${escapeHtml(language)}"` : ''
       const codeContent = (node.content || []).map(n => n.text || '').join('')
-      return `<pre><code${langClass}>${escapeHtml(codeContent)}</code></pre>`
+      return `<pre style="background:#1e1e1e;color:#d4d4d4;border-radius:4px;padding:12px;overflow-x:auto;"><code${langClass} style="font-family:Consolas,Monaco,monospace;font-size:14px;">${escapeHtml(codeContent)}</code></pre>`
     }
 
     case 'horizontalRule':
-      return '<hr>'
+      return '<hr style="border:none;border-top:2px solid #ccc;margin:1em 0;">'
 
     case 'hardBreak':
       return '<br>'
@@ -227,6 +227,17 @@ const renderNode = (node) => {
       const dataHrefHeight = attrs.dataHrefHeight ? ` data-href-height="${escapeHtml(String(attrs.dataHrefHeight))}"` : ''
       const alt = escapeHtml(attrs.alt || '360°全景图片')
       return `<div class="w-e-panorama360"><img src="${src}" class="w-e-panorama360-img"${width}${height}${dataHref}${dataHrefWidth}${dataHrefHeight} alt="${alt}" data-type="panorama360" loading="lazy" /></div>`
+    }
+
+    case 'contentBlock': {
+      const attrs = node.attrs || {}
+      const blockType = escapeHtml(attrs.blockType || '')
+      const blockTitle = escapeHtml(attrs.blockTitle || '')
+      const typeLabels = { bangumi: '番剧', movie: '电影', book: '书籍', game: '游戏', vote: '投票' }
+      const typeColors = { bangumi: '#f472b6', movie: '#fb923c', book: '#4ade80', game: '#60a5fa', vote: '#a78bfa' }
+      const label = typeLabels[blockType] || blockType
+      const color = typeColors[blockType] || '#999'
+      return `<div style="border:1px solid #e0e0e0;border-radius:8px;padding:10px 14px;margin:8px 0;background:#fafafa;"><span style="display:inline-block;padding:2px 8px;border-radius:4px;color:#fff;font-size:12px;margin-right:8px;background:${color};">${label}</span><strong>${blockTitle}</strong></div>`
     }
 
     default:
