@@ -32,7 +32,8 @@ module.exports = async function (req, res, next) {
   const updateData = {
     type: type,
     author: adminId,
-    lastChangDate: new Date()
+    lastChangDate: new Date(),
+    editorVersion: 6
   }
 
   // save

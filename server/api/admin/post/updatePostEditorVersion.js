@@ -1,16 +1,14 @@
 const postUtils = require('../../../mongodb/utils/posts')
 const utils = require('../../../utils/utils')
 const log4js = require('log4js')
-const tagUtils = require('../../../mongodb/utils/tags')
 const adminApiLog = log4js.getLogger('adminApi')
-const validator = require('validator')
 const cacheDataUtils = require('../../../config/cacheData')
 const rssToolUtils = require('../../../utils/rss')
 const sitemapToolUtils = require('../../../utils/sitemap')
 
 module.exports = async function (req, res, next) {
   const id = req.body.id
-  let { __v } = req.body
+  let { __v, contentJson } = req.body
 
   const params = { id, __v }
   const rule = [
@@ -30,11 +28,22 @@ module.exports = async function (req, res, next) {
   }
 
   const updateData = {
-    editorVersion: 5,
-    content: '',
+    editorVersion: 6,
     status: 0,
     lastChangDate: new Date()
   }
+
+  // If contentJson is provided, it's an upgrade with content conversion
+  if (contentJson && typeof contentJson === 'object') {
+    updateData.contentJson = contentJson
+    // Clear old HTML content since we now use JSON
+    updateData.content = ''
+  } else {
+    // Clear content for fresh upgrade
+    updateData.content = ''
+    updateData.contentJson = null
+  }
+
   // 更新
   postUtils
     .updateOne({ _id: id, __v: __v }, updateData)

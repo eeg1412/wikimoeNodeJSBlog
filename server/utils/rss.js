@@ -1,6 +1,7 @@
 const Feed = require('feed').Feed
 const postUtils = require('../mongodb/utils/posts')
 const utils = require('./utils')
+const { tiptapJsonToHtml } = require('./tiptapToHtml')
 const fs = require('fs')
 const path = require('path')
 const rssCacheFolder = './seo/rss'
@@ -43,7 +44,7 @@ exports.updateRSS = async type => {
     }
     const size = parseInt(siteRssMaxCount) || 1
     const filter =
-      '-voteList -bangumiList -movieList -bookList -eventList -gameList -postList -seriesSortList -code -editorVersion'
+      '-voteList -bangumiList -movieList -bookList -eventList -gameList -postList -seriesSortList -code'
     const data = await postUtils
       .findPage(params, sort, 1, size, filter, {
         authorFilter: 'nickname',
@@ -81,11 +82,15 @@ exports.updateRSS = async type => {
       }
     })
     list.forEach(item => {
-      const { title, excerpt, content, _id, author, type, date, alias } = item
+      const { title, excerpt, content, contentJson, _id, author, type, date, alias, editorVersion } = item
       const link = `${siteUrl}/post/${alias || _id}`
       // 注意如果用到作者的话，务必在更改作者的时候更新rss！！！
       let newTitle = title
       let newContent = content
+      // v6 posts use contentJson
+      if (editorVersion === 6 && contentJson) {
+        newContent = tiptapJsonToHtml(contentJson)
+      }
       if (type === 2) {
         // 推文时，标题为【nickname在xxxx年xx月xx日xx点xx分发表了推文】
         // const authorName = author.nickname

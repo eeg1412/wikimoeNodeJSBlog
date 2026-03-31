@@ -40,6 +40,10 @@ var posts = new Schema(
       type: String,
       default: ''
     },
+    contentJson: {
+      type: Schema.Types.Mixed,
+      default: null
+    },
     excerpt: {
       type: String,
       default: ''
