@@ -435,7 +435,7 @@ module.exports = async function (req, res, next) {
     }
   }
   const filter =
-    '-voteList -content -bangumiList -movieList -bookList -eventList -gameList -postList -seriesSortList -code -editorVersion'
+    '-voteList -content -contentJson -bangumiList -movieList -bookList -eventList -gameList -postList -seriesSortList -code -editorVersion'
   postUtils
     .findPage(params, postSorting, page, size, filter, {
       voteFliter:

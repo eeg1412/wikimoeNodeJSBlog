@@ -116,7 +116,11 @@
       v-if="postData.data.type === 1 || postData.data.type === 3"
       id="postHtmlContent"
     >
-      <LazyHtmlContent :content="postData.data.content" />
+      <LazyTiptapContent
+        v-if="postData.data.editorVersion === 6 && postData.data.contentJson"
+        :contentJson="postData.data.contentJson"
+      />
+      <LazyHtmlContent v-else :content="postData.data.content" />
       <!-- tags -->
       <div
         class="mt-1 mb-1"

@@ -194,7 +194,7 @@ module.exports = async function (req, res, next) {
         break
     }
   }
-  const filter = '-content'
+  const filter = '-content -contentJson'
   postUtils
     .findPage(params, postSorting, page, size, filter, { isAdmin: true })
     .then(data => {
