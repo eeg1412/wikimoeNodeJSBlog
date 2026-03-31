@@ -64,8 +64,13 @@
                   :isPost="true"
                   v-else-if="postEditorVersion === 5"
                 />
+                <TiptapEditor
+                  v-model:contentJson="form.contentJson"
+                  :isPost="true"
+                  v-else-if="postEditorVersion === 6"
+                />
               </el-tab-pane>
-              <el-tab-pane label="源代码" name="sourceCode">
+              <el-tab-pane label="源代码" name="sourceCode" v-if="postEditorVersion !== 6">
                 <el-input
                   type="textarea"
                   v-model="contentSource"
@@ -73,21 +78,63 @@
                   placeholder="请输入源代码"
                 ></el-input>
               </el-tab-pane>
+              <el-tab-pane label="JSON" name="jsonSource" v-if="postEditorVersion === 6">
+                <el-input
+                  type="textarea"
+                  :model-value="contentJsonSource"
+                  rows="30"
+                  placeholder="Tiptap JSON 内容"
+                  readonly
+                ></el-input>
+              </el-tab-pane>
             </el-tabs>
             <div class="mt10 w_10 old-content-body" v-if="oldPostEditorContent">
               <div class="fb">旧编辑器内容（刷新后删除）：</div>
               <div v-html="oldPostEditorContent"></div>
             </div>
-            <div class="mt10" v-if="postEditorVersion < 5">
+            <div class="mt10" v-if="postEditorVersion < 6">
               <!-- 升级按钮 -->
+              <el-button
+                type="primary"
+                @click="showUpgradePreview"
+                class="mb10"
+                >升级编辑器到Tiptap</el-button
+              >
               <el-button
                 type="danger"
                 @click="updatePostEditorVersion"
                 class="mb10"
-                >清空内容并升级编辑器版本</el-button
+                v-if="postEditorVersion < 5"
+                >清空内容并升级到v5编辑器</el-button
               >
             </div>
           </el-form-item>
+
+          <!-- 升级预览对话框 -->
+          <el-dialog
+            v-model="upgradePreviewVisible"
+            title="升级编辑器预览"
+            width="80%"
+            :close-on-click-modal="false"
+            destroy-on-close
+          >
+            <div class="upgrade-preview-body">
+              <div class="upgrade-preview-section">
+                <div class="fb mb10">当前内容（HTML）：</div>
+                <div class="upgrade-preview-content old-content-body" v-html="form.content"></div>
+              </div>
+              <div class="upgrade-preview-section mt10">
+                <div class="fb mb10">升级后预览（Tiptap JSON 渲染）：</div>
+                <div class="upgrade-preview-content" v-html="upgradePreviewHtml"></div>
+              </div>
+            </div>
+            <template #footer>
+              <span class="dialog-footer">
+                <el-button @click="upgradePreviewVisible = false">取消</el-button>
+                <el-button type="primary" @click="confirmUpgradeToTiptap">确认升级</el-button>
+              </span>
+            </template>
+          </el-dialog>
 
           <!-- 摘要 -->
           <el-form-item label="摘要" prop="excerpt">
@@ -788,6 +835,7 @@ import { ElMessage, ElMessageBox } from 'element-plus'
 import AttachmentsDialog from '@/components/AttachmentsDialog'
 import RichEditor4 from '@/components/RichEditor4'
 import RichEditor5 from '@/components/RichEditor5'
+import TiptapEditor from '@/components/TiptapEditor'
 import BangumiSelector from '@/components/BangumiSelector.vue'
 import MovieSelector from '@/components/MovieSelector.vue'
 import GameSelector from '@/components/GameSelector.vue'
@@ -810,6 +858,7 @@ import {
   stringHash,
   rankKeywordsResults
 } from '@/utils/utils'
+import { htmlToTiptapJson } from '@/utils/htmlToTiptapJson'
 import store from '@/store'
 
 export default {
@@ -817,6 +866,7 @@ export default {
     AttachmentsDialog,
     RichEditor4,
     RichEditor5,
+    TiptapEditor,
     draggable,
     EmojiTextarea,
     BangumiSelector,
@@ -1007,7 +1057,7 @@ export default {
             }
           })
           type.value = res.data.data.type
-          // 旧文章采用v4富文本编辑器，新文章采用v5富文本编辑器
+          // 旧文章采用v4富文本编辑器，新文章采用v6 Tiptap编辑器
           postEditorVersion.value = res.data.data.editorVersion || 5
           form.id = res.data.data._id
           // status 为0时 启动setAutoSaveTimer()
@@ -1069,6 +1119,7 @@ export default {
       title: '',
       date: null,
       content: '',
+      contentJson: null,
       excerpt: '',
       alias: '',
       sort: null,
@@ -1261,6 +1312,10 @@ export default {
       }
       delete newForm.seriesSortListTurnOn
       delete newForm.contentSeriesSortListTurnOn
+      // For v6 (Tiptap), clear content field since we use contentJson
+      if (postEditorVersion.value === 6) {
+        newForm.content = ''
+      }
       authApi.updatePost(newForm).then(() => {
         // 成功消息
         ElMessage.success('保存成功')
@@ -1273,8 +1328,10 @@ export default {
     const contentSource = ref('')
     const contentTabChange = tab => {
       if (tab === 'richText') {
-        resetRichEditor()
-      } else {
+        if (postEditorVersion.value !== 6) {
+          resetRichEditor()
+        }
+      } else if (tab === 'sourceCode') {
         contentSource.value = form.content
       }
     }
@@ -1473,6 +1530,10 @@ export default {
       if (form.status === 0 && !autoSaveError.value) {
         const newForm = JSON.parse(JSON.stringify(form))
         newForm.isAutoSave = true
+        // For v6 (Tiptap), clear content field since we use contentJson
+        if (postEditorVersion.value === 6) {
+          newForm.content = ''
+        }
         authApi
           .updatePost(newForm, true)
           .then(res => {
@@ -1493,7 +1554,7 @@ export default {
       }, 1000 * 60 * 2)
     }
 
-    // 升级编辑器版本
+    // 升级编辑器版本（v4 -> v5 旧逻辑）
     const oldPostEditorContent = ref(null)
     const updatePostEditorVersion = () => {
       ElMessageBox.confirm(
@@ -1516,6 +1577,119 @@ export default {
         })
         .catch(() => {})
     }
+
+    // 升级到 Tiptap (v6) 预览
+    const upgradePreviewVisible = ref(false)
+    const upgradePreviewHtml = ref('')
+    const upgradePreviewJson = ref(null)
+
+    const tiptapJsonToHtmlSimple = (json) => {
+      // Simple client-side JSON to HTML for preview
+      if (!json || !json.content) return ''
+      const renderNode = (node) => {
+        if (!node) return ''
+        if (node.type === 'text') {
+          let html = (node.text || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+          if (node.marks) {
+            node.marks.forEach(mark => {
+              switch (mark.type) {
+                case 'bold': html = `<strong>${html}</strong>`; break
+                case 'italic': html = `<em>${html}</em>`; break
+                case 'underline': html = `<u>${html}</u>`; break
+                case 'strike': html = `<s>${html}</s>`; break
+                case 'code': html = `<code>${html}</code>`; break
+                case 'superscript': html = `<sup>${html}</sup>`; break
+                case 'subscript': html = `<sub>${html}</sub>`; break
+                case 'link': html = `<a href="${mark.attrs?.href || ''}" target="_blank">${html}</a>`; break
+                case 'textStyle': {
+                  const styles = []
+                  if (mark.attrs?.color) styles.push(`color: ${mark.attrs.color}`)
+                  if (mark.attrs?.fontSize) styles.push(`font-size: ${mark.attrs.fontSize}`)
+                  if (styles.length > 0) html = `<span style="${styles.join('; ')}">${html}</span>`
+                  break
+                }
+                case 'highlight': html = `<mark style="background-color: ${mark.attrs?.color || 'yellow'}">${html}</mark>`; break
+              }
+            })
+          }
+          return html
+        }
+        const children = (node.content || []).map(renderNode).join('')
+        switch (node.type) {
+          case 'doc': return children
+          case 'paragraph': return `<p>${children}</p>`
+          case 'heading': return `<h${node.attrs?.level || 1}>${children}</h${node.attrs?.level || 1}>`
+          case 'blockquote': return `<blockquote>${children}</blockquote>`
+          case 'bulletList': return `<ul>${children}</ul>`
+          case 'orderedList': return `<ol>${children}</ol>`
+          case 'listItem': return `<li>${children}</li>`
+          case 'taskList': return `<ul data-type="taskList">${children}</ul>`
+          case 'taskItem': return `<li data-type="taskItem">${children}</li>`
+          case 'codeBlock': {
+            const text = (node.content || []).map(n => n.text || '').join('')
+            return `<pre><code>${text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')}</code></pre>`
+          }
+          case 'horizontalRule': return '<hr>'
+          case 'hardBreak': return '<br>'
+          case 'image': return `<img src="${node.attrs?.src || ''}" alt="${node.attrs?.alt || ''}" style="max-width: 100%;" loading="lazy">`
+          case 'video': {
+            const src = node.attrs?.src || ''
+            if (src.startsWith('<iframe')) return `<div>${src}</div>`
+            return `<div><video controls style="max-width: 100%;"><source src="${src}" type="video/mp4"/></video></div>`
+          }
+          case 'table': return `<table border="1" cellpadding="4" style="border-collapse: collapse;">${children}</table>`
+          case 'tableRow': return `<tr>${children}</tr>`
+          case 'tableHeader': return `<th>${children}</th>`
+          case 'tableCell': return `<td>${children}</td>`
+          case 'eventspan': return `<span style="color: #409eff; cursor: pointer; text-decoration: underline;">${node.attrs?.textContent || ''}</span>`
+          case 'imageGroup': {
+            const list = node.attrs?.childrenList || []
+            let html = '<div style="display: flex; flex-wrap: wrap; gap: 4px;">'
+            list.forEach(child => {
+              html += `<div style="flex: 1 1 calc(50% - 4px);"><img src="${child.src || ''}" alt="${child.alt || ''}" style="width: 100%; height: auto;" loading="lazy"></div>`
+            })
+            html += '</div>'
+            return html
+          }
+          case 'panorama360': return `<div style="position: relative;"><img src="${node.attrs?.src || ''}" alt="${node.attrs?.alt || ''}" style="width: 100%; max-height: 400px; object-fit: cover;" loading="lazy"><span style="position: absolute; top: 5px; left: 5px; background: rgba(0,0,0,0.6); color: white; padding: 2px 8px; border-radius: 4px; font-size: 12px;">360°</span></div>`
+          default: return children
+        }
+      }
+      return renderNode(json)
+    }
+
+    const showUpgradePreview = () => {
+      const currentContent = form.content || ''
+      const json = htmlToTiptapJson(currentContent)
+      upgradePreviewJson.value = json
+      upgradePreviewHtml.value = tiptapJsonToHtmlSimple(json)
+      upgradePreviewVisible.value = true
+    }
+
+    const confirmUpgradeToTiptap = () => {
+      upgradePreviewVisible.value = false
+      authApi
+        .updatePostEditorVersion({
+          id: form.id,
+          __v: form.__v,
+          contentJson: upgradePreviewJson.value
+        })
+        .then(() => {
+          oldPostEditorContent.value = form.content
+          ElMessage.success('升级到Tiptap成功')
+          getPostDetail()
+        })
+        .catch(() => {
+          ElMessage.error('升级失败')
+        })
+    }
+
+    const contentJsonSource = computed(() => {
+      if (form.contentJson) {
+        return JSON.stringify(form.contentJson, null, 2)
+      }
+      return ''
+    })
 
     onBeforeRouteLeave(async (to, from, next) => {
       if (submitSuccessFlag) {
@@ -1951,6 +2125,12 @@ export default {
       // 升级编辑器版本
       oldPostEditorContent,
       updatePostEditorVersion,
+      // 升级到Tiptap
+      upgradePreviewVisible,
+      upgradePreviewHtml,
+      showUpgradePreview,
+      confirmUpgradeToTiptap,
+      contentJsonSource,
       openPreviewer,
       // tweetContentParse
       tweetContentParseRes,
@@ -2036,6 +2216,22 @@ export default {
 .old-content-body {
   border: 1px solid #dcdfe6;
   padding: 10px;
+}
+.upgrade-preview-body {
+  max-height: 60vh;
+  overflow-y: auto;
+}
+.upgrade-preview-section {
+  margin-bottom: 10px;
+}
+.upgrade-preview-content {
+  border: 1px solid #dcdfe6;
+  padding: 10px;
+  max-height: 300px;
+  overflow-y: auto;
+}
+.upgrade-preview-content img {
+  max-width: 100%;
 }
 .link-content {
   margin-top: 10px;
