@@ -58,3 +58,8 @@ exports.findOneAndUpdate = async function (filters, parmas, options) {
   // document查询
   return await commentReactionsModel.findOneAndUpdate(filters, parmas, options)
 }
+// 聚合
+exports.aggregate = async function (parmas) {
+  // document查询
+  return await commentReactionsModel.aggregate(parmas)
+}
