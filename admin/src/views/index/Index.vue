@@ -276,6 +276,26 @@
                 <i class="fas fa-fw fa-thumbs-up pr10"></i>
                 <template #title>评论点赞日志</template>
               </el-menu-item>
+              <!-- 文章反应日志 PostReactionList -->
+              <el-menu-item
+                index="PostReactionList"
+                @click="removeParam('PostReactionList')"
+                @click.middle="openNewTab('PostReactionList')"
+                :route="{ name: 'PostReactionList' }"
+              >
+                <i class="fas fa-fw fa-smile pr10"></i>
+                <template #title>文章反应日志</template>
+              </el-menu-item>
+              <!-- 评论反应日志 CommentReactionList -->
+              <el-menu-item
+                index="CommentReactionList"
+                @click="removeParam('CommentReactionList')"
+                @click.middle="openNewTab('CommentReactionList')"
+                :route="{ name: 'CommentReactionList' }"
+              >
+                <i class="fas fa-fw fa-smile pr10"></i>
+                <template #title>评论反应日志</template>
+              </el-menu-item>
               <!-- 读者操作日志 ReaderlogList -->
               <el-menu-item
                 index="ReaderlogList"

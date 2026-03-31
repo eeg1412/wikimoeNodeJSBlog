@@ -312,6 +312,24 @@ const routes = [
             /* webpackChunkName: "CommentLikeLogList" */ '../views/index/commentLikeLog/CommentLikeLogList.vue'
           )
       },
+      // PostReactionList
+      {
+        path: '/postreaction/list',
+        name: 'PostReactionList',
+        component: () =>
+          import(
+            /* webpackChunkName: "PostReactionList" */ '../views/index/postReaction/PostReactionList.vue'
+          )
+      },
+      // CommentReactionList
+      {
+        path: '/commentreaction/list',
+        name: 'CommentReactionList',
+        component: () =>
+          import(
+            /* webpackChunkName: "CommentReactionList" */ '../views/index/commentReaction/CommentReactionList.vue'
+          )
+      },
       // EmailSendHistoryList
       {
         path: '/emailsendhistory/list',

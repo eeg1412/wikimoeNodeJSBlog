@@ -531,6 +531,46 @@ export default function (api) {
         shouldAdminJWT: true
       })
     },
+    // /postreaction/list
+    getPostReactionList(data) {
+      return api.get('/postreaction/list', {
+        params: data,
+        shouldAdminJWT: true
+      })
+    },
+    // /postreaction/stats
+    getPostReactionStats() {
+      return api.get('/postreaction/stats', {
+        shouldAdminJWT: true
+      })
+    },
+    // delete /postreaction/delete
+    deletePostReaction(data) {
+      return api.delete('/postreaction/delete', {
+        params: data,
+        shouldAdminJWT: true
+      })
+    },
+    // /commentreaction/list
+    getCommentReactionList(data) {
+      return api.get('/commentreaction/list', {
+        params: data,
+        shouldAdminJWT: true
+      })
+    },
+    // /commentreaction/stats
+    getCommentReactionStats() {
+      return api.get('/commentreaction/stats', {
+        shouldAdminJWT: true
+      })
+    },
+    // delete /commentreaction/delete
+    deleteCommentReaction(data) {
+      return api.delete('/commentreaction/delete', {
+        params: data,
+        shouldAdminJWT: true
+      })
+    },
     // /bangumi/create
     createBangumi(data) {
       return api.post('/bangumi/create', data, {
