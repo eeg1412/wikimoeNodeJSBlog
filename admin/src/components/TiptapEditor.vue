@@ -1,440 +1,17 @@
 <template>
   <div class="editor-body tiptap-editor" :class="{ 'tiptap-fullscreen': isFullScreen }">
-    <div class="tiptap-toolbar" v-if="editor">
-      <!-- Row 1: Basic formatting -->
-      <div class="tiptap-toolbar-row">
-        <!-- Heading select -->
-        <el-select
-          :model-value="currentHeading"
-          @change="setHeading"
-          size="small"
-          class="tiptap-toolbar-select"
-          placeholder="正文"
-        >
-          <el-option label="正文" value="paragraph" />
-          <el-option label="标题1" value="1" />
-          <el-option label="标题2" value="2" />
-          <el-option label="标题3" value="3" />
-          <el-option label="标题4" value="4" />
-          <el-option label="标题5" value="5" />
-        </el-select>
-
-        <el-divider direction="vertical" />
-
-        <!-- Text style buttons -->
-        <el-tooltip content="加粗" placement="top" :show-after="500">
-          <button
-            class="tiptap-btn"
-            :class="{ 'is-active': editor.isActive('bold') }"
-            @click="editor.chain().focus().toggleBold().run()"
-          >
-            <b>B</b>
-          </button>
-        </el-tooltip>
-        <el-tooltip content="斜体" placement="top" :show-after="500">
-          <button
-            class="tiptap-btn"
-            :class="{ 'is-active': editor.isActive('italic') }"
-            @click="editor.chain().focus().toggleItalic().run()"
-          >
-            <i>I</i>
-          </button>
-        </el-tooltip>
-        <el-tooltip content="下划线" placement="top" :show-after="500">
-          <button
-            class="tiptap-btn"
-            :class="{ 'is-active': editor.isActive('underline') }"
-            @click="editor.chain().focus().toggleUnderline().run()"
-          >
-            <u>U</u>
-          </button>
-        </el-tooltip>
-        <el-tooltip content="删除线" placement="top" :show-after="500">
-          <button
-            class="tiptap-btn"
-            :class="{ 'is-active': editor.isActive('strike') }"
-            @click="editor.chain().focus().toggleStrike().run()"
-          >
-            <s>S</s>
-          </button>
-        </el-tooltip>
-        <el-tooltip content="行内代码" placement="top" :show-after="500">
-          <button
-            class="tiptap-btn"
-            :class="{ 'is-active': editor.isActive('code') }"
-            @click="editor.chain().focus().toggleCode().run()"
-          >
-            &lt;/&gt;
-          </button>
-        </el-tooltip>
-        <el-tooltip content="上标" placement="top" :show-after="500">
-          <button
-            class="tiptap-btn"
-            :class="{ 'is-active': editor.isActive('superscript') }"
-            @click="editor.chain().focus().toggleSuperscript().run()"
-          >
-            X<sup>2</sup>
-          </button>
-        </el-tooltip>
-        <el-tooltip content="下标" placement="top" :show-after="500">
-          <button
-            class="tiptap-btn"
-            :class="{ 'is-active': editor.isActive('subscript') }"
-            @click="editor.chain().focus().toggleSubscript().run()"
-          >
-            X<sub>2</sub>
-          </button>
-        </el-tooltip>
-        <el-tooltip content="清除格式" placement="top" :show-after="500">
-          <button
-            class="tiptap-btn"
-            @click="editor.chain().focus().unsetAllMarks().run()"
-          >
-            ✕
-          </button>
-        </el-tooltip>
-
-        <el-divider direction="vertical" />
-
-        <!-- Color -->
-        <el-tooltip content="文字颜色" placement="top" :show-after="500">
-          <el-color-picker
-            :model-value="editor.getAttributes('textStyle').color || '#000000'"
-            @change="val => editor.chain().focus().setColor(val).run()"
-            size="small"
-            class="tiptap-color-picker"
-          />
-        </el-tooltip>
-        <el-tooltip content="背景颜色" placement="top" :show-after="500">
-          <el-color-picker
-            :model-value="
-              editor.getAttributes('highlight').color || 'transparent'
-            "
-            @change="
-              val =>
-                editor.chain().focus().toggleHighlight({ color: val }).run()
-            "
-            size="small"
-            class="tiptap-color-picker"
-          />
-        </el-tooltip>
-
-        <el-divider direction="vertical" />
-
-        <!-- Font size -->
-        <el-select
-          :model-value="currentFontSize"
-          @change="setFontSize"
-          size="small"
-          class="tiptap-toolbar-select tiptap-toolbar-select-sm"
-          placeholder="字号"
-        >
-          <el-option label="默认" value="" />
-          <el-option label="12px" value="12px" />
-          <el-option label="14px" value="14px" />
-          <el-option label="16px" value="16px" />
-          <el-option label="18px" value="18px" />
-          <el-option label="20px" value="20px" />
-          <el-option label="24px" value="24px" />
-          <el-option label="28px" value="28px" />
-          <el-option label="32px" value="32px" />
-          <el-option label="36px" value="36px" />
-        </el-select>
-
-        <!-- Line height -->
-        <el-select
-          :model-value="currentLineHeight"
-          @change="setLineHeight"
-          size="small"
-          class="tiptap-toolbar-select tiptap-toolbar-select-sm"
-          placeholder="行高"
-        >
-          <el-option label="默认" value="" />
-          <el-option label="1" value="1" />
-          <el-option label="1.15" value="1.15" />
-          <el-option label="1.5" value="1.5" />
-          <el-option label="1.75" value="1.75" />
-          <el-option label="2" value="2" />
-          <el-option label="2.5" value="2.5" />
-          <el-option label="3" value="3" />
-        </el-select>
-
-        <!-- Font family -->
-        <el-select
-          :model-value="currentFontFamily"
-          @change="setFontFamily"
-          size="small"
-          class="tiptap-toolbar-select"
-          placeholder="字体"
-        >
-          <el-option label="默认" value="" />
-          <el-option label="黑体" value="SimHei" />
-          <el-option label="宋体" value="SimSun" />
-          <el-option label="楷体" value="KaiTi" />
-          <el-option label="微软雅黑" value="Microsoft YaHei" />
-          <el-option label="Arial" value="Arial" />
-          <el-option label="Tahoma" value="Tahoma" />
-          <el-option label="Verdana" value="Verdana" />
-          <el-option label="Georgia" value="Georgia" />
-          <el-option label="Times New Roman" value="Times New Roman" />
-          <el-option label="Courier New" value="Courier New" />
-        </el-select>
-      </div>
-
-      <!-- Row 2: Structure and media -->
-      <div class="tiptap-toolbar-row">
-        <el-tooltip content="引用" placement="top" :show-after="500">
-          <button
-            class="tiptap-btn"
-            :class="{ 'is-active': editor.isActive('blockquote') }"
-            @click="editor.chain().focus().toggleBlockquote().run()"
-          >
-            ❝
-          </button>
-        </el-tooltip>
-
-        <el-tooltip content="无序列表" placement="top" :show-after="500">
-          <button
-            class="tiptap-btn"
-            :class="{ 'is-active': editor.isActive('bulletList') }"
-            @click="editor.chain().focus().toggleBulletList().run()"
-          >
-            ☰
-          </button>
-        </el-tooltip>
-        <el-tooltip content="有序列表" placement="top" :show-after="500">
-          <button
-            class="tiptap-btn"
-            :class="{ 'is-active': editor.isActive('orderedList') }"
-            @click="editor.chain().focus().toggleOrderedList().run()"
-          >
-            1.
-          </button>
-        </el-tooltip>
-        <el-tooltip content="任务列表" placement="top" :show-after="500">
-          <button
-            class="tiptap-btn"
-            :class="{ 'is-active': editor.isActive('taskList') }"
-            @click="editor.chain().focus().toggleTaskList().run()"
-          >
-            ☑
-          </button>
-        </el-tooltip>
-
-        <el-divider direction="vertical" />
-
-        <!-- Alignment -->
-        <el-tooltip content="左对齐" placement="top" :show-after="500">
-          <button
-            class="tiptap-btn"
-            :class="{ 'is-active': editor.isActive({ textAlign: 'left' }) }"
-            @click="editor.chain().focus().setTextAlign('left').run()"
-          >
-            ≡
-          </button>
-        </el-tooltip>
-        <el-tooltip content="居中" placement="top" :show-after="500">
-          <button
-            class="tiptap-btn"
-            :class="{ 'is-active': editor.isActive({ textAlign: 'center' }) }"
-            @click="editor.chain().focus().setTextAlign('center').run()"
-          >
-            ≡
-          </button>
-        </el-tooltip>
-        <el-tooltip content="右对齐" placement="top" :show-after="500">
-          <button
-            class="tiptap-btn"
-            :class="{ 'is-active': editor.isActive({ textAlign: 'right' }) }"
-            @click="editor.chain().focus().setTextAlign('right').run()"
-          >
-            ≡
-          </button>
-        </el-tooltip>
-        <el-tooltip content="两端对齐" placement="top" :show-after="500">
-          <button
-            class="tiptap-btn"
-            :class="{ 'is-active': editor.isActive({ textAlign: 'justify' }) }"
-            @click="editor.chain().focus().setTextAlign('justify').run()"
-          >
-            ≡
-          </button>
-        </el-tooltip>
-
-        <el-divider direction="vertical" />
-
-        <!-- Indent -->
-        <el-tooltip content="增加缩进" placement="top" :show-after="500">
-          <button
-            class="tiptap-btn"
-            @click="editor.chain().focus().increaseIndent().run()"
-          >
-            →|
-          </button>
-        </el-tooltip>
-        <el-tooltip content="减少缩进" placement="top" :show-after="500">
-          <button
-            class="tiptap-btn"
-            @click="editor.chain().focus().decreaseIndent().run()"
-          >
-            |←
-          </button>
-        </el-tooltip>
-
-        <el-divider direction="vertical" />
-
-        <!-- Emoji popover -->
-        <el-popover trigger="click" :width="300">
-          <template #reference>
-            <el-tooltip content="表情" placement="top" :show-after="500">
-              <button class="tiptap-btn">😀</button>
-            </el-tooltip>
-          </template>
-          <div class="tiptap-emoji-grid">
-            <span
-              v-for="emoji in emojiList"
-              :key="emoji"
-              class="tiptap-emoji-item"
-              @click="insertEmoji(emoji)"
-              >{{ emoji }}</span
-            >
-          </div>
-        </el-popover>
-
-        <!-- Link -->
-        <el-tooltip content="链接" placement="top" :show-after="500">
-          <button
-            class="tiptap-btn"
-            :class="{ 'is-active': editor.isActive('link') }"
-            @click="setLink"
-          >
-            🔗
-          </button>
-        </el-tooltip>
-
-        <!-- Image buttons -->
-        <el-tooltip content="上传图片" placement="top" :show-after="500">
-          <button class="tiptap-btn" @click="openImageUpload">🖼️</button>
-        </el-tooltip>
-        <template v-if="isPost">
-          <el-tooltip content="图片组" placement="top" :show-after="500">
-            <button class="tiptap-btn" @click="openImageGroupUpload">
-              🖼️+
-            </button>
-          </el-tooltip>
-          <el-tooltip content="360°全景" placement="top" :show-after="500">
-            <button class="tiptap-btn" @click="openPanorama360Upload">
-              🌐
-            </button>
-          </el-tooltip>
-        </template>
-
-        <!-- Video buttons -->
-        <el-tooltip content="上传视频" placement="top" :show-after="500">
-          <button class="tiptap-btn" @click="openVideoUpload">🎬</button>
-        </el-tooltip>
-        <el-tooltip content="插入视频链接" placement="top" :show-after="500">
-          <button class="tiptap-btn" @click="insertVideoUrl">📹</button>
-        </el-tooltip>
-
-        <el-divider direction="vertical" />
-
-        <!-- Table -->
-        <el-tooltip content="插入表格" placement="top" :show-after="500">
-          <button
-            class="tiptap-btn"
-            @click="
-              editor
-                .chain()
-                .focus()
-                .insertTable({ rows: 3, cols: 3, withHeaderRow: true })
-                .run()
-            "
-          >
-            ▦
-          </button>
-        </el-tooltip>
-
-        <!-- Code block -->
-        <el-popover trigger="click" :width="200">
-          <template #reference>
-            <el-tooltip content="代码块" placement="top" :show-after="500">
-              <button
-                class="tiptap-btn"
-                :class="{ 'is-active': editor.isActive('codeBlock') }"
-              >
-                { }
-              </button>
-            </el-tooltip>
-          </template>
-          <div>
-            <div
-              v-for="lang in codeLangs"
-              :key="lang.value"
-              class="tiptap-code-lang-item"
-              @click="insertCodeBlock(lang.value)"
-            >
-              {{ lang.text }}
-            </div>
-          </div>
-        </el-popover>
-
-        <!-- Divider -->
-        <el-tooltip content="分割线" placement="top" :show-after="500">
-          <button
-            class="tiptap-btn"
-            @click="editor.chain().focus().setHorizontalRule().run()"
-          >
-            ─
-          </button>
-        </el-tooltip>
-
-        <el-divider direction="vertical" />
-
-        <!-- Undo/Redo -->
-        <el-tooltip content="撤销" placement="top" :show-after="500">
-          <button
-            class="tiptap-btn"
-            :disabled="!editor.can().undo()"
-            @click="editor.chain().focus().undo().run()"
-          >
-            ↩
-          </button>
-        </el-tooltip>
-        <el-tooltip content="重做" placement="top" :show-after="500">
-          <button
-            class="tiptap-btn"
-            :disabled="!editor.can().redo()"
-            @click="editor.chain().focus().redo().run()"
-          >
-            ↪
-          </button>
-        </el-tooltip>
-
-        <!-- Event span (only for posts) -->
-        <template v-if="isPost">
-          <el-divider direction="vertical" />
-          <el-tooltip content="活动链接" placement="top" :show-after="500">
-            <button class="tiptap-btn" @click="openEventDialog()">
-              📅
-            </button>
-          </el-tooltip>
-        </template>
-
-        <el-divider direction="vertical" />
-
-        <!-- Full screen -->
-        <el-tooltip content="全屏" placement="top" :show-after="500">
-          <button
-            class="tiptap-btn"
-            :class="{ 'is-active': isFullScreen }"
-            @click="toggleFullScreen"
-          >
-            ⛶
-          </button>
-        </el-tooltip>
-      </div>
-    </div>
+    <TiptapToolbar
+      :editor="editor"
+      :isPost="isPost"
+      :isFullScreen="isFullScreen"
+      @open-image-upload="openImageUpload"
+      @open-image-group-upload="openImageGroupUpload"
+      @open-panorama360-upload="openPanorama360Upload"
+      @open-video-upload="openVideoUpload"
+      @insert-video-url="insertVideoUrl"
+      @open-event-dialog="openEventDialog"
+      @toggle-full-screen="toggleFullScreen"
+    />
 
     <!-- Table controls when table is selected -->
     <div class="tiptap-table-controls" v-if="editor && editor.isActive('table')">
@@ -474,8 +51,6 @@
 import {
   onBeforeUnmount,
   ref,
-  shallowRef,
-  onMounted,
   computed,
   watch,
   nextTick
@@ -509,9 +84,10 @@ import FontSize from '@/utils/tiptapExtensions/fontSize'
 import LineHeight from '@/utils/tiptapExtensions/lineHeight'
 import Indent from '@/utils/tiptapExtensions/indent'
 
+import TiptapToolbar from '@/components/TiptapToolbar'
 import AttachmentsDialog from '@/components/AttachmentsDialog'
 import RichEditorEventSelectorDialog from '@/components/RichEditorEventSelectorDialog'
-import { ElMessage, ElMessageBox } from 'element-plus'
+import { ElMessageBox } from 'element-plus'
 import store from '@/store'
 
 export default {
@@ -528,42 +104,12 @@ export default {
   },
   components: {
     EditorContent,
+    TiptapToolbar,
     AttachmentsDialog,
     RichEditorEventSelectorDialog
   },
   emits: ['update:contentJson', 'blur'],
   setup(props, { emit }) {
-    const codeLangs = [
-      { text: 'CSS', value: 'css' },
-      { text: 'HTML', value: 'html' },
-      { text: 'XML', value: 'xml' },
-      { text: 'Javascript', value: 'javascript' },
-      { text: 'Typescript', value: 'typescript' },
-      { text: 'JSX', value: 'jsx' },
-      { text: 'Go', value: 'go' },
-      { text: 'PHP', value: 'php' },
-      { text: 'Python', value: 'python' },
-      { text: 'Java', value: 'java' },
-      { text: 'C', value: 'c' },
-      { text: 'C++', value: 'cpp' },
-      { text: 'C#', value: 'csharp' },
-      { text: 'Visual Basic', value: 'visual-basic' },
-      { text: 'SQL', value: 'sql' },
-      { text: 'Ruby', value: 'ruby' },
-      { text: 'Swift', value: 'swift' },
-      { text: 'Lua', value: 'lua' },
-      { text: 'Groovy', value: 'groovy' },
-      { text: 'Markdown', value: 'markdown' },
-      { text: 'JSON', value: 'json' },
-      { text: 'Bash', value: 'bash' },
-      { text: 'sh', value: 'sh' }
-    ]
-
-    const emojiList =
-      '😀 😃 😄 😁 😆 😅 😂 🤣 😊 😇 🙂 🙃 😉 😌 😍 😘 😗 😙 😚 😋 😛 😝 😜 🤓 😎 😏 😒 😞 😔 😟 😕 🙁 😣 😖 😫 😩 😢 😭 😤 😠 😡 😳 😱 😨 🤗 🤔 😶 😑 😬 🙄 😯 😴 😷 🤑 😈 🤡 💩 👻 💀 👀 👣 👐 🙌 👏'.split(
-        ' '
-      )
-
     const siteUrl = computed(() => {
       return store.state.siteUrl
     })
@@ -651,99 +197,6 @@ export default {
         editor.value.destroy()
       }
     })
-
-    // Toolbar state computations
-    const currentHeading = computed(() => {
-      if (!editor.value) return 'paragraph'
-      for (let i = 1; i <= 5; i++) {
-        if (editor.value.isActive('heading', { level: i })) return String(i)
-      }
-      return 'paragraph'
-    })
-
-    const currentFontSize = computed(() => {
-      if (!editor.value) return ''
-      return editor.value.getAttributes('textStyle').fontSize || ''
-    })
-
-    const currentLineHeight = computed(() => {
-      if (!editor.value) return ''
-      // Check paragraph or heading
-      const paraAttrs = editor.value.getAttributes('paragraph')
-      const headAttrs = editor.value.getAttributes('heading')
-      return paraAttrs.lineHeight || headAttrs.lineHeight || ''
-    })
-
-    const currentFontFamily = computed(() => {
-      if (!editor.value) return ''
-      return editor.value.getAttributes('textStyle').fontFamily || ''
-    })
-
-    const setHeading = val => {
-      if (val === 'paragraph') {
-        editor.value.chain().focus().setParagraph().run()
-      } else {
-        editor.value
-          .chain()
-          .focus()
-          .toggleHeading({ level: parseInt(val) })
-          .run()
-      }
-    }
-
-    const setFontSize = val => {
-      if (val) {
-        editor.value.chain().focus().setFontSize(val).run()
-      } else {
-        editor.value.chain().focus().unsetFontSize().run()
-      }
-    }
-
-    const setLineHeight = val => {
-      if (val) {
-        editor.value.chain().focus().setLineHeight(val).run()
-      } else {
-        editor.value.chain().focus().unsetLineHeight().run()
-      }
-    }
-
-    const setFontFamily = val => {
-      if (val) {
-        editor.value.chain().focus().setFontFamily(val).run()
-      } else {
-        editor.value.chain().focus().unsetFontFamily().run()
-      }
-    }
-
-    // Emoji
-    const insertEmoji = emoji => {
-      editor.value.chain().focus().insertContent(emoji).run()
-    }
-
-    // Link
-    const setLink = () => {
-      const previousUrl = editor.value.getAttributes('link').href
-      ElMessageBox.prompt('请输入链接地址', '插入链接', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        inputValue: previousUrl || 'https://',
-        inputPattern: /\S+/,
-        inputErrorMessage: '请输入有效链接'
-      })
-        .then(({ value }) => {
-          if (value === null || value === '') {
-            editor.value.chain().focus().extendMarkRange('link').unsetLink().run()
-            return
-          }
-          editor.value
-            .chain()
-            .focus()
-            .extendMarkRange('link')
-            .setLink({ href: value })
-            .run()
-        })
-        .catch(() => {})
-    }
 
     // Image upload
     const insertFnType = ref('image')
@@ -908,14 +361,6 @@ export default {
       openAttachmentsDialogType.value = ''
     }
 
-    // Code block
-    const insertCodeBlock = language => {
-      editor.value.chain().focus().toggleCodeBlock().run()
-      if (language && editor.value.isActive('codeBlock')) {
-        editor.value.chain().focus().updateAttributes('codeBlock', { language }).run()
-      }
-    }
-
     // Event span
     const showEventDialog = ref(false)
     const eventText = ref('')
@@ -951,18 +396,6 @@ export default {
 
     return {
       editor,
-      codeLangs,
-      emojiList,
-      currentHeading,
-      currentFontSize,
-      currentLineHeight,
-      currentFontFamily,
-      setHeading,
-      setFontSize,
-      setLineHeight,
-      setFontFamily,
-      insertEmoji,
-      setLink,
       insertFnType,
       insertFnIs360Panorama,
       attachmentsDialogRef,
@@ -972,7 +405,6 @@ export default {
       openVideoUpload,
       insertVideoUrl,
       selectAttachments,
-      insertCodeBlock,
       showEventDialog,
       eventText,
       eventId,
@@ -1008,79 +440,6 @@ export default {
 }
 .tiptap-fullscreen .tiptap-content .tiptap {
   min-height: 100%;
-}
-.tiptap-toolbar {
-  border-bottom: 1px solid #ccc;
-  padding: 4px;
-  background: #f5f5f5;
-}
-.tiptap-toolbar-row {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 2px;
-  padding: 2px 0;
-}
-.tiptap-btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  min-width: 28px;
-  height: 28px;
-  border: 1px solid transparent;
-  background: transparent;
-  cursor: pointer;
-  border-radius: 4px;
-  font-size: 14px;
-  padding: 0 4px;
-  color: #333;
-  transition: all 0.2s;
-}
-.tiptap-btn:hover {
-  background: #e0e0e0;
-}
-.tiptap-btn.is-active {
-  background: #d0d0d0;
-  border-color: #bbb;
-  color: var(--el-color-primary, #409eff);
-}
-.tiptap-btn:disabled {
-  opacity: 0.4;
-  cursor: not-allowed;
-}
-.tiptap-toolbar-select {
-  width: 90px;
-}
-.tiptap-toolbar-select-sm {
-  width: 75px;
-}
-.tiptap-color-picker {
-  vertical-align: middle;
-}
-.tiptap-emoji-grid {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 4px;
-  max-height: 200px;
-  overflow-y: auto;
-}
-.tiptap-emoji-item {
-  cursor: pointer;
-  font-size: 20px;
-  padding: 2px;
-  border-radius: 4px;
-  transition: background 0.2s;
-}
-.tiptap-emoji-item:hover {
-  background: #e0e0e0;
-}
-.tiptap-code-lang-item {
-  padding: 4px 8px;
-  cursor: pointer;
-  border-radius: 4px;
-}
-.tiptap-code-lang-item:hover {
-  background: #e0e0e0;
 }
 .tiptap-table-controls {
   padding: 4px 8px;
