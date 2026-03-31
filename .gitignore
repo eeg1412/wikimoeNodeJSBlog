@@ -28,4 +28,4 @@ data
 /server/secret/*
 /server/backups/*
 /blog/public/ads.txt
-/blog/public/robots.txt
+/blog/public/robots.txtpackage-lock.json
