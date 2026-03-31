@@ -22,7 +22,6 @@ var commentReactions = new Schema(
     // date
     date: {
       type: Date,
-      expires: 31968000,
       default: Date.now
     },
     // 评论者ip
