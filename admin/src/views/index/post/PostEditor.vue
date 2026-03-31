@@ -1050,6 +1050,9 @@ export default {
               case 'force':
                 form[key] = false
                 break
+              case 'contentJson':
+                form[key] = res.data.data[key] || null
+                break
 
               default:
                 form[key] = res.data.data[key]
@@ -1890,7 +1893,17 @@ export default {
     }
 
     const getSuggestions = () => {
-      const concatenatedText = `${form.title} ${form.excerpt} ${form.content}`
+      let contentText = form.content || ''
+      // For v6 (Tiptap), extract text from contentJson
+      if (postEditorVersion.value === 6 && form.contentJson) {
+        const extractText = (node) => {
+          if (!node) return ''
+          if (node.type === 'text') return node.text || ''
+          return (node.content || []).map(extractText).join(' ')
+        }
+        contentText = extractText(form.contentJson)
+      }
+      const concatenatedText = `${form.title} ${form.excerpt} ${contentText}`
       // const currentHash = stringHash(concatenatedText)
       // currentHash !== lastContentHash.value
       if (concatenatedText.trim().length > 0) {
