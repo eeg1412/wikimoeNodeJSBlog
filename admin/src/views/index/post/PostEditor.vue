@@ -67,7 +67,9 @@
                 <TiptapEditor
                   v-model:contentJson="form.contentJson"
                   :isPost="true"
+                  ref="tiptapEditorRef"
                   v-else-if="postEditorVersion === 6"
+                  @insert-content-block="openContentBlockSelector"
                 />
               </el-tab-pane>
               <el-tab-pane label="源代码" name="sourceCode" v-if="postEditorVersion !== 6">
@@ -817,6 +819,11 @@
       :hasDelete="false"
       @selectAttachments="selectAttachments"
     />
+    <ContentBlockSelectorDialog
+      v-model:show="showContentBlockSelector"
+      :blockType="contentBlockType"
+      @select="onContentBlockSelected"
+    />
   </div>
 </template>
 <script>
@@ -836,6 +843,7 @@ import AttachmentsDialog from '@/components/AttachmentsDialog'
 import RichEditor4 from '@/components/RichEditor4'
 import RichEditor5 from '@/components/RichEditor5'
 import TiptapEditor from '@/components/TiptapEditor'
+import ContentBlockSelectorDialog from '@/components/ContentBlockSelectorDialog'
 import BangumiSelector from '@/components/BangumiSelector.vue'
 import MovieSelector from '@/components/MovieSelector.vue'
 import GameSelector from '@/components/GameSelector.vue'
@@ -867,6 +875,7 @@ export default {
     RichEditor4,
     RichEditor5,
     TiptapEditor,
+    ContentBlockSelectorDialog,
     draggable,
     EmojiTextarea,
     BangumiSelector,
@@ -1480,6 +1489,21 @@ export default {
       }
     })
     const attachmentDrag = ref(false)
+
+    // Content block selector
+    const tiptapEditorRef = ref(null)
+    const showContentBlockSelector = ref(false)
+    const contentBlockType = ref('')
+    const openContentBlockSelector = (blockType) => {
+      contentBlockType.value = blockType
+      showContentBlockSelector.value = true
+    }
+    const onContentBlockSelected = ({ id, title }) => {
+      if (tiptapEditorRef.value && tiptapEditorRef.value.insertContentBlock) {
+        tiptapEditorRef.value.insertContentBlock(contentBlockType.value, id, title)
+      }
+    }
+
     // template
     // 模板选项 about:关于页面, link: 友情链接页面, almanac:程序员老黄历, bangumi:番剧,gameList:游戏列表
     const templateList = ref([
@@ -2130,6 +2154,12 @@ export default {
       selectAttachments,
       coverImagesDataList,
       attachmentDrag,
+      // content block selector
+      tiptapEditorRef,
+      showContentBlockSelector,
+      contentBlockType,
+      openContentBlockSelector,
+      onContentBlockSelected,
       // template
       templateList,
 

@@ -182,7 +182,13 @@ const SVG_ICONS = {
   table: '<svg viewBox="0 0 24 24" width="16" height="16"><path fill="currentColor" d="M3 3v18h18V3H3zm8 16H5v-6h6v6zm0-8H5V5h6v6zm8 8h-6v-6h6v6zm0-8h-6V5h6v6z"/></svg>',
   codeBlock: '<svg viewBox="0 0 24 24" width="16" height="16"><path fill="currentColor" d="M9.4 16.6L4.8 12l4.6-4.6L8 6l-6 6 6 6 1.4-1.4zm5.2 0l4.6-4.6-4.6-4.6L16 6l6 6-6 6-1.4-1.4z"/></svg>',
   hr: '<svg viewBox="0 0 24 24" width="16" height="16"><path fill="currentColor" d="M2 11h20v2H2z"/></svg>',
-  moreStyles: '<svg viewBox="0 0 24 24" width="16" height="16"><path fill="currentColor" d="M6 10c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm12 0c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm-6 0c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"/></svg>'
+  moreStyles: '<svg viewBox="0 0 24 24" width="16" height="16"><path fill="currentColor" d="M6 10c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm12 0c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm-6 0c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"/></svg>',
+  contentBlock: '<svg viewBox="0 0 24 24" width="16" height="16"><path fill="currentColor" d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V5h14v14zM7 12h2v5H7zm4-3h2v8h-2zm4-3h2v11h-2z"/></svg>',
+  bangumi: '<svg viewBox="0 0 24 24" width="16" height="16"><path fill="currentColor" d="M18 3v2h-2V3H8v2H6V3H4v18h2v-2h2v2h8v-2h2v2h2V3h-2zM8 17H6V7h2v10zm10 0h-2V7h2v10z"/></svg>',
+  movie: '<svg viewBox="0 0 24 24" width="16" height="16"><path fill="currentColor" d="M18 4l2 4h-3l-2-4h-2l2 4h-3l-2-4H8l2 4H7L5 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V4h-4z"/></svg>',
+  book: '<svg viewBox="0 0 24 24" width="16" height="16"><path fill="currentColor" d="M18 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM6 4h5v8l-2.5-1.5L6 12V4z"/></svg>',
+  game: '<svg viewBox="0 0 24 24" width="16" height="16"><path fill="currentColor" d="M21 6H3c-1.1 0-2 .9-2 2v8c0 1.1.9 2 2 2h18c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2zm-10 7H8v3H6v-3H3v-2h3V8h2v3h3v2zm4.5 2c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zm4-3c-.83 0-1.5-.67-1.5-1.5S18.67 9 19.5 9s1.5.67 1.5 1.5-.67 1.5-1.5 1.5z"/></svg>',
+  vote: '<svg viewBox="0 0 24 24" width="16" height="16"><path fill="currentColor" d="M18 13h-.68l-2 2h1.91L19 17H5l1.78-2h2.05l-2-2H6l-3 3v4c0 1.1.89 2 1.99 2H19c1.1 0 2-.89 2-2v-4l-3-3zm-1-5.05l-4.95 4.95-3.54-3.54 4.95-4.95L17 7.95zm-4.24-5.66L6.39 8.66a.996.996 0 0 0 0 1.41l4.95 4.95c.39.39 1.02.39 1.41 0l6.36-6.36a.996.996 0 0 0 0-1.41l-4.95-4.95a.996.996 0 0 0-1.41 0z"/></svg>'
 }
 
 function svg (name) {
@@ -216,6 +222,7 @@ export default {
     'open-video-upload',
     'insert-video-url',
     'open-event-dialog',
+    'insert-content-block',
     'toggle-full-screen'
   ],
   setup (props, { emit }) {
@@ -730,6 +737,55 @@ export default {
           emitEvent: 'open-event-dialog',
           isPostOnly: true
         },
+        {
+          type: 'group',
+          name: 'contentBlock',
+          tooltip: '内容块',
+          icon: svg('contentBlock'),
+          isPostOnly: true,
+          items: [
+            {
+              name: 'contentBlock-bangumi',
+              tooltip: '番剧',
+              icon: svg('bangumi'),
+              emitEvent: 'insert-content-block',
+              emitData: 'bangumi',
+              isPostOnly: true
+            },
+            {
+              name: 'contentBlock-movie',
+              tooltip: '电影',
+              icon: svg('movie'),
+              emitEvent: 'insert-content-block',
+              emitData: 'movie',
+              isPostOnly: true
+            },
+            {
+              name: 'contentBlock-book',
+              tooltip: '书籍',
+              icon: svg('book'),
+              emitEvent: 'insert-content-block',
+              emitData: 'book',
+              isPostOnly: true
+            },
+            {
+              name: 'contentBlock-game',
+              tooltip: '游戏',
+              icon: svg('game'),
+              emitEvent: 'insert-content-block',
+              emitData: 'game',
+              isPostOnly: true
+            },
+            {
+              name: 'contentBlock-vote',
+              tooltip: '投票',
+              icon: svg('vote'),
+              emitEvent: 'insert-content-block',
+              emitData: 'vote',
+              isPostOnly: true
+            }
+          ]
+        },
         { type: 'divider' },
         {
           type: 'button',
@@ -824,7 +880,11 @@ export default {
     // Action handlers
     const handleAction = (item) => {
       if (item.emitEvent) {
-        emit(item.emitEvent)
+        if (item.emitData !== undefined) {
+          emit(item.emitEvent, item.emitData)
+        } else {
+          emit(item.emitEvent)
+        }
         return
       }
       if (item.action && props.editor) {

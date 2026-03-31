@@ -10,6 +10,7 @@
       @open-video-upload="openVideoUpload"
       @insert-video-url="insertVideoUrl"
       @open-event-dialog="openEventDialog"
+      @insert-content-block="onInsertContentBlock"
       @toggle-full-screen="toggleFullScreen"
     />
 
@@ -83,6 +84,7 @@ import Panorama360 from '@/utils/tiptapExtensions/panorama360'
 import FontSize from '@/utils/tiptapExtensions/fontSize'
 import LineHeight from '@/utils/tiptapExtensions/lineHeight'
 import Indent from '@/utils/tiptapExtensions/indent'
+import ContentBlock from '@/utils/tiptapExtensions/contentBlock'
 
 import TiptapToolbar from '@/components/TiptapToolbar'
 import AttachmentsDialog from '@/components/AttachmentsDialog'
@@ -108,7 +110,7 @@ export default {
     AttachmentsDialog,
     RichEditorEventSelectorDialog
   },
-  emits: ['update:contentJson', 'blur'],
+  emits: ['update:contentJson', 'blur', 'insert-content-block'],
   setup(props, { emit }) {
     const siteUrl = computed(() => {
       return store.state.siteUrl
@@ -167,7 +169,8 @@ export default {
         }),
         EventSpan,
         ImageGroup,
-        Panorama360
+        Panorama360,
+        ContentBlock
       ],
       content: props.contentJson || { type: 'doc', content: [{ type: 'paragraph' }] },
       onUpdate: ({ editor: ed }) => {
@@ -388,6 +391,27 @@ export default {
         .run()
     }
 
+    // Content block insertion
+    const onInsertContentBlock = (blockType) => {
+      emit('insert-content-block', blockType)
+    }
+
+    const insertContentBlock = (blockType, blockId, blockTitle) => {
+      if (!editor.value) return
+      editor.value
+        .chain()
+        .focus()
+        .insertContent({
+          type: 'contentBlock',
+          attrs: {
+            blockType: blockType,
+            blockId: blockId,
+            blockTitle: blockTitle
+          }
+        })
+        .run()
+    }
+
     // Full screen
     const isFullScreen = ref(false)
     const toggleFullScreen = () => {
@@ -410,6 +434,8 @@ export default {
       eventId,
       openEventDialog,
       onEventDialogOk,
+      onInsertContentBlock,
+      insertContentBlock,
       isFullScreen,
       toggleFullScreen
     }
