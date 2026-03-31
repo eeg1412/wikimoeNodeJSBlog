@@ -174,6 +174,41 @@ const blogRouteSetting = [
     middleware: [],
     controller: require('../api/blog/commentLikeLog/getPostCommentLogList')
   },
+  // get getReactionEmojis
+  {
+    path: '/reaction/emojis',
+    method: 'get',
+    middleware: [],
+    controller: require('../api/blog/postReaction/getReactionEmojis')
+  },
+  // post createPostReaction
+  {
+    path: '/post/reaction',
+    method: 'post',
+    middleware: [],
+    controller: require('../api/blog/postReaction/createPostReaction')
+  },
+  // post getPostReactionList
+  {
+    path: '/post/reaction/list',
+    method: 'post',
+    middleware: [],
+    controller: require('../api/blog/postReaction/getPostReactionList')
+  },
+  // post createCommentReaction
+  {
+    path: '/comment/reaction',
+    method: 'post',
+    middleware: [],
+    controller: require('../api/blog/commentReaction/createCommentReaction')
+  },
+  // post getCommentReactionList
+  {
+    path: '/comment/reaction/list',
+    method: 'post',
+    middleware: [],
+    controller: require('../api/blog/commentReaction/getCommentReactionList')
+  },
   // get getlinkList
   {
     path: '/link/list',

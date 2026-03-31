@@ -855,6 +855,60 @@ const adminRouteSetting = [
     roleType: null,
     role: null
   },
+  // getPostReactionList
+  {
+    path: '/postreaction/list',
+    method: 'get',
+    middleware: [checkAuth],
+    controller: require('../api/admin/postReaction/getPostReactionList'),
+    roleType: null,
+    role: null
+  },
+  // getPostReactionStats
+  {
+    path: '/postreaction/stats',
+    method: 'get',
+    middleware: [checkAuth],
+    controller: require('../api/admin/postReaction/getPostReactionStats'),
+    roleType: null,
+    role: null
+  },
+  // deletePostReaction
+  {
+    path: '/postreaction/delete',
+    method: 'delete',
+    middleware: [checkAuth],
+    controller: require('../api/admin/postReaction/deletePostReaction'),
+    roleType: null,
+    role: null
+  },
+  // getCommentReactionList
+  {
+    path: '/commentreaction/list',
+    method: 'get',
+    middleware: [checkAuth],
+    controller: require('../api/admin/commentReaction/getCommentReactionList'),
+    roleType: null,
+    role: null
+  },
+  // getCommentReactionStats
+  {
+    path: '/commentreaction/stats',
+    method: 'get',
+    middleware: [checkAuth],
+    controller: require('../api/admin/commentReaction/getCommentReactionStats'),
+    roleType: null,
+    role: null
+  },
+  // deleteCommentReaction
+  {
+    path: '/commentreaction/delete',
+    method: 'delete',
+    middleware: [checkAuth],
+    controller: require('../api/admin/commentReaction/deleteCommentReaction'),
+    roleType: null,
+    role: null
+  },
   // createBangumi
   {
     path: '/bangumi/create',
