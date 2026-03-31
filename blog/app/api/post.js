@@ -67,6 +67,14 @@ const reactionEmojisURL = `/reaction/emojis`
 const getReactionEmojisApi = () => {
   return httpRequest.getFetch(`${reactionEmojisURL}`)
 }
+// get '/post/list' (client-side fetch)
+const getPostsApiFetch = params => {
+  return httpRequest.getFetch(URL, params)
+}
+// get '/post/detail' (client-side fetch)
+const getDetailApiFetch = params => {
+  return httpRequest.getFetch(`${detailURL}`, params)
+}
 export {
   getPostsApi,
   getArchiveApi,
@@ -77,5 +85,7 @@ export {
   putShareCountApi,
   postReactionApi,
   postReactionListApi,
-  getReactionEmojisApi
+  getReactionEmojisApi,
+  getPostsApiFetch,
+  getDetailApiFetch
 }

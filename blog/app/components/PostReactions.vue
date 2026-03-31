@@ -1,5 +1,8 @@
 <template>
-  <div class="post-reactions-body" v-if="isHydrated">
+  <div
+    class="post-reactions-body"
+    v-if="sortedReactions.length > 0 || (reactionInited && !userEmoji)"
+  >
     <div class="flex flex-wrap items-center gap-1.5">
       <!-- 已有的反应气泡 -->
       <button
@@ -7,21 +10,25 @@
         :key="reaction.emoji"
         class="reaction-bubble cursor-pointer select-none"
         :class="{
-          'reaction-bubble-active': userEmoji === reaction.emoji
+          'reaction-bubble-active': reactionInited && userEmoji === reaction.emoji,
+          'opacity-60 pointer-events-none': !reactionInited || reactionLoading
         }"
         @click="handleReactionClick(reaction.emoji)"
-        :disabled="reactionLoading"
+        :disabled="!reactionInited || reactionLoading"
       >
         <span class="reaction-bubble-emoji">{{ reaction.emoji }}</span>
         <span class="reaction-bubble-count">{{ reaction.count }}</span>
       </button>
-      <!-- 添加反应按钮 -->
+      <!-- 添加反应按钮（仅在用户反应数据加载后且用户未反应时显示） -->
       <WUIPopover
         :popper="{ placement: 'bottom-start', offsetDistance: 6 }"
-        v-if="!userEmoji"
+        v-if="reactionInited && !userEmoji"
       >
         <button
           class="reaction-add-btn cursor-pointer select-none"
+          :class="{
+            'opacity-60 pointer-events-none': reactionLoading
+          }"
           :disabled="reactionLoading"
         >
           <WUIIcon name="i-heroicons-face-smile" class="w-4 h-4" />
@@ -65,12 +72,15 @@ const props = defineProps({
   loading: {
     type: Boolean,
     default: false
+  },
+  reactionInited: {
+    type: Boolean,
+    default: false
   }
 })
 
 const emit = defineEmits(['react'])
 
-const isHydrated = useIsHydrated()
 const reactionLoading = computed(() => props.loading)
 
 const sortedReactions = computed(() => {
@@ -81,7 +91,7 @@ const sortedReactions = computed(() => {
 })
 
 const handleReactionClick = (emoji) => {
-  if (reactionLoading.value) return
+  if (!props.reactionInited || reactionLoading.value) return
   if (props.userEmoji === emoji) {
     return
   }
@@ -89,17 +99,9 @@ const handleReactionClick = (emoji) => {
 }
 
 const addReaction = (emoji, closeFn) => {
-  if (reactionLoading.value) return
+  if (!props.reactionInited || reactionLoading.value) return
   closeFn()
   emit('react', { emoji, __v: props.userReactionVersion })
-}
-
-function useIsHydrated() {
-  const isHydrated = ref(false)
-  onMounted(() => {
-    isHydrated.value = true
-  })
-  return isHydrated
 }
 </script>
 
@@ -108,7 +110,7 @@ function useIsHydrated() {
   @apply mt-2;
 }
 .reaction-bubble {
-  @apply inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-sm
+  @apply inline-flex items-center gap-1 px-2 py-1 rounded-full text-sm
     bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700
     border border-transparent transition-colors;
 }
@@ -116,16 +118,16 @@ function useIsHydrated() {
   @apply border-primary-500 bg-primary-50 dark:bg-primary-900/30;
 }
 .reaction-bubble-emoji {
-  @apply text-base leading-none;
+  @apply text-lg leading-tight;
 }
 .reaction-bubble-count {
-  @apply text-xs text-gray-600 dark:text-gray-400 leading-none;
+  @apply text-xs text-gray-600 dark:text-gray-400 leading-tight;
 }
 .reaction-bubble-active .reaction-bubble-count {
   @apply text-primary-600 dark:text-primary-400;
 }
 .reaction-add-btn {
-  @apply inline-flex items-center justify-center w-7 h-7 rounded-full
+  @apply inline-flex items-center justify-center w-8 h-8 rounded-full
     bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700
     text-gray-500 dark:text-gray-400 transition-colors;
 }

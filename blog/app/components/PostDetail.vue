@@ -191,6 +191,19 @@
       />
     </div>
 
+    <!-- 文章反应 -->
+    <div class="px-2">
+      <PostReactions
+        :reactions="postReactionData"
+        :userEmoji="postUserReactionEmoji"
+        :userReactionVersion="postUserReactionVersion"
+        :emojiList="postReactionEmojiList"
+        :loading="postReactionLoading"
+        :reactionInited="postReactionInited"
+        @react="handlePostReaction"
+      />
+    </div>
+
     <div
       class="post-detail-action-body flex justify-center items-center gap-2 my-4"
     >
@@ -260,18 +273,6 @@
           />
         </div>
       </div>
-    </div>
-
-    <!-- 文章反应 -->
-    <div class="px-2" v-if="postReactionEmojiList.length > 0">
-      <PostReactions
-        :reactions="postReactionData"
-        :userEmoji="postUserReactionEmoji"
-        :userReactionVersion="postUserReactionVersion"
-        :emojiList="postReactionEmojiList"
-        :loading="postReactionLoading"
-        @react="handlePostReaction"
-      />
     </div>
 
     <!-- 文章通用底部内容 -->
@@ -546,12 +547,13 @@
                   </div>
                   <!-- 评论反应 -->
                   <PostReactions
-                    v-if="commentReactionEmojiList.length > 0 && item.status === 1"
+                    v-if="item.status === 1"
                     :reactions="getCommentReactions(item._id)"
                     :userEmoji="getCommentUserEmoji(item._id)"
                     :userReactionVersion="getCommentUserReactionVersion(item._id)"
                     :emojiList="commentReactionEmojiList"
                     :loading="commentReactionLoadingMap[item._id] === true"
+                    :reactionInited="commentReactionInited"
                     @react="(payload) => handleCommentReaction(item._id, payload)"
                   />
                   <div class="mt-5" v-if="commentid === item._id">
@@ -678,7 +680,8 @@ import {
   postLikeLogApi,
   postReactionApi,
   postReactionListApi,
-  getReactionEmojisApi
+  getReactionEmojisApi,
+  getDetailApiFetch
 } from '@/api/post'
 import {
   getCommentListApi,
@@ -764,7 +767,7 @@ const getCommentList = async goToCommentListRef => {
       console.log(res)
       commentData.value = res
       commentLikeLogList()
-      loadCommentReactions()
+      loadCommentUserReactions()
       if (goToCommentListRef && commentListRef.value) {
         // const rect = commentListRef.value.getBoundingClientRect()
         const elementRect = commentListRef.value.getBoundingClientRect()
@@ -988,9 +991,10 @@ const likePost = () => {
 
 // === 文章反应 ===
 const postReactionEmojiList = ref([])
-const postReactionData = ref([])
+const postReactionData = ref(postData.value?.data?.reactions || [])
 const postUserReaction = ref(null)
 const postReactionLoading = ref(false)
+const postReactionInited = ref(false)
 
 const postUserReactionEmoji = computed(() => {
   return postUserReaction.value ? postUserReaction.value.emoji : null
@@ -1008,19 +1012,31 @@ const loadReactionEmojis = () => {
     .catch(() => {})
 }
 
-const loadPostReactions = () => {
+const loadPostUserReactions = () => {
   postReactionListApi({ postIdList: [postid] })
     .then(res => {
-      const postReactions = res.reactionList.find(
-        item => String(item._id) === String(postid)
-      )
-      postReactionData.value = postReactions ? postReactions.reactions : []
-      const userReaction = res.userReactions.find(
+      const userReaction = res.list.find(
         item => String(item.post) === String(postid)
       )
       postUserReaction.value = userReaction || null
     })
     .catch(() => {})
+    .finally(() => {
+      postReactionInited.value = true
+    })
+}
+
+const reloadPostReactionData = async () => {
+  try {
+    const freshData = await getDetailApiFetch({
+      id: postid,
+      type,
+      randompost: 0
+    })
+    if (freshData?.data?.reactions) {
+      postReactionData.value = freshData.data.reactions
+    }
+  } catch (err) {}
 }
 
 const handlePostReaction = (payload) => {
@@ -1029,7 +1045,7 @@ const handlePostReaction = (payload) => {
   postReactionApi({ id: postid, emoji: payload.emoji, __v: payload.__v })
     .then(res => {
       postUserReaction.value = res.data
-      loadPostReactions()
+      reloadPostReactionData()
     })
     .catch(err => {
       console.log(err)
@@ -1051,32 +1067,36 @@ const handlePostReaction = (payload) => {
 
 // === 评论反应 ===
 const commentReactionEmojiList = ref([])
-const commentReactionMap = ref({})
 const commentUserReactionMap = ref({})
 const commentReactionLoadingMap = reactive({})
+const commentReactionInited = ref(false)
 
-const loadCommentReactions = () => {
-  if (!commentData.value?.list || commentData.value.list.length === 0) return
+const loadCommentUserReactions = () => {
+  if (!commentData.value?.list || commentData.value.list.length === 0) {
+    commentReactionInited.value = true
+    return
+  }
   const commentIdList = commentData.value.list.map(item => item._id)
   postCommentReactionListApi({ commentIdList })
     .then(res => {
-      const newMap = {}
-      res.reactionList.forEach(item => {
-        newMap[String(item._id)] = item.reactions
-      })
-      commentReactionMap.value = newMap
-
       const newUserMap = {}
-      res.userReactions.forEach(item => {
+      res.list.forEach(item => {
         newUserMap[String(item.comment)] = item
       })
       commentUserReactionMap.value = newUserMap
     })
     .catch(() => {})
+    .finally(() => {
+      commentReactionInited.value = true
+    })
 }
 
 const getCommentReactions = (commentId) => {
-  return commentReactionMap.value[String(commentId)] || []
+  // 从评论数据中获取SSR提供的反应数据
+  const comment = commentData.value?.list?.find(
+    item => String(item._id) === String(commentId)
+  )
+  return comment?.reactions || []
 }
 
 const getCommentUserEmoji = (commentId) => {
@@ -1089,13 +1109,34 @@ const getCommentUserReactionVersion = (commentId) => {
   return reaction ? reaction.__v : undefined
 }
 
+const reloadCommentReactionData = async () => {
+  try {
+    const res = await getCommentListApi({
+      id: postid,
+      sorttype: commentSortType.value,
+      page: commentPage.value
+    })
+    if (res?.list) {
+      // 更新评论列表中的反应数据
+      res.list.forEach(freshComment => {
+        const existComment = commentData.value?.list?.find(
+          item => String(item._id) === String(freshComment._id)
+        )
+        if (existComment) {
+          existComment.reactions = freshComment.reactions || []
+        }
+      })
+    }
+  } catch (err) {}
+}
+
 const handleCommentReaction = (commentId, payload) => {
   if (commentReactionLoadingMap[commentId]) return
   commentReactionLoadingMap[commentId] = true
   postCommentReactionApi({ id: commentId, emoji: payload.emoji, __v: payload.__v })
     .then(res => {
       commentUserReactionMap.value[String(commentId)] = res.data
-      loadCommentReactions()
+      reloadCommentReactionData()
     })
     .catch(err => {
       console.log(err)
@@ -1333,7 +1374,7 @@ onMounted(() => {
   putViewCount()
   postLikeLogList()
   loadReactionEmojis()
-  loadPostReactions()
+  loadPostUserReactions()
   getHeaderList()
   checkCommentScroll()
   isHydrated.value = true

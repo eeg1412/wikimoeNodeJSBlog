@@ -133,6 +133,18 @@
               <LazyPostItem :post="item" />
             </NuxtLink>
           </template>
+          <!-- 文章反应 -->
+          <div class="px-2 pb-1" @click.stop @keydown.enter.stop>
+            <PostReactions
+              :reactions="item.reactions || []"
+              :userEmoji="getPostUserEmoji(item._id)"
+              :userReactionVersion="getPostUserReactionVersion(item._id)"
+              :emojiList="reactionEmojiList"
+              :loading="postReactionLoadingMap[item._id] === true"
+              :reactionInited="postReactionInited"
+              @react="payload => handlePostReaction(item._id, payload)"
+            />
+          </div>
           <!-- 统计信息左边阅读数 右边点赞数 -->
           <div class="post-list-info-bottom-body cGray94">
             <div class="dflex flexCenter">
@@ -239,17 +251,6 @@
                 <span>{{ formatNumber(item.likes) }} 点赞</span>
               </div>
             </div>
-          </div>
-          <!-- 文章反应 -->
-          <div class="px-2 pb-1" v-if="reactionEmojiList.length > 0">
-            <PostReactions
-              :reactions="getPostReactions(item._id)"
-              :userEmoji="getPostUserEmoji(item._id)"
-              :userReactionVersion="getPostUserReactionVersion(item._id)"
-              :emojiList="reactionEmojiList"
-              :loading="postReactionLoadingMap[item._id] === true"
-              @react="payload => handlePostReaction(item._id, payload)"
-            />
           </div>
         </div>
       </div>
@@ -404,7 +405,8 @@ import {
   postLikeLogApi,
   postReactionListApi,
   postReactionApi,
-  getReactionEmojisApi
+  getReactionEmojisApi,
+  getPostsApiFetch
 } from '@/api/post'
 
 const { options } = useOptions()
@@ -755,9 +757,9 @@ const likePost = postId => {
 
 // === 文章反应 ===
 const reactionEmojiList = ref([])
-const postReactionMap = ref({})
 const postUserReactionMap = ref({})
 const postReactionLoadingMap = reactive({})
+const postReactionInited = ref(false)
 
 const loadReactionEmojis = () => {
   getReactionEmojisApi()
@@ -767,28 +769,24 @@ const loadReactionEmojis = () => {
     .catch(() => {})
 }
 
-const loadPostReactions = () => {
-  if (!postsData.value?.list || postsData.value.list.length === 0) return
+const loadPostUserReactions = () => {
+  if (!postsData.value?.list || postsData.value.list.length === 0) {
+    postReactionInited.value = true
+    return
+  }
   const postIdList = postsData.value.list.map(item => item._id)
   postReactionListApi({ postIdList })
     .then(res => {
-      const newMap = {}
-      res.reactionList.forEach(item => {
-        newMap[String(item._id)] = item.reactions
-      })
-      postReactionMap.value = newMap
-
       const newUserMap = {}
-      res.userReactions.forEach(item => {
+      res.list.forEach(item => {
         newUserMap[String(item.post)] = item
       })
       postUserReactionMap.value = newUserMap
     })
     .catch(() => {})
-}
-
-const getPostReactions = postId => {
-  return postReactionMap.value[String(postId)] || []
+    .finally(() => {
+      postReactionInited.value = true
+    })
 }
 
 const getPostUserEmoji = postId => {
@@ -801,13 +799,43 @@ const getPostUserReactionVersion = postId => {
   return reaction ? reaction.__v : undefined
 }
 
+const reloadPostListReactionData = async () => {
+  try {
+    const res = await getPostsApiFetch({
+      page: page,
+      keyword: keyword || undefined,
+      pageType: apiType.value,
+      sortid: sortid || undefined,
+      year: year || undefined,
+      month: month || undefined,
+      'tags[]': tagid ? [tagid] : undefined,
+      mappointid: mappointid || undefined,
+      bangumiId: bangumiid || undefined,
+      movieId: movieid || undefined,
+      bookId: bookid || undefined,
+      gameId: gameid || undefined,
+      type: postType.value || undefined
+    })
+    if (res?.list) {
+      res.list.forEach(freshPost => {
+        const existPost = postsData.value?.list?.find(
+          item => String(item._id) === String(freshPost._id)
+        )
+        if (existPost) {
+          existPost.reactions = freshPost.reactions || []
+        }
+      })
+    }
+  } catch (err) {}
+}
+
 const handlePostReaction = (postId, payload) => {
   if (postReactionLoadingMap[postId]) return
   postReactionLoadingMap[postId] = true
   postReactionApi({ id: postId, emoji: payload.emoji, __v: payload.__v })
     .then(res => {
       postUserReactionMap.value[String(postId)] = res.data
-      loadPostReactions()
+      reloadPostListReactionData()
     })
     .catch(err => {
       console.log(err)
@@ -934,7 +962,7 @@ const changeToPageByInput = () => {
 onMounted(() => {
   postLikeLogList()
   loadReactionEmojis()
-  loadPostReactions()
+  loadPostUserReactions()
   isHydrated.value = true
 })
 </script>
