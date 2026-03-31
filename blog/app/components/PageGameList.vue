@@ -17,7 +17,7 @@
                   <div class="text-sm font-medium mb-1">关键词</div>
                   <WUIInput
                     v-model.trim="filterCache.keyword"
-                    @keydown.enter="applyFilters(close)"
+                    @keyup.enter="applyFilters(close)"
                     size="sm"
                     maxlength="20"
                     placeholder="请输入关键词"
