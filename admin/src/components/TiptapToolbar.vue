@@ -66,9 +66,6 @@
                   class="tiptap-icon"
                   v-html="item.icon.content"
                 ></span>
-                <el-icon v-else-if="item.icon && item.icon.type === 'component'">
-                  <component :is="item.icon.name" />
-                </el-icon>
                 <span class="tiptap-group-arrow">▾</span>
               </button>
             </el-tooltip>
@@ -87,9 +84,6 @@
                 class="tiptap-icon"
                 v-html="subItem.icon.content"
               ></span>
-              <el-icon v-else-if="subItem.icon && subItem.icon.type === 'component'">
-                <component :is="subItem.icon.name" />
-              </el-icon>
               <span class="tiptap-group-item-label">{{ subItem.tooltip }}</span>
             </button>
           </div>
@@ -143,9 +137,6 @@
               class="tiptap-icon"
               v-html="item.icon.content"
             ></span>
-            <el-icon v-else-if="item.icon && item.icon.type === 'component'">
-              <component :is="item.icon.name" />
-            </el-icon>
           </button>
         </el-tooltip>
       </template>
@@ -188,15 +179,20 @@ const SVG_ICONS = {
   movie: '<svg viewBox="0 0 24 24" width="16" height="16"><path fill="currentColor" d="M18 4l2 4h-3l-2-4h-2l2 4h-3l-2-4H8l2 4H7L5 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V4h-4z"/></svg>',
   book: '<svg viewBox="0 0 24 24" width="16" height="16"><path fill="currentColor" d="M18 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM6 4h5v8l-2.5-1.5L6 12V4z"/></svg>',
   game: '<svg viewBox="0 0 24 24" width="16" height="16"><path fill="currentColor" d="M21 6H3c-1.1 0-2 .9-2 2v8c0 1.1.9 2 2 2h18c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2zm-10 7H8v3H6v-3H3v-2h3V8h2v3h3v2zm4.5 2c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zm4-3c-.83 0-1.5-.67-1.5-1.5S18.67 9 19.5 9s1.5.67 1.5 1.5-.67 1.5-1.5 1.5z"/></svg>',
-  vote: '<svg viewBox="0 0 24 24" width="16" height="16"><path fill="currentColor" d="M18 13h-.68l-2 2h1.91L19 17H5l1.78-2h2.05l-2-2H6l-3 3v4c0 1.1.89 2 1.99 2H19c1.1 0 2-.89 2-2v-4l-3-3zm-1-5.05l-4.95 4.95-3.54-3.54 4.95-4.95L17 7.95zm-4.24-5.66L6.39 8.66a.996.996 0 0 0 0 1.41l4.95 4.95c.39.39 1.02.39 1.41 0l6.36-6.36a.996.996 0 0 0 0-1.41l-4.95-4.95a.996.996 0 0 0-1.41 0z"/></svg>'
+  vote: '<svg viewBox="0 0 24 24" width="16" height="16"><path fill="currentColor" d="M18 13h-.68l-2 2h1.91L19 17H5l1.78-2h2.05l-2-2H6l-3 3v4c0 1.1.89 2 1.99 2H19c1.1 0 2-.89 2-2v-4l-3-3zm-1-5.05l-4.95 4.95-3.54-3.54 4.95-4.95L17 7.95zm-4.24-5.66L6.39 8.66a.996.996 0 0 0 0 1.41l4.95 4.95c.39.39 1.02.39 1.41 0l6.36-6.36a.996.996 0 0 0 0-1.41l-4.95-4.95a.996.996 0 0 0-1.41 0z"/></svg>',
+  link: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512" width="16" height="16"><!--!Font Awesome Free 6.7.2 by @fontawesome--><path fill="currentColor" d="M579.8 267.7c56.5-56.5 56.5-148 0-204.5c-50-50-128.8-56.5-186.3-15.4l-1.6 1.1c-14.4 10.3-17.7 30.3-7.4 44.6s30.3 17.7 44.6 7.4l1.6-1.1c32.1-22.9 76-19.3 103.8 8.6c31.5 31.5 31.5 82.5 0 114L422.3 334.8c-31.5 31.5-82.5 31.5-114 0c-27.9-27.9-31.5-71.8-8.6-103.8l1.1-1.6c10.3-14.4 6.9-34.4-7.4-44.6s-34.4-6.9-44.6 7.4l-1.1 1.6C206.5 251.2 213 330 263 380c56.5 56.5 148 56.5 204.5 0L579.8 267.7zM60.2 244.3c-56.5 56.5-56.5 148 0 204.5c50 50 128.8 56.5 186.3 15.4l1.6-1.1c14.4-10.3 17.7-30.3 7.4-44.6s-30.3-17.7-44.6-7.4l-1.6 1.1c-32.1 22.9-76 19.3-103.8-8.6C74 372.1 74 321.1 105.5 289.5L217.7 177.2c31.5-31.5 82.5-31.5 114 0c27.9 27.9 31.5 71.8 8.6 103.8l-1.1 1.6c-10.3 14.4-6.9 34.4 7.4 44.6s34.4 6.9 44.6-7.4l1.1-1.6C433.5 260.8 427 182 377 132c-56.5-56.5-148-56.5-204.5 0L60.2 244.3z"/></svg>',
+  picture: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="16" height="16"><!--!Font Awesome Free 6.7.2 by @fontawesome--><path fill="currentColor" d="M0 96C0 60.7 28.7 32 64 32l384 0c35.3 0 64 28.7 64 64l0 320c0 35.3-28.7 64-64 64L64 480c-35.3 0-64-28.7-64-64L0 96zM323.8 202.5c-4.5-6.6-11.9-10.5-19.8-10.5s-15.4 3.9-19.8 10.5l-87 127.6L170.7 297c-4.6-5.7-11.5-9-18.7-9s-14.2 3.3-18.7 9l-64 80c-5.8 7.2-6.9 17.1-2.9 25.4s12.4 13.6 21.6 13.6l96 0 32 0 208 0c8.9 0 17.1-4.9 21.2-12.8s3.6-17.4-1.4-24.7l-120-176zM112 192a48 48 0 1 0 0-96 48 48 0 1 0 0 96z"/></svg>',
+  pictureFilled: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512" width="16" height="16"><!--!Font Awesome Free 6.7.2 by @fontawesome--><path fill="currentColor" d="M160 80l352 0c8.8 0 16 7.2 16 16l0 224c0 8.8-7.2 16-16 16l-21.2 0L388.1 178.9c-4.4-6.8-12-10.9-20.1-10.9s-15.7 4.1-20.1 10.9l-52.2 79.8-12.4-16.9c-4.5-6.2-11.7-9.8-19.4-9.8s-14.8 3.6-19.4 9.8L175.6 336 160 336c-8.8 0-16-7.2-16-16l0-224c0-8.8 7.2-16 16-16zM96 96l0 224c0 35.3 28.7 64 64 64l352 0c35.3 0 64-28.7 64-64l0-224c0-35.3-28.7-64-64-64L160 32c-35.3 0-64 28.7-64 64zM48 120c0-13.3-10.7-24-24-24S0 106.7 0 120L0 344c0 75.1 60.9 136 136 136l320 0c13.3 0 24-10.7 24-24s-10.7-24-24-24l-320 0c-48.6 0-88-39.4-88-88l0-224zm208 24a32 32 0 1 0 -64 0 32 32 0 1 0 64 0z"/></svg>',
+  videoPlay: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512" width="16" height="16"><!--!Font Awesome Free 6.7.2 by @fontawesome--><path fill="currentColor" d="M73 39c-14.8-9.1-33.4-9.4-48.5-.9S0 62.6 0 80L0 432c0 17.4 9.4 33.4 24.5 41.9s33.7 8.1 48.5-.9L361 297c14.3-8.8 23-24.2 23-41s-8.7-32.2-23-41L73 39z"/></svg>',
+  videoCamera: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512" width="16" height="16"><!--!Font Awesome Free 6.7.2 by @fontawesome--><path fill="currentColor" d="M0 128C0 92.7 28.7 64 64 64l256 0c35.3 0 64 28.7 64 64l0 256c0 35.3-28.7 64-64 64L64 448c-35.3 0-64-28.7-64-64L0 128zM559.1 99.8c10.4 5.6 16.9 16.4 16.9 28.2l0 256c0 11.8-6.5 22.6-16.9 28.2s-23 5-32.9-1.6l-96-64L416 336l0-16 0-128 0-16 14.2-9.5 96-64c9.8-6.5 22.4-7.2 32.9-1.6z"/></svg>',
+  undo: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="16" height="16"><!--!Font Awesome Free 6.7.2 by @fontawesome--><path fill="currentColor" d="M125.7 160l50.3 0c17.7 0 32 14.3 32 32s-14.3 32-32 32L48 224c-17.7 0-32-14.3-32-32L16 64c0-17.7 14.3-32 32-32s32 14.3 32 32l0 51.2L97.6 97.6c87.5-87.5 229.3-87.5 316.8 0s87.5 229.3 0 316.8s-229.3 87.5-316.8 0c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0c62.5 62.5 163.8 62.5 226.3 0s62.5-163.8 0-226.3s-163.8-62.5-226.3 0L125.7 160z"/></svg>',
+  redo: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="16" height="16"><!--!Font Awesome Free 6.7.2 by @fontawesome--><path fill="currentColor" d="M386.3 160L336 160c-17.7 0-32 14.3-32 32s14.3 32 32 32l128 0c17.7 0 32-14.3 32-32l0-128c0-17.7-14.3-32-32-32s-32 14.3-32 32l0 51.2L414.4 97.6c-87.5-87.5-229.3-87.5-316.8 0s-87.5 229.3 0 316.8s229.3 87.5 316.8 0c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0c-62.5 62.5-163.8 62.5-226.3 0s-62.5-163.8 0-226.3s163.8-62.5 226.3 0L386.3 160z"/></svg>',
+  calendar: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" width="16" height="16"><!--!Font Awesome Free 6.5.1 by @fontawesome--><path fill="currentColor" d="M152 24c0-13.3-10.7-24-24-24s-24 10.7-24 24V64H64C28.7 64 0 92.7 0 128v16 48V448c0 35.3 28.7 64 64 64H384c35.3 0 64-28.7 64-64V192 144 128c0-35.3-28.7-64-64-64H344V24c0-13.3-10.7-24-24-24s-24 10.7-24 24V64H152V24zM48 192H400V448c0 8.8-7.2 16-16 16H64c-8.8 0-16-7.2-16-16V192z"/></svg>',
+  fullScreen: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" width="16" height="16"><!--!Font Awesome Free 6.7.2 by @fontawesome--><path fill="currentColor" d="M32 32C14.3 32 0 46.3 0 64l0 96c0 17.7 14.3 32 32 32s32-14.3 32-32l0-64 64 0c17.7 0 32-14.3 32-32s-14.3-32-32-32L32 32zM64 352c0-17.7-14.3-32-32-32s-32 14.3-32 32l0 96c0 17.7 14.3 32 32 32l96 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l-64 0 0-64zM320 32c-17.7 0-32 14.3-32 32s14.3 32 32 32l64 0 0 64c0 17.7 14.3 32 32 32s32-14.3 32-32l0-96c0-17.7-14.3-32-32-32l-96 0zM448 352c0-17.7-14.3-32-32-32s-32 14.3-32 32l0 64-64 0c-17.7 0-32 14.3-32 32s14.3 32 32 32l96 0c17.7 0 32-14.3 32-32l0-96z"/></svg>'
 }
 
 function svg (name) {
   return { type: 'svg', content: SVG_ICONS[name] }
-}
-
-function icon (name) {
-  return { type: 'component', name: name }
 }
 
 export default {
@@ -631,7 +627,7 @@ export default {
           type: 'button',
           name: 'link',
           tooltip: '链接',
-          icon: icon('Link'),
+          icon: svg('link'),
           isActive: (ed) => ed.isActive('link'),
           action: () => setLink()
         },
@@ -639,18 +635,18 @@ export default {
           type: 'group',
           name: 'imageGroup',
           tooltip: '图片',
-          icon: icon('Picture'),
+          icon: svg('picture'),
           items: [
             {
               name: 'imageUpload',
               tooltip: '上传图片',
-              icon: icon('Picture'),
+              icon: svg('picture'),
               emitEvent: 'open-image-upload'
             },
             {
               name: 'imageGroupUpload',
               tooltip: '图片组',
-              icon: icon('PictureFilled'),
+              icon: svg('pictureFilled'),
               emitEvent: 'open-image-group-upload',
               isPostOnly: true
             },
@@ -667,18 +663,18 @@ export default {
           type: 'group',
           name: 'videoGroup',
           tooltip: '视频',
-          icon: icon('VideoPlay'),
+          icon: svg('videoPlay'),
           items: [
             {
               name: 'videoUpload',
               tooltip: '上传视频',
-              icon: icon('VideoPlay'),
+              icon: svg('videoPlay'),
               emitEvent: 'open-video-upload'
             },
             {
               name: 'videoUrl',
               tooltip: '插入视频链接',
-              icon: icon('VideoCamera'),
+              icon: svg('videoCamera'),
               emitEvent: 'insert-video-url'
             }
           ]
@@ -716,7 +712,7 @@ export default {
           type: 'button',
           name: 'undo',
           tooltip: '撤销',
-          icon: icon('RefreshLeft'),
+          icon: svg('undo'),
           disabled: (ed) => !ed.can().undo(),
           action: (ed) => ed.chain().focus().undo().run()
         },
@@ -724,7 +720,7 @@ export default {
           type: 'button',
           name: 'redo',
           tooltip: '重做',
-          icon: icon('RefreshRight'),
+          icon: svg('redo'),
           disabled: (ed) => !ed.can().redo(),
           action: (ed) => ed.chain().focus().redo().run()
         },
@@ -733,7 +729,7 @@ export default {
           type: 'button',
           name: 'eventspan',
           tooltip: '活动链接',
-          icon: icon('Calendar'),
+          icon: svg('calendar'),
           emitEvent: 'open-event-dialog',
           isPostOnly: true
         },
@@ -791,7 +787,7 @@ export default {
           type: 'button',
           name: 'fullScreen',
           tooltip: '全屏',
-          icon: icon('FullScreen'),
+          icon: svg('fullScreen'),
           isActive: () => props.isFullScreen,
           emitEvent: 'toggle-full-screen'
         }
@@ -1024,9 +1020,6 @@ export default {
 .tiptap-group-item:disabled {
   opacity: 0.4;
   cursor: not-allowed;
-}
-.tiptap-group-item .el-icon {
-  font-size: 16px;
 }
 .tiptap-group-item-label {
   white-space: nowrap;
