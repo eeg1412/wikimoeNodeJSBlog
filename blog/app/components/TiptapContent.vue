@@ -44,6 +44,18 @@ const componentNameLower = 'tiptapcontent'
 const route = useRoute()
 const router = useRouter()
 
+// Sanitize CSS values to prevent CSS injection
+const sanitizeCssValue = (value) => {
+  if (!value) return ''
+  // Remove anything that could be used for CSS injection
+  return String(value).replace(/[;{}\\<>()'"]/g, '').replace(/expression/gi, '').replace(/javascript/gi, '').replace(/url\s*\(/gi, '').trim()
+}
+
+const sanitizeAttrValue = (value) => {
+  if (!value) return ''
+  return String(value).replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+}
+
 // Render Tiptap JSON to HTML
 const renderNode = (node) => {
   if (!node) return ''
@@ -75,24 +87,24 @@ const renderNode = (node) => {
             html = `<sub>${html}</sub>`
             break
           case 'link': {
-            const href = (mark.attrs?.href || '').replace(/&/g, '&amp;').replace(/"/g, '&quot;')
+            const href = sanitizeAttrValue(mark.attrs?.href || '')
             const target = mark.attrs?.target || '_blank'
             const rel = mark.attrs?.rel || 'noopener noreferrer nofollow'
-            html = `<a href="${href}" target="${target}" rel="${rel}">${html}</a>`
+            html = `<a href="${href}" target="${sanitizeAttrValue(target)}" rel="${sanitizeAttrValue(rel)}">${html}</a>`
             break
           }
           case 'textStyle': {
             const styles = []
-            if (mark.attrs?.color) styles.push(`color: ${mark.attrs.color}`)
-            if (mark.attrs?.fontSize) styles.push(`font-size: ${mark.attrs.fontSize}`)
-            if (mark.attrs?.fontFamily) styles.push(`font-family: ${mark.attrs.fontFamily}`)
+            if (mark.attrs?.color) styles.push(`color: ${sanitizeCssValue(mark.attrs.color)}`)
+            if (mark.attrs?.fontSize) styles.push(`font-size: ${sanitizeCssValue(mark.attrs.fontSize)}`)
+            if (mark.attrs?.fontFamily) styles.push(`font-family: ${sanitizeCssValue(mark.attrs.fontFamily)}`)
             if (styles.length > 0) {
               html = `<span style="${styles.join('; ')}">${html}</span>`
             }
             break
           }
           case 'highlight': {
-            const color = mark.attrs?.color || ''
+            const color = sanitizeCssValue(mark.attrs?.color || '')
             if (color) {
               html = `<mark style="background-color: ${color}">${html}</mark>`
             } else {
@@ -115,23 +127,24 @@ const renderNode = (node) => {
       const attrs = node.attrs || {}
       const styles = []
       if (attrs.textAlign && attrs.textAlign !== 'left') {
-        styles.push(`text-align: ${attrs.textAlign}`)
+        styles.push(`text-align: ${sanitizeCssValue(attrs.textAlign)}`)
       }
       if (attrs.lineHeight) {
-        styles.push(`line-height: ${attrs.lineHeight}`)
+        styles.push(`line-height: ${sanitizeCssValue(attrs.lineHeight)}`)
       }
       if (attrs.indent && attrs.indent > 0) {
-        styles.push(`margin-left: ${attrs.indent * 2}em`)
+        const indent = parseInt(attrs.indent) || 0
+        styles.push(`margin-left: ${indent * 2}em`)
       }
       const styleStr = styles.length > 0 ? ` style="${styles.join('; ')}"` : ''
       return `<p${styleStr}>${children}</p>`
     }
     case 'heading': {
-      const level = node.attrs?.level || 1
+      const level = Math.max(1, Math.min(6, parseInt(node.attrs?.level) || 1))
       const attrs = node.attrs || {}
       const styles = []
       if (attrs.textAlign && attrs.textAlign !== 'left') {
-        styles.push(`text-align: ${attrs.textAlign}`)
+        styles.push(`text-align: ${sanitizeCssValue(attrs.textAlign)}`)
       }
       const styleStr = styles.length > 0 ? ` style="${styles.join('; ')}"` : ''
       return `<h${level}${styleStr}>${children}</h${level}>`
@@ -154,7 +167,7 @@ const renderNode = (node) => {
       return `<li data-type="taskItem" data-checked="${checked ? 'true' : 'false'}">${children}</li>`
     }
     case 'codeBlock': {
-      const language = node.attrs?.language || ''
+      const language = sanitizeCssValue(node.attrs?.language || '')
       const langClass = language ? ` class="language-${language}"` : ''
       const codeContent = (node.content || []).map(n => (n.text || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')).join('')
       return `<pre><code${langClass}>${codeContent}</code></pre>`
@@ -165,25 +178,38 @@ const renderNode = (node) => {
       return '<br>'
     case 'image': {
       const attrs = node.attrs || {}
-      const src = (attrs.src || '').replace(/"/g, '&quot;')
-      const alt = (attrs.alt || '').replace(/"/g, '&quot;')
-      const width = attrs.width ? ` width="${attrs.width}"` : ''
-      const height = attrs.height ? ` height="${attrs.height}"` : ''
-      const dataHref = attrs.dataHref ? ` data-href="${(attrs.dataHref || '').replace(/"/g, '&quot;')}"` : ''
-      const dataHrefWidth = attrs.dataHrefWidth ? ` data-href-width="${attrs.dataHrefWidth}"` : ''
-      const dataHrefHeight = attrs.dataHrefHeight ? ` data-href-height="${attrs.dataHrefHeight}"` : ''
+      const src = sanitizeAttrValue(attrs.src || '')
+      const alt = sanitizeAttrValue(attrs.alt || '')
+      const width = attrs.width ? ` width="${sanitizeAttrValue(String(attrs.width))}"` : ''
+      const height = attrs.height ? ` height="${sanitizeAttrValue(String(attrs.height))}"` : ''
+      const dataHref = attrs.dataHref ? ` data-href="${sanitizeAttrValue(attrs.dataHref)}"` : ''
+      const dataHrefWidth = attrs.dataHrefWidth ? ` data-href-width="${sanitizeAttrValue(String(attrs.dataHrefWidth))}"` : ''
+      const dataHrefHeight = attrs.dataHrefHeight ? ` data-href-height="${sanitizeAttrValue(String(attrs.dataHrefHeight))}"` : ''
       return `<img src="${src}" alt="${alt}"${width}${height}${dataHref}${dataHrefWidth}${dataHrefHeight} loading="lazy">`
     }
     case 'video': {
       const attrs = node.attrs || {}
       const src = attrs.src || ''
       if (src.trim().startsWith('<iframe')) {
-        return `<div data-w-e-type="video">${src}</div>`
+        // Sanitize iframe: only allow specific attributes
+        const tempDiv = import.meta.client ? document.createElement('div') : null
+        if (tempDiv) {
+          tempDiv.innerHTML = src
+          const iframe = tempDiv.querySelector('iframe')
+          if (iframe) {
+            const iframeSrc = iframe.getAttribute('src') || ''
+            const iframeWidth = iframe.getAttribute('width') || ''
+            const iframeHeight = iframe.getAttribute('height') || ''
+            const iframeStyle = iframe.getAttribute('style') || ''
+            return `<div data-w-e-type="video"><iframe src="${sanitizeAttrValue(iframeSrc)}" width="${sanitizeAttrValue(iframeWidth)}" height="${sanitizeAttrValue(iframeHeight)}" style="${sanitizeCssValue(iframeStyle)}" frameborder="0" allowfullscreen="true" scrolling="no"></iframe></div>`
+          }
+        }
+        return ''
       }
-      const poster = attrs.poster ? ` poster="${(attrs.poster || '').replace(/"/g, '&quot;')}"` : ''
-      const width = attrs.width ? ` width="${attrs.width}"` : ''
-      const height = attrs.height ? ` height="${attrs.height}"` : ''
-      return `<div data-w-e-type="video"><video${poster} playsinline="true" preload="none" muted="muted" loop="loop" controls="true"${width}${height}><source src="${(src || '').replace(/"/g, '&quot;')}" type="video/mp4"/></video></div>`
+      const poster = attrs.poster ? ` poster="${sanitizeAttrValue(attrs.poster)}"` : ''
+      const width = attrs.width ? ` width="${sanitizeAttrValue(String(attrs.width))}"` : ''
+      const height = attrs.height ? ` height="${sanitizeAttrValue(String(attrs.height))}"` : ''
+      return `<div data-w-e-type="video"><video${poster} playsinline="true" preload="none" muted="muted" loop="loop" controls="true"${width}${height}><source src="${sanitizeAttrValue(src)}" type="video/mp4"/></video></div>`
     }
     case 'table':
       return `<table>${children}</table>`
@@ -195,7 +221,7 @@ const renderNode = (node) => {
       return `<td>${children}</td>`
     case 'eventspan': {
       const attrs = node.attrs || {}
-      const id = (attrs.id || '').replace(/"/g, '&quot;')
+      const id = sanitizeAttrValue(attrs.id || '')
       const textContent = (attrs.textContent || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
       return `<span data-w-e-type="eventspan" data-w-e-is-void data-w-e-is-inline data-id="${id}">${textContent}</span>`
     }
@@ -210,13 +236,13 @@ const renderNode = (node) => {
       }
       let html = `<div data-w-e-type="imageGroup" class="${className}">`
       childrenList.forEach(child => {
-        const imgSrc = (child.src || '').replace(/"/g, '&quot;')
-        const imgWidth = child.width ? ` width="${child.width}"` : ''
-        const imgHeight = child.height ? ` height="${child.height}"` : ''
-        const imgDataHref = child.dataHref ? ` data-href="${(child.dataHref || '').replace(/"/g, '&quot;')}"` : ''
-        const imgDataHrefWidth = child.dataHrefWidth ? ` data-href-width="${child.dataHrefWidth}"` : ''
-        const imgDataHrefHeight = child.dataHrefHeight ? ` data-href-height="${child.dataHrefHeight}"` : ''
-        const imgAlt = (child.alt || '').replace(/"/g, '&quot;')
+        const imgSrc = sanitizeAttrValue(child.src || '')
+        const imgWidth = child.width ? ` width="${sanitizeAttrValue(String(child.width))}"` : ''
+        const imgHeight = child.height ? ` height="${sanitizeAttrValue(String(child.height))}"` : ''
+        const imgDataHref = child.dataHref ? ` data-href="${sanitizeAttrValue(child.dataHref)}"` : ''
+        const imgDataHrefWidth = child.dataHrefWidth ? ` data-href-width="${sanitizeAttrValue(String(child.dataHrefWidth))}"` : ''
+        const imgDataHrefHeight = child.dataHrefHeight ? ` data-href-height="${sanitizeAttrValue(String(child.dataHrefHeight))}"` : ''
+        const imgAlt = sanitizeAttrValue(child.alt || '')
         html += `<div class="w-e-image-group-img-body"><img src="${imgSrc}" class="w-e-image-group-img"${imgWidth}${imgHeight}${imgDataHref}${imgDataHrefWidth}${imgDataHrefHeight} alt="${imgAlt}" loading="lazy" /></div>`
       })
       html += '</div>'
@@ -224,13 +250,13 @@ const renderNode = (node) => {
     }
     case 'panorama360': {
       const attrs = node.attrs || {}
-      const src = (attrs.src || '').replace(/"/g, '&quot;')
-      const width = attrs.width ? ` width="${attrs.width}"` : ''
-      const height = attrs.height ? ` height="${attrs.height}"` : ''
-      const dataHref = attrs.dataHref ? ` data-href="${(attrs.dataHref || '').replace(/"/g, '&quot;')}"` : ''
-      const dataHrefWidth = attrs.dataHrefWidth ? ` data-href-width="${attrs.dataHrefWidth}"` : ''
-      const dataHrefHeight = attrs.dataHrefHeight ? ` data-href-height="${attrs.dataHrefHeight}"` : ''
-      const alt = (attrs.alt || '360°全景图片').replace(/"/g, '&quot;')
+      const src = sanitizeAttrValue(attrs.src || '')
+      const width = attrs.width ? ` width="${sanitizeAttrValue(String(attrs.width))}"` : ''
+      const height = attrs.height ? ` height="${sanitizeAttrValue(String(attrs.height))}"` : ''
+      const dataHref = attrs.dataHref ? ` data-href="${sanitizeAttrValue(attrs.dataHref)}"` : ''
+      const dataHrefWidth = attrs.dataHrefWidth ? ` data-href-width="${sanitizeAttrValue(String(attrs.dataHrefWidth))}"` : ''
+      const dataHrefHeight = attrs.dataHrefHeight ? ` data-href-height="${sanitizeAttrValue(String(attrs.dataHrefHeight))}"` : ''
+      const alt = sanitizeAttrValue(attrs.alt || '360°全景图片')
       return `<div class="w-e-panorama360"><img src="${src}" class="w-e-panorama360-img"${width}${height}${dataHref}${dataHrefWidth}${dataHrefHeight} alt="${alt}" data-type="panorama360" loading="lazy" /></div>`
     }
     default:

@@ -34,7 +34,7 @@ module.exports = async function (req, res, next) {
   }
 
   // If contentJson is provided, it's an upgrade with content conversion
-  if (contentJson && typeof contentJson === 'object') {
+  if (contentJson && typeof contentJson === 'object' && !Array.isArray(contentJson)) {
     updateData.contentJson = contentJson
     // Clear old HTML content since we now use JSON
     updateData.content = ''
