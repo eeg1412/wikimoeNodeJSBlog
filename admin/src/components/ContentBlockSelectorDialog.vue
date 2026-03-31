@@ -45,7 +45,7 @@
   </el-dialog>
 </template>
 <script>
-import { computed, ref, watch } from 'vue'
+import { computed, ref, watch, onBeforeUnmount } from 'vue'
 import { authApi } from '@/api'
 import { Search, ArrowRight } from '@element-plus/icons-vue'
 
@@ -150,6 +150,12 @@ export default {
         }
       }
     )
+
+    onBeforeUnmount(() => {
+      if (searchTimer) {
+        clearTimeout(searchTimer)
+      }
+    })
 
     return {
       showDialog,
