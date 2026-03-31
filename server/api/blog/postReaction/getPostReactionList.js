@@ -22,14 +22,6 @@ module.exports = async function (req, res, next) {
     return
   }
 
-  // 限制最大查询数量
-  if (postIdList.length > 50) {
-    res.status(400).json({
-      errors: [{ message: '查询数量超出限制' }]
-    })
-    return
-  }
-
   try {
     // 聚合查询：按post和emoji分组统计数量
     const mongoose = require('mongoose')
