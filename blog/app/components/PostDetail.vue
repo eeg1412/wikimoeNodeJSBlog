@@ -262,6 +262,18 @@
       </div>
     </div>
 
+    <!-- 文章反应 -->
+    <div class="px-2" v-if="postReactionEmojiList.length > 0">
+      <PostReactions
+        :reactions="postReactionData"
+        :userEmoji="postUserReactionEmoji"
+        :userReactionVersion="postUserReactionVersion"
+        :emojiList="postReactionEmojiList"
+        :loading="postReactionLoading"
+        @react="handlePostReaction"
+      />
+    </div>
+
     <!-- 文章通用底部内容 -->
     <LazyPostCommonFooter
       :post="postData.data"
@@ -532,6 +544,16 @@
                       />
                     </div>
                   </div>
+                  <!-- 评论反应 -->
+                  <PostReactions
+                    v-if="commentReactionEmojiList.length > 0 && item.status === 1"
+                    :reactions="getCommentReactions(item._id)"
+                    :userEmoji="getCommentUserEmoji(item._id)"
+                    :userReactionVersion="getCommentUserReactionVersion(item._id)"
+                    :emojiList="commentReactionEmojiList"
+                    :loading="commentReactionLoadingMap[item._id] === true"
+                    @react="(payload) => handleCommentReaction(item._id, payload)"
+                  />
                   <div class="mt-5" v-if="commentid === item._id">
                     <!-- 回复表单 -->
                     <LazyCommentForm
@@ -653,12 +675,17 @@ import {
   getDetailApi,
   putViewCountApi,
   postLikeLogListApi,
-  postLikeLogApi
+  postLikeLogApi,
+  postReactionApi,
+  postReactionListApi,
+  getReactionEmojisApi
 } from '@/api/post'
 import {
   getCommentListApi,
   postCommentLikeLogApi,
-  postCommentLikeLogListApi
+  postCommentLikeLogListApi,
+  postCommentReactionApi,
+  postCommentReactionListApi
 } from '@/api/comment'
 
 const { options } = useOptions()
@@ -737,6 +764,7 @@ const getCommentList = async goToCommentListRef => {
       console.log(res)
       commentData.value = res
       commentLikeLogList()
+      loadCommentReactions()
       if (goToCommentListRef && commentListRef.value) {
         // const rect = commentListRef.value.getBoundingClientRect()
         const elementRect = commentListRef.value.getBoundingClientRect()
@@ -958,6 +986,135 @@ const likePost = () => {
     })
 }
 
+// === 文章反应 ===
+const postReactionEmojiList = ref([])
+const postReactionData = ref([])
+const postUserReaction = ref(null)
+const postReactionLoading = ref(false)
+
+const postUserReactionEmoji = computed(() => {
+  return postUserReaction.value ? postUserReaction.value.emoji : null
+})
+const postUserReactionVersion = computed(() => {
+  return postUserReaction.value ? postUserReaction.value.__v : undefined
+})
+
+const loadReactionEmojis = () => {
+  getReactionEmojisApi()
+    .then(res => {
+      postReactionEmojiList.value = res.list
+      commentReactionEmojiList.value = res.list
+    })
+    .catch(() => {})
+}
+
+const loadPostReactions = () => {
+  postReactionListApi({ postIdList: [postid] })
+    .then(res => {
+      const postReactions = res.reactionList.find(
+        item => String(item._id) === String(postid)
+      )
+      postReactionData.value = postReactions ? postReactions.reactions : []
+      const userReaction = res.userReactions.find(
+        item => String(item.post) === String(postid)
+      )
+      postUserReaction.value = userReaction || null
+    })
+    .catch(() => {})
+}
+
+const handlePostReaction = (payload) => {
+  if (postReactionLoading.value) return
+  postReactionLoading.value = true
+  postReactionApi({ id: postid, emoji: payload.emoji, __v: payload.__v })
+    .then(res => {
+      postUserReaction.value = res.data
+      loadPostReactions()
+    })
+    .catch(err => {
+      console.log(err)
+      const errors = err.response?._data?.errors
+      if (errors) {
+        errors.forEach(item => {
+          toast.add({
+            title: item.message,
+            icon: 'i-heroicons-x-circle',
+            color: 'red'
+          })
+        })
+      }
+    })
+    .finally(() => {
+      postReactionLoading.value = false
+    })
+}
+
+// === 评论反应 ===
+const commentReactionEmojiList = ref([])
+const commentReactionMap = ref({})
+const commentUserReactionMap = ref({})
+const commentReactionLoadingMap = reactive({})
+
+const loadCommentReactions = () => {
+  if (!commentData.value?.list || commentData.value.list.length === 0) return
+  const commentIdList = commentData.value.list.map(item => item._id)
+  postCommentReactionListApi({ commentIdList })
+    .then(res => {
+      const newMap = {}
+      res.reactionList.forEach(item => {
+        newMap[String(item._id)] = item.reactions
+      })
+      commentReactionMap.value = newMap
+
+      const newUserMap = {}
+      res.userReactions.forEach(item => {
+        newUserMap[String(item.comment)] = item
+      })
+      commentUserReactionMap.value = newUserMap
+    })
+    .catch(() => {})
+}
+
+const getCommentReactions = (commentId) => {
+  return commentReactionMap.value[String(commentId)] || []
+}
+
+const getCommentUserEmoji = (commentId) => {
+  const reaction = commentUserReactionMap.value[String(commentId)]
+  return reaction ? reaction.emoji : null
+}
+
+const getCommentUserReactionVersion = (commentId) => {
+  const reaction = commentUserReactionMap.value[String(commentId)]
+  return reaction ? reaction.__v : undefined
+}
+
+const handleCommentReaction = (commentId, payload) => {
+  if (commentReactionLoadingMap[commentId]) return
+  commentReactionLoadingMap[commentId] = true
+  postCommentReactionApi({ id: commentId, emoji: payload.emoji, __v: payload.__v })
+    .then(res => {
+      commentUserReactionMap.value[String(commentId)] = res.data
+      loadCommentReactions()
+    })
+    .catch(err => {
+      console.log(err)
+      const errors = err.response?._data?.errors
+      if (errors) {
+        errors.forEach(item => {
+          toast.add({
+            title: item.message,
+            icon: 'i-heroicons-x-circle',
+            color: 'red'
+          })
+        })
+      }
+    })
+    .finally(() => {
+      commentReactionLoadingMap[commentId] = false
+    })
+}
+
 // 设置SEO - 使用公共方法
 const { generatePostSeoData } = usePostSeo()
 const seoData = generatePostSeoData(postData.value.data)
@@ -1175,6 +1332,8 @@ const shareadd = () => {
 onMounted(() => {
   putViewCount()
   postLikeLogList()
+  loadReactionEmojis()
+  loadPostReactions()
   getHeaderList()
   checkCommentScroll()
   isHydrated.value = true

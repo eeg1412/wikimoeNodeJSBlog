@@ -52,11 +52,27 @@ const postCommentLikeLogListApi = params => {
     shouldUuid: true
   })
 }
+// post /comment/reaction
+const commentReactionURL = `/comment/reaction`
+const postCommentReactionApi = params => {
+  return httpRequest.postFetch(`${commentReactionURL}`, params, {
+    shouldUuid: true
+  })
+}
+// post /comment/reaction/list
+const commentReactionListURL = `/comment/reaction/list`
+const postCommentReactionListApi = params => {
+  return httpRequest.postFetch(`${commentReactionListURL}`, params, {
+    shouldUuid: true
+  })
+}
 export {
   getCommentLatestApi,
   getCommentListApi,
   getCommentCreateApi,
   deleteCommentRetractApi,
   postCommentLikeLogApi,
-  postCommentLikeLogListApi
+  postCommentLikeLogListApi,
+  postCommentReactionApi,
+  postCommentReactionListApi
 }

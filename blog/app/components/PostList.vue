@@ -240,6 +240,17 @@
               </div>
             </div>
           </div>
+          <!-- 文章反应 -->
+          <div class="px-2 pb-1" v-if="reactionEmojiList.length > 0">
+            <PostReactions
+              :reactions="getPostReactions(item._id)"
+              :userEmoji="getPostUserEmoji(item._id)"
+              :userReactionVersion="getPostUserReactionVersion(item._id)"
+              :emojiList="reactionEmojiList"
+              :loading="postReactionLoadingMap[item._id] === true"
+              @react="(payload) => handlePostReaction(item._id, payload)"
+            />
+          </div>
         </div>
       </div>
       <div v-else>
@@ -387,7 +398,14 @@
   </div>
 </template>
 <script setup>
-import { getPostsApi, postLikeLogListApi, postLikeLogApi } from '@/api/post'
+import {
+  getPostsApi,
+  postLikeLogListApi,
+  postLikeLogApi,
+  postReactionListApi,
+  postReactionApi,
+  getReactionEmojisApi
+} from '@/api/post'
 
 const { options } = useOptions()
 const defaultCover = options.value.siteDefaultCover || ''
@@ -735,6 +753,80 @@ const likePost = postId => {
     })
 }
 
+// === 文章反应 ===
+const reactionEmojiList = ref([])
+const postReactionMap = ref({})
+const postUserReactionMap = ref({})
+const postReactionLoadingMap = reactive({})
+
+const loadReactionEmojis = () => {
+  getReactionEmojisApi()
+    .then(res => {
+      reactionEmojiList.value = res.list
+    })
+    .catch(() => {})
+}
+
+const loadPostReactions = () => {
+  if (!postListData.value?.list || postListData.value.list.length === 0) return
+  const postIdList = postListData.value.list.map(item => item._id)
+  postReactionListApi({ postIdList })
+    .then(res => {
+      const newMap = {}
+      res.reactionList.forEach(item => {
+        newMap[String(item._id)] = item.reactions
+      })
+      postReactionMap.value = newMap
+
+      const newUserMap = {}
+      res.userReactions.forEach(item => {
+        newUserMap[String(item.post)] = item
+      })
+      postUserReactionMap.value = newUserMap
+    })
+    .catch(() => {})
+}
+
+const getPostReactions = (postId) => {
+  return postReactionMap.value[String(postId)] || []
+}
+
+const getPostUserEmoji = (postId) => {
+  const reaction = postUserReactionMap.value[String(postId)]
+  return reaction ? reaction.emoji : null
+}
+
+const getPostUserReactionVersion = (postId) => {
+  const reaction = postUserReactionMap.value[String(postId)]
+  return reaction ? reaction.__v : undefined
+}
+
+const handlePostReaction = (postId, payload) => {
+  if (postReactionLoadingMap[postId]) return
+  postReactionLoadingMap[postId] = true
+  postReactionApi({ id: postId, emoji: payload.emoji, __v: payload.__v })
+    .then(res => {
+      postUserReactionMap.value[String(postId)] = res.data
+      loadPostReactions()
+    })
+    .catch(err => {
+      console.log(err)
+      const errors = err.response?._data?.errors
+      if (errors) {
+        errors.forEach(item => {
+          toast.add({
+            title: item.message,
+            icon: 'i-heroicons-x-circle',
+            color: 'red'
+          })
+        })
+      }
+    })
+    .finally(() => {
+      postReactionLoadingMap[postId] = false
+    })
+}
+
 // 文章筛选
 const showFilterMenu = ref(false)
 const filterMenuRef = ref(null)
@@ -841,6 +933,8 @@ const changeToPageByInput = () => {
 
 onMounted(() => {
   postLikeLogList()
+  loadReactionEmojis()
+  loadPostReactions()
   isHydrated.value = true
 })
 </script>

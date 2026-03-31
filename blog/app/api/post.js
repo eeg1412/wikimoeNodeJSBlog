@@ -48,6 +48,25 @@ const postLikeLogListApi = params => {
     shouldUuid: true
   })
 }
+// post '/post/reaction'
+const postReactionURL = `/post/reaction`
+const postReactionApi = params => {
+  return httpRequest.postFetch(`${postReactionURL}`, params, {
+    shouldUuid: true
+  })
+}
+// post '/post/reaction/list'
+const postReactionListURL = `/post/reaction/list`
+const postReactionListApi = params => {
+  return httpRequest.postFetch(`${postReactionListURL}`, params, {
+    shouldUuid: true
+  })
+}
+// get '/reaction/emojis'
+const reactionEmojisURL = `/reaction/emojis`
+const getReactionEmojisApi = () => {
+  return httpRequest.getFetch(`${reactionEmojisURL}`)
+}
 export {
   getPostsApi,
   getArchiveApi,
@@ -55,5 +74,8 @@ export {
   putViewCountApi,
   postLikeLogApi,
   postLikeLogListApi,
-  putShareCountApi
+  putShareCountApi,
+  postReactionApi,
+  postReactionListApi,
+  getReactionEmojisApi
 }
