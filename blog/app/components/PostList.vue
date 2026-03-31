@@ -248,7 +248,7 @@
               :userReactionVersion="getPostUserReactionVersion(item._id)"
               :emojiList="reactionEmojiList"
               :loading="postReactionLoadingMap[item._id] === true"
-              @react="(payload) => handlePostReaction(item._id, payload)"
+              @react="payload => handlePostReaction(item._id, payload)"
             />
           </div>
         </div>
@@ -768,8 +768,8 @@ const loadReactionEmojis = () => {
 }
 
 const loadPostReactions = () => {
-  if (!postListData.value?.list || postListData.value.list.length === 0) return
-  const postIdList = postListData.value.list.map(item => item._id)
+  if (!postsData.value?.list || postsData.value.list.length === 0) return
+  const postIdList = postsData.value.list.map(item => item._id)
   postReactionListApi({ postIdList })
     .then(res => {
       const newMap = {}
@@ -787,16 +787,16 @@ const loadPostReactions = () => {
     .catch(() => {})
 }
 
-const getPostReactions = (postId) => {
+const getPostReactions = postId => {
   return postReactionMap.value[String(postId)] || []
 }
 
-const getPostUserEmoji = (postId) => {
+const getPostUserEmoji = postId => {
   const reaction = postUserReactionMap.value[String(postId)]
   return reaction ? reaction.emoji : null
 }
 
-const getPostUserReactionVersion = (postId) => {
+const getPostUserReactionVersion = postId => {
   const reaction = postUserReactionMap.value[String(postId)]
   return reaction ? reaction.__v : undefined
 }
