@@ -6,6 +6,8 @@ const utils = require('../../../utils/utils')
 const log4js = require('log4js')
 const userApiLog = log4js.getLogger('userApi')
 const moment = require('moment-timezone')
+const postReactionUtils = require('../../../mongodb/utils/postReactions')
+const mongoose = require('mongoose')
 
 module.exports = async function (req, res, next) {
   let {
@@ -441,7 +443,51 @@ module.exports = async function (req, res, next) {
       voteFliter:
         '_id endTime maxSelect showResultAfter title options.title options._id'
     })
-    .then(data => {
+    .then(async data => {
+      // 获取反应数据
+      try {
+        const postIdList = data.list.map(item => item._id)
+        if (postIdList.length > 0) {
+          const objectIdList = postIdList.map(
+            id => new mongoose.Types.ObjectId(id)
+          )
+          const aggregateResult = await postReactionUtils.aggregate([
+            { $match: { post: { $in: objectIdList } } },
+            {
+              $group: {
+                _id: { post: '$post', emoji: '$emoji' },
+                count: { $sum: 1 }
+              }
+            },
+            {
+              $group: {
+                _id: '$_id.post',
+                reactions: {
+                  $push: {
+                    emoji: '$_id.emoji',
+                    count: '$count'
+                  }
+                }
+              }
+            }
+          ])
+          // 将反应数据合并到文章列表中
+          const reactionMap = {}
+          aggregateResult.forEach(item => {
+            reactionMap[String(item._id)] = item.reactions
+          })
+          data.list = data.list.map(item => {
+            const jsonItem =
+              typeof item.toJSON === 'function' ? item.toJSON() : item
+            jsonItem.reactions = reactionMap[String(jsonItem._id)] || []
+            return jsonItem
+          })
+        }
+      } catch (err) {
+        userApiLog.error(
+          `post list reactions get fail, ${logErrorToText(err)}`
+        )
+      }
       // 返回格式list,total
       res.send({
         list: data.list,

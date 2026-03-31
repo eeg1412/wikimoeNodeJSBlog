@@ -3,6 +3,8 @@ const utils = require('../../../utils/utils')
 const log4js = require('log4js')
 const userApiLog = log4js.getLogger('userApi')
 const { ObjectId } = require('mongodb')
+const postReactionUtils = require('../../../mongodb/utils/postReactions')
+const mongoose = require('mongoose')
 
 module.exports = async function (req, res, next) {
   const id = req.query.id
@@ -247,6 +249,40 @@ module.exports = async function (req, res, next) {
             jsonData.randomPostList = randomPostList
           }
         }
+      }
+      // 获取反应数据
+      try {
+        const postObjectId = new mongoose.Types.ObjectId(jsonData._id)
+        const aggregateResult = await postReactionUtils.aggregate([
+          { $match: { post: postObjectId } },
+          {
+            $group: {
+              _id: { post: '$post', emoji: '$emoji' },
+              count: { $sum: 1 }
+            }
+          },
+          {
+            $group: {
+              _id: '$_id.post',
+              reactions: {
+                $push: {
+                  emoji: '$_id.emoji',
+                  count: '$count'
+                }
+              }
+            }
+          }
+        ])
+        if (aggregateResult.length > 0) {
+          jsonData.reactions = aggregateResult[0].reactions
+        } else {
+          jsonData.reactions = []
+        }
+      } catch (err) {
+        jsonData.reactions = []
+        userApiLog.error(
+          `post detail reactions get fail, ${logErrorToText(err)}`
+        )
       }
       res.send({
         data: jsonData

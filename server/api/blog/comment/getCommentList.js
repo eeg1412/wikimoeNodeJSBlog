@@ -2,6 +2,8 @@ const commentUtils = require('../../../mongodb/utils/comments')
 const utils = require('../../../utils/utils')
 const log4js = require('log4js')
 const userApiLog = log4js.getLogger('userApi')
+const commentReactionUtils = require('../../../mongodb/utils/commentReactions')
+const mongoose = require('mongoose')
 
 module.exports = async function (req, res, next) {
   let { page, id, sorttype } = req.query
@@ -47,7 +49,7 @@ module.exports = async function (req, res, next) {
   }
   commentUtils
     .findPage(params, sort, page, size, '-post')
-    .then(data => {
+    .then(async data => {
       const keys = [
         '_id',
         'avatar',
@@ -97,6 +99,46 @@ module.exports = async function (req, res, next) {
           Object.entries(jsonItem).filter(([key]) => keys.includes(key))
         )
       })
+      // 获取评论反应数据
+      try {
+        const commentIdList = list.map(item => item._id)
+        if (commentIdList.length > 0) {
+          const objectIdList = commentIdList.map(
+            id => new mongoose.Types.ObjectId(id)
+          )
+          const aggregateResult = await commentReactionUtils.aggregate([
+            { $match: { comment: { $in: objectIdList } } },
+            {
+              $group: {
+                _id: { comment: '$comment', emoji: '$emoji' },
+                count: { $sum: 1 }
+              }
+            },
+            {
+              $group: {
+                _id: '$_id.comment',
+                reactions: {
+                  $push: {
+                    emoji: '$_id.emoji',
+                    count: '$count'
+                  }
+                }
+              }
+            }
+          ])
+          const reactionMap = {}
+          aggregateResult.forEach(item => {
+            reactionMap[String(item._id)] = item.reactions
+          })
+          list.forEach(item => {
+            item.reactions = reactionMap[String(item._id)] || []
+          })
+        }
+      } catch (err) {
+        userApiLog.error(
+          `comment list reactions get fail, ${logErrorToText(err)}`
+        )
+      }
       res.send({
         list: list,
         total: data.total,
