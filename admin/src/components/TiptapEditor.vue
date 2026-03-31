@@ -1,5 +1,5 @@
 <template>
-  <div class="editor-body tiptap-editor">
+  <div class="editor-body tiptap-editor" :class="{ 'tiptap-fullscreen': isFullScreen }">
     <div class="tiptap-toolbar" v-if="editor">
       <!-- Row 1: Basic formatting -->
       <div class="tiptap-toolbar-row">
@@ -157,6 +157,27 @@
           <el-option label="2" value="2" />
           <el-option label="2.5" value="2.5" />
           <el-option label="3" value="3" />
+        </el-select>
+
+        <!-- Font family -->
+        <el-select
+          :model-value="currentFontFamily"
+          @change="setFontFamily"
+          size="small"
+          class="tiptap-toolbar-select"
+          placeholder="字体"
+        >
+          <el-option label="默认" value="" />
+          <el-option label="黑体" value="SimHei" />
+          <el-option label="宋体" value="SimSun" />
+          <el-option label="楷体" value="KaiTi" />
+          <el-option label="微软雅黑" value="Microsoft YaHei" />
+          <el-option label="Arial" value="Arial" />
+          <el-option label="Tahoma" value="Tahoma" />
+          <el-option label="Verdana" value="Verdana" />
+          <el-option label="Georgia" value="Georgia" />
+          <el-option label="Times New Roman" value="Times New Roman" />
+          <el-option label="Courier New" value="Courier New" />
         </el-select>
       </div>
 
@@ -399,6 +420,19 @@
             </button>
           </el-tooltip>
         </template>
+
+        <el-divider direction="vertical" />
+
+        <!-- Full screen -->
+        <el-tooltip content="全屏" placement="top" :show-after="500">
+          <button
+            class="tiptap-btn"
+            :class="{ 'is-active': isFullScreen }"
+            @click="toggleFullScreen"
+          >
+            ⛶
+          </button>
+        </el-tooltip>
       </div>
     </div>
 
@@ -640,6 +674,11 @@ export default {
       return paraAttrs.lineHeight || headAttrs.lineHeight || ''
     })
 
+    const currentFontFamily = computed(() => {
+      if (!editor.value) return ''
+      return editor.value.getAttributes('textStyle').fontFamily || ''
+    })
+
     const setHeading = val => {
       if (val === 'paragraph') {
         editor.value.chain().focus().setParagraph().run()
@@ -665,6 +704,14 @@ export default {
         editor.value.chain().focus().setLineHeight(val).run()
       } else {
         editor.value.chain().focus().unsetLineHeight().run()
+      }
+    }
+
+    const setFontFamily = val => {
+      if (val) {
+        editor.value.chain().focus().setFontFamily(val).run()
+      } else {
+        editor.value.chain().focus().unsetFontFamily().run()
       }
     }
 
@@ -896,6 +943,12 @@ export default {
         .run()
     }
 
+    // Full screen
+    const isFullScreen = ref(false)
+    const toggleFullScreen = () => {
+      isFullScreen.value = !isFullScreen.value
+    }
+
     return {
       editor,
       codeLangs,
@@ -903,9 +956,11 @@ export default {
       currentHeading,
       currentFontSize,
       currentLineHeight,
+      currentFontFamily,
       setHeading,
       setFontSize,
       setLineHeight,
+      setFontFamily,
       insertEmoji,
       setLink,
       insertFnType,
@@ -922,7 +977,9 @@ export default {
       eventText,
       eventId,
       openEventDialog,
-      onEventDialogOk
+      onEventDialogOk,
+      isFullScreen,
+      toggleFullScreen
     }
   }
 }
@@ -933,6 +990,24 @@ export default {
   border: 1px solid #ccc;
   width: 100%;
   box-sizing: border-box;
+}
+.tiptap-fullscreen {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 9999;
+  background: #fff;
+  display: flex;
+  flex-direction: column;
+}
+.tiptap-fullscreen .tiptap-content {
+  flex: 1;
+  overflow-y: auto;
+}
+.tiptap-fullscreen .tiptap-content .tiptap {
+  min-height: 100%;
 }
 .tiptap-toolbar {
   border-bottom: 1px solid #ccc;
