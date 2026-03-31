@@ -15,6 +15,21 @@ module.exports = async function (req, res, next) {
     return
   }
 
+  // 校验commentIdList
+  if (!Array.isArray(commentIdList) || commentIdList.length === 0) {
+    res.status(400).json({
+      errors: [{ message: '参数错误' }]
+    })
+    return
+  }
+
+  if (commentIdList.length > 50) {
+    res.status(400).json({
+      errors: [{ message: '查询数量超出限制' }]
+    })
+    return
+  }
+
   const params = {
     comment: {
       $in: commentIdList

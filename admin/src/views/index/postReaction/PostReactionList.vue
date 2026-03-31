@@ -132,7 +132,12 @@
         <!-- UA信息 -->
         <ResponsiveTableColumn label="UA信息" width="210">
           <template #default="{ row }">
-            <DeviceInfoDisplay :deviceInfo="row.deviceInfo" />
+            <div>系统：{{ row.deviceInfo?.os?.name }}</div>
+            <div>系统版本号：{{ row.deviceInfo?.os?.version }}</div>
+            <div>浏览器：{{ row.deviceInfo?.browser?.name }}</div>
+            <div>浏览器版本号： {{ row.deviceInfo?.browser?.version }}</div>
+            <div v-if="row.deviceInfo?.device?.type">设备类型：{{ row.deviceInfo?.device?.type }}</div>
+            <div>UA：{{ row.deviceInfo?.ua }}</div>
           </template>
         </ResponsiveTableColumn>
       </ResponsiveTable>
