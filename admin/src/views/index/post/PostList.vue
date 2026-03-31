@@ -986,6 +986,7 @@ export default {
           .getTagList(
             {
               idList: params.tags,
+              page: 1,
               size: 999999
             },
             true
