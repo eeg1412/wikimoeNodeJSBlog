@@ -148,7 +148,12 @@ const getVoteList = (keyword = null) => {
   lastKeyword.value = keyword
   authApi
     .getVoteList(
-      { keyword, status: statusFilter.value === -1 ? undefined : statusFilter.value, size: 50, page: 1 },
+      {
+        keyword,
+        status: statusFilter.value === -1 ? undefined : statusFilter.value,
+        size: 50,
+        page: 1
+      },
       true
     )
     .then(res => {

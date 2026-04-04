@@ -162,7 +162,12 @@ const getBangumiList = (keyword = null) => {
   lastKeyword.value = keyword
   authApi
     .getBangumiList(
-      { keyword, status: statusFilter.value === -1 ? undefined : statusFilter.value, size: 50, page: 1 },
+      {
+        keyword,
+        status: statusFilter.value === -1 ? undefined : statusFilter.value,
+        size: 50,
+        page: 1
+      },
       true
     )
     .then(res => {

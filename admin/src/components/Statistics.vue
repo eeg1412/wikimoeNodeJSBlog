@@ -63,7 +63,10 @@
                 </div>
                 <!-- 点击打开按钮 -->
                 <div class="dib ml5 vt">
-                  <el-link type="primary" underline="hover" @click="openPage(row)"
+                  <el-link
+                    type="primary"
+                    underline="hover"
+                    @click="openPage(row)"
                     ><i class="fas fa-external-link-alt"></i
                   ></el-link>
                 </div>
@@ -115,7 +118,10 @@
                 </div>
                 <!-- 点击打开按钮 -->
                 <div class="dib ml5 vt">
-                  <el-link type="primary" underline="hover" @click="openPage(row)"
+                  <el-link
+                    type="primary"
+                    underline="hover"
+                    @click="openPage(row)"
                     ><i class="fas fa-external-link-alt"></i
                   ></el-link>
                 </div>
@@ -162,7 +168,10 @@
                 </div>
                 <!-- 点击打开按钮 -->
                 <div class="dib ml5 vt">
-                  <el-link type="primary" underline="hover" @click="openPage(row)"
+                  <el-link
+                    type="primary"
+                    underline="hover"
+                    @click="openPage(row)"
                     ><i class="fas fa-external-link-alt"></i
                   ></el-link>
                 </div>
