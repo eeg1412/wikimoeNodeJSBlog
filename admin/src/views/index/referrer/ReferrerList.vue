@@ -86,7 +86,7 @@
         layout="total, prev, pager, next"
         :total="total"
         :pager-count="5"
-        small
+        size="small"
         v-model:current-page="params.page"
         v-model:page-size="params.size"
       />

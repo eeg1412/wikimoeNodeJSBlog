@@ -75,8 +75,8 @@
         </el-form-item>
         <el-form-item label="状态" prop="status">
           <el-radio-group v-model="form.status">
-            <el-radio :label="0">不显示</el-radio>
-            <el-radio :label="1">显示</el-radio>
+            <el-radio :value="0">不显示</el-radio>
+            <el-radio :value="1">显示</el-radio>
           </el-radio-group>
         </el-form-item>
         <el-form-item>

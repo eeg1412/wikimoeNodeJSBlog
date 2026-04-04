@@ -278,7 +278,7 @@
           layout="total, prev, pager, next"
           :total="total"
           :pager-count="5"
-          small
+          size="small"
           v-model:page-size="params.size"
           v-model:current-page="params.page"
         />

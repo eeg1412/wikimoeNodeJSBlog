@@ -58,10 +58,10 @@
         <el-form-item label="季度" prop="season">
           <!-- radio 分别对应 1 2 3 4 -->
           <el-radio-group v-model="form.season">
-            <el-radio :label="1">冬季新番</el-radio>
-            <el-radio :label="2">春季新番</el-radio>
-            <el-radio :label="3">夏季新番</el-radio>
-            <el-radio :label="4">秋季新番</el-radio>
+            <el-radio :value="1">冬季新番</el-radio>
+            <el-radio :value="2">春季新番</el-radio>
+            <el-radio :value="3">夏季新番</el-radio>
+            <el-radio :value="4">秋季新番</el-radio>
           </el-radio-group>
         </el-form-item>
         <el-form-item label="标记" prop="label">
@@ -151,8 +151,8 @@
         <el-form-item label="状态" prop="status">
           <!-- radio 分别对应 0 1 不显示 显示 -->
           <el-radio-group v-model="form.status">
-            <el-radio :label="0">不显示</el-radio>
-            <el-radio :label="1">显示</el-radio>
+            <el-radio :value="0">不显示</el-radio>
+            <el-radio :value="1">显示</el-radio>
           </el-radio-group>
         </el-form-item>
         <el-form-item>

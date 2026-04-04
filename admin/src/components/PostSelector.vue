@@ -22,9 +22,9 @@
             @change="queryPosts(lastKeyword)"
             :disabled="loading"
           >
-            <el-radio :label="undefined" size="small">全部</el-radio>
-            <el-radio :label="0" size="small">仅草稿</el-radio>
-            <el-radio :label="1" size="small">仅发布</el-radio>
+            <el-radio :value="undefined" size="small">全部</el-radio>
+            <el-radio :value="0" size="small">仅草稿</el-radio>
+            <el-radio :value="1" size="small">仅发布</el-radio>
           </el-radio-group>
         </template>
         <el-option

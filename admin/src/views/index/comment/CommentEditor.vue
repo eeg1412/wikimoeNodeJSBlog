@@ -70,9 +70,9 @@
         </el-form-item>
         <el-form-item label="状态" prop="status">
           <el-radio-group v-model="form.status">
-            <el-radio :label="0">待审核</el-radio>
-            <el-radio :label="1">通过</el-radio>
-            <el-radio :label="2">未通过</el-radio>
+            <el-radio :value="0">待审核</el-radio>
+            <el-radio :value="1">通过</el-radio>
+            <el-radio :value="2">未通过</el-radio>
           </el-radio-group>
         </el-form-item>
         <template v-if="form.status === 1">

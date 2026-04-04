@@ -38,9 +38,9 @@
     <!-- siteThemeMode -->
     <el-form-item label="默认站点主题模式" prop="siteThemeMode">
       <el-radio-group v-model="siteSettingsForm.siteThemeMode">
-        <el-radio label="system">跟随系统</el-radio>
-        <el-radio label="light">浅色模式</el-radio>
-        <el-radio label="dark">深色模式</el-radio>
+        <el-radio value="system">跟随系统</el-radio>
+        <el-radio value="light">浅色模式</el-radio>
+        <el-radio value="dark">深色模式</el-radio>
       </el-radio-group>
     </el-form-item>
     <!-- siteFavicon -->

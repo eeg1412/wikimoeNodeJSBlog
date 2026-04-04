@@ -29,8 +29,8 @@
             v-model="dataSortPriority"
             @change="getStatistics(true)"
           >
-            <el-radio label="ip" size="small">IP</el-radio>
-            <el-radio label="pv" size="small">PV</el-radio>
+            <el-radio value="ip" size="small">IP</el-radio>
+            <el-radio value="pv" size="small">PV</el-radio>
           </el-radio-group>
         </div>
       </div>
@@ -85,7 +85,7 @@
               layout="prev, pager, next"
               :total="rankData.readPostViewData.length"
               :pager-count="5"
-              small
+              size="small"
               v-model:current-page="readPostViewPagination.currentPage"
               v-model:page-size="readPostViewPagination.pageSize"
             />
@@ -132,7 +132,7 @@
               layout="prev, pager, next"
               :total="rankData.readPostLikeData.length"
               :pager-count="5"
-              small
+              size="small"
               v-model:current-page="readPostLikePagination.currentPage"
               v-model:page-size="readPostLikePagination.pageSize"
             />
@@ -179,7 +179,7 @@
               layout="prev, pager, next"
               :total="rankData.readPostShareData.length"
               :pager-count="5"
-              small
+              size="small"
               v-model:current-page="readPostSharePagination.currentPage"
               v-model:page-size="readPostSharePagination.pageSize"
             />
@@ -215,7 +215,7 @@
               layout="prev, pager, next"
               :total="rankData.readPostSharePlatformData.length"
               :pager-count="5"
-              small
+              size="small"
               v-model:current-page="readPostSharePlatformPagination.currentPage"
               v-model:page-size="readPostSharePlatformPagination.pageSize"
             />
@@ -251,7 +251,7 @@
               layout="prev, pager, next"
               :total="rankData.readReferrerData.length"
               :pager-count="5"
-              small
+              size="small"
               v-model:current-page="readReferrerPagination.currentPage"
               v-model:page-size="readReferrerPagination.pageSize"
             />
@@ -286,7 +286,7 @@
               layout="prev, pager, next"
               :total="rankData.readPostListSortData.length"
               :pager-count="5"
-              small
+              size="small"
               v-model:current-page="readPostListSortPagination.currentPage"
               v-model:page-size="readPostListSortPagination.pageSize"
             />
@@ -321,7 +321,7 @@
               layout="prev, pager, next"
               :total="rankData.readPostListTagData.length"
               :pager-count="5"
-              small
+              size="small"
               v-model:current-page="readPostListTagPagination.currentPage"
               v-model:page-size="readPostListTagPagination.pageSize"
             />
@@ -356,7 +356,7 @@
               layout="prev, pager, next"
               :total="rankData.readPostListKeywordData.length"
               :pager-count="5"
-              small
+              size="small"
               v-model:current-page="readPostListKeywordPagination.currentPage"
               v-model:page-size="readPostListKeywordPagination.pageSize"
             />
@@ -395,7 +395,7 @@
               layout="prev, pager, next"
               :total="rankData.readPostListBangumiData.length"
               :pager-count="5"
-              small
+              size="small"
               v-model:current-page="readPostListBangumiPagination.currentPage"
               v-model:page-size="readPostListBangumiPagination.pageSize"
             />
@@ -434,7 +434,7 @@
               layout="prev, pager, next"
               :total="rankData.readPostListMovieData.length"
               :pager-count="5"
-              small
+              size="small"
               v-model:current-page="readPostListMoviePagination.currentPage"
               v-model:page-size="readPostListMoviePagination.pageSize"
             />
@@ -473,7 +473,7 @@
               layout="prev, pager, next"
               :total="rankData.readPostListBookData.length"
               :pager-count="5"
-              small
+              size="small"
               v-model:current-page="readPostListBookPagination.currentPage"
               v-model:page-size="readPostListBookPagination.pageSize"
             />
@@ -512,7 +512,7 @@
               layout="prev, pager, next"
               :total="rankData.readPostListGameData.length"
               :pager-count="5"
-              small
+              size="small"
               v-model:current-page="readPostListGamePagination.currentPage"
               v-model:page-size="readPostListGamePagination.pageSize"
             />
@@ -552,7 +552,7 @@
               layout="prev, pager, next"
               :total="rankData.readPostListMappointData.length"
               :pager-count="5"
-              small
+              size="small"
               v-model:current-page="readPostListMappointPagination.currentPage"
               v-model:page-size="readPostListMappointPagination.pageSize"
             />
@@ -596,7 +596,7 @@
               layout="prev, pager, next"
               :total="rankData.osStats?.length || 0"
               :pager-count="5"
-              small
+              size="small"
               v-model:current-page="osStatsPagination.currentPage"
               v-model:page-size="osStatsPagination.pageSize"
             />
@@ -638,7 +638,7 @@
               layout="prev, pager, next"
               :total="rankData.browserStats?.length || 0"
               :pager-count="5"
-              small
+              size="small"
               v-model:current-page="browserStatsPagination.currentPage"
               v-model:page-size="browserStatsPagination.pageSize"
             />
@@ -673,7 +673,7 @@
               layout="prev, pager, next"
               :total="rankData.languageStats?.length || 0"
               :pager-count="5"
-              small
+              size="small"
               v-model:current-page="languageStatsPagination.currentPage"
               v-model:page-size="languageStatsPagination.pageSize"
             />
@@ -708,7 +708,7 @@
               layout="prev, pager, next"
               :total="rankData.fullLocaleStats?.length || 0"
               :pager-count="5"
-              small
+              size="small"
               v-model:current-page="fullLocaleStatsPagination.currentPage"
               v-model:page-size="fullLocaleStatsPagination.pageSize"
             />
@@ -747,7 +747,7 @@
               layout="prev, pager, next"
               :total="rankData.countryStats?.length || 0"
               :pager-count="5"
-              small
+              size="small"
               v-model:current-page="countryStatsPagination.currentPage"
               v-model:page-size="countryStatsPagination.pageSize"
             />
@@ -782,7 +782,7 @@
               layout="prev, pager, next"
               :total="rankData.regionStats?.length || 0"
               :pager-count="5"
-              small
+              size="small"
               v-model:current-page="regionStatsPagination.currentPage"
               v-model:page-size="regionStatsPagination.pageSize"
             />
@@ -807,7 +807,7 @@
               layout="prev, pager, next"
               :total="rankData.botStats?.length || 0"
               :pager-count="5"
-              small
+              size="small"
               v-model:current-page="botStatsPagination.currentPage"
               v-model:page-size="botStatsPagination.pageSize"
             />

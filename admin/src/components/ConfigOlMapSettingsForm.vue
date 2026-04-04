@@ -10,8 +10,8 @@
     <el-form-item label="地图精度" prop="olMapMapPrecision">
       <!-- radio -->
       <el-radio-group v-model="olMapSettingsForm.olMapMapPrecision">
-        <el-radio :label="1">低</el-radio>
-        <el-radio :label="2">普通</el-radio>
+        <el-radio :value="1">低</el-radio>
+        <el-radio :value="2">普通</el-radio>
       </el-radio-group>
       <div class="w_10">※低精度地图文件约965KB,普通精度地图文件约4.3MB</div>
     </el-form-item>

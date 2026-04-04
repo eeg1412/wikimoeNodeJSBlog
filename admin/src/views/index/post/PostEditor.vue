@@ -737,9 +737,9 @@
         <!-- 状态 -->
         <el-form-item label="状态" prop="status">
           <el-radio-group v-model="form.status">
-            <el-radio :label="0">草稿</el-radio>
-            <el-radio :label="1">发布</el-radio>
-            <!-- <el-radio :label="99">回收站</el-radio> -->
+            <el-radio :value="0">草稿</el-radio>
+            <el-radio :value="1">发布</el-radio>
+            <!-- <el-radio :value="99">回收站</el-radio> -->
           </el-radio-group>
         </el-form-item>
         <!-- 强制提交 -->
@@ -1488,9 +1488,12 @@ export default {
 
     let autoSaveTimer = null
     const setAutoSaveTimer = () => {
-      autoSaveTimer = setInterval(() => {
-        autoSave()
-      }, 1000 * 60 * 2)
+      autoSaveTimer = setInterval(
+        () => {
+          autoSave()
+        },
+        1000 * 60 * 2
+      )
     }
 
     // 升级编辑器版本

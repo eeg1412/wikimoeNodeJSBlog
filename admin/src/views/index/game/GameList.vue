@@ -163,7 +163,7 @@
                 :href="item.url"
                 target="_blank"
                 type="primary"
-                :underline="false"
+                underline="never"
                 >{{ item.text }}</el-link
               >
             </div>
@@ -243,7 +243,7 @@
         layout="total, prev, pager, next"
         :total="total"
         :pager-count="5"
-        small
+        size="small"
         v-model:current-page="params.page"
         v-model:page-size="params.size"
       />

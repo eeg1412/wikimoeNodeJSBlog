@@ -28,8 +28,8 @@
       </p>
       <div class="mt10">
         <el-radio-group v-model="form.changeType">
-          <el-radio label="0">删除</el-radio>
-          <el-radio label="1">转移给</el-radio>
+          <el-radio value="0">删除</el-radio>
+          <el-radio value="1">转移给</el-radio>
         </el-radio-group>
         <el-select
           v-model="form.toUserId"

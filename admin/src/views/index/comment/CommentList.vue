@@ -125,8 +125,8 @@
                   row.status === 0
                     ? 'info'
                     : row.status === 1
-                    ? 'success'
-                    : 'danger'
+                      ? 'success'
+                      : 'danger'
                 "
                 :disabled="!row.post"
               >
@@ -134,8 +134,8 @@
                   row.status === 0
                     ? '待审核'
                     : row.status === 1
-                    ? '通过'
-                    : '未通过'
+                      ? '通过'
+                      : '未通过'
                 }}
                 <el-icon class="el-icon--right"><arrow-down /></el-icon>
               </el-button>
@@ -275,7 +275,7 @@
         layout="total, prev, pager, next"
         :total="total"
         :pager-count="5"
-        small
+        size="small"
         v-model:current-page="params.page"
         v-model:page-size="params.size"
       />

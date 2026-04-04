@@ -26,8 +26,8 @@
     <el-form-item label="推文标题类型" prop="siteRssTweetTitleType">
       <!-- radio -->
       <el-radio-group v-model="rssSettingsForm.siteRssTweetTitleType">
-        <el-radio :label="1">裁切内容</el-radio>
-        <el-radio :label="2">日期</el-radio>
+        <el-radio :value="1">裁切内容</el-radio>
+        <el-radio :value="2">日期</el-radio>
       </el-radio-group>
     </el-form-item>
     <!-- 底部显示RSS siteShowRssInFooter -->

@@ -222,7 +222,7 @@
               layout="prev, pager, next"
               :total="loadingTimeData.slowestData.length"
               :pager-count="5"
-              small
+              size="small"
               v-model:current-page="slowestPagination.currentPage"
               v-model:page-size="slowestPagination.pageSize"
             />
@@ -380,7 +380,7 @@
               layout="prev, pager, next"
               :total="loadingTimeData.fastestData.length"
               :pager-count="5"
-              small
+              size="small"
               v-model:current-page="fastestPagination.currentPage"
               v-model:page-size="fastestPagination.pageSize"
             />
@@ -426,7 +426,7 @@
               layout="prev, pager, next"
               :total="loadingTimeData.countrySlowStats?.length || 0"
               :pager-count="5"
-              small
+              size="small"
               v-model:current-page="countrySlowPagination.currentPage"
               v-model:page-size="countrySlowPagination.pageSize"
             />
@@ -469,7 +469,7 @@
               layout="prev, pager, next"
               :total="loadingTimeData.countryFastStats?.length || 0"
               :pager-count="5"
-              small
+              size="small"
               v-model:current-page="countryFastPagination.currentPage"
               v-model:page-size="countryFastPagination.pageSize"
             />
@@ -511,7 +511,7 @@
               layout="prev, pager, next"
               :total="loadingTimeData.regionSlowStats?.length || 0"
               :pager-count="5"
-              small
+              size="small"
               v-model:current-page="regionSlowPagination.currentPage"
               v-model:page-size="regionSlowPagination.pageSize"
             />
@@ -550,7 +550,7 @@
               layout="prev, pager, next"
               :total="loadingTimeData.regionFastStats?.length || 0"
               :pager-count="5"
-              small
+              size="small"
               v-model:current-page="regionFastPagination.currentPage"
               v-model:page-size="regionFastPagination.pageSize"
             />
