@@ -22,7 +22,7 @@
   </div>
 </template>
 <script>
-import { ref, computed, emit } from 'vue'
+import { ref, computed } from 'vue'
 import RichEditor5 from '@/components/RichEditor5'
 import { ElMessage, ElMessageBox } from 'element-plus'
 

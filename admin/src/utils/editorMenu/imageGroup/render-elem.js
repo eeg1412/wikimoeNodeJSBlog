@@ -3,7 +3,7 @@
  */
 
 import { h } from 'snabbdom'
-import { IDomEditor, DomEditor } from '@wangeditor/core'
+import { DomEditor } from '@wangeditor/core'
 
 function renderImageGroup(elem, children, editor, info) {
   // 当前节点是否选中

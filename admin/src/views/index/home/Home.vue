@@ -147,7 +147,7 @@ export default {
       })
     }
 
-    const version = process.env.VUE_APP_VERSION
+    const version = import.meta.env.VITE_APP_VERSION
 
     onMounted(() => {
       getDashboard()
