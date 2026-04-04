@@ -23,7 +23,7 @@
             @change="queryMappoints(lastKeyword)"
             :disabled="loading"
           >
-            <el-radio :value="undefined" size="small">全部</el-radio>
+            <el-radio :value="-1" size="small">全部</el-radio>
             <el-radio :value="0" size="small">仅不显示</el-radio>
             <el-radio :value="1" size="small">仅显示</el-radio>
           </el-radio-group>
@@ -147,7 +147,7 @@ const checkShowText = item => {
 }
 
 const lastKeyword = ref(null)
-const statusFilter = ref(undefined) // 0:不显示,1:显示
+const statusFilter = ref(-1) // -1:全部, 0:不显示, 1:显示
 // 获取地点列表
 const getMappointList = (keyword = null) => {
   if (loading.value) {
@@ -157,7 +157,7 @@ const getMappointList = (keyword = null) => {
   lastKeyword.value = keyword
   authApi
     .getMappointList(
-      { keyword, status: statusFilter.value, size: 50, page: 1 },
+      { keyword, status: statusFilter.value === -1 ? undefined : statusFilter.value, size: 50, page: 1 },
       true
     )
     .then(res => {

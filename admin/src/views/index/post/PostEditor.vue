@@ -69,7 +69,7 @@
                 <el-input
                   type="textarea"
                   v-model="contentSource"
-                  rows="30"
+                  :rows="30"
                   placeholder="请输入源代码"
                 ></el-input>
               </el-tab-pane>
@@ -94,7 +94,7 @@
             <el-input
               type="textarea"
               v-model="form.excerpt"
-              rows="5"
+              :rows="5"
               placeholder="请输入摘要"
             ></el-input>
           </el-form-item>
@@ -103,7 +103,7 @@
             <el-input
               type="textarea"
               v-model="form.code"
-              rows="5"
+              :rows="5"
               placeholder="请输入插入code"
             ></el-input>
           </el-form-item>

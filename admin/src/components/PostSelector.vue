@@ -22,7 +22,7 @@
             @change="queryPosts(lastKeyword)"
             :disabled="loading"
           >
-            <el-radio :value="undefined" size="small">全部</el-radio>
+            <el-radio :value="-1" size="small">全部</el-radio>
             <el-radio :value="0" size="small">仅草稿</el-radio>
             <el-radio :value="1" size="small">仅发布</el-radio>
           </el-radio-group>
@@ -159,7 +159,7 @@ const checkShowText = item => {
 }
 
 const lastKeyword = ref(null)
-const statusFilter = ref(undefined) // 0:草稿,1:发布
+const statusFilter = ref(-1) // -1:全部, 0:草稿, 1:发布
 
 // 获取博文列表
 const getPostList = (keyword = null) => {
@@ -172,7 +172,7 @@ const getPostList = (keyword = null) => {
     .getPostList(
       {
         keyword,
-        status: statusFilter.value,
+        status: statusFilter.value === -1 ? undefined : statusFilter.value,
         type: props.type,
         size: 50,
         page: 1

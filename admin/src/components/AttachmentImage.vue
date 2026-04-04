@@ -100,7 +100,7 @@
           <el-input
             type="textarea"
             v-model="formName.description"
-            rows="5"
+            :rows="5"
             placeholder="请输入描述"
           ></el-input>
         </el-form-item>
