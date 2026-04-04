@@ -519,6 +519,8 @@
         <el-form-item label="内容" prop="content">
           <EmojiTextarea
             v-model:value="commentForm.content"
+            v-model:stickers="commentForm.stickers"
+            :showStickerPicker="true"
             placeholder="请输入评论内容"
           />
         </el-form-item>
@@ -762,11 +764,23 @@ export default {
     const commentForm = reactive({
       post: '',
       content: '',
-      top: false
+      top: false,
+      stickers: []
     })
     const commentFormRef = ref(null)
     const commentFormRules = {
-      content: [{ required: true, message: '请输入评论内容', trigger: 'blur' }]
+      content: [
+        {
+          validator: (rule, value, callback) => {
+            if (!value && commentForm.stickers.length === 0) {
+              callback(new Error('请输入评论内容或选择贴纸'))
+              return
+            }
+            callback()
+          },
+          trigger: 'blur'
+        }
+      ]
     }
     const commentFormVisible = ref(false)
     const commentFormTitle = ref('添加评论')
@@ -774,6 +788,7 @@ export default {
       // 重置表单
       commentForm.content = ''
       commentForm.top = false
+      commentForm.stickers = []
       commentForm.post = postId
       if (title) {
         commentFormTitle.value = title
@@ -788,12 +803,17 @@ export default {
     const submitCommentForm = () => {
       commentFormRef.value.validate(valid => {
         if (valid) {
-          authApi.createComment(commentForm).then(res => {
-            ElMessage.success('评论成功')
-            closeCommentForm()
-            // 重新获取文章列表
-            getPostList()
-          })
+          authApi
+            .createComment({
+              ...commentForm,
+              stickers: commentForm.stickers.map(item => item._id)
+            })
+            .then(res => {
+              ElMessage.success('评论成功')
+              closeCommentForm()
+              // 重新获取文章列表
+              getPostList()
+            })
         } else {
           return false
         }

@@ -30,8 +30,25 @@
           </ClientOnly>
         </div>
         <!-- 评论内容 -->
-        <div class="comment-latest-item-comment-body line-clamp-2">
+        <div
+          v-if="item.content"
+          class="comment-latest-item-comment-body line-clamp-2"
+        >
           {{ item.content }}
+        </div>
+        <div
+          v-if="item.stickers && item.stickers.length > 0"
+          class="comment-latest-item-sticker-list"
+        >
+          <img
+            v-for="(sticker, stickerIndex) in item.stickers"
+            :key="`${item._id}-sticker-${stickerIndex}`"
+            :src="sticker.image"
+            :alt="sticker.description"
+            :title="sticker.description"
+            class="comment-latest-item-sticker"
+            loading="lazy"
+          />
         </div>
       </div>
     </div>
@@ -132,6 +149,24 @@ const preventDefaultMiddleClick = e => {
 .comment-latest-item-comment-body {
   word-break: break-all;
 }
+
+.comment-latest-item-sticker-list {
+  display: flex;
+  gap: 8px;
+  margin-top: 8px;
+  flex-wrap: wrap;
+}
+
+.comment-latest-item-sticker {
+  display: block;
+  width: min(64px, calc((100% - 16px) / 3));
+  max-width: 64px;
+  flex: 0 0 auto;
+  height: auto;
+  aspect-ratio: 1;
+  object-fit: contain;
+}
+
 .comment-latest-item-date {
   color: #999;
   font-size: 13px;

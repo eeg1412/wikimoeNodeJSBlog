@@ -177,7 +177,11 @@ module.exports = async function (req, res, next) {
           userApiLog.info(`comment retract success`)
           // 发送邮件
           const postInfo = await postUtils.findOne({ _id: comment.post })
-          utils.sendRetractCommentNotice(postInfo, comment)
+          utils.sendRetractCommentNotice(postInfo, comment).catch(err => {
+            userApiLog.error(
+              `comment retract mail fail, ${logErrorToText(err)}`
+            )
+          })
 
           // 记录日志
           let content = comment.content

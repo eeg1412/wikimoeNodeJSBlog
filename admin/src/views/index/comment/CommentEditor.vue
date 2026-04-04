@@ -42,15 +42,33 @@
         <el-form-item label="父级评论" v-if="detailData.parentId">
           <blockquote
             class="common-blockquote comment-detail-blockquote"
-            v-if="detailData.parent && detailData.parent?.content"
+            v-if="detailData.parent"
           >
             <div class="fb">
               {{
                 detailData.parent.user?.nickname || detailData.parent.nickname
               }}
             </div>
-            <div>{{ $formatDate(detailData.date) }}</div>
-            <div class="mt5 pre-wrap">{{ detailData.parent.content }}</div>
+            <div>{{ $formatDate(detailData.parent.date) }}</div>
+            <div class="mt5 pre-wrap" v-if="detailData.parent.content">
+              {{ detailData.parent.content }}
+            </div>
+            <div
+              class="comment-detail-sticker-list"
+              v-if="
+                detailData.parent.stickers &&
+                detailData.parent.stickers.length > 0
+              "
+            >
+              <img
+                v-for="(sticker, stickerIndex) in detailData.parent.stickers"
+                :key="`detail-parent-${stickerIndex}`"
+                :src="sticker.image"
+                :alt="sticker.description"
+                :title="sticker.description"
+                class="comment-detail-sticker-img"
+              />
+            </div>
           </blockquote>
           <blockquote
             class="common-blockquote comment-detail-blockquote"
@@ -62,6 +80,8 @@
         <el-form-item label="评论内容" prop="content">
           <EmojiTextarea
             v-model:value="form.content"
+            v-model:stickers="form.stickers"
+            :showStickerPicker="true"
             placeholder="请输入评论内容"
           />
         </el-form-item>
@@ -85,6 +105,8 @@
             <el-form-item label="回复内容" prop="reply.content">
               <EmojiTextarea
                 v-model:value="form.reply.content"
+                v-model:stickers="form.reply.stickers"
+                :showStickerPicker="true"
                 placeholder="请输入回复内容"
               />
             </el-form-item>
@@ -122,11 +144,13 @@ export default {
       url: '',
       email: '',
       status: 0,
+      stickers: [],
       reply: {
         post: '',
         content: '',
         parent: '',
-        top: false
+        top: false,
+        stickers: []
       },
       __v: null
     })
@@ -135,13 +159,18 @@ export default {
     const detailData = ref({})
     const showForm = ref(false)
     const rules = computed(() => {
+      const hasStickers = form.stickers && form.stickers.length > 0
       const ruleList = {
         content: [
-          { required: true, message: '请输入评论内容', trigger: 'blur' },
+          {
+            required: !hasStickers,
+            message: '请输入评论内容或选择贴纸',
+            trigger: 'blur'
+          },
           { max: 500, message: '评论内容不能超过500个字符', trigger: 'blur' }
         ]
       }
-      if (!detailData.user) {
+      if (!detailData.value.user) {
         ruleList.nickname = [
           { required: true, message: '请输入昵称', trigger: 'blur' },
           { max: 20, message: '昵称不能超过20个字符', trigger: 'blur' }
@@ -196,7 +225,16 @@ export default {
       }
       if (replyFlag.value) {
         ruleList['reply.content'] = [
-          { required: true, message: '请输入回复内容', trigger: 'blur' }
+          {
+            validator: (rule, value, callback) => {
+              if (!value && form.reply.stickers.length === 0) {
+                callback(new Error('请输入回复内容或选择贴纸'))
+                return
+              }
+              callback()
+            },
+            trigger: 'blur'
+          }
         ]
       }
       return ruleList
@@ -212,6 +250,8 @@ export default {
         // 编辑
         data.id = id.value
         data.__v = form.__v
+        // 发送贴纸ID数组
+        data.stickers = form.stickers.map(s => s._id)
         // 如果有user，删除nickname, url, email
         if (detailData.value.user) {
           delete data.nickname
@@ -224,6 +264,7 @@ export default {
             if (replyFlag.value && data.status === 1) {
               // 回复
               const replyData = JSON.parse(JSON.stringify(form.reply))
+              replyData.stickers = form.reply.stickers.map(s => s._id)
               authApi.createComment(replyData).then(res => {
                 router.push({
                   name: 'CommentList'
@@ -254,6 +295,7 @@ export default {
           form.email = res.data.data.email
           form.status = res.data.data.status
           form.__v = res.data.data.__v
+          form.stickers = res.data.data.stickers || []
           form.reply.post = res.data.data.post._id
           const user = res.data.data.user
           if (user) {
@@ -290,5 +332,24 @@ export default {
 <style scoped>
 .comment-detail-blockquote {
   line-height: 18px;
+}
+
+.comment-detail-sticker-list {
+  display: flex;
+  gap: 8px;
+  margin-top: 8px;
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  overflow-y: hidden;
+}
+
+.comment-detail-sticker-img {
+  display: block;
+  width: min(128px, calc((100% - 16px) / 3));
+  max-width: 128px;
+  flex: 0 0 auto;
+  height: auto;
+  aspect-ratio: 1;
+  object-fit: contain;
 }
 </style>

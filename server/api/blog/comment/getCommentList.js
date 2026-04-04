@@ -60,7 +60,8 @@ module.exports = async function (req, res, next) {
         'parent',
         'parentId',
         'top',
-        'status'
+        'status',
+        'stickers'
       ]
 
       const list = data.list.map((item, index) => {

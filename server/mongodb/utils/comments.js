@@ -14,14 +14,25 @@ exports.findOne = async function (parmas, projection, options = {}) {
     .populate({
       path: 'parent',
       match: { status: 1 },
-      select: 'content _id status user nickname date',
-      populate: {
-        path: 'user',
-        select: '_id nickname'
-      }
+      select: 'content _id status user nickname date stickers',
+      populate: [
+        {
+          path: 'user',
+          select: '_id nickname'
+        },
+        {
+          path: 'stickers',
+          select:
+            '_id description image thumbnail width height thumWidth thumHeight'
+        }
+      ]
     })
     .populate('post', 'title _id excerpt')
     .populate('user', options.userFilter || 'nickname _id photo')
+    .populate(
+      'stickers',
+      '_id description image thumbnail width height thumWidth thumHeight'
+    )
 }
 
 // 查找所有
@@ -46,14 +57,25 @@ exports.findPage = async function (
     .populate({
       path: 'parent',
       match: { status: 1 },
-      select: 'content _id status user nickname date',
-      populate: {
-        path: 'user',
-        select: '_id nickname'
-      }
+      select: 'content _id status user nickname date stickers',
+      populate: [
+        {
+          path: 'user',
+          select: '_id nickname'
+        },
+        {
+          path: 'stickers',
+          select:
+            '_id description image thumbnail width height thumWidth thumHeight'
+        }
+      ]
     })
     .populate('post', options.postFilter || 'title _id excerpt alias type')
     .populate('user', options.userFilter || 'nickname _id photo')
+    .populate(
+      'stickers',
+      '_id description image thumbnail width height thumWidth thumHeight'
+    )
     .sort(sort)
     .skip((page - 1) * limit)
     .limit(limit)

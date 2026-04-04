@@ -181,6 +181,7 @@ exports.getCommentList = async function () {
           '_id',
           'avatar',
           'content',
+          'stickers',
           'date',
           'nickname',
           'url',

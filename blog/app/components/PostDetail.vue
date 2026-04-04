@@ -463,7 +463,25 @@
                         </ClientOnly>
                       </div>
                     </div>
-                    <div>{{ item.parent.content }}</div>
+                    <div v-if="item.parent.content">
+                      {{ item.parent.content }}
+                    </div>
+                    <div
+                      class="comment-parent-sticker-list"
+                      v-if="
+                        item.parent.stickers && item.parent.stickers.length > 0
+                      "
+                    >
+                      <img
+                        v-for="(ps, parentStickerIndex) in item.parent.stickers"
+                        :key="`${item._id}-parent-${parentStickerIndex}`"
+                        :src="ps.image"
+                        :alt="ps.description"
+                        :title="ps.description"
+                        class="comment-sticker-image"
+                        loading="lazy"
+                      />
+                    </div>
                   </blockquote>
                   <blockquote
                     class="comment-list-item-parent-content"
@@ -471,8 +489,23 @@
                   >
                     <div>这条评论已经去异世界了...</div>
                   </blockquote>
-                  <div class="comment-list-item-content">
+                  <div class="comment-list-item-content" v-if="item.content">
                     {{ item.content }}
+                  </div>
+                  <!-- 评论贴纸 -->
+                  <div
+                    class="comment-sticker-panel"
+                    v-if="item.stickers && item.stickers.length > 0"
+                  >
+                    <img
+                      v-for="(sticker, stickerIndex) in item.stickers"
+                      :key="`${item._id}-sticker-${stickerIndex}`"
+                      :src="sticker.image"
+                      :alt="sticker.description"
+                      :title="sticker.description"
+                      class="comment-sticker-image"
+                      loading="lazy"
+                    />
                   </div>
                   <div class="flex items-center">
                     <!-- 按钮 -->
@@ -1294,6 +1327,25 @@ onUnmounted(() => {
 .comment-list-item-content {
   font-size: 14px;
   line-height: 1.6;
+}
+.comment-parent-sticker-list,
+.comment-sticker-panel {
+  display: flex;
+  gap: 8px;
+  margin-top: 8px;
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  overflow-y: hidden;
+}
+
+.comment-sticker-image {
+  display: block;
+  width: min(128px, calc((100% - 16px) / 3));
+  max-width: 128px;
+  flex: 0 0 auto;
+  height: auto;
+  aspect-ratio: 1;
+  object-fit: contain;
 }
 .comment-list-item-btns {
   margin-top: 10px;

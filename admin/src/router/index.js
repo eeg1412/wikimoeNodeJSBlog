@@ -157,6 +157,18 @@ const routes = [
         name: 'BangumiAdd',
         component: () => import('../views/index/bangumi/BangumiEditor.vue')
       },
+      // StickerGroupList
+      {
+        path: '/sticker/list',
+        name: 'StickerGroupList',
+        component: () => import('../views/index/sticker/StickerGroupList.vue')
+      },
+      // StickerGroupEditor
+      {
+        path: '/sticker/group/editor/:id',
+        name: 'StickerGroupEdit',
+        component: () => import('../views/index/sticker/StickerGroupEditor.vue')
+      },
       // MovieList
       {
         path: '/movie/list',

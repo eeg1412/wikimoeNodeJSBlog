@@ -11,6 +11,7 @@ data
 /server/public/upload/movie/*
 /server/public/upload/gameCover/*
 /server/public/upload/bookCover/*
+/server/public/upload/sticker/*
 /server/public/content/uploadfile/*
 /server/public/admin/*
 /server/public/up_works/*

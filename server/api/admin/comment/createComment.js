@@ -1,19 +1,21 @@
 const commentUtils = require('../../../mongodb/utils/comments')
 const postUtils = require('../../../mongodb/utils/posts')
+const stickerHelper = require('../../../utils/sticker')
 const utils = require('../../../utils/utils')
 const log4js = require('log4js')
 const adminApiLog = log4js.getLogger('adminApi')
 const cacheDataUtils = require('../../../config/cacheData')
 
 module.exports = async function (req, res, next) {
-  const { post, parent, content, top } = req.body
+  const { post, parent, content, top, stickers } = req.body
   const user = req.admin.id
   const ip = utils.getUserIp(req)
+  const { siteMinCommentLength = 1 } = global.$globalConfig.commentSettings
   // 校验格式
   const params = {
     post,
     parent,
-    content,
+    content: content || '',
     user,
     top,
     // 因为是后台接口，所以默认通过审核
@@ -39,7 +41,7 @@ module.exports = async function (req, res, next) {
       key: 'content',
       label: '评论内容',
       type: null,
-      required: true,
+      required: false,
       strict: true,
       strictType: 'string'
     },
@@ -63,6 +65,33 @@ module.exports = async function (req, res, next) {
     res.status(400).json({ errors })
     return
   }
+
+  const stickerValidation = await stickerHelper.validateStickerIds(stickers, {
+    requireVisible: true
+  })
+  if (stickerValidation.error) {
+    res.status(400).json({
+      errors: [{ message: stickerValidation.error }]
+    })
+    return
+  }
+
+  const validStickers = stickerValidation.ids || []
+
+  const contentValidationError = stickerHelper.getCommentContentValidationError(
+    params.content,
+    validStickers,
+    siteMinCommentLength
+  )
+  if (contentValidationError) {
+    res.status(400).json({
+      errors: [{ message: contentValidationError }]
+    })
+    return
+  }
+
+  params.stickers = validStickers
+
   // 获取文章信息
   const postInfo = await postUtils.findOne({ _id: post })
   if (!postInfo) {
@@ -89,7 +118,11 @@ module.exports = async function (req, res, next) {
       postUtils.updateOne({ _id: post }, { $inc: { comnum: 1 } })
       // 发送邮件通知
       if (parent) {
-        utils.sendReplyCommentNotice(postInfo, String(data._id))
+        utils.sendReplyCommentNotice(postInfo, String(data._id)).catch(err => {
+          adminApiLog.error(
+            `comment:${content} reply mail fail, ${logErrorToText(err)}`
+          )
+        })
       }
       // utils.reflushBlogCache()
     })

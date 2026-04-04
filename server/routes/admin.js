@@ -909,6 +909,132 @@ const adminRouteSetting = [
     roleType: null,
     role: null
   },
+  // createStickerGroup
+  {
+    path: '/stickergroup/create',
+    method: 'post',
+    middleware: [checkAuth],
+    controller: require('../api/admin/stickerGroup/createStickerGroup'),
+    roleType: null,
+    role: null
+  },
+  // getStickerGroupList
+  {
+    path: '/stickergroup/list',
+    method: 'get',
+    middleware: [checkAuth],
+    controller: require('../api/admin/stickerGroup/getStickerGroupList'),
+    roleType: null,
+    role: null
+  },
+  // getStickerGroupDetail
+  {
+    path: '/stickergroup/detail',
+    method: 'get',
+    middleware: [checkAuth],
+    controller: require('../api/admin/stickerGroup/getStickerGroupDetail'),
+    roleType: null,
+    role: null
+  },
+  // updateStickerGroup
+  {
+    path: '/stickergroup/update',
+    method: 'put',
+    middleware: [checkAuth],
+    controller: require('../api/admin/stickerGroup/updateStickerGroup'),
+    roleType: null,
+    role: null
+  },
+  // deleteStickerGroup
+  {
+    path: '/stickergroup/delete',
+    method: 'delete',
+    middleware: [checkAuth],
+    controller: require('../api/admin/stickerGroup/deleteStickerGroup'),
+    roleType: null,
+    role: null
+  },
+  // uploadSticker
+  {
+    path: '/sticker/upload',
+    method: 'post',
+    middleware: [checkAuth, upload.single('file')],
+    controller: require('../api/admin/sticker/uploadSticker'),
+    roleType: null,
+    role: null
+  },
+  // getStickerDetail
+  {
+    path: '/sticker/detail',
+    method: 'get',
+    middleware: [checkAuth],
+    controller: require('../api/admin/sticker/getStickerDetail'),
+    roleType: null,
+    role: null
+  },
+  // updateSticker
+  {
+    path: '/sticker/update',
+    method: 'put',
+    middleware: [checkAuth, upload.single('file')],
+    controller: require('../api/admin/sticker/updateSticker'),
+    roleType: null,
+    role: null
+  },
+  // sortStickerList
+  {
+    path: '/sticker/sort',
+    method: 'put',
+    middleware: [checkAuth],
+    controller: require('../api/admin/sticker/sortStickerList'),
+    roleType: null,
+    role: null
+  },
+  // deleteSticker
+  {
+    path: '/sticker/delete',
+    method: 'delete',
+    middleware: [checkAuth],
+    controller: require('../api/admin/sticker/deleteSticker'),
+    roleType: null,
+    role: null
+  },
+  // hideSticker
+  {
+    path: '/sticker/hide',
+    method: 'post',
+    middleware: [checkAuth],
+    controller: require('../api/admin/sticker/hideSticker'),
+    roleType: null,
+    role: null
+  },
+  // replaceAndDeleteSticker
+  {
+    path: '/sticker/replace',
+    method: 'post',
+    middleware: [checkAuth],
+    controller: require('../api/admin/sticker/replaceAndDeleteSticker'),
+    roleType: null,
+    role: null
+  },
+  // updateCommentStickers
+  {
+    path: '/sticker/comment/update',
+    method: 'put',
+    middleware: [checkAuth],
+    controller: require('../api/admin/sticker/updateCommentStickers'),
+    roleType: null,
+    role: null
+  },
+  // getStickerGroupsWithStickers
+  {
+    path: '/sticker/groups/all',
+    method: 'get',
+    middleware: [checkAuth],
+    controller: require('../api/admin/sticker/getStickerGroupsWithStickers'),
+    roleType: null,
+    role: null
+  },
   // createMovie
   {
     path: '/movie/create',

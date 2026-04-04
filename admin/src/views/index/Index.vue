@@ -133,6 +133,16 @@
               <i class="fas fa-fw fa-image pr10"></i>
               <template #title>横幅</template>
             </el-menu-item>
+            <!-- 贴纸 StickerGroupList -->
+            <el-menu-item
+              index="StickerGroupList"
+              @click="removeParam('StickerGroupList')"
+              @click.middle="openNewTab('StickerGroupList')"
+              :route="{ name: 'StickerGroupList' }"
+            >
+              <i class="fas fa-fw fa-sticky-note pr10"></i>
+              <template #title>贴纸</template>
+            </el-menu-item>
             <!-- 番剧 BangumiList -->
             <el-menu-item
               index="BangumiList"

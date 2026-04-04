@@ -82,6 +82,16 @@ var comments = new Schema(
       default: false,
       index: true
     },
+    // 贴纸
+    stickers: {
+      type: [
+        {
+          type: Schema.Types.ObjectId,
+          ref: 'stickers'
+        }
+      ],
+      default: []
+    },
     // 评论状态,0待审核,1审核通过,2未通过,查询评论时注意父级评论的状态
     status: {
       type: Number,

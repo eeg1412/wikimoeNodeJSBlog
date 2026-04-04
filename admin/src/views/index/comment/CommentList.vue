@@ -91,15 +91,28 @@
         <ResponsiveTableColumn prop="content" label="内容" min-width="300">
           <template #default="{ row }">
             <div>
-              <blockquote
-                class="common-blockquote"
-                v-if="row.parent && row.parent?.content"
-              >
+              <blockquote class="common-blockquote" v-if="row.parent">
                 <div class="fb">
                   {{ row.parent.user?.nickname || row.parent.nickname }}
                 </div>
-                <div>{{ $formatDate(row.date) }}</div>
-                <div class="mt5 pre-wrap">{{ row.parent.content }}</div>
+                <div>{{ $formatDate(row.parent.date) }}</div>
+                <div class="mt5 pre-wrap" v-if="row.parent.content">
+                  {{ row.parent.content }}
+                </div>
+                <div
+                  class="comment-sticker-list is-parent"
+                  v-if="row.parent.stickers && row.parent.stickers.length > 0"
+                >
+                  <img
+                    v-for="(parentSticker, parentStickerIndex) in row.parent
+                      .stickers"
+                    :key="`${row._id}-parent-${parentStickerIndex}`"
+                    :src="parentSticker.image"
+                    :alt="parentSticker.description"
+                    :title="parentSticker.description"
+                    class="comment-sticker-img"
+                  />
+                </div>
               </blockquote>
               <blockquote
                 class="common-blockquote"
@@ -107,7 +120,21 @@
               >
                 该评论审核暂未通过或已被删除
               </blockquote>
-              <div class="pre-wrap">{{ row.content }}</div>
+              <div class="pre-wrap" v-if="row.content">{{ row.content }}</div>
+              <!-- 评论贴纸 -->
+              <div
+                class="comment-sticker-list"
+                v-if="row.stickers && row.stickers.length > 0"
+              >
+                <img
+                  v-for="(sticker, stickerIndex) in row.stickers"
+                  :key="`${row._id}-sticker-${stickerIndex}`"
+                  :src="sticker.image"
+                  :alt="sticker.description"
+                  :title="sticker.description"
+                  class="comment-sticker-img"
+                />
+              </div>
             </div>
           </template>
         </ResponsiveTableColumn>
@@ -303,7 +330,7 @@
           <div>
             <blockquote
               class="common-blockquote"
-              v-if="commentParentData?.parent?.content"
+              v-if="commentParentData?.parent"
             >
               <div class="fb">
                 {{
@@ -311,9 +338,30 @@
                   commentParentData.parent.nickname
                 }}
               </div>
-              <div>{{ $formatDate(commentParentData.date) }}</div>
-              <div class="mt5 pre-wrap">
+              <div>{{ $formatDate(commentParentData.parent.date) }}</div>
+              <div
+                class="mt5 pre-wrap"
+                v-if="commentParentData.parent?.content"
+              >
                 {{ commentParentData.parent?.content }}
+              </div>
+              <div
+                class="comment-sticker-list is-parent"
+                v-if="
+                  commentParentData.parent?.stickers &&
+                  commentParentData.parent.stickers.length > 0
+                "
+              >
+                <img
+                  v-for="(
+                    parentSticker, parentStickerIndex
+                  ) in commentParentData.parent.stickers"
+                  :key="`comment-parent-${parentStickerIndex}`"
+                  :src="parentSticker.image"
+                  :alt="parentSticker.description"
+                  :title="parentSticker.description"
+                  class="comment-sticker-img"
+                />
               </div>
             </blockquote>
             <blockquote
@@ -328,7 +376,11 @@
           </div>
         </el-form-item>
         <el-form-item label="回复内容" prop="content">
-          <EmojiTextarea v-model:value="commentForm.content" />
+          <EmojiTextarea
+            v-model:value="commentForm.content"
+            v-model:stickers="commentForm.stickers"
+            :showStickerPicker="true"
+          />
         </el-form-item>
         <el-form-item label="置顶" prop="top">
           <el-switch v-model="commentForm.top" />
@@ -443,7 +495,6 @@ export default {
           console.log('Dialog closed:', error)
         })
     }
-
     const titleLimit = title => {
       let title_ = Array.from(title || '')
       if (title_.length > 20) {
@@ -471,11 +522,23 @@ export default {
       post: '',
       content: '',
       parent: '',
-      top: false
+      top: false,
+      stickers: []
     })
     const commentFormRef = ref(null)
     const commentFormRules = {
-      content: [{ required: true, message: '请输入评论内容', trigger: 'blur' }]
+      content: [
+        {
+          validator: (rule, value, callback) => {
+            if (!value && commentForm.stickers.length === 0) {
+              callback(new Error('请输入评论内容或选择贴纸'))
+            } else {
+              callback()
+            }
+          },
+          trigger: 'blur'
+        }
+      ]
     }
     const commentParentData = ref({})
 
@@ -486,6 +549,7 @@ export default {
       commentForm.top = false
       commentForm.post = item.post._id
       commentForm.parent = item._id
+      commentForm.stickers = []
       commentParentData.value = item
       commentFormVisible.value = true
     }
@@ -495,7 +559,11 @@ export default {
     const submitCommentForm = () => {
       commentFormRef.value.validate(valid => {
         if (valid) {
-          authApi.createComment(commentForm).then(res => {
+          const data = {
+            ...commentForm,
+            stickers: commentForm.stickers.map(s => s._id)
+          }
+          authApi.createComment(data).then(res => {
             ElMessage.success('评论成功')
             closeCommentForm()
             getCommentList()
@@ -591,4 +659,27 @@ export default {
   }
 }
 </script>
-<style lang=""></style>
+<style scoped>
+.comment-sticker-list {
+  display: flex;
+  gap: 8px;
+  margin-top: 8px;
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  overflow-y: hidden;
+}
+
+.comment-sticker-img {
+  display: block;
+  width: min(128px, calc((100% - 16px) / 3));
+  max-width: 128px;
+  flex: 0 0 auto;
+  height: auto;
+  aspect-ratio: 1;
+  object-fit: contain;
+}
+
+.comment-sticker-list.is-parent {
+  margin-top: 6px;
+}
+</style>

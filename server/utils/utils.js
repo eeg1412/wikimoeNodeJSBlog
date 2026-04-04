@@ -717,8 +717,29 @@ exports.sendEmail = function (to, content, subject) {
     })
   return promise
 }
+// 构建贴纸邮件HTML，支持已填充的贴纸对象或ObjectId
+async function buildStickersEmailHtml(stickers, siteUrl) {
+  if (!stickers || stickers.length === 0) return ''
+  const stickerUtils = require('../mongodb/utils/stickers')
+  const populated = await Promise.all(
+    stickers.map(s => {
+      if (s && typeof s === 'object' && s.image) return Promise.resolve(s)
+      return stickerUtils.findOne({ _id: s }, '_id description image thumbnail')
+    })
+  )
+  const imgs = populated
+    .filter(Boolean)
+    .map(s => {
+      const imgSrc = `${siteUrl}${s.image}`
+      const alt = s.description || '贴纸'
+      return `<img src="${imgSrc}" alt="${exports.escapeHtml(alt)}" style="width:128px;height:128px;object-fit:contain;margin:4px;" />`
+    })
+    .join('')
+  if (!imgs) return ''
+  return `<div style="margin-top:8px;">${imgs}</div>`
+}
 // 发送评论添加通知，参数是文章信息post，评论信息comment
-exports.sendCommentAddNotice = function (post, comment) {
+exports.sendCommentAddNotice = async function (post, comment) {
   const siteSettings = global.$globalConfig.siteSettings
   const emailSettings = global.$globalConfig.emailSettings
   const {
@@ -748,6 +769,7 @@ exports.sendCommentAddNotice = function (post, comment) {
       nickname = user.nickname
     }
     nickname = this.escapeHtml(nickname)
+    const stickersHtml = await buildStickersEmailHtml(comment.stickers, siteUrl)
     const to = emailReceiver
     const subject = `【${siteTitle}】的博文/推文有了新的评论`
     let contentHtml = emailSendToMeTemplate
@@ -758,7 +780,7 @@ exports.sendCommentAddNotice = function (post, comment) {
     // 其中${title}需要替换成a标签
     // 其中${siteTitle}为站点名称需要替换成a标签
     // 开始替换
-    contentHtml = contentHtml.replace(/\${comment}/g, content)
+    contentHtml = contentHtml.replace(/\${comment}/g, content + stickersHtml)
     contentHtml = contentHtml.replace(/\${nickname}/g, nickname)
     contentHtml = contentHtml.replace(
       /\${title}/g,
@@ -768,11 +790,11 @@ exports.sendCommentAddNotice = function (post, comment) {
       /\${siteTitle}/g,
       `<a href="${siteUrl}" target="_blank">${siteTitle}</a>`
     )
-    this.sendEmail(to, contentHtml, subject)
+    return this.sendEmail(to, contentHtml, subject)
   }
 }
 // 评论撤回通知，参数是文章信息post，评论信息comment
-exports.sendRetractCommentNotice = function (post, comment) {
+exports.sendRetractCommentNotice = async function (post, comment) {
   const siteSettings = global.$globalConfig.siteSettings
   const emailSettings = global.$globalConfig.emailSettings
   const {
@@ -802,11 +824,12 @@ exports.sendRetractCommentNotice = function (post, comment) {
       nickname = user.nickname
     }
     nickname = this.escapeHtml(nickname)
+    const stickersHtml = await buildStickersEmailHtml(comment.stickers, siteUrl)
     const to = emailReceiver
     const subject = `【${siteTitle}】的评论被评论者撤回`
     let contentHtml = emailRetractCommentTemplate
     // 替换模板中的变量
-    contentHtml = contentHtml.replace(/\${comment}/g, `${content}`)
+    contentHtml = contentHtml.replace(/\${comment}/g, content + stickersHtml)
     contentHtml = contentHtml.replace(/\${nickname}/g, nickname)
     contentHtml = contentHtml.replace(
       /\${title}/g,
@@ -816,7 +839,7 @@ exports.sendRetractCommentNotice = function (post, comment) {
       /\${siteTitle}/g,
       `<a href="${siteUrl}" target="_blank">${siteTitle}</a>`
     )
-    this.sendEmail(to, contentHtml, subject)
+    return this.sendEmail(to, contentHtml, subject)
   }
 }
 
@@ -905,6 +928,11 @@ exports.sendReplyCommentNotice = async function (post, comment) {
       parentNickname = parentCommentUser.nickname
     }
     parentNickname = this.escapeHtml(parentNickname)
+    const stickersHtml = await buildStickersEmailHtml(comment.stickers, siteUrl)
+    const parentStickersHtml = await buildStickersEmailHtml(
+      parentComment.stickers,
+      siteUrl
+    )
     const to = parentCommentEmail
     const subject = `您在【${siteTitle}】发表的评论收到了回复`
     let contentHtml = emailSendToCommenterTemplate
@@ -917,7 +945,7 @@ exports.sendReplyCommentNotice = async function (post, comment) {
     // 其中${title}需要替换成a标签
     // 其中${siteTitle}为站点名称需要替换成a标签
     // 开始替换
-    contentHtml = contentHtml.replace(/\${comment}/g, content)
+    contentHtml = contentHtml.replace(/\${comment}/g, content + stickersHtml)
     contentHtml = contentHtml.replace(/\${nickname}/g, nickname)
     contentHtml = contentHtml.replace(
       /\${title}/g,
@@ -929,9 +957,12 @@ exports.sendReplyCommentNotice = async function (post, comment) {
       /\${siteTitle}/g,
       `<a href="${siteUrl}" target="_blank">${siteTitle}</a>`
     )
-    contentHtml = contentHtml.replace(/\${parentComment}/g, parentContent)
+    contentHtml = contentHtml.replace(
+      /\${parentComment}/g,
+      parentContent + parentStickersHtml
+    )
     contentHtml = contentHtml.replace(/\${parentNickname}/g, parentNickname)
-    this.sendEmail(to, contentHtml, subject)
+    return this.sendEmail(to, contentHtml, subject)
   }
 }
 
@@ -1017,17 +1048,20 @@ exports.referrerRecord = function (referrer, referrerType) {
         return
       }
       // 设置计时器
-      referrerRecordTimerMap[md5Id] = setTimeout(() => {
-        // 如果计时器到期，就保存referrer
-        const params = {
-          referrer,
-          referrerType
-        }
-        console.log('referrer记录', params)
-        referrerUtils.save(params)
-        // 删除计时器
-        delete referrerRecordTimerMap[md5Id]
-      }, 1000 * 60 * 60)
+      referrerRecordTimerMap[md5Id] = setTimeout(
+        () => {
+          // 如果计时器到期，就保存referrer
+          const params = {
+            referrer,
+            referrerType
+          }
+          console.log('referrer记录', params)
+          referrerUtils.save(params)
+          // 删除计时器
+          delete referrerRecordTimerMap[md5Id]
+        },
+        1000 * 60 * 60
+      )
     }
   }
 }

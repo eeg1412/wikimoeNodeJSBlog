@@ -8,13 +8,24 @@
     </div>
     <WUIForm :state="form" @submit="onSubmit">
       <div class="flex flex-col space-y-2">
-        <div class="flex items-center">
+        <div class="flex items-center gap-2">
           <div>
             <ClientOnly>
               <Emoji @emojiClick="emojiClick" @emojiBtnClick="emojiBtnClick" />
             </ClientOnly>
           </div>
-          <div class="ml-2">
+          <div>
+            <ClientOnly>
+              <Sticker
+                @stickerClick="handleStickerSelect"
+                @stickerBtnClick="emojiBtnClick"
+                :maxCount="3"
+                :currentCount="selectedStickers.length"
+                :selectedIds="selectedStickers.map(s => s._id)"
+              />
+            </ClientOnly>
+          </div>
+          <div>
             <WUIPopover :popper="{ arrow: true }">
               <!-- 设置按钮 -->
               <WUIButton
@@ -50,14 +61,52 @@
             </WUIPopover>
           </div>
         </div>
-        <WUIFormGroup name="content" :error="error.content">
-          <WUITextarea
-            class="comment-form-textarea"
-            ref="contentRef"
-            placeholder="说点什么吧..."
-            v-model="form.content"
-          />
-        </WUIFormGroup>
+        <div
+          class="comment-form-textarea-wrapper"
+          :class="{
+            '!ring-red-500 dark:!ring-red-400': error.content
+          }"
+        >
+          <WUIFormGroup name="content" :error="error.content">
+            <WUITextarea
+              class="comment-form-textarea"
+              ref="contentRef"
+              placeholder="说点什么吧..."
+              v-model="form.content"
+            />
+          </WUIFormGroup>
+
+          <!-- 已选贴纸展示 -->
+          <div
+            class="comment-form-selected-stickers flex items-center gap-2"
+            v-if="selectedStickers.length > 0"
+          >
+            <div
+              class="comment-form-selected-sticker relative border border-gray-200 dark:border-gray-700 rounded-md inline-flex items-center justify-center"
+              v-for="(sticker, index) in selectedStickers"
+              :key="index"
+            >
+              <img
+                :src="sticker.image"
+                :alt="sticker.description"
+                class="comment-form-selected-sticker-image"
+              />
+              <div
+                class="absolute -top-1.5 -right-1.5 w-4 h-4 bg-primary-700 text-white rounded-full flex items-center justify-center text-xs cursor-pointer leading-none common-focus-visible-btn"
+                @click="removeSticker(index)"
+                @keydown.enter="removeSticker(index)"
+                tabindex="0"
+              >
+                ×
+              </div>
+            </div>
+
+            <!-- 占位色块 -->
+            <!-- <div
+            class="flex-1 self-stretch rounded-md bg-gray-100/80 dark:bg-gray-800 ring-1 ring-inset ring-gray-200 dark:ring-gray-700"
+          ></div> -->
+          </div>
+        </div>
 
         <div
           class="flex flex-col space-y-2 sm:flex-row sm:space-x-2 sm:space-y-0"
@@ -161,6 +210,7 @@ const emits = defineEmits()
 
 const error = ref({})
 const commentIsSending = ref(false)
+const selectedStickers = ref([])
 let validatorModule = null
 const loadValidatorModule = async () => {
   if (!validatorModule) {
@@ -215,15 +265,17 @@ const onSubmit = async event => {
     }, 0)
   }
   if (!event.data.content) {
-    error.value.content = true
-    // 提示
-    setTimeout(() => {
-      toast.add({
-        title: '评论内容不能为空',
-        icon: 'i-heroicons-x-circle',
-        color: 'red'
-      })
-    }, 0)
+    if (selectedStickers.value.length === 0) {
+      error.value.content = true
+      // 提示
+      setTimeout(() => {
+        toast.add({
+          title: '请输入内容',
+          icon: 'i-heroicons-x-circle',
+          color: 'red'
+        })
+      }, 0)
+    }
   } else {
     const siteMinCommentLength = options.value.siteMinCommentLength || 1
     if (event.data.content.length < siteMinCommentLength) {
@@ -339,7 +391,8 @@ const onSubmit = async event => {
     nickname: event.data.nickname,
     email: event.data.email,
     url: event.data.url,
-    content: event.data.content
+    content: event.data.content,
+    stickers: selectedStickers.value.map(s => s._id)
   })
     .then(res => {
       console.log(res)
@@ -348,6 +401,7 @@ const onSubmit = async event => {
       // form.email = ''
       // form.url = ''
       form.content = ''
+      selectedStickers.value = []
       const dataStatus = res.status
       // 0是审核中，1是审核通过
       if (dataStatus === 0) {
@@ -412,6 +466,14 @@ const emojiClick = item => {
 const emojiBtnClick = () => {
   // 取消聚焦
   contentRef.value.textarea.blur()
+}
+
+const handleStickerSelect = sticker => {
+  if (selectedStickers.value.length >= 3) return
+  selectedStickers.value.push(sticker)
+}
+const removeSticker = index => {
+  selectedStickers.value.splice(index, 1)
 }
 
 // 保存个人信息
@@ -480,4 +542,31 @@ onMounted(() => {
   isInit.value = true
 })
 </script>
-<style scoped></style>
+<style scoped>
+.comment-form-selected-sticker {
+  display: block;
+  width: min(128px, calc((100% - 16px) / 3));
+  max-width: 128px;
+  flex: 0 0 auto;
+  height: auto;
+  aspect-ratio: 1;
+  -o-object-fit: contain;
+  object-fit: contain;
+}
+
+.comment-form-selected-sticker-image {
+  width: 100%;
+  max-width: 100%;
+  height: auto;
+  aspect-ratio: 1;
+  object-fit: contain;
+}
+.comment-form-textarea-wrapper {
+  @apply w-full rounded-md border-0 px-3 py-2 bg-white dark:bg-gray-900
+    ring-1 ring-inset ring-gray-300 dark:ring-gray-700
+    shadow-sm;
+}
+.comment-form-textarea-wrapper :deep(.wui-textarea) {
+  @apply ring-0 shadow-none px-0 py-0;
+}
+</style>

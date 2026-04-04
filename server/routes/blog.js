@@ -118,6 +118,13 @@ const blogRouteSetting = [
     middleware: [],
     controller: require('../api/blog/comment/getCommentList')
   },
+  // get getStickerGroups
+  {
+    path: '/sticker/groups',
+    method: 'get',
+    middleware: [],
+    controller: require('../api/blog/sticker/getStickerGroups')
+  },
   // post createComment
   {
     path: '/comment/create',

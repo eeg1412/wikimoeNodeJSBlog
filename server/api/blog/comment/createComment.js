@@ -1,5 +1,6 @@
 const commentUtils = require('../../../mongodb/utils/comments')
 const postUtils = require('../../../mongodb/utils/posts')
+const stickerHelper = require('../../../utils/sticker')
 const utils = require('../../../utils/utils')
 const log4js = require('log4js')
 const userApiLog = log4js.getLogger('userApi')
@@ -8,18 +9,25 @@ const cacheDataUtils = require('../../../config/cacheData')
 module.exports = async function (req, res, next) {
   utils
     .executeInLock('createComment', async () => {
-      const { post, parent, content, nickname, email, url } = req.body
-      // 如果content超过500个字符，就报错
-      if (content?.length > 500) {
+      const { post, parent, content, nickname, email, url, stickers } = req.body
+
+      const stickerValidation = await stickerHelper.validateStickerIds(
+        stickers,
+        {
+          requireVisible: true
+        }
+      )
+      if (stickerValidation.error) {
         res.status(400).json({
-          errors: [
-            {
-              message: '评论内容不能超过500个字符'
-            }
-          ]
+          errors: [{ message: stickerValidation.error }]
         })
         return
       }
+
+      const validStickers = stickerValidation.ids || []
+
+      const hasStickers = validStickers.length > 0
+
       // nickname 20个字符以内
       if (nickname?.length > 20) {
         res.status(400).json({
@@ -64,14 +72,15 @@ module.exports = async function (req, res, next) {
         siteMinCommentLength
       } = global.$globalConfig.commentSettings
       const { siteCommentIPBlockList } = global.$globalConfig.IPBlockSettings
-      // 如果content少于siteMinCommentLength个字符，就报错
-      if (content.length < siteMinCommentLength) {
+      const contentValidationError =
+        stickerHelper.getCommentContentValidationError(
+          content || '',
+          validStickers,
+          siteMinCommentLength
+        )
+      if (contentValidationError) {
         res.status(400).json({
-          errors: [
-            {
-              message: `评论内容不能少于${siteMinCommentLength}个字`
-            }
-          ]
+          errors: [{ message: contentValidationError }]
         })
         return
       }
@@ -113,17 +122,19 @@ module.exports = async function (req, res, next) {
         return
       }
       // 校验敏感词
-      const mintRes = mint.verify(content)
-      // 如果有敏感词，报错
-      if (!mintRes) {
-        res.status(400).json({
-          errors: [
-            {
-              message: '评论内容中有不恰当的词汇，请修改后再试'
-            }
-          ]
-        })
-        return
+      if (content) {
+        const mintRes = mint.verify(content)
+        // 如果有敏感词，报错
+        if (!mintRes) {
+          res.status(400).json({
+            errors: [
+              {
+                message: '评论内容中有不恰当的词汇，请修改后再试'
+              }
+            ]
+          })
+          return
+        }
       }
 
       // 校验昵称敏感词
@@ -175,9 +186,10 @@ module.exports = async function (req, res, next) {
       // 校验格式
       const params = {
         post,
-        content,
+        content: content || '',
         nickname,
         uuid,
+        stickers: validStickers,
         ip: ip,
         deviceInfo: utils.deviceUAInfoUtils(req),
         ipInfo: await utils.IP2LocationUtils(ip, null, null, false)
@@ -199,7 +211,7 @@ module.exports = async function (req, res, next) {
           key: 'content',
           label: '评论内容',
           type: null,
-          required: true
+          required: !hasStickers
         },
         {
           key: 'nickname',
@@ -415,11 +427,19 @@ module.exports = async function (req, res, next) {
             cacheDataUtils.getCommentList()
             // utils.reflushBlogCache()
           }
-          utils.sendCommentAddNotice(postInfo, data)
+          utils.sendCommentAddNotice(postInfo, data).catch(err => {
+            userApiLog.error(
+              `comment:${content} add mail fail, ${logErrorToText(err)}`
+            )
+          })
           if (sendParentMailFlag) {
             // 发送回复邮件通知
             // 获取父评论信息
-            utils.sendReplyCommentNotice(postInfo, data)
+            utils.sendReplyCommentNotice(postInfo, data).catch(err => {
+              userApiLog.error(
+                `comment:${content} reply mail fail, ${logErrorToText(err)}`
+              )
+            })
           }
         })
         .catch(err => {

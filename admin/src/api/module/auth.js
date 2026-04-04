@@ -1,4 +1,13 @@
+import { invalidateAdminStickerPickerCache } from '@/utils/stickerPickerCache'
+
 export default function (api) {
+  const withStickerPickerRefresh = requestPromise => {
+    return requestPromise.then(res => {
+      invalidateAdminStickerPickerCache()
+      return res
+    })
+  }
+
   return {
     login(data) {
       return api.post('/login', data)
@@ -1043,6 +1052,117 @@ export default function (api) {
       return api.post('/post/suggestions', data, {
         shouldAdminJWT: true,
         noLoading: true
+      })
+    },
+    // post /stickergroup/create
+    createStickerGroup(data) {
+      return withStickerPickerRefresh(
+        api.post('/stickergroup/create', data, {
+          shouldAdminJWT: true
+        })
+      )
+    },
+    // get /stickergroup/list
+    getStickerGroupList(data, noLoading = false) {
+      return api.get('/stickergroup/list', {
+        params: data,
+        shouldAdminJWT: true,
+        noLoading
+      })
+    },
+    // get /stickergroup/detail
+    getStickerGroupDetail(data) {
+      return api.get('/stickergroup/detail', {
+        params: data,
+        shouldAdminJWT: true
+      })
+    },
+    // put /stickergroup/update
+    updateStickerGroup(data) {
+      return withStickerPickerRefresh(
+        api.put('/stickergroup/update', data, {
+          shouldAdminJWT: true
+        })
+      )
+    },
+    // delete /stickergroup/delete
+    deleteStickerGroup(data) {
+      return withStickerPickerRefresh(
+        api.delete('/stickergroup/delete', {
+          params: data,
+          shouldAdminJWT: true
+        })
+      )
+    },
+    // post /sticker/upload
+    uploadSticker(data, config = {}) {
+      return withStickerPickerRefresh(
+        api.post('/sticker/upload', data, {
+          shouldAdminJWT: true,
+          ...config,
+          headers: config.headers || {}
+        })
+      )
+    },
+    // get /sticker/detail
+    getStickerDetail(data) {
+      return api.get('/sticker/detail', {
+        params: data,
+        shouldAdminJWT: true
+      })
+    },
+    // put /sticker/update
+    updateSticker(data) {
+      return withStickerPickerRefresh(
+        api.put('/sticker/update', data, {
+          shouldAdminJWT: true
+        })
+      )
+    },
+    // put /sticker/sort
+    sortStickerList(data) {
+      return withStickerPickerRefresh(
+        api.put('/sticker/sort', data, {
+          shouldAdminJWT: true
+        })
+      )
+    },
+    // delete /sticker/delete
+    deleteSticker(data) {
+      return withStickerPickerRefresh(
+        api.delete('/sticker/delete', {
+          params: data,
+          shouldAdminJWT: true
+        })
+      )
+    },
+    // post /sticker/hide
+    hideSticker(data) {
+      return withStickerPickerRefresh(
+        api.post('/sticker/hide', data, {
+          shouldAdminJWT: true
+        })
+      )
+    },
+    // post /sticker/replace
+    replaceAndDeleteSticker(data) {
+      return withStickerPickerRefresh(
+        api.post('/sticker/replace', data, {
+          shouldAdminJWT: true
+        })
+      )
+    },
+    // put /sticker/comment/update
+    updateCommentStickers(data) {
+      return api.put('/sticker/comment/update', data, {
+        shouldAdminJWT: true
+      })
+    },
+    // get /sticker/groups/all
+    getStickerGroupsWithStickers(noLoading = false) {
+      return api.get('/sticker/groups/all', {
+        shouldAdminJWT: true,
+        noLoading
       })
     }
   }

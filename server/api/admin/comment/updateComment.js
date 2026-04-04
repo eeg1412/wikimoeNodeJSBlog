@@ -1,23 +1,14 @@
 const commentUtils = require('../../../mongodb/utils/comments')
 const postUtils = require('../../../mongodb/utils/posts')
+const stickerHelper = require('../../../utils/sticker')
 const utils = require('../../../utils/utils')
 const log4js = require('log4js')
 const adminApiLog = log4js.getLogger('adminApi')
 const cacheDataUtils = require('../../../config/cacheData')
 
 module.exports = async function (req, res, next) {
-  const { content, top, nickname, url, email, status, id, __v } = req.body
-  // 如果content超过500个字符，就报错
-  if (content?.length > 500) {
-    res.status(400).json({
-      errors: [
-        {
-          message: '评论内容不能超过500个字符'
-        }
-      ]
-    })
-    return
-  }
+  const { content, top, nickname, url, email, status, id, __v, stickers } =
+    req.body
   // nickname 20个字符以内
   if (nickname?.length > 20) {
     res.status(400).json({
@@ -136,7 +127,7 @@ module.exports = async function (req, res, next) {
 
   const params = {}
 
-  if (content) {
+  if (typeof content === 'string') {
     params.content = content
   }
   // 如果top是boolean类型，那么就更新，否则不更新
@@ -163,6 +154,19 @@ module.exports = async function (req, res, next) {
     params.email = email
   }
 
+  const stickerValidation = await stickerHelper.validateStickerIds(stickers, {
+    allowUndefined: true
+  })
+  if (stickerValidation.error) {
+    res.status(400).json({
+      errors: [{ message: stickerValidation.error }]
+    })
+    return
+  }
+  if (Array.isArray(stickers)) {
+    params.stickers = stickerValidation.ids
+  }
+
   // 获取评论信息
   const commentInfo = await commentUtils.findOne({ _id: id, __v })
   if (!commentInfo) {
@@ -174,6 +178,28 @@ module.exports = async function (req, res, next) {
       ]
     })
     return
+  }
+
+  if (typeof content === 'string' || Array.isArray(stickers)) {
+    const { siteMinCommentLength = 1 } = global.$globalConfig.commentSettings
+    const finalContent =
+      typeof content === 'string' ? content : commentInfo.content || ''
+    const finalStickers = Array.isArray(stickers)
+      ? stickerValidation.ids
+      : (commentInfo.stickers || []).map(item => String(item._id || item))
+    const contentValidationError =
+      stickerHelper.getCommentContentValidationError(
+        finalContent,
+        finalStickers,
+        siteMinCommentLength
+      )
+
+    if (contentValidationError) {
+      res.status(400).json({
+        errors: [{ message: contentValidationError }]
+      })
+      return
+    }
   }
 
   // updateOne
@@ -211,7 +237,11 @@ module.exports = async function (req, res, next) {
           if (commentInfo.parent && commentInfo.needSendMailToParent) {
             // 发送回复邮件通知
             // 发送邮件通知
-            utils.sendReplyCommentNotice(null, commentInfo, null)
+            utils.sendReplyCommentNotice(null, commentInfo, null).catch(err => {
+              adminApiLog.error(
+                `comment:${id} reply mail fail, ${logErrorToText(err)}`
+              )
+            })
             // 更新needSendMailToParent为false
             commentUtils.updateOne(
               { _id: commentInfo._id },

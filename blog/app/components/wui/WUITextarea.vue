@@ -2,7 +2,7 @@
   <div class="wui-textarea-wrapper" :class="$attrs.class">
     <textarea
       ref="textareaRef"
-      class="wui-textarea"
+      class="wui-textarea custom-scroll"
       :class="{ 'wui-textarea-error': isError }"
       :value="modelValue"
       :placeholder="placeholder"
