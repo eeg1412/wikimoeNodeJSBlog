@@ -11,6 +11,11 @@
     <el-form-item label="开启评论" prop="siteEnableComment">
       <el-switch v-model="commentSettingsForm.siteEnableComment"></el-switch>
     </el-form-item>
+    <el-form-item label="显示贴纸按钮" prop="siteCommentShowStickerButton">
+      <el-switch
+        v-model="commentSettingsForm.siteCommentShowStickerButton"
+      ></el-switch>
+    </el-form-item>
     <el-form-item label="发表评论间隔" prop="siteCommentInterval">
       <!-- 数字 1-100 -->
       <el-input-number
@@ -103,6 +108,8 @@ export default {
     const commentSettingsForm = reactive({
       // 开启评论
       siteEnableComment: false,
+      // 显示贴纸按钮
+      siteCommentShowStickerButton: false,
       // 发表评论间隔
       siteCommentInterval: 10,
       // 开启评论审核

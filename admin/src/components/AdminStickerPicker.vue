@@ -1,5 +1,6 @@
 <template>
   <el-popover
+    v-if="hasAvailableStickerGroups"
     :width="popoverWidth"
     placement="bottom-start"
     :popper-options="popperOptions"
@@ -234,6 +235,10 @@ export default {
       return groups.concat(sortedGroups)
     })
 
+    const hasAvailableStickerGroups = computed(() => {
+      return stickerGroups.value.length > 0
+    })
+
     const tabItems = computed(() => {
       return stickerGroupsCom.value.map(group => {
         const shouldShowText = group.key === 'used' || group.showLabel === true
@@ -462,6 +467,7 @@ export default {
       selectedGroupKey,
       selectedGroupIndex,
       isLoading,
+      hasAvailableStickerGroups,
       stickerGroupsCom,
       tabItems,
       activeGroup,

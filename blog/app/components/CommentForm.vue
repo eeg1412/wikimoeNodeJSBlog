@@ -14,7 +14,7 @@
               <Emoji @emojiClick="emojiClick" @emojiBtnClick="emojiBtnClick" />
             </ClientOnly>
           </div>
-          <div>
+          <div v-if="showStickerButton">
             <ClientOnly>
               <Sticker
                 @stickerClick="handleStickerSelect"
@@ -79,7 +79,7 @@
           <!-- 已选贴纸展示 -->
           <div
             class="comment-form-selected-stickers flex items-center gap-2"
-            v-if="selectedStickers.length > 0"
+            v-if="showStickerButton && selectedStickers.length > 0"
           >
             <div
               class="comment-form-selected-sticker relative border border-gray-200 dark:border-gray-700 rounded-md inline-flex items-center justify-center"
@@ -211,6 +211,9 @@ const emits = defineEmits()
 const error = ref({})
 const commentIsSending = ref(false)
 const selectedStickers = ref([])
+const showStickerButton = computed(() => {
+  return options.value?.siteCommentShowStickerButton === true
+})
 let validatorModule = null
 const loadValidatorModule = async () => {
   if (!validatorModule) {
@@ -392,7 +395,9 @@ const onSubmit = async event => {
     email: event.data.email,
     url: event.data.url,
     content: event.data.content,
-    stickers: selectedStickers.value.map(s => s._id)
+    stickers: showStickerButton.value
+      ? selectedStickers.value.map(s => s._id)
+      : []
   })
     .then(res => {
       console.log(res)
@@ -469,6 +474,7 @@ const emojiBtnClick = () => {
 }
 
 const handleStickerSelect = sticker => {
+  if (!showStickerButton.value) return
   if (selectedStickers.value.length >= 3) return
   selectedStickers.value.push(sticker)
 }
@@ -532,6 +538,18 @@ watch(
   },
   {
     deep: true
+  }
+)
+
+watch(
+  showStickerButton,
+  enabled => {
+    if (!enabled && selectedStickers.value.length > 0) {
+      selectedStickers.value = []
+    }
+  },
+  {
+    immediate: true
   }
 )
 

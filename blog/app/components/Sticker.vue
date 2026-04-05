@@ -9,13 +9,12 @@
     >
     <template #panel="{ close }">
       <div class="sticker-popover-panel">
-        <div v-if="isLoading" class="sticker-popover-empty">正在加载贴纸...</div>
+        <div v-if="isLoading" class="sticker-popover-empty">
+          正在加载贴纸...
+        </div>
         <template v-else-if="stickerGroupsCom.length > 0">
           <div class="sticker-popover-layout">
-            <WUIImageTabs
-              v-model="selectedGroupIndex"
-              :items="tabItems"
-            />
+            <WUIImageTabs v-model="selectedGroupIndex" :items="tabItems" />
 
             <div
               :key="selectedGroupKey || selectedGroupIndex"
@@ -55,10 +54,7 @@
           </div>
         </template>
         <div v-else class="sticker-popover-empty">暂无可用贴纸组</div>
-        <div
-          v-if="maxCount > 0"
-          class="sticker-popover-count"
-        >
+        <div v-if="maxCount > 0" class="sticker-popover-count">
           {{ currentCount }}/{{ maxCount }}
         </div>
       </div>
@@ -159,6 +155,10 @@ const stickerGroupsCom = computed(() => {
   return groups
 })
 
+const hasAvailableStickerGroups = computed(() => {
+  return stickerGroups.value.length > 0
+})
+
 const tabItems = computed(() => {
   return stickerGroupsCom.value.map(group => {
     const shouldShowText = group.key === 'used' || group.showLabel === true
@@ -190,7 +190,8 @@ const selectedGroupIndex = computed({
     return matchedIndex
   },
   set(index) {
-    const nextGroup = stickerGroupsCom.value[index] || stickerGroupsCom.value[0] || null
+    const nextGroup =
+      stickerGroupsCom.value[index] || stickerGroupsCom.value[0] || null
     selectedGroupKey.value = nextGroup ? getStickerGroupKey(nextGroup) : null
   }
 })
@@ -273,7 +274,9 @@ const syncUsedStickers = () => {
   }
   try {
     const ids = JSON.parse(str)
-    const allStickers = stickerGroups.value.flatMap(group => group.stickers || [])
+    const allStickers = stickerGroups.value.flatMap(
+      group => group.stickers || []
+    )
     const nextStickers = ids
       .map(id => allStickers.find(sticker => sticker._id === id))
       .filter(Boolean)
@@ -301,10 +304,7 @@ const setUsedSticker = sticker => {
     ...ids.filter(id => String(id) !== String(sticker._id))
   ].slice(0, MAX_USED_STICKERS)
 
-  localStorage.setItem(
-    'usedStickers',
-    JSON.stringify(nextIds)
-  )
+  localStorage.setItem('usedStickers', JSON.stringify(nextIds))
 }
 
 const stickerBtnClick = () => {
@@ -318,9 +318,13 @@ onMounted(() => {
   ensureStickerGroupsLoaded()
 })
 
-watch(stickerGroupsCom, groups => {
-  syncSelectedGroupKey(groups)
-}, { immediate: true })
+watch(
+  stickerGroupsCom,
+  groups => {
+    syncSelectedGroupKey(groups)
+  },
+  { immediate: true }
+)
 </script>
 <style scoped>
 .sticker-popover-panel {

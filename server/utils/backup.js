@@ -35,6 +35,8 @@ const referrersUtil = require('../mongodb/utils/referrers')
 const rsslogsUtil = require('../mongodb/utils/rsslogs')
 const sidebarsUtil = require('../mongodb/utils/sidebars')
 const sortsUtil = require('../mongodb/utils/sorts')
+const stickerGroupsUtil = require('../mongodb/utils/stickerGroups')
+const stickersUtil = require('../mongodb/utils/stickers')
 const tagsUtil = require('../mongodb/utils/tags')
 const usersUtil = require('../mongodb/utils/users')
 const userLoginLogsUtil = require('../mongodb/utils/userLoginLogs')
@@ -69,6 +71,8 @@ const modelUtilMap = {
   rsslogs: rsslogsUtil,
   sidebars: sidebarsUtil,
   sorts: sortsUtil,
+  stickergroups: stickerGroupsUtil,
+  stickers: stickersUtil,
   tags: tagsUtil,
   users: usersUtil,
   userloginlogs: userLoginLogsUtil,

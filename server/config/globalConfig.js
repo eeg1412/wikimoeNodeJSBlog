@@ -89,6 +89,8 @@ const initGlobalConfig = async () => {
   const commentSettingsConfig = {
     // 开启评论
     siteEnableComment: false,
+    // 显示贴纸按钮
+    siteCommentShowStickerButton: false,
     // 发表评论间隔
     siteCommentInterval: 10,
     // 开启评论审核
