@@ -9,203 +9,205 @@ const cacheDataUtils = require('../../../config/cacheData')
 module.exports = async function (req, res, next) {
   const { content, top, nickname, url, email, status, id, __v, stickers } =
     req.body
-  // nickname 20个字符以内
-  if (nickname?.length > 20) {
-    res.status(400).json({
-      errors: [
-        {
-          message: '昵称不能超过20个字符'
-        }
-      ]
-    })
-    return
-  }
-  // url 200个字符以内
-  if (url?.length > 200) {
-    res.status(400).json({
-      errors: [
-        {
-          message: 'url不能超过200个字符'
-        }
-      ]
-    })
-    return
-  }
-  if (email) {
-    // email 100个字符以内
-    if (email?.length > 100) {
+  const shouldUseStickerReferenceLock =
+    Array.isArray(stickers) && stickers.length > 0
+
+  const updateComment = async () => {
+    // nickname 20个字符以内
+    if (nickname?.length > 20) {
       res.status(400).json({
         errors: [
           {
-            message: '邮箱地址不能超过100个字符'
+            message: '昵称不能超过20个字符'
           }
         ]
       })
       return
     }
-  }
-  const checkForm = {
-    id,
-    __v,
-    content,
-    top,
-    nickname,
-    url,
-    email,
-    status
-  }
-  const rule = [
-    {
-      key: 'id',
-      label: 'id',
-      type: 'isMongoId',
-      required: true
-    },
-    {
-      key: '__v',
-      label: '__v',
-      strict: true,
-      strictType: 'number',
-      required: true
-    },
-    {
-      key: 'content',
-      label: '内容',
-      strict: true,
-      strictType: 'string',
-      required: false
-    },
-    {
-      key: 'top',
-      label: '置顶',
-      strict: true,
-      strictType: 'boolean',
-      required: false
-    },
-    {
-      key: 'status',
-      label: '状态',
-      strict: true,
-      strictType: 'number',
-      required: false
-    },
-    {
-      key: 'nickname',
-      label: '昵称',
-      strict: true,
-      strictType: 'string',
-      required: false
-    },
-    {
-      key: 'url',
-      label: '网址',
-      type: 'isURL',
-      required: false,
-      options: {
-        protocols: ['http', 'https'],
-        require_protocol: true,
-        require_host: true,
-        require_valid_protocol: true,
-        require_tld: true,
-        require_port: false,
-        allow_protocol_relative_urls: false,
-        validate_length: false
-      }
-    },
-    {
-      key: 'email',
-      label: '邮箱地址',
-      type: 'isEmail',
-      required: false
-    }
-  ]
-  const errors = utils.checkForm(checkForm, rule)
-  if (errors.length > 0) {
-    res.status(400).json({ errors })
-    return
-  }
-
-  const params = {}
-
-  if (typeof content === 'string') {
-    params.content = content
-  }
-  // 如果top是boolean类型，那么就更新，否则不更新
-  if (typeof top === 'boolean') {
-    params.top = top
-  }
-  // 评论状态,0待审核,1已审核,2未通过
-  // 如果status是0-2的整数 ，那么就更新，否则不更新
-  // 转换成整数
-  if (status !== undefined && status !== null) {
-    const statusInt = parseInt(status)
-    if (statusInt >= 0 && statusInt <= 2) {
-      params.status = statusInt
-    }
-  }
-  // 如果nickname，url，email是字符串，那么就更新，否则不更新
-  if (typeof nickname === 'string') {
-    params.nickname = nickname
-  }
-  if (typeof url === 'string') {
-    params.url = url
-  }
-  if (typeof email === 'string') {
-    params.email = email
-  }
-
-  const stickerValidation = await stickerHelper.validateStickerIds(stickers, {
-    allowUndefined: true
-  })
-  if (stickerValidation.error) {
-    res.status(400).json({
-      errors: [{ message: stickerValidation.error }]
-    })
-    return
-  }
-  if (Array.isArray(stickers)) {
-    params.stickers = stickerValidation.ids
-  }
-
-  // 获取评论信息
-  const commentInfo = await commentUtils.findOne({ _id: id, __v })
-  if (!commentInfo) {
-    res.status(400).json({
-      errors: [
-        {
-          message: '评论不存在'
-        }
-      ]
-    })
-    return
-  }
-
-  if (typeof content === 'string' || Array.isArray(stickers)) {
-    const { siteMinCommentLength = 1 } = global.$globalConfig.commentSettings
-    const finalContent =
-      typeof content === 'string' ? content : commentInfo.content || ''
-    const finalStickers = Array.isArray(stickers)
-      ? stickerValidation.ids
-      : (commentInfo.stickers || []).map(item => String(item._id || item))
-    const contentValidationError =
-      stickerHelper.getCommentContentValidationError(
-        finalContent,
-        finalStickers,
-        siteMinCommentLength
-      )
-
-    if (contentValidationError) {
+    // url 200个字符以内
+    if (url?.length > 200) {
       res.status(400).json({
-        errors: [{ message: contentValidationError }]
+        errors: [
+          {
+            message: 'url不能超过200个字符'
+          }
+        ]
       })
       return
     }
-  }
+    if (email) {
+      // email 100个字符以内
+      if (email?.length > 100) {
+        res.status(400).json({
+          errors: [
+            {
+              message: '邮箱地址不能超过100个字符'
+            }
+          ]
+        })
+        return
+      }
+    }
+    const checkForm = {
+      id,
+      __v,
+      content,
+      top,
+      nickname,
+      url,
+      email,
+      status
+    }
+    const rule = [
+      {
+        key: 'id',
+        label: 'id',
+        type: 'isMongoId',
+        required: true
+      },
+      {
+        key: '__v',
+        label: '__v',
+        strict: true,
+        strictType: 'number',
+        required: true
+      },
+      {
+        key: 'content',
+        label: '内容',
+        strict: true,
+        strictType: 'string',
+        required: false
+      },
+      {
+        key: 'top',
+        label: '置顶',
+        strict: true,
+        strictType: 'boolean',
+        required: false
+      },
+      {
+        key: 'status',
+        label: '状态',
+        strict: true,
+        strictType: 'number',
+        required: false
+      },
+      {
+        key: 'nickname',
+        label: '昵称',
+        strict: true,
+        strictType: 'string',
+        required: false
+      },
+      {
+        key: 'url',
+        label: '网址',
+        type: 'isURL',
+        required: false,
+        options: {
+          protocols: ['http', 'https'],
+          require_protocol: true,
+          require_host: true,
+          require_valid_protocol: true,
+          require_tld: true,
+          require_port: false,
+          allow_protocol_relative_urls: false,
+          validate_length: false
+        }
+      },
+      {
+        key: 'email',
+        label: '邮箱地址',
+        type: 'isEmail',
+        required: false
+      }
+    ]
+    const errors = utils.checkForm(checkForm, rule)
+    if (errors.length > 0) {
+      res.status(400).json({ errors })
+      return
+    }
 
-  // updateOne
-  commentUtils
-    .updateOne({ _id: id, __v }, params)
-    .then(data => {
+    const params = {}
+
+    if (typeof content === 'string') {
+      params.content = content
+    }
+    // 如果top是boolean类型，那么就更新，否则不更新
+    if (typeof top === 'boolean') {
+      params.top = top
+    }
+    // 评论状态,0待审核,1已审核,2未通过
+    // 如果status是0-2的整数 ，那么就更新，否则不更新
+    // 转换成整数
+    if (status !== undefined && status !== null) {
+      const statusInt = parseInt(status)
+      if (statusInt >= 0 && statusInt <= 2) {
+        params.status = statusInt
+      }
+    }
+    // 如果nickname，url，email是字符串，那么就更新，否则不更新
+    if (typeof nickname === 'string') {
+      params.nickname = nickname
+    }
+    if (typeof url === 'string') {
+      params.url = url
+    }
+    if (typeof email === 'string') {
+      params.email = email
+    }
+
+    const stickerValidation = await stickerHelper.validateStickerIds(stickers, {
+      allowUndefined: true
+    })
+    if (stickerValidation.error) {
+      res.status(400).json({
+        errors: [{ message: stickerValidation.error }]
+      })
+      return
+    }
+    if (Array.isArray(stickers)) {
+      params.stickers = stickerValidation.ids
+    }
+
+    // 获取评论信息
+    const commentInfo = await commentUtils.findOne({ _id: id, __v })
+    if (!commentInfo) {
+      res.status(400).json({
+        errors: [
+          {
+            message: '评论不存在'
+          }
+        ]
+      })
+      return
+    }
+
+    if (typeof content === 'string' || Array.isArray(stickers)) {
+      const { siteMinCommentLength = 1 } = global.$globalConfig.commentSettings
+      const finalContent =
+        typeof content === 'string' ? content : commentInfo.content || ''
+      const finalStickers = Array.isArray(stickers)
+        ? stickerValidation.ids
+        : (commentInfo.stickers || []).map(item => String(item._id || item))
+      const contentValidationError =
+        stickerHelper.getCommentContentValidationError(
+          finalContent,
+          finalStickers,
+          siteMinCommentLength
+        )
+
+      if (contentValidationError) {
+        res.status(400).json({
+          errors: [{ message: contentValidationError }]
+        })
+        return
+      }
+    }
+
+    try {
+      const data = await commentUtils.updateOne({ _id: id, __v }, params)
       if (data.modifiedCount === 0) {
         res.status(400).json({
           errors: [
@@ -260,8 +262,7 @@ module.exports = async function (req, res, next) {
 
       cacheDataUtils.getCommentList()
       // utils.reflushBlogCache()
-    })
-    .catch(err => {
+    } catch (err) {
       res.status(400).json({
         errors: [
           {
@@ -270,5 +271,13 @@ module.exports = async function (req, res, next) {
         ]
       })
       adminApiLog.error(`comment:${id} update fail, ${logErrorToText(err)}`)
-    })
+    }
+  }
+
+  if (shouldUseStickerReferenceLock) {
+    await stickerHelper.executeWithStickerReferenceLock(updateComment)
+    return
+  }
+
+  await updateComment()
 }

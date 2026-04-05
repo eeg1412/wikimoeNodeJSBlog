@@ -1,7 +1,11 @@
+const fs = require('fs')
+const path = require('path')
+const stickerGroupUtils = require('../mongodb/utils/stickerGroups')
 const stickerUtils = require('../mongodb/utils/stickers')
 const utils = require('./utils')
 
 const MAX_STICKER_COUNT = 3
+const STICKER_REFERENCE_LOCK_KEY = 'sticker-reference'
 
 function normalizeStickerIds(stickers) {
   if (!Array.isArray(stickers)) {
@@ -21,9 +25,60 @@ function normalizeStickerIds(stickers) {
   return result
 }
 
+function removeFileIfExists(filePath) {
+  if (!filePath || !fs.existsSync(filePath)) {
+    return
+  }
+
+  fs.unlinkSync(filePath)
+}
+
+exports.executeWithStickerReferenceLock = function (fn) {
+  return utils.executeInLock(STICKER_REFERENCE_LOCK_KEY, fn)
+}
+
+exports.removeStickerFiles = function (sticker, logger) {
+  if (!sticker || !sticker.imageFolder) {
+    return
+  }
+
+  const filePathList = []
+
+  if (sticker.imageFileName) {
+    filePathList.push(
+      path.join(
+        './public/upload/sticker/',
+        sticker.imageFolder,
+        sticker.imageFileName
+      )
+    )
+  }
+
+  if (sticker.thumbnailFileName) {
+    filePathList.push(
+      path.join(
+        './public/upload/sticker/',
+        sticker.imageFolder,
+        sticker.thumbnailFileName
+      )
+    )
+  }
+
+  filePathList.forEach(filePath => {
+    try {
+      removeFileIfExists(filePath)
+    } catch (error) {
+      if (logger && typeof logger.error === 'function') {
+        logger.error(`delete sticker file fail: ${filePath}, ${error.message}`)
+      }
+    }
+  })
+}
+
 exports.validateStickerIds = async function (stickers, options = {}) {
   const {
     requireVisible = false,
+    requireVisibleGroup = false,
     allowUndefined = false,
     maxCount = MAX_STICKER_COUNT
   } = options
@@ -65,11 +120,44 @@ exports.validateStickerIds = async function (stickers, options = {}) {
     query.status = 1
   }
 
-  const existingStickers = await stickerUtils.find(query, null, '_id')
+  const existingStickers = await stickerUtils.find(
+    query,
+    null,
+    requireVisibleGroup ? '_id group' : '_id',
+    { lean: requireVisibleGroup }
+  )
 
   if (existingStickers.length !== uniqueIds.length) {
     return {
       error: requireVisible ? '部分贴纸暂不可用' : '部分贴纸不存在'
+    }
+  }
+
+  if (requireVisibleGroup) {
+    const groupIdList = [
+      ...new Set(existingStickers.map(item => String(item.group || '')))
+    ]
+
+    if (groupIdList.length === 0 || groupIdList.includes('')) {
+      return {
+        error: requireVisible ? '部分贴纸暂不可用' : '部分贴纸不存在'
+      }
+    }
+
+    const visibleGroups = await stickerGroupUtils.find(
+      {
+        _id: { $in: groupIdList },
+        status: 1
+      },
+      null,
+      '_id',
+      { lean: true }
+    )
+
+    if (visibleGroups.length !== groupIdList.length) {
+      return {
+        error: requireVisible ? '部分贴纸暂不可用' : '部分贴纸不存在'
+      }
     }
   }
 

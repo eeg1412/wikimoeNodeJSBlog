@@ -11,104 +11,107 @@ module.exports = async function (req, res, next) {
   const user = req.admin.id
   const ip = utils.getUserIp(req)
   const { siteMinCommentLength = 1 } = global.$globalConfig.commentSettings
-  // 校验格式
-  const params = {
-    post,
-    parent,
-    content: content || '',
-    user,
-    top,
-    // 因为是后台接口，所以默认通过审核
-    status: 1,
-    ip: ip,
-    deviceInfo: utils.deviceUAInfoUtils(req),
-    ipInfo: await utils.IP2LocationUtils(ip, null, null, false)
-  }
-  const rule = [
-    {
-      key: 'post',
-      label: '评论文章',
-      type: 'isMongoId',
-      required: true
-    },
-    {
-      key: 'parent',
-      label: '父级评论',
-      type: 'isMongoId',
-      required: false
-    },
-    {
-      key: 'content',
-      label: '评论内容',
-      type: null,
-      required: false,
-      strict: true,
-      strictType: 'string'
-    },
-    {
-      key: 'user',
-      label: '评论用户',
-      type: 'isMongoId',
-      required: true
-    },
-    {
-      key: 'top',
-      label: '置顶',
-      type: null,
-      required: false,
-      strict: true,
-      strictType: 'boolean'
+  const shouldUseStickerReferenceLock =
+    Array.isArray(stickers) && stickers.length > 0
+
+  const createComment = async () => {
+    // 校验格式
+    const params = {
+      post,
+      parent,
+      content: content || '',
+      user,
+      top,
+      // 因为是后台接口，所以默认通过审核
+      status: 1,
+      ip: ip,
+      deviceInfo: utils.deviceUAInfoUtils(req),
+      ipInfo: await utils.IP2LocationUtils(ip, null, null, false)
     }
-  ]
-  const errors = utils.checkForm(params, rule)
-  if (errors.length > 0) {
-    res.status(400).json({ errors })
-    return
-  }
+    const rule = [
+      {
+        key: 'post',
+        label: '评论文章',
+        type: 'isMongoId',
+        required: true
+      },
+      {
+        key: 'parent',
+        label: '父级评论',
+        type: 'isMongoId',
+        required: false
+      },
+      {
+        key: 'content',
+        label: '评论内容',
+        type: null,
+        required: false,
+        strict: true,
+        strictType: 'string'
+      },
+      {
+        key: 'user',
+        label: '评论用户',
+        type: 'isMongoId',
+        required: true
+      },
+      {
+        key: 'top',
+        label: '置顶',
+        type: null,
+        required: false,
+        strict: true,
+        strictType: 'boolean'
+      }
+    ]
+    const errors = utils.checkForm(params, rule)
+    if (errors.length > 0) {
+      res.status(400).json({ errors })
+      return
+    }
 
-  const stickerValidation = await stickerHelper.validateStickerIds(stickers, {
-    requireVisible: true
-  })
-  if (stickerValidation.error) {
-    res.status(400).json({
-      errors: [{ message: stickerValidation.error }]
+    const stickerValidation = await stickerHelper.validateStickerIds(stickers, {
+      requireVisible: true
     })
-    return
-  }
+    if (stickerValidation.error) {
+      res.status(400).json({
+        errors: [{ message: stickerValidation.error }]
+      })
+      return
+    }
 
-  const validStickers = stickerValidation.ids || []
+    const validStickers = stickerValidation.ids || []
 
-  const contentValidationError = stickerHelper.getCommentContentValidationError(
-    params.content,
-    validStickers,
-    siteMinCommentLength
-  )
-  if (contentValidationError) {
-    res.status(400).json({
-      errors: [{ message: contentValidationError }]
-    })
-    return
-  }
+    const contentValidationError =
+      stickerHelper.getCommentContentValidationError(
+        params.content,
+        validStickers,
+        siteMinCommentLength
+      )
+    if (contentValidationError) {
+      res.status(400).json({
+        errors: [{ message: contentValidationError }]
+      })
+      return
+    }
 
-  params.stickers = validStickers
+    params.stickers = validStickers
 
-  // 获取文章信息
-  const postInfo = await postUtils.findOne({ _id: post })
-  if (!postInfo) {
-    res.status(400).json({
-      errors: [
-        {
-          message: '文章不存在'
-        }
-      ]
-    })
-    return
-  }
+    // 获取文章信息
+    const postInfo = await postUtils.findOne({ _id: post })
+    if (!postInfo) {
+      res.status(400).json({
+        errors: [
+          {
+            message: '文章不存在'
+          }
+        ]
+      })
+      return
+    }
 
-  // save
-  commentUtils
-    .save(params)
-    .then(data => {
+    try {
+      const data = await commentUtils.save(params)
       res.send({
         data: data
       })
@@ -125,8 +128,7 @@ module.exports = async function (req, res, next) {
         })
       }
       // utils.reflushBlogCache()
-    })
-    .catch(err => {
+    } catch (err) {
       console.error(err)
       res.status(400).json({
         errors: [
@@ -138,5 +140,13 @@ module.exports = async function (req, res, next) {
       adminApiLog.error(
         `comment:${content} create fail, ${logErrorToText(err)}`
       )
-    })
+    }
+  }
+
+  if (shouldUseStickerReferenceLock) {
+    await stickerHelper.executeWithStickerReferenceLock(createComment)
+    return
+  }
+
+  await createComment()
 }

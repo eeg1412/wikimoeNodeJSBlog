@@ -5,6 +5,16 @@ const userApiLog = log4js.getLogger('userApi')
 
 module.exports = async function (req, res, next) {
   try {
+    const { siteCommentShowStickerButton = false } =
+      global.$globalConfig.commentSettings
+
+    if (!siteCommentShowStickerButton) {
+      res.send({
+        list: []
+      })
+      return
+    }
+
     // 只获取显示中的贴纸组
     const groups = await stickerGroupUtils.find(
       { status: 1 },

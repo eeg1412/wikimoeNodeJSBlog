@@ -1,5 +1,6 @@
 const stickerUtils = require('../../../mongodb/utils/stickers')
 const commentUtils = require('../../../mongodb/utils/comments')
+const stickerHelper = require('../../../utils/sticker')
 const utils = require('../../../utils/utils')
 const log4js = require('log4js')
 const adminApiLog = log4js.getLogger('adminApi')
@@ -28,88 +29,71 @@ module.exports = async function (req, res, next) {
     return
   }
 
-  // 校验目标贴纸是否存在且为显示状态
-  const toSticker = await stickerUtils.findOne({ _id: toStickerId, status: 1 })
-  if (!toSticker) {
-    res.status(400).json({
-      errors: [{ message: '目标贴纸不存在' }]
-    })
-    return
-  }
-
-  const fromSticker = await stickerUtils.findOne({ _id: fromStickerId })
-  if (!fromSticker) {
-    res.status(400).json({
-      errors: [{ message: '源贴纸不存在' }]
-    })
-    return
-  }
-
   try {
-    // 先将源贴纸设置为不显示
-    await stickerUtils.updateOne({ _id: fromStickerId }, { status: 0 })
-
-    // 查找所有引用了源贴纸的评论
-    const comments = await commentUtils.find(
-      { stickers: fromStickerId },
-      null,
-      '_id stickers'
-    )
-
-    let replaceCount = 0
-    for (const comment of comments) {
-      const newStickers = comment.stickers.map(s =>
-        s.toString() === fromStickerId ? toStickerId : s.toString()
+    await stickerHelper.executeWithStickerReferenceLock(async () => {
+      const targetValidation = await stickerHelper.validateStickerIds(
+        [toStickerId],
+        {
+          requireVisible: true,
+          requireVisibleGroup: true,
+          maxCount: 1
+        }
       )
-      await commentUtils.updateOne(
-        { _id: comment._id },
-        { stickers: newStickers }
+      if (targetValidation.error) {
+        res.status(400).json({
+          errors: [{ message: '目标贴纸不可用' }]
+        })
+        return
+      }
+
+      const fromSticker = await stickerUtils.findOne({ _id: fromStickerId })
+      if (!fromSticker) {
+        res.status(400).json({
+          errors: [{ message: '源贴纸不存在' }]
+        })
+        return
+      }
+
+      // 查找所有引用了源贴纸的评论
+      const comments = await commentUtils.find(
+        { stickers: fromStickerId },
+        null,
+        '_id stickers'
       )
-      replaceCount++
-    }
 
-    // 替换完成后删除源贴纸及其文件
-    const fs = require('fs')
-    const path = require('path')
-    if (fromSticker.imageFileName && fromSticker.imageFolder) {
-      try {
-        fs.unlinkSync(
-          path.join(
-            './public/upload/sticker/',
-            fromSticker.imageFolder,
-            fromSticker.imageFileName
-          )
+      let replaceCount = 0
+      for (const comment of comments) {
+        const newStickers = comment.stickers.map(s =>
+          s.toString() === fromStickerId ? toStickerId : s.toString()
         )
-      } catch (e) {
-        adminApiLog.error(`delete sticker image fail: ${e.message}`)
-      }
-    }
-    if (fromSticker.thumbnailFileName && fromSticker.imageFolder) {
-      try {
-        fs.unlinkSync(
-          path.join(
-            './public/upload/sticker/',
-            fromSticker.imageFolder,
-            fromSticker.thumbnailFileName
-          )
+        await commentUtils.updateOne(
+          { _id: comment._id },
+          { stickers: newStickers }
         )
-      } catch (e) {
-        adminApiLog.error(`delete sticker thumbnail fail: ${e.message}`)
+        replaceCount++
       }
-    }
 
-    await stickerUtils.deleteOne({ _id: fromStickerId })
-
-    res.send({
-      data: {
-        message: `替换完成，共替换 ${replaceCount} 条评论`,
-        replaceCount: replaceCount
+      const deleteResult = await stickerUtils.deleteOne({ _id: fromStickerId })
+      if (deleteResult.deletedCount === 0) {
+        res.status(400).json({
+          errors: [{ message: '贴纸删除失败' }]
+        })
+        return
       }
+
+      stickerHelper.removeStickerFiles(fromSticker, adminApiLog)
+
+      res.send({
+        data: {
+          message: `替换完成，共替换 ${replaceCount} 条评论`,
+          replaceCount: replaceCount
+        }
+      })
+      cacheDataUtils.getCommentList()
+      adminApiLog.info(
+        `sticker replace success: ${fromStickerId} -> ${toStickerId}, replaced ${replaceCount} comments`
+      )
     })
-    cacheDataUtils.getCommentList()
-    adminApiLog.info(
-      `sticker replace success: ${fromStickerId} -> ${toStickerId}, replaced ${replaceCount} comments`
-    )
   } catch (err) {
     console.error(err)
     res.status(400).json({
