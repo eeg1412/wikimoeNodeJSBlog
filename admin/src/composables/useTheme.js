@@ -60,7 +60,7 @@ export function useTheme() {
 
   // 创建一个安全的事件监听器
   let mediaQuery = null
-  const handleSystemThemeChange = event => {
+  const onSystemThemeChange = event => {
     systemTheme.value = event.matches ? 'dark' : 'light'
 
     if (followSystem.value) {
@@ -76,6 +76,7 @@ export function useTheme() {
     }
 
     detectSystemTheme()
+    theme.value = systemTheme.value
     applyTheme(theme.value)
   }
 
@@ -84,10 +85,10 @@ export function useTheme() {
 
     mediaQuery = window.matchMedia('(prefers-color-scheme: dark)')
     if (mediaQuery.addEventListener) {
-      mediaQuery.addEventListener('change', handleSystemThemeChange)
+      mediaQuery.addEventListener('change', onSystemThemeChange)
       return
     }
-    mediaQuery.addListener(handleSystemThemeChange)
+    mediaQuery.addListener(onSystemThemeChange)
   }
 
   // 移除事件监听
@@ -95,10 +96,10 @@ export function useTheme() {
     if (!mediaQuery) return
 
     if (mediaQuery.removeEventListener) {
-      mediaQuery.removeEventListener('change', handleSystemThemeChange)
+      mediaQuery.removeEventListener('change', onSystemThemeChange)
       return
     }
-    mediaQuery.removeListener(handleSystemThemeChange)
+    mediaQuery.removeListener(onSystemThemeChange)
   }
 
   onMounted(() => {
