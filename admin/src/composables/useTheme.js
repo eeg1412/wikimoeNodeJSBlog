@@ -72,6 +72,13 @@ export function useTheme() {
 
   const syncThemeOnResume = () => {
     if (!followSystem.value) return
+    if (
+      document.visibilityState &&
+      document.visibilityState !== 'visible' &&
+      document.visibilityState !== 'prerender'
+    ) {
+      return
+    }
 
     detectSystemTheme()
     applyTheme(theme.value)
