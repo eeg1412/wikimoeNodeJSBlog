@@ -61,7 +61,6 @@ export function useTheme() {
   // 创建一个安全的事件监听器
   let mediaQuery = null
   const handleSystemThemeChange = event => {
-    systemPreferenceSupported.value = true
     systemTheme.value = event.matches ? 'dark' : 'light'
 
     if (followSystem.value) {
@@ -72,11 +71,7 @@ export function useTheme() {
 
   const syncThemeOnResume = () => {
     if (!followSystem.value) return
-    if (
-      document.visibilityState &&
-      document.visibilityState !== 'visible' &&
-      document.visibilityState !== 'prerender'
-    ) {
+    if (document.visibilityState && document.visibilityState !== 'visible') {
       return
     }
 
