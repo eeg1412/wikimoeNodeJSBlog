@@ -34,6 +34,7 @@ export function useTheme() {
     detectSystemTheme()
     if (followSystem.value) {
       theme.value = systemTheme.value
+      applyTheme(systemTheme.value)
     }
   }
 
