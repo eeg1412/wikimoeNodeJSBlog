@@ -130,7 +130,7 @@ export default defineNuxtConfig({
   },
 
   experimental: {
-    emitRouteChunkError: false
+    emitRouteChunkError: 'manual'
   },
 
   compatibilityDate: '2026-02-10'

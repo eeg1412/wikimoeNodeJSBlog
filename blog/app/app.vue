@@ -10,9 +10,34 @@
 </template>
 <script setup>
 import { postLogCreateApi, putLogUpdatePerformanceApi } from '@/api/log'
+import { isChunkAssetError, trackChunkAssetError } from '@/utils/chunk-error'
+
+const nuxtApp = useNuxtApp()
+
+if (import.meta.client) {
+  nuxtApp.hook('app:chunkError', ({ error }) => {
+    trackChunkAssetError(error)
+  })
+}
 
 const { options, getOptions } = useOptions()
 await getOptions()
+
+onErrorCaptured(error => {
+  if (!import.meta.client) {
+    return
+  }
+
+  if (!nuxtApp.isHydrating) {
+    return
+  }
+
+  if (!isChunkAssetError(error)) {
+    return
+  }
+
+  return false
+})
 
 const { setCommentRetractAuthDecode } = useCommentRetractAuthDecode()
 const { setCommentRetractCountData } = useCommentRetractCountData()
