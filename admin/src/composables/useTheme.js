@@ -63,7 +63,6 @@ export function useTheme() {
     }
     if (theme.value !== systemTheme.value) {
       theme.value = systemTheme.value
-      return
     }
     applyTheme(systemTheme.value)
   }
@@ -103,7 +102,7 @@ export function useTheme() {
     }
   }
 
-  const handlePageVisible = () => {
+  const handleVisibilityChange = () => {
     if (document.visibilityState === 'hidden') {
       return
     }
@@ -111,13 +110,13 @@ export function useTheme() {
   }
 
   const setupPageListener = () => {
-    document.addEventListener('visibilitychange', handlePageVisible)
-    window.addEventListener('pageshow', handlePageVisible)
+    document.addEventListener('visibilitychange', handleVisibilityChange)
+    window.addEventListener('pageshow', handleVisibilityChange)
   }
 
   const cleanupPageListener = () => {
-    document.removeEventListener('visibilitychange', handlePageVisible)
-    window.removeEventListener('pageshow', handlePageVisible)
+    document.removeEventListener('visibilitychange', handleVisibilityChange)
+    window.removeEventListener('pageshow', handleVisibilityChange)
   }
 
   onMounted(() => {
