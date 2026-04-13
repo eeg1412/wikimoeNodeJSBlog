@@ -2,6 +2,8 @@
 import { ref, onMounted, onUnmounted, watch } from 'vue'
 import { applyThemeToDom } from '@/utils/theme.js'
 
+const SYSTEM_THEME_MEDIA = '(prefers-color-scheme: dark)'
+
 export function useTheme() {
   const theme = ref('light') // 当前使用的主题
   const systemTheme = ref('light') // 系统主题
@@ -12,7 +14,7 @@ export function useTheme() {
   const checkSystemSupport = () => {
     return (
       window.matchMedia &&
-      window.matchMedia('(prefers-color-scheme: dark)').media !== 'not all'
+      window.matchMedia(SYSTEM_THEME_MEDIA).media !== 'not all'
     )
   }
 
@@ -24,12 +26,8 @@ export function useTheme() {
     }
 
     systemPreferenceSupported.value = true
-    const isDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches
+    const isDarkMode = window.matchMedia(SYSTEM_THEME_MEDIA).matches
     systemTheme.value = isDarkMode ? 'dark' : 'light'
-
-    if (followSystem.value) {
-      theme.value = systemTheme.value
-    }
   }
 
   // 应用主题
@@ -58,32 +56,68 @@ export function useTheme() {
     localStorage.setItem('theme-follow-system', value)
   }
 
+  const syncThemeWithSystem = () => {
+    detectSystemTheme()
+    if (!followSystem.value) {
+      return
+    }
+    if (theme.value !== systemTheme.value) {
+      theme.value = systemTheme.value
+      return
+    }
+    applyTheme(systemTheme.value)
+  }
+
   // 创建一个安全的事件监听器
   let mediaQuery = null
+  const handleSystemThemeChange = () => {
+    syncThemeWithSystem()
+  }
+
   const setupMediaListener = () => {
     if (!systemPreferenceSupported.value) return
 
-    mediaQuery = window.matchMedia('(prefers-color-scheme: dark)')
+    mediaQuery = window.matchMedia(SYSTEM_THEME_MEDIA)
 
-    // 使用适当的事件监听方法
-    const eventMethod = mediaQuery.addEventListener
-      ? 'addEventListener'
-      : 'addListener'
-    const handler = detectSystemTheme
+    if (typeof mediaQuery.addEventListener === 'function') {
+      mediaQuery.addEventListener('change', handleSystemThemeChange)
+      return
+    }
 
-    mediaQuery[eventMethod]('change', handler)
+    if (typeof mediaQuery.addListener === 'function') {
+      mediaQuery.addListener(handleSystemThemeChange)
+    }
   }
 
   // 移除事件监听
   const cleanupMediaListener = () => {
     if (!mediaQuery) return
 
-    const eventMethod = mediaQuery.removeEventListener
-      ? 'removeEventListener'
-      : 'removeListener'
-    const handler = detectSystemTheme
+    if (typeof mediaQuery.removeEventListener === 'function') {
+      mediaQuery.removeEventListener('change', handleSystemThemeChange)
+      return
+    }
 
-    mediaQuery[eventMethod]('change', handler)
+    if (typeof mediaQuery.removeListener === 'function') {
+      mediaQuery.removeListener(handleSystemThemeChange)
+    }
+  }
+
+  const handlePageVisible = () => {
+    if (document.visibilityState === 'hidden') {
+      return
+    }
+    syncThemeWithSystem()
+  }
+
+  const setupPageListener = () => {
+    document.addEventListener('visibilitychange', handlePageVisible)
+    window.addEventListener('pageshow', handlePageVisible)
+  }
+
+  const cleanupPageListener = () => {
+    document.removeEventListener('visibilitychange', handlePageVisible)
+    window.removeEventListener('pageshow', handlePageVisible)
   }
 
   onMounted(() => {
@@ -116,11 +150,13 @@ export function useTheme() {
 
     // 设置系统主题变化的监听
     setupMediaListener()
+    setupPageListener()
   })
 
   // 组件销毁时清理监听器
   onUnmounted(() => {
     cleanupMediaListener()
+    cleanupPageListener()
   })
 
   // 监听主题变化
