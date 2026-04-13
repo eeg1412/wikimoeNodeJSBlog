@@ -28,7 +28,10 @@ export function useTheme() {
     systemPreferenceSupported.value = true
     const isDarkMode = window.matchMedia(SYSTEM_THEME_MEDIA).matches
     systemTheme.value = isDarkMode ? 'dark' : 'light'
+  }
 
+  const syncThemeWithSystem = () => {
+    detectSystemTheme()
     if (followSystem.value) {
       theme.value = systemTheme.value
     }
@@ -68,12 +71,12 @@ export function useTheme() {
     mediaQuery = window.matchMedia(SYSTEM_THEME_MEDIA)
 
     if (typeof mediaQuery.addEventListener === 'function') {
-      mediaQuery.addEventListener('change', detectSystemTheme)
+      mediaQuery.addEventListener('change', syncThemeWithSystem)
       return
     }
 
     if (typeof mediaQuery.addListener === 'function') {
-      mediaQuery.addListener(detectSystemTheme)
+      mediaQuery.addListener(syncThemeWithSystem)
     }
   }
 
@@ -82,20 +85,20 @@ export function useTheme() {
     if (!mediaQuery) return
 
     if (typeof mediaQuery.removeEventListener === 'function') {
-      mediaQuery.removeEventListener('change', detectSystemTheme)
+      mediaQuery.removeEventListener('change', syncThemeWithSystem)
       return
     }
 
     if (typeof mediaQuery.removeListener === 'function') {
-      mediaQuery.removeListener(detectSystemTheme)
+      mediaQuery.removeListener(syncThemeWithSystem)
     }
   }
 
   const handleVisibilityChange = () => {
-    if (document.visibilityState !== 'visible') {
+    if (document.visibilityState === 'hidden') {
       return
     }
-    detectSystemTheme()
+    syncThemeWithSystem()
   }
 
   onMounted(() => {
