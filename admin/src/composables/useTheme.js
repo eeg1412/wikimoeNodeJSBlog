@@ -28,6 +28,10 @@ export function useTheme() {
     systemPreferenceSupported.value = true
     const isDarkMode = window.matchMedia(SYSTEM_THEME_MEDIA).matches
     systemTheme.value = isDarkMode ? 'dark' : 'light'
+
+    if (followSystem.value) {
+      theme.value = systemTheme.value
+    }
   }
 
   // 应用主题
@@ -56,35 +60,20 @@ export function useTheme() {
     localStorage.setItem('theme-follow-system', value)
   }
 
-  const syncThemeWithSystem = () => {
-    detectSystemTheme()
-    if (!followSystem.value) {
-      return
-    }
-    if (theme.value !== systemTheme.value) {
-      theme.value = systemTheme.value
-    }
-    applyTheme(systemTheme.value)
-  }
-
   // 创建一个安全的事件监听器
   let mediaQuery = null
-  const handleSystemThemeChange = () => {
-    syncThemeWithSystem()
-  }
-
   const setupMediaListener = () => {
     if (!systemPreferenceSupported.value) return
 
     mediaQuery = window.matchMedia(SYSTEM_THEME_MEDIA)
 
     if (typeof mediaQuery.addEventListener === 'function') {
-      mediaQuery.addEventListener('change', handleSystemThemeChange)
+      mediaQuery.addEventListener('change', detectSystemTheme)
       return
     }
 
     if (typeof mediaQuery.addListener === 'function') {
-      mediaQuery.addListener(handleSystemThemeChange)
+      mediaQuery.addListener(detectSystemTheme)
     }
   }
 
@@ -93,30 +82,20 @@ export function useTheme() {
     if (!mediaQuery) return
 
     if (typeof mediaQuery.removeEventListener === 'function') {
-      mediaQuery.removeEventListener('change', handleSystemThemeChange)
+      mediaQuery.removeEventListener('change', detectSystemTheme)
       return
     }
 
     if (typeof mediaQuery.removeListener === 'function') {
-      mediaQuery.removeListener(handleSystemThemeChange)
+      mediaQuery.removeListener(detectSystemTheme)
     }
   }
 
   const handleVisibilityChange = () => {
-    if (document.visibilityState === 'hidden') {
+    if (document.visibilityState !== 'visible') {
       return
     }
-    syncThemeWithSystem()
-  }
-
-  const setupPageListener = () => {
-    document.addEventListener('visibilitychange', handleVisibilityChange)
-    window.addEventListener('pageshow', handleVisibilityChange)
-  }
-
-  const cleanupPageListener = () => {
-    document.removeEventListener('visibilitychange', handleVisibilityChange)
-    window.removeEventListener('pageshow', handleVisibilityChange)
+    detectSystemTheme()
   }
 
   onMounted(() => {
@@ -149,13 +128,13 @@ export function useTheme() {
 
     // 设置系统主题变化的监听
     setupMediaListener()
-    setupPageListener()
+    document.addEventListener('visibilitychange', handleVisibilityChange)
   })
 
   // 组件销毁时清理监听器
   onUnmounted(() => {
     cleanupMediaListener()
-    cleanupPageListener()
+    document.removeEventListener('visibilitychange', handleVisibilityChange)
   })
 
   // 监听主题变化
