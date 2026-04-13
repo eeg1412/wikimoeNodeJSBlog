@@ -18,17 +18,9 @@ import ResponsiveTableColumn from '@/components/ResponsiveTableColumn.vue'
 import { formatDate, limitStr } from '@/utils/utils'
 import { initRichEditor } from '@/utils/richEditor'
 import zhCn from 'element-plus/dist/locale/zh-cn.mjs'
-import { applyThemeToDom } from '@/utils/theme.js'
+import { initTheme } from '@/composables/useTheme'
 
-const savedTheme = localStorage.getItem('theme-preference')
-const savedFollowSystem = localStorage.getItem('theme-follow-system')
-if (savedFollowSystem === 'true') {
-  const isDarkMode =
-    window.matchMedia('(prefers-color-scheme: dark)')?.matches || false
-  applyThemeToDom(isDarkMode ? 'dark' : 'light')
-} else {
-  applyThemeToDom(savedTheme || 'light')
-}
+initTheme()
 
 const app = createApp(App)
 app.component('Cropper', Cropper)
