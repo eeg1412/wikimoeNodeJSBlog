@@ -60,30 +60,43 @@ export function useTheme() {
 
   // 创建一个安全的事件监听器
   let mediaQuery = null
+  const handleSystemThemeChange = event => {
+    systemPreferenceSupported.value = true
+    systemTheme.value = event.matches ? 'dark' : 'light'
+
+    if (followSystem.value) {
+      theme.value = systemTheme.value
+      applyTheme(theme.value)
+    }
+  }
+
+  const syncThemeOnResume = () => {
+    if (!followSystem.value) return
+
+    detectSystemTheme()
+    applyTheme(theme.value)
+  }
+
   const setupMediaListener = () => {
     if (!systemPreferenceSupported.value) return
 
     mediaQuery = window.matchMedia('(prefers-color-scheme: dark)')
-
-    // 使用适当的事件监听方法
-    const eventMethod = mediaQuery.addEventListener
-      ? 'addEventListener'
-      : 'addListener'
-    const handler = detectSystemTheme
-
-    mediaQuery[eventMethod]('change', handler)
+    if (mediaQuery.addEventListener) {
+      mediaQuery.addEventListener('change', handleSystemThemeChange)
+      return
+    }
+    mediaQuery.addListener(handleSystemThemeChange)
   }
 
   // 移除事件监听
   const cleanupMediaListener = () => {
     if (!mediaQuery) return
 
-    const eventMethod = mediaQuery.removeEventListener
-      ? 'removeEventListener'
-      : 'removeListener'
-    const handler = detectSystemTheme
-
-    mediaQuery[eventMethod]('change', handler)
+    if (mediaQuery.removeEventListener) {
+      mediaQuery.removeEventListener('change', handleSystemThemeChange)
+      return
+    }
+    mediaQuery.removeListener(handleSystemThemeChange)
   }
 
   onMounted(() => {
@@ -116,11 +129,16 @@ export function useTheme() {
 
     // 设置系统主题变化的监听
     setupMediaListener()
+
+    document.addEventListener('visibilitychange', syncThemeOnResume)
+    window.addEventListener('pageshow', syncThemeOnResume)
   })
 
   // 组件销毁时清理监听器
   onUnmounted(() => {
     cleanupMediaListener()
+    document.removeEventListener('visibilitychange', syncThemeOnResume)
+    window.removeEventListener('pageshow', syncThemeOnResume)
   })
 
   // 监听主题变化
