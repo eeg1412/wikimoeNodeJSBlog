@@ -96,10 +96,9 @@ export function useTheme() {
   }
 
   const handleVisibilityChange = () => {
-    if (document.visibilityState === 'hidden') {
-      return
+    if (document.visibilityState === 'visible') {
+      syncThemeWithSystem()
     }
-    syncThemeWithSystem()
   }
 
   onMounted(() => {
