@@ -60,6 +60,10 @@ export function useTheme() {
 
   // 创建一个安全的事件监听器
   let mediaQuery = null
+  /**
+   * 响应系统主题变化并在跟随系统时立即同步到页面。
+   * @param {MediaQueryListEvent} event - 系统主题变更事件
+   */
   const onSystemThemeChange = event => {
     systemTheme.value = event.matches ? 'dark' : 'light'
 
@@ -69,9 +73,12 @@ export function useTheme() {
     }
   }
 
+  /**
+   * 页面从后台恢复时重新同步系统主题，避免 Android Chrome 定时切换主题后页面状态失步。
+   */
   const syncThemeOnResume = () => {
     if (!followSystem.value) return
-    if (document.visibilityState && document.visibilityState !== 'visible') {
+    if (document.visibilityState !== 'visible') {
       return
     }
 
