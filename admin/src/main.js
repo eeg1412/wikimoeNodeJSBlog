@@ -20,15 +20,32 @@ import { initRichEditor } from '@/utils/richEditor'
 import zhCn from 'element-plus/dist/locale/zh-cn.mjs'
 import { applyThemeToDom } from '@/utils/theme.js'
 
-const savedTheme = localStorage.getItem('theme-preference')
-const savedFollowSystem = localStorage.getItem('theme-follow-system')
-if (savedFollowSystem === 'true') {
-  const isDarkMode =
-    window.matchMedia('(prefers-color-scheme: dark)')?.matches || false
-  applyThemeToDom(isDarkMode ? 'dark' : 'light')
-} else {
-  applyThemeToDom(savedTheme || 'light')
+const renderStartupError = message => {
+  const appElement = document.querySelector('#app')
+  if (!appElement) return
+  appElement.textContent = message
+  appElement.style.padding = '24px'
+  appElement.style.whiteSpace = 'pre-wrap'
 }
+
+const initTheme = () => {
+  try {
+    const savedTheme = localStorage.getItem('theme-preference')
+    const savedFollowSystem = localStorage.getItem('theme-follow-system')
+    if (savedFollowSystem === 'true') {
+      const isDarkMode =
+        window.matchMedia('(prefers-color-scheme: dark)')?.matches || false
+      applyThemeToDom(isDarkMode ? 'dark' : 'light')
+      return
+    }
+    applyThemeToDom(savedTheme || 'light')
+  } catch (error) {
+    console.error('初始化主题失败', error)
+    applyThemeToDom('light')
+  }
+}
+
+initTheme()
 
 const app = createApp(App)
 app.component('Cropper', Cropper)
@@ -39,15 +56,26 @@ app.component('ResponsiveTableColumn', ResponsiveTableColumn)
 for (const [key, component] of Object.entries(ElementPlusIconsVue)) {
   app.component(key, component)
 }
-app
-  .use(ElementPlus, {
+app.config.errorHandler = error => {
+  console.error('后台应用运行异常', error)
+}
+try {
+  app.use(ElementPlus, {
     locale: zhCn
   })
-  .use(store)
-  .use(router)
-  .mount('#app')
+  app.use(store)
+  app.use(router)
+  app.mount('#app')
+} catch (error) {
+  console.error('后台应用启动失败', error)
+  renderStartupError('后台加载失败，请刷新页面重试。')
+}
 
-initRichEditor()
+try {
+  initRichEditor()
+} catch (error) {
+  console.error('初始化编辑器失败', error)
+}
 
 // 时间转时间戳
 const formatTimestamp = time => {

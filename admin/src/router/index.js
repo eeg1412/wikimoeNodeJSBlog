@@ -375,4 +375,45 @@ const router = createRouter({
   routes
 })
 
+const dynamicImportReloadKey = 'admin-dynamic-import-reload-path'
+
+const isDynamicImportError = error => {
+  const message = error?.message || ''
+  return (
+    message.includes('Failed to fetch dynamically imported module') ||
+    message.includes('Importing a module script failed') ||
+    message.includes('dynamically imported module')
+  )
+}
+
+const renderRouteLoadError = () => {
+  const appElement = document.querySelector('#app')
+  if (!appElement) return
+  appElement.textContent = '后台页面加载失败，请刷新页面重试。'
+  appElement.style.padding = '24px'
+  appElement.style.whiteSpace = 'pre-wrap'
+}
+
+router.onError(error => {
+  console.error('路由加载异常', error)
+  if (!isDynamicImportError(error)) {
+    return
+  }
+
+  const currentPath = `${window.location.pathname}${window.location.search}${window.location.hash}`
+  const lastReloadPath = sessionStorage.getItem(dynamicImportReloadKey)
+  if (lastReloadPath === currentPath) {
+    sessionStorage.removeItem(dynamicImportReloadKey)
+    renderRouteLoadError()
+    return
+  }
+
+  sessionStorage.setItem(dynamicImportReloadKey, currentPath)
+  window.location.reload()
+})
+
+router.afterEach(() => {
+  sessionStorage.removeItem(dynamicImportReloadKey)
+})
+
 export default router

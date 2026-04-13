@@ -36,17 +36,23 @@ export default createStore({
         })
     },
     setOptions(state, data) {
-      authApi.getOptionList({ nameList: ['siteUrl'] }).then(res => {
-        const list = res.data.data
-        // 查找name为siteUrl的数据
-        const siteUrlData = list.find(item => item.name === 'siteUrl')
-        if (siteUrlData) {
-          state.siteUrl = siteUrlData.value
-        } else {
-          // 报错
-          ElMessage.error('请先设置站点信息！')
-        }
-      })
+      authApi
+        .getOptionList({ nameList: ['siteUrl'] })
+        .then(res => {
+          const list = res.data.data
+          // 查找name为siteUrl的数据
+          const siteUrlData = list.find(item => item.name === 'siteUrl')
+          if (siteUrlData) {
+            state.siteUrl = siteUrlData.value
+          } else {
+            // 报错
+            ElMessage.error('请先设置站点信息！')
+          }
+        })
+        .catch(error => {
+          state.siteUrl = ''
+          console.error('获取站点信息失败', error)
+        })
     }
   },
   actions: {
