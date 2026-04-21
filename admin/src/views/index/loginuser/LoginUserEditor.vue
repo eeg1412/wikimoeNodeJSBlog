@@ -233,6 +233,7 @@ export default {
           if (coverData.value) {
             newForm.cover = coverData.value._id
           }
+          newForm.type = activeName.value
           authApi
             .updateLoginUserInfo(newForm)
             .then(res => {

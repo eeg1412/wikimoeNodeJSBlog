@@ -12,7 +12,8 @@ module.exports = async function (req, res, next) {
     description,
     currentPassword,
     password,
-    cover
+    cover,
+    type
   } = req.body
 
   const params = {
@@ -29,7 +30,7 @@ module.exports = async function (req, res, next) {
       label: '昵称',
       type: 'regCheck',
       reg: /^.{1,10}$/,
-      required: true,
+      required: type === 'profile' ? true : false,
       strict: true,
       strictType: 'string'
     },
@@ -57,7 +58,7 @@ module.exports = async function (req, res, next) {
   if (password) {
     rule.push({
       key: 'currentPassword',
-      label: '当前密码',
+      label: '原密码',
       required: true,
       strict: true,
       strictType: 'string'
@@ -112,7 +113,7 @@ module.exports = async function (req, res, next) {
       res.status(400).json({
         errors: [
           {
-            message: '当前密码不正确'
+            message: '原密码不正确'
           }
         ]
       })
