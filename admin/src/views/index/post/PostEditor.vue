@@ -682,7 +682,7 @@
             type="primary"
             size="small"
             class="mt10"
-            @click="form.alias = nowTimestampToBase36WithRandom()"
+            @click="form.alias = buildTypeAlias(type)"
             >按时间随机别名</el-button
           >
           <!-- 重置别名按钮 -->
@@ -866,6 +866,18 @@ export default {
       }
       return result
     }
+    const buildTypeAlias = type => {
+      const timeRandomStr = nowTimestampToBase36WithRandom()
+      if (type === 1) {
+        return `b-${timeRandomStr}`
+      } else if (type === 2) {
+        return `t-${timeRandomStr}`
+      } else if (type === 3) {
+        return `p-${timeRandomStr}`
+      } else {
+        return timeRandomStr
+      }
+    }
     let isIniting = ref(true)
     const getPostDetail = () => {
       authApi
@@ -992,7 +1004,7 @@ export default {
               case 'alias':
                 if (isNew) {
                   form[key] =
-                    res.data.data[key] || nowTimestampToBase36WithRandom()
+                    res.data.data[key] || buildTypeAlias(res.data.data?.type)
                 } else {
                   form[key] = res.data.data[key]
                 }
@@ -1038,7 +1050,16 @@ export default {
 
     // 重新设置随机别名
     const resetRandomAlias = () => {
-      form.alias = generateRandomString(8)
+      const type = form.type || type.value
+      let prefix = ''
+      if (type === 1) {
+        prefix = 'b-'
+      } else if (type === 2) {
+        prefix = 't-'
+      } else if (type === 3) {
+        prefix = 'p-'
+      }
+      form.alias = prefix + generateRandomString(8)
     }
 
     const listSortListMap = {
@@ -1889,6 +1910,7 @@ export default {
       contentSeriesSortListTurnOnChange,
       seriesSortListTurnOnChange,
       resetRandomAlias,
+      buildTypeAlias,
       nowTimestampToBase36WithRandom,
 
       rules,
