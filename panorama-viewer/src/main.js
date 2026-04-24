@@ -189,7 +189,7 @@ const normalizeLocale = locale => {
     .toLowerCase()
 
   if (!localeText) {
-    return 'zh-CN'
+    return 'en'
   }
 
   if (
@@ -226,7 +226,7 @@ const normalizeLocale = locale => {
     return 'en'
   }
 
-  return 'zh-CN'
+  return 'en'
 }
 
 const resolveLocale = () => {
@@ -236,12 +236,7 @@ const resolveLocale = () => {
     return normalizeLocale(queryLocale)
   }
 
-  const browserLocale =
-    navigator.languages?.[0] ||
-    navigator.language ||
-    document.documentElement.lang
-
-  return normalizeLocale(browserLocale)
+  return 'en'
 }
 
 const currentLocale = resolveLocale()

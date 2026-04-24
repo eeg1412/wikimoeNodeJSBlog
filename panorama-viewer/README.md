@@ -36,6 +36,8 @@ yarn dev-panorama
 - `en`
 - `ja`
 
+未传 `lang` 时，默认使用 `en`。
+
 示例：
 
 ```text

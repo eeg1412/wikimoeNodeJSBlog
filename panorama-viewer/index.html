@@ -1,12 +1,12 @@
 <!doctype html>
-<html lang="zh-CN">
+<html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta
       name="viewport"
       content="width=device-width, initial-scale=1.0, viewport-fit=cover"
     />
-    <title>全景照片查看器</title>
+    <title>Panorama Viewer</title>
   </head>
   <body>
     <div class="panorama-shell" id="app">
@@ -14,18 +14,14 @@
 
       <div class="panorama-overlay panorama-overlay--status" id="status">
         <div class="panorama-card">
-          <div class="panorama-card__title" id="status-title">
-            全景照片查看器
-          </div>
-          <div class="panorama-card__body" id="status-text">初始化中...</div>
+          <div class="panorama-card__title" id="status-title">Panorama Viewer</div>
+          <div class="panorama-card__body" id="status-text">Initializing...</div>
         </div>
       </div>
 
       <div class="panorama-overlay panorama-overlay--status hidden" id="error">
         <div class="panorama-card panorama-card--error">
-          <div class="panorama-card__title" id="error-title">
-            无法显示全景照片
-          </div>
+          <div class="panorama-card__title" id="error-title">Unable to Display Panorama</div>
           <div class="panorama-card__body" id="error-text"></div>
           <div class="panorama-card__actions">
             <button
@@ -33,7 +29,7 @@
               id="error-home-button"
               type="button"
             >
-              返回首页
+              Go Home
             </button>
           </div>
         </div>
@@ -42,35 +38,35 @@
       <div
         class="panorama-toolbar hidden"
         id="toolbar"
-        aria-label="全景控制工具栏"
+        aria-label="Panorama Controls"
       >
         <button
           class="panorama-toolbar__button"
           id="home-button"
           type="button"
-          title="返回首页"
-          aria-label="返回首页"
+          title="Go Home"
+          aria-label="Go Home"
         ></button>
         <button
           class="panorama-toolbar__button hidden"
           id="fisheye-button"
           type="button"
-          title="切换镜头模式"
-          aria-label="切换镜头模式"
+          title="Toggle Lens Mode"
+          aria-label="Toggle Lens Mode"
         ></button>
         <button
           class="panorama-toolbar__button hidden"
           id="gyroscope-button"
           type="button"
-          title="动态体感视角"
-          aria-label="动态体感视角"
+          title="Motion View"
+          aria-label="Motion View"
         ></button>
         <button
           class="panorama-toolbar__button hidden"
           id="vr-button"
           type="button"
-          title="VR模式"
-          aria-label="VR模式"
+          title="VR Mode"
+          aria-label="VR Mode"
         ></button>
       </div>
     </div>
