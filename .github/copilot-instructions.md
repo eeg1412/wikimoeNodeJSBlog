@@ -338,6 +338,7 @@ Desktop: min-width: 1024px
 - 管理端前端使用DeviceInfoDisplay组件显示设备信息。
 - 除非用户明确指示，否则禁止使用 terminal command 来修改文件。
 - 分析哪些代码可以作为通用组件或函数提取出来，并将它们放在适当的目录中，以便在整个项目中重用。
+- 该项目使用yarn classic作为包管理工具，禁止使用npm install命令安装依赖，必须使用yarn add命令安装依赖。
 
 ## Git 提交规范
 
