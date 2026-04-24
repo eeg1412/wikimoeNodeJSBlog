@@ -6,7 +6,9 @@
   "scripts": {
     "start": "node index.js",
     "build-all": "node build-all.js",
-    "ver-change": "node ver-change.js"
+    "ver-change": "node ver-change.js",
+    "build-panorama": "yarn --cwd panorama-viewer build",
+    "dev-panorama": "yarn --cwd panorama-viewer dev"
   },
   "repository": {
     "type": "git",
