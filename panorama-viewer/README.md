@@ -41,7 +41,7 @@ yarn dev-panorama
 示例：
 
 ```text
-/panorama/index.html?src=/upload/panorama.jpg
+/panorama?src=/upload/panorama.jpg
 
-/panorama/index.html?src=/upload/panorama.jpg&lang=en
+/panorama?src=/upload/panorama.jpg&lang=en
 ```

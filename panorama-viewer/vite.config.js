@@ -3,7 +3,7 @@ import { resolve } from 'node:path'
 import { defineConfig } from 'vite'
 
 export default defineConfig({
-  base: './',
+  base: '/panorama/',
   publicDir: false,
   build: {
     outDir: resolve(__dirname, '../blog/public/panorama'),
