@@ -4,7 +4,7 @@
       class="p-2 pb-2 pl-4 pr-4 block text-center border-solid border-b border-gray-200 dark:border-gray-700"
       v-if="data"
     >
-      地点：{{ data.data.title }}
+      {{ data.data.title }}
     </div>
     <NuxtPage></NuxtPage>
   </div>
@@ -12,15 +12,18 @@
 <script setup>
 import { getMappointDetailApi } from '@/api/mappoint'
 import { postLogCreateApi } from '@/api/log'
+
+const { t } = useLang()
+
 const route = useRoute()
 // 如果page不是正整数，报错去404页面
 const page = route.params.page
 if (!/^\d+$/.test(page)) {
   showError({
     statusCode: 404,
-    message: '页面不存在'
+    message: t('common.error.notFound')
   })
-  throw new Error('页面不存在')
+  throw new Error(t('common.error.notFound'))
 }
 const mappointid = route.params.mappointid
 const { data } = await getMappointDetailApi({

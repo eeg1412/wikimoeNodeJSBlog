@@ -12,19 +12,21 @@
 <script setup>
 import { postLogCreateApi } from '@/api/log'
 
+const { t } = useLang()
+
 const route = useRoute()
 const page = route.params.page
 // 如果page不是正整数，报错去404页面
 if (!/^\d+$/.test(page)) {
   showError({
     statusCode: 404,
-    message: '页面不存在'
+    message: t('common.error.notFound')
   })
-  throw new Error('页面不存在')
+  throw new Error(t('common.error.notFound'))
 }
 const year = route.params.year
 const month = route.params.month
-const title = `归档${year}年${month}月`
+const title = t('common.post.listArchive', { year, month })
 // 设置SEO
 useSeoMeta({
   title: title,

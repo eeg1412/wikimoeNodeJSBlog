@@ -5,8 +5,9 @@
 </template>
 <script setup>
 import { postLogCreateApi } from '@/api/log'
+
 definePageMeta({
-  alias: ['/'],
+  alias: ['/:code?'],
   name: 'postList'
 })
 onMounted(() => {
