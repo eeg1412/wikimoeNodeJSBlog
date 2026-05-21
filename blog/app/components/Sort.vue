@@ -10,7 +10,11 @@
         <NuxtLink
           :to="{
             name: 'postListSort',
-            params: { sortid: item.alias || item._id, page: 1 }
+            params: {
+              code: languageCode,
+              sortid: item.alias || item._id,
+              page: 1
+            }
           }"
           class="sort-list-item-link"
           :class="{ active: sortid === item.alias || sortid === item._id }"
@@ -27,7 +31,11 @@
             <NuxtLink
               :to="{
                 name: 'postListSort',
-                params: { sortid: item.alias || item._id, page: 1 }
+                params: {
+                  code: languageCode,
+                  sortid: item.alias || item._id,
+                  page: 1
+                }
               }"
               class="sort-list-item-link"
               :class="{ active: sortid === item.alias || sortid === item._id }"
@@ -42,13 +50,14 @@
       class="text-center py-4 text-gray-500"
       v-if="sortListData.length === 0"
     >
-      <div>暂无内容</div>
+      <div>{{ t('common.status.empty') }}</div>
     </div>
   </div>
 </template>
 <script setup>
 import { getSortListApi } from '@/api/sort'
 const route = useRoute()
+const { languageCode, t } = useLang()
 const sortid = computed(() => route.params.sortid)
 const [sortData] = await Promise.all([getSortListApi()])
 const { data: sortListData } = sortData

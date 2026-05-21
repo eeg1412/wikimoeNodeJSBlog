@@ -8,7 +8,9 @@
     <template #panel="{ close }">
       <div class="p-4 share-popover-panel cursor-default" @click.stop>
         <div class="flex justify-between items-center mb-3">
-          <div class="share-popover-title text-base font-bold">分享至</div>
+          <div class="share-popover-title text-base font-bold">
+            {{ t('common.share.title') }}
+          </div>
           <!-- 关闭 -->
           <div
             class="share-popover-close text-gray-400 cursor-pointer text-base"
@@ -50,6 +52,7 @@
 <script setup>
 import { putShareCountApi } from '@/api/post'
 const { options } = useOptions()
+const { t, localeUrl } = useLang()
 const siteUrl = computed(() => options.value?.siteUrl)
 const siteTitle = computed(() => options.value?.siteTitle)
 const siteEnableShareButton = computed(
@@ -57,6 +60,7 @@ const siteEnableShareButton = computed(
 )
 const siteSharePlatforms = computed(() => options.value?.siteSharePlatforms)
 const siteShareDescription = computed(() => options.value?.siteShareDescription)
+const { copyText } = useLocalizedText()
 
 const props = defineProps({
   post: {
@@ -67,30 +71,35 @@ const props = defineProps({
 const toast = useWToast()
 const emit = defineEmits(['shareadd'])
 
-const copyText = text => {
-  copyToClipboard(text, toast)
+const getSourcePostId = () => {
+  if (props.post.sourceId) {
+    return props.post.sourceId
+  }
+
+  return props.post._id
 }
 
-// 生成文章链接
+// 生成文章链接（包含语言前缀）
 const getPostUrl = () => {
   const baseUrl = siteUrl.value || ''
   const identifier = props.post.alias || props.post._id
-
+  let path = ''
   if (props.post.type === 3) {
-    return `${baseUrl}/page/${identifier}`
+    path = `/page/${identifier}`
   } else {
-    return `${baseUrl}/post/${identifier}`
+    path = `/post/${identifier}`
   }
+  return localeUrl(baseUrl, path)
 }
 
 // 生成分享文案
 const getShareText = () => {
   const postTypeMap = {
-    1: '博文',
-    2: '推文',
-    3: '页面'
+    1: t('common.post.blog'),
+    2: t('common.post.tweet'),
+    3: t('common.post.page')
   }
-  const postType = postTypeMap[props.post.type] || '文章'
+  const postType = postTypeMap[props.post.type] || t('common.post.blog')
   let text = siteShareDescription.value
   // ${siteTitle}为站点名称
   // ${title}为文章标题
@@ -173,7 +182,7 @@ const handleShare = platform => {
       break
     case 'copy-link':
       // 复制链接到剪贴板
-      copyText(`${shareText} ${postUrl}`)
+      copyText(`${shareText} ${postUrl}`, toast)
       break
     default:
       console.warn(`未知的分享方式: ${platform}`)
@@ -190,7 +199,7 @@ const handleShare = platform => {
   }
 
   putShareCountApi({
-    id: props.post._id,
+    id: getSourcePostId(),
     sharePlatform: platform
   }).then(res => {
     if (res.add) {
@@ -200,57 +209,62 @@ const handleShare = platform => {
 }
 
 // 分享图标配置：每项包含图片路径、alt 文本和背景色（Tailwind 类）
-const icons = [
+const icons = computed(() => [
   {
     key: 'weibo',
     src: '/img/icon/sina-weibo.svg',
-    alt: '分享到新浪微博',
+    alt: t('common.share.toWeibo'),
     bg: 'bg-red-500'
   },
   {
     key: 'qq-zone',
     src: '/img/icon/qq-zone.svg',
-    alt: '分享到QQ空间',
+    alt: t('common.share.toQzone'),
     bg: 'bg-yellow-400'
   },
-  { key: 'x', src: '/img/icon/x-icon.svg', alt: '分享到X', bg: 'bg-slate-700' },
+  {
+    key: 'x',
+    src: '/img/icon/x-icon.svg',
+    alt: t('common.share.toX'),
+    bg: 'bg-slate-700'
+  },
   {
     key: 'facebook',
     src: '/img/icon/facebook.svg',
-    alt: '分享到Facebook',
+    alt: t('common.share.toFacebook'),
     bg: 'bg-blue-600'
   },
   {
     key: 'reddit',
     src: '/img/icon/reddit.svg',
-    alt: '分享到Reddit',
+    alt: t('common.share.toReddit'),
     bg: 'bg-orange-400'
   },
   {
     key: 'telegram',
     src: '/img/icon/telegram.svg',
-    alt: '分享到Telegram',
+    alt: t('common.share.toTelegram'),
     bg: 'bg-cyan-500'
   },
   {
     key: 'line',
     src: '/img/icon/line.svg',
-    alt: '分享到LINE',
+    alt: t('common.share.toLine'),
     bg: 'bg-green-500'
   },
   {
     key: 'whatsapp',
     src: '/img/icon/whatsapp.svg',
-    alt: '分享到WhatsApp',
+    alt: t('common.share.toWhatsapp'),
     bg: 'bg-green-600'
   },
   {
     key: 'copy-link',
     icon: 'i-heroicons-link',
-    alt: '复制链接',
+    alt: t('common.share.copyLink'),
     bg: 'bg-gray-500'
   }
-]
+])
 </script>
 <style scoped>
 .share-popover-panel {

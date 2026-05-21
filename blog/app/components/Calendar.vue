@@ -54,6 +54,8 @@
 <script setup>
 import moment from 'moment'
 
+const { t } = useLang()
+
 const props = defineProps({
   events: {
     type: Array,
@@ -196,7 +198,7 @@ const getDayEvents = (date, day) => {
 }
 
 const youbi = dayIndex => {
-  const week = ['日', '一', '二', '三', '四', '五', '六']
+  const week = t('common.calendar.weekdaysShort')
   return week[dayIndex]
 }
 

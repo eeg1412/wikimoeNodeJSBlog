@@ -21,7 +21,7 @@
             class="none seo"
             :to="{
               name: 'postDetail',
-              params: { id: item.alias || item._id }
+              params: { code: languageCode, id: item.alias || item._id }
             }"
             tabindex="-1"
           >
@@ -34,7 +34,7 @@
               ><span class="tenten"></span>
               <ClientOnly
                 ><span class="cGray94" :title="formatDate(item.date)">{{
-                  fromNow(item.date, 'yyyy-MM-dd')
+                  fromNowText(item.date, 'yyyy-MM-dd')
                 }}</span
                 ><template #fallback
                   ><span class="cGray94">{{ item.dateStr }}</span></template
@@ -47,6 +47,7 @@
                     name: 'postListSort',
                     params: {
                       sortid: item.sort.alias || item.sort._id,
+                      code: languageCode,
                       page: 1
                     }
                   }"
@@ -61,7 +62,7 @@
               <WUIIcon
                 class="text-primary-500 f18"
                 name="i-heroicons-bars-arrow-up"
-                title="置顶"
+                :title="t('common.post.pinned')"
                 v-if="item.showTopIcon"
               />
             </div>
@@ -71,7 +72,7 @@
           <div class="post-list-excerpt-body">
             <!-- prettier-ignore -->
             <template v-if="item.type === 1">
-              <div class="whitespace-pre-wrap" v-if="item.type === 1">{{ item.excerpt || '发表了一篇博文' }}</div>
+              <div class="whitespace-pre-wrap" v-if="item.type === 1">{{ item.excerpt || t('common.post.defaultExcerpt') }}</div>
               <!-- tags -->
               <div class="mt-1 mb-1" v-if="item.tags.length > 0 || item.mappointList.length > 0">
                 <template v-for="(tag, index) in item.tags" :key="index">
@@ -79,7 +80,7 @@
                     class="post-detail-tag-item hover:underline"
                     :to="{
                       name: 'postListTag',
-                      params: { tagid: tag._id, page: 1 },
+                      params: { code: languageCode, tagid: tag._id, page: 1 },
                     }"
                     >#{{ tag.tagname }}</NuxtLink
                   >
@@ -89,7 +90,7 @@
                     class="post-detail-tag-item hover:underline"
                     :to="{
                       name: 'postListMappoint',
-                      params: { mappointid: mappoint._id, page: 1 },
+                      params: { code: languageCode, mappointid: mappoint._id, page: 1 },
                     }"
                     ><WUIIcon
                     name="i-heroicons-map-pin-solid"
@@ -127,7 +128,7 @@
               @click.middle.stop
               :to="{
                 name: 'postDetail',
-                params: { id: item.alias || item._id }
+                params: { code: languageCode, id: item.alias || item._id }
               }"
             >
               <LazyPostItem :post="item" />
@@ -143,7 +144,7 @@
                   @click.middle.stop
                   :to="{
                     name: 'postDetail',
-                    params: { id: item.alias || item._id }
+                    params: { code: languageCode, id: item.alias || item._id }
                   }"
                 >
                   <!-- icon book-open -->
@@ -151,7 +152,14 @@
                     class="mr5 post-list-info-bottom-icon"
                     name="i-heroicons-book-open"
                   />
-                  <span>{{ formatNumber(item.views) }} 阅读</span>
+                  <span class="none xl:!inline">{{
+                    t('common.post.views', {
+                      count: formatNumberText(item.views)
+                    })
+                  }}</span>
+                  <span class="xl:hidden">{{
+                    formatNumberText(item.views)
+                  }}</span>
                 </NuxtLink>
               </div>
               <div class="mr15">
@@ -161,7 +169,7 @@
                   @click.middle.stop
                   :to="{
                     name: 'postDetail',
-                    params: { id: item.alias || item._id },
+                    params: { code: languageCode, id: item.alias || item._id },
                     hash: '#commentlist-container'
                   }"
                 >
@@ -170,7 +178,14 @@
                     class="mr5 post-list-info-bottom-icon"
                     name="i-heroicons-chat-bubble-left-ellipsis"
                   />
-                  <span>{{ formatNumber(item.comnum) }} 评论</span>
+                  <span class="none xl:!inline">{{
+                    t('common.post.comments', {
+                      count: formatNumberText(item.comnum)
+                    })
+                  }}</span>
+                  <span class="xl:hidden">{{
+                    formatNumberText(item.comnum)
+                  }}</span>
                 </NuxtLink>
               </div>
               <div
@@ -192,7 +207,14 @@
                       class="mr5 post-list-info-bottom-icon"
                     />
 
-                    <span>{{ formatNumber(item.shares) }} 分享</span>
+                    <span class="none xl:!inline">{{
+                      t('common.post.shares', {
+                        count: formatNumberText(item.shares)
+                      })
+                    }}</span>
+                    <span class="xl:hidden">{{
+                      formatNumberText(item.shares)
+                    }}</span>
                   </button>
                 </LazySharePopover>
               </div>
@@ -203,16 +225,16 @@
                 class="dflex flexCenter cursor-pointer hover:text-primary-500 focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-inset"
                 :class="item.isLike ? 'text-primary-500' : 'cGray94'"
                 tabindex="0"
-                @click.stop="likePost(item._id)"
+                @click.stop="likePost(item)"
                 @click.middle.stop
-                @keydown.enter.stop="likePost(item._id)"
+                @keydown.enter.stop="likePost(item)"
                 v-if="likeListInited"
               >
                 <!-- 加载 -->
                 <WUIIcon
                   class="mr5 post-list-info-bottom-icon animate-spin"
                   name="i-heroicons-arrow-path"
-                  v-if="getLikePostIsLoading(item._id)"
+                  v-if="getLikePostIsLoading(item)"
                 />
                 <!-- heart -->
                 <WUIIcon
@@ -227,7 +249,14 @@
                   v-else
                 />
 
-                <span>{{ formatNumber(item.likes) }} 点赞</span>
+                <span class="none xl:!inline">{{
+                  t('common.post.likes', {
+                    count: formatNumberText(item.likes)
+                  })
+                }}</span>
+                <span class="xl:hidden">{{
+                  formatNumberText(item.likes)
+                }}</span>
               </div>
               <div class="dflex flexCenter opacity-20" v-else>
                 <!-- heart -->
@@ -236,7 +265,14 @@
                   name="i-heroicons-heart"
                 />
 
-                <span>{{ formatNumber(item.likes) }} 点赞</span>
+                <span class="none xl:!inline">{{
+                  t('common.post.likes', {
+                    count: formatNumberText(item.likes)
+                  })
+                }}</span>
+                <span class="xl:hidden">{{
+                  formatNumberText(item.likes)
+                }}</span>
               </div>
             </div>
           </div>
@@ -330,7 +366,7 @@
               <div
                 class="flex justify-between items-center bg-white dark:bg-gray-900 border-b border-solid border-gray-200 dark:border-gray-700 text-base px-4 py-3"
               >
-                <div>类型筛选</div>
+                <div>{{ t('common.post.filterType') }}</div>
                 <button
                   class="text-gray-500 hover:text-gray-700 common-focus-visible-btn-outline"
                   @click="switchFilterMenu"
@@ -352,7 +388,7 @@
                         postType !== '1' && postType !== '2' ? '-1' : '0'
                       "
                     >
-                      全部类型
+                      {{ t('common.post.allTypes') }}
                     </div>
                   </li>
                   <li>
@@ -363,7 +399,7 @@
                       @keydown.enter="switchPostType('blog')"
                       :tabindex="postType === '1' ? '-1' : '0'"
                     >
-                      博文
+                      {{ t('common.post.blog') }}
                     </div>
                   </li>
                   <li>
@@ -374,7 +410,7 @@
                       @keydown.enter="switchPostType('tweet')"
                       :tabindex="postType === '2' ? '-1' : '0'"
                     >
-                      推文
+                      {{ t('common.post.tweet') }}
                     </div>
                   </li>
                 </ul>
@@ -395,6 +431,10 @@ const sitePageSize = computed(() => options.value.sitePageSize || 1)
 const route = useRoute()
 const router = useRouter()
 const toast = useWToast()
+const { languageCode, t } = useLang()
+const { formatNumberText, fromNowText } = useLocalizedText()
+languageCode.value
+
 const postRouteType = computed(() => route.params.type)
 const postType = computed(() => {
   if (postRouteType.value === 'blog') {
@@ -470,6 +510,8 @@ const routePagination = computed(() => {
       to.firstRoute = {
         name: routeName.value,
         params: {
+          ...route.params,
+          code: languageCode.value,
           page: 1,
           type: postRouteType.value
         }
@@ -477,6 +519,8 @@ const routePagination = computed(() => {
       to.lastRoute = {
         name: routeName.value,
         params: {
+          ...route.params,
+          code: languageCode.value,
           page: totalPage.value,
           type: postRouteType.value
         }
@@ -484,6 +528,8 @@ const routePagination = computed(() => {
       to.prevRoute = {
         name: routeName.value,
         params: {
+          ...route.params,
+          code: languageCode.value,
           page: page - 1,
           type: postRouteType.value
         }
@@ -491,6 +537,8 @@ const routePagination = computed(() => {
       to.nextRoute = {
         name: routeName.value,
         params: {
+          ...route.params,
+          code: languageCode.value,
           page: page + 1,
           type: postRouteType.value
         }
@@ -506,9 +554,9 @@ const routePagination = computed(() => {
 if (!/^\d+$/.test(page)) {
   showError({
     statusCode: 404,
-    message: '页面不存在'
+    message: t('common.error.notFound')
   })
-  throw new Error('页面不存在')
+  throw new Error(t('common.error.notFound'))
 }
 const [postsDataResponse] = await Promise.all([
   getPostsApi({
@@ -542,7 +590,7 @@ const showTopIcon = item => {
 }
 if (postsData?.value?.list) {
   postsData.value.list.forEach((item, index) => {
-    postsData.value.list[index].dateStr = fromNow(item.date, 'yyyy-MM-dd')
+    postsData.value.list[index].dateStr = fromNowText(item.date, 'yyyy-MM-dd')
     postsData.value.list[index].showTopIcon = showTopIcon(item)
   })
 }
@@ -556,27 +604,29 @@ const { generateItemListJsonLd, setJsonLd } = useArticleJsonLd()
 const getListName = () => {
   switch (routeName.value) {
     case 'postList':
-      return page === 1 ? '首页' : `首页 - 第${page}页`
+      return page === 1
+        ? t('common.post.listHome')
+        : t('common.post.listHomePage', { page })
     case 'postListKeyword':
-      return `搜索：${keyword}`
+      return t('common.post.listKeyword', { keyword })
     case 'postListSort':
-      return `分类文章`
+      return t('common.post.listSort')
     case 'postListArchive':
-      return `归档：${year}年${month}月`
+      return t('common.post.listArchive', { year, month })
     case 'postListTag':
-      return `标签文章`
+      return t('common.post.listTag')
     case 'postListMappoint':
-      return `地点文章`
+      return t('common.post.listMappoint')
     case 'postListBangumi':
-      return `番剧相关文章`
+      return t('common.post.listBangumi')
     case 'postListMovie':
-      return `电影相关文章`
+      return t('common.post.listMovie')
     case 'postListBook':
-      return `图书相关文章`
+      return t('common.post.listBook')
     case 'postListGame':
-      return `游戏相关文章`
+      return t('common.post.listGame')
     default:
-      return '文章列表'
+      return t('common.post.listDefault')
   }
 }
 if (postsData?.value?.list && postsData.value.list.length > 0) {
@@ -618,7 +668,7 @@ const goPostDetail = (e, item, middle) => {
     // resolveUrl
     const url = router.resolve({
       name: routeName,
-      params: { id }
+      params: { code: languageCode.value, id }
     }).href
     window.open(url, '_blank')
   } else {
@@ -626,6 +676,7 @@ const goPostDetail = (e, item, middle) => {
     router.push({
       name: routeName,
       params: {
+        code: languageCode.value,
         id: id
       }
     })
@@ -644,14 +695,24 @@ const preventDefaultMiddleClick = e => {
 const likeListInited = ref(false)
 const likeListLoading = ref(false)
 const likeList = ref([])
+const getSourcePostId = post => {
+  if (post.sourceId) {
+    return post.sourceId
+  }
+
+  return post._id
+}
 const postLikeLogList = () => {
-  const postIdList = postsData.value.list.map(item => item._id)
+  const postIdList = postsData.value.list.map(item => getSourcePostId(item))
   likeListLoading.value = true
   postLikeLogListApi({ postIdList })
     .then(res => {
       likeList.value = res.list
       postsData.value.list.forEach((item, index) => {
-        const likeData = res.list.find(likeItem => likeItem.post === item._id)
+        const sourcePostId = getSourcePostId(item)
+        const likeData = res.list.find(
+          likeItem => likeItem.post === sourcePostId
+        )
         if (likeData && likeData.like) {
           if (item.likes === 0) {
             // 延迟补偿
@@ -685,21 +746,23 @@ const getLikeDataByPostId = postId => {
 
 const likePostIsLoading = reactive({})
 const getLikePostIsLoading = postId => {
-  return likePostIsLoading[postId] === true
+  const sourcePostId = getSourcePostId(postId)
+  return likePostIsLoading[sourcePostId] === true
 }
-const likePost = postId => {
-  if (likePostIsLoading[postId]) {
+const likePost = post => {
+  const sourcePostId = getSourcePostId(post)
+  if (likePostIsLoading[sourcePostId]) {
     return
   }
   // 如果找到了，判断里面的Like，没有就是false
-  let like = checkIsLike(postId)
-  const __v = getLikeDataByPostId(postId)?.__v
-  likePostIsLoading[postId] = true
+  let like = checkIsLike(sourcePostId)
+  const __v = getLikeDataByPostId(sourcePostId)?.__v
+  likePostIsLoading[sourcePostId] = true
 
-  postLikeLogApi({ id: postId, like: !like, __v })
+  postLikeLogApi({ id: sourcePostId, like: !like, __v })
     .then(res => {
       // 将对应的likeList里的postId替换为res.data
-      const index = likeList.value.findIndex(item => item.post === postId)
+      const index = likeList.value.findIndex(item => item.post === sourcePostId)
       if (index > -1) {
         likeList.value[index] = res.data
       } else {
@@ -708,11 +771,11 @@ const likePost = postId => {
       const newLike = res.data.like
       // postsData.value.list 找到对应的postId，将likes数量根据newLike加减
       const postIndex = postsData.value.list.findIndex(
-        item => item._id === postId
+        item => item._id === post._id
       )
 
-      const post = postsData.value.list[postIndex]
-      const newLikeCount = newLike ? post.likes + 1 : post.likes - 1
+      const targetPost = postsData.value.list[postIndex]
+      const newLikeCount = newLike ? targetPost.likes + 1 : targetPost.likes - 1
       postsData.value.list[postIndex].likes = newLikeCount
       postsData.value.list[postIndex].isLike = newLike
     })
@@ -731,7 +794,7 @@ const likePost = postId => {
       }
     })
     .finally(() => {
-      likePostIsLoading[postId] = false
+      likePostIsLoading[sourcePostId] = false
     })
 }
 

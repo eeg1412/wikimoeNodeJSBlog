@@ -3,7 +3,9 @@
     <div ref="mapContainer" class="ol-map" tabindex="0"></div>
     <!-- 增加无障碍访问列表 -->
     <div v-if="props.markers.length" class="sr-only">
-      <h2 :id="`map-markers-label-${instanceId}`">地图标记点列表</h2>
+      <h2 :id="`map-markers-label-${instanceId}`">
+        {{ t('common.map.markerListTitle') }}
+      </h2>
       <ul :aria-labelledby="`map-markers-label-${instanceId}`">
         <li v-for="marker in props.markers" :key="marker._id">
           <button
@@ -11,7 +13,7 @@
             @blur="handleMarkerBlur"
             @click="emit('markerClick', marker)"
           >
-            {{ marker.title }} - 点击查看详情
+            {{ marker.title }} - {{ t('common.map.viewDetail') }}
           </button>
         </li>
       </ul>
@@ -34,6 +36,7 @@ const props = defineProps({
 })
 
 const { options } = useOptions()
+const { t } = useLang()
 
 // Emits - 向父组件发射事件
 const emit = defineEmits(['markerClick', 'mapReady'])
@@ -232,8 +235,8 @@ const initMap = async () => {
     const zoomControl = new olClasses.Zoom({
       zoomInLabel: '+', // 按钮可见文本（也可用 HTML 节点）
       zoomOutLabel: '-',
-      zoomInTipLabel: '放大', // tooltip 文案
-      zoomOutTipLabel: '缩小'
+      zoomInTipLabel: t('common.map.zoomIn'), // tooltip 文案
+      zoomOutTipLabel: t('common.map.zoomOut')
     })
 
     // 创建地图

@@ -13,13 +13,14 @@
       class="text-center py-4 text-gray-500"
       v-if="bangumiSeasonList.length === 0"
     >
-      <div>暂无内容</div>
+      <div>{{ t('common.status.empty') }}</div>
     </div>
   </div>
 </template>
 <script setup>
 import { getBangumiSeasonListApi } from '@/api/bangumi'
 
+const { t } = useLang()
 const { data: bangumiSeasonList } = await getBangumiSeasonListApi()
 </script>
 <style scoped></style>

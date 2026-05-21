@@ -15,13 +15,15 @@
               <div class="pt-3 pl-3 pr-3">
                 <!-- 关键词输入 -->
                 <div class="mb-3">
-                  <div class="text-sm font-medium mb-1">关键词</div>
+                  <div class="text-sm font-medium mb-1">
+                    {{ t('common.pageBangumi.keywordLabel') }}
+                  </div>
                   <WUIInput
                     v-model.trim="filterCache.keyword"
                     @keyup.enter="applyFilters(close)"
                     size="sm"
                     maxlength="20"
-                    placeholder="请输入关键词"
+                    :placeholder="t('common.pageBangumi.keywordPlaceholder')"
                   >
                     <template #trailing>
                       <WUIButton
@@ -38,7 +40,9 @@
 
                 <!-- 年份选择 -->
                 <div class="mb-2">
-                  <div class="text-sm font-medium mb-1">年份</div>
+                  <div class="text-sm font-medium mb-1">
+                    {{ t('common.pageBangumi.yearLabel') }}
+                  </div>
                   <div class="flex flex-wrap">
                     <div
                       v-for="year in yearList"
@@ -59,7 +63,9 @@
 
                 <!-- 季度选择器 -->
                 <div class="mb-2">
-                  <div class="text-sm font-medium mb-1">季度</div>
+                  <div class="text-sm font-medium mb-1">
+                    {{ t('common.pageBangumi.seasonLabel') }}
+                  </div>
                   <TransitionGroup
                     name="season-list"
                     tag="div"
@@ -71,7 +77,7 @@
                       class="mr-1 mb-1"
                     >
                       <WUIButton
-                        :label="seasonToName(season)"
+                        :label="seasonName(season)"
                         size="2xs"
                         :variant="
                           season === filterCache.season ? 'solid' : 'ghost'
@@ -84,7 +90,9 @@
 
                 <!-- 状态选择器 -->
                 <div class="mb-2">
-                  <div class="text-sm font-medium mb-1">状态</div>
+                  <div class="text-sm font-medium mb-1">
+                    {{ t('common.pageBangumi.statusLabel') }}
+                  </div>
                   <div class="flex flex-wrap">
                     <div
                       v-for="status in statusList"
@@ -112,7 +120,7 @@
               >
                 <!-- 取消 -->
                 <WUIButton
-                  label="取消"
+                  :label="t('common.pageBangumi.cancel')"
                   size="sm"
                   variant="ghost"
                   class="mr-2"
@@ -120,7 +128,7 @@
                 />
                 <!-- 筛选 -->
                 <WUIButton
-                  label="筛选"
+                  :label="t('common.pageBangumi.apply')"
                   size="sm"
                   variant="solid"
                   color="primary"
@@ -178,10 +186,7 @@
       <DivLoading :loading="bangumiLoading" />
     </div>
     <div class="p-2 flex justify-between items-center" v-if="total > 0">
-      <div>
-        共计<span class="text-primary pl-1 pr-1">{{ total }}</span
-        >部番剧
-      </div>
+      <div>{{ t('common.pageBangumi.totalBangumi', { count: total }) }}</div>
       <div v-show="hasPrev || hasNext">
         <WUIButton
           icon="i-heroicons-chevron-left"
@@ -212,6 +217,8 @@ import {
   getBangumiListApiFetch,
   getBangumiYearListApi
 } from '@/api/bangumi'
+const { t } = useLang()
+const { seasonName } = useLocalizedText()
 const route = useRoute()
 const router = useRouter()
 const onlyRouteChange = ref(false)
@@ -256,20 +263,20 @@ const params = computed(() => {
   return newParams
 })
 
-const sortTypeMap = {
-  default: '默认排序',
-  rating: '按评分排序'
-}
-const sortTypeList = [
+const sortTypeMap = computed(() => ({
+  default: t('common.pageBangumi.defaultSort'),
+  rating: t('common.pageBangumi.ratingSort')
+}))
+const sortTypeList = computed(() => [
   {
-    label: '默认排序',
+    label: t('common.pageBangumi.defaultSort'),
     value: 'default'
   },
   {
-    label: '按评分排序',
+    label: t('common.pageBangumi.ratingSort'),
     value: 'rating'
   }
-]
+])
 const selectType = (type, close) => {
   if (bangumiLoading.value) return
   setRouterQuery({ sortType: type })
@@ -309,7 +316,9 @@ const yearList = computed(() => {
 })
 
 const formatYearText = year => {
-  return year === undefined ? '所有年份' : `${year}年`
+  return year === undefined
+    ? t('common.pageBangumi.allYears')
+    : t('common.pageBangumi.yearValue', { year })
 }
 const total = ref(0)
 const selectSeasonList = computed(() => {
@@ -323,16 +332,16 @@ const selectSeasonList = computed(() => {
 })
 
 // 状态
-const statusList = [
+const statusList = computed(() => [
   {
-    label: '全部',
+    label: t('common.pageBangumi.allStatus'),
     value: undefined
   },
   {
-    label: '弃坑',
+    label: t('common.pageBangumi.droppedStatus'),
     value: 99
   }
-]
+])
 
 const checkedParams = {
   ...rawQuery
@@ -365,7 +374,7 @@ const initParams = () => {
 
   // sortType必须是sortTypeList里的
   const querySortType = route.query.sortType
-  if (sortTypeList.find(item => item.value === querySortType)) {
+  if (sortTypeList.value.find(item => item.value === querySortType)) {
     checkedParams.sortType = querySortType
   }
 
@@ -374,7 +383,9 @@ const initParams = () => {
   // status必须是数字且在statusList里
   if (queryStatus) {
     const queryStatusNumber = Number(queryStatus)
-    const statusItem = statusList.find(item => item.value === queryStatusNumber)
+    const statusItem = statusList.value.find(
+      item => item.value === queryStatusNumber
+    )
     if (statusItem) {
       checkedParams.status = queryStatus
     }
@@ -465,9 +476,11 @@ const filterCount = computed(() => {
 })
 const filterText = computed(() => {
   if (filterCount.value > 0) {
-    return `已应用${filterCount.value}项筛选`
+    return t('common.pageBangumi.appliedFilters', {
+      count: filterCount.value
+    })
   }
-  return '所有内容'
+  return t('common.pageBangumi.allContent')
 })
 // watch filterOpen
 watch(filterOpen, val => {

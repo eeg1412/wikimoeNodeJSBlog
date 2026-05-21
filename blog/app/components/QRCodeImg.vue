@@ -2,13 +2,14 @@
   <img
     v-if="qrCodeDataUrl"
     :src="qrCodeDataUrl"
-    :alt="alt || '二维码'"
+    :alt="alt || t('common.qrcode.title')"
     :class="className"
   />
 </template>
 
 <script setup>
 const QRCode = await import('qrcode')
+const { t } = useLang()
 
 // 定义组件props
 const props = defineProps({
@@ -63,7 +64,7 @@ const generateQRCode = async () => {
     error.value = ''
 
     if (!props.text) {
-      error.value = '二维码内容不能为空'
+      error.value = t('common.qrcode.emptyText')
       return
     }
 
@@ -79,7 +80,7 @@ const generateQRCode = async () => {
     qrCodeDataUrl.value = dataUrl
   } catch (err) {
     console.error('生成二维码失败:', err)
-    error.value = '生成二维码失败'
+    error.value = t('common.qrcode.generateFailed')
     qrCodeDataUrl.value = ''
   }
 }

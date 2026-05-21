@@ -14,7 +14,9 @@
     <template #panel="{ close }">
       <div class="p-4 share-popover-panel" @click.stop>
         <div class="flex justify-between items-center mb-3">
-          <div class="share-popover-title text-base font-bold">二维码</div>
+          <div class="share-popover-title text-base font-bold">
+            {{ t('common.qrcode.title') }}
+          </div>
           <!-- 关闭 -->
           <div
             class="share-popover-close text-gray-400 cursor-pointer text-base"
@@ -43,7 +45,7 @@
             <WUIButton
               icon="i-heroicons-clipboard-document"
               color="gray"
-              @click="copyText(getPostUrl)"
+              @click="copyText(getPostUrl, toast)"
             />
           </WUIButtonGroup>
         </div>
@@ -53,6 +55,8 @@
 </template>
 <script setup>
 const { options } = useOptions()
+const { t, localeUrl } = useLang()
+const { copyText } = useLocalizedText()
 const siteUrl = computed(() => options.value?.siteUrl)
 const siteEnableFooterQRCodeButton = computed(
   () => options.value?.siteEnableFooterQRCodeButton
@@ -66,20 +70,17 @@ const props = defineProps({
 })
 const toast = useWToast()
 
-const copyText = text => {
-  copyToClipboard(text, toast)
-}
-
-// 生成文章链接
+// 生成文章链接（包含语言前缀）
 const getPostUrl = computed(() => {
   const baseUrl = siteUrl.value || ''
   const identifier = props.post.alias || props.post._id
-
+  let path = ''
   if (props.post.type === 3) {
-    return `${baseUrl}/page/${identifier}`
+    path = `/page/${identifier}`
   } else {
-    return `${baseUrl}/post/${identifier}`
+    path = `/post/${identifier}`
   }
+  return localeUrl(baseUrl, path)
 })
 </script>
 <style scoped>

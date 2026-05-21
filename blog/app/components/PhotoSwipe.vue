@@ -38,7 +38,7 @@
     >
       <div
         class="photo-swipe-photo-swipe-btn"
-        title="浏览所有媒体"
+        :title="t('common.media.browseAll')"
         tabindex="0"
         @keydown.enter="e => e.target.click()"
       >
@@ -234,7 +234,7 @@
   >
     <div
       class="photo-swipe-photo-swipe-btn"
-      title="动态体感视角"
+      :title="t('common.panorama.gyroscope')"
       @click="toggleGyroscope"
       tabindex="0"
       @keydown.enter="e => e.target.click()"
@@ -276,7 +276,7 @@
   >
     <div
       class="photo-swipe-photo-swipe-btn"
-      title="VR模式"
+      :title="t('common.panorama.vrMode')"
       @click="enterVR"
       tabindex="0"
       @keydown.enter="e => e.target.click()"
@@ -394,7 +394,7 @@ const enterVR = async () => {
 
       onError: error => {
         toast.add({
-          title: '进入VR模式失败，请检查权限或设备支持情况',
+          title: t('common.panorama.vrEnterFailed'),
           icon: 'i-heroicons-x-circle',
           color: 'red'
         })
@@ -416,7 +416,7 @@ const enterVR = async () => {
   } catch (error) {
     VRLoading.value = false
     toast.add({
-      title: '初始化VR模式失败，请检查权限或设备支持情况',
+      title: t('common.panorama.vrInitFailed'),
       icon: 'i-heroicons-x-circle',
       color: 'red'
     })
@@ -477,26 +477,26 @@ const clearPanoramaListMapByKey = key => {
     console.warn('not found', key, panoramaListMap)
   }
 }
-const panoramaLang = {
-  zoom: '缩放',
-  zoomOut: '缩小',
-  zoomIn: '放大',
-  moveUp: '向上移动',
-  moveDown: '向下移动',
-  moveLeft: '向左移动',
-  moveRight: '向右移动',
-  description: '描述',
-  download: '下载',
-  fullscreen: '全屏',
-  loading: '加载中...',
-  menu: '菜单',
-  close: '关闭',
-  twoFingers: '使用双指导航',
-  ctrlZoom: '使用Ctrl+滚轮缩放图片',
-  loadError: '全景图无法加载',
-  webglError: '您的浏览器似乎不支持WebGL',
-  gyroscope: '动态体感视角'
-}
+const panoramaLang = computed(() => ({
+  zoom: t('common.panorama.zoom'),
+  zoomOut: t('common.panorama.zoomOut'),
+  zoomIn: t('common.panorama.zoomIn'),
+  moveUp: t('common.panorama.moveUp'),
+  moveDown: t('common.panorama.moveDown'),
+  moveLeft: t('common.panorama.moveLeft'),
+  moveRight: t('common.panorama.moveRight'),
+  description: t('common.panorama.description'),
+  download: t('common.panorama.download'),
+  fullscreen: t('common.panorama.fullscreen'),
+  loading: t('common.panorama.loading'),
+  menu: t('common.panorama.menu'),
+  close: t('common.panorama.close'),
+  twoFingers: t('common.panorama.twoFingers'),
+  ctrlZoom: t('common.panorama.ctrlZoom'),
+  loadError: t('common.panorama.loadError'),
+  webglError: t('common.panorama.webglError'),
+  gyroscope: t('common.panorama.gyroscope')
+}))
 
 const is360PanoramaActive = ref(false)
 // watch is360PanoramaActive
@@ -595,6 +595,7 @@ const toggleFisheye = () => {
 let isAllPreventDefault = false
 
 const { options } = useOptions()
+const { t } = useLang()
 
 const emits = defineEmits()
 
@@ -739,7 +740,7 @@ const open = async (
   firstFlag = true
   if (attachmentList.value.length <= 0) {
     toast.add({
-      title: '暂无相关内容',
+      title: t('common.album.empty'),
       icon: 'i-heroicons-x-circle',
       color: 'red'
     })
@@ -768,7 +769,7 @@ const open = async (
   lightbox.addFilter('contentErrorElement', (contentErrorElement, content) => {
     const el = document.createElement('div')
     el.className = 'pswp__error-msg'
-    el.innerHTML = `读取失败`
+    el.innerHTML = t('common.status.error')
     return el
   })
   lightbox.addFilter('itemData', (itemData, index) => {
@@ -793,7 +794,9 @@ const open = async (
         const loadFailed = attachmentList.value[index].loadFailed
         return {
           html: `<div class="previewer-img-loading-content" id="loading-content-${componentId}-${index}">${
-            loadFailed ? '图片加载失败' : '图片加载中...'
+            loadFailed
+              ? t('common.image.loadFailed')
+              : t('common.image.loading')
           }</div>`,
           shouldLoadImageItem: true,
           imageSrc: src,
@@ -827,7 +830,9 @@ const open = async (
       const maxWidth = Math.round(width * 0.6)
       const maxHeight = Math.round(height * 0.6)
       return {
-        html: `<div class="content-360panorama-body"><div class="content-360panorama-content" style="max-width:${maxWidth}px;max-height:${maxHeight}px;" id="lightbox-360panorama-${index}">加载中...</div></div>`,
+        html: `<div class="content-360panorama-body"><div class="content-360panorama-content" style="max-width:${maxWidth}px;max-height:${maxHeight}px;" id="lightbox-360panorama-${index}">${t(
+          'common.panorama.loading'
+        )}</div></div>`,
         is360Panorama: true,
         imageSrc: src
       }
@@ -897,10 +902,10 @@ const initLightbox = async () => {
     padding: { top: 65, bottom: 30, left: 0, right: 0 },
     secondaryZoomLevel: 1,
     returnFocus: false,
-    closeTitle: '关闭', // TODO strings from text properties
-    zoomTitle: '缩放',
-    arrowPrevTitle: '上一张',
-    arrowNextTitle: '下一张'
+    closeTitle: t('common.panorama.close'),
+    zoomTitle: t('common.panorama.zoom'),
+    arrowPrevTitle: t('common.actions.previous'),
+    arrowNextTitle: t('common.actions.next')
   })
   lightbox.init()
   // window.lightbox = lightbox
@@ -1022,7 +1027,7 @@ const initLightbox = async () => {
             navbar: false,
             defaultZoomLvl: 10,
             maxFov: 100,
-            lang: panoramaLang,
+            lang: panoramaLang.value,
             moveSpeed: 1.5,
             // 设置鱼眼默认为0
             fisheye: 0,
@@ -1128,7 +1133,7 @@ const initLightbox = async () => {
     // 注册VR按钮
     lightbox.pswp.ui.registerElement({
       name: `photo-swipe-vr-button-${componentId}`,
-      title: 'VR模式',
+      title: t('common.panorama.vrMode'),
       order: 9,
       isButton: true,
       onInit: function (el, pswp) {
@@ -1140,7 +1145,7 @@ const initLightbox = async () => {
     // 注册陀螺仪按钮
     lightbox.pswp.ui.registerElement({
       name: `photo-swipe-gyroscope-button-${componentId}`,
-      title: '动态体感视角',
+      title: t('common.panorama.gyroscope'),
       order: 9,
       isButton: true,
       onInit: function (el, pswp) {
@@ -1152,7 +1157,7 @@ const initLightbox = async () => {
     // 注册360度全景截图按钮
     lightbox.pswp.ui.registerElement({
       name: `photo-swipe-screenshot-button-${componentId}`,
-      title: '截图',
+      title: t('common.panorama.screenshot'),
       order: 9,
       isButton: true,
       onInit: function (el, pswp) {
@@ -1165,7 +1170,7 @@ const initLightbox = async () => {
     // 注册360度全景鱼眼切换按钮
     lightbox.pswp.ui.registerElement({
       name: `photo-swipe-fisheye-button-${componentId}`,
-      title: '切换镜头模式',
+      title: t('common.panorama.switchLens'),
       order: 9,
       isButton: true,
       onInit: function (el, pswp) {
@@ -1178,7 +1183,7 @@ const initLightbox = async () => {
     // 注册描述开关按钮
     lightbox.pswp.ui.registerElement({
       name: `photo-swipe-caption-button-${componentId}`,
-      title: '描述开关',
+      title: t('common.panorama.descriptionToggle'),
       order: 9,
       isButton: true,
       onInit: function (el, pswp) {

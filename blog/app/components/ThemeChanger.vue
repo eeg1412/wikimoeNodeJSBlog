@@ -3,6 +3,8 @@
   <div
     ref="triggerRef"
     class="themeBtn common-right-tool-btn opacity-70 text-white common-focus-visible-btn-outline"
+    :aria-label="t('common.theme.title')"
+    :title="t('common.theme.title')"
     @click="switchFilterMenu"
     @keydown.enter="switchFilterMenu"
     tabindex="0"
@@ -23,7 +25,7 @@
         <div
           class="flex justify-between items-center bg-white dark:bg-gray-900 border-b border-solid border-gray-200 dark:border-gray-700 text-base px-4 py-3"
         >
-          <div>主题模式</div>
+          <div>{{ t('common.theme.title') }}</div>
           <button
             class="text-gray-500 hover:text-gray-700 common-focus-visible-btn-outline"
             @click="switchFilterMenu"
@@ -41,7 +43,7 @@
                 @keydown.enter="setColorMode('system')"
                 :tabindex="colorMode.preference === 'system' ? '-1' : '0'"
               >
-                跟随系统
+                {{ t('common.theme.system') }}
               </div>
             </li>
             <li>
@@ -54,7 +56,7 @@
                 @keydown.enter="setColorMode('light')"
                 :tabindex="colorMode.preference === 'light' ? '-1' : '0'"
               >
-                浅色模式
+                {{ t('common.theme.light') }}
               </div>
             </li>
             <li>
@@ -65,7 +67,7 @@
                 @keydown.enter="setColorMode('dark')"
                 :tabindex="colorMode.preference === 'dark' ? '-1' : '0'"
               >
-                深色模式
+                {{ t('common.theme.dark') }}
               </div>
             </li>
           </ul>
@@ -78,6 +80,7 @@
 <script setup>
 // 使用Nuxt 3的colorMode组合式API
 const colorMode = useColorMode()
+const { t } = useLang()
 const showFilterMenu = ref(false)
 const menuRef = ref(null)
 const triggerRef = ref(null)

@@ -3,7 +3,7 @@
     v-if="movie"
     :item="movie"
     :badge="{
-      name: '电影',
+      name: t('common.media.movie'),
       color: '#fb923c'
     }"
     type="movie"
@@ -24,6 +24,8 @@
   </LazyACGNItem>
 </template>
 <script setup>
+const { t } = useLang()
+
 const props = defineProps({
   movie: {
     type: Object,
@@ -40,7 +42,11 @@ const props = defineProps({
 })
 const watDate = computed(() => {
   if (props.movie.year && props.movie.month && props.movie.day) {
-    return `${props.movie.year}年${props.movie.month}月${props.movie.day}日观看`
+    return t('common.acgn.watchedOn', {
+      year: props.movie.year,
+      month: props.movie.month,
+      day: props.movie.day
+    })
   }
   return ''
 })

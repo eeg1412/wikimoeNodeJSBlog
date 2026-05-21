@@ -1,7 +1,10 @@
 <template>
   <div>
     <div class="page-olmap-body">
-      <DivLoading :loading="mappointLoading || !mapIsReady" text="加载中..." />
+      <DivLoading
+        :loading="mappointLoading || !mapIsReady"
+        :text="t('common.status.loading') + '...'"
+      />
       <div class="page-olmap-container">
         <OlMap
           :markers="mappointList"
@@ -13,7 +16,9 @@
           class="page-olmap-empty text-primary-500"
           v-show="mappointList.length === 0"
         >
-          <div v-show="!mappointLoading">暂无地点标记</div>
+          <div v-show="!mappointLoading">
+            {{ t('common.map.emptyMarkers') }}
+          </div>
         </div>
       </div>
     </div>
@@ -57,7 +62,7 @@
                     v-else-if="!postListLoading"
                     class="text-center text-gray-500 py-4"
                   >
-                    暂无相关文章
+                    {{ t('common.map.relatedPostEmpty') }}
                   </div>
                 </div>
 
@@ -109,7 +114,9 @@
           </div>
         </div>
         <div v-else>
-          <div class="tc text-gray-500 py-5">数据加载中...</div>
+          <div class="tc text-gray-500 py-5">
+            {{ t('common.map.dataLoading') }}
+          </div>
         </div>
       </template>
     </CommonDialog>
@@ -123,6 +130,7 @@ import {
   getMappointPostListApiFetch
 } from '@/api/mappoint'
 
+const { t } = useLang()
 const router = useRouter()
 const route = useRoute()
 const onlyRouteChange = ref(false)
@@ -203,7 +211,7 @@ const getMappointDetail = async () => {
           const message = item.message
           toast.add({
             color: 'red',
-            title: '错误',
+            title: t('common.status.error'),
             description: message
           })
         })
@@ -259,7 +267,7 @@ const getPostList = async (page = null) => {
         const message = item.message
         toast.add({
           color: 'red',
-          title: '错误',
+          title: t('common.status.error'),
           description: message
         })
       })

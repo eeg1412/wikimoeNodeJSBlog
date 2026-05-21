@@ -14,13 +14,15 @@
               <div class="pt-3 pl-3 pr-3">
                 <!-- 关键词输入 -->
                 <div class="mb-3">
-                  <div class="text-sm font-medium mb-1">关键词</div>
+                  <div class="text-sm font-medium mb-1">
+                    {{ t('common.pageMedia.keywordLabel') }}
+                  </div>
                   <WUIInput
                     v-model.trim="filterCache.keyword"
                     @keyup.enter="applyFilters(close)"
                     size="sm"
                     maxlength="20"
-                    placeholder="请输入关键词"
+                    :placeholder="t('common.pageMedia.keywordPlaceholder')"
                   >
                     <template #trailing>
                       <WUIButton
@@ -37,21 +39,18 @@
 
                 <!-- 观看年份 -->
                 <div class="mb-3">
-                  <div class="text-sm font-medium mb-1">观看年份</div>
+                  <div class="text-sm font-medium mb-1">
+                    {{ t('common.pageMedia.watchYearLabel') }}
+                  </div>
                   <div class="flex flex-wrap">
                     <div class="mr-1 mb-1">
                       <WUIButton
-                        label="全部年份"
+                        :label="t('common.pageMedia.allYears')"
                         size="2xs"
                         :variant="
                           filterCache.year === undefined ? 'solid' : 'ghost'
                         "
-                        @click="
-                          selectYear(
-                            { name: '全部平台', _id: undefined },
-                            close
-                          )
-                        "
+                        @click="selectYear({ year: undefined }, close)"
                       />
                     </div>
                     <div
@@ -78,7 +77,7 @@
               >
                 <!-- 取消 -->
                 <WUIButton
-                  label="取消"
+                  :label="t('common.pageMedia.cancel')"
                   size="sm"
                   variant="ghost"
                   class="mr-2"
@@ -86,7 +85,7 @@
                 />
                 <!-- 筛选 -->
                 <WUIButton
-                  label="筛选"
+                  :label="t('common.pageMedia.apply')"
                   size="sm"
                   variant="solid"
                   color="primary"
@@ -144,10 +143,7 @@
       <DivLoading :loading="movieLoading" />
     </div>
     <div class="p-2 flex justify-between items-center" v-if="total > 0">
-      <div>
-        共<span class="text-primary pl-1 pr-1">{{ total }}</span
-        >部电影
-      </div>
+      <div>{{ t('common.pageMedia.totalMovies', { count: total }) }}</div>
       <div v-show="hasPrev || hasNext">
         <WUIButton
           icon="i-heroicons-chevron-left"
@@ -178,6 +174,7 @@ import {
   getMovieListApiFetch,
   getMovieYearListApi
 } from '@/api/movie'
+const { t } = useLang()
 const route = useRoute()
 const router = useRouter()
 const onlyRouteChange = ref(false)
@@ -220,20 +217,20 @@ const params = computed(() => {
   return newParams
 })
 
-const sortTypeMap = {
-  watchTime: '按观看时间排序',
-  rating: '按评分排序'
-}
-const sortTypeList = [
+const sortTypeMap = computed(() => ({
+  watchTime: t('common.pageMedia.watchTimeSort'),
+  rating: t('common.pageMedia.ratingSort')
+}))
+const sortTypeList = computed(() => [
   {
-    label: '按观看时间排序',
+    label: t('common.pageMedia.watchTimeSort'),
     value: 'watchTime'
   },
   {
-    label: '按评分排序',
+    label: t('common.pageMedia.ratingSort'),
     value: 'rating'
   }
-]
+])
 const selectType = (type, close) => {
   if (movieLoading.value) return
   setRouterQuery({
@@ -271,7 +268,7 @@ const initParams = () => {
     checkedParams.year = queryYear
   }
   // sortType必须是sortTypeList里的
-  if (sortTypeList.find(item => item.value === querySortType)) {
+  if (sortTypeList.value.find(item => item.value === querySortType)) {
     checkedParams.sortType = querySortType
   }
 
@@ -352,9 +349,11 @@ const filterCount = computed(() => {
 })
 const filterText = computed(() => {
   if (filterCount.value > 0) {
-    return `已应用${filterCount.value}项筛选`
+    return t('common.pageMedia.appliedFilters', {
+      count: filterCount.value
+    })
   }
-  return '所有内容'
+  return t('common.pageMedia.allContent')
 })
 // watch filterOpen
 watch(filterOpen, val => {
@@ -376,7 +375,7 @@ const applyFilters = async close => {
 }
 
 const yearText = year => {
-  return `${year.year}年(${year.count})`
+  return `${t('common.pageBangumi.yearValue', { year: year.year })} (${year.count})`
 }
 
 // 监听路由变化

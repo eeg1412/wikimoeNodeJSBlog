@@ -4,15 +4,15 @@
       v-if="rating"
       class="text-sm text-primary text-center rounded flex items-center justify-center rating-item"
     >
-      <span>{{ rating }}分</span><span class="rating-bar"></span
-      ><span>{{ ratingToText(rating) }}</span>
+      <span>{{ t('common.rating.points', { score: rating }) }}</span
+      ><span class="rating-bar"></span><span>{{ ratingText(rating) }}</span>
     </div>
     <div
       v-else
       class="text-sm text-gray-300 dark:text-gray-500 text-center rounded flex items-center justify-center rating-item rating-item-no-rating"
     >
       <div class="rating-item-no-rating-inner flex items-center justify-center">
-        暂无评分
+        {{ t('common.rating.level.none') }}
       </div>
     </div>
     <div class="rating-p-bar" v-if="rating && rating > 0">
@@ -23,6 +23,9 @@
   </div>
 </template>
 <script setup>
+const { t } = useLang()
+const { ratingText } = useLocalizedText()
+
 const props = defineProps({
   rating: {
     type: Number,

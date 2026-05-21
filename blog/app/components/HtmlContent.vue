@@ -20,7 +20,7 @@
         <WUIIcon
           class="img-loading-icon animate-spin text-primary-500"
           name="i-heroicons-arrow-path"
-        /><span class="pl-2">加载中...</span>
+        /><span class="pl-2">{{ t('common.status.loading') }}...</span>
       </div>
     </div>
   </div>
@@ -31,6 +31,8 @@ import { getEventDetailApiFetch } from '@/api/event'
 import 'highlight.js/styles/base16/dracula.css'
 
 const { pswpIsOpen } = usePswpIsOpen()
+const { t } = useLang()
+const { copyText } = useLocalizedText()
 const toast = useWToast()
 // props
 const props = defineProps({
@@ -348,20 +350,7 @@ const initHljs = async () => {
 
     // 事件监听函数
     const copyHandler = async () => {
-      try {
-        await navigator.clipboard.writeText(codeBlock.textContent)
-        toast.add({
-          title: '复制成功',
-          icon: 'i-heroicons-check-circle',
-          color: 'green'
-        })
-      } catch (error) {
-        toast.add({
-          title: '复制失败',
-          icon: 'i-heroicons-x-circle',
-          color: 'red'
-        })
-      }
+      await copyText(codeBlock.textContent, toast)
     }
     copyBtn.addEventListener('click', copyHandler)
     // 记录监听器和元素

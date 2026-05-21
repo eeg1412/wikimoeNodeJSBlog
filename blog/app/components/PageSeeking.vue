@@ -1,28 +1,34 @@
 <template>
   <div class="container dark:opacity-80">
-    <div class="title bg-primary text-white dark:text-black">程序员求签</div>
-    <div class="info">
-      <strong>求</strong>婚丧嫁娶亲友疾病编程测试升职跳槽陨石核弹各类吉凶
+    <div class="title bg-primary text-white dark:text-black">
+      {{ t('seeking.title') }}
     </div>
-    <div class="date"></div>
+    <div class="info">
+      <strong>{{ t('seeking.summaryPrefix') }}</strong
+      >{{ t('seeking.summary') }}
+    </div>
+    <div class="date">{{ titleDate }}</div>
     <div class="check_luck">
       <ul>
-        <li>编码测试修复提交之前求一签，可避凶趋吉</li>
-        <li>选择所求之事并在心中默念，再单击“求”即可</li>
-        <li>同一件事只能求一次，下次再求请刷新页面</li>
+        <li
+          v-for="(instruction, index) in seekingText.instructions"
+          :key="index"
+        >
+          {{ instruction }}
+        </li>
       </ul>
       <table class="event_table selecttable">
         <tbody>
           <tr>
             <td
               class="common-focus-visible-btn-outline"
-              v-for="(item, index) in items"
+              v-for="item in itemList"
               :key="index"
               :class="item.class"
               :data-event="item.event"
-              @click="eventClik(item)"
+              @click="eventClick(item)"
               tabindex="0"
-              @keydown.enter="eventClik(item)"
+              @keydown.enter="eventClick(item)"
             >
               {{ item.text }}
             </td>
@@ -31,7 +37,9 @@
       </table>
     </div>
     <div class="roll">
-      <div class="card" style="top: -1px; font-size: 20pt">请点击所求之事</div>
+      <div class="card" style="top: -1px; font-size: 20pt">
+        {{ t('seeking.initialCard') }}
+      </div>
       <transition name="slide">
         <div
           class="card clickable common-focus-visible-btn-outline"
@@ -40,132 +48,113 @@
           tabindex="0"
           @keydown.enter="startSeeking"
         >
-          <div class="title">求</div>
+          <div class="title">{{ t('seeking.actionText') }}</div>
         </div>
       </transition>
       <!-- cardList -->
       <TransitionGroup name="slide">
         <div
           class="card"
-          v-for="(item, index) in cardList"
-          :key="index + '_' + item.title"
+          v-for="(resultIndex, index) in cardResultIndexList"
+          :key="`${index}_${resultIndex}`"
         >
-          <div class="title dark:bg-gray-700/80">{{ item.title }}</div>
-          <div class="desc">{{ item.desc }}</div>
+          <div class="title dark:bg-gray-700/80">
+            {{ resultList[resultIndex]?.title }}
+          </div>
+          <div class="desc">{{ resultList[resultIndex]?.desc }}</div>
         </div>
       </TransitionGroup>
     </div>
   </div>
 </template>
 <script setup>
-//
+import { getLanguageTextMap } from '@/lang'
+
 /*
  * 注意：本程序中的“随机”都是伪随机概念。
  * 第一个种子相对固定，第二个种子相对有更多变化
  */
 function random(seed1, seed2) {
-  var n = seed1 % 11117
-  for (var i = 0; i < 100 + seed2; i++) {
+  let n = seed1 % 11117
+  for (let i = 0; i < 100 + seed2; i++) {
     n = n * n
     n = n % 11117 // 11117 是个质数
   }
   return n
 }
 
-const items = ref([
-  { class: '', event: '100', text: '编码' },
-  { class: '', event: '200', text: '测试' },
-  { class: '', event: '300', text: '修复BUG' },
-  { class: '', event: '400', text: '提交代码' },
-  { class: '', event: '500', text: '其他' }
-])
+const { languageCode, t } = useLang()
 
-// 从数组中随机挑选 size 个
-function pickRandom(array, size) {
-  var result = []
+const seekingText = computed(
+  () => getLanguageTextMap(languageCode.value).seeking
+)
 
-  for (var i = 0; i < array.length; i++) {
-    result.push(array[i])
-  }
+const itemDefinitions = [
+  { event: 100, key: 'coding' },
+  { event: 200, key: 'testing' },
+  { event: 300, key: 'fixingBug' },
+  { event: 400, key: 'commitCode' },
+  { event: 500, key: 'other' }
+]
 
-  for (var j = 0; j < array.length - size; j++) {
-    var index = random(iday, j) % result.length
-    result.splice(index, 1)
-  }
+const selectedEvent = ref(null)
+const itemList = computed(() => {
+  const itemLabels = seekingText.value?.itemLabels || {}
 
-  return result
-}
+  return itemDefinitions.map(item => ({
+    ...item,
+    class: selectedEvent.value === item.event ? 'selected' : '',
+    text: itemLabels[item.key] || ''
+  }))
+})
 
-var weeks = ['日', '一', '二', '三', '四', '五', '六']
 function getTodayString() {
-  return (
-    '今天是' +
-    today.getFullYear() +
-    '年' +
-    (today.getMonth() + 1) +
-    '月' +
-    today.getDate() +
-    '日 星期' +
-    weeks[today.getDay()]
-  )
+  return t('seeking.todayText', {
+    year: today.getFullYear(),
+    month: today.getMonth() + 1,
+    day: today.getDate(),
+    week: seekingText.value?.weeks?.[today.getDay()] || ''
+  })
 }
 
-var today = new Date()
-var timeseed = today.getMilliseconds()
+const today = new Date()
+const timeseed = today.getMilliseconds()
 
 /////////////////////////////////////////////////////////
 
-var results = [
-  '超大吉',
-  '大吉',
-  '吉',
-  '小吉',
-  ' ',
-  '小凶',
-  '凶',
-  '大凶',
-  '超大凶'
-]
-var descriptions = ['', '', '', '', '', '', '', '', '']
-var luck_rate = [10, 100, 500, 800, 300, 800, 500, 100, 10] // 吉凶概率分布，总数为 3120
+const resultList = computed(() => seekingText.value?.results || [])
+const luckRate = [10, 100, 500, 800, 300, 800, 500, 100, 10] // 吉凶概率分布，总数为 3120
 
 function pickRandomWithRate(seed1, seed2) {
-  var result = random(seed1, seed2) % 3120
-  var addup = 0
+  const result = random(seed1, seed2) % 3120
+  let addup = 0
 
-  for (var i = 0; i < luck_rate.length; i++) {
-    addup += luck_rate[i]
+  for (let i = 0; i < luckRate.length; i++) {
+    addup += luckRate[i]
     if (result <= addup) {
-      return { title: results[i], desc: descriptions[i] }
+      return i
     }
   }
-  return { title: ' ', desc: '' }
+  return 4
 }
 
 /////////////////////////////////////////////////////////
-var selectedEvent = null
 
 const showQiu = ref(false)
-const eventClik = item => {
+const eventClick = item => {
   clearTimeout(slideTimer)
-  // items
-  items.value.forEach(element => {
-    element.class = ''
-  })
-  item.class = 'selected'
-  selectedEvent = item.event
+  selectedEvent.value = item.event
   showQiu.value = true
-  cardList.value = []
+  cardResultIndexList.value = []
 }
 
-function getNextCardText() {
-  return pickRandomWithRate(timeseed + selectedEvent, slidecount)
+function getNextResultIndex() {
+  return pickRandomWithRate(timeseed + selectedEvent.value, slidecount)
 }
 
-var tail,
-  slidecount = 0
+let slidecount = 0
 
-const cardList = ref([])
+const cardResultIndexList = ref([])
 
 const startSeeking = () => {
   slidecount = 0
@@ -174,36 +163,43 @@ const startSeeking = () => {
 }
 
 let slideTimer = null
+const getSlideDuration = () => {
+  if (slidecount > 33) {
+    return 1500
+  }
+
+  if (slidecount > 32) {
+    return 800
+  }
+
+  if (slidecount > 25) {
+    return 400
+  }
+
+  if (slidecount > 20) {
+    return 200
+  }
+
+  if (slidecount > 15) {
+    return 150
+  }
+
+  return 100
+}
+
 function slide() {
   if (slidecount > 35) {
     return
   }
 
-  var duration =
-    slidecount > 33
-      ? 1500
-      : slidecount > 32
-        ? 800
-        : slidecount > 25
-          ? 400
-          : slidecount > 20
-            ? 200
-            : slidecount > 15
-              ? 150
-              : 100
-
-  var cardInfo = getNextCardText()
-  cardList.value.push(cardInfo)
+  const resultIndex = getNextResultIndex()
+  cardResultIndexList.value.push(resultIndex)
   slidecount++
-  slideTimer = setTimeout(slide, duration)
+  slideTimer = setTimeout(slide, getSlideDuration())
 }
 
-const titleDate = ref('')
-onMounted(() => {
-  titleDate.value = getTodayString()
-  // initEventTable()
-  // initClickEvent()
-})
+const titleDate = computed(() => getTodayString())
+
 onUnmounted(() => {
   clearTimeout(slideTimer)
 })

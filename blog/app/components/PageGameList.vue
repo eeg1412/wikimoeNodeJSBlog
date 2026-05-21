@@ -14,13 +14,15 @@
               <div class="pt-3 pl-3 pr-3">
                 <!-- 关键词输入 -->
                 <div class="mb-3">
-                  <div class="text-sm font-medium mb-1">关键词</div>
+                  <div class="text-sm font-medium mb-1">
+                    {{ t('common.pageMedia.keywordLabel') }}
+                  </div>
                   <WUIInput
                     v-model.trim="filterCache.keyword"
                     @keyup.enter="applyFilters(close)"
                     size="sm"
                     maxlength="20"
-                    placeholder="请输入关键词"
+                    :placeholder="t('common.pageMedia.keywordPlaceholder')"
                   >
                     <template #trailing>
                       <WUIButton
@@ -37,11 +39,13 @@
 
                 <!-- 类型选择器 -->
                 <div class="mb-2">
-                  <div class="text-sm font-medium mb-1">平台</div>
+                  <div class="text-sm font-medium mb-1">
+                    {{ t('common.pageMedia.platformLabel') }}
+                  </div>
                   <div class="flex flex-wrap">
                     <div class="mr-1 mb-1">
                       <WUIButton
-                        label="全部平台"
+                        :label="t('common.pageMedia.allPlatforms')"
                         size="2xs"
                         :variant="
                           filterCache.gamePlatformId === undefined
@@ -50,7 +54,10 @@
                         "
                         @click="
                           selectPlatform(
-                            { name: '全部平台', _id: undefined },
+                            {
+                              name: t('common.pageMedia.allPlatforms'),
+                              _id: undefined
+                            },
                             close
                           )
                         "
@@ -77,7 +84,9 @@
 
                 <!-- 状态选择器 -->
                 <div class="mb-2">
-                  <div class="text-sm font-medium mb-1">状态</div>
+                  <div class="text-sm font-medium mb-1">
+                    {{ t('common.pageMedia.statusLabel') }}
+                  </div>
                   <div class="flex flex-wrap">
                     <div
                       v-for="status in statusList"
@@ -105,7 +114,7 @@
               >
                 <!-- 取消 -->
                 <WUIButton
-                  label="取消"
+                  :label="t('common.pageMedia.cancel')"
                   size="sm"
                   variant="ghost"
                   class="mr-2"
@@ -113,7 +122,7 @@
                 />
                 <!-- 筛选 -->
                 <WUIButton
-                  label="筛选"
+                  :label="t('common.pageMedia.apply')"
                   size="sm"
                   variant="solid"
                   color="primary"
@@ -171,10 +180,7 @@
       <DivLoading :loading="gameLoading" />
     </div>
     <div class="p-2 flex justify-between items-center" v-if="total > 0">
-      <div>
-        共<span class="text-primary pl-1 pr-1">{{ total }}</span
-        >部游戏
-      </div>
+      <div>{{ t('common.pageMedia.totalWorks', { count: total }) }}</div>
       <div v-show="hasPrev || hasNext">
         <WUIButton
           icon="i-heroicons-chevron-left"
@@ -205,6 +211,7 @@ import {
   getGameListApiFetch,
   getGamePlatformListApi
 } from '@/api/game'
+const { t } = useLang()
 const route = useRoute()
 const router = useRouter()
 const onlyRouteChange = ref(false)
@@ -220,7 +227,7 @@ const setRouterQuery = query => {
 // 平台
 const gamePlatformList = ref([])
 const selectPlatformData = ref({
-  name: '全部平台',
+  name: t('common.pageMedia.allPlatforms'),
   _id: undefined
 })
 await getGamePlatformListApi().then(res => {
@@ -258,43 +265,43 @@ const params = computed(() => {
   return newParams
 })
 
-const statusList = [
+const statusList = computed(() => [
   {
-    label: '全部',
+    label: t('common.pageBangumi.allStatus'),
     value: undefined
   },
   {
-    label: '尚未攻略',
+    label: t('common.pageMedia.gameUnplayed'),
     value: 1
   },
   {
-    label: '攻略中',
+    label: t('common.pageMedia.gamePlaying'),
     value: 2
   },
   {
-    label: '已通关',
+    label: t('common.pageMedia.gameFinished'),
     value: 3
   },
   {
-    label: '弃坑',
+    label: t('common.pageBangumi.droppedStatus'),
     value: 99
   }
-]
+])
 
-const sortTypeMap = {
-  startTime: '按开始时间排序',
-  rating: '按评分排序'
-}
-const sortTypeList = [
+const sortTypeMap = computed(() => ({
+  startTime: t('common.pageMedia.startTimeSort'),
+  rating: t('common.pageMedia.ratingSort')
+}))
+const sortTypeList = computed(() => [
   {
-    label: '按开始时间排序',
+    label: t('common.pageMedia.startTimeSort'),
     value: 'startTime'
   },
   {
-    label: '按评分排序',
+    label: t('common.pageMedia.ratingSort'),
     value: 'rating'
   }
-]
+])
 const selectType = (type, close) => {
   if (gameLoading.value) return
   setRouterQuery({
@@ -322,7 +329,7 @@ const initParams = () => {
     checkedParams.page = Number(queryPage)
   }
   // sortType必须是sortTypeList里的
-  if (sortTypeList.find(item => item.value === querySortType)) {
+  if (sortTypeList.value.find(item => item.value === querySortType)) {
     checkedParams.sortType = querySortType
   }
   // gamePlatformId必须是isObjectId
@@ -337,7 +344,10 @@ const initParams = () => {
     }
   }
 
-  if (queryStatus && statusList.some(item => item.value === queryStatus)) {
+  if (
+    queryStatus &&
+    statusList.value.some(item => item.value === queryStatus)
+  ) {
     checkedParams.status = queryStatus
   }
 
@@ -427,9 +437,11 @@ const filterCount = computed(() => {
 })
 const filterText = computed(() => {
   if (filterCount.value > 0) {
-    return `已应用${filterCount.value}项筛选`
+    return t('common.pageMedia.appliedFilters', {
+      count: filterCount.value
+    })
   }
-  return '所有内容'
+  return t('common.pageMedia.allContent')
 })
 // watch filterOpen
 watch(filterOpen, val => {

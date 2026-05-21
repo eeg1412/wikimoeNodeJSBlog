@@ -35,9 +35,11 @@
       <div
         class="trend-right-hot-body px-1 flex flex-col items-center justify-center text-sm bg-white dark:bg-gray-800/40"
       >
-        <div class="text-gray-800 text-xs dark:text-gray-200">热度</div>
+        <div class="text-gray-800 text-xs dark:text-gray-200">
+          {{ t('common.trend.heat') }}
+        </div>
         <div class="text-primary-600 text-base font-semibold">
-          {{ formatNumber(item.hot) }}
+          {{ formatNumberText(item.hot) }}
         </div>
       </div>
     </nuxt-link>
@@ -50,7 +52,7 @@
       <!-- <div class="text-2xl mb-2">
         <WUIIcon name="i-heroicons-cube-transparent" class="align-middle mr-1" />
       </div> -->
-      <div>暂无内容</div>
+      <div>{{ t('common.status.empty') }}</div>
     </div>
   </div>
 </template>
@@ -58,6 +60,8 @@
 import { getTrendPostListApi } from '@/api/trend'
 
 const { options } = useOptions()
+const { languageCode, t } = useLang()
+const { formatNumberText } = useLocalizedText()
 
 const { data: trendPostListData } = await getTrendPostListApi()
 const trendPostList = ref(trendPostListData.value.list)
@@ -84,13 +88,13 @@ const getLinkObj = item => {
     case 'blog':
       linkObj = {
         name: 'postDetail',
-        params: { id: detail.alias || detail._id }
+        params: { code: languageCode.value, id: detail.alias || detail._id }
       }
       break
     case 'page':
       linkObj = {
         name: 'pageDetail',
-        params: { id: detail.alias || detail._id }
+        params: { code: languageCode.value, id: detail.alias || detail._id }
       }
 
       break
@@ -115,7 +119,7 @@ const getTrendTitle = item => {
       break
   }
   if (!title) {
-    title = '暂无标题或内容'
+    title = t('common.post.noTitleOrContent')
   }
   return title
 }
@@ -125,15 +129,15 @@ const getTrendCategory = item => {
   switch (target) {
     // tweet
     case 'tweet':
-      category = '推文'
+      category = t('common.post.tweet')
       break
     // blog
     case 'blog':
-      category = '博文'
+      category = t('common.post.blog')
       break
     // page
     case 'page':
-      category = '页面'
+      category = t('common.post.page')
       break
 
     default:

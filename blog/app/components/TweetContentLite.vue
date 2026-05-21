@@ -13,14 +13,18 @@
       <div
         class="line-clamp-3 text-gray-800 dark:text-gray-200 font-semibold text-sm break-words tweet-content-lite-item-title"
       >
-        {{ item.excerpt || '推文' }}
+        {{ item.excerpt || t('common.post.tweetTitle') }}
       </div>
       <!-- 时间 -->
       <div
         class="text-xs text-gray-600 dark:text-gray-300 mt-1"
         v-if="item.date"
       >
-        发表于：{{ formatDate(item.date, 'yyyy-MM-dd hh:mm') }}
+        {{
+          t('common.post.publishedAt', {
+            date: formatDate(item.date, 'yyyy-MM-dd hh:mm')
+          })
+        }}
       </div>
     </div>
   </div>
@@ -35,6 +39,7 @@ const props = defineProps({
 })
 
 const { options } = useOptions()
+const { t } = useLang()
 
 const coverImages = computed(() => {
   const coverImages = props.item?.coverImages || []

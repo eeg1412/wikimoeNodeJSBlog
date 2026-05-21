@@ -33,7 +33,7 @@
         <!-- 介绍 -->
         <div class="mt-1">
           <div class="text-gray-500">
-            {{ author.description || '暂无介绍' }}
+            {{ author.description || t('common.pageAbout.noDescription') }}
           </div>
         </div>
       </div>
@@ -41,6 +41,8 @@
   </div>
 </template>
 <script setup>
+const { t } = useLang()
+
 const props = defineProps({
   author: {
     type: Object,

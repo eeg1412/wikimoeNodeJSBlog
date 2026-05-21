@@ -5,7 +5,7 @@
       size="xs"
       icon="i-heroicons-face-smile"
       @click="emojiBtnClick"
-      >表情</WUIButton
+      >{{ t('common.emoji.button') }}</WUIButton
     >
     <template #panel="{ close }">
       <div class="p-2 w-[470px] flex max-w-[90vw]">
@@ -37,7 +37,7 @@
             v-else
             class="flex justify-center items-center h-full text-gray-400"
           >
-            暂无表情
+            {{ t('common.emoji.empty') }}
           </div>
         </div>
       </div>
@@ -45,6 +45,7 @@
   </WUIPopover>
 </template>
 <script setup>
+const { t } = useLang()
 const emits = defineEmits()
 const emoji = getEmoji()
 // 常用emoji
@@ -52,7 +53,7 @@ const usedEmoji = ref([])
 const emojiCom = computed(() => {
   let emojiAll = []
   const base = {
-    groupName: '常用',
+    groupName: t('common.emoji.frequent'),
     emojis: []
   }
   if (usedEmoji.value.length > 0) {

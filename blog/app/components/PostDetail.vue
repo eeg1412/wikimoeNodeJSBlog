@@ -8,29 +8,32 @@
       <div class="post-author-avatar-body">
         <img
           class="post-author-avatar"
-          :src="postData.data.author.photo"
-          :alt="postData.data.author.nickname"
+          :src="postAuthor.photo"
+          :alt="postAuthor.nickname"
           width="50"
           height="50"
         />
       </div>
       <div class="post-right-info">
         <h2 class="post-title mb-1" v-if="postData.data.type === 1">
-          {{ postData.data.title || '暂无标题' }}
+          {{ postData.data.title || t('common.post.noTitle') }}
         </h2>
         <h2 class="post-title mb-1" v-else-if="postData.data.type === 2">
-          推文
+          {{ t('common.post.tweetTitle') }}
         </h2>
         <p class="post-extra cGray94">
-          作者：{{ postData.data.author.nickname
-          }}<span class="tenten"></span>时间：{{ formatDate(postData.data.date)
+          {{ t('common.post.author') }}{{ postAuthor.nickname
+          }}<span class="tenten"></span>{{ t('common.post.time')
+          }}{{ formatDate(postData.data.date)
           }}<span class="post_sort_link_span" v-if="postData.data.sort"
-            ><span class="tenten"></span><span>分类：</span>
+            ><span class="tenten"></span
+            ><span>{{ t('common.post.sort') }}</span>
             <NuxtLink
               class="common-a"
               :to="{
                 name: 'postListSort',
                 params: {
+                  code: languageCode,
                   sortid: postData.data.sort.alias || postData.data.sort._id,
                   page: 1
                 }
@@ -58,7 +61,7 @@
         </div>
       </template>
       <template v-else-if="pageTemplate === 'about'">
-        <LazyPageAbout :author="postData.data.author" />
+        <LazyPageAbout :author="postAuthor" />
       </template>
       <!-- bangumi -->
       <template v-else-if="pageTemplate === 'bangumi'">
@@ -129,7 +132,7 @@
             class="post-detail-tag-item"
             :to="{
               name: 'postListTag',
-              params: { tagid: tag._id, page: 1 }
+              params: { code: languageCode, tagid: tag._id, page: 1 }
             }"
             >#{{ tag.tagname }}</NuxtLink
           >
@@ -142,7 +145,7 @@
             class="post-detail-tag-item"
             :to="{
               name: 'postListMappoint',
-              params: { mappointid: mappoint._id, page: 1 }
+              params: { code: languageCode, mappointid: mappoint._id, page: 1 }
             }"
             ><WUIIcon
               name="i-heroicons-map-pin-solid"
@@ -185,7 +188,7 @@
         size="md"
         color="primary"
         variant="solid"
-        :label="`运行代码`"
+        :label="t('common.post.runCode')"
         :trailing="false"
         @click="runCode"
       />
@@ -216,7 +219,11 @@
             size="md"
             color="primary"
             variant="outline"
-            :label="`${formatNumber(postData.data.shares)} 分享`"
+            :label="
+              t('common.post.shares', {
+                count: formatNumberText(postData.data.shares)
+              })
+            "
             :trailing="false"
           />
         </LazySharePopover>
@@ -230,7 +237,11 @@
             size="md"
             color="primary"
             :variant="colorMode.value === 'dark' ? 'soft' : 'solid'"
-            :label="`${formatNumber(postData.data.likes)} 点赞`"
+            :label="
+              t('common.post.likes', {
+                count: formatNumberText(postData.data.likes)
+              })
+            "
             :trailing="false"
             :loading="likeListLoading || likePostIsLoading"
             v-if="postData.data.isLike"
@@ -241,7 +252,11 @@
             size="md"
             color="primary"
             variant="outline"
-            :label="`${formatNumber(postData.data.likes)} 点赞`"
+            :label="
+              t('common.post.likes', {
+                count: formatNumberText(postData.data.likes)
+              })
+            "
             :trailing="false"
             :loading="likeListLoading || likePostIsLoading"
             v-else
@@ -255,7 +270,11 @@
             color="primary"
             variant="outline"
             disabled
-            :label="`${formatNumber(postData.data.likes)} 点赞`"
+            :label="
+              t('common.post.likes', {
+                count: formatNumberText(postData.data.likes)
+              })
+            "
             :trailing="false"
           />
         </div>
@@ -329,19 +348,23 @@
     </div>
     <!-- 评论 -->
     <!-- 评论列表 commentList -->
-    <ClientOnly>
-      <div class="comment-list-body">
-        <!-- 评论form -->
-        <LazyCommentForm
-          :postid="postid"
-          :allowRemark="postData.data.allowRemark"
-          @refresh="refreshCommentList"
-        />
-        <div
-          class="relative pt-4 header-scroll-margin-top"
-          id="commentlist-container"
-        >
-          <DivLoading :loading="commentLoading" text="拼命加载中..." />
+    <div
+      class="relative pt-4 header-scroll-margin-top"
+      id="commentlist-container"
+    >
+      <ClientOnly>
+        <div class="comment-list-body">
+          <!-- 评论form -->
+          <LazyCommentForm
+            v-if="sourcePostid"
+            :postid="sourcePostid"
+            :allowRemark="postData.data.allowRemark"
+            @refresh="refreshCommentList"
+          />
+          <DivLoading
+            :loading="commentLoading"
+            :text="t('common.status.loading')"
+          />
           <!-- 评论 -->
           <div
             class="pt-3 border-t border-solid border-gray-200 dark:border-gray-700"
@@ -349,14 +372,14 @@
             v-if="commentTotal > 0"
           >
             <div class="comment-list-title flex justify-between items-center">
-              <div>评论：</div>
+              <div>{{ t('common.comment.title') }}</div>
               <div class="comment-list-sort flex justify-between items-center">
                 <WUIButton
                   size="2xs"
                   :color="commentSortType === 'date' ? 'primary' : 'gray'"
                   variant="link"
                   @click="changeCommentSort('date')"
-                  >按时间</WUIButton
+                  >{{ t('common.comment.sortByDate') }}</WUIButton
                 >
                 <!-- 中间间隔线 -->
                 <span class="comment-list-sort-line"></span>
@@ -365,7 +388,7 @@
                   :color="commentSortType === 'like' ? 'primary' : 'gray'"
                   variant="link"
                   @click="changeCommentSort('like')"
-                  >按点赞</WUIButton
+                  >{{ t('common.comment.sortByLike') }}</WUIButton
                 >
               </div>
             </div>
@@ -407,15 +430,15 @@
                           >{{ item.nickname }}</a
                         >
                         <span class="pr-1" v-else>{{ item.nickname }}</span>
-                        <WUIBadge class="mr-1" size="xs" v-if="item.isAdmin"
-                          >管理员</WUIBadge
-                        >
+                        <WUIBadge class="mr-1" size="xs" v-if="item.isAdmin">{{
+                          t('common.comment.admin')
+                        }}</WUIBadge>
                         <WUIBadge
                           size="xs"
                           color="primary"
                           variant="outline"
                           v-if="item.status === 0"
-                          >审核中</WUIBadge
+                          >{{ t('common.comment.pending') }}</WUIBadge
                         >
                       </div>
 
@@ -432,7 +455,9 @@
                       <ClientOnly
                         ><span
                           :title="formatDate(item.date, 'yyyy-MM-dd hh:mm:ss')"
-                          >{{ fromNow(item.date, 'yyyy-MM-dd hh:mm') }}</span
+                          >{{
+                            fromNowText(item.date, 'yyyy-MM-dd hh:mm')
+                          }}</span
                         ><template #fallback>{{
                           formatDate(item.date, 'yyyy-MM-dd hh:mm')
                         }}</template>
@@ -455,7 +480,7 @@
                               )
                             "
                             >{{
-                              fromNow(item.parent.date, 'yyyy-MM-dd hh:mm')
+                              fromNowText(item.parent.date, 'yyyy-MM-dd hh:mm')
                             }}</span
                           ><template #fallback>{{
                             formatDate(item.parent.date, 'yyyy-MM-dd hh:mm')
@@ -469,7 +494,7 @@
                     class="comment-list-item-parent-content"
                     v-else-if="!item.parent && item.parentId"
                   >
-                    <div>这条评论已经去异世界了...</div>
+                    <div>{{ t('common.comment.deleted') }}</div>
                   </blockquote>
                   <div class="comment-list-item-content">
                     {{ item.content }}
@@ -489,7 +514,7 @@
                         v-if="checkIsCommentLike(item._id)"
                         @click="likeComment(item._id)"
                         :loading="likeCommentIsLoading[item._id] === true"
-                        >{{ formatNumber(item.likes) }}</WUIButton
+                        >{{ formatNumberText(item.likes) }}</WUIButton
                       >
                       <WUIButton
                         size="2xs"
@@ -499,7 +524,7 @@
                         @click="likeComment(item._id)"
                         :loading="likeCommentIsLoading[item._id] === true"
                         v-else
-                        >{{ formatNumber(item.likes) }}</WUIButton
+                        >{{ formatNumberText(item.likes) }}</WUIButton
                       >
                       <template
                         v-if="
@@ -512,7 +537,7 @@
                           variant="ghost"
                           @click="openComment(item._id)"
                           v-if="item._id !== commentid"
-                          >回复</WUIButton
+                          >{{ t('common.comment.reply') }}</WUIButton
                         >
                         <WUIButton
                           size="2xs"
@@ -520,7 +545,7 @@
                           variant="ghost"
                           @click="closeComment"
                           v-else
-                          >取消</WUIButton
+                          >{{ t('common.comment.cancel') }}</WUIButton
                         >
                       </template>
                     </div>
@@ -535,8 +560,9 @@
                   <div class="mt-5" v-if="commentid === item._id">
                     <!-- 回复表单 -->
                     <LazyCommentForm
+                      v-if="sourcePostid"
                       :id="`${item._id}-reply`"
-                      :postid="postid"
+                      :postid="sourcePostid"
                       :commentid="commentid"
                       :parentNickname="item.nickname || item.user?.nickname"
                       @refresh="refreshCommentList"
@@ -593,15 +619,16 @@
               v-else-if="
                 options.siteEnableComment &&
                 postData.data.allowRemark &&
+                sourcePostid &&
                 !commentLoading
               "
             >
-              <span class="text-gray-500">期待大佬们的评论(☆ω☆)</span>
+              <span class="text-gray-500">{{ t('common.comment.empty') }}</span>
             </div>
           </div>
         </div>
-      </div>
-    </ClientOnly>
+      </ClientOnly>
+    </div>
     <ClientOnly>
       <!-- headerList -->
       <Teleport to="#rightToolBarMenu">
@@ -618,7 +645,7 @@
               <div
                 class="flex justify-between items-center bg-white dark:bg-gray-900 border-b border-solid border-gray-200 dark:border-gray-700 text-base px-4 py-3"
               >
-                <div>文章目录</div>
+                <div>{{ t('common.post.tableOfContents') }}</div>
                 <button
                   class="text-gray-500 hover:text-gray-700 common-focus-visible-btn-outline"
                   @click="switchShowHeaderListMenu"
@@ -667,6 +694,10 @@ const route = useRoute()
 const id = route.params.id
 const routeName = route.name
 const toast = useWToast()
+const { languageCode, t } = useLang()
+const { formatNumberText, fromNowText } = useLocalizedText()
+languageCode.value
+
 let type = null
 switch (routeName) {
   case 'postDetail':
@@ -687,6 +718,17 @@ const [postDataResponse] = await Promise.all([
   })
 ])
 const { data: postData } = postDataResponse
+const postAuthor = computed(() => {
+  const author = postData.value?.data?.author
+  if (author) {
+    return author
+  }
+
+  return {
+    nickname: options.value?.siteTitle || 'Wikimoe',
+    photo: '/img/avatar/1.webp'
+  }
+})
 const pageTemplate = computed(() => {
   return postData.value?.data?.template
 })
@@ -700,6 +742,7 @@ const runCode = () => {
   newWindow.document.write(runCodeContent)
 }
 const postid = postData.value.data._id
+const sourcePostid = postData.value.data.sourceId
 // comment
 const commentPage = ref(1)
 const commentData = ref({
@@ -727,9 +770,19 @@ const changeCommentSort = type => {
   getCommentList()
 }
 const getCommentList = async goToCommentListRef => {
+  if (!sourcePostid) {
+    commentData.value = {
+      list: [],
+      total: 0,
+      size: 1
+    }
+    commentLoading.value = false
+    return
+  }
+
   commentLoading.value = true
   await getCommentListApi({
-    id: postid,
+    id: sourcePostid,
     sorttype: commentSortType.value,
     page: commentPage.value
   })
@@ -872,8 +925,12 @@ const likeComment = commentId => {
 
 // viewCount
 const putViewCount = () => {
+  if (!sourcePostid) {
+    return
+  }
+
   putViewCountApi({
-    id: postid
+    id: sourcePostid
   })
 }
 
@@ -882,7 +939,14 @@ const likeListInited = ref(false)
 const likeListLoading = ref(false)
 const likeList = ref([])
 const postLikeLogList = () => {
-  const postIdList = [postid]
+  if (!sourcePostid) {
+    likeList.value = []
+    likeListInited.value = true
+    likeListLoading.value = false
+    return
+  }
+
+  const postIdList = [sourcePostid]
   likeListLoading.value = true
   postLikeLogListApi({ postIdList })
     .then(res => {
@@ -895,7 +959,7 @@ const postLikeLogList = () => {
     })
 }
 const checkIsLike = () => {
-  const likeData = likeList.value.find(item => item.post === postid)
+  const likeData = likeList.value.find(item => item.post === sourcePostid)
   if (likeData) {
     postData.value.data.isLike = likeData.like
     if (likeData.like && postData.value.data.likes === 0) {
@@ -905,7 +969,7 @@ const checkIsLike = () => {
   }
 }
 const getLikeDataByPostId = () => {
-  const likeData = likeList.value.find(item => item.post === postid)
+  const likeData = likeList.value.find(item => item.post === sourcePostid)
   if (likeData) {
     return likeData
   } else {
@@ -915,6 +979,10 @@ const getLikeDataByPostId = () => {
 
 const likePostIsLoading = ref(false)
 const likePost = () => {
+  if (!sourcePostid) {
+    return
+  }
+
   if (likePostIsLoading.value) {
     return
   }
@@ -923,10 +991,10 @@ const likePost = () => {
   const __v = getLikeDataByPostId()?.__v
   likePostIsLoading.value = true
 
-  postLikeLogApi({ id: postid, like: !like, __v })
+  postLikeLogApi({ id: sourcePostid, like: !like, __v })
     .then(res => {
       // 将对应的likeList里的postId替换为res.data
-      const index = likeList.value.findIndex(item => item.post === postid)
+      const index = likeList.value.findIndex(item => item.post === sourcePostid)
       if (index > -1) {
         likeList.value[index] = res.data
       } else {
@@ -1137,9 +1205,9 @@ const checkCommentScroll = () => {
       } else {
         console.warn('postCommentId 找不到对应的评论')
         // 提示用户
-        let title = '这条评论可能已经去了异世界...'
+        let title = t('common.comment.lost')
         if (commentTotal.value / commentSize.value > 1) {
-          title = '这条评论可能已经去了异世界或被刷到更深层次的评论页去了...'
+          title = t('common.comment.lostPaged')
         }
         toast.add({
           title: title,

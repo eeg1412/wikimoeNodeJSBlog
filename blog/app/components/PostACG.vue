@@ -4,7 +4,7 @@
       v-if="showTitle"
       class="mb-3 text-gray-600 dark:text-gray-200 font-bold text-base border-b border-dotted pb-2 border-gray-300 dark:border-gray-700"
     >
-      相关作品：
+      {{ t('common.related.work') }}
     </div>
     <div class="grid gap-2 post-acg-grid">
       <div
@@ -47,6 +47,7 @@
   </div>
 </template>
 <script setup>
+const { t } = useLang()
 const props = defineProps({
   bangumiList: {
     type: Array,

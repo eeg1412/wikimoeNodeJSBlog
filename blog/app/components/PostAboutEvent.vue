@@ -4,7 +4,7 @@
       v-if="showTitle"
       class="mb-3 text-gray-600 font-bold dark:text-gray-200 text-base border-b border-dotted pb-2 border-gray-300 dark:border-gray-700"
     >
-      相关活动：
+      {{ t('common.related.event') }}
     </div>
     <div>
       <ul>
@@ -37,6 +37,7 @@
 </template>
 <script setup>
 import { getEventDetailApiFetch } from '@/api/event'
+const { t } = useLang()
 const props = defineProps({
   eventList: {
     type: Array,

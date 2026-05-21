@@ -17,12 +17,14 @@
         <!-- 昵称 -->
         <div class="comment-latest-item-nickname-body fb">
           <span class="pr-1">{{ item.nickname }}</span
-          ><WUIBadge size="xs" v-if="item.isAdmin">管理员</WUIBadge>
+          ><WUIBadge size="xs" v-if="item.isAdmin">{{
+            t('common.comment.admin')
+          }}</WUIBadge>
         </div>
         <div class="comment-latest-item-date">
           <ClientOnly
             ><span :title="formatDate(item.date, 'yyyy-MM-dd hh:mm:ss')">{{
-              fromNow(item.date, 'yyyy-MM-dd hh:mm')
+              fromNowText(item.date, 'yyyy-MM-dd hh:mm')
             }}</span
             ><template #fallback>{{
               formatDate(item.date, 'yyyy-MM-dd hh:mm')
@@ -39,7 +41,7 @@
       class="text-center py-4 text-gray-500"
       v-if="commentLatest.length === 0"
     >
-      <div>暂无内容</div>
+      <div>{{ t('common.status.empty') }}</div>
     </div>
   </div>
 </template>
@@ -48,6 +50,8 @@ import { getCommentLatestApi } from '@/api/comment'
 
 const props = defineProps({})
 const router = useRouter()
+const { languageCode, t } = useLang()
+const { fromNowText } = useLocalizedText()
 
 const { data: commentLatest } = await getCommentLatestApi()
 
@@ -71,7 +75,7 @@ const goPostDetail = (e, item, middle) => {
   // resolveUrl
   const url = router.resolve({
     name: routeName,
-    params: { id },
+    params: { code: languageCode.value, id },
     hash: `#comment-${item._id}`
   }).href
   const newTabOpen = () => {
@@ -91,6 +95,7 @@ const goPostDetail = (e, item, middle) => {
     router.push({
       name: routeName,
       params: {
+        code: languageCode.value,
         id: id
       },
       hash: `#comment-${item._id}`

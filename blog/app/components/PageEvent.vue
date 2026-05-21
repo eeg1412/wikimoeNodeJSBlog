@@ -54,7 +54,9 @@
           class="page-event-table-empty text-primary-500"
           v-show="eventList.length === 0"
         >
-          <div v-show="!eventLoading">该月无事发生</div>
+          <div v-show="!eventLoading">
+            {{ t('common.pageEvent.emptyMonth') }}
+          </div>
         </div>
       </div>
     </div>
@@ -120,7 +122,9 @@
           </div>
         </div>
         <div v-else>
-          <div class="tc text-gray-500 py-5">当日无事发生</div>
+          <div class="tc text-gray-500 py-5">
+            {{ t('common.pageEvent.emptyDay') }}
+          </div>
         </div>
       </template>
     </CommonDialog>
@@ -130,6 +134,7 @@
 import { getEventListApiFetch, getEventDetailApiFetch } from '@/api/event'
 import moment from 'moment'
 
+const { t } = useLang()
 const router = useRouter()
 const route = useRoute()
 const onlyRouteChange = ref(false)
@@ -194,9 +199,15 @@ const endTime = computed(() => {
 })
 // 月
 const monthYear = computed(() => {
+  if (!startTime.value) {
+    return ''
+  }
+
   const start = new Date(startTime.value)
-  // const end = new Date(endTime.value)
-  return `${start.getFullYear()}年${start.getMonth() + 1}月`
+  return t('common.calendar.yearMonth', {
+    year: start.getFullYear(),
+    month: start.getMonth() + 1
+  })
 })
 const eventLoading = ref(false)
 const getList = async () => {
@@ -384,7 +395,9 @@ const dayEventList = ref([])
 const dayEventTitle = computed(() => {
   if (route.query.daydetail) {
     const date = moment(route.query.daydetail, 'YYYY-MM-DD')
-    return `${date.format('YYYY年M月D日')}活动`
+    return t('common.pageEvent.dayTitle', {
+      date: formatDate(date.toDate(), t('common.pageEvent.dayDateFormat'))
+    })
   }
   return ''
 })

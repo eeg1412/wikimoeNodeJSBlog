@@ -43,10 +43,7 @@
       </div>
     </template>
     <template v-else-if="item.isdefault && !item.newtab">
-      <nuxt-link
-        class="blog-layout-sidebar-item"
-        :to="item.url + (item.query || '')"
-      >
+      <nuxt-link class="blog-layout-sidebar-item" :to="getItemUrl(item)">
         <span>{{ item.naviname }}</span>
       </nuxt-link>
     </template>
@@ -54,7 +51,7 @@
       <!-- 非本站链接 -->
       <a
         class="blog-layout-sidebar-item"
-        :href="item.url + (item.query || '')"
+        :href="getItemUrl(item)"
         :target="item.newtab ? '_blank' : '_self'"
       >
         <span>{{ item.naviname }}</span>
@@ -76,7 +73,14 @@ const props = defineProps({
   }
 })
 const route = useRoute()
+const { languageCode, localePath } = useLang()
+languageCode.value
+
 const showChildren = ref(false)
+const getItemUrl = item => {
+  return localePath(item.url) + (item.query || '')
+}
+
 const checkActive = item => {
   const currentPath = route.path
   if (item.deepmatch) {
@@ -85,11 +89,9 @@ const checkActive = item => {
       .map(key => `${key}=${currentQuery[key]}`)
       .join('&')
     currentQueryStr = currentQueryStr ? `?${currentQueryStr}` : ''
-    const itemQuery = item.query
-    const itemUrl = item.url
-    return itemUrl + itemQuery === currentPath + currentQueryStr
+    return getItemUrl(item) === currentPath + currentQueryStr
   } else {
-    return item.url === currentPath
+    return getItemUrl(item) === currentPath
   }
 }
 

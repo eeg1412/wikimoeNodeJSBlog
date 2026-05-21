@@ -10,18 +10,23 @@
 
     <!-- 截止时间 -->
     <div class="text-sm text-gray-500 mb-2" v-if="itemCom.endTime">
-      截止时间:
+      {{ t('common.vote.endTime') }}:
       <ClientOnly
         >{{ formatDate(itemCom.endTime)
-        }}<template #fallback>加载中...</template></ClientOnly
+        }}<template #fallback>{{
+          t('common.vote.loading')
+        }}</template></ClientOnly
       >
     </div>
 
     <!-- 最大选择提示 -->
     <div class="text-xs text-gray-500 mb-3">
       <span v-if="itemCom.votes || itemCom.votes === 0"
-        >共 {{ itemCom.votes }} 票<span class="tenten"></span></span
-      ><span>最多可选择 {{ itemCom.maxSelect }} 项</span>
+        >{{ t('common.vote.totalVotes', { count: itemCom.votes })
+        }}<span class="tenten"></span></span
+      ><span>{{
+        t('common.vote.maxSelect', { count: itemCom.maxSelect })
+      }}</span>
     </div>
     <!-- 选项列表 -->
     <div>
@@ -49,15 +54,17 @@
           <div
             class="text-gray-500 dark:text-gray-400 pl-2 vote-item-option-votes"
           >
-            <span v-if="isLoading">加载中...</span>
+            <span v-if="isLoading">{{ t('common.vote.loading') }}</span>
             <span v-else-if="option.votes || option.votes === 0"
-              >{{ option.votes }} 票 ({{
+              >{{ option.votes }} ({{
                 option.votes
                   ? ((option.votes / itemCom.votes) * 100).toFixed(0)
                   : '0'
               }}%)</span
             >
-            <span v-else-if="itemCom.showResultAfter">投票后显示票数</span>
+            <span v-else-if="itemCom.showResultAfter">{{
+              t('common.vote.showResultAfter')
+            }}</span>
           </div>
           <div class="vote-item-option-bar">
             <div
@@ -87,6 +94,7 @@
 
 <script setup>
 import { getVoteDetailApi, postVoteApi } from '@/api/vote'
+const { t } = useLang()
 // props
 const props = defineProps({
   item: {
@@ -155,19 +163,19 @@ const btnDisabled = computed(() => {
 })
 const btnText = computed(() => {
   if (isLoading.value) {
-    return '加载中...'
+    return t('common.vote.loading')
   } else if (isVoting.value) {
-    return '正在投票...'
+    return t('common.vote.voting')
   } else if (voted.value) {
     if (bothUUID.value) {
-      return '已投票'
+      return t('common.vote.voted')
     } else {
-      return '同IP地址已投票'
+      return t('common.vote.sameIpVoted')
     }
   } else if (isExpired.value) {
-    return '投票已结束'
+    return t('common.vote.ended')
   } else {
-    return '提交'
+    return t('common.vote.submit')
   }
 })
 
@@ -193,7 +201,7 @@ const handleSelect = option => {
         optionIdList.value.push(option._id)
       } else {
         toast.add({
-          title: '最多只能选择' + maxSelect + '项',
+          title: t('common.vote.maxSelectExceeded', { count: maxSelect }),
           icon: 'i-heroicons-x-circle',
           color: 'red'
         })
@@ -205,7 +213,7 @@ const isVoting = ref(false)
 const doVote = async () => {
   if (optionIdList.value.length < 1) {
     toast.add({
-      title: '请选择选项',
+      title: t('common.vote.chooseOption'),
       icon: 'i-heroicons-x-circle',
       color: 'red'
     })
@@ -221,7 +229,7 @@ const doVote = async () => {
     .then(res => {
       if (res) {
         toast.add({
-          title: '投票成功',
+          title: t('common.vote.success'),
           icon: 'i-heroicons-check-circle',
           color: 'green',
           timeout: 10000

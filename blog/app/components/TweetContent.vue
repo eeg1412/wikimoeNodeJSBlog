@@ -16,7 +16,7 @@
         class="post-detail-tag-item hover:underline"
         :to="{
           name: 'postListTag',
-          params: { tagid: tag._id, page: 1 }
+          params: { code: languageCode, tagid: tag._id, page: 1 }
         }"
         >#{{ tag.tagname }}</NuxtLink
       >
@@ -26,7 +26,7 @@
         class="post-detail-tag-item hover:underline"
         :to="{
           name: 'postListMappoint',
-          params: { mappointid: mappoint._id, page: 1 }
+          params: { code: languageCode, mappointid: mappoint._id, page: 1 }
         }"
         ><WUIIcon
           name="i-heroicons-map-pin-solid"
@@ -58,7 +58,7 @@
             >
               <div class="text-2xl text-center">
                 <WUIIcon class="animate-spin" name="i-heroicons-arrow-path" />
-                <div class="text-lg">读取中</div>
+                <div class="text-lg">{{ t('common.status.loading') }}</div>
               </div>
             </div>
           </div>
@@ -126,6 +126,8 @@
 </template>
 <script setup>
 import { nextTick, onMounted, onUnmounted, ref } from 'vue'
+
+const { languageCode, t } = useLang()
 
 const props = defineProps({
   content: {

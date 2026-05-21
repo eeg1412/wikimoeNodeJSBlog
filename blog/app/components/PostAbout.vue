@@ -4,7 +4,7 @@
       v-if="showTitle"
       class="mb-3 text-gray-600 dark:text-gray-200 font-bold text-base border-b border-dotted pb-2 border-gray-300 dark:border-gray-700"
     >
-      相关博文：
+      {{ t('common.related.blog') }}
     </div>
     <div>
       <div
@@ -16,7 +16,7 @@
         <NuxtLink
           :to="{
             name: 'postDetail',
-            params: { id: item.alias || item._id }
+            params: { code: languageCode, id: item.alias || item._id }
           }"
           target="_blank"
         >
@@ -27,6 +27,8 @@
   </div>
 </template>
 <script setup>
+const { languageCode, t } = useLang()
+
 const props = defineProps({
   postList: {
     type: Array,

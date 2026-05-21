@@ -17,8 +17,8 @@
             {{
               `${formatDate(
                 game.startTime,
-                'yyyy年M月dd日 h时'
-              )} ~ ${formatDate(game.endTime, 'yyyy年M月dd日 h时')}`
+                t('common.acgn.dateFormat')
+              )} ~ ${formatDate(game.endTime, t('common.acgn.dateFormat'))}`
             }}
           </div>
           <div
@@ -27,24 +27,28 @@
             <WUIIcon
               name="i-heroicons-bookmark-slash"
               class="align-middle acgn-time-icon"
-            />游玩{{ getACGDuration(game.startTime, game.endTime) }}后弃坑
+            />{{
+              t('common.acgn.playAfterDropped', {
+                duration: acgDurationText(game.startTime, game.endTime)
+              })
+            }}
           </div>
         </div>
         <template v-else>
           <WUIIcon
             name="i-heroicons-bookmark-slash"
             class="align-middle acgn-time-icon"
-          />已弃坑
+          />{{ t('common.acgn.dropped') }}
         </template>
       </div>
       <!-- 用时 -->
       <div v-else-if="game.startTime">
         <div class="acgn-time text-gray-400">
           {{
-            `${formatDate(game.startTime, 'yyyy年M月dd日 h时')} ~ ${
+            `${formatDate(game.startTime, t('common.acgn.dateFormat'))} ~ ${
               game.endTime
-                ? formatDate(game.endTime, 'yyyy年M月dd日 h时')
-                : '攻略中'
+                ? formatDate(game.endTime, t('common.acgn.dateFormat'))
+                : t('common.acgn.playing')
             }`
           }}<LoadingDots v-if="!game.endTime && showAnimeDot" />
         </div>
@@ -55,19 +59,22 @@
             ><WUIIcon
               name="i-heroicons-clock"
               class="align-middle acgn-time-icon"
-            />已累计游玩</template
+            />{{ t('common.acgn.accumulatedPlay') }}</template
           ><template v-else
             ><WUIIcon
               name="i-heroicons-star"
               class="align-middle acgn-time-icon"
-            />共计游玩</template
-          >{{ getACGDuration(game.startTime, game.endTime) }}
+            />{{ t('common.acgn.totalPlay') }}</template
+          >{{ acgDurationText(game.startTime, game.endTime) }}
         </div>
       </div>
     </template>
   </LazyACGNItem>
 </template>
 <script setup>
+const { t } = useLang()
+const { acgDurationText } = useLocalizedText()
+
 const props = defineProps({
   game: {
     type: Object,

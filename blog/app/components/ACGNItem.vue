@@ -49,13 +49,14 @@
             :to="{
               name: postLinkName,
               params: {
+                code: languageCode,
                 ...postLinkParams,
                 page: 1
               }
             }"
           >
             <WUIIcon name="i-heroicons-newspaper" class="align-middle mr-1" />
-            相关文章
+            {{ t('common.acgn.relatedPost') }}
           </NuxtLink>
           <a
             href="javascript:;"
@@ -64,7 +65,7 @@
             @click="showAlbum(item.screenshotAlbum._id)"
           >
             <WUIIcon name="i-heroicons-photo" class="align-middle mr-1" />
-            相关相册
+            {{ t('common.acgn.relatedAlbum') }}
           </a>
           <a
             :href="url.url"
@@ -89,18 +90,25 @@
                   @click="toggleSummary"
                   class="text-sm text-primary inline-flex items-center pl-1"
                 >
-                  {{ summaryExpanded ? '<收起>' : '<更多>' }}
+                  {{
+                    summaryExpanded
+                      ? t('common.acgn.collapse')
+                      : t('common.acgn.expand')
+                  }}
                 </button>
               </span>
             </div>
           </div>
-          <div v-else class="text-sm text-gray-400">暂无内容</div>
+          <div v-else class="text-sm text-gray-400">
+            {{ t('common.acgn.noContent') }}
+          </div>
 
           <div
             class="text-sm whitespace-pre-line text-gray-400 flex-grow"
             v-if="item.label?.length > 0"
           >
-            标记：<WUIBadge
+            {{ t('common.acgn.labels')
+            }}<WUIBadge
               v-for="(label, index) in item.label"
               :key="index"
               color="white"
@@ -119,6 +127,8 @@
   </ClientOnly>
 </template>
 <script setup>
+const { languageCode, t } = useLang()
+
 const props = defineProps({
   item: {
     type: Object,

@@ -3,7 +3,7 @@
     v-if="bangumi"
     :item="bangumi"
     :badge="{
-      name: '番剧',
+      name: t('common.media.bangumi'),
       color: '#f472b6'
     }"
     type="bangumi"
@@ -17,7 +17,12 @@
         <WUIIcon
           name="i-heroicons-calendar-20-solid"
           class="align-middle acgn-time-icon"
-        />{{ bangumi.year }}年{{ seasonToName(bangumi.season) }}
+        />{{
+          t('common.acgn.yearSeason', {
+            year: bangumi.year,
+            season: seasonName(bangumi.season)
+          })
+        }}
       </div>
       <div
         class="text-sm mb-1 text-gray-400 flex-shrink-0 w_10 flex items-center"
@@ -26,12 +31,15 @@
         <WUIIcon
           name="i-heroicons-bookmark-slash"
           class="align-middle mr-1"
-        />已弃坑
+        />{{ t('common.acgn.dropped') }}
       </div>
     </template>
   </LazyACGNItem>
 </template>
 <script setup>
+const { t } = useLang()
+const { seasonName } = useLocalizedText()
+
 const props = defineProps({
   bangumi: {
     type: Object,

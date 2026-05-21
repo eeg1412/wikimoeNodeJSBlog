@@ -14,12 +14,13 @@
       class="text-center py-4 text-gray-500"
       v-if="randomTagList.length === 0"
     >
-      <div>暂无内容</div>
+      <div>{{ t('common.status.empty') }}</div>
     </div>
   </div>
 </template>
 <script setup>
 import { getRandomTagListApi } from '@/api/tag'
+const { languageCode, t } = useLang()
 
 const { data: randomTagListData } = await getRandomTagListApi()
 const randomTagList = ref(randomTagListData.value.list)
@@ -28,6 +29,7 @@ const getLinkObj = item => {
   return {
     name: 'postListTag',
     params: {
+      code: languageCode.value,
       tagid: item._id,
       page: 1
     }

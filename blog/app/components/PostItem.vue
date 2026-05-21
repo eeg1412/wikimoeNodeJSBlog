@@ -26,12 +26,13 @@
       class="post-list-title-body border border-gray-200 border-solid group-hover:border-primary-500/60 bg-white dark:bg-gray-800/40 dark:border-gray-700 transition-border-color duration-500"
     >
       <div class="group-hover:text-primary-500 transition duration-500">
-        {{ post.title || '暂无标题' }}
+        {{ post.title || t('common.post.noTitle') }}
       </div>
     </div>
   </div>
 </template>
 <script setup>
+const { t } = useLang()
 const props = defineProps({
   post: {
     type: Object,

@@ -7,11 +7,13 @@
       @keydown.esc="onEsc"
       tabindex="0"
     >
-      <span v-if="postRouteType === 'blog'" class="text-sm system-ui-font"
-        >博</span
-      >
-      <span v-else-if="postRouteType === 'tweet'" class="text-sm system-ui-font"
-        >推</span
+      <span v-if="postRouteType === 'blog'" class="text-sm system-ui-font">{{
+        t('common.post.shortBlog')
+      }}</span>
+      <span
+        v-else-if="postRouteType === 'tweet'"
+        class="text-sm system-ui-font"
+        >{{ t('common.post.shortTweet') }}</span
       >
       <WUIIcon name="i-heroicons-adjustments-horizontal" v-else />
     </div>
@@ -20,6 +22,7 @@
 
 <script setup>
 const route = useRoute()
+const { t } = useLang()
 const emits = defineEmits(['btnClick', 'close'])
 const postRouteType = computed(() => route.params.type)
 const onClick = () => {

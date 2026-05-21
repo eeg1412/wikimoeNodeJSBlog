@@ -30,7 +30,7 @@
           class="line-clamp-2 overflow-ellipsis overflow-hidden h-10 leading-5 text-gray-500 dark:text-gray-400 group-hover:text-white dark:group-hover:text-gray-400"
         >
           <!-- description -->
-          {{ item.description || '暂无描述' }}
+          {{ item.description || t('common.link.noDescription') }}
         </div>
       </div>
     </a>
@@ -38,6 +38,8 @@
 </template>
 <script setup>
 import { getLinkListApi } from '@/api/link'
+
+const { t } = useLang()
 const [linkListDataResponse] = await Promise.all([getLinkListApi()])
 const { data: linkListData } = linkListDataResponse
 </script>

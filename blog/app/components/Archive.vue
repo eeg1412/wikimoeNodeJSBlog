@@ -9,21 +9,32 @@
         <NuxtLink
           :to="{
             name: 'postListArchive',
-            params: { year: item.year, month: item.month, page: 1 }
+            params: {
+              code: languageCode,
+              year: item.year,
+              month: item.month,
+              page: 1
+            }
           }"
           class="archive-list-item-link common-a"
         >
-          {{ item.year }}年{{ item.month }}月({{ formatCount(item.count) }})
+          {{
+            t('common.calendar.yearMonth', {
+              year: item.year,
+              month: item.month
+            })
+          }}({{ formatCount(item.count) }})
         </NuxtLink>
       </li>
     </ul>
     <div class="text-center py-4 text-gray-500" v-if="archiveList.length === 0">
-      <div>暂无内容</div>
+      <div>{{ t('common.status.empty') }}</div>
     </div>
   </div>
 </template>
 <script setup>
 import { getArchiveApi } from '@/api/post'
+const { languageCode, t } = useLang()
 const [archiveData] = await Promise.all([getArchiveApi()])
 const { data: archiveListData } = archiveData
 // list 格式  { "_id": { "year": 2023, "month": 12 }, "count": 10 }

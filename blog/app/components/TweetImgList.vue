@@ -92,13 +92,13 @@
             :title="coverImages[0].description"
             v-if="coverImages[0].description"
           >
-            描述
+            {{ t('common.panorama.description') }}
           </div>
           <div
             class="rounded px-1 py-0.5 bg-primary-500 text-white dark:text-gray-900 bg-opacity-80 text-xs flex align-middle justify-center pointer whitespace-nowrap"
             v-if="coverImages[0].is360Panorama"
           >
-            360°全景
+            {{ t('common.panorama.panorama360') }}
           </div>
         </div>
       </div>
@@ -206,13 +206,13 @@
                     :title="img.description"
                     v-if="img.description"
                   >
-                    描述
+                    {{ t('common.panorama.description') }}
                   </div>
                   <div
                     class="rounded px-1 py-0.5 bg-primary-500 text-white dark:text-gray-900 bg-opacity-80 text-xs flex align-middle justify-center pointer whitespace-nowrap"
                     v-if="img.is360Panorama"
                   >
-                    360°全景
+                    {{ t('common.panorama.panorama360') }}
                   </div>
                 </div>
               </template>
@@ -302,13 +302,13 @@
                     :title="img.description"
                     v-if="img.description"
                   >
-                    描述
+                    {{ t('common.panorama.description') }}
                   </div>
                   <div
                     class="rounded px-1 py-0.5 bg-primary-500 text-white dark:text-gray-900 bg-opacity-80 text-xs flex align-middle justify-center pointer whitespace-nowrap"
                     v-if="img.is360Panorama"
                   >
-                    360°全景
+                    {{ t('common.panorama.panorama360') }}
                   </div>
                 </div>
               </template>
@@ -322,6 +322,7 @@
 <script setup>
 import { nextTick, onMounted, onUnmounted, ref } from 'vue'
 
+const { t } = useLang()
 const { options } = useOptions()
 const { pswpIsOpen } = usePswpIsOpen()
 

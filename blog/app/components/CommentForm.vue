@@ -4,7 +4,7 @@
       class="mb-3 text-gray-600 dark:text-gray-200 font-bold text-base border-b border-dotted pb-2 border-gray-300 dark:border-gray-700"
       v-if="!commentid"
     >
-      发表评论：
+      {{ t('common.comment.publish') }}
     </div>
     <WUIForm :state="form" @submit="onSubmit">
       <div class="flex flex-col space-y-2">
@@ -31,7 +31,7 @@
                     <!-- UCheckbox  提交后保存个人信息 -->
                     <WUICheckbox
                       v-model="commentSetting.commentSaveUserInfo"
-                      :label="`提交后保存此个人信息`"
+                      :label="t('common.comment.saveUserInfo')"
                     />
                   </div>
                   <div class="mt-2 flex justify-center items-center">
@@ -42,7 +42,7 @@
                       icon="i-heroicons-trash"
                       @click="removeUserInfo"
                     >
-                      立即清除个人信息
+                      {{ t('common.comment.clearUserInfo') }}
                     </WUIButton>
                   </div>
                 </div>
@@ -54,7 +54,7 @@
           <WUITextarea
             class="comment-form-textarea"
             ref="contentRef"
-            placeholder="说点什么吧..."
+            :placeholder="t('common.comment.placeholder')"
             v-model="form.content"
           />
         </WUIFormGroup>
@@ -71,7 +71,7 @@
                 color="white"
                 :trailing="false"
                 v-model="form.nickname"
-                placeholder="昵称"
+                :placeholder="t('common.comment.nickname')"
               />
             </WUIFormGroup>
           </div>
@@ -89,7 +89,7 @@
                     form.email = form.email.toLowerCase()
                   }
                 "
-                placeholder="邮箱（选填）"
+                :placeholder="t('common.comment.email')"
             /></WUIFormGroup>
           </div>
           <div class="w-full sm:w-1/3">
@@ -102,7 +102,7 @@
                 :trailing="false"
                 name="url"
                 v-model="form.url"
-                placeholder="网址（选填）"
+                :placeholder="t('common.comment.website')"
             /></WUIFormGroup>
           </div>
 
@@ -112,18 +112,20 @@
               type="submit"
               v-if="isInit"
               :loading="commentIsSending"
-              ><template v-if="!commentIsSending">提交</template></WUIButton
+              ><template v-if="!commentIsSending">{{
+                t('common.comment.submit')
+              }}</template></WUIButton
             >
-            <WUIButton :block="true" type="submit" :disabled="true" v-else
-              >提交</WUIButton
-            >
+            <WUIButton :block="true" type="submit" :disabled="true" v-else>{{
+              t('common.comment.submit')
+            }}</WUIButton>
           </div>
         </div>
       </div>
     </WUIForm>
   </div>
   <div class="text-center" v-else>
-    <span class="text-gray-500">评论已关闭</span>
+    <span class="text-gray-500">{{ t('common.comment.closed') }}</span>
   </div>
 </template>
 <script setup>
@@ -132,6 +134,7 @@ import { getCommentCreateApi } from '@/api/comment'
 const toast = useWToast()
 const { options } = useOptions()
 const { setCommentRetractAuthDecode } = useCommentRetractAuthDecode()
+const { t } = useLang()
 
 const props = defineProps({
   postid: {
@@ -182,7 +185,7 @@ const onSubmit = async event => {
   } catch (error) {
     commentIsSending.value = false
     toast.add({
-      title: '加载验证模块失败, 请稍后再试',
+      title: t('common.comment.validatorLoadFailed'),
       icon: 'i-heroicons-x-circle',
       color: 'red'
     })
@@ -198,7 +201,7 @@ const onSubmit = async event => {
     // 提示
     setTimeout(() => {
       toast.add({
-        title: '昵称不能为空',
+        title: t('common.comment.nicknameRequired'),
         icon: 'i-heroicons-x-circle',
         color: 'red'
       })
@@ -208,7 +211,7 @@ const onSubmit = async event => {
     // 提示
     setTimeout(() => {
       toast.add({
-        title: '昵称不能超过20个字符',
+        title: t('common.comment.nicknameMax'),
         icon: 'i-heroicons-x-circle',
         color: 'red'
       })
@@ -219,7 +222,7 @@ const onSubmit = async event => {
     // 提示
     setTimeout(() => {
       toast.add({
-        title: '评论内容不能为空',
+        title: t('common.comment.contentRequired'),
         icon: 'i-heroicons-x-circle',
         color: 'red'
       })
@@ -231,7 +234,9 @@ const onSubmit = async event => {
       // 提示
       setTimeout(() => {
         toast.add({
-          title: `评论内容不能少于 ${siteMinCommentLength} 个字`,
+          title: t('common.comment.contentMin', {
+            count: siteMinCommentLength
+          }),
           icon: 'i-heroicons-x-circle',
           color: 'red'
         })
@@ -241,7 +246,7 @@ const onSubmit = async event => {
       // 提示
       setTimeout(() => {
         toast.add({
-          title: '评论内容不能超过500个字符',
+          title: t('common.comment.contentMax'),
           icon: 'i-heroicons-x-circle',
           color: 'red'
         })
@@ -256,7 +261,7 @@ const onSubmit = async event => {
       // 提示
       setTimeout(() => {
         toast.add({
-          title: 'url不能超过200个字符',
+          title: t('common.comment.urlMax'),
           icon: 'i-heroicons-x-circle',
           color: 'red'
         })
@@ -287,7 +292,7 @@ const onSubmit = async event => {
       // 提示
       setTimeout(() => {
         toast.add({
-          title: '网址格式不正确',
+          title: t('common.comment.urlInvalid'),
           icon: 'i-heroicons-x-circle',
           color: 'red'
         })
@@ -301,7 +306,7 @@ const onSubmit = async event => {
       // 提示
       setTimeout(() => {
         toast.add({
-          title: '邮箱地址不能超过100个字符',
+          title: t('common.comment.emailMax'),
           icon: 'i-heroicons-x-circle',
           color: 'red'
         })
@@ -313,7 +318,7 @@ const onSubmit = async event => {
       // 提示
       setTimeout(() => {
         toast.add({
-          title: '邮箱地址格式不正确',
+          title: t('common.comment.emailInvalid'),
           icon: 'i-heroicons-x-circle',
           color: 'red'
         })
@@ -352,14 +357,14 @@ const onSubmit = async event => {
       // 0是审核中，1是审核通过
       if (dataStatus === 0) {
         toast.add({
-          title: '评论成功，将在审核后公开',
+          title: t('common.comment.successPending'),
           icon: 'i-heroicons-check-circle',
           color: 'green',
           timeout: 10000
         })
       } else {
         toast.add({
-          title: '评论成功',
+          title: t('common.comment.success'),
           icon: 'i-heroicons-check-circle',
           color: 'green',
           timeout: 10000
@@ -457,7 +462,7 @@ const removeUserInfo = () => {
   form.url = ''
   // 提示
   toast.add({
-    title: '已清除个人信息',
+    title: t('common.comment.userInfoCleared'),
     icon: 'i-heroicons-check-circle',
     color: 'green'
   })

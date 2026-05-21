@@ -17,13 +17,14 @@
       class="text-center py-4 text-gray-500"
       v-if="playingGameList.length === 0"
     >
-      <div>暂无内容</div>
+      <div>{{ t('common.status.empty') }}</div>
     </div>
   </div>
 </template>
 <script setup>
 import { getGamePlayingListApi } from '@/api/game'
 
+const { t } = useLang()
 const { data: playingGameList } = await getGamePlayingListApi()
 </script>
 <style scoped></style>

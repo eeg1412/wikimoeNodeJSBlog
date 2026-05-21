@@ -51,6 +51,7 @@ const { options } = useOptions()
 
 const siteTopSlideTime = computed(() => options.value.siteTopSlideTime || 8000)
 const router = useRouter()
+const { localePath } = useLang()
 const [bannerListDataResponse] = await Promise.all([getBannerListApi()])
 const { data: bannerListData } = bannerListDataResponse
 
@@ -71,7 +72,7 @@ const openLink = (item, midClick) => {
   if (newtab || midClick) {
     window.open(link)
   } else if (isdefault) {
-    router.push(link)
+    router.push(localePath(link))
   } else {
     // 本窗口打开
     window.location.href = link

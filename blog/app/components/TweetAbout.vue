@@ -4,7 +4,7 @@
       v-if="showTitle"
       class="mb-3 text-gray-600 dark:text-gray-200 font-bold text-base border-b border-dotted pb-2 border-gray-300 dark:border-gray-700"
     >
-      相关推文：
+      {{ t('common.related.tweet') }}
     </div>
     <div
       class="content-grid-list-2-1"
@@ -21,7 +21,7 @@
         <NuxtLink
           :to="{
             name: 'postDetail',
-            params: { id: item.alias || item._id }
+            params: { code: languageCode, id: item.alias || item._id }
           }"
           target="_blank"
         >
@@ -32,6 +32,8 @@
   </div>
 </template>
 <script setup>
+const { languageCode, t } = useLang()
+
 const props = defineProps({
   tweetList: {
     type: Array,

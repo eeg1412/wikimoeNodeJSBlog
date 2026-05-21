@@ -6,23 +6,27 @@
     v-if="showBtn"
     :loading="isLoading"
     @click="isModalOpen = true"
-    >撤回(剩余{{ countDown }}秒)</WUIButton
+    >{{ t('common.comment.retractButton', { seconds: countDown }) }}</WUIButton
   >
   <CommonDialog v-model:show="isModalOpen">
     <template #title>
-      <div class="text-xl font-bold">确认撤回评论</div>
+      <div class="text-xl font-bold">
+        {{ t('common.comment.retractTitle') }}
+      </div>
     </template>
 
     <template #body>
       <div class="flex flex-col gap-4">
-        <div>确定要撤回这条评论吗？</div>
+        <div>{{ t('common.comment.retractConfirmText') }}</div>
         <div class="flex justify-end gap-3">
-          <WUIButton color="gray" @click="isModalOpen = false">取消</WUIButton>
+          <WUIButton color="gray" @click="isModalOpen = false">{{
+            t('common.comment.cancel')
+          }}</WUIButton>
           <WUIButton
             color="primary"
             :loading="isLoading"
             @click="retractComment"
-            >确认撤回</WUIButton
+            >{{ t('common.comment.confirmRetract') }}</WUIButton
           >
         </div>
       </div>
@@ -33,6 +37,8 @@
 <script setup>
 import { deleteCommentRetractApi } from '@/api/comment'
 const emits = defineEmits(['refresh'])
+const { t } = useLang()
+const { copyText } = useLocalizedText()
 const props = defineProps({
   commentid: {
     type: String,
@@ -106,7 +112,7 @@ const retractComment = () => {
   }
   if (!showBtn.value) {
     toast.add({
-      title: '已超过撤回时间，无法撤回评论',
+      title: t('common.comment.retractExpired'),
       icon: 'i-heroicons-x-circle',
       color: 'red',
       timeout: 10000
@@ -121,14 +127,14 @@ const retractComment = () => {
     .then(res => {
       console.log(res)
       toast.add({
-        title: '已成功撤回评论',
+        title: t('common.comment.retractSuccess'),
         icon: 'i-heroicons-check-circle',
         color: 'green',
         timeout: 60000,
         actions: [
           {
-            label: '复制评论内容',
-            click: () => copyToClipboard(props.content, toast)
+            label: t('common.comment.copyContent'),
+            click: () => copyText(props.content, toast)
           }
         ]
       })

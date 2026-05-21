@@ -1,6 +1,7 @@
 <template></template>
 <script setup>
 import { getAttachmentListApiFetch } from '@/api/attachment'
+const { t } = useLang()
 const props = defineProps({
   albumId: {
     type: String,
@@ -24,7 +25,7 @@ const getList = async () => {
     return
   } else if (res.data.length <= 0) {
     toast.add({
-      title: '暂无相关内容',
+      title: t('common.album.empty'),
       icon: 'i-heroicons-x-circle',
       color: 'red'
     })
