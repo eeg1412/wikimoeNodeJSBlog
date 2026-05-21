@@ -91,6 +91,7 @@ export default defineNuxtConfig({
 
   runtimeConfig: {
     apiDomain: '',
+    apiMultilingualDomain: '',
     swrEnabled: '',
     swrCacheMaxage: '',
     swrCacheStaleMaxage: '',
