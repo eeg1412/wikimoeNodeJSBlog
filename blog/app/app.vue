@@ -13,6 +13,7 @@ import { postLogCreateApi, putLogUpdatePerformanceApi } from '@/api/log'
 import { isChunkAssetError, trackChunkAssetError } from '@/utils/chunk-error'
 
 const nuxtApp = useNuxtApp()
+const route = useRoute()
 
 if (import.meta.client) {
   nuxtApp.hook('app:chunkError', ({ error }) => {
@@ -41,36 +42,6 @@ onErrorCaptured(error => {
 
 const { setCommentRetractAuthDecode } = useCommentRetractAuthDecode()
 const { setCommentRetractCountData } = useCommentRetractCountData()
-const siteEnableRss = options.value.siteEnableRss
-const rssHead = () => {
-  if (siteEnableRss) {
-    return [
-      // rel="alternate" type="application/rss+xml" title="RSS"
-      {
-        rel: 'alternate',
-        type: 'application/rss+xml',
-        title: 'RSS',
-        href: options.value.siteUrl + '/rss'
-      },
-      // rss for blog
-      {
-        rel: 'alternate',
-        type: 'application/rss+xml',
-        title: 'RSS for blog',
-        href: options.value.siteUrl + '/rss/blog'
-      },
-      // rss for tweet
-      {
-        rel: 'alternate',
-        type: 'application/rss+xml',
-        title: 'RSS for tweet',
-        href: options.value.siteUrl + '/rss/tweet'
-      }
-    ]
-  } else {
-    return []
-  }
-}
 const script = []
 // console.log(options)
 if (options.value.googleAdEnabled) {
@@ -98,66 +69,10 @@ if (siteThemeModeList && siteThemeModeList.includes(siteThemeMode)) {
     type: 'text/javascript'
   })
 }
-
-useHead({
-  titleTemplate: titleChunk => {
-    if (!titleChunk) {
-      return options.value.siteTitle
-    } else if (titleChunk === options.value.siteSubTitle) {
-      return `${options.value.siteTitle} | ${titleChunk}`
-    } else {
-      return `${titleChunk} - ${options.value.siteTitle}`
-    }
-  },
-  title: options.value.siteSubTitle,
-  htmlAttrs: {
-    lang: 'zh-hans'
-  },
-  meta: [
-    { name: 'description', content: options.value.siteDescription },
-    // name="keywords"
-    { name: 'keywords', content: options.value.siteKeywords },
-    // name="generator"
-    { name: 'generator', content: 'wikimoeBlog' },
-    // theme-color
-    { name: 'theme-color', content: '#ef90a7' },
-    // OGP
-    { property: 'og:type', content: 'website' },
-    { property: 'og:site_name', content: options.value.siteTitle },
-    { property: 'og:title', content: options.value.siteTitle },
-    { property: 'og:description', content: options.value.siteDescription },
-    // { property: 'og:url', content: options.value.siteUrl },
-    {
-      property: 'og:image',
-      content: options.value.siteUrl + options.value.siteDefaultCover
-    },
-    // twitter
-    { name: 'twitter:card', content: 'summary' },
-    { name: 'twitter:site', content: `@${options.value.siteTitle}` },
-    { name: 'twitter:title', content: options.value.siteTitle },
-    { name: 'twitter:description', content: options.value.siteDescription },
-    {
-      name: 'twitter:image',
-      content: options.value.siteUrl + options.value.siteDefaultCover
-    },
-    // robots meta，允许大图预览
-    { name: 'robots', content: 'max-image-preview:large' }
-  ],
-  link: [
-    {
-      rel: 'icon',
-      type: 'image/x-icon',
-      href: options.value.siteFavicon
-    },
-    {
-      rel: 'apple-touch-icon',
-      sizes: '256x256',
-      href: options.value.siteFavicon
-    },
-    // rss
-    ...rssHead()
-  ],
-  script: script
+useHead(() => {
+  return {
+    script: script
+  }
 })
 const getPerformanceNavigationTiming = () => {
   let dataContentObj = null
@@ -252,7 +167,6 @@ const updatePerformance = () => {
 }
 
 // watch 路由变化 重新设置 og:url
-const route = useRoute()
 watch(
   () => route.path,
   () => {

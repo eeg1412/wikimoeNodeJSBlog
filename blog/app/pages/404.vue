@@ -1,14 +1,32 @@
 <template>
   <div class="error-body">
     <div class="error-code">404</div>
-    <div class="error-msg">页面不见了？</div>
+    <div class="error-msg">{{ t('common.error.notFound') }}</div>
     <!-- 尝试回到首页 -->
-    <div class="error-btn pointer" @click="reflushHome">返回首页</div>
+    <div class="error-btn pointer" @click="reflushHome">
+      {{ t('common.error.backHome') }}
+    </div>
   </div>
 </template>
 <script setup>
+import { buildLanguagePath } from '@/composables/useLang'
+import {
+  DEFAULT_LANGUAGE_CODE,
+  getLanguageText,
+  normalizeLanguageCode
+} from '@/lang'
+
+const route = useRoute()
+const currentLanguageCode = computed(() => {
+  const routeCode = Array.isArray(route.params.code)
+    ? route.params.code[0]
+    : route.params.code
+  return normalizeLanguageCode(routeCode) || DEFAULT_LANGUAGE_CODE
+})
+const t = path => getLanguageText(currentLanguageCode.value, path)
+
 const reflushHome = () => {
-  window.location.href = '/'
+  window.location.href = buildLanguagePath(currentLanguageCode.value, '/')
 }
 // google ad
 const runtimeConfig = useRuntimeConfig()

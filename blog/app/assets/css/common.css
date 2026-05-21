@@ -1420,7 +1420,7 @@ ins.adsbygoogle[data-ad-status='unfilled'] {
 }
 .w-e-panorama360::after {
   /* 点击以360°全景查看 */
-  content: '点击可进入360°全景模式';
+  content: var(--w-panorama-enter-mode-tip);
   position: absolute;
   top: 0.5rem;
   left: 0.5rem;

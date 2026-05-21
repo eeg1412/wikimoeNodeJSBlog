@@ -7,32 +7,59 @@
   </div>
 </template>
 <script setup>
+import { buildLanguagePath } from '@/composables/useLang'
+import {
+  DEFAULT_LANGUAGE_CODE,
+  getLanguageText,
+  normalizeLanguageCode
+} from '@/lang'
+
 const error = useError()
+const route = useRoute()
+const BLOG_LANGUAGE_DISABLED_REASON = 'BLOG_LANGUAGE_DISABLED'
+const currentLanguageCode = computed(() => {
+  const routeCode = Array.isArray(route.params.code)
+    ? route.params.code[0]
+    : route.params.code
+  return normalizeLanguageCode(routeCode) || DEFAULT_LANGUAGE_CODE
+})
+const t = path => getLanguageText(currentLanguageCode.value, path)
+const isBlogLanguageDisabledError = computed(() => {
+  return error.value?.data?.reason === BLOG_LANGUAGE_DISABLED_REASON
+})
+const homePath = computed(() => {
+  if (isBlogLanguageDisabledError.value) {
+    return '/'
+  }
+
+  return buildLanguagePath(currentLanguageCode.value, '/')
+})
+
 const reflushHome = () => {
-  window.location.href = '/'
+  window.location.href = homePath.value
 }
 // 判断是否是首页
 const isHome = computed(() => {
-  return useRoute().path === '/'
+  return route.path === homePath.value
 })
 // 按钮文案
 const btnText = computed(() => {
-  return isHome.value ? '尝试刷新' : '返回首页'
+  return isHome.value ? t('common.error.refresh') : t('common.error.backHome')
 })
 
 const errorMessage = computed(() => {
   switch (error.value.statusCode) {
     case 404:
-      return '您访问的页面不存在。'
+      return t('common.error.notFound')
     case 403:
-      return '您当前没有权限访问此页面。'
+      return t('common.error.forbidden')
     case 503:
-      return '服务器正在更新维护中，请稍后再试。'
+      return t('common.error.maintenanceUpdating')
     default:
       return (
         error.value?.message ||
         error.value?.statusMessage ||
-        '服务器正在维护中，请稍后再试。'
+        t('common.error.maintenance')
       )
   }
 })
