@@ -109,7 +109,7 @@ const translationModules = import.meta.glob('./*/*.js', {
 })
 
 /**
- * @description 介绍：扫描语言包模块并按语言码、模块名分组。
+ * @description 介绍：扫描语言包模块并按语言码、模块名分组；输入：无。
  * @returns {Record<string, Record<string, object>>} 输出：按语言码和模块名分组的文案对象。
  */
 function discoverLanguageTextMap() {
@@ -135,7 +135,7 @@ function discoverLanguageTextMap() {
 }
 
 /**
- * @description 介绍：构建完整语言文案表，并校验语言目录和必需模块。
+ * @description 介绍：构建完整语言文案表，并校验语言目录和必需模块；输入：无。
  * @returns {Record<string, Record<string, object>>} 输出：完整语言文案表。
  */
 function buildLanguageTextMap() {

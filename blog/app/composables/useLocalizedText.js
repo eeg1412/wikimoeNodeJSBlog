@@ -1,9 +1,9 @@
 import { formatDate } from '@/utils'
 
 /**
- * 将数值评分映射到语言包中的评分等级键。
- * @param {number} rating 数值评分。
- * @returns {string} 评分等级键名。
+ * @description 介绍：将数值评分映射到语言包中的评分等级键。
+ * @param {number} rating 输入：数值评分。
+ * @returns {string} 输出：评分等级键名。
  */
 function resolveRatingLevel(rating) {
   if (rating >= 90) return 'masterpiece'
@@ -19,16 +19,16 @@ function resolveRatingLevel(rating) {
 }
 
 /**
- * 提供时间、数字、评分等展示文本的本地化工具。
- * @returns {object} 本地化文本工具集合。
+ * @description 介绍：提供时间、数字、评分等展示文本的本地化工具；输入：无。
+ * @returns {object} 输出：本地化文本工具集合。
  */
 export function useLocalizedText() {
   const { languageCode, t } = useLang()
 
   /**
-   * 去掉紧凑数字中的无意义小数位。
-   * @param {number} value 需要紧凑显示的数字。
-   * @returns {string} 去掉无意义小数位后的字符串。
+   * @description 介绍：去掉紧凑数字中的无意义小数位。
+   * @param {number} value 输入：需要紧凑显示的数字。
+   * @returns {string} 输出：去掉无意义小数位后的字符串。
    */
   const formatCompactValue = value => {
     const compactValue = value.toFixed(1)
@@ -38,10 +38,10 @@ export function useLocalizedText() {
   }
 
   /**
-   * 将日期格式化为相对时间文案。
-   * @param {Date|string|number} date 日期值。
-   * @param {string} [fmt='yyyy-MM-dd hh:mm:ss'] 超出相对时间范围时使用的格式。
-   * @returns {string} 本地化相对时间文案或格式化日期字符串。
+   * @description 介绍：将日期格式化为相对时间文案。
+   * @param {Date|string|number} date 输入：日期值。
+   * @param {string} [fmt='yyyy-MM-dd hh:mm:ss'] 输入：超出相对时间范围时使用的格式。
+   * @returns {string} 输出：本地化相对时间文案或格式化日期字符串。
    */
   const fromNowText = (date, fmt = 'yyyy-MM-dd hh:mm:ss') => {
     const normalizedDate = new Date(date)
@@ -85,18 +85,18 @@ export function useLocalizedText() {
   }
 
   /**
-   * 将评分数值格式化为当前语言的评分等级文案。
-   * @param {number} rating 数值评分。
-   * @returns {string} 当前语言的评分等级文案。
+   * @description 介绍：将评分数值格式化为当前语言的评分等级文案。
+   * @param {number} rating 输入：数值评分。
+   * @returns {string} 输出：当前语言的评分等级文案。
    */
   const ratingText = rating => {
     return t(`common.rating.level.${resolveRatingLevel(rating)}`)
   }
 
   /**
-   * 按当前语言格式化大数字。
-   * @param {number|string} num 需要格式化的数字或数字字符串。
-   * @returns {string|number} 本地化数字字符串；无法转换为数字时返回原值。
+   * @description 介绍：按当前语言格式化大数字。
+   * @param {number|string} num 输入：需要格式化的数字或数字字符串。
+   * @returns {string|number} 输出：本地化数字字符串；无法转换为数字时返回原值。
    */
   const formatNumberText = num => {
     const value = Number(num)
@@ -138,9 +138,9 @@ export function useLocalizedText() {
   }
 
   /**
-   * 将季度编号转换为当前语言的季度名称。
-   * @param {number|undefined} season 季度编号。
-   * @returns {string|number|undefined} 本地化季度名称；未知编号返回原值。
+   * @description 介绍：将季度编号转换为当前语言的季度名称。
+   * @param {number|undefined} season 输入：季度编号。
+   * @returns {string|number|undefined} 输出：本地化季度名称；未知编号返回原值。
    */
   const seasonName = season => {
     switch (season) {
@@ -161,10 +161,10 @@ export function useLocalizedText() {
   }
 
   /**
-   * 计算 ACG 条目的游玩、阅读或观看持续时间文案。
-   * @param {Date|string|number} startTime 开始时间。
-   * @param {Date|string|number} [endTime] 结束时间；不传时使用当前时间。
-   * @returns {string} 本地化持续时间文案。
+   * @description 介绍：计算 ACG 条目的游玩、阅读或观看持续时间文案。
+   * @param {Date|string|number} startTime 输入：开始时间。
+   * @param {Date|string|number} [endTime] 输入：结束时间；不传时使用当前时间。
+   * @returns {string} 输出：本地化持续时间文案。
    */
   const acgDurationText = (startTime, endTime) => {
     const start = new Date(startTime).getTime()
@@ -222,11 +222,11 @@ export function useLocalizedText() {
   }
 
   /**
-   * 复制文本到剪贴板，并按当前语言提示结果。
-   * @param {string} text 要复制的文本。
-   * @param {any} [toast] 通知实例。
-   * @param {{ timeout?: number }} [options={}] 可选配置。
-   * @returns {Promise<boolean>} 成功返回 true，失败返回 false。
+   * @description 介绍：复制文本到剪贴板，并按当前语言提示结果。
+   * @param {string} text 输入：要复制的文本。
+   * @param {any} [toast] 输入：通知实例。
+   * @param {{ timeout?: number }} [options={}] 输入：可选配置。
+   * @returns {Promise<boolean>} 输出：成功返回 true，失败返回 false。
    */
   const copyText = async (text, toast, options = {}) => {
     const timeout = options.timeout ?? 10000

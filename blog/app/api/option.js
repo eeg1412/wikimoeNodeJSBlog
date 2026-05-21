@@ -5,7 +5,7 @@ import { assertLanguageCode } from '@/lang'
 const URL = `/options`
 
 /**
- * @description 介绍：查询源站配置项。
+ * @description 介绍：查询源站配置项；输入：无。
  * @returns {Promise<any>} 输出：源站配置项响应。
  */
 const getOptionsApi = () => {

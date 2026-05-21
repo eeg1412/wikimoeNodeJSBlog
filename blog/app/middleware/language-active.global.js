@@ -17,7 +17,7 @@ function getRouteLanguageCode(route) {
 }
 
 /**
- * @description 介绍：创建语言不存在时使用的 404 错误。
+ * @description 介绍：创建语言不存在时使用的 404 错误；输入：无。
  * @returns {Error} 输出：Nuxt createError 返回的 404 错误对象。
  */
 function createLanguageNotFoundError() {
