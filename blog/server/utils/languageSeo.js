@@ -22,6 +22,49 @@ function normalizeLanguageCode(input) {
   return LANGUAGE_CODE_MAP[key] || null
 }
 
+export function getMultilingualApiDomain(event) {
+  const config = useRuntimeConfig(event)
+  const apiDomain = String(config.apiMultilingualDomain || '').trim()
+
+  // 多语言代理只接受显式 http(s) 上游，避免空配置或异常协议进入 proxyRequest。
+  if (!apiDomain) {
+    throw createError({
+      statusCode: 500,
+      statusMessage: 'Multilingual API domain is not configured'
+    })
+  }
+
+  let parsedUrl = null
+  try {
+    parsedUrl = new URL(apiDomain)
+  } catch (error) {
+    throw createError({
+      statusCode: 500,
+      statusMessage: 'Multilingual API domain is invalid'
+    })
+  }
+
+  if (parsedUrl.protocol !== 'http:' && parsedUrl.protocol !== 'https:') {
+    throw createError({
+      statusCode: 500,
+      statusMessage: 'Multilingual API domain protocol is invalid'
+    })
+  }
+
+  return apiDomain.replace(/\/+$/, '')
+}
+
+export function buildMultilingualProxyUrl(event, requestUrl) {
+  const apiDomain = getMultilingualApiDomain(event)
+  let normalizedRequestUrl = requestUrl || '/'
+
+  if (!normalizedRequestUrl.startsWith('/')) {
+    normalizedRequestUrl = `/${normalizedRequestUrl}`
+  }
+
+  return `${apiDomain}${normalizedRequestUrl}`
+}
+
 export function getCanonicalLanguageCode(event) {
   const languageCode = normalizeLanguageCode(getRouterParam(event, 'code'))
   if (!languageCode) {
@@ -39,9 +82,10 @@ export function getCanonicalRequestUrl(event, languageCode) {
 }
 
 export function proxyLanguageSeoRequest(event) {
-  const config = useRuntimeConfig(event)
-  const apiDomain = config.apiMultilingualDomain
   const languageCode = getCanonicalLanguageCode(event)
-  const url = `${apiDomain}${getCanonicalRequestUrl(event, languageCode)}`
+  const url = buildMultilingualProxyUrl(
+    event,
+    getCanonicalRequestUrl(event, languageCode)
+  )
   return proxyRequest(event, url)
 }

@@ -26,14 +26,21 @@ export function getRouteCode(route) {
 }
 
 /**
- * @description 介绍：判断路径是否指向站外地址或特殊协议地址。
+ * @description 介绍：判断路径是否指向允许透传的站外地址或特殊协议地址。
  * @param {string} path 输入：需要判断的路径。
- * @returns {boolean} 输出：true 表示外部路径或特殊协议路径。
+ * @returns {boolean} 输出：true 表示外部路径或允许的特殊协议路径。
  */
 function isExternalPath(path) {
-  return (
-    /^(https?:)?\/\//i.test(path) || /^(mailto|tel|javascript):/i.test(path)
-  )
+  return /^(https?:)?\/\//i.test(path) || /^(mailto|tel):/i.test(path)
+}
+
+/**
+ * @description 介绍：判断路径是否使用不允许写入 href 或 router 的脚本协议。
+ * @param {string} path 输入：需要判断的路径。
+ * @returns {boolean} 输出：true 表示路径协议不安全。
+ */
+function isUnsafeProtocolPath(path) {
+  return /^(javascript|data|vbscript):/i.test(path.trim())
 }
 
 /**
@@ -79,6 +86,11 @@ export function buildPlainPath(path = '/') {
     return '/'
   }
 
+  // 动态导航和横幅链接来自接口，禁止脚本协议穿过本地化路径工具。
+  if (isUnsafeProtocolPath(path)) {
+    return '/'
+  }
+
   if (isExternalPath(path) || path.startsWith('#')) {
     return path
   }
@@ -106,6 +118,11 @@ export function buildLanguagePath(languageCode, path = '/') {
   const targetLanguageCode = assertLanguageCode(languageCode)
 
   if (typeof path !== 'string' || !path) {
+    return `/${targetLanguageCode}`
+  }
+
+  // 动态导航和横幅链接来自接口，禁止脚本协议穿过本地化路径工具。
+  if (isUnsafeProtocolPath(path)) {
     return `/${targetLanguageCode}`
   }
 
@@ -195,11 +212,7 @@ export function useLang() {
    * @returns {string} 输出：旧路由路径或带语言前缀的本地化路径。
    */
   const localePath = path => {
-    return buildLocalePath(
-      languageCode.value,
-      path,
-      isLocalizedRoute.value
-    )
+    return buildLocalePath(languageCode.value, path, isLocalizedRoute.value)
   }
 
   /**

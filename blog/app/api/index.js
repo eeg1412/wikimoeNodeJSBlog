@@ -1,6 +1,47 @@
+import {
+  DEFAULT_LANGUAGE_CODE,
+  getLanguageText,
+  normalizeLanguageCode
+} from '@/lang'
+
 // API base 统一在请求客户端层维护，业务 API 文件只选择请求实例。
 const BLOG_BASE_URL = '/api/blog'
 const MULTILINGUAL_BASE_URL = '/api/multilingual-blog'
+
+/**
+ * @description 介绍：从请求参数或请求配置中读取标准语言码。
+ * @param {any} data 输入：查询参数或请求体。
+ * @param {object} [options={}] 输入：请求配置。
+ * @returns {string} 输出：标准语言码；无语言码时返回默认语言。
+ */
+function getRequestLanguageCode(data, options = {}) {
+  const optionLanguageCode = normalizeLanguageCode(options?.languageCode)
+  if (optionLanguageCode) {
+    return optionLanguageCode
+  }
+
+  if (data && typeof data === 'object') {
+    const dataLanguageCode = normalizeLanguageCode(data.languageCode)
+    if (dataLanguageCode) {
+      return dataLanguageCode
+    }
+  }
+
+  return DEFAULT_LANGUAGE_CODE
+}
+
+/**
+ * @description 介绍：按请求语言生成接口维护错误文案。
+ * @param {any} data 输入：查询参数或请求体。
+ * @param {object} [options={}] 输入：请求配置。
+ * @returns {string} 输出：本地化后的错误文案。
+ */
+function getRequestMaintenanceMessage(data, options = {}) {
+  return getLanguageText(
+    getRequestLanguageCode(data, options),
+    'common.error.maintenance'
+  )
+}
 
 class HttpRequest {
   /**
@@ -48,12 +89,14 @@ class HttpRequest {
        */
       function handleFetchResponse(res) {
         if (res.error?.value) {
-          const statusCode = res.error?.value?.statusCode
-          console.log('statusCode', statusCode)
+          const requestError = res.error.value
+          const statusCode = requestError?.statusCode
+          // 多语言请求失败时使用当前请求语言展示错误，并 reject，避免调用方 await 长时间悬空。
           showError({
             statusCode: statusCode || 500,
-            message: '服务器正在维护中，请稍后再试。'
+            message: getRequestMaintenanceMessage(data, options)
           })
+          reject(requestError)
         } else {
           resolve(res)
         }
@@ -82,32 +125,32 @@ class HttpRequest {
    * @param {object} options 输入：$fetch 配置。
    * @returns {Promise<any>} 输出：$fetch 响应 Promise。
    */
-  requestFetch(url, options) {
+  requestFetch(url, options = {}) {
+    // 克隆请求配置，避免多语言和源站请求复用同一个 options 对象时互相污染。
+    const requestOptions = { ...options }
     // 查看options内包含shouldUuid
-    const shouldUuid = options.shouldUuid
+    const shouldUuid = requestOptions.shouldUuid
+    delete requestOptions.shouldUuid
     // 如果有就去本地拿uuid
     if (shouldUuid && import.meta.client) {
       const uuid = checkUuid()
-      // 删除shouldUuid
-      delete options.shouldUuid
       if (uuid) {
-        options.headers = {
-          ...options.headers,
+        requestOptions.headers = {
+          ...requestOptions.headers,
           // 将uuid放入请求头 wmb-request-id
           'wmb-request-id': uuid
         }
       }
     }
     // 查看options内包含shouldCommentRetractJWT
-    const shouldCommentRetractJWT = options.shouldCommentRetractJWT
+    const shouldCommentRetractJWT = requestOptions.shouldCommentRetractJWT
+    delete requestOptions.shouldCommentRetractJWT
     // 如果有就去本地拿commentRetractJWT
     if (shouldCommentRetractJWT && import.meta.client) {
       const commentRetractJWT = localStorage.getItem('commentRetractJWT')
-      // 删除shouldCommentRetractJWT
-      delete options.shouldCommentRetractJWT
       if (commentRetractJWT) {
-        options.headers = {
-          ...options.headers,
+        requestOptions.headers = {
+          ...requestOptions.headers,
           // 将commentRetractJWT放入请求头 comment-retract-jwt
           'wm-comment-retract-authorization': `Bearer ${commentRetractJWT}`
         }
@@ -138,7 +181,9 @@ class HttpRequest {
         reject(error)
       }
 
-      $fetch(url, options).then(handleFetchSuccess).catch(handleFetchFailure)
+      $fetch(url, requestOptions)
+        .then(handleFetchSuccess)
+        .catch(handleFetchFailure)
     }
 
     return new Promise(runFetch)
@@ -199,10 +244,13 @@ class HttpRequest {
    * @returns {Promise<any>} 输出：$fetch 响应数据 Promise。
    */
   getFetch(url, data, options = {}) {
-    options.method = 'GET'
-    options.baseURL = this.baseURL
-    options.params = data
-    return this.requestFetch(url, options)
+    const requestOptions = {
+      ...options,
+      method: 'GET',
+      baseURL: this.baseURL,
+      params: data
+    }
+    return this.requestFetch(url, requestOptions)
   }
 
   /**
@@ -213,10 +261,13 @@ class HttpRequest {
    * @returns {Promise<any>} 输出：$fetch 响应数据 Promise。
    */
   postFetch(url, data, options = {}) {
-    options.method = 'POST'
-    options.baseURL = this.baseURL
-    options.body = data
-    return this.requestFetch(url, options)
+    const requestOptions = {
+      ...options,
+      method: 'POST',
+      baseURL: this.baseURL,
+      body: data
+    }
+    return this.requestFetch(url, requestOptions)
   }
 
   /**
@@ -227,10 +278,13 @@ class HttpRequest {
    * @returns {Promise<any>} 输出：$fetch 响应数据 Promise。
    */
   putFetch(url, data, options = {}) {
-    options.method = 'PUT'
-    options.baseURL = this.baseURL
-    options.body = data
-    return this.requestFetch(url, options)
+    const requestOptions = {
+      ...options,
+      method: 'PUT',
+      baseURL: this.baseURL,
+      body: data
+    }
+    return this.requestFetch(url, requestOptions)
   }
 
   /**
@@ -241,10 +295,13 @@ class HttpRequest {
    * @returns {Promise<any>} 输出：$fetch 响应数据 Promise。
    */
   deleteFetch(url, data, options = {}) {
-    options.method = 'DELETE'
-    options.baseURL = this.baseURL
-    options.params = data
-    return this.requestFetch(url, options)
+    const requestOptions = {
+      ...options,
+      method: 'DELETE',
+      baseURL: this.baseURL,
+      params: data
+    }
+    return this.requestFetch(url, requestOptions)
   }
 }
 

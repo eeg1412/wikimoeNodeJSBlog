@@ -53,6 +53,7 @@
         class="blog-layout-sidebar-item"
         :href="getItemUrl(item)"
         :target="item.newtab ? '_blank' : '_self'"
+        rel="noopener noreferrer"
       >
         <span>{{ item.naviname }}</span>
         <WUIIcon
@@ -78,6 +79,7 @@ languageCode.value
 
 const showChildren = ref(false)
 const getItemUrl = item => {
+  // localePath 会过滤脚本协议，避免接口下发的导航链接进入 href。
   return localePath(item.url) + (item.query || '')
 }
 

@@ -70,12 +70,23 @@ const onFocusSlide = index => {
   }
 }
 
+const isUnsafeLink = link => {
+  return /^(javascript|data|vbscript):/i.test(link)
+}
+
 const openLink = (item, midClick) => {
-  const { link, isdefault, newtab } = item
+  const { isdefault, newtab } = item
+  let link = ''
+  if (typeof item.link === 'string') {
+    link = item.link.trim()
+  }
+
+  // 横幅链接来自接口，打开前阻断脚本协议并使用 noopener。
   if (!link) return
-  console.log(item)
+  if (isUnsafeLink(link)) return
+
   if (newtab || midClick) {
-    window.open(link)
+    window.open(link, '_blank', 'noopener,noreferrer')
   } else if (isdefault) {
     router.push(localePath(link))
   } else {

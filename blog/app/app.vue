@@ -10,22 +10,27 @@
 </template>
 <script setup>
 import { postLogCreateApi, putLogUpdatePerformanceApi } from '@/api/log'
+import { normalizeLanguageCode } from '@/lang'
+import { getRouteCode } from '~/composables/useLang'
 import { isChunkAssetError, trackChunkAssetError } from '@/utils/chunk-error'
 
 const nuxtApp = useNuxtApp()
 const route = useRoute()
 const router = useRouter()
 
-const toLowerCase = str => {
-  if (typeof str === 'string') {
-    return str.toLowerCase()
+/**
+ * @description 介绍：读取路由中的标准语言码，用于判断 options 是否需要重新加载。
+ * @param {object} targetRoute 输入：Nuxt 路由对象。
+ * @returns {string} 输出：标准语言码；无语言码或非法语言码时返回空字符串。
+ */
+function getOptionsRouteLanguageCode(targetRoute) {
+  const languageCode = normalizeLanguageCode(getRouteCode(targetRoute))
+  if (languageCode) {
+    return languageCode
   }
-  return str
-}
 
-const currentLanguageCode = computed(() => {
-  return route.params.code
-})
+  return ''
+}
 
 if (import.meta.client) {
   nuxtApp.hook('app:chunkError', ({ error }) => {
@@ -35,21 +40,24 @@ if (import.meta.client) {
 
 const { options, getOptions } = useOptions()
 await getOptions()
-const currentOptionsLanguageCode = ref(
-  toLowerCase(currentLanguageCode.value || '')
-)
+const currentOptionsLanguageCode = ref(getOptionsRouteLanguageCode(route))
 
 // 路由跳转前
 router.beforeEach(async (to, from, next) => {
-  const toLanguageCode = to.params.code
+  // 使用标准语言码比较，避免 zh-CN 和 zh-cn 在同语言导航时重复拉取 options。
+  const toLanguageCode = getOptionsRouteLanguageCode(to)
   if (toLanguageCode !== currentOptionsLanguageCode.value) {
-    console.log('语言代码发生变化，重新获取选项')
     try {
-      await getOptions({ languageCode: toLanguageCode, force: true })
+      await getOptions({
+        languageCode: toLanguageCode || undefined,
+        force: true
+      })
     } catch (error) {
       console.error('获取选项失败:', error)
+      next(error)
+      return
     }
-    currentOptionsLanguageCode.value = toLowerCase(toLanguageCode)
+    currentOptionsLanguageCode.value = toLanguageCode
   }
   next()
 })

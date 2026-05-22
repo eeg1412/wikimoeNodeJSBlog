@@ -258,7 +258,17 @@ export function useOptions() {
         languageContext
       )
     } catch (error) {
-      throw 'Failed to fetch localized options: ' + error?.message
+      // 保留 createError 的 statusCode 和 data，避免语言停用被包装成普通 500。
+      if (error?.statusCode || error?.statusMessage || error?.data?.reason) {
+        throw error
+      }
+
+      let errorMessage = String(error)
+      if (error?.message) {
+        errorMessage = error.message
+      }
+
+      throw new Error('Failed to fetch localized options: ' + errorMessage)
     }
   }
 

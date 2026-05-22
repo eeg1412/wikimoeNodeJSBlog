@@ -34,8 +34,9 @@ async function assertActiveLanguageRoute(to) {
     throw createLanguageNotFoundError()
   }
 
-  // const { getOptions } = useOptions()
-  // await getOptions({ languageCode, force: true })
+  // 进入带 code 的页面前先读取该语言配置，避免已停用语言继续渲染或命中缓存。
+  const { getOptions } = useOptions()
+  await getOptions({ languageCode })
 }
 
 export default defineNuxtRouteMiddleware(assertActiveLanguageRoute)
