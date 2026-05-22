@@ -17,6 +17,7 @@ import {
 const error = useError()
 const route = useRoute()
 const BLOG_LANGUAGE_DISABLED_REASON = 'BLOG_LANGUAGE_DISABLED'
+const LANGUAGE_NOT_FOUND_REASON = 'LANGUAGE_NOT_FOUND'
 const currentLanguageCode = computed(() => {
   const routeCode = Array.isArray(route.params.code)
     ? route.params.code[0]
@@ -25,7 +26,10 @@ const currentLanguageCode = computed(() => {
 })
 const t = path => getLanguageText(currentLanguageCode.value, path)
 const isBlogLanguageDisabledError = computed(() => {
-  return error.value?.data?.reason === BLOG_LANGUAGE_DISABLED_REASON
+  return (
+    error.value?.data?.reason === BLOG_LANGUAGE_DISABLED_REASON ||
+    error.value?.data?.reason === LANGUAGE_NOT_FOUND_REASON
+  )
 })
 const homePath = computed(() => {
   if (isBlogLanguageDisabledError.value) {

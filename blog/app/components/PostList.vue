@@ -593,7 +593,7 @@ if (postsData?.value?.list) {
 }
 
 const totalPage = computed(() => {
-  return Math.ceil(postsData.value.total / postsData.value.size)
+  return Math.ceil(postsData.value?.total / postsData.value?.size)
 })
 
 // ItemList JSON-LD 结构化数据

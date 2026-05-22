@@ -68,7 +68,14 @@ function getOptionsLanguageContext(params = {}) {
     }
   }
 
-  const routeCode = getCurrentRouteCode()
+  let routeCode = null
+  if (params.force) {
+    if (params.languageCode) {
+      routeCode = params.languageCode
+    }
+  } else {
+    routeCode = getCurrentRouteCode()
+  }
   if (!routeCode) {
     return {
       isLocalizedRoute: false,
@@ -273,6 +280,7 @@ export function useOptions() {
     options,
     optionsLanguageCode,
     optionsIsLocalizedRoute,
-    getOptions
+    getOptions,
+    createLanguageNotFoundError
   }
 }

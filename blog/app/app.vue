@@ -1,5 +1,5 @@
 <template>
-  <div class="blog-body">
+  <div class="blog-body" :key="currentOptionsLanguageCode">
     <NuxtLoadingIndicator color="#ef90a7" />
     <NuxtPage></NuxtPage>
     <WUINotifications />
@@ -14,6 +14,18 @@ import { isChunkAssetError, trackChunkAssetError } from '@/utils/chunk-error'
 
 const nuxtApp = useNuxtApp()
 const route = useRoute()
+const router = useRouter()
+
+const toLowerCase = str => {
+  if (typeof str === 'string') {
+    return str.toLowerCase()
+  }
+  return str
+}
+
+const currentLanguageCode = computed(() => {
+  return route.params.code
+})
 
 if (import.meta.client) {
   nuxtApp.hook('app:chunkError', ({ error }) => {
@@ -23,6 +35,20 @@ if (import.meta.client) {
 
 const { options, getOptions } = useOptions()
 await getOptions()
+const currentOptionsLanguageCode = ref(
+  toLowerCase(currentLanguageCode.value || '')
+)
+
+// 路由跳转前
+router.beforeEach(async (to, from, next) => {
+  const toLanguageCode = to.params.code
+  if (toLanguageCode !== currentOptionsLanguageCode.value) {
+    console.log('语言代码发生变化，重新获取选项')
+    await getOptions({ languageCode: toLanguageCode, force: true })
+    currentOptionsLanguageCode.value = toLowerCase(toLanguageCode)
+  }
+  next()
+})
 
 onErrorCaptured(error => {
   if (!import.meta.client) {
