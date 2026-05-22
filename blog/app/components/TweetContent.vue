@@ -16,7 +16,7 @@
         class="post-detail-tag-item hover:underline"
         :to="{
           name: 'postListTag',
-          params: { code: languageCode, tagid: tag._id, page: 1 }
+          params: { tagid: tag._id, page: 1 }
         }"
         >#{{ tag.tagname }}</NuxtLink
       >
@@ -26,7 +26,7 @@
         class="post-detail-tag-item hover:underline"
         :to="{
           name: 'postListMappoint',
-          params: { code: languageCode, mappointid: mappoint._id, page: 1 }
+          params: { mappointid: mappoint._id, page: 1 }
         }"
         ><WUIIcon
           name="i-heroicons-map-pin-solid"

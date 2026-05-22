@@ -27,7 +27,8 @@ if (!/^\d+$/.test(page)) {
 }
 const bangumiid = route.params.bangumiid
 const { data } = await getBangumiDetailApi({
-  id: bangumiid
+  id: bangumiid,
+  languageCode: route.params.code
 })
 useSeoMeta({
   title: data.value.data.title,

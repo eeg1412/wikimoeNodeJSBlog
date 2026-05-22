@@ -34,8 +34,13 @@
 </template>
 <script setup>
 import { getArchiveApi } from '@/api/post'
+const route = useRoute()
 const { languageCode, t } = useLang()
-const [archiveData] = await Promise.all([getArchiveApi()])
+const [archiveData] = await Promise.all([
+  getArchiveApi({
+    languageCode: route.params.code
+  })
+])
 const { data: archiveListData } = archiveData
 // list 格式  { "_id": { "year": 2023, "month": 12 }, "count": 10 }
 const archiveList = computed(() => {

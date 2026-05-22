@@ -1,6 +1,7 @@
 <template></template>
 <script setup>
 import { getAttachmentListApiFetch } from '@/api/attachment'
+const route = useRoute()
 const { t } = useLang()
 const props = defineProps({
   albumId: {
@@ -16,7 +17,8 @@ const toast = useWToast()
 const attachmentList = ref([])
 const getList = async () => {
   const res = await getAttachmentListApiFetch({
-    album: props.albumId
+    album: props.albumId,
+    languageCode: route.params.code
   }).catch(err => {
     console.log(err)
     return null

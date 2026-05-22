@@ -75,7 +75,7 @@ const goPostDetail = (e, item, middle) => {
   // resolveUrl
   const url = router.resolve({
     name: routeName,
-    params: { code: languageCode.value, id },
+    params: { id },
     hash: `#comment-${item._id}`
   }).href
   const newTabOpen = () => {
@@ -95,7 +95,6 @@ const goPostDetail = (e, item, middle) => {
     router.push({
       name: routeName,
       params: {
-        code: languageCode.value,
         id: id
       },
       hash: `#comment-${item._id}`

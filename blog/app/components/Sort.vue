@@ -11,7 +11,6 @@
           :to="{
             name: 'postListSort',
             params: {
-              code: languageCode,
               sortid: item.alias || item._id,
               page: 1
             }
@@ -32,7 +31,6 @@
               :to="{
                 name: 'postListSort',
                 params: {
-                  code: languageCode,
                   sortid: item.alias || item._id,
                   page: 1
                 }
@@ -59,7 +57,11 @@ import { getSortListApi } from '@/api/sort'
 const route = useRoute()
 const { languageCode, t } = useLang()
 const sortid = computed(() => route.params.sortid)
-const [sortData] = await Promise.all([getSortListApi()])
+const [sortData] = await Promise.all([
+  getSortListApi({
+    languageCode: route.params.code
+  })
+])
 const { data: sortListData } = sortData
 </script>
 <style scoped>

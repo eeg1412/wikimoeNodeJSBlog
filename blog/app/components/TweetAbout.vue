@@ -21,7 +21,7 @@
         <NuxtLink
           :to="{
             name: 'postDetail',
-            params: { code: languageCode, id: item.alias || item._id }
+            params: { id: item.alias || item._id }
           }"
           target="_blank"
         >

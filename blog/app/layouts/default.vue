@@ -383,8 +383,12 @@ const showLoading = siteShowLoading
 //   },
 // ])
 const [naviData, sidebarData] = await Promise.all([
-  getNaviListApi(),
-  getSidebarListApi()
+  getNaviListApi({
+    languageCode: route.params.code
+  }),
+  getSidebarListApi({
+    languageCode: route.params.code
+  })
 ])
 
 const { data: naviListData } = naviData

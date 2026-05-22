@@ -51,8 +51,13 @@ const { options } = useOptions()
 
 const siteTopSlideTime = computed(() => options.value.siteTopSlideTime || 8000)
 const router = useRouter()
+const route = useRoute()
 const { localePath } = useLang()
-const [bannerListDataResponse] = await Promise.all([getBannerListApi()])
+const [bannerListDataResponse] = await Promise.all([
+  getBannerListApi({
+    languageCode: route.params.code
+  })
+])
 const { data: bannerListData } = bannerListDataResponse
 
 const swiperInstance = ref(null)

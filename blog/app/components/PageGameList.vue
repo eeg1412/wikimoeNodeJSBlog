@@ -230,7 +230,9 @@ const selectPlatformData = ref({
   name: t('common.pageMedia.allPlatforms'),
   _id: undefined
 })
-await getGamePlatformListApi().then(res => {
+await getGamePlatformListApi({
+  languageCode: route.params.code
+}).then(res => {
   gamePlatformList.value = res.data.value.data
 })
 
@@ -370,7 +372,10 @@ const gameList = ref([])
 const total = ref(0)
 
 // 获取数据
-await getGameListApi(checkedParams).then(res => {
+await getGameListApi({
+  ...checkedParams,
+  languageCode: route.params.code
+}).then(res => {
   gameList.value = res.data.value.list
   total.value = res.data.value.total
 })
@@ -382,7 +387,8 @@ const listRef = ref(null)
 const fetchGameList = async () => {
   gameLoading.value = true
   const newParams = {
-    ...params.value
+    ...params.value,
+    languageCode: route.params.code
   }
   const res = await getGameListApiFetch(newParams)
   gameList.value = res?.list || []

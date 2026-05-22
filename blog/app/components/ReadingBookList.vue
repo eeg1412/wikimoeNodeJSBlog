@@ -24,7 +24,10 @@
 <script setup>
 import { getBookReadingListApi } from '@/api/book'
 
+const route = useRoute()
 const { t } = useLang()
-const { data: readingBookList } = await getBookReadingListApi()
+const { data: readingBookList } = await getBookReadingListApi({
+  languageCode: route.params.code
+})
 </script>
 <style scoped></style>

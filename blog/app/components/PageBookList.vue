@@ -231,7 +231,9 @@ const selectBooktypeData = ref({
   _id: undefined
 })
 
-await getBooktypeListApi().then(res => {
+await getBooktypeListApi({
+  languageCode: route.params.code
+}).then(res => {
   booktypeList.value = res.data.value.data
 })
 
@@ -370,7 +372,10 @@ const bookList = ref([])
 const total = ref(0)
 
 // 获取数据
-await getBookListApi(checkedParams).then(res => {
+await getBookListApi({
+  ...checkedParams,
+  languageCode: route.params.code
+}).then(res => {
   bookList.value = res.data.value.list
   total.value = res.data.value.total
 })
@@ -382,7 +387,8 @@ const listRef = ref(null)
 const fetchBookList = async () => {
   bookLoading.value = true
   const newParams = {
-    ...params.value
+    ...params.value,
+    languageCode: route.params.code
   }
   const res = await getBookListApiFetch(newParams)
   bookList.value = res?.list || []

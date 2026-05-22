@@ -20,16 +20,18 @@
 </template>
 <script setup>
 import { getRandomTagListApi } from '@/api/tag'
+const route = useRoute()
 const { languageCode, t } = useLang()
 
-const { data: randomTagListData } = await getRandomTagListApi()
+const { data: randomTagListData } = await getRandomTagListApi({
+  languageCode: route.params.code
+})
 const randomTagList = ref(randomTagListData.value.list)
 
 const getLinkObj = item => {
   return {
     name: 'postListTag',
     params: {
-      code: languageCode.value,
       tagid: item._id,
       page: 1
     }

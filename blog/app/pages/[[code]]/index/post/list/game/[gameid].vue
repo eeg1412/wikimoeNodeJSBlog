@@ -27,7 +27,8 @@ if (!/^\d+$/.test(page)) {
 }
 const gameid = route.params.gameid
 const { data } = await getGameDetailApi({
-  id: gameid
+  id: gameid,
+  languageCode: route.params.code
 })
 useSeoMeta({
   title: data.value.data.title,

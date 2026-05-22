@@ -21,7 +21,7 @@
             class="none seo"
             :to="{
               name: 'postDetail',
-              params: { code: languageCode, id: item.alias || item._id }
+              params: { id: item.alias || item._id }
             }"
             tabindex="-1"
           >
@@ -47,7 +47,7 @@
                     name: 'postListSort',
                     params: {
                       sortid: item.sort.alias || item.sort._id,
-                      code: languageCode,
+
                       page: 1
                     }
                   }"
@@ -80,7 +80,7 @@
                     class="post-detail-tag-item hover:underline"
                     :to="{
                       name: 'postListTag',
-                      params: { code: languageCode, tagid: tag._id, page: 1 },
+                      params: { tagid: tag._id, page: 1 },
                     }"
                     >#{{ tag.tagname }}</NuxtLink
                   >
@@ -90,7 +90,7 @@
                     class="post-detail-tag-item hover:underline"
                     :to="{
                       name: 'postListMappoint',
-                      params: { code: languageCode, mappointid: mappoint._id, page: 1 },
+                      params: {  mappointid: mappoint._id, page: 1 },
                     }"
                     ><WUIIcon
                     name="i-heroicons-map-pin-solid"
@@ -128,7 +128,7 @@
               @click.middle.stop
               :to="{
                 name: 'postDetail',
-                params: { code: languageCode, id: item.alias || item._id }
+                params: { id: item.alias || item._id }
               }"
             >
               <LazyPostItem :post="item" />
@@ -144,7 +144,7 @@
                   @click.middle.stop
                   :to="{
                     name: 'postDetail',
-                    params: { code: languageCode, id: item.alias || item._id }
+                    params: { id: item.alias || item._id }
                   }"
                 >
                   <!-- icon book-open -->
@@ -169,7 +169,7 @@
                   @click.middle.stop
                   :to="{
                     name: 'postDetail',
-                    params: { code: languageCode, id: item.alias || item._id },
+                    params: { id: item.alias || item._id },
                     hash: '#commentlist-container'
                   }"
                 >
@@ -511,7 +511,6 @@ const routePagination = computed(() => {
         name: routeName.value,
         params: {
           ...route.params,
-          code: languageCode.value,
           page: 1,
           type: postRouteType.value
         }
@@ -520,7 +519,6 @@ const routePagination = computed(() => {
         name: routeName.value,
         params: {
           ...route.params,
-          code: languageCode.value,
           page: totalPage.value,
           type: postRouteType.value
         }
@@ -529,7 +527,6 @@ const routePagination = computed(() => {
         name: routeName.value,
         params: {
           ...route.params,
-          code: languageCode.value,
           page: page - 1,
           type: postRouteType.value
         }
@@ -538,7 +535,6 @@ const routePagination = computed(() => {
         name: routeName.value,
         params: {
           ...route.params,
-          code: languageCode.value,
           page: page + 1,
           type: postRouteType.value
         }
@@ -572,7 +568,8 @@ const [postsDataResponse] = await Promise.all([
     movieId: movieid || undefined,
     bookId: bookid || undefined,
     gameId: gameid || undefined,
-    type: postType.value || undefined
+    type: postType.value || undefined,
+    languageCode: route.params.code
   })
 ])
 
@@ -668,7 +665,7 @@ const goPostDetail = (e, item, middle) => {
     // resolveUrl
     const url = router.resolve({
       name: routeName,
-      params: { code: languageCode.value, id }
+      params: { id }
     }).href
     window.open(url, '_blank')
   } else {
@@ -676,7 +673,6 @@ const goPostDetail = (e, item, middle) => {
     router.push({
       name: routeName,
       params: {
-        code: languageCode.value,
         id: id
       }
     })

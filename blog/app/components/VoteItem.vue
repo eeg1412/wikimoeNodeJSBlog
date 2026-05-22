@@ -94,6 +94,7 @@
 
 <script setup>
 import { getVoteDetailApi, postVoteApi } from '@/api/vote'
+const route = useRoute()
 const { t } = useLang()
 // props
 const props = defineProps({
@@ -112,7 +113,8 @@ const voteItemRef = ref(null)
 const itemRes = ref(null)
 const getVoteDetail = async () => {
   const res = await getVoteDetailApi({
-    id: props.item._id
+    id: props.item._id,
+    languageCode: route.params.code
   })
   if (res) {
     itemRes.value = res.data
@@ -224,7 +226,8 @@ const doVote = async () => {
   postVoteApi({
     voteId: itemCom.value._id,
     postId: props.postId,
-    optionIdList: optionIdList.value
+    optionIdList: optionIdList.value,
+    languageCode: route.params.code
   })
     .then(res => {
       if (res) {

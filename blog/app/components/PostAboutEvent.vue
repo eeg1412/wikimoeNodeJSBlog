@@ -37,6 +37,7 @@
 </template>
 <script setup>
 import { getEventDetailApiFetch } from '@/api/event'
+const route = useRoute()
 const { t } = useLang()
 const props = defineProps({
   eventList: {
@@ -69,7 +70,8 @@ const getEventDetail = async id => {
   }
   contentIsLoading.value = true
   getEventDetailApiFetch({
-    id
+    id,
+    languageCode: route.params.code
   })
     .then(res => {
       currentEventData.value = res.data

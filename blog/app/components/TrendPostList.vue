@@ -60,10 +60,13 @@
 import { getTrendPostListApi } from '@/api/trend'
 
 const { options } = useOptions()
+const route = useRoute()
 const { languageCode, t } = useLang()
 const { formatNumberText } = useLocalizedText()
 
-const { data: trendPostListData } = await getTrendPostListApi()
+const { data: trendPostListData } = await getTrendPostListApi({
+  languageCode: route.params.code
+})
 const trendPostList = ref(trendPostListData.value.list)
 
 const getTrendDetail = (item, target) => {
@@ -88,13 +91,13 @@ const getLinkObj = item => {
     case 'blog':
       linkObj = {
         name: 'postDetail',
-        params: { code: languageCode.value, id: detail.alias || detail._id }
+        params: { id: detail.alias || detail._id }
       }
       break
     case 'page':
       linkObj = {
         name: 'pageDetail',
-        params: { code: languageCode.value, id: detail.alias || detail._id }
+        params: { id: detail.alias || detail._id }
       }
 
       break

@@ -27,7 +27,8 @@ if (!/^\d+$/.test(page)) {
 }
 const tagid = route.params.tagid
 const { data } = await getTagDetailApi({
-  id: tagid
+  id: tagid,
+  languageCode: route.params.code
 })
 useSeoMeta({
   title: data.value.data.tagname,

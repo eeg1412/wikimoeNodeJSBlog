@@ -219,7 +219,8 @@ const getList = async () => {
   eventList.value = []
   const res = await getEventListApiFetch({
     startTime: new Date(startTime.value).toISOString(),
-    endTime: new Date(endTime.value).toISOString()
+    endTime: new Date(endTime.value).toISOString(),
+    languageCode: route.params.code
   })
     .then(res => {
       return res
@@ -300,7 +301,8 @@ const getEventDetail = async () => {
   eventLoading.value = true
   const id = route.query.eventid
   getEventDetailApiFetch({
-    id
+    id,
+    languageCode: route.params.code
   })
     .then(res => {
       currentData.value = res.data

@@ -27,7 +27,8 @@ if (!/^\d+$/.test(page)) {
 }
 const bookid = route.params.bookid
 const { data } = await getBookDetailApi({
-  id: bookid
+  id: bookid,
+  languageCode: route.params.code
 })
 useSeoMeta({
   title: data.value.data.title,

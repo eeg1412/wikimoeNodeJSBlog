@@ -241,7 +241,9 @@ const selectType = (type, close) => {
 
 // 观看年份
 const yearList = ref([])
-await getMovieYearListApi().then(res => {
+await getMovieYearListApi({
+  languageCode: route.params.code
+}).then(res => {
   yearList.value = res.data.value.data?.list || []
 })
 const selectYear = (year, close) => {
@@ -291,7 +293,10 @@ const movieList = ref([])
 const total = ref(0)
 
 // 获取数据
-await getMovieListApi(checkedParams).then(res => {
+await getMovieListApi({
+  ...checkedParams,
+  languageCode: route.params.code
+}).then(res => {
   movieList.value = res.data.value.list
   total.value = res.data.value.total
 })
@@ -303,7 +308,8 @@ const listRef = ref(null)
 const fetchMovieList = async () => {
   movieLoading.value = true
   const newParams = {
-    ...params.value
+    ...params.value,
+    languageCode: route.params.code
   }
   const res = await getMovieListApiFetch(newParams)
   movieList.value = res?.list || []

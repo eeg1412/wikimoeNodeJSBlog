@@ -27,7 +27,8 @@ if (!/^\d+$/.test(page)) {
 }
 const mappointid = route.params.mappointid
 const { data } = await getMappointDetailApi({
-  id: mappointid
+  id: mappointid,
+  languageCode: route.params.code
 })
 useSeoMeta({
   title: data.value.data.title,

@@ -20,7 +20,10 @@
 <script setup>
 import { getBangumiSeasonListApi } from '@/api/bangumi'
 
+const route = useRoute()
 const { t } = useLang()
-const { data: bangumiSeasonList } = await getBangumiSeasonListApi()
+const { data: bangumiSeasonList } = await getBangumiSeasonListApi({
+  languageCode: route.params.code
+})
 </script>
 <style scoped></style>

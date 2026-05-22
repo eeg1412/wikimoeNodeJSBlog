@@ -27,7 +27,8 @@ if (!/^\d+$/.test(page)) {
 }
 const movieid = route.params.movieid
 const { data } = await getMovieDetailApi({
-  id: movieid
+  id: movieid,
+  languageCode: route.params.code
 })
 useSeoMeta({
   title: data.value.data.title,

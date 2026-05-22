@@ -231,7 +231,9 @@ const setRouterQuery = query => {
   })
 }
 
-const { data: yearListData } = await getBangumiYearListApi()
+const { data: yearListData } = await getBangumiYearListApi({
+  languageCode: route.params.code
+})
 
 const rawQuery = {
   year: undefined,
@@ -409,7 +411,10 @@ const initParams = () => {
 }
 initParams()
 const bangumiList = ref([])
-await getBangumiListApi(checkedParams).then(res => {
+await getBangumiListApi({
+  ...checkedParams,
+  languageCode: route.params.code
+}).then(res => {
   bangumiList.value = res.data.value.data.list
   total.value = res.data.value.data.total
 })
@@ -419,7 +424,8 @@ const bangumiLoading = ref(false)
 const fetchBangumiList = async () => {
   bangumiLoading.value = true
   const newParams = {
-    ...params.value
+    ...params.value,
+    languageCode: route.params.code
   }
   const res = await getBangumiListApiFetch(newParams)
     .then(res => {

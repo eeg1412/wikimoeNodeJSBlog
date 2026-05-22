@@ -268,7 +268,8 @@ const getEventDetail = async e => {
   contentIsLoading.value = true
   const id = e.target.getAttribute('data-id')
   getEventDetailApiFetch({
-    id
+    id,
+    languageCode: route.params.code
   })
     .then(res => {
       currentEventData.value = res.data

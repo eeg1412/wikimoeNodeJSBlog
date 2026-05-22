@@ -152,7 +152,9 @@ const mapIsReady = ref(false)
 
 const getList = async () => {
   mappointLoading.value = true
-  const res = await getMappointListApiFetch()
+  const res = await getMappointListApiFetch({
+    languageCode: route.params.code
+  })
     .then(res => {
       return res
     })
@@ -195,7 +197,8 @@ const getMappointDetail = async () => {
   mappointLoading.value = true
   const id = route.query.mappointid
   getMappointDetailApiFetch({
-    id
+    id,
+    languageCode: route.params.code
   })
     .then(async res => {
       currentData.value = res.data
@@ -236,7 +239,8 @@ const getPostList = async (page = null) => {
   try {
     const res = await getMappointPostListApiFetch({
       id: currentData.value._id,
-      page: targetPage
+      page: targetPage,
+      languageCode: route.params.code
     })
 
     postList.value = res.list || []

@@ -28,7 +28,8 @@ if (!/^\d+$/.test(page)) {
 const sortid = route.params.sortid
 
 const { data } = await getSortDetailApi({
-  id: sortid
+  id: sortid,
+  languageCode: route.params.code
 })
 
 let description = data.value.description
