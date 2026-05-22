@@ -32,11 +32,13 @@ const isBlogLanguageDisabledError = computed(() => {
   )
 })
 const homePath = computed(() => {
-  if (isBlogLanguageDisabledError.value) {
-    return '/'
-  }
+  return '/'
+  // 由于难以区分语言不存在和其他错误，暂时先不区分这两种情况，直接回到首页
+  // if (isBlogLanguageDisabledError.value) {
+  //   return '/'
+  // }
 
-  return buildLanguagePath(currentLanguageCode.value, '/')
+  // return buildLanguagePath(currentLanguageCode.value, '/')
 })
 
 const reflushHome = () => {

@@ -44,7 +44,11 @@ router.beforeEach(async (to, from, next) => {
   const toLanguageCode = to.params.code
   if (toLanguageCode !== currentOptionsLanguageCode.value) {
     console.log('语言代码发生变化，重新获取选项')
-    await getOptions({ languageCode: toLanguageCode, force: true })
+    try {
+      await getOptions({ languageCode: toLanguageCode, force: true })
+    } catch (error) {
+      console.error('获取选项失败:', error)
+    }
     currentOptionsLanguageCode.value = toLowerCase(toLanguageCode)
   }
   next()

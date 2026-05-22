@@ -239,22 +239,27 @@ export function useOptions() {
    * @returns {Promise<object>} 输出：写入缓存后的合并 options。
    */
   async function getLocalizedOptions(languageContext) {
-    const [sourceResponse, multilingualResponse] = await Promise.all([
-      getOptionsApi(),
-      getMultilingualOptionsApi(
-        {},
-        {
-          languageCode: languageContext.languageCode
-        }
+    try {
+      const [sourceResponse, multilingualResponse] = await Promise.all([
+        getOptionsApi(),
+        getMultilingualOptionsApi(
+          {},
+          {
+            languageCode: languageContext.languageCode
+          }
+        )
+      ])
+
+      const sourceOptions = readSourceOptions(sourceResponse)
+      const multilingualOptions = readMultilingualOptions(multilingualResponse)
+      assertBlogLanguageEnabled(multilingualOptions)
+      return setOptions(
+        mergeOptions(sourceOptions, multilingualOptions),
+        languageContext
       )
-    ])
-    const sourceOptions = readSourceOptions(sourceResponse)
-    const multilingualOptions = readMultilingualOptions(multilingualResponse)
-    assertBlogLanguageEnabled(multilingualOptions)
-    return setOptions(
-      mergeOptions(sourceOptions, multilingualOptions),
-      languageContext
-    )
+    } catch (error) {
+      throw 'Failed to fetch localized options: ' + error?.message
+    }
   }
 
   /**
