@@ -1,5 +1,6 @@
 import * as crypto from 'node:crypto'
 import { default as LRUCacheDriver } from 'unstorage/drivers/lru-cache'
+import { LANGUAGE_CONFIG_LIST } from '#shared/languages'
 
 export default defineNitroPlugin(nitroApp => {
   // 每秒输出内存使用情况，输出MB
@@ -212,15 +213,60 @@ export default defineNitroPlugin(nitroApp => {
   const inflightCacheWrites = new Set()
   const inflightBackgroundUpdates = new Set()
 
+  const supportedLanguageCodes = LANGUAGE_CONFIG_LIST.map(languageConfig => {
+    return languageConfig.code.toLowerCase()
+  })
+  const supportedLanguageCodeSet = new Set(supportedLanguageCodes)
+
+  function createCachedUrls(languageCodes) {
+    const baseCachedUrls = [
+      // 首页
+      '/',
+      // 文章列/文章详情
+      '/post/*',
+      // 页面
+      '/page/*'
+    ]
+    const generatedCachedUrls = new Set(baseCachedUrls)
+
+    for (const languageCode of languageCodes) {
+      for (const baseUrl of baseCachedUrls) {
+        if (baseUrl === '/') {
+          generatedCachedUrls.add(`/${languageCode}`)
+          generatedCachedUrls.add(`/${languageCode}/`)
+          continue
+        }
+
+        generatedCachedUrls.add(`/${languageCode}${baseUrl}`)
+      }
+    }
+
+    return generatedCachedUrls
+  }
+
+  function normalizePathLanguageCode(path) {
+    if (!path || path === '/') {
+      return path
+    }
+
+    const pathSegments = path.split('/')
+    const languageCode = pathSegments[1]
+
+    if (!languageCode) {
+      return path
+    }
+
+    const normalizedLanguageCode = languageCode.toLowerCase()
+    if (!supportedLanguageCodeSet.has(normalizedLanguageCode)) {
+      return path
+    }
+
+    pathSegments[1] = normalizedLanguageCode
+    return pathSegments.join('/')
+  }
+
   // 缓存URL列表
-  const cachedUrls = new Set([
-    // 首页
-    '/',
-    // 文章列/文章详情
-    '/post/*',
-    // 页面
-    '/page/*'
-  ])
+  const cachedUrls = createCachedUrls(supportedLanguageCodes)
 
   // 生成32位随机密码
   const RANDOMPASS = crypto.randomBytes(32).toString('hex')
@@ -238,9 +284,10 @@ export default defineNitroPlugin(nitroApp => {
   function isUrlCacheable(url) {
     // url 拆分路径和查询参数
     const [path] = url.split('?')
+    const normalizedPath = normalizePathLanguageCode(path)
 
     for (const regex of cachedUrlRegexes) {
-      if (regex.test(path)) {
+      if (regex.test(normalizedPath)) {
         return true
       }
     }
