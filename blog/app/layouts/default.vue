@@ -14,14 +14,16 @@
     <div class="blog-top-bar">
       <div class="blog-top-bar-body">
         <div class="blog-top-bar-left-body">
-          <nuxt-link to="/">
+          <nuxt-link :to="homePath">
             <img
+              v-if="options.siteLogo"
               class="blog-top-bar-sitelogo light"
               loading="lazy"
               :src="options.siteLogo"
               :alt="options.siteTitle"
             />
             <img
+              v-if="options.siteDarkLogo"
               class="blog-top-bar-sitelogo dark"
               loading="lazy"
               :src="options.siteDarkLogo"
@@ -59,7 +61,7 @@
         <div
           class="justify-between layout-close-btn-body type-l layout-mobile-navi-btn-body"
         >
-          <div class="text-xl font-bold">导航</div>
+          <div class="text-xl font-bold">{{ t('common.navigation.menu') }}</div>
           <div class="text-xl cursor-pointer" @click="toggleLeftMenu">
             <WUIIcon name="i-heroicons-x-mark" />
           </div>
@@ -68,13 +70,15 @@
           <div class="blog-layout-left-top-info-body">
             <!-- logo -->
             <div>
-              <nuxt-link to="/">
+              <nuxt-link :to="homePath">
                 <img
+                  v-if="options.siteLogo"
                   class="blog-layout-sitelogo light"
                   :src="options.siteLogo"
                   :alt="options.siteTitle"
                 />
                 <img
+                  v-if="options.siteDarkLogo"
                   class="blog-layout-sitelogo dark"
                   :src="options.siteDarkLogo"
                   :alt="options.siteTitle"
@@ -114,7 +118,9 @@
         <div class="blog-layout-right-top-body">
           <!-- 关闭按钮 -->
           <div class="justify-between mb-5 layout-close-btn-body type-r">
-            <div class="text-xl font-bold">侧边栏</div>
+            <div class="text-xl font-bold">
+              {{ t('common.navigation.sidebar') }}
+            </div>
             <div class="text-xl cursor-pointer" @click="toggleRightSidebar">
               <WUIIcon name="i-heroicons-x-mark" />
             </div>
@@ -123,7 +129,7 @@
           <div class="blog-search-body">
             <WUIInput
               v-model.trim="keyword"
-              placeholder="请输入关键词"
+              :placeholder="t('common.search.placeholder')"
               size="lg"
               variant="none"
               @keydown.enter="goSearch"
@@ -149,7 +155,7 @@
           >
             <!-- title -->
             <div class="blog-layout-right-title-body">
-              {{ item.title }}
+              {{ getSidebarTitle(item) }}
             </div>
             <template v-if="item.type === 1">
               <LazyHtmlContent :content="item.content" />
@@ -217,19 +223,27 @@
           ><template
             v-if="options.siteEnableSitemap && options.siteShowSitemapInFooter"
             ><span class="px-2">|</span
-            ><a :href="`${options.siteUrl}/sitemap.xml`" target="_blank"
-              >站点地图</a
+            ><a
+              :href="localeUrl(options.siteUrl, '/sitemap.xml')"
+              target="_blank"
+              >{{ t('common.footer.sitemap') }}</a
             ></template
           >
         </div>
         <div v-if="options.siteEnableRss && options.siteShowRssInFooter">
-          <span>RSS订阅：</span
-          ><a :href="`${options.siteUrl}/rss`" target="_blank">全站订阅</a
+          <span>{{ t('common.footer.rssSubscribe') }}</span
+          ><a :href="localeUrl(options.siteUrl, '/rss')" target="_blank">{{
+            t('common.footer.rssAll')
+          }}</a
           ><span class="px-2">|</span
-          ><a :href="`${options.siteUrl}/rss/blog`" target="_blank">订阅博文</a
+          ><a :href="localeUrl(options.siteUrl, '/rss/blog')" target="_blank">{{
+            t('common.footer.rssBlog')
+          }}</a
           ><span class="px-2">|</span
-          ><a :href="`${options.siteUrl}/rss/tweet`" target="_blank"
-            >订阅推文</a
+          ><a
+            :href="localeUrl(options.siteUrl, '/rss/tweet')"
+            target="_blank"
+            >{{ t('common.footer.rssTweet') }}</a
           >
         </div>
         <div
@@ -258,9 +272,54 @@
 <script setup>
 import { getNaviListApi } from '@/api/navi'
 import { getSidebarListApi } from '@/api/sidebar'
+import { getLanguageText } from '@/lang'
 
 const route = useRoute()
 const router = useRouter()
+const { languageCode, localePath, localeUrl, supportedLanguageCodes, t } =
+  useLang()
+languageCode.value
+
+const getSidebarBuiltinTitle = (type, targetLanguageCode) => {
+  const titlePath = `common.sidebarBuiltinTitles.${type}`
+  const title = getLanguageText(targetLanguageCode, titlePath)
+  if (title === titlePath) {
+    return ''
+  }
+
+  return title
+}
+
+const getSidebarBuiltinTitleList = type => {
+  return supportedLanguageCodes
+    .map(targetLanguageCode => {
+      return getSidebarBuiltinTitle(type, targetLanguageCode)
+    })
+    .filter(title => {
+      return Boolean(title)
+    })
+}
+
+const getSidebarTitle = item => {
+  const title = String(item?.title || '').trim()
+  const localizedTitle = getSidebarBuiltinTitle(item?.type, languageCode.value)
+
+  if (!localizedTitle) {
+    return title
+  }
+
+  if (!title) {
+    return localizedTitle
+  }
+
+  if (getSidebarBuiltinTitleList(item?.type).includes(title)) {
+    return localizedTitle
+  }
+
+  return title
+}
+
+const homePath = computed(() => localePath('/'))
 const layoutContentBody = ref(null)
 const layoutContentBodyMinHeight = ref(null)
 const layoutContentBodyMinHeightStyle = computed(() => {
@@ -334,7 +393,7 @@ const naviList = computed(() => {
   const list = naviListData.value.data
   const newList = [
     {
-      naviname: '首页',
+      naviname: t('common.navigation.home'),
       url: '/',
       isdefault: true
     },
@@ -352,7 +411,7 @@ const goSearch = () => {
   const keywordValue = escapeRegExp(keyword.value.trim())
   if (keyword.value) {
     router.push({
-      path: `/post/list/keyword/${keywordValue}/1`
+      path: localePath(`/post/list/keyword/${keywordValue}/1`)
     })
     keyword.value = ''
     // 释放焦点
