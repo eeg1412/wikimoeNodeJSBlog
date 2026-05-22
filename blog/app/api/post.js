@@ -1,4 +1,4 @@
-import httpRequest from '~/api'
+import httpRequest, { multilingualRequest } from '~/api'
 
 /**
  * @description 查询文章
@@ -6,17 +6,29 @@ import httpRequest from '~/api'
  */
 const URL = `/post/list`
 const getPostsApi = params => {
+  const languageCode = params?.languageCode
+  if (languageCode) {
+    return multilingualRequest.get(URL, params)
+  }
   return httpRequest.get(URL, params)
 }
 
 // '/post/archive'
 const archiveURL = `/post/archive`
-const getArchiveApi = () => {
-  return httpRequest.get(archiveURL)
+const getArchiveApi = (params = {}) => {
+  const languageCode = params?.languageCode
+  if (languageCode) {
+    return multilingualRequest.get(archiveURL, params)
+  }
+  return httpRequest.get(archiveURL, params)
 }
 // '/post/detail'
 const detailURL = `/post/detail`
 const getDetailApi = params => {
+  const languageCode = params?.languageCode
+  if (languageCode) {
+    return multilingualRequest.get(`${detailURL}`, params)
+  }
   return httpRequest.get(`${detailURL}`, params)
 }
 //put  /post/view/count

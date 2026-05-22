@@ -1,5 +1,5 @@
 // banner
-import httpRequest from '~/api'
+import httpRequest, { multilingualRequest } from '~/api'
 
 /**
  * @description 查询配置项
@@ -8,12 +8,20 @@ import httpRequest from '~/api'
 
 const URL = `/tag/detail`
 const getTagDetailApi = params => {
+  const languageCode = params?.languageCode
+  if (languageCode) {
+    return multilingualRequest.get(URL, params)
+  }
   return httpRequest.get(URL, params)
 }
 
 // /tag/random/list
 const RandomURL = `/tag/random/list`
 const getRandomTagListApi = params => {
+  const languageCode = params?.languageCode
+  if (languageCode) {
+    return multilingualRequest.get(RandomURL, params)
+  }
   return httpRequest.get(RandomURL, params)
 }
 

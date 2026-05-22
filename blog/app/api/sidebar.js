@@ -1,5 +1,5 @@
 // banner
-import httpRequest from '~/api'
+import httpRequest, { multilingualRequest } from '~/api'
 
 /**
  * @description 查询配置项
@@ -7,8 +7,12 @@ import httpRequest from '~/api'
  */
 
 const URL = `/sidebar/list`
-const getSidebarListApi = () => {
-  return httpRequest.get(URL)
+const getSidebarListApi = (params = {}) => {
+  const languageCode = params?.languageCode
+  if (languageCode) {
+    return multilingualRequest.get(URL, params)
+  }
+  return httpRequest.get(URL, params)
 }
 
 export { getSidebarListApi }

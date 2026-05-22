@@ -1,12 +1,16 @@
-import httpRequest from '~/api'
+import httpRequest, { multilingualRequest } from '~/api'
 
 /**
  * @description 获取地图标记点列表
  * @return {any} 返回地图标记点列表
  */
 const URL = `/mappoint/list`
-const getMappointListApi = () => {
-  return httpRequest.get(URL)
+const getMappointListApi = (params = {}) => {
+  const languageCode = params?.languageCode
+  if (languageCode) {
+    return multilingualRequest.get(URL, params)
+  }
+  return httpRequest.get(URL, params)
 }
 
 /**
@@ -17,6 +21,10 @@ const getMappointListApi = () => {
  */
 const detailURL = `/mappoint/detail`
 const getMappointDetailApi = params => {
+  const languageCode = params?.languageCode
+  if (languageCode) {
+    return multilingualRequest.get(detailURL, params)
+  }
   return httpRequest.get(detailURL, params)
 }
 
@@ -29,6 +37,10 @@ const getMappointDetailApi = params => {
  */
 const postListURL = `/mappoint/post/list`
 const getMappointPostListApi = params => {
+  const languageCode = params?.languageCode
+  if (languageCode) {
+    return multilingualRequest.get(postListURL, params)
+  }
   return httpRequest.get(postListURL, params)
 }
 
@@ -36,8 +48,12 @@ const getMappointPostListApi = params => {
  * @description 获取地图标记点列表 (Fetch版本)
  * @return {any} 返回地图标记点列表
  */
-const getMappointListApiFetch = () => {
-  return httpRequest.getFetch(URL, {})
+const getMappointListApiFetch = (params = {}) => {
+  const languageCode = params?.languageCode
+  if (languageCode) {
+    return multilingualRequest.getFetch(URL, params)
+  }
+  return httpRequest.getFetch(URL, params)
 }
 
 /**
@@ -47,6 +63,10 @@ const getMappointListApiFetch = () => {
  * @return {any} 返回地图标记点详情
  */
 const getMappointDetailApiFetch = params => {
+  const languageCode = params?.languageCode
+  if (languageCode) {
+    return multilingualRequest.getFetch(detailURL, params)
+  }
   return httpRequest.getFetch(detailURL, params)
 }
 
@@ -58,6 +78,10 @@ const getMappointDetailApiFetch = params => {
  * @return {any} 返回文章列表
  */
 const getMappointPostListApiFetch = params => {
+  const languageCode = params?.languageCode
+  if (languageCode) {
+    return multilingualRequest.getFetch(postListURL, params)
+  }
   return httpRequest.getFetch(postListURL, params)
 }
 

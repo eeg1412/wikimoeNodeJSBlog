@@ -1,4 +1,4 @@
-import httpRequest from '~/api'
+import httpRequest, { multilingualRequest } from '~/api'
 
 /**
  * @description 查询配置项
@@ -6,8 +6,12 @@ import httpRequest from '~/api'
  */
 
 const URL = `/navi/list`
-const getNaviListApi = () => {
-  return httpRequest.get(URL)
+const getNaviListApi = (params = {}) => {
+  const languageCode = params?.languageCode
+  if (languageCode) {
+    return multilingualRequest.get(URL, params)
+  }
+  return httpRequest.get(URL, params)
 }
 
 export { getNaviListApi }
