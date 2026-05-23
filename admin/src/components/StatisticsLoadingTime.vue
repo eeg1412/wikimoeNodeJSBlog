@@ -570,6 +570,7 @@ import { onMounted, reactive, ref, computed } from 'vue'
 import { generateRandomAlphabetString } from '@/utils/utils'
 import { authApi } from '@/api'
 import moment from 'moment'
+import 'moment/locale/zh-cn'
 import IpInfoDisplay from '@/components/IpInfoDisplay.vue'
 import LanguageTag from '@/components/LanguageTag.vue'
 
@@ -814,9 +815,9 @@ export default {
         const isOverDays = loadingTimeData.value.isOverDays
 
         data.forEach(item => {
-          let f = moment(item.time).format(
-            `YYYY/MM/DD dddd${isOverDays ? '' : ' HH:mm'}`
-          )
+          let f = moment(item.time)
+            .locale('zh-cn')
+            .format(`YYYY/MM/DD dddd${isOverDays ? '' : ' HH:mm'}`)
           // 空格换行
           f = f.split(' ')
           labels.push(f)

@@ -71,6 +71,7 @@
 import { ref, onMounted, computed } from 'vue'
 import { authApi } from '@/api'
 import moment from 'moment'
+import 'moment/locale/zh-cn'
 import { generateRandomAlphabetString } from '@/utils/utils'
 import {
   Chart as ChartJS,
@@ -90,7 +91,6 @@ ChartJS.register(
   Title,
   Tooltip
 )
-moment.locale('zh-cn')
 
 export default {
   components: {
@@ -230,9 +230,9 @@ export default {
         const isOverDays = visitorData.value.isOverDays
         data.forEach(item => {
           // _id 为日期 2024-01-13T07:00:00.000Z
-          let f = moment(item._id).format(
-            `YYYY/MM/DD dddd${isOverDays ? '' : ' HH:mm'}`
-          )
+          let f = moment(item._id)
+            .locale('zh-cn')
+            .format(`YYYY/MM/DD dddd${isOverDays ? '' : ' HH:mm'}`)
           // 空格换行
           f = f.split(' ')
           labels.push(f)
@@ -264,9 +264,9 @@ export default {
         const isOverDays = visitorData.value.isOverDays
         data.forEach(item => {
           // _id 为日期 2024-01-13T07:00:00.000Z
-          let f = moment(item._id).format(
-            `YYYY/MM/DD dddd${isOverDays ? '' : ' HH:mm'}`
-          )
+          let f = moment(item._id)
+            .locale('zh-cn')
+            .format(`YYYY/MM/DD dddd${isOverDays ? '' : ' HH:mm'}`)
           // 空格换行
           f = f.split(' ')
           labels.push(f)
@@ -298,9 +298,9 @@ export default {
         const isOverDays = visitorData.value.isOverDays
         data.forEach(item => {
           // _id 为日期 2024-01-13T07:00:00.000Z
-          let f = moment(item._id).format(
-            `YYYY/MM/DD dddd${isOverDays ? '' : ' HH:mm'}`
-          )
+          let f = moment(item._id)
+            .locale('zh-cn')
+            .format(`YYYY/MM/DD dddd${isOverDays ? '' : ' HH:mm'}`)
           // 空格换行
           f = f.split(' ')
           labels.push(f)
