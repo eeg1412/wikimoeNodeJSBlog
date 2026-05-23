@@ -12,9 +12,16 @@ export default defineConfig(({ mode }) => {
   return {
     plugins: [vue()],
     resolve: {
-      alias: {
-        '@': resolve(__dirname, 'src')
-      },
+      alias: [
+        {
+          find: '@',
+          replacement: resolve(__dirname, 'src')
+        },
+        {
+          find: /^moment$/,
+          replacement: resolve(__dirname, 'node_modules/moment/moment.js')
+        }
+      ],
       extensions: [
         '.mjs',
         '.js',
