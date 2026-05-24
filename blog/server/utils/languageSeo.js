@@ -9,6 +9,8 @@ const LANGUAGE_CODE_MAP = SUPPORTED_LANGUAGE_CODES.reduce((map, code) => {
   return map
 }, {})
 
+const MULTILINGUAL_API_NOT_CONFIGURED_REASON = 'MULTILINGUAL_API_NOT_CONFIGURED'
+
 function normalizeLanguageCode(input) {
   if (typeof input !== 'string') {
     return null
@@ -26,11 +28,14 @@ export function getMultilingualApiDomain(event) {
   const config = useRuntimeConfig(event)
   const apiDomain = String(config.apiMultilingualDomain || '').trim()
 
-  // 多语言代理只接受显式 http(s) 上游，避免空配置或异常协议进入 proxyRequest。
+  // 多语言代理只接受显式 http(s) 上游，未配置时表示多语言资源不可用。
   if (!apiDomain) {
     throw createError({
-      statusCode: 500,
-      statusMessage: 'Multilingual API domain is not configured'
+      statusCode: 404,
+      statusMessage: 'Not found',
+      data: {
+        reason: MULTILINGUAL_API_NOT_CONFIGURED_REASON
+      }
     })
   }
 
@@ -39,14 +44,14 @@ export function getMultilingualApiDomain(event) {
     parsedUrl = new URL(apiDomain)
   } catch (error) {
     throw createError({
-      statusCode: 500,
+      statusCode: 400,
       statusMessage: 'Multilingual API domain is invalid'
     })
   }
 
   if (parsedUrl.protocol !== 'http:' && parsedUrl.protocol !== 'https:') {
     throw createError({
-      statusCode: 500,
+      statusCode: 400,
       statusMessage: 'Multilingual API domain protocol is invalid'
     })
   }
