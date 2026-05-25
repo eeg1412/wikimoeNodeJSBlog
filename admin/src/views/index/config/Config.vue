@@ -9,6 +9,10 @@
       <el-tab-pane label="网站设置" name="site">
         <ConfigSiteSettingsForm v-if="activeName === 'site'" />
       </el-tab-pane>
+      <!-- 多语言设置 -->
+      <el-tab-pane label="多语言设置" name="multilingual">
+        <ConfigMultilingualSettingsForm v-if="activeName === 'multilingual'" />
+      </el-tab-pane>
       <!-- 文章页设置 -->
       <el-tab-pane label="文章页设置" name="post">
         <ConfigSitePostForm v-if="activeName === 'post'" />
@@ -62,6 +66,7 @@ import ConfigSitePostForm from '@/components/ConfigSitePostForm'
 import ConfigAdSettingsForm from '@/components/ConfigAdSettingsForm'
 import ConfigIPBlockSettingsForm from '@/components/ConfigIPBlockSettingsForm'
 import ConfigOlMapSettingsForm from '@/components/ConfigOlMapSettingsForm'
+import ConfigMultilingualSettingsForm from '@/components/ConfigMultilingualSettingsForm'
 export default {
   components: {
     ConfigSiteSettingsForm,
@@ -73,7 +78,8 @@ export default {
     ConfigSitePostForm,
     ConfigAdSettingsForm,
     ConfigIPBlockSettingsForm,
-    ConfigOlMapSettingsForm
+    ConfigOlMapSettingsForm,
+    ConfigMultilingualSettingsForm
   },
   setup() {
     const route = useRoute()

@@ -6,9 +6,56 @@ const log4js = require('log4js')
 const adminApiLog = log4js.getLogger('adminApi')
 const globalConfigUtils = require('../../../config/globalConfig')
 const cacheDataUtils = require('../../../config/cacheData')
+const { isSupportedLanguageCode } = require('../../../config/languages')
+
+function sendOptionValidateError(res, message) {
+  res.status(400).json({
+    errors: [
+      {
+        message
+      }
+    ]
+  })
+}
+
+function validateOptionList(optionList, res) {
+  if (!Array.isArray(optionList)) {
+    sendOptionValidateError(res, '配置项列表格式无效')
+    return false
+  }
+
+  for (const item of optionList) {
+    const { name, value } = item
+
+    if (name === 'siteDefaultLanguage') {
+      if (!isSupportedLanguageCode(value)) {
+        sendOptionValidateError(res, '默认站点语言不在支持的语言列表中')
+        return false
+      }
+    }
+
+    if (name === 'siteEnableMultilingual') {
+      const isValidBooleanValue =
+        value === true ||
+        value === false ||
+        value === 'true' ||
+        value === 'false'
+      if (!isValidBooleanValue) {
+        sendOptionValidateError(res, '开启多语言配置值无效')
+        return false
+      }
+    }
+  }
+
+  return true
+}
 
 module.exports = async function (req, res, next) {
   const optionList = req.body.optionList || []
+  if (!validateOptionList(optionList, res)) {
+    return
+  }
+
   const resList = []
   // optionList 为name 和 value 的数组,name是必须的
   // for await 遍历数组

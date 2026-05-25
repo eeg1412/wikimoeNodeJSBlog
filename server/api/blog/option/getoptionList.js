@@ -6,6 +6,7 @@ const userApiLog = log4js.getLogger('userApi')
 module.exports = async function (req, res, next) {
   if (
     !global.$globalConfig?.siteSettings ||
+    !global.$globalConfig?.multilingualSettings ||
     !global.$globalConfig?.commentSettings
   ) {
     // 400
@@ -22,6 +23,7 @@ module.exports = async function (req, res, next) {
   res.send({
     data: {
       ...global.$globalConfig.siteSettings,
+      ...global.$globalConfig.multilingualSettings,
       ...global.$globalConfig.commentSettings,
       ...global.$globalConfig.rssSettings,
       ...global.$globalConfig.sitePostSettings,

@@ -2,6 +2,7 @@ const fs = require('fs')
 var path = require('path')
 const optionUtils = require('../mongodb/utils/options')
 const { Mint } = require('mint-filter')
+const { DEFAULT_LANGUAGE_CODE } = require('./languages')
 
 const initGlobalConfig = async () => {
   // 默认配置
@@ -86,6 +87,14 @@ const initGlobalConfig = async () => {
     // robots.txt
     siteRobotsTxt: ''
   }
+
+  const multilingualSettingsConfig = {
+    // 开启多语言
+    siteEnableMultilingual: false,
+    // 默认站点语言
+    siteDefaultLanguage: DEFAULT_LANGUAGE_CODE
+  }
+
   const commentSettingsConfig = {
     // 开启评论
     siteEnableComment: false,
@@ -238,6 +247,7 @@ const initGlobalConfig = async () => {
       const config = {
         imgSettings: imgSettingConfig,
         siteSettings: siteSettingsConfig,
+        multilingualSettings: multilingualSettingsConfig,
         commentSettings: commentSettingsConfig,
         rssSettings: rssSettingsConfig,
         emailSettings: emailSettingsConfig,
@@ -255,6 +265,7 @@ const initGlobalConfig = async () => {
       // 将obj转换为config
       formatResToForm(config.imgSettings, obj)
       formatResToForm(config.siteSettings, obj)
+      formatResToForm(config.multilingualSettings, obj)
       formatResToForm(config.commentSettings, obj)
       formatResToForm(config.rssSettings, obj)
       formatResToForm(config.emailSettings, obj)
