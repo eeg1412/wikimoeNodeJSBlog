@@ -1,9 +1,5 @@
 <template>
-  <div>
-    <NuxtLayout>
-      <NuxtPage></NuxtPage>
-    </NuxtLayout>
-  </div>
+  <NuxtPage></NuxtPage>
 </template>
 <script setup>
 import {
