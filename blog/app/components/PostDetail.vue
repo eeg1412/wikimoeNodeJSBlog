@@ -21,27 +21,52 @@
         <h2 class="post-title mb-1" v-else-if="postData.data.type === 2">
           {{ t('common.post.tweetTitle') }}
         </h2>
-        <p class="post-extra cGray94">
-          {{ t('common.post.author') }}{{ postAuthor.nickname
-          }}<span class="tenten"></span>{{ t('common.post.time')
-          }}{{ formatDate(postData.data.date)
-          }}<span class="post_sort_link_span" v-if="postData.data.sort"
-            ><span class="tenten"></span
-            ><span>{{ t('common.post.sort') }}</span>
-            <NuxtLink
-              class="common-a"
-              :to="{
-                name: 'postListSort',
-                params: {
-                  code: languageCode,
-                  sortid: postData.data.sort.alias || postData.data.sort._id,
-                  page: 1
-                }
-              }"
-            >
-              {{ postData.data.sort.sortname }}
-            </NuxtLink></span
+        <p class="post-extra cGray94 leading-[1.5]">
+          <span class="inline-flex items-center align-middle gap-1 mr-2.5">
+            <WUIIcon
+              name="i-heroicons-user"
+              class="size-[1em] shrink-0 post-extra-icon"
+            />
+            <span>{{ postAuthor.nickname }}</span>
+          </span>
+
+          <!-- <span class="tenten align-middle"></span> -->
+
+          <span class="inline-flex items-center align-middle gap-1 mr-2.5">
+            <WUIIcon
+              name="i-heroicons-clock"
+              class="size-[1em] shrink-0 post-extra-icon"
+            />
+            <span>{{ formatDate(postData.data.date) }}</span>
+          </span>
+
+          <span
+            v-if="postData.data.sort"
+            class="post_sort_link_span align-middle"
           >
+            <!-- <span class="tenten align-middle"></span> -->
+
+            <span class="inline-flex items-center align-middle gap-1 mr-2.5">
+              <WUIIcon
+                name="i-heroicons-folder"
+                class="size-[1em] shrink-0 post-extra-icon"
+              />
+
+              <NuxtLink
+                class="common-a"
+                :to="{
+                  name: 'postListSort',
+                  params: {
+                    code: languageCode,
+                    sortid: postData.data.sort.alias || postData.data.sort._id,
+                    page: 1
+                  }
+                }"
+              >
+                {{ postData.data.sort.sortname }}
+              </NuxtLink>
+            </span>
+          </span>
         </p>
       </div>
     </div>
@@ -1284,7 +1309,7 @@ onUnmounted(() => {
   font-weight: 700;
 }
 .post-extra {
-  font-size: 13px;
+  font-size: 14px;
   line-height: 1.5;
 }
 /* 推文 */
