@@ -31,6 +31,11 @@ const getDetailApi = params => {
   }
   return httpRequest.get(`${detailURL}`, params)
 }
+// '/post/language/existence'
+const languageExistenceURL = `/post/language/existence`
+const getPostLanguageExistenceApi = (params, options = {}) => {
+  return multilingualRequest.get(languageExistenceURL, params, options)
+}
 //put  /post/view/count
 const viewCountURL = `/post/view/count`
 const putViewCountApi = params => {
@@ -67,5 +72,6 @@ export {
   putViewCountApi,
   postLikeLogApi,
   postLikeLogListApi,
-  putShareCountApi
+  putShareCountApi,
+  getPostLanguageExistenceApi
 }

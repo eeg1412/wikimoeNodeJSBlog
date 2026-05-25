@@ -21,7 +21,7 @@
         <h2 class="post-title mb-1" v-else-if="postData.data.type === 2">
           {{ t('common.post.tweetTitle') }}
         </h2>
-        <p class="post-extra cGray94 leading-[1.5]">
+        <div class="post-extra cGray94 leading-[1.5]">
           <span class="inline-flex items-center align-middle gap-1 mr-2.5">
             <WUIIcon
               name="i-heroicons-user"
@@ -67,7 +67,55 @@
               </NuxtLink>
             </span>
           </span>
-        </p>
+          <!-- 多语言信息接口有效时才显示语言块；失败、超时或未配置时整块不渲染。 -->
+          <span
+            class="post-language-switcher align-middle mr-2.5"
+            v-if="hasPostLanguageBlock"
+          >
+            <!-- 存在其他可选语言时才显示 WUIPopover 和下拉箭头。 -->
+            <WUIPopover
+              :popper="{ arrow: true }"
+              class="post-language-popover"
+              v-if="hasPostLanguageSwitcher"
+            >
+              <button
+                class="post-language-trigger common-focus-visible-btn-outline hover:text-primary-500"
+                type="button"
+              >
+                <WUIIcon
+                  name="i-heroicons-language"
+                  class="size-[1em] shrink-0 post-extra-icon"
+                />
+                <span>{{ currentLanguageLabel }}</span>
+                <WUIIcon
+                  name="i-heroicons-chevron-down-20-solid"
+                  class="size-[1em] shrink-0"
+                />
+              </button>
+              <template #panel="{ close }">
+                <div class="post-language-panel p-2" @click.stop>
+                  <NuxtLink
+                    class="post-language-option flex items-center gap-2 rounded px-3 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-primary-500 dark:text-gray-200 dark:hover:bg-gray-800"
+                    v-for="item in selectablePostLanguageList"
+                    :key="item.code"
+                    :to="getPostLanguagePath(item.code)"
+                    @click="close"
+                  >
+                    <span>{{ item.label }}</span>
+                  </NuxtLink>
+                </div>
+              </template>
+            </WUIPopover>
+            <!-- 只有当前语言可用、没有其他语言可切换时，只静态显示当前语言。 -->
+            <span class="post-language-static" v-else>
+              <WUIIcon
+                name="i-heroicons-language"
+                class="size-[1em] shrink-0 post-extra-icon"
+              />
+              <span>{{ currentLanguageLabel }}</span>
+            </span>
+          </span>
+        </div>
       </div>
     </div>
     <div v-else-if="postData.data.type === 3">
@@ -705,13 +753,15 @@ import {
   getDetailApi,
   putViewCountApi,
   postLikeLogListApi,
-  postLikeLogApi
+  postLikeLogApi,
+  getPostLanguageExistenceApi
 } from '@/api/post'
 import {
   getCommentListApi,
   postCommentLikeLogApi,
   postCommentLikeLogListApi
 } from '@/api/comment'
+import { LANGUAGE_CONFIG_LIST } from '#shared/languages'
 
 const { options } = useOptions()
 
@@ -719,7 +769,7 @@ const route = useRoute()
 const id = route.params.id
 const routeName = route.name
 const toast = useWToast()
-const { languageCode, t } = useLang()
+const { isLocalizedRoute, languageCode, t } = useLang()
 const { formatNumberText, fromNowText } = useLocalizedText()
 languageCode.value
 
@@ -767,8 +817,143 @@ const runCode = () => {
   const newWindow = window.open()
   newWindow.document.write(runCodeContent)
 }
-const postid = postData.value.data._id
-const sourcePostid = postData.value.data.sourceId
+// const postid = postData.value.data._id
+const sourcePostid = postData.value?.data?.sourceId
+// 多语言接口只接受源文章 ID；译文详情页也要回到 sourceId 查询同一组语言状态。
+const sourceArticleId =
+  postData.value?.data?.sourceId || postData.value?.data?._id
+// 语言切换属于增强信息，SSR 最多等 1 秒，避免拖慢文章主内容输出。
+const POST_LANGUAGE_EXISTENCE_TIMEOUT = 1000
+// 语言配置转为 map，便于根据 code 显示当前语言名称。
+const languageConfigMap = LANGUAGE_CONFIG_LIST.reduce((map, item) => {
+  map[item.code] = item
+  return map
+}, {})
+// 统一表示“多语言信息不可用”；这种状态下模板不会渲染语言块。
+const createUnavailablePostLanguageInfo = () => {
+  return {
+    sourceLanguageCode: '',
+    existenceMap: {}
+  }
+}
+// 接口成功时直接使用上游给出的语言信息；前端不补齐或推断语言数据。
+const normalizePostLanguageInfo = data => {
+  return {
+    sourceLanguageCode: data.sourceLanguageCode,
+    existenceMap: data.existenceMap
+  }
+}
+// 未配置多语言上游或缺少源文章 ID 时，SSR 阶段不发起这个辅助接口。
+const shouldFetchPostLanguageExistence = () => {
+  if (!sourceArticleId) {
+    return false
+  }
+
+  if (import.meta.server) {
+    const runtimeConfig = useRuntimeConfig()
+    const apiDomain = String(runtimeConfig.apiMultilingualDomain || '').trim()
+    return Boolean(apiDomain)
+  }
+
+  return true
+}
+// 在文章详情 SSR 阶段读取语言状态；失败只返回不可用状态，不触发前端语言块。
+const fetchPostLanguageExistence = async () => {
+  if (!shouldFetchPostLanguageExistence()) {
+    return createUnavailablePostLanguageInfo()
+  }
+
+  try {
+    const response = await getPostLanguageExistenceApi(
+      { sourceId: sourceArticleId },
+      {
+        shouldSkipErrorPage: true,
+        timeout: POST_LANGUAGE_EXISTENCE_TIMEOUT
+      }
+    )
+    return normalizePostLanguageInfo(response.data.value)
+  } catch {
+    return createUnavailablePostLanguageInfo()
+  }
+}
+const postLanguageInfo = ref(await fetchPostLanguageExistence())
+// 只有请求成功并确认源语言存在时，才允许页面展示多语言块。
+const hasPostLanguageInfo = computed(() => {
+  const sourceLanguageCode = postLanguageInfo.value?.sourceLanguageCode
+  if (!sourceLanguageCode) {
+    return false
+  }
+
+  return postLanguageInfo.value?.existenceMap?.[sourceLanguageCode] === true
+})
+// 源文章 URL 不带语言 code；这种情况下当前语言来自接口返回的源语言。
+const currentPostLanguageCode = computed(() => {
+  if (!hasPostLanguageInfo.value) {
+    return ''
+  }
+
+  const sourceLanguageCode = postLanguageInfo.value?.sourceLanguageCode
+  if (!isLocalizedRoute.value) {
+    return sourceLanguageCode
+  }
+
+  return languageCode.value
+})
+// 没有有效多语言信息时返回空字符串，模板会因此完全隐藏语言块。
+const currentLanguageLabel = computed(() => {
+  if (!currentPostLanguageCode.value) {
+    return ''
+  }
+
+  const currentLanguageConfig = languageConfigMap[currentPostLanguageCode.value]
+  if (currentLanguageConfig) {
+    return currentLanguageConfig.label
+  }
+
+  return ''
+})
+// 只列出接口确认存在且已启用的语言，不根据本地语言配置补齐。
+const availablePostLanguageList = computed(() => {
+  if (!hasPostLanguageInfo.value) {
+    return []
+  }
+
+  return LANGUAGE_CONFIG_LIST.filter(item => {
+    return postLanguageInfo.value?.existenceMap?.[item.code] === true
+  })
+})
+// 下拉列表只显示可切换的其他语言，当前语言不重复出现。
+const selectablePostLanguageList = computed(() => {
+  return availablePostLanguageList.value.filter(item => {
+    return item.code !== currentPostLanguageCode.value
+  })
+})
+// 有其他语言可选时才显示 Popover；否则展示静态语言文本。
+const hasPostLanguageSwitcher = computed(() => {
+  return selectablePostLanguageList.value.length > 0
+})
+// 总开关：没有可靠接口数据时，前端页面不显示任何多语言块。
+const hasPostLanguageBlock = computed(() => {
+  if (!hasPostLanguageInfo.value) {
+    return false
+  }
+
+  return Boolean(currentLanguageLabel.value)
+})
+// 源语言链接走无 code 的源文章地址；译文语言链接使用 code 前缀和源文章 ID。
+const getPostLanguagePath = targetLanguageCode => {
+  let postTypePath = 'post'
+  if (postData.value?.data?.type === 3) {
+    postTypePath = 'page'
+  }
+
+  const postPath = `/${postTypePath}/${sourceArticleId}`
+  if (targetLanguageCode === postLanguageInfo.value?.sourceLanguageCode) {
+    return buildPlainPath(postPath)
+  }
+
+  return buildLanguagePath(targetLanguageCode, postPath)
+}
 // comment
 const commentPage = ref(1)
 const commentData = ref({
@@ -1426,5 +1611,23 @@ onUnmounted(() => {
 }
 .comment-list-item-avatar-link:focus-visible {
   @apply ring-0 block outline-2 outline-primary-500 outline rounded;
+}
+.post-language-switcher,
+.post-language-static,
+.post-language-trigger {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+.post-language-trigger {
+  color: inherit;
+  line-height: inherit;
+  cursor: pointer;
+  background: transparent;
+  border: 0;
+  padding: 0;
+}
+.post-language-panel {
+  min-width: 150px;
 }
 </style>

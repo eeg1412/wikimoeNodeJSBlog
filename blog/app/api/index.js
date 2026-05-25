@@ -74,6 +74,9 @@ class HttpRequest {
         method: method,
         ...options
       }
+      // 某些非关键 SSR 辅助接口失败时只需要让调用方自行处理，不应该触发全局错误页。
+      const shouldSkipErrorPage = newOptions.shouldSkipErrorPage
+      delete newOptions.shouldSkipErrorPage
 
       if (method === 'GET' || method === 'DELETE') {
         newOptions.params = data
@@ -91,11 +94,13 @@ class HttpRequest {
         if (res.error?.value) {
           const requestError = res.error.value
           const statusCode = requestError?.statusCode
-          // 多语言请求失败时使用当前请求语言展示错误，并 reject，避免调用方 await 长时间悬空。
-          showError({
-            statusCode: statusCode || 500,
-            message: getRequestMaintenanceMessage(data, options)
-          })
+          if (!shouldSkipErrorPage) {
+            // 多语言请求失败时使用当前请求语言展示错误，并 reject，避免调用方 await 长时间悬空。
+            showError({
+              statusCode: statusCode || 500,
+              message: getRequestMaintenanceMessage(data, options)
+            })
+          }
           reject(requestError)
         } else {
           resolve(res)
