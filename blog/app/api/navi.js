@@ -1,4 +1,4 @@
-import httpRequest, { multilingualRequest } from '~/api'
+import { resolveSiteRequest } from '~/api'
 
 /**
  * @description 查询配置项
@@ -6,12 +6,14 @@ import httpRequest, { multilingualRequest } from '~/api'
  */
 
 const URL = `/navi/list`
-const getNaviListApi = (params = {}) => {
-  const languageCode = params?.languageCode
-  if (languageCode) {
-    return multilingualRequest.get(URL, params)
-  }
-  return httpRequest.get(URL, params)
+const getNaviListApi = (params = {}, options = {}) => {
+  const siteRequest = resolveSiteRequest(params, options)
+  return siteRequest.request.get(URL, siteRequest.params, options)
 }
 
-export { getNaviListApi }
+const getNaviListFetchApi = (params = {}, options = {}) => {
+  const siteRequest = resolveSiteRequest(params, options)
+  return siteRequest.request.getFetch(URL, siteRequest.params, options)
+}
+
+export { getNaviListApi, getNaviListFetchApi }

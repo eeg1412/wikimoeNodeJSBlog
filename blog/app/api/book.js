@@ -1,5 +1,5 @@
 // banner
-import httpRequest, { multilingualRequest } from '~/api'
+import { resolveSiteRequest } from '~/api'
 
 /**
  * @description 查询配置项
@@ -8,54 +8,38 @@ import httpRequest, { multilingualRequest } from '~/api'
 
 const URL = `/book/list`
 const getBookListApi = params => {
-  const languageCode = params?.languageCode
-  if (languageCode) {
-    return multilingualRequest.get(URL, params, { watch: false })
-  }
-  return httpRequest.get(URL, params, { watch: false })
+  const siteRequest = resolveSiteRequest(params)
+  return siteRequest.request.get(URL, siteRequest.params, { watch: false })
 }
 const getBookListApiFetch = params => {
-  const languageCode = params?.languageCode
-  if (languageCode) {
-    return multilingualRequest.getFetch(URL, params)
-  }
-  return httpRequest.getFetch(URL, params)
+  const siteRequest = resolveSiteRequest(params)
+  return siteRequest.request.getFetch(URL, siteRequest.params)
 }
 
 // detail
 const URL_DETAIL = `/book/detail`
 const getBookDetailApi = params => {
-  const languageCode = params?.languageCode
-  if (languageCode) {
-    return multilingualRequest.get(URL_DETAIL, params, { watch: false })
-  }
-  return httpRequest.get(URL_DETAIL, params, { watch: false })
+  const siteRequest = resolveSiteRequest(params)
+  return siteRequest.request.get(URL_DETAIL, siteRequest.params, {
+    watch: false
+  })
 }
 const getBookDetailApiFetch = params => {
-  const languageCode = params?.languageCode
-  if (languageCode) {
-    return multilingualRequest.getFetch(URL_DETAIL, params)
-  }
-  return httpRequest.getFetch(URL_DETAIL, params)
+  const siteRequest = resolveSiteRequest(params)
+  return siteRequest.request.getFetch(URL_DETAIL, siteRequest.params)
 }
 
 const URL2 = `/booktype/list`
 const getBooktypeListApi = params => {
-  const languageCode = params?.languageCode
-  if (languageCode) {
-    return multilingualRequest.get(URL2, params, { watch: false })
-  }
-  return httpRequest.get(URL2, params, { watch: false })
+  const siteRequest = resolveSiteRequest(params)
+  return siteRequest.request.get(URL2, siteRequest.params, { watch: false })
 }
 
 // /book/reading/list
 const URL3 = `/book/reading/list`
 const getBookReadingListApi = (params = {}) => {
-  const languageCode = params?.languageCode
-  if (languageCode) {
-    return multilingualRequest.get(URL3, params, { watch: false })
-  }
-  return httpRequest.get(URL3, params, { watch: false })
+  const siteRequest = resolveSiteRequest(params)
+  return siteRequest.request.get(URL3, siteRequest.params, { watch: false })
 }
 
 export {

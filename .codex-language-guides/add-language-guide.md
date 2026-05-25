@@ -12,6 +12,8 @@
 
 只新增语言时不要修改代码配置里的 `isDefault: true`。Blog 运行时默认语言优先使用 `/api/blog/options` 返回的 `siteDefaultLanguage`；options 不可用或配置值无效时，才使用代码配置里唯一的 `isDefault: true` 作为兜底。
 
+如果后台把 `siteDefaultLanguage` 设置为新语言，该语言就是主站语言。无论访问 `/` 还是 `/<language-code>`，主站语言相关的 options、导航和侧边栏都应走 `/api/blog` 主站接口；只有非主站语言才走 `/api/multilingual-blog` 多语言接口。
+
 ## 2. Blog 语言包
 
 在 `blog/shared/languages.js` 的 `LANGUAGE_CONFIG_LIST` 中追加语言后，必须新增对应语言目录：
@@ -42,6 +44,7 @@
 - `siteDefaultLanguage` 可以保存为新语言码。
 - `/api/blog/options` 返回的 `siteDefaultLanguage` 与后台保存值一致。
 - `/api/blog/options` 返回 `siteEnableMultilingual`。
+- 当 `siteDefaultLanguage` 设置为新语言时，访问 `/<language-code>` 不应请求对应语言的多语言 options、导航和侧边栏接口。
 - `/api/blog/comment/create` 接受新语言 code 作为 `siteLangCode`，并拒绝不在语言表内的 code。
 - 回复评论邮件中的文章链接在 `siteLangCode` 为新语言 code 时使用 `/<language-code>/post/<post-id>` 或 `/<language-code>/page/<post-id>`。
 

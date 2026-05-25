@@ -28,14 +28,14 @@ const router = useRouter()
  * @param {object} targetRoute 输入：Nuxt 路由对象。
  * @returns {string} 输出：标准语言码；无语言码或非法语言码时返回空字符串。
  */
-// function getOptionsRouteLanguageCode(targetRoute) {
-//   const languageCode = normalizeLanguageCode(getRouteCode(targetRoute))
-//   if (languageCode) {
-//     return languageCode
-//   }
+function getOptionsRouteLanguageCode(targetRoute) {
+  const languageCode = normalizeLanguageCode(getRouteCode(targetRoute))
+  if (languageCode) {
+    return languageCode
+  }
 
-//   return ''
-// }
+  return ''
+}
 
 if (import.meta.client) {
   nuxtApp.hook('app:chunkError', ({ error }) => {
@@ -45,32 +45,33 @@ if (import.meta.client) {
 
 const { options, getOptions } = useOptions()
 await getOptions()
-// const currentOptionsLanguageCode = ref(getOptionsRouteLanguageCode(route))
+const currentOptionsLanguageCode = ref(getOptionsRouteLanguageCode(route))
 
 // 路由跳转前
-// router.beforeEach(async (to, from) => {
-//   // 使用标准语言码比较，避免 zh-CN 和 zh-cn 在同语言导航时重复拉取 options。
-//   const toLanguageCode = getOptionsRouteLanguageCode(to)
+if (import.meta.client) {
+  router.beforeEach(async to => {
+    const toLanguageCode = getOptionsRouteLanguageCode(to)
 
-//   if (toLanguageCode !== currentOptionsLanguageCode.value) {
-//     try {
-//       await getOptions({
-//         languageCode: toLanguageCode || undefined,
-//         force: true
-//       })
+    if (toLanguageCode !== currentOptionsLanguageCode.value) {
+      try {
+        const optionsParams = {
+          force: true
+        }
+        if (toLanguageCode) {
+          optionsParams.languageCode = toLanguageCode
+        }
 
-//       currentOptionsLanguageCode.value = toLanguageCode
-//     } catch (error) {
-//       console.error('获取选项失败:', error)
+        await getOptions(optionsParams)
+        currentOptionsLanguageCode.value = toLanguageCode
+      } catch (error) {
+        console.error('获取选项失败:', error)
+        throw error
+      }
+    }
 
-//       // 等价于以前的 next(error)
-//       throw error
-//     }
-//   }
-
-//   // 等价于以前的 next()
-//   return true
-// })
+    return true
+  })
+}
 
 onErrorCaptured(error => {
   if (!import.meta.client) {

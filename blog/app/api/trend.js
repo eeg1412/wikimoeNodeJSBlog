@@ -1,5 +1,5 @@
 // banner
-import httpRequest, { multilingualRequest } from '~/api'
+import { resolveSiteRequest } from '~/api'
 
 /**
  * @description 查询配置项
@@ -8,11 +8,8 @@ import httpRequest, { multilingualRequest } from '~/api'
 
 const POSTURL = `/trend/post/list`
 const getTrendPostListApi = params => {
-  const languageCode = params?.languageCode
-  if (languageCode) {
-    return multilingualRequest.get(POSTURL, params)
-  }
-  return httpRequest.get(POSTURL, params)
+  const siteRequest = resolveSiteRequest(params)
+  return siteRequest.request.get(POSTURL, siteRequest.params)
 }
 
 export { getTrendPostListApi }

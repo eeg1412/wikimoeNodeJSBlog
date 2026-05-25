@@ -1,4 +1,4 @@
-import httpRequest, { multilingualRequest } from '~/api'
+import { resolveSiteRequest } from '~/api'
 
 /**
  * @description 获取地图标记点列表
@@ -6,11 +6,8 @@ import httpRequest, { multilingualRequest } from '~/api'
  */
 const URL = `/mappoint/list`
 const getMappointListApi = (params = {}) => {
-  const languageCode = params?.languageCode
-  if (languageCode) {
-    return multilingualRequest.get(URL, params)
-  }
-  return httpRequest.get(URL, params)
+  const siteRequest = resolveSiteRequest(params)
+  return siteRequest.request.get(URL, siteRequest.params)
 }
 
 /**
@@ -21,11 +18,8 @@ const getMappointListApi = (params = {}) => {
  */
 const detailURL = `/mappoint/detail`
 const getMappointDetailApi = params => {
-  const languageCode = params?.languageCode
-  if (languageCode) {
-    return multilingualRequest.get(detailURL, params)
-  }
-  return httpRequest.get(detailURL, params)
+  const siteRequest = resolveSiteRequest(params)
+  return siteRequest.request.get(detailURL, siteRequest.params)
 }
 
 /**
@@ -37,11 +31,8 @@ const getMappointDetailApi = params => {
  */
 const postListURL = `/mappoint/post/list`
 const getMappointPostListApi = params => {
-  const languageCode = params?.languageCode
-  if (languageCode) {
-    return multilingualRequest.get(postListURL, params)
-  }
-  return httpRequest.get(postListURL, params)
+  const siteRequest = resolveSiteRequest(params)
+  return siteRequest.request.get(postListURL, siteRequest.params)
 }
 
 /**
@@ -49,11 +40,8 @@ const getMappointPostListApi = params => {
  * @return {any} 返回地图标记点列表
  */
 const getMappointListApiFetch = (params = {}) => {
-  const languageCode = params?.languageCode
-  if (languageCode) {
-    return multilingualRequest.getFetch(URL, params)
-  }
-  return httpRequest.getFetch(URL, params)
+  const siteRequest = resolveSiteRequest(params)
+  return siteRequest.request.getFetch(URL, siteRequest.params)
 }
 
 /**
@@ -63,11 +51,8 @@ const getMappointListApiFetch = (params = {}) => {
  * @return {any} 返回地图标记点详情
  */
 const getMappointDetailApiFetch = params => {
-  const languageCode = params?.languageCode
-  if (languageCode) {
-    return multilingualRequest.getFetch(detailURL, params)
-  }
-  return httpRequest.getFetch(detailURL, params)
+  const siteRequest = resolveSiteRequest(params)
+  return siteRequest.request.getFetch(detailURL, siteRequest.params)
 }
 
 /**
@@ -78,11 +63,8 @@ const getMappointDetailApiFetch = params => {
  * @return {any} 返回文章列表
  */
 const getMappointPostListApiFetch = params => {
-  const languageCode = params?.languageCode
-  if (languageCode) {
-    return multilingualRequest.getFetch(postListURL, params)
-  }
-  return httpRequest.getFetch(postListURL, params)
+  const siteRequest = resolveSiteRequest(params)
+  return siteRequest.request.getFetch(postListURL, siteRequest.params)
 }
 
 export {

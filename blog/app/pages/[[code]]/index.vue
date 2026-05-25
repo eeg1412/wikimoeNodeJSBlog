@@ -31,11 +31,23 @@ const isLocalizedRoute = computed(() => {
   return Boolean(getCurrentRouteCode())
 })
 
+const isMainSiteLanguage = computed(() => {
+  return currentLanguageCode.value === resolveDefaultLanguageCode(options.value)
+})
+
+const shouldRequireMultilingualSite = computed(() => {
+  if (!isLocalizedRoute.value) {
+    return false
+  }
+
+  return !isMainSiteLanguage.value
+})
+
 const isSiteMultilingualEnabled = computed(() => {
   return options.value?.siteEnableMultilingual === true
 })
 
-if (isLocalizedRoute.value && !isSiteMultilingualEnabled.value) {
+if (shouldRequireMultilingualSite.value && !isSiteMultilingualEnabled.value) {
   throw createLanguageNotFoundError(SITE_MULTILINGUAL_DISABLED_REASON)
 }
 

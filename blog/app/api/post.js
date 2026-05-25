@@ -1,4 +1,4 @@
-import httpRequest, { multilingualRequest } from '~/api'
+import httpRequest, { multilingualRequest, resolveSiteRequest } from '~/api'
 
 /**
  * @description 查询文章
@@ -6,30 +6,21 @@ import httpRequest, { multilingualRequest } from '~/api'
  */
 const URL = `/post/list`
 const getPostsApi = params => {
-  const languageCode = params?.languageCode
-  if (languageCode) {
-    return multilingualRequest.get(URL, params)
-  }
-  return httpRequest.get(URL, params)
+  const siteRequest = resolveSiteRequest(params)
+  return siteRequest.request.get(URL, siteRequest.params)
 }
 
 // '/post/archive'
 const archiveURL = `/post/archive`
 const getArchiveApi = (params = {}) => {
-  const languageCode = params?.languageCode
-  if (languageCode) {
-    return multilingualRequest.get(archiveURL, params)
-  }
-  return httpRequest.get(archiveURL, params)
+  const siteRequest = resolveSiteRequest(params)
+  return siteRequest.request.get(archiveURL, siteRequest.params)
 }
 // '/post/detail'
 const detailURL = `/post/detail`
 const getDetailApi = params => {
-  const languageCode = params?.languageCode
-  if (languageCode) {
-    return multilingualRequest.get(`${detailURL}`, params)
-  }
-  return httpRequest.get(`${detailURL}`, params)
+  const siteRequest = resolveSiteRequest(params)
+  return siteRequest.request.get(`${detailURL}`, siteRequest.params)
 }
 // '/post/language/existence'
 const languageExistenceURL = `/post/language/existence`

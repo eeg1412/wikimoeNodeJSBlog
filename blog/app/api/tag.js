@@ -1,5 +1,5 @@
 // banner
-import httpRequest, { multilingualRequest } from '~/api'
+import { resolveSiteRequest } from '~/api'
 
 /**
  * @description 查询配置项
@@ -8,21 +8,15 @@ import httpRequest, { multilingualRequest } from '~/api'
 
 const URL = `/tag/detail`
 const getTagDetailApi = params => {
-  const languageCode = params?.languageCode
-  if (languageCode) {
-    return multilingualRequest.get(URL, params)
-  }
-  return httpRequest.get(URL, params)
+  const siteRequest = resolveSiteRequest(params)
+  return siteRequest.request.get(URL, siteRequest.params)
 }
 
 // /tag/random/list
 const RandomURL = `/tag/random/list`
 const getRandomTagListApi = params => {
-  const languageCode = params?.languageCode
-  if (languageCode) {
-    return multilingualRequest.get(RandomURL, params)
-  }
-  return httpRequest.get(RandomURL, params)
+  const siteRequest = resolveSiteRequest(params)
+  return siteRequest.request.get(RandomURL, siteRequest.params)
 }
 
 export { getTagDetailApi, getRandomTagListApi }

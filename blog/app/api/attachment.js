@@ -1,5 +1,5 @@
 // banner
-import httpRequest, { multilingualRequest } from '~/api'
+import { resolveSiteRequest } from '~/api'
 
 /**
  * @description 查询配置项
@@ -8,11 +8,8 @@ import httpRequest, { multilingualRequest } from '~/api'
 
 const URL = `/attachment/list`
 const getAttachmentListApiFetch = params => {
-  const languageCode = params?.languageCode
-  if (languageCode) {
-    return multilingualRequest.getFetch(URL, params)
-  }
-  return httpRequest.getFetch(URL, params)
+  const siteRequest = resolveSiteRequest(params)
+  return siteRequest.request.getFetch(URL, siteRequest.params)
 }
 
 export { getAttachmentListApiFetch }

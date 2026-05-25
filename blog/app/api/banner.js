@@ -1,5 +1,5 @@
 // banner
-import httpRequest, { multilingualRequest } from '~/api'
+import { resolveSiteRequest } from '~/api'
 
 /**
  * @description 查询配置项
@@ -8,11 +8,8 @@ import httpRequest, { multilingualRequest } from '~/api'
 
 const URL = `/banner/list`
 const getBannerListApi = (params = {}) => {
-  const languageCode = params?.languageCode
-  if (languageCode) {
-    return multilingualRequest.get(URL, params)
-  }
-  return httpRequest.get(URL, params)
+  const siteRequest = resolveSiteRequest(params)
+  return siteRequest.request.get(URL, siteRequest.params)
 }
 
 export { getBannerListApi }

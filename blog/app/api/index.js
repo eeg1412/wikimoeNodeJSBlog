@@ -1,4 +1,5 @@
 import {
+  assertLanguageCode,
   getLanguageText,
   normalizeLanguageCode
 } from '@/lang'
@@ -7,6 +8,126 @@ import { resolveDefaultLanguageCode } from '@/utils/default-language'
 // API base 统一在请求客户端层维护，业务 API 文件只选择请求实例。
 const BLOG_BASE_URL = '/api/blog'
 const MULTILINGUAL_BASE_URL = '/api/multilingual-blog'
+
+/**
+ * @description 介绍：判断语言码值是否可用于请求分流。
+ * @param {any} value 输入：待判断的语言码值。
+ * @returns {boolean} 输出：true 表示语言码值有效存在。
+ */
+function hasLanguageCodeValue(value) {
+  if (value === undefined || value === null || value === '') {
+    return false
+  }
+
+  return true
+}
+
+/**
+ * @description 介绍：判断请求参数是否显式携带语言码。
+ * @param {object} [params={}] 输入：请求参数对象。
+ * @param {object} [options={}] 输入：请求配置对象。
+ * @returns {boolean} 输出：true 表示存在显式语言码。
+ */
+function hasExplicitLanguageCode(params = {}, options = {}) {
+  if (hasLanguageCodeValue(options?.languageCode)) {
+    return true
+  }
+
+  if (!params || typeof params !== 'object') {
+    return false
+  }
+
+  if (!Object.prototype.hasOwnProperty.call(params, 'languageCode')) {
+    return false
+  }
+
+  return hasLanguageCodeValue(params.languageCode)
+}
+
+/**
+ * @description 介绍：读取并校验请求显式携带的语言码。
+ * @param {object} [params={}] 输入：请求参数对象。
+ * @param {object} [options={}] 输入：请求配置对象。
+ * @returns {string} 输出：标准语言码；没有显式语言码时返回空字符串。
+ */
+function getExplicitLanguageCode(params = {}, options = {}) {
+  if (!hasExplicitLanguageCode(params, options)) {
+    return ''
+  }
+
+  if (hasLanguageCodeValue(options?.languageCode)) {
+    return assertLanguageCode(options.languageCode)
+  }
+
+  return assertLanguageCode(params.languageCode)
+}
+
+/**
+ * @description 介绍：读取主站原始配置，用于判定主站语言。
+ * @returns {object|null} 输出：源站 options 或空值。
+ */
+function getSourceOptionsForRequest() {
+  try {
+    const sourceOptions = useState('sourceOptions', () => null)
+    if (sourceOptions.value) {
+      return sourceOptions.value
+    }
+
+    const currentOptions = useState('options', () => null)
+    return currentOptions.value
+  } catch {
+    return null
+  }
+}
+
+/**
+ * @description 介绍：读取主站语言，主站语言由源站 options 配置决定。
+ * @returns {string} 输出：主站语言码。
+ */
+function getMainSiteLanguageCode() {
+  return resolveDefaultLanguageCode(getSourceOptionsForRequest())
+}
+
+/**
+ * @description 介绍：生成源站接口请求参数，避免把多语言参数传给源站接口。
+ * @param {object} [params={}] 输入：原始请求参数。
+ * @returns {object} 输出：源站接口请求参数。
+ */
+function createSourceRequestParams(params = {}) {
+  if (!params || typeof params !== 'object') {
+    return {}
+  }
+
+  const requestParams = { ...params }
+  delete requestParams.languageCode
+  return requestParams
+}
+
+/**
+ * @description 介绍：根据主站语言配置选择源站或多语言请求实例。
+ * @param {object} [params={}] 输入：请求参数对象。
+ * @param {object} [options={}] 输入：请求配置对象。
+ * @returns {{ request: HttpRequest, params: object }} 输出：请求实例和处理后的参数。
+ */
+function resolveSiteRequest(params = {}, options = {}) {
+  const languageCode = getExplicitLanguageCode(params, options)
+  const mainSiteLanguageCode = getMainSiteLanguageCode()
+
+  if (!languageCode || languageCode === mainSiteLanguageCode) {
+    return {
+      request: httpRequest,
+      params: createSourceRequestParams(params)
+    }
+  }
+
+  return {
+    request: multilingualRequest,
+    params: {
+      ...params,
+      languageCode
+    }
+  }
+}
 
 /**
  * @description 介绍：从请求参数或请求配置中读取标准语言码。
@@ -319,5 +440,5 @@ const httpRequest = new HttpRequest(BLOG_BASE_URL)
 const multilingualRequest = new HttpRequest(MULTILINGUAL_BASE_URL)
 
 // 默认实例服务源站接口；多语言内容接口显式使用 multilingualRequest。
-export { multilingualRequest }
+export { multilingualRequest, resolveSiteRequest }
 export default httpRequest

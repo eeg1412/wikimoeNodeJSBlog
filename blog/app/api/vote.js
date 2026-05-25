@@ -1,5 +1,5 @@
 // banner
-import httpRequest, { multilingualRequest } from '~/api'
+import { resolveSiteRequest } from '~/api'
 
 /**
  * @description 查询配置项
@@ -9,13 +9,8 @@ import httpRequest, { multilingualRequest } from '~/api'
 // get /vote/detail
 const voteDetailURL = `/vote/detail`
 const getVoteDetailApi = params => {
-  const languageCode = params?.languageCode
-  if (languageCode) {
-    return multilingualRequest.getFetch(`${voteDetailURL}`, params, {
-      shouldUuid: true
-    })
-  }
-  return httpRequest.getFetch(`${voteDetailURL}`, params, {
+  const siteRequest = resolveSiteRequest(params)
+  return siteRequest.request.getFetch(`${voteDetailURL}`, siteRequest.params, {
     shouldUuid: true
   })
 }
@@ -23,13 +18,8 @@ const getVoteDetailApi = params => {
 // post /vote
 const voteURL = `/vote`
 const postVoteApi = params => {
-  const languageCode = params?.languageCode
-  if (languageCode) {
-    return multilingualRequest.postFetch(`${voteURL}`, params, {
-      shouldUuid: true
-    })
-  }
-  return httpRequest.postFetch(`${voteURL}`, params, {
+  const siteRequest = resolveSiteRequest(params)
+  return siteRequest.request.postFetch(`${voteURL}`, siteRequest.params, {
     shouldUuid: true
   })
 }
