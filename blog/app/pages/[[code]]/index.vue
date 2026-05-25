@@ -2,29 +2,42 @@
   <NuxtPage></NuxtPage>
 </template>
 <script setup>
-import {
-  DEFAULT_LANGUAGE_CODE,
-  getLanguageText,
-  normalizeLanguageCode
-} from '@/lang'
+import { getLanguageText, normalizeLanguageCode } from '@/lang'
+import { resolveDefaultLanguageCode } from '@/utils/default-language'
+import { getRouteCode as getRouteCodeFromRoute } from '~/composables/useLang'
 
 const route = useRoute()
 
-const { options } = useOptions()
+const {
+  options,
+  createLanguageNotFoundError,
+  SITE_MULTILINGUAL_DISABLED_REASON
+} = useOptions()
 
-function getRouteCode() {
-  const code = route.params.code
-
-  if (Array.isArray(code)) {
-    return code[0]
-  }
-
-  return code
+function getCurrentRouteCode() {
+  return getRouteCodeFromRoute(route)
 }
 
 const currentLanguageCode = computed(() => {
-  return normalizeLanguageCode(getRouteCode()) || DEFAULT_LANGUAGE_CODE
+  const routeLanguageCode = normalizeLanguageCode(getCurrentRouteCode())
+  if (routeLanguageCode) {
+    return routeLanguageCode
+  }
+
+  return resolveDefaultLanguageCode(options.value)
 })
+
+const isLocalizedRoute = computed(() => {
+  return Boolean(getCurrentRouteCode())
+})
+
+const isSiteMultilingualEnabled = computed(() => {
+  return options.value?.siteEnableMultilingual === true
+})
+
+if (isLocalizedRoute.value && !isSiteMultilingualEnabled.value) {
+  throw createLanguageNotFoundError(SITE_MULTILINGUAL_DISABLED_REASON)
+}
 
 const siteEnableRss = options.value.siteEnableRss
 const rssHead = () => {

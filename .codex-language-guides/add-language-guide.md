@@ -10,7 +10,7 @@
 - `admin/src/config/languages.js`
 - `server/config/languages.js`
 
-只新增语言时不要修改默认语言。默认语言由唯一的 `isDefault: true` 标记决定。
+只新增语言时不要修改代码配置里的 `isDefault: true`。Blog 运行时默认语言优先使用 `/api/blog/options` 返回的 `siteDefaultLanguage`；options 不可用或配置值无效时，才使用代码配置里唯一的 `isDefault: true` 作为兜底。
 
 ## 2. Blog 语言包
 

@@ -1,8 +1,10 @@
 import { getMultilingualOptionsApi, getOptionsApi } from '~/api/option'
-import { DEFAULT_LANGUAGE_CODE, normalizeLanguageCode } from '@/lang'
+import { normalizeLanguageCode } from '@/lang'
 import { getRouteCode } from '~/composables/useLang'
+import { resolveDefaultLanguageCode } from '@/utils/default-language'
 
 const BLOG_LANGUAGE_DISABLED_REASON = 'BLOG_LANGUAGE_DISABLED'
+const SITE_MULTILINGUAL_DISABLED_REASON = 'SITE_MULTILINGUAL_DISABLED'
 
 /**
  * @description 介绍：读取当前路由中的语言码原始参数；输入：无。
@@ -22,6 +24,9 @@ function createLanguageNotFoundError(reason = 'LANGUAGE_NOT_FOUND') {
   let statusMessage = 'Language not found'
   if (reason === BLOG_LANGUAGE_DISABLED_REASON) {
     statusMessage = 'Blog language disabled'
+  }
+  if (reason === SITE_MULTILINGUAL_DISABLED_REASON) {
+    statusMessage = 'Language not found'
   }
 
   return createError({
@@ -53,9 +58,10 @@ function hasLanguageCodeParam(params = {}) {
 /**
  * @description 介绍：判定当前 options 请求应该按源站模式还是多语言模式执行。
  * @param {object} [params={}] 输入：请求参数对象。
+ * @param {object|null} [currentOptions=null] 输入：当前已缓存的 options。
  * @returns {{ isLocalizedRoute: boolean, languageCode: string }} 输出：语言上下文对象。
  */
-function getOptionsLanguageContext(params = {}) {
+function getOptionsLanguageContext(params = {}, currentOptions = null) {
   if (hasLanguageCodeParam(params)) {
     const paramsLanguageCode = normalizeLanguageCode(params.languageCode)
     if (!paramsLanguageCode) {
@@ -79,7 +85,7 @@ function getOptionsLanguageContext(params = {}) {
   if (!routeCode) {
     return {
       isLocalizedRoute: false,
-      languageCode: DEFAULT_LANGUAGE_CODE
+      languageCode: resolveDefaultLanguageCode(currentOptions)
     }
   }
 
@@ -136,6 +142,19 @@ function assertBlogLanguageEnabled(multilingualOptions) {
 }
 
 /**
+ * @description 介绍：校验源站是否开启多语言；输入：源站 options。
+ * @param {object} sourceOptions 输入：源站配置。
+ * @returns {void} 输出：无返回值。
+ */
+function assertSiteMultilingualEnabled(sourceOptions) {
+  if (sourceOptions?.siteEnableMultilingual === true) {
+    return
+  }
+
+  throw createLanguageNotFoundError(SITE_MULTILINGUAL_DISABLED_REASON)
+}
+
+/**
  * @description 介绍：合并源站 options 和当前语言的多语言 options。
  * @param {object} sourceOptions 输入：源站配置。
  * @param {object} multilingualOptions 输入：多语言配置。
@@ -154,6 +173,22 @@ function mergeOptions(sourceOptions, multilingualOptions) {
  */
 function createInitialOptions() {
   return null
+}
+
+/**
+ * @description 介绍：初始化源站 options 缓存为空；输入：无。
+ * @returns {null} 输出：空源站 options 缓存值。
+ */
+function createInitialSourceOptions() {
+  return null
+}
+
+/**
+ * @description 介绍：初始化多语言 options 缓存表；输入：无。
+ * @returns {Record<string, object>} 输出：按语言码缓存的多语言 options。
+ */
+function createInitialMultilingualOptionsMap() {
+  return {}
 }
 
 /**
@@ -178,6 +213,11 @@ function createInitialOptionsIsLocalizedRoute() {
  */
 export function useOptions() {
   const options = useState('options', createInitialOptions)
+  const sourceOptions = useState('sourceOptions', createInitialSourceOptions)
+  const multilingualOptionsMap = useState(
+    'multilingualOptionsMap',
+    createInitialMultilingualOptionsMap
+  )
   const optionsLanguageCode = useState(
     'optionsLanguageCode',
     createInitialOptionsLanguageCode
@@ -223,38 +263,84 @@ export function useOptions() {
   }
 
   /**
+   * @description 介绍：读取并缓存源站 options；输入：请求参数。
+   * @param {object} [params={}] 输入：请求参数，可包含 force。
+   * @returns {Promise<object>} 输出：源站 options。
+   */
+  async function getCachedSourceOptions(params = {}) {
+    if (!params.force && sourceOptions.value) {
+      return sourceOptions.value
+    }
+
+    if (!params.force && options.value && !optionsIsLocalizedRoute.value) {
+      sourceOptions.value = options.value
+      return sourceOptions.value
+    }
+
+    const sourceResponse = await getOptionsApi()
+    const nextSourceOptions = readSourceOptions(sourceResponse)
+    sourceOptions.value = nextSourceOptions
+    return sourceOptions.value
+  }
+
+  /**
+   * @description 介绍：读取并缓存指定语言的多语言 options；输入：语言码和请求参数。
+   * @param {string} languageCode 输入：标准语言码。
+   * @param {object} [params={}] 输入：请求参数，可包含 force。
+   * @returns {Promise<object>} 输出：指定语言的多语言 options。
+   */
+  async function getCachedMultilingualOptions(languageCode, params = {}) {
+    const cachedOptions = multilingualOptionsMap.value[languageCode]
+    if (!params.force && cachedOptions) {
+      return cachedOptions
+    }
+
+    const multilingualResponse = await getMultilingualOptionsApi(
+      {},
+      {
+        languageCode
+      }
+    )
+    const multilingualOptions = readMultilingualOptions(multilingualResponse)
+    multilingualOptionsMap.value = {
+      ...multilingualOptionsMap.value,
+      [languageCode]: multilingualOptions
+    }
+    return multilingualOptions
+  }
+
+  /**
    * @description 介绍：读取无 code 旧路由使用的源站 options。
    * @param {{ isLocalizedRoute: boolean, languageCode: string }} languageContext 输入：当前语言上下文。
+   * @param {object} [params={}] 输入：请求参数，可包含 force。
    * @returns {Promise<object>} 输出：写入缓存后的源站 options。
    */
-  async function getSourceOptions(languageContext) {
-    const sourceResponse = await getOptionsApi()
-    const sourceOptions = readSourceOptions(sourceResponse)
-    return setOptions(sourceOptions, languageContext)
+  async function getSourceOptions(languageContext, params = {}) {
+    const nextSourceOptions = await getCachedSourceOptions(params)
+    const sourceLanguageContext = {
+      ...languageContext,
+      languageCode: resolveDefaultLanguageCode(nextSourceOptions)
+    }
+    return setOptions(nextSourceOptions, sourceLanguageContext)
   }
 
   /**
    * @description 介绍：读取带 code 多语言路由使用的合并 options。
    * @param {{ isLocalizedRoute: boolean, languageCode: string }} languageContext 输入：当前语言上下文。
+   * @param {object} [params={}] 输入：请求参数，可包含 force。
    * @returns {Promise<object>} 输出：写入缓存后的合并 options。
    */
-  async function getLocalizedOptions(languageContext) {
+  async function getLocalizedOptions(languageContext, params = {}) {
     try {
-      const [sourceResponse, multilingualResponse] = await Promise.all([
-        getOptionsApi(),
-        getMultilingualOptionsApi(
-          {},
-          {
-            languageCode: languageContext.languageCode
-          }
-        )
-      ])
-
-      const sourceOptions = readSourceOptions(sourceResponse)
-      const multilingualOptions = readMultilingualOptions(multilingualResponse)
+      const nextSourceOptions = await getCachedSourceOptions(params)
+      assertSiteMultilingualEnabled(nextSourceOptions)
+      const multilingualOptions = await getCachedMultilingualOptions(
+        languageContext.languageCode,
+        params
+      )
       assertBlogLanguageEnabled(multilingualOptions)
       return setOptions(
-        mergeOptions(sourceOptions, multilingualOptions),
+        mergeOptions(nextSourceOptions, multilingualOptions),
         languageContext
       )
     } catch (error) {
@@ -278,24 +364,27 @@ export function useOptions() {
    * @returns {Promise<object>} 输出：当前模式可用的 options。
    */
   async function getOptions(params = {}) {
-    const languageContext = getOptionsLanguageContext(params)
+    const languageContext = getOptionsLanguageContext(params, options.value)
 
     if (shouldReuseOptions(params, languageContext)) {
       return options.value
     }
 
     if (languageContext.isLocalizedRoute) {
-      return getLocalizedOptions(languageContext)
+      return getLocalizedOptions(languageContext, params)
     }
 
-    return getSourceOptions(languageContext)
+    return getSourceOptions(languageContext, params)
   }
 
   return {
     options,
+    sourceOptions,
+    multilingualOptionsMap,
     optionsLanguageCode,
     optionsIsLocalizedRoute,
     getOptions,
-    createLanguageNotFoundError
+    createLanguageNotFoundError,
+    SITE_MULTILINGUAL_DISABLED_REASON
   }
 }

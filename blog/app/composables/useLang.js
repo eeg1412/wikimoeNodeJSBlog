@@ -1,10 +1,10 @@
 import {
-  DEFAULT_LANGUAGE_CODE,
   SUPPORTED_LANGUAGE_CODES,
   assertLanguageCode,
   getLanguageText,
   normalizeLanguageCode
 } from '@/lang'
+import { useDefaultLanguageCode } from '@/utils/default-language'
 
 /**
  * @description 介绍：从 Nuxt 路由参数中读取原始语言码。
@@ -171,6 +171,7 @@ export function buildLocalePath(
  */
 export function useLang() {
   const route = useRoute()
+  const defaultLanguageCode = useDefaultLanguageCode()
   /**
    * @description 介绍：读取当前路由参数里的语言码原始值；输入：无。
    * @returns {import('vue').ComputedRef<string|null>} 输出：值为语言码字符串或 null 的 computed。
@@ -189,7 +190,7 @@ export function useLang() {
    */
   const languageCode = computed(() => {
     if (!isLocalizedRoute.value) {
-      return DEFAULT_LANGUAGE_CODE
+      return defaultLanguageCode.value
     }
 
     return assertLanguageCode(routeCode.value)
@@ -228,6 +229,7 @@ export function useLang() {
   return {
     isLocalizedRoute,
     languageCode,
+    defaultLanguageCode,
     supportedLanguageCodes: SUPPORTED_LANGUAGE_CODES,
     normalizeLanguageCode,
     localePath,

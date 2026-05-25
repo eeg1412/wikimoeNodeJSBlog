@@ -824,6 +824,9 @@ const sourceArticleId =
   postData.value?.data?.sourceId || postData.value?.data?._id
 // 语言切换属于增强信息，SSR 最多等 1 秒，避免拖慢文章主内容输出。
 const POST_LANGUAGE_EXISTENCE_TIMEOUT = 1000
+const isSiteMultilingualEnabled = computed(() => {
+  return options.value?.siteEnableMultilingual === true
+})
 // 语言配置转为 map，便于根据 code 显示当前语言名称。
 const languageConfigMap = LANGUAGE_CONFIG_LIST.reduce((map, item) => {
   map[item.code] = item
@@ -845,6 +848,10 @@ const normalizePostLanguageInfo = data => {
 }
 // 未配置多语言上游或缺少源文章 ID 时，SSR 阶段不发起这个辅助接口。
 const shouldFetchPostLanguageExistence = () => {
+  if (!isSiteMultilingualEnabled.value) {
+    return false
+  }
+
   if (!sourceArticleId) {
     return false
   }
@@ -934,6 +941,10 @@ const hasPostLanguageSwitcher = computed(() => {
 })
 // 总开关：没有可靠接口数据时，前端页面不显示任何多语言块。
 const hasPostLanguageBlock = computed(() => {
+  if (!isSiteMultilingualEnabled.value) {
+    return false
+  }
+
   if (!hasPostLanguageInfo.value) {
     return false
   }

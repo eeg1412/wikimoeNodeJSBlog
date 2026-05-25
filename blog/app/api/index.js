@@ -1,8 +1,8 @@
 import {
-  DEFAULT_LANGUAGE_CODE,
   getLanguageText,
   normalizeLanguageCode
 } from '@/lang'
+import { resolveDefaultLanguageCode } from '@/utils/default-language'
 
 // API base 统一在请求客户端层维护，业务 API 文件只选择请求实例。
 const BLOG_BASE_URL = '/api/blog'
@@ -27,7 +27,12 @@ function getRequestLanguageCode(data, options = {}) {
     }
   }
 
-  return DEFAULT_LANGUAGE_CODE
+  try {
+    const currentOptions = useState('options', () => null)
+    return resolveDefaultLanguageCode(currentOptions.value)
+  } catch {
+    return resolveDefaultLanguageCode(null)
+  }
 }
 
 /**

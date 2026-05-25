@@ -10,18 +10,23 @@
 </template>
 <script setup>
 import { buildLanguagePath } from '@/composables/useLang'
-import {
-  DEFAULT_LANGUAGE_CODE,
-  getLanguageText,
-  normalizeLanguageCode
-} from '@/lang'
+import { getLanguageText, normalizeLanguageCode } from '@/lang'
+import { useDefaultLanguageCode } from '@/utils/default-language'
 
 const route = useRoute()
+const defaultLanguageCode = useDefaultLanguageCode()
 const currentLanguageCode = computed(() => {
-  const routeCode = Array.isArray(route.params.code)
-    ? route.params.code[0]
-    : route.params.code
-  return normalizeLanguageCode(routeCode) || DEFAULT_LANGUAGE_CODE
+  let routeCode = route.params.code
+  if (Array.isArray(routeCode)) {
+    routeCode = routeCode[0]
+  }
+
+  const routeLanguageCode = normalizeLanguageCode(routeCode)
+  if (routeLanguageCode) {
+    return routeLanguageCode
+  }
+
+  return defaultLanguageCode.value
 })
 const t = path => getLanguageText(currentLanguageCode.value, path)
 
