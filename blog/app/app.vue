@@ -1,5 +1,5 @@
 <template>
-  <div class="blog-body" :key="currentOptionsLanguageCode">
+  <div class="blog-body">
     <NuxtLoadingIndicator color="#ef90a7" />
     <NuxtPage></NuxtPage>
     <WUINotifications />
@@ -43,23 +43,28 @@ await getOptions()
 const currentOptionsLanguageCode = ref(getOptionsRouteLanguageCode(route))
 
 // 路由跳转前
-router.beforeEach(async (to, from, next) => {
+router.beforeEach(async (to, from) => {
   // 使用标准语言码比较，避免 zh-CN 和 zh-cn 在同语言导航时重复拉取 options。
   const toLanguageCode = getOptionsRouteLanguageCode(to)
+
   if (toLanguageCode !== currentOptionsLanguageCode.value) {
     try {
       await getOptions({
         languageCode: toLanguageCode || undefined,
         force: true
       })
+
+      currentOptionsLanguageCode.value = toLanguageCode
     } catch (error) {
       console.error('获取选项失败:', error)
-      next(error)
-      return
+
+      // 等价于以前的 next(error)
+      throw error
     }
-    currentOptionsLanguageCode.value = toLanguageCode
   }
-  next()
+
+  // 等价于以前的 next()
+  return true
 })
 
 onErrorCaptured(error => {
