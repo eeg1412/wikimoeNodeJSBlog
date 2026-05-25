@@ -1,5 +1,5 @@
 export default {
-  languageName: '简体中文',
+  languageName: '中国大陆简体中文',
   actions: {
     create: '创建',
     edit: '编辑',

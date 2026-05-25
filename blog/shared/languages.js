@@ -5,20 +5,20 @@
 export const LANGUAGE_CONFIG_LIST = [
   {
     code: 'zh-CN',
-    label: '简体中文',
+    label: '中国大陆简体中文',
     isDefault: true
   },
   {
     code: 'zh-HK',
-    label: '繁体中文（香港）'
+    label: '香港繁體中文'
   },
   {
     code: 'zh-TW',
-    label: '繁体中文（台湾）'
+    label: '臺灣正體中文'
   },
   {
     code: 'zh-SG',
-    label: '简体中文（新加坡）'
+    label: '新加坡简体中文'
   },
   {
     code: 'ja-JP',
