@@ -87,6 +87,11 @@ var comments = new Schema(
       type: Number,
       default: 0,
       index: true
+    },
+    siteLangCode: {
+      type: String,
+      default: null,
+      index: true
     }
   },
   { timestamps: true }
