@@ -30,6 +30,7 @@
 
 - 设置页“多语言设置”tab 中出现新语言。
 - 默认站点语言可以选择新语言。
+- 评论列表中的“语言code”能够显示新语言 code 对应的语言标签。
 - 小屏设备上表单标签、选择框和提交按钮不重叠。
 
 ## 4. Server 语言表
@@ -41,6 +42,8 @@
 - `siteDefaultLanguage` 可以保存为新语言码。
 - `/api/blog/options` 返回的 `siteDefaultLanguage` 与后台保存值一致。
 - `/api/blog/options` 返回 `siteEnableMultilingual`。
+- `/api/blog/comment/create` 接受新语言 code 作为 `siteLangCode`，并拒绝不在语言表内的 code。
+- 回复评论邮件中的文章链接在 `siteLangCode` 为新语言 code 时使用 `/<language-code>/post/<post-id>` 或 `/<language-code>/page/<post-id>`。
 
 ## 5. 校验原则
 

@@ -4,11 +4,13 @@ const utils = require('../../../utils/utils')
 const log4js = require('log4js')
 const userApiLog = log4js.getLogger('userApi')
 const cacheDataUtils = require('../../../config/cacheData')
+const { isSupportedLanguageCode } = require('../../../config/languages')
 
 module.exports = async function (req, res, next) {
   utils
     .executeInLock('createComment', async () => {
-      const { post, parent, content, nickname, email, url } = req.body
+      const { post, parent, content, nickname, email, url, siteLangCode } =
+        req.body
       // 如果content超过500个字符，就报错
       if (content?.length > 500) {
         res.status(400).json({
@@ -49,6 +51,22 @@ module.exports = async function (req, res, next) {
             errors: [
               {
                 message: '邮箱地址不能超过100个字符'
+              }
+            ]
+          })
+          return
+        }
+      }
+      if (siteLangCode !== undefined) {
+        if (
+          typeof siteLangCode !== 'string' ||
+          !isSupportedLanguageCode(siteLangCode)
+        ) {
+          res.status(400).json({
+            errors: [
+              {
+                key: 'siteLangCode',
+                message: '页面语言code不正确'
               }
             ]
           })
@@ -187,6 +205,9 @@ module.exports = async function (req, res, next) {
       }
       if (url) {
         params.url = url
+      }
+      if (siteLangCode !== undefined) {
+        params.siteLangCode = siteLangCode
       }
       const rule = [
         {

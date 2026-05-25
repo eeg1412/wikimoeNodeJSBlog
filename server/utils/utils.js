@@ -835,7 +835,11 @@ exports.sendReplyCommentNotice = async function (post, comment) {
 
   // 如果不存在post就查询post
   if (!post) {
-    post = await postUtils.findOne({ _id: comment.post })
+    let commentPostId = comment.post
+    if (comment.post?._id) {
+      commentPostId = comment.post._id
+    }
+    post = await postUtils.findOne({ _id: commentPostId })
     if (!post) {
       console.error('post不存在')
       return
@@ -921,7 +925,9 @@ exports.sendReplyCommentNotice = async function (post, comment) {
     contentHtml = contentHtml.replace(/\${nickname}/g, nickname)
     contentHtml = contentHtml.replace(
       /\${title}/g,
-      `<a href="${this.getPostPagePath(post)}/#comment-${
+      `<a href="${this.getPostPagePath(post, {
+        siteLangCode: comment.siteLangCode
+      })}/#comment-${
         comment._id
       }" target="_blank">${linkTitle}</a>`
     )
@@ -949,7 +955,7 @@ exports.getPostTypeName = postData => {
   }
 }
 
-exports.getPostPagePath = postData => {
+exports.getPostPagePath = (postData, options = {}) => {
   // 先判断type是1，2还是3，1和2跳转到/post/id，3跳转到/page/id
   // 如果有别名，就跳转到别名，没有别名就跳转到id
   const siteSettings = global.$globalConfig.siteSettings
@@ -966,7 +972,10 @@ exports.getPostPagePath = postData => {
     throw new Error('type类型错误')
   }
 
-  if (postData.alias) {
+  if (options.siteLangCode) {
+    path = `/${options.siteLangCode}${path}`
+    path += postData._id
+  } else if (postData.alias) {
     path += postData.alias
   } else {
     path += postData._id

@@ -12,6 +12,7 @@ import 'photoswipe/style.css'
 import * as ElementPlusIconsVue from '@element-plus/icons-vue'
 import Cropper from '@/components/Cropper.vue'
 import IpInfoDisplay from '@/components/IpInfoDisplay.vue'
+import DeviceInfoDisplay from '@/components/DeviceInfoDisplay.vue'
 import TagsInput from '@/components/TagsInput.vue'
 import ResponsiveTable from '@/components/ResponsiveTable.vue'
 import ResponsiveTableColumn from '@/components/ResponsiveTableColumn.vue'
@@ -25,6 +26,7 @@ initTheme()
 const app = createApp(App)
 app.component('Cropper', Cropper)
 app.component('IpInfoDisplay', IpInfoDisplay)
+app.component('DeviceInfoDisplay', DeviceInfoDisplay)
 app.component('TagsInput', TagsInput)
 app.component('ResponsiveTable', ResponsiveTable)
 app.component('ResponsiveTableColumn', ResponsiveTableColumn)

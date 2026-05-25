@@ -188,6 +188,17 @@
             <el-tag v-else type="info">否</el-tag>
           </template>
         </ResponsiveTableColumn>
+        <ResponsiveTableColumn prop="siteLangCode" label="语言code" width="140">
+          <template #default="{ row }">
+            <template v-if="row.siteLangCode">
+              <el-tag type="info">{{ row.siteLangCode }}</el-tag>
+              <!-- <div class="cGray94 f12 mt5">
+                {{ getSiteLangLabel(row.siteLangCode) }}
+              </div> -->
+            </template>
+            <span v-else class="cGray94">-</span>
+          </template>
+        </ResponsiveTableColumn>
         <!-- IP信息 -->
         <ResponsiveTableColumn prop="ip" label="IP信息" width="350">
           <template #default="{ row }">
@@ -214,12 +225,7 @@
         <!-- UA信息 -->
         <ResponsiveTableColumn label="UA信息" width="210">
           <template #default="{ row }">
-            <div>系统：{{ row.deviceInfo?.os?.name }}</div>
-            <div>系统版本号：{{ row.deviceInfo?.os?.version }}</div>
-            <div>浏览器：{{ row.deviceInfo?.browser?.name }}</div>
-            <div>浏览器版本号： {{ row.deviceInfo?.browser?.version }}</div>
-            <!-- ua -->
-            <div>UA：{{ row.deviceInfo?.ua }}</div>
+            <DeviceInfoDisplay :deviceInfo="row.deviceInfo" />
           </template>
         </ResponsiveTableColumn>
         <!-- uuid -->
@@ -349,6 +355,7 @@ import { authApi } from '@/api'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { nextTick, onMounted, reactive, ref, watch, computed } from 'vue'
 import EmojiTextarea from '@/components/EmojiTextarea.vue'
+import { LANGUAGE_CONFIG_LIST } from '@/config/languages'
 import {
   setSessionParams,
   getSessionParams,
@@ -366,6 +373,18 @@ export default {
     const route = useRoute()
     const router = useRouter()
     const commentList = ref([])
+    const languageConfigMap = LANGUAGE_CONFIG_LIST.reduce((map, item) => {
+      map[item.code] = item
+      return map
+    }, {})
+    const getSiteLangLabel = siteLangCode => {
+      const languageConfig = languageConfigMap[siteLangCode]
+      if (!languageConfig) {
+        return ''
+      }
+
+      return languageConfig.label
+    }
     const params = reactive({
       page: 1,
       size: 50,
@@ -471,7 +490,8 @@ export default {
       post: '',
       content: '',
       parent: '',
-      top: false
+      top: false,
+      siteLangCode: undefined
     })
     const commentFormRef = ref(null)
     const commentFormRules = {
@@ -486,6 +506,10 @@ export default {
       commentForm.top = false
       commentForm.post = item.post._id
       commentForm.parent = item._id
+      commentForm.siteLangCode = undefined
+      if (item.siteLangCode) {
+        commentForm.siteLangCode = item.siteLangCode
+      }
       commentParentData.value = item
       commentFormVisible.value = true
     }
@@ -547,7 +571,10 @@ export default {
         return
       }
 
-      if (post.alias) {
+      if (row.siteLangCode) {
+        path = `/${row.siteLangCode}${path}`
+        path += post._id
+      } else if (post.alias) {
         path += post.alias
       } else {
         path += post._id
@@ -570,6 +597,7 @@ export default {
       total,
       tableRef,
       getCommentList,
+      getSiteLangLabel,
       goEdit,
       deleteComment,
       titleLimit,

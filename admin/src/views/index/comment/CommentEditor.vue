@@ -38,6 +38,15 @@
             ></el-input>
           </el-form-item>
         </template>
+        <el-form-item label="语言code">
+          <template v-if="detailData.siteLangCode">
+            <el-tag type="info">{{ detailData.siteLangCode }}</el-tag>
+            <!-- <span class="ml10 cGray94">
+              {{ getSiteLangLabel(detailData.siteLangCode) }}
+            </span> -->
+          </template>
+          <span v-else class="cGray94">-</span>
+        </el-form-item>
         <!-- 父级评论内容 -->
         <el-form-item label="父级评论" v-if="detailData.parentId">
           <blockquote
@@ -106,6 +115,7 @@ import { computed, onMounted, reactive, ref, nextTick } from 'vue'
 import { authApi } from '@/api'
 import EmojiTextarea from '@/components/EmojiTextarea.vue'
 import validator from 'validator'
+import { LANGUAGE_CONFIG_LIST } from '@/config/languages'
 export default {
   components: {
     EmojiTextarea
@@ -126,10 +136,23 @@ export default {
         post: '',
         content: '',
         parent: '',
-        top: false
+        top: false,
+        siteLangCode: undefined
       },
       __v: null
     })
+    const languageConfigMap = LANGUAGE_CONFIG_LIST.reduce((map, item) => {
+      map[item.code] = item
+      return map
+    }, {})
+    const getSiteLangLabel = siteLangCode => {
+      const languageConfig = languageConfigMap[siteLangCode]
+      if (!languageConfig) {
+        return ''
+      }
+
+      return languageConfig.label
+    }
     // 回复Flag
     const replyFlag = ref(false)
     const detailData = ref({})
@@ -255,6 +278,10 @@ export default {
           form.status = res.data.data.status
           form.__v = res.data.data.__v
           form.reply.post = res.data.data.post._id
+          form.reply.siteLangCode = undefined
+          if (res.data.data.siteLangCode) {
+            form.reply.siteLangCode = res.data.data.siteLangCode
+          }
           const user = res.data.data.user
           if (user) {
             form.reply.content = `@${user.nickname}：`
@@ -282,7 +309,8 @@ export default {
       showForm,
       rules,
       formRef,
-      submit
+      submit,
+      getSiteLangLabel
     }
   }
 }

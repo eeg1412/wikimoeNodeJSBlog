@@ -4,11 +4,28 @@ const utils = require('../../../utils/utils')
 const log4js = require('log4js')
 const adminApiLog = log4js.getLogger('adminApi')
 const cacheDataUtils = require('../../../config/cacheData')
+const { isSupportedLanguageCode } = require('../../../config/languages')
 
 module.exports = async function (req, res, next) {
-  const { post, parent, content, top } = req.body
+  const { post, parent, content, top, siteLangCode } = req.body
   const user = req.admin.id
   const ip = utils.getUserIp(req)
+  if (siteLangCode !== undefined) {
+    if (
+      typeof siteLangCode !== 'string' ||
+      !isSupportedLanguageCode(siteLangCode)
+    ) {
+      res.status(400).json({
+        errors: [
+          {
+            key: 'siteLangCode',
+            message: '页面语言code不正确'
+          }
+        ]
+      })
+      return
+    }
+  }
   // 校验格式
   const params = {
     post,
@@ -21,6 +38,9 @@ module.exports = async function (req, res, next) {
     ip: ip,
     deviceInfo: utils.deviceUAInfoUtils(req),
     ipInfo: await utils.IP2LocationUtils(ip, null, null, false)
+  }
+  if (siteLangCode !== undefined) {
+    params.siteLangCode = siteLangCode
   }
   const rule = [
     {

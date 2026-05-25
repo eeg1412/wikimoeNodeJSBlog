@@ -134,7 +134,7 @@ import { getCommentCreateApi } from '@/api/comment'
 const toast = useWToast()
 const { options } = useOptions()
 const { setCommentRetractAuthDecode } = useCommentRetractAuthDecode()
-const { t } = useLang()
+const { isLocalizedRoute, languageCode, t } = useLang()
 
 const props = defineProps({
   postid: {
@@ -338,14 +338,18 @@ const onSubmit = async event => {
   // 提交
   console.log(event.data)
   commentIsSending.value = true
-  getCommentCreateApi({
+  const commentCreateParams = {
     post: props.postid,
     parent: props.commentid,
     nickname: event.data.nickname,
     email: event.data.email,
     url: event.data.url,
     content: event.data.content
-  })
+  }
+  if (isLocalizedRoute.value) {
+    commentCreateParams.siteLangCode = languageCode.value
+  }
+  getCommentCreateApi(commentCreateParams)
     .then(res => {
       console.log(res)
       // 清空表单

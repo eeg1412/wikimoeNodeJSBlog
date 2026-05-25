@@ -20,7 +20,7 @@ exports.findOne = async function (parmas, projection, options = {}) {
         select: '_id nickname'
       }
     })
-    .populate('post', 'title _id excerpt')
+    .populate('post', 'title _id excerpt alias type')
     .populate('user', options.userFilter || 'nickname _id photo')
 }
 
