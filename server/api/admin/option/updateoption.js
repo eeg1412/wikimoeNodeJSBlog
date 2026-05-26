@@ -7,6 +7,9 @@ const adminApiLog = log4js.getLogger('adminApi')
 const globalConfigUtils = require('../../../config/globalConfig')
 const cacheDataUtils = require('../../../config/cacheData')
 const { isSupportedLanguageCode } = require('../../../config/languages')
+const {
+  notifyMultilingualSourceConfigRefreshSilently
+} = require('../../../utils/multilingualSourceConfigRefresh')
 
 const EMAIL_SEND_TO_COMMENTER_TEMPLATE_MULTILINGUAL_LIST =
   'emailSendToCommenterTemplateMultilingualList'
@@ -206,5 +209,13 @@ module.exports = async function (req, res, next) {
   // 返回结果
   res.send({
     data: resList
+  })
+  /**
+   * 源站自身保存流程已经完成，后续多语言站刷新为静默异步通知。
+   * 该通知失败只写入日志，不改变当前保存接口的响应结果。
+   */
+  notifyMultilingualSourceConfigRefreshSilently({
+    authorization: req.headers.authorization,
+    optionList: resList
   })
 }
