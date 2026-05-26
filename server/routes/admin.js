@@ -120,6 +120,15 @@ const adminRouteSetting = [
     roleType: null,
     role: null
   },
+  // get /token/check
+  {
+    path: '/token/check',
+    method: 'get',
+    middleware: [checkAuth],
+    controller: require('../api/admin/checkToken'),
+    roleType: null,
+    role: null
+  },
   // get,loginuserinfo
   {
     path: '/loginuserinfo',
