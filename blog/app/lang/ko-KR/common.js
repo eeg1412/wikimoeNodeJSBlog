@@ -33,7 +33,9 @@ export default {
     forbidden: '이 페이지에 접근할 권한이 없습니다.',
     maintenanceUpdating:
       '서버를 업데이트 중입니다. 잠시 후 다시 시도해 주세요.',
-    maintenance: '서버 점검 중입니다. 잠시 후 다시 시도해 주세요.'
+    maintenance: '서버 점검 중입니다. 잠시 후 다시 시도해 주세요.',
+    languageSwitchFailed:
+      '언어 전환에 실패했습니다. 잠시 후 다시 시도해 주세요.'
   },
   calendar: {
     weekdaysShort: ['일', '월', '화', '수', '목', '금', '토'],

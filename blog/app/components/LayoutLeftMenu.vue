@@ -36,7 +36,7 @@
           <p>{{ options.siteDescription }}</p>
         </div>
       </div>
-      <ul class="blog-layout-sidebar-body custom-scroll" :key="languageCode">
+      <ul class="blog-layout-sidebar-body custom-scroll">
         <template v-for="(item, index) in naviList" :key="index">
           <NaviItem :item="item" />
         </template>
@@ -53,9 +53,6 @@
   </div>
 </template>
 <script setup>
-import { getNaviListFetchApi } from '@/api/navi'
-import { readApiListResponse } from '@/utils/api-response'
-
 defineProps({
   active: {
     type: Boolean,
@@ -69,24 +66,13 @@ defineProps({
 
 const emit = defineEmits(['close', 'focusin'])
 const { options } = useOptions()
-const { defaultLanguageCode, languageCode, localePath, t } = useLang()
+const { localePath, t } = useLang()
+const { layoutLanguageSnapshot } = useLayoutLanguageSnapshot()
 
 const homePath = computed(() => localePath('/'))
 
-const { data: naviResponse } = await useAsyncData(
-  'layout-left-menu-navi-list',
-  () => {
-    return getNaviListFetchApi({
-      languageCode: languageCode.value
-    })
-  },
-  {
-    watch: [languageCode, defaultLanguageCode]
-  }
-)
-
 const naviSourceList = computed(() => {
-  return readApiListResponse(naviResponse.value)
+  return layoutLanguageSnapshot.value.naviSourceList
 })
 
 const naviList = computed(() => {

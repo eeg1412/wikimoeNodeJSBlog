@@ -165,6 +165,39 @@ export function buildLocalePath(
   return buildPlainPath(path)
 }
 
+function createInitialLanguageDisplayState() {
+  return {
+    isLocked: false,
+    languageCode: '',
+    isLocalizedRoute: false
+  }
+}
+
+export function useLanguageDisplayState() {
+  const languageDisplayState = useState(
+    'languageDisplayState',
+    createInitialLanguageDisplayState
+  )
+
+  function lockLanguageDisplay(languageContext) {
+    languageDisplayState.value = {
+      isLocked: true,
+      languageCode: assertLanguageCode(languageContext.languageCode),
+      isLocalizedRoute: Boolean(languageContext.isLocalizedRoute)
+    }
+  }
+
+  function unlockLanguageDisplay() {
+    languageDisplayState.value = createInitialLanguageDisplayState()
+  }
+
+  return {
+    languageDisplayState,
+    lockLanguageDisplay,
+    unlockLanguageDisplay
+  }
+}
+
 /**
  * @description 介绍：提供当前语言、双模式路由状态和本地化路径工具；输入：无。
  * @returns {object} 输出：包含 isLocalizedRoute、languageCode、localePath、localeUrl 和 t 的对象。
@@ -172,6 +205,7 @@ export function buildLocalePath(
 export function useLang() {
   const route = useRoute()
   const defaultLanguageCode = useDefaultLanguageCode()
+  const { languageDisplayState } = useLanguageDisplayState()
   /**
    * @description 介绍：读取当前路由参数里的语言码原始值；输入：无。
    * @returns {import('vue').ComputedRef<string|null>} 输出：值为语言码字符串或 null 的 computed。
@@ -181,15 +215,26 @@ export function useLang() {
    * @description 介绍：判断当前 URL 是否显式处于多语言路由模式；输入：无。
    * @returns {import('vue').ComputedRef<boolean>} 输出：值为布尔值的 computed。
    */
-  const isLocalizedRoute = computed(() => {
+  const routeIsLocalizedRoute = computed(() => {
     return Boolean(routeCode.value)
+  })
+  const isLocalizedRoute = computed(() => {
+    if (languageDisplayState.value.isLocked) {
+      return languageDisplayState.value.isLocalizedRoute
+    }
+
+    return routeIsLocalizedRoute.value
   })
   /**
    * @description 介绍：计算当前显示语言；无 code 时使用默认语言，带 code 时严格校验 URL 语言码；输入：无。
    * @returns {import('vue').ComputedRef<string>} 输出：值为标准语言码的 computed。
    */
   const languageCode = computed(() => {
-    if (!isLocalizedRoute.value) {
+    if (languageDisplayState.value.isLocked) {
+      return languageDisplayState.value.languageCode
+    }
+
+    if (!routeIsLocalizedRoute.value) {
       return defaultLanguageCode.value
     }
 

@@ -19,14 +19,14 @@
   </div>
 </template>
 <script setup>
-import { getRandomTagListApi } from '@/api/tag'
-const route = useRoute()
-const { languageCode, t } = useLang()
-
-const { data: randomTagListData } = await getRandomTagListApi({
-  languageCode: route.params.code
+defineProps({
+  randomTagList: {
+    type: Array,
+    default: () => []
+  }
 })
-const randomTagList = ref(randomTagListData.value.list)
+
+const { t } = useLang()
 
 const getLinkObj = item => {
   return {

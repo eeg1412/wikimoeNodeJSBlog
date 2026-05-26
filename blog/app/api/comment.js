@@ -10,6 +10,9 @@ const URL = `/comment/latest`
 const getCommentLatestApi = () => {
   return httpRequest.get(URL)
 }
+const getCommentLatestFetchApi = () => {
+  return httpRequest.getFetch(URL)
+}
 // /comment/list
 const commentListURL = `/comment/list`
 const getCommentListApi = (params, options) => {
@@ -54,6 +57,7 @@ const postCommentLikeLogListApi = params => {
 }
 export {
   getCommentLatestApi,
+  getCommentLatestFetchApi,
   getCommentListApi,
   getCommentCreateApi,
   deleteCommentRetractApi,

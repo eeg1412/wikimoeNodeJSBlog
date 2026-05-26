@@ -80,6 +80,10 @@
             >
               <button
                 class="post-language-trigger common-focus-visible-btn-outline hover:text-primary-500"
+                :class="{
+                  'post-language-trigger-disabled': isLayoutLanguageSwitching
+                }"
+                :disabled="isLayoutLanguageSwitching"
                 type="button"
               >
                 <WUIIcon
@@ -96,10 +100,17 @@
                 <div class="post-language-panel p-2" @click.stop>
                   <NuxtLink
                     class="post-language-option flex items-center gap-2 rounded px-3 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-primary-500 dark:text-gray-200 dark:hover:bg-gray-800"
+                    :class="{
+                      'post-language-option-disabled': isLayoutLanguageSwitching
+                    }"
                     v-for="item in selectablePostLanguageList"
                     :key="item.code"
                     :to="getPostLanguagePath(item.code)"
-                    @click="close"
+                    :aria-disabled="isLayoutLanguageSwitching"
+                    :tabindex="languageOptionTabindex"
+                    @click="
+                      event => handlePostLanguageOptionClick(event, close)
+                    "
                   >
                     <span>{{ item.label }}</span>
                   </NuxtLink>
@@ -771,6 +782,7 @@ const routeName = route.name
 const toast = useWToast()
 const { isLocalizedRoute, languageCode, t } = useLang()
 const { formatNumberText, fromNowText } = useLocalizedText()
+const { isLayoutLanguageSwitching } = useLayoutLanguageSnapshot()
 languageCode.value
 
 let type = null
@@ -1020,6 +1032,22 @@ const selectablePostLanguageList = computed(() => {
 const hasPostLanguageSwitcher = computed(() => {
   return selectablePostLanguageList.value.length > 0
 })
+const languageOptionTabindex = computed(() => {
+  if (isLayoutLanguageSwitching.value) {
+    return -1
+  }
+
+  return 0
+})
+const handlePostLanguageOptionClick = (event, close) => {
+  if (isLayoutLanguageSwitching.value) {
+    event.preventDefault()
+    event.stopPropagation()
+    return
+  }
+
+  close()
+}
 // 总开关：没有可靠接口数据时，前端页面不显示任何多语言块。
 const hasPostLanguageBlock = computed(() => {
   if (!isSiteMultilingualEnabled.value) {
@@ -1725,6 +1753,15 @@ onUnmounted(() => {
   background: transparent;
   border: 0;
   padding: 0;
+}
+.post-language-trigger-disabled,
+.post-language-trigger:disabled,
+.post-language-option-disabled {
+  cursor: not-allowed;
+  opacity: 0.55;
+}
+.post-language-option-disabled {
+  pointer-events: none;
 }
 .post-language-panel {
   min-width: 150px;

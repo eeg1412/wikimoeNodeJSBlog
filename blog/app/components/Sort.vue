@@ -53,16 +53,16 @@
   </div>
 </template>
 <script setup>
-import { getSortListApi } from '@/api/sort'
+defineProps({
+  sortListData: {
+    type: Array,
+    default: () => []
+  }
+})
+
 const route = useRoute()
-const { languageCode, t } = useLang()
+const { t } = useLang()
 const sortid = computed(() => route.params.sortid)
-const [sortData] = await Promise.all([
-  getSortListApi({
-    languageCode: route.params.code
-  })
-])
-const { data: sortListData } = sortData
 </script>
 <style scoped>
 .sidebar-sort-body {

@@ -34,7 +34,9 @@ export default {
     maintenanceUpdating:
       'サーバーは更新メンテナンス中です。しばらくしてからお試しください。',
     maintenance:
-      'サーバーはメンテナンス中です。しばらくしてからお試しください。'
+      'サーバーはメンテナンス中です。しばらくしてからお試しください。',
+    languageSwitchFailed:
+      '言語の切り替えに失敗しました。しばらくしてからお試しください。'
   },
   calendar: {
     weekdaysShort: ['日', '月', '火', '水', '木', '金', '土'],

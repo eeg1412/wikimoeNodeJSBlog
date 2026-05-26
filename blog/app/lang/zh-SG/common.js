@@ -32,7 +32,8 @@ export default {
     notFound: '您访问的页面不存在。',
     forbidden: '您当前没有权限访问此页面。',
     maintenanceUpdating: '服务器正在更新维护中，请稍后再试。',
-    maintenance: '服务器正在维护中，请稍后再试。'
+    maintenance: '服务器正在维护中，请稍后再试。',
+    languageSwitchFailed: '语言切换失败，请稍后再试。'
   },
   calendar: {
     weekdaysShort: ['日', '一', '二', '三', '四', '五', '六'],

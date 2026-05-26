@@ -46,14 +46,16 @@
   </div>
 </template>
 <script setup>
-import { getCommentLatestApi } from '@/api/comment'
+defineProps({
+  commentLatest: {
+    type: Array,
+    default: () => []
+  }
+})
 
-const props = defineProps({})
 const router = useRouter()
-const { languageCode, t } = useLang()
+const { t } = useLang()
 const { fromNowText } = useLocalizedText()
-
-const { data: commentLatest } = await getCommentLatestApi()
 
 const goPostDetail = (e, item, middle) => {
   // 如果是点击了链接，就不跳转

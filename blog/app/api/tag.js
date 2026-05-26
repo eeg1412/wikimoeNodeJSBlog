@@ -19,4 +19,9 @@ const getRandomTagListApi = params => {
   return siteRequest.request.get(RandomURL, siteRequest.params)
 }
 
-export { getTagDetailApi, getRandomTagListApi }
+const getRandomTagListFetchApi = (params = {}) => {
+  const siteRequest = resolveSiteRequest(params)
+  return siteRequest.request.getFetch(RandomURL, siteRequest.params)
+}
+
+export { getTagDetailApi, getRandomTagListApi, getRandomTagListFetchApi }

@@ -32,7 +32,8 @@ export default {
     notFound: '您造訪的頁面不存在。',
     forbidden: '您目前沒有權限存取此頁面。',
     maintenanceUpdating: '伺服器正在更新維護中，請稍後再試。',
-    maintenance: '伺服器正在維護中，請稍後再試。'
+    maintenance: '伺服器正在維護中，請稍後再試。',
+    languageSwitchFailed: '語言切換失敗，請稍後再試。'
   },
   calendar: {
     weekdaysShort: ['日', '一', '二', '三', '四', '五', '六'],

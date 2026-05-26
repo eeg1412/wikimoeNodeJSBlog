@@ -41,6 +41,10 @@ const getGamePlayingListApi = (params = {}) => {
   const siteRequest = resolveSiteRequest(params)
   return siteRequest.request.get(URL3, siteRequest.params, { watch: false })
 }
+const getGamePlayingListApiFetch = (params = {}) => {
+  const siteRequest = resolveSiteRequest(params)
+  return siteRequest.request.getFetch(URL3, siteRequest.params)
+}
 
 export {
   getGameListApi,
@@ -48,5 +52,6 @@ export {
   getGameDetailApi,
   getGameDetailApiFetch,
   getGamePlatformListApi,
-  getGamePlayingListApi
+  getGamePlayingListApi,
+  getGamePlayingListApiFetch
 }

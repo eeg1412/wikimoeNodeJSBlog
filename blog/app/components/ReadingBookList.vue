@@ -22,12 +22,13 @@
   </div>
 </template>
 <script setup>
-import { getBookReadingListApi } from '@/api/book'
-
-const route = useRoute()
-const { t } = useLang()
-const { data: readingBookList } = await getBookReadingListApi({
-  languageCode: route.params.code
+defineProps({
+  readingBookList: {
+    type: Array,
+    default: () => []
+  }
 })
+
+const { t } = useLang()
 </script>
 <style scoped></style>

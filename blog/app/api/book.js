@@ -41,6 +41,10 @@ const getBookReadingListApi = (params = {}) => {
   const siteRequest = resolveSiteRequest(params)
   return siteRequest.request.get(URL3, siteRequest.params, { watch: false })
 }
+const getBookReadingListApiFetch = (params = {}) => {
+  const siteRequest = resolveSiteRequest(params)
+  return siteRequest.request.getFetch(URL3, siteRequest.params)
+}
 
 export {
   getBookListApi,
@@ -48,5 +52,6 @@ export {
   getBookDetailApi,
   getBookDetailApiFetch,
   getBooktypeListApi,
-  getBookReadingListApi
+  getBookReadingListApi,
+  getBookReadingListApiFetch
 }

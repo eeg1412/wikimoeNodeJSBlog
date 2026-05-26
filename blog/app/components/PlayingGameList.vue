@@ -22,12 +22,13 @@
   </div>
 </template>
 <script setup>
-import { getGamePlayingListApi } from '@/api/game'
-
-const route = useRoute()
-const { t } = useLang()
-const { data: playingGameList } = await getGamePlayingListApi({
-  languageCode: route.params.code
+defineProps({
+  playingGameList: {
+    type: Array,
+    default: () => []
+  }
 })
+
+const { t } = useLang()
 </script>
 <style scoped></style>

@@ -34,9 +34,15 @@ async function assertActiveLanguageRoute(to) {
     throw createLanguageNotFoundError()
   }
 
-  // 进入带 code 的页面前先读取该语言配置，避免已停用语言继续渲染或命中缓存。
-  const { getOptions } = useOptions()
-  await getOptions({ languageCode })
+  // 客户端语言切换由 app.vue 的 router.beforeEach 统一预取并处理失败 toast。
+  // 这里不重复请求，避免接口 502 先进入 Nuxt error 流程，绕过切换失败提示。
+  if (import.meta.client) {
+    return
+  }
+
+  // 首屏进入带 code 的页面前先读取该语言配置，避免已停用语言继续渲染或命中缓存。
+  const { prepareOptions } = useOptions()
+  await prepareOptions({ languageCode })
 }
 
 export default defineNuxtRouteMiddleware(assertActiveLanguageRoute)

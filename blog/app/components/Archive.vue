@@ -33,18 +33,17 @@
   </div>
 </template>
 <script setup>
-import { getArchiveApi } from '@/api/post'
-const route = useRoute()
+const props = defineProps({
+  archiveListData: {
+    type: Array,
+    default: () => []
+  }
+})
+
 const { languageCode, t } = useLang()
-const [archiveData] = await Promise.all([
-  getArchiveApi({
-    languageCode: route.params.code
-  })
-])
-const { data: archiveListData } = archiveData
 // list 格式  { "_id": { "year": 2023, "month": 12 }, "count": 10 }
 const archiveList = computed(() => {
-  const list = archiveListData.value
+  const list = props.archiveListData
   const newList = []
   // 遍历list，转换为 [{year: 2021, month: 12, count: 10}]，月份小于10的前面加0
   for (const key in list) {

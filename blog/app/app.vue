@@ -43,29 +43,137 @@ if (import.meta.client) {
   })
 }
 
-const { options, getOptions } = useOptions()
+const { options, getOptions, prepareOptions, commitPreparedOptions } =
+  useOptions()
+const {
+  layoutLanguageSwitchState,
+  ensureLayoutLanguageSnapshot,
+  beginLayoutLanguageSwitch,
+  isCurrentLayoutLanguageSwitch,
+  finishLayoutLanguageSwitch,
+  prepareLayoutLanguageSnapshot,
+  commitLayoutLanguageSnapshot,
+  getLayoutLanguageCode
+} = useLayoutLanguageSnapshot()
+const { lockLanguageDisplay, unlockLanguageDisplay } = useLanguageDisplayState()
+const { t } = useLang()
+const toast = useWToast()
 await getOptions()
+await ensureLayoutLanguageSnapshot(route, options.value)
 const currentOptionsLanguageCode = ref(getOptionsRouteLanguageCode(route))
+let pendingLanguageSwitchCommit = null
+
+function createLanguageSwitchOptionsParams(toLanguageCode) {
+  const optionsParams = {
+    force: true
+  }
+
+  if (toLanguageCode) {
+    optionsParams.languageCode = toLanguageCode
+  }
+
+  return optionsParams
+}
+
+function getRouteIsLocalized(targetRoute) {
+  return Boolean(getRouteCode(targetRoute))
+}
+
+function lockCurrentLanguageDisplay() {
+  lockLanguageDisplay({
+    languageCode: getLayoutLanguageCode(route, options.value),
+    isLocalizedRoute: getRouteIsLocalized(route)
+  })
+}
+
+function clearPendingLanguageSwitch(switchSequence = null) {
+  if (switchSequence && !isCurrentLayoutLanguageSwitch(switchSequence)) {
+    return
+  }
+
+  pendingLanguageSwitchCommit = null
+  unlockLanguageDisplay()
+}
+
+function commitPendingLanguageSwitch() {
+  if (!pendingLanguageSwitchCommit) {
+    return
+  }
+
+  const pendingCommit = pendingLanguageSwitchCommit
+  if (!isCurrentLayoutLanguageSwitch(pendingCommit.switchSequence)) {
+    pendingLanguageSwitchCommit = null
+    return
+  }
+
+  commitPreparedOptions(pendingCommit.preparedOptions)
+  commitLayoutLanguageSnapshot(pendingCommit.layoutLanguageSnapshot)
+  currentOptionsLanguageCode.value = pendingCommit.toLanguageCode
+  clearPendingLanguageSwitch(pendingCommit.switchSequence)
+  finishLayoutLanguageSwitch(pendingCommit.switchSequence)
+}
+
+function showLanguageSwitchFailedToast() {
+  toast.add({
+    title: t('common.error.languageSwitchFailed'),
+    icon: 'i-heroicons-x-circle',
+    color: 'red'
+  })
+}
 
 // 路由跳转前
 if (import.meta.client) {
+  nuxtApp.hook('page:finish', commitPendingLanguageSwitch)
+  nuxtApp.hook('page:loading:end', commitPendingLanguageSwitch)
+
   router.beforeEach(async to => {
     const toLanguageCode = getOptionsRouteLanguageCode(to)
 
-    if (toLanguageCode !== currentOptionsLanguageCode.value) {
-      try {
-        const optionsParams = {
-          force: true
-        }
-        if (toLanguageCode) {
-          optionsParams.languageCode = toLanguageCode
-        }
+    if (toLanguageCode === currentOptionsLanguageCode.value) {
+      if (layoutLanguageSwitchState.value.isSwitching) {
+        const switchSequence = beginLayoutLanguageSwitch(toLanguageCode)
+        clearPendingLanguageSwitch(switchSequence)
+        finishLayoutLanguageSwitch(switchSequence)
+      }
 
-        await getOptions(optionsParams)
-        currentOptionsLanguageCode.value = toLanguageCode
-      } catch (error) {
-        console.error('获取选项失败:', error)
-        throw error
+      return true
+    }
+
+    const switchSequence = beginLayoutLanguageSwitch(toLanguageCode)
+    let shouldFinishSwitchInGuard = true
+    lockCurrentLanguageDisplay()
+    try {
+      const preparedOptions = await prepareOptions(
+        createLanguageSwitchOptionsParams(toLanguageCode)
+      )
+      const layoutLanguageSnapshot = await prepareLayoutLanguageSnapshot(
+        to,
+        preparedOptions.data
+      )
+
+      if (!isCurrentLayoutLanguageSwitch(switchSequence)) {
+        return false
+      }
+
+      pendingLanguageSwitchCommit = {
+        switchSequence,
+        toLanguageCode,
+        preparedOptions,
+        layoutLanguageSnapshot
+      }
+      shouldFinishSwitchInGuard = false
+    } catch (error) {
+      console.error('准备语言切换数据失败:', error)
+      if (isCurrentLayoutLanguageSwitch(switchSequence)) {
+        showLanguageSwitchFailedToast()
+      }
+      return false
+    } finally {
+      if (shouldFinishSwitchInGuard) {
+        if (isCurrentLayoutLanguageSwitch(switchSequence)) {
+          clearPendingLanguageSwitch(switchSequence)
+          finishLayoutLanguageSwitch(switchSequence)
+        }
       }
     }
 

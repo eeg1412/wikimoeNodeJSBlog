@@ -16,6 +16,10 @@ const getArchiveApi = (params = {}) => {
   const siteRequest = resolveSiteRequest(params)
   return siteRequest.request.get(archiveURL, siteRequest.params)
 }
+const getArchiveFetchApi = (params = {}) => {
+  const siteRequest = resolveSiteRequest(params)
+  return siteRequest.request.getFetch(archiveURL, siteRequest.params)
+}
 // '/post/detail'
 const detailURL = `/post/detail`
 const getDetailApi = params => {
@@ -59,6 +63,7 @@ const postLikeLogListApi = params => {
 export {
   getPostsApi,
   getArchiveApi,
+  getArchiveFetchApi,
   getDetailApi,
   putViewCountApi,
   postLikeLogApi,

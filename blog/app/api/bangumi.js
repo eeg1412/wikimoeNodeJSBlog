@@ -40,6 +40,10 @@ const getBangumiSeasonListApi = (params = {}) => {
   const siteRequest = resolveSiteRequest(params)
   return siteRequest.request.get(URL3, siteRequest.params, { watch: false })
 }
+const getBangumiSeasonListApiFetch = (params = {}) => {
+  const siteRequest = resolveSiteRequest(params)
+  return siteRequest.request.getFetch(URL3, siteRequest.params)
+}
 
 export {
   getBangumiListApi,
@@ -47,5 +51,6 @@ export {
   getBangumiDetailApi,
   getBangumiDetailApiFetch,
   getBangumiYearListApi,
-  getBangumiSeasonListApi
+  getBangumiSeasonListApi,
+  getBangumiSeasonListApiFetch
 }

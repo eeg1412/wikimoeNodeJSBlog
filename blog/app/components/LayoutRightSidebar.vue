@@ -37,7 +37,7 @@
         </WUIInput>
       </div>
     </div>
-    <div class="blog-layout-right-box" :key="languageCode">
+    <div class="blog-layout-right-box">
       <div
         v-for="item in sidebarListData"
         :key="item._id"
@@ -46,50 +46,23 @@
         <div class="blog-layout-right-title-body">
           {{ getSidebarTitle(item) }}
         </div>
-        <template v-if="item.type === 1">
-          <LazyHtmlContent :content="item.content" />
-        </template>
-        <template v-else-if="item.type === 3">
-          <LazyCommentLatest />
-        </template>
-        <template v-else-if="item.type === 4">
-          <LazyRandomTagList />
-        </template>
-        <template v-else-if="item.type === 8">
-          <LazySort />
-        </template>
-        <template v-else-if="item.type === 9">
-          <LazyArchive />
-        </template>
-        <template v-else-if="item.type === 10">
-          <LazyAdsbygoogleHave :ad="item.content" />
-        </template>
-        <template v-else-if="item.type === 11">
-          <div
-            class="blog-layout-right-customize-html"
-            v-html="item.content"
-          ></div>
-        </template>
-        <template v-else-if="item.type === 12">
-          <LazyTrendPostList />
-        </template>
-        <template v-else-if="item.type === 13">
-          <LazyBangumiSeasonList />
-        </template>
-        <template v-else-if="item.type === 14">
-          <LazyPlayingGameList />
-        </template>
-        <template v-else-if="item.type === 15">
-          <LazyReadingBookList />
-        </template>
+        <component
+          v-if="getSidebarBlockComponent(item)"
+          :is="getSidebarBlockComponent(item)"
+          v-bind="getSidebarBlockProps(item)"
+        />
       </div>
     </div>
   </div>
 </template>
 <script setup>
-import { getSidebarListFetchApi } from '@/api/sidebar'
+import { defineAsyncComponent, markRaw } from 'vue'
 import { getLanguageText } from '@/lang'
-import { readApiListResponse } from '@/utils/api-response'
+import {
+  createSidebarBlockProps,
+  getSidebarBlockComponentLoader,
+  getSidebarBlockComponentName
+} from '@/utils/sidebar-block'
 
 defineProps({
   active: {
@@ -104,29 +77,41 @@ defineProps({
 
 const emit = defineEmits(['close', 'focusin'])
 const router = useRouter()
-const {
-  defaultLanguageCode,
-  languageCode,
-  localePath,
-  supportedLanguageCodes,
-  t
-} = useLang()
-
-const { data: sidebarResponse } = await useAsyncData(
-  'layout-right-sidebar-list',
-  () => {
-    return getSidebarListFetchApi({
-      languageCode: languageCode.value
-    })
-  },
-  {
-    watch: [languageCode, defaultLanguageCode]
-  }
-)
+const { languageCode, localePath, supportedLanguageCodes, t } = useLang()
+const { layoutLanguageSnapshot } = useLayoutLanguageSnapshot()
 
 const sidebarListData = computed(() => {
-  return readApiListResponse(sidebarResponse.value)
+  return layoutLanguageSnapshot.value.sidebarList
 })
+
+const sidebarData = computed(() => {
+  return layoutLanguageSnapshot.value.sidebarData
+})
+const sidebarBlockComponentCache = new Map()
+
+const getSidebarBlockComponent = item => {
+  const componentName = getSidebarBlockComponentName(item)
+  if (!componentName) {
+    return null
+  }
+
+  if (sidebarBlockComponentCache.has(componentName)) {
+    return sidebarBlockComponentCache.get(componentName)
+  }
+
+  const componentLoader = getSidebarBlockComponentLoader(item)
+  if (!componentLoader) {
+    return null
+  }
+
+  const component = markRaw(defineAsyncComponent(componentLoader))
+  sidebarBlockComponentCache.set(componentName, component)
+  return component
+}
+
+const getSidebarBlockProps = item => {
+  return createSidebarBlockProps(item, sidebarData.value)
+}
 
 const getSidebarBuiltinTitle = (type, targetLanguageCode) => {
   const titlePath = `common.sidebarBuiltinTitles.${type}`
@@ -233,9 +218,6 @@ const goSearch = () => {
   font-weight: 400;
   padding-bottom: 8px;
   border-bottom: 1px solid #e2e2e2;
-}
-.blog-layout-right-customize-html {
-  padding-top: 10px;
 }
 .blog-layout-right-sidebar-item {
   margin-bottom: 20px;

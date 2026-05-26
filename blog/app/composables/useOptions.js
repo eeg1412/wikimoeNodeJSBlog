@@ -322,31 +322,44 @@ export function useOptions() {
   }
 
   /**
-   * @description 介绍：读取无 code 旧路由使用的源站 options。
+   * @description 介绍：创建待提交 options 结果，便于调用方控制统一提交时机。
+   * @param {object} data 输入：options 数据。
+   * @param {{ isLocalizedRoute: boolean, languageCode: string }} languageContext 输入：当前语言上下文。
+   * @returns {{ data: object, languageContext: object }} 输出：待提交 options 结果。
+   */
+  function createPreparedOptions(data, languageContext) {
+    return {
+      data,
+      languageContext
+    }
+  }
+
+  /**
+   * @description 介绍：预读取无 code 旧路由使用的源站 options，但不立即写入可见 options。
    * @param {{ isLocalizedRoute: boolean, languageCode: string }} languageContext 输入：当前语言上下文。
    * @param {object} [params={}] 输入：请求参数，可包含 force。
-   * @returns {Promise<object>} 输出：写入缓存后的源站 options。
+   * @returns {Promise<{ data: object, languageContext: object }>} 输出：待提交 options 结果。
    */
-  async function getSourceOptions(languageContext, params = {}) {
+  async function prepareSourceOptions(languageContext, params = {}) {
     const nextSourceOptions = await getCachedSourceOptions(params)
     const sourceLanguageContext = {
       ...languageContext,
       languageCode: resolveDefaultLanguageCode(nextSourceOptions)
     }
-    return setOptions(nextSourceOptions, sourceLanguageContext)
+    return createPreparedOptions(nextSourceOptions, sourceLanguageContext)
   }
 
   /**
-   * @description 介绍：读取带 code 多语言路由使用的合并 options。
+   * @description 介绍：预读取带 code 多语言路由使用的合并 options，但不立即写入可见 options。
    * @param {{ isLocalizedRoute: boolean, languageCode: string }} languageContext 输入：当前语言上下文。
    * @param {object} [params={}] 输入：请求参数，可包含 force。
-   * @returns {Promise<object>} 输出：写入缓存后的合并 options。
+   * @returns {Promise<{ data: object, languageContext: object }>} 输出：待提交 options 结果。
    */
-  async function getLocalizedOptions(languageContext, params = {}) {
+  async function prepareLocalizedOptions(languageContext, params = {}) {
     try {
       const nextSourceOptions = await getCachedSourceOptions(params)
       if (isMainSiteLanguage(languageContext, nextSourceOptions)) {
-        return setOptions(nextSourceOptions, languageContext)
+        return createPreparedOptions(nextSourceOptions, languageContext)
       }
 
       assertSiteMultilingualEnabled(nextSourceOptions)
@@ -355,7 +368,7 @@ export function useOptions() {
         params
       )
       assertBlogLanguageEnabled(multilingualOptions)
-      return setOptions(
+      return createPreparedOptions(
         mergeOptions(nextSourceOptions, multilingualOptions),
         languageContext
       )
@@ -375,22 +388,45 @@ export function useOptions() {
   }
 
   /**
-   * @description 介绍：按当前路由模式读取 options。
+   * @description 介绍：按当前路由模式预读取 options，不改变当前可见 UI 状态。
+   * @param {object} [params={}] 输入：请求参数，可包含 languageCode 和 force。
+   * @returns {Promise<{ data: object, languageContext: object }>} 输出：待提交 options 结果。
+   */
+  async function prepareOptions(params = {}) {
+    const languageContext = getOptionsLanguageContext(params, options.value)
+
+    if (shouldReuseOptions(params, languageContext)) {
+      return createPreparedOptions(options.value, languageContext)
+    }
+
+    if (languageContext.isLocalizedRoute) {
+      return prepareLocalizedOptions(languageContext, params)
+    }
+
+    return prepareSourceOptions(languageContext, params)
+  }
+
+  /**
+   * @description 介绍：提交预读取完成的 options，让可见 UI 进入目标语言状态。
+   * @param {{ data: object, languageContext: object }} preparedOptions 输入：待提交 options 结果。
+   * @returns {object} 输出：写入后的 options 数据。
+   */
+  function commitPreparedOptions(preparedOptions) {
+    if (!preparedOptions?.data || !preparedOptions?.languageContext) {
+      throw new Error('Invalid prepared options')
+    }
+
+    return setOptions(preparedOptions.data, preparedOptions.languageContext)
+  }
+
+  /**
+   * @description 介绍：按当前路由模式读取并提交 options。
    * @param {object} [params={}] 输入：请求参数，可包含 languageCode 和 force。
    * @returns {Promise<object>} 输出：当前模式可用的 options。
    */
   async function getOptions(params = {}) {
-    const languageContext = getOptionsLanguageContext(params, options.value)
-
-    if (shouldReuseOptions(params, languageContext)) {
-      return options.value
-    }
-
-    if (languageContext.isLocalizedRoute) {
-      return getLocalizedOptions(languageContext, params)
-    }
-
-    return getSourceOptions(languageContext, params)
+    const preparedOptions = await prepareOptions(params)
+    return commitPreparedOptions(preparedOptions)
   }
 
   return {
@@ -399,6 +435,8 @@ export function useOptions() {
     multilingualOptionsMap,
     optionsLanguageCode,
     optionsIsLocalizedRoute,
+    prepareOptions,
+    commitPreparedOptions,
     getOptions,
     createLanguageNotFoundError,
     SITE_MULTILINGUAL_DISABLED_REASON

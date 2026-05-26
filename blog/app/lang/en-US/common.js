@@ -32,7 +32,8 @@ export default {
     notFound: 'The page you are looking for does not exist.',
     forbidden: 'You do not have permission to access this page.',
     maintenanceUpdating: 'The server is being updated. Please try again later.',
-    maintenance: 'The server is under maintenance. Please try again later.'
+    maintenance: 'The server is under maintenance. Please try again later.',
+    languageSwitchFailed: 'Language switch failed. Please try again later.'
   },
   calendar: {
     weekdaysShort: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],

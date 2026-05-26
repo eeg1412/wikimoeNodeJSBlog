@@ -57,17 +57,16 @@
   </div>
 </template>
 <script setup>
-import { getTrendPostListApi } from '@/api/trend'
+defineProps({
+  trendPostList: {
+    type: Array,
+    default: () => []
+  }
+})
 
 const { options } = useOptions()
-const route = useRoute()
-const { languageCode, t } = useLang()
+const { t } = useLang()
 const { formatNumberText } = useLocalizedText()
-
-const { data: trendPostListData } = await getTrendPostListApi({
-  languageCode: route.params.code
-})
-const trendPostList = ref(trendPostListData.value.list)
 
 const getTrendDetail = (item, target) => {
   let detail = ''
