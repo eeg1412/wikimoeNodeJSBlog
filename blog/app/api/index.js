@@ -63,32 +63,6 @@ function getExplicitLanguageCode(params = {}, options = {}) {
 }
 
 /**
- * @description 介绍：读取主站原始配置，用于判定主站语言。
- * @returns {object|null} 输出：源站 options 或空值。
- */
-function getSourceOptionsForRequest() {
-  try {
-    const sourceOptions = useState('sourceOptions', () => null)
-    if (sourceOptions.value) {
-      return sourceOptions.value
-    }
-
-    const currentOptions = useState('options', () => null)
-    return currentOptions.value
-  } catch {
-    return null
-  }
-}
-
-/**
- * @description 介绍：读取主站语言，主站语言由源站 options 配置决定。
- * @returns {string} 输出：主站语言码。
- */
-function getMainSiteLanguageCode() {
-  return resolveDefaultLanguageCode(getSourceOptionsForRequest())
-}
-
-/**
  * @description 介绍：生成源站接口请求参数，避免把多语言参数传给源站接口。
  * @param {object} [params={}] 输入：原始请求参数。
  * @returns {object} 输出：源站接口请求参数。
@@ -104,16 +78,15 @@ function createSourceRequestParams(params = {}) {
 }
 
 /**
- * @description 介绍：根据主站语言配置选择源站或多语言请求实例。
+ * @description 介绍：根据是否显式携带语言码选择源站或多语言请求实例。
  * @param {object} [params={}] 输入：请求参数对象。
  * @param {object} [options={}] 输入：请求配置对象。
  * @returns {{ request: HttpRequest, params: object }} 输出：请求实例和处理后的参数。
  */
 function resolveSiteRequest(params = {}, options = {}) {
   const languageCode = getExplicitLanguageCode(params, options)
-  const mainSiteLanguageCode = getMainSiteLanguageCode()
 
-  if (!languageCode || languageCode === mainSiteLanguageCode) {
+  if (!languageCode) {
     return {
       request: httpRequest,
       params: createSourceRequestParams(params)

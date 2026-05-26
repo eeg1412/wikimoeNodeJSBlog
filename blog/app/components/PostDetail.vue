@@ -982,7 +982,7 @@ const hasPostLanguageInfo = computed(() => {
 
   return hasPostLanguageRoute(currentLanguageCode)
 })
-// 源文章 URL 不带语言 code；这种情况下当前语言来自接口返回的源语言。
+// 无 code 源站页面的当前语言来自接口返回的源语言。
 const currentPostLanguageCode = computed(() => {
   if (!hasPostLanguageInfo.value) {
     return ''
@@ -1060,7 +1060,7 @@ const hasPostLanguageBlock = computed(() => {
 
   return Boolean(currentLanguageLabel.value)
 })
-// 源语言链接走无 code 的源文章地址；译文语言链接使用 code 前缀，标识符统一使用 alias > id。
+// 语言切换链接统一使用 code 前缀，标识符统一使用 alias > id。
 const getPostLanguagePath = targetLanguageCode => {
   const postIdentifier = getPostLanguageIdentifier(targetLanguageCode)
   if (!postIdentifier) {
@@ -1073,10 +1073,6 @@ const getPostLanguagePath = targetLanguageCode => {
   }
 
   const postPath = `/${postTypePath}/${postIdentifier}`
-  if (targetLanguageCode === postLanguageInfo.value?.sourceLanguageCode) {
-    return buildPlainPath(postPath)
-  }
-
   return buildLanguagePath(targetLanguageCode, postPath)
 }
 // comment

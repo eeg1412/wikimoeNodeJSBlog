@@ -142,12 +142,6 @@ Docker 运行需要读取名为 `.env` 的配置文件，所以我们需要将�
 mv example.env .env
 ```
 
-**注意：** 如果用的是老版升级但是又不想升级 mongoDB 版本，可以下载 MongoDB 6 版本的配置文件（不推荐，有安全风险，仅做兼容）：
-
-> ```bash
-> wget -O compose.yml https://raw.githubusercontent.com/eeg1412/wikimoeNodeJSBlog/main/docker-compose-mongo6.yml
-> ```
-
 ### 4. 修改环境变量
 
 使用编辑器（如 `nano` 或 `vi`）打开 `.env` 文件：

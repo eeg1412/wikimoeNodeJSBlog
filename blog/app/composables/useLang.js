@@ -165,6 +165,25 @@ export function buildLocalePath(
   return buildPlainPath(path)
 }
 
+/**
+ * @description 介绍：构造 SEO 资源路径；无 code 源站使用源站路径，带 code 路由保留语言前缀。
+ * @param {string} languageCode 输入：当前语言码。
+ * @param {string} [path='/'] 输入：站内资源路径。
+ * @param {boolean} [isLocalizedRoute=false] 输入：是否为带 code 路由。
+ * @returns {string} 输出：可访问的 SEO 资源路径。
+ */
+export function buildSeoResourcePath(
+  languageCode,
+  path = '/',
+  isLocalizedRoute = false
+) {
+  if (isLocalizedRoute) {
+    return buildLanguagePath(languageCode, path)
+  }
+
+  return buildPlainPath(path)
+}
+
 function createInitialLanguageDisplayState() {
   return {
     isLocked: false,
@@ -271,6 +290,21 @@ export function useLang() {
     return `${siteUrl || ''}${localePath(path)}`
   }
 
+  /**
+   * @description 介绍：构造 SEO 资源完整 URL；带 code 路由使用多语言 RSS/站点地图入口。
+   * @param {string} siteUrl 输入：站点根 URL。
+   * @param {string} path 输入：站内资源路径。
+   * @returns {string} 输出：完整 URL 字符串。
+   */
+  const seoResourceUrl = (siteUrl, path) => {
+    const resourcePath = buildSeoResourcePath(
+      languageCode.value,
+      path,
+      isLocalizedRoute.value
+    )
+    return `${siteUrl || ''}${resourcePath}`
+  }
+
   return {
     isLocalizedRoute,
     languageCode,
@@ -279,6 +313,7 @@ export function useLang() {
     normalizeLanguageCode,
     localePath,
     localeUrl,
+    seoResourceUrl,
     t
   }
 }

@@ -134,15 +134,10 @@ import { getCommentCreateApi } from '@/api/comment'
 const toast = useWToast()
 const { options } = useOptions()
 const { setCommentRetractAuthDecode } = useCommentRetractAuthDecode()
-const { isLocalizedRoute, languageCode, defaultLanguageCode, t } = useLang()
+const { isLocalizedRoute, languageCode, t } = useLang()
 
-// 主站语言即使使用 /<code> 路径，也必须按源站评论邮件链路处理。
 const shouldSubmitSiteLangCode = computed(() => {
-  if (!isLocalizedRoute.value) {
-    return false
-  }
-
-  return languageCode.value !== defaultLanguageCode.value
+  return isLocalizedRoute.value
 })
 
 const props = defineProps({

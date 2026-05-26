@@ -4,7 +4,10 @@
 <script setup>
 import { getLanguageText, normalizeLanguageCode } from '@/lang'
 import { resolveDefaultLanguageCode } from '@/utils/default-language'
-import { getRouteCode as getRouteCodeFromRoute } from '~/composables/useLang'
+import {
+  buildSeoResourcePath,
+  getRouteCode as getRouteCodeFromRoute
+} from '~/composables/useLang'
 
 const route = useRoute()
 
@@ -31,16 +34,8 @@ const isLocalizedRoute = computed(() => {
   return Boolean(getCurrentRouteCode())
 })
 
-const isMainSiteLanguage = computed(() => {
-  return currentLanguageCode.value === resolveDefaultLanguageCode(options.value)
-})
-
 const shouldRequireMultilingualSite = computed(() => {
-  if (!isLocalizedRoute.value) {
-    return false
-  }
-
-  return !isMainSiteLanguage.value
+  return isLocalizedRoute.value
 })
 
 const isSiteMultilingualEnabled = computed(() => {
@@ -52,9 +47,17 @@ if (shouldRequireMultilingualSite.value && !isSiteMultilingualEnabled.value) {
 }
 
 const siteEnableRss = options.value.siteEnableRss
+const getSeoResourceUrl = path => {
+  const siteUrl = options.value.siteUrl
+  const resourcePath = buildSeoResourcePath(
+    currentLanguageCode.value,
+    path,
+    isLocalizedRoute.value
+  )
+  return `${siteUrl}${resourcePath}`
+}
 const rssHead = () => {
   if (siteEnableRss) {
-    const siteUrl = options.value.siteUrl
     const languageCode = currentLanguageCode.value
 
     return [
@@ -63,21 +66,21 @@ const rssHead = () => {
         rel: 'alternate',
         type: 'application/rss+xml',
         title: getLanguageText(languageCode, 'common.footer.rssAllTitle'),
-        href: `${siteUrl}/${languageCode}/rss`
+        href: getSeoResourceUrl('/rss')
       },
       // rss for blog
       {
         rel: 'alternate',
         type: 'application/rss+xml',
         title: getLanguageText(languageCode, 'common.footer.rssBlogTitle'),
-        href: `${siteUrl}/${languageCode}/rss/blog`
+        href: getSeoResourceUrl('/rss/blog')
       },
       // rss for tweet
       {
         rel: 'alternate',
         type: 'application/rss+xml',
         title: getLanguageText(languageCode, 'common.footer.rssTweetTitle'),
-        href: `${siteUrl}/${languageCode}/rss/tweet`
+        href: getSeoResourceUrl('/rss/tweet')
       }
     ]
   } else {

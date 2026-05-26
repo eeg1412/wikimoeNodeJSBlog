@@ -155,18 +155,6 @@ function assertSiteMultilingualEnabled(sourceOptions) {
 }
 
 /**
- * @description 介绍：判断当前语言是否为主站语言；输入：语言上下文和源站配置。
- * @param {{ isLocalizedRoute: boolean, languageCode: string }} languageContext 输入：当前语言上下文。
- * @param {object} sourceOptions 输入：源站配置。
- * @returns {boolean} 输出：true 表示当前语言应走主站接口。
- */
-function isMainSiteLanguage(languageContext, sourceOptions) {
-  return (
-    languageContext.languageCode === resolveDefaultLanguageCode(sourceOptions)
-  )
-}
-
-/**
  * @description 介绍：合并源站 options 和当前语言的多语言 options。
  * @param {object} sourceOptions 输入：源站配置。
  * @param {object} multilingualOptions 输入：多语言配置。
@@ -358,10 +346,6 @@ export function useOptions() {
   async function prepareLocalizedOptions(languageContext, params = {}) {
     try {
       const nextSourceOptions = await getCachedSourceOptions(params)
-      if (isMainSiteLanguage(languageContext, nextSourceOptions)) {
-        return createPreparedOptions(nextSourceOptions, languageContext)
-      }
-
       assertSiteMultilingualEnabled(nextSourceOptions)
       const multilingualOptions = await getCachedMultilingualOptions(
         languageContext.languageCode,

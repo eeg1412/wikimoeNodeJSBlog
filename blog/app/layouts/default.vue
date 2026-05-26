@@ -90,7 +90,7 @@
             v-if="options.siteEnableSitemap && options.siteShowSitemapInFooter"
             ><span class="px-2">|</span
             ><a
-              :href="localeUrl(options.siteUrl, '/sitemap.xml')"
+              :href="seoResourceUrl(options.siteUrl, '/sitemap.xml')"
               target="_blank"
               >{{ t('common.footer.sitemap') }}</a
             ></template
@@ -98,16 +98,18 @@
         </div>
         <div v-if="options.siteEnableRss && options.siteShowRssInFooter">
           <span>{{ t('common.footer.rssSubscribe') }}</span
-          ><a :href="localeUrl(options.siteUrl, '/rss')" target="_blank">{{
+          ><a :href="seoResourceUrl(options.siteUrl, '/rss')" target="_blank">{{
             t('common.footer.rssAll')
           }}</a
           ><span class="px-2">|</span
-          ><a :href="localeUrl(options.siteUrl, '/rss/blog')" target="_blank">{{
-            t('common.footer.rssBlog')
-          }}</a
-          ><span class="px-2">|</span
           ><a
-            :href="localeUrl(options.siteUrl, '/rss/tweet')"
+            :href="seoResourceUrl(options.siteUrl, '/rss/blog')"
+            target="_blank"
+            >{{ t('common.footer.rssBlog') }}</a
+          >
+          <span class="px-2">|</span
+          ><a
+            :href="seoResourceUrl(options.siteUrl, '/rss/tweet')"
             target="_blank"
             >{{ t('common.footer.rssTweet') }}</a
           >
@@ -137,7 +139,7 @@
 </template>
 <script setup>
 const route = useRoute()
-const { localePath, localeUrl, t } = useLang()
+const { localePath, seoResourceUrl, t } = useLang()
 
 const homePath = computed(() => localePath('/'))
 const layoutContentBody = ref(null)

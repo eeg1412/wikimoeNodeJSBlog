@@ -88,8 +88,9 @@ defineProps({
 
 1. 需要按语言切换的数据接口必须通过 `resolveSiteRequest(params)` 分流。
 2. `fetch` 使用 `requestParams` 透传 `languageCode`。
-3. 如果该类型只读取源站公共数据，`fetch` 可以忽略 `requestParams`。
-4. 不要在展示组件内直接读取 `route.params.code` 发起 sidebar 数据请求。
+3. `/<language-code>` 一律代表多语言站，即使该 code 等于源站默认语言，也必须透传 `languageCode`。
+4. 如果该类型只读取源站公共数据，`fetch` 可以忽略 `requestParams`。
+5. 不要在展示组件内直接读取 `route.params.code` 发起 sidebar 数据请求。
 
 ## UI 要求
 
