@@ -9,12 +9,7 @@
         <NuxtLink
           :to="{
             name: 'postListArchive',
-            params: {
-              code: languageCode,
-              year: item.year,
-              month: item.month,
-              page: 1
-            }
+            params: getArchiveRouteParams(item)
           }"
           class="archive-list-item-link common-a"
         >
@@ -40,7 +35,7 @@ const props = defineProps({
   }
 })
 
-const { languageCode, t } = useLang()
+const { isLocalizedRoute, languageCode, t } = useLang()
 // list 格式  { "_id": { "year": 2023, "month": 12 }, "count": 10 }
 const archiveList = computed(() => {
   const list = props.archiveListData
@@ -63,6 +58,20 @@ const archiveList = computed(() => {
 
 const formatCount = count => {
   return count > 999 ? '999+' : count
+}
+
+const getArchiveRouteParams = item => {
+  const routeParams = {
+    year: item.year,
+    month: item.month,
+    page: 1
+  }
+
+  if (isLocalizedRoute.value) {
+    routeParams.code = languageCode.value
+  }
+
+  return routeParams
 }
 </script>
 <style scoped>

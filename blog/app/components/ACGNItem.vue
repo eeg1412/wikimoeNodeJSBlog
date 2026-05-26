@@ -48,11 +48,7 @@
             target="_blank"
             :to="{
               name: postLinkName,
-              params: {
-                code: languageCode,
-                ...postLinkParams,
-                page: 1
-              }
+              params: postLinkRouteParams
             }"
           >
             <WUIIcon name="i-heroicons-newspaper" class="align-middle mr-1" />
@@ -127,7 +123,7 @@
   </ClientOnly>
 </template>
 <script setup>
-const { languageCode, t } = useLang()
+const { isLocalizedRoute, languageCode, t } = useLang()
 
 const props = defineProps({
   item: {
@@ -199,6 +195,18 @@ const postLinkParams = computed(() => {
     default:
       return {}
   }
+})
+const postLinkRouteParams = computed(() => {
+  const routeParams = {
+    ...postLinkParams.value,
+    page: 1
+  }
+
+  if (isLocalizedRoute.value) {
+    routeParams.code = languageCode.value
+  }
+
+  return routeParams
 })
 
 // 简介更多/收起功能

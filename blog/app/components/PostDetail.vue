@@ -56,11 +56,7 @@
                 class="common-a"
                 :to="{
                   name: 'postListSort',
-                  params: {
-                    code: languageCode,
-                    sortid: postData.data.sort.alias || postData.data.sort._id,
-                    page: 1
-                  }
+                  params: postSortRouteParams
                 }"
               >
                 {{ postData.data.sort.sortname }}
@@ -1060,7 +1056,7 @@ const hasPostLanguageBlock = computed(() => {
 
   return Boolean(currentLanguageLabel.value)
 })
-// 语言切换链接统一使用 code 前缀，标识符统一使用 alias > id。
+// 源语言链接走无 code 的源文章地址；译文语言链接使用 code 前缀，标识符统一使用 alias > id。
 const getPostLanguagePath = targetLanguageCode => {
   const postIdentifier = getPostLanguageIdentifier(targetLanguageCode)
   if (!postIdentifier) {
@@ -1073,8 +1069,25 @@ const getPostLanguagePath = targetLanguageCode => {
   }
 
   const postPath = `/${postTypePath}/${postIdentifier}`
+  if (targetLanguageCode === postLanguageInfo.value?.sourceLanguageCode) {
+    return buildPlainPath(postPath)
+  }
+
   return buildLanguagePath(targetLanguageCode, postPath)
 }
+const postSortRouteParams = computed(() => {
+  const sort = postData.value?.data?.sort
+  const routeParams = {
+    sortid: sort?.alias || sort?._id,
+    page: 1
+  }
+
+  if (isLocalizedRoute.value) {
+    routeParams.code = languageCode.value
+  }
+
+  return routeParams
+})
 // comment
 const commentPage = ref(1)
 const commentData = ref({

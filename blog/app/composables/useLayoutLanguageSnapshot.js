@@ -12,6 +12,7 @@ import { getRouteCode } from '~/composables/useLang'
 function createInitialLayoutLanguageSnapshot() {
   return {
     languageCode: '',
+    isLocalizedRoute: false,
     naviSourceList: [],
     sidebarList: [],
     sidebarData: createInitialSidebarData()
@@ -38,47 +39,65 @@ function readConfiguredListResponse(response, dataName) {
   throw new Error(`${dataName} response invalid`)
 }
 
-function createRequestParams(languageCode) {
+function createRequestParams(languageContext) {
+  if (!languageContext.isLocalizedRoute) {
+    return {}
+  }
+
   return {
-    languageCode
+    languageCode: languageContext.languageCode
+  }
+}
+
+function getLayoutLanguageContext(targetRoute, targetOptions) {
+  const routeLanguageCode = normalizeLanguageCode(getRouteCode(targetRoute))
+  if (routeLanguageCode) {
+    return {
+      isLocalizedRoute: true,
+      languageCode: routeLanguageCode
+    }
+  }
+
+  return {
+    isLocalizedRoute: false,
+    languageCode: resolveDefaultLanguageCode(targetOptions)
   }
 }
 
 function getLayoutLanguageCode(targetRoute, targetOptions) {
-  const routeLanguageCode = normalizeLanguageCode(getRouteCode(targetRoute))
-  if (routeLanguageCode) {
-    return routeLanguageCode
-  }
-
-  return resolveDefaultLanguageCode(targetOptions)
+  return getLayoutLanguageContext(targetRoute, targetOptions).languageCode
 }
 
-async function fetchSidebarData(sidebarList, languageCode) {
-  const requestParams = createRequestParams(languageCode)
+async function fetchSidebarData(sidebarList, languageContext) {
+  const requestParams = createRequestParams(languageContext)
   return fetchSidebarBlockData(sidebarList, requestParams)
 }
 
 async function loadLayoutLanguageSnapshot(targetRoute, targetOptions) {
-  const languageCode = getLayoutLanguageCode(targetRoute, targetOptions)
-  const requestParams = createRequestParams(languageCode)
+  const languageContext = getLayoutLanguageContext(targetRoute, targetOptions)
+  const requestParams = createRequestParams(languageContext)
   const [naviResponse, sidebarResponse] = await Promise.all([
     getNaviListFetchApi(requestParams),
     getSidebarListFetchApi(requestParams)
   ])
   const naviSourceList = readConfiguredListResponse(naviResponse, 'naviList')
   const sidebarList = readConfiguredListResponse(sidebarResponse, 'sidebarList')
-  const sidebarData = await fetchSidebarData(sidebarList, languageCode)
+  const sidebarData = await fetchSidebarData(sidebarList, languageContext)
 
   return {
-    languageCode,
+    ...languageContext,
     naviSourceList,
     sidebarList,
     sidebarData
   }
 }
 
-function isSnapshotReadyForLanguage(snapshot, languageCode) {
-  if (snapshot.languageCode !== languageCode) {
+function isSnapshotReadyForLanguage(snapshot, languageContext) {
+  if (snapshot.languageCode !== languageContext.languageCode) {
+    return false
+  }
+
+  if (snapshot.isLocalizedRoute !== languageContext.isLocalizedRoute) {
     return false
   }
 
@@ -142,9 +161,12 @@ export function useLayoutLanguageSnapshot() {
   }
 
   async function ensureLayoutLanguageSnapshot(targetRoute, targetOptions) {
-    const languageCode = getLayoutLanguageCode(targetRoute, targetOptions)
+    const languageContext = getLayoutLanguageContext(
+      targetRoute,
+      targetOptions
+    )
     if (
-      isSnapshotReadyForLanguage(layoutLanguageSnapshot.value, languageCode)
+      isSnapshotReadyForLanguage(layoutLanguageSnapshot.value, languageContext)
     ) {
       return layoutLanguageSnapshot.value
     }
