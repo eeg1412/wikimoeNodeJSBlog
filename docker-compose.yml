@@ -1,10 +1,11 @@
 services:
   blog:
     container_name: wikimoe-blog-nuxt
-    image: eeg1412/wikimoe-blog-nuxt
+    image: eeg1412/wikimoe-blog-nuxt:latest
     environment:
       - TZ=Asia/Shanghai
       - NUXT_API_DOMAIN=${NUXT_API_DOMAIN}
+      - NUXT_API_MULTILINGUAL_DOMAIN=${NUXT_API_MULTILINGUAL_DOMAIN}
       - NUXT_SWR_ENABLED=${NUXT_SWR_ENABLED}
       - NUXT_SWR_CACHE_MAXAGE=${NUXT_SWR_CACHE_MAXAGE}
       - NUXT_SWR_CACHE_STALEMAXAGE=${NUXT_SWR_CACHE_STALEMAXAGE}
@@ -37,6 +38,7 @@ services:
       - URLENCODED_LIMIT=${URLENCODED_LIMIT}
       - IP2LOCATION_FILE_NAME=${IP2LOCATION_FILE_NAME}
       - MAX_HISTORYLOGS_SIZE=${MAX_HISTORYLOGS_SIZE}
+      - MULTILINGUAL_DOMAIN=${MULTILINGUAL_DOMAIN}
       - USER_NAME=${USER_NAME} # option
     volumes:
       - ./data/wikimoe-blog-server/log:/app/log

@@ -5,8 +5,8 @@ COPY . .
 
 # env debug info
 RUN node -e "console.log(process.env)" && \
-    yarn install && \
-    yarn build
+	yarn install && \
+	yarn build
 
 
 FROM node:20-alpine AS runner 
