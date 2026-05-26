@@ -109,7 +109,11 @@ module.exports = async function (req, res, next) {
       postUtils.updateOne({ _id: post }, { $inc: { comnum: 1 } })
       // 发送邮件通知
       if (parent) {
-        utils.sendReplyCommentNotice(postInfo, String(data._id))
+        utils.sendReplyCommentNotice(postInfo, String(data._id)).catch(err => {
+          adminApiLog.error(
+            `reply comment notice send fail, ${logErrorToText(err)}`
+          )
+        })
       }
       // utils.reflushBlogCache()
     })

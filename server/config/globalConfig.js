@@ -4,6 +4,24 @@ const optionUtils = require('../mongodb/utils/options')
 const { Mint } = require('mint-filter')
 const { DEFAULT_LANGUAGE_CODE } = require('./languages')
 
+const EMAIL_SEND_TO_COMMENTER_TEMPLATE_MULTILINGUAL_LIST =
+  'emailSendToCommenterTemplateMultilingualList'
+
+function parseJsonArrayConfig(key, value) {
+  let parsedValue = null
+  try {
+    parsedValue = JSON.parse(value)
+  } catch (error) {
+    throw new Error(`${key}配置格式无效`)
+  }
+
+  if (!Array.isArray(parsedValue)) {
+    throw new Error(`${key}配置必须是数组`)
+  }
+
+  return parsedValue
+}
+
 const initGlobalConfig = async () => {
   // 默认配置
   const imgSettingConfig = {
@@ -158,8 +176,11 @@ const initGlobalConfig = async () => {
     emailSendToMeTemplate: '',
     emailSendToMeTemplateIsRichMode: true,
     // 通知评论者模板
+    emailSendToCommenterTitle: '您在【${siteTitle}】发表的评论收到了回复',
     emailSendToCommenterTemplate: '',
     emailSendToCommenterTemplateIsRichMode: true,
+    // 多语言通知评论者模板
+    emailSendToCommenterTemplateMultilingualList: [],
     // 撤回评论时通知自己模板
     emailRetractCommentTemplate: '',
     emailRetractCommentTemplateIsRichMode: true
@@ -228,6 +249,8 @@ const initGlobalConfig = async () => {
           form[key] = Number(obj[key])
         } else if (typeof form[key] === 'boolean') {
           form[key] = obj[key] === 'true'
+        } else if (key === EMAIL_SEND_TO_COMMENTER_TEMPLATE_MULTILINGUAL_LIST) {
+          form[key] = parseJsonArrayConfig(key, obj[key])
         } else if (Array.isArray(form[key])) {
           form[key] = obj[key].split(',')
         } else if (form[key] instanceof Set) {
@@ -301,7 +324,16 @@ const initGlobalConfig = async () => {
       const formatValueColored = v => {
         if (v && typeof v === 'object') {
           if (v.type === 'Set') return ANSI.value + v.value + ANSI.reset
-          if (Array.isArray(v)) return ANSI.value + v.join(', ') + ANSI.reset
+          if (Array.isArray(v)) {
+            const hasObjectItem = v.some(item => {
+              return item && typeof item === 'object'
+            })
+            if (hasObjectItem) {
+              return ANSI.value + JSON.stringify(v) + ANSI.reset
+            }
+
+            return ANSI.value + v.join(', ') + ANSI.reset
+          }
           return ANSI.value + JSON.stringify(v) + ANSI.reset
         }
         return ANSI.value + String(v) + ANSI.reset

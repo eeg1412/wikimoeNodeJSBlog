@@ -33,6 +33,7 @@
 - 设置页“多语言设置”tab 中出现新语言。
 - 默认站点语言可以选择新语言。
 - 评论列表中的“语言code”能够显示新语言 code 对应的语言标签。
+- 设置页“邮件设置 / 通知评论者模板”中出现新语言 tab，并可保存该语言的回复通知模板。
 - 小屏设备上表单标签、选择框和提交按钮不重叠。
 
 ## 4. Server 语言表
@@ -46,7 +47,9 @@
 - `/api/blog/options` 返回 `siteEnableMultilingual`。
 - 当 `siteDefaultLanguage` 设置为新语言时，访问 `/<language-code>` 不应请求对应语言的多语言 options、导航和侧边栏接口。
 - `/api/blog/comment/create` 接受新语言 code 作为 `siteLangCode`，并拒绝不在语言表内的 code。
-- 回复评论邮件中的文章链接在 `siteLangCode` 为新语言 code 时使用 `/<language-code>/post/<post-id>` 或 `/<language-code>/page/<post-id>`。
+- `emailSendToCommenterTemplateMultilingualList` 中应能保存新语言 code 对应的标题和模板项。
+- 回复评论邮件中的站点链接和文章链接在 `siteLangCode` 为新语言 code 时使用主站 `siteUrl` 下的 `/<language-code>`、`/<language-code>/post/<post-alias-or-id>` 或 `/<language-code>/page/<post-alias-or-id>`；文章 URL 优先使用别名，没有别名时使用当前文章自身 ID。
+- 回复评论邮件只使用 `MULTILINGUAL_DOMAIN` 拉取多语言文章详情和 options 接口，不应把该 API 域名写入面向用户的邮件链接。
 
 ## 5. 校验原则
 

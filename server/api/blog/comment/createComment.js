@@ -440,7 +440,11 @@ module.exports = async function (req, res, next) {
           if (sendParentMailFlag) {
             // 发送回复邮件通知
             // 获取父评论信息
-            utils.sendReplyCommentNotice(postInfo, data)
+            utils.sendReplyCommentNotice(postInfo, data).catch(err => {
+              userApiLog.error(
+                `reply comment notice send fail, ${logErrorToText(err)}`
+              )
+            })
           }
         })
         .catch(err => {

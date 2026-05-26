@@ -17,6 +17,9 @@ const lock = new AsyncLock({ timeout: 60000 })
 const crawlerUserAgents = require('./crawler-user-agents.json')
 const { Worker } = require('worker_threads')
 const moment = require('moment-timezone')
+const { isSupportedLanguageCode } = require('../config/languages')
+
+const MULTILINGUAL_DOMAIN_ENV_NAME = 'MULTILINGUAL_DOMAIN'
 
 const botUserAgentList = []
 crawlerUserAgents.forEach(item => {
@@ -820,6 +823,174 @@ exports.sendRetractCommentNotice = function (post, comment) {
   }
 }
 
+function getMultilingualDomain() {
+  const multilingualDomain = String(
+    process.env[MULTILINGUAL_DOMAIN_ENV_NAME] || ''
+  )
+    .trim()
+    .replace(/\/+$/, '')
+
+  if (!multilingualDomain) {
+    throw new Error('MULTILINGUAL_DOMAIN不存在，无法发送多语言评论回复邮件')
+  }
+
+  let parsedUrl = null
+  try {
+    parsedUrl = new URL(multilingualDomain)
+  } catch (error) {
+    throw new Error('MULTILINGUAL_DOMAIN配置无效，无法发送多语言评论回复邮件')
+  }
+
+  if (parsedUrl.protocol !== 'http:' && parsedUrl.protocol !== 'https:') {
+    throw new Error('MULTILINGUAL_DOMAIN协议无效，无法发送多语言评论回复邮件')
+  }
+
+  return multilingualDomain
+}
+
+function buildMultilingualApiUrl(pathname, params = {}) {
+  const multilingualDomain = getMultilingualDomain()
+  const normalizedPathname = String(pathname || '').replace(/^\/+/, '')
+  const url = new URL(`${multilingualDomain}/${normalizedPathname}`)
+
+  Object.keys(params).forEach(key => {
+    const value = params[key]
+    if (value !== undefined && value !== null) {
+      url.searchParams.append(key, String(value))
+    }
+  })
+
+  return url
+}
+
+async function fetchMultilingualApiJson(pathname, params = {}) {
+  if (typeof fetch !== 'function') {
+    throw new Error('当前Node.js运行时不支持fetch，无法发送多语言评论回复邮件')
+  }
+
+  const url = buildMultilingualApiUrl(pathname, params)
+  const response = await fetch(url.toString(), { method: 'GET' })
+  const responseText = await response.text()
+  let responseData = {}
+
+  if (responseText) {
+    try {
+      responseData = JSON.parse(responseText)
+    } catch (error) {
+      throw new Error(`多语言接口返回内容不是JSON：${url.pathname}`)
+    }
+  }
+
+  if (!response.ok) {
+    let message = response.statusText
+    const errorMessage = responseData?.errors?.[0]?.message
+    if (errorMessage) {
+      message = errorMessage
+    }
+    throw new Error(
+      `多语言接口请求失败：${url.pathname} ${response.status} ${message}`
+    )
+  }
+
+  return responseData
+}
+
+function getMultilingualSitePagePath(siteLangCode) {
+  const siteSettings = global.$globalConfig.siteSettings
+  const siteUrl = String(siteSettings.siteUrl || '').replace(/\/+$/, '')
+  if (!siteUrl) {
+    throw new Error('siteUrl不存在,请在后台设置')
+  }
+
+  return `${siteUrl}/${siteLangCode}`
+}
+
+function getMultilingualPostPagePath(multilingualPost, siteLangCode) {
+  return exports.getPostPagePath(multilingualPost, { siteLangCode })
+}
+
+async function getMultilingualReplyCommentPostContext(
+  sourcePost,
+  siteLangCode
+) {
+  if (!isSupportedLanguageCode(siteLangCode)) {
+    throw new Error('评论siteLangCode不在支持的语言列表中')
+  }
+
+  const sourcePostId = sourcePost?._id
+  if (!sourcePostId) {
+    throw new Error('多语言评论回复邮件缺少源文章ID')
+  }
+
+  const [postDetailData, optionsData] = await Promise.all([
+    fetchMultilingualApiJson('/api/multilingual-blog/post/detail', {
+      id: sourcePostId,
+      languageCode: siteLangCode
+    }),
+    fetchMultilingualApiJson('/api/multilingual-blog/options', {
+      languageCode: siteLangCode
+    })
+  ])
+
+  const multilingualPost = postDetailData.data
+  if (!multilingualPost || typeof multilingualPost !== 'object') {
+    throw new Error('多语言文章详情数据无效')
+  }
+
+  const multilingualOptions = optionsData.data || {}
+  const siteTitle = String(multilingualOptions.siteTitle || '')
+  if (!siteTitle) {
+    throw new Error('多语言站点标题不存在，无法发送多语言评论回复邮件')
+  }
+  const siteUrl = getMultilingualSitePagePath(siteLangCode)
+  const postUrl = getMultilingualPostPagePath(multilingualPost, siteLangCode)
+
+  return {
+    post: multilingualPost,
+    siteTitle,
+    siteUrl,
+    postUrl
+  }
+}
+
+function getMultilingualCommenterTemplate(emailSettings, siteLangCode) {
+  const templateList =
+    emailSettings.emailSendToCommenterTemplateMultilingualList || []
+  if (!Array.isArray(templateList)) {
+    throw new Error(
+      'emailSendToCommenterTemplateMultilingualList配置必须是数组'
+    )
+  }
+
+  return templateList.find(item => {
+    return item.siteLangCode === siteLangCode
+  })
+}
+
+function getEmailPostLinkTitle(post) {
+  return exports.escapeHtml(getEmailPostTitle(post))
+}
+
+function getEmailPostTitle(post) {
+  let title = post.title || post.excerpt || ''
+  title = String(title)
+  if (title.length > 200) {
+    title = exports.limitStr(title, 200)
+  }
+
+  return title
+}
+
+function formatReplyCommentNoticeSubject(template, params) {
+  return String(template)
+    .replace(/\${siteTitle}/g, params.siteTitle)
+    .replace(/\${title}/g, params.title)
+    .replace(/\${nickname}/g, params.nickname)
+    .replace(/\${comment}/g, params.comment)
+    .replace(/\${parentNickname}/g, params.parentNickname)
+    .replace(/\${parentComment}/g, params.parentComment)
+}
+
 // 发送回复评论通知，参数是文章信息post，评论信息comment，父级评论信息parentComment
 exports.sendReplyCommentNotice = async function (post, comment) {
   if (typeof comment === 'string') {
@@ -880,38 +1051,97 @@ exports.sendReplyCommentNotice = async function (post, comment) {
   }
   const siteSettings = global.$globalConfig.siteSettings
   const emailSettings = global.$globalConfig.emailSettings
-  const { emailSendToCommenterTemplate, emailEnable, emailSendOptions } =
-    emailSettings
-
-  // 如果没有设置emailSendToCommenterTemplate，就不发送邮件
-  if (!emailSendToCommenterTemplate) {
-    console.error('请在后台设置emailSendToCommenterTemplate')
-    return
-  }
+  const {
+    emailSendToCommenterTitle,
+    emailSendToCommenterTemplate,
+    emailEnable,
+    emailSendOptions
+  } = emailSettings
 
   // 判断emailEnable为true，且emailSendOptions包含字符串receiveComment
   if (emailEnable && emailSendOptions.includes('replyComment')) {
-    const { siteUrl, siteTitle } = siteSettings
-    const { title, excerpt } = post
-    let linkTitle = title || excerpt
-    if (linkTitle.length > 200) {
-      linkTitle = this.limitStr(linkTitle, 200)
+    let siteUrl = siteSettings.siteUrl
+    let siteTitle = siteSettings.siteTitle
+    let postUrl = ''
+    let titleTemplate = emailSendToCommenterTitle
+    let template = emailSendToCommenterTemplate
+    let titleErrorMessage = '请在后台设置emailSendToCommenterTitle'
+    let templateErrorMessage = '请在后台设置emailSendToCommenterTemplate'
+
+    if (comment.siteLangCode) {
+      const multilingualTemplate = getMultilingualCommenterTemplate(
+        emailSettings,
+        comment.siteLangCode
+      )
+      if (!multilingualTemplate) {
+        console.error(
+          `请在后台设置${comment.siteLangCode}的多语言通知评论者配置`
+        )
+        return
+      }
+      titleTemplate = multilingualTemplate.title
+      template = multilingualTemplate.template
+      titleErrorMessage = `请在后台设置${comment.siteLangCode}的多语言通知评论者标题`
+      templateErrorMessage = `请在后台设置${comment.siteLangCode}的多语言通知评论者模板`
+      if (!template) {
+        console.error(templateErrorMessage)
+        return
+      }
+      if (!titleTemplate) {
+        console.error(titleErrorMessage)
+        return
+      }
+
+      const multilingualContext = await getMultilingualReplyCommentPostContext(
+        post,
+        comment.siteLangCode
+      )
+      post = multilingualContext.post
+      siteUrl = multilingualContext.siteUrl
+      siteTitle = multilingualContext.siteTitle
+      postUrl = multilingualContext.postUrl
+    } else {
+      if (!template) {
+        console.error(templateErrorMessage)
+        return
+      }
+      if (!titleTemplate) {
+        console.error(titleErrorMessage)
+        return
+      }
+      postUrl = this.getPostPagePath(post)
     }
+
+    const linkTitle = getEmailPostLinkTitle(post)
+    const postTitle = getEmailPostTitle(post)
     let { nickname, content } = comment
+    let subjectNickname = String(nickname || '')
+    const subjectComment = String(content || '')
     content = this.escapeHtml(content)
     let { nickname: parentNickname, content: parentContent } = parentComment
+    let subjectParentNickname = String(parentNickname || '')
+    const subjectParentComment = String(parentContent || '')
     parentContent = this.escapeHtml(parentContent)
     if (commentIsAdmin) {
       nickname = commentUser.nickname
+      subjectNickname = String(commentUser.nickname || '')
     }
     nickname = this.escapeHtml(nickname)
     if (parentCommentIsAdmin) {
       parentNickname = parentCommentUser.nickname
+      subjectParentNickname = String(parentCommentUser.nickname || '')
     }
     parentNickname = this.escapeHtml(parentNickname)
     const to = parentCommentEmail
-    const subject = `您在【${siteTitle}】发表的评论收到了回复`
-    let contentHtml = emailSendToCommenterTemplate
+    const subject = formatReplyCommentNoticeSubject(titleTemplate, {
+      siteTitle,
+      title: postTitle,
+      nickname: subjectNickname,
+      comment: subjectComment,
+      parentNickname: subjectParentNickname,
+      parentComment: subjectParentComment
+    })
+    let contentHtml = template
     // 替换模板中的变量
     // ${comment}为评论内容
     // ${nickname}为评论者昵称
@@ -925,15 +1155,11 @@ exports.sendReplyCommentNotice = async function (post, comment) {
     contentHtml = contentHtml.replace(/\${nickname}/g, nickname)
     contentHtml = contentHtml.replace(
       /\${title}/g,
-      `<a href="${this.getPostPagePath(post, {
-        siteLangCode: comment.siteLangCode
-      })}/#comment-${
-        comment._id
-      }" target="_blank">${linkTitle}</a>`
+      `<a href="${postUrl}/#comment-${comment._id}" target="_blank">${linkTitle}</a>`
     )
     contentHtml = contentHtml.replace(
       /\${siteTitle}/g,
-      `<a href="${siteUrl}" target="_blank">${siteTitle}</a>`
+      `<a href="${siteUrl}" target="_blank">${this.escapeHtml(siteTitle)}</a>`
     )
     contentHtml = contentHtml.replace(/\${parentComment}/g, parentContent)
     contentHtml = contentHtml.replace(/\${parentNickname}/g, parentNickname)
@@ -974,7 +1200,11 @@ exports.getPostPagePath = (postData, options = {}) => {
 
   if (options.siteLangCode) {
     path = `/${options.siteLangCode}${path}`
-    path += postData._id
+    if (postData.alias) {
+      path += postData.alias
+    } else {
+      path += postData._id
+    }
   } else if (postData.alias) {
     path += postData.alias
   } else {
@@ -1026,17 +1256,20 @@ exports.referrerRecord = function (referrer, referrerType) {
         return
       }
       // 设置计时器
-      referrerRecordTimerMap[md5Id] = setTimeout(() => {
-        // 如果计时器到期，就保存referrer
-        const params = {
-          referrer,
-          referrerType
-        }
-        console.log('referrer记录', params)
-        referrerUtils.save(params)
-        // 删除计时器
-        delete referrerRecordTimerMap[md5Id]
-      }, 1000 * 60 * 60)
+      referrerRecordTimerMap[md5Id] = setTimeout(
+        () => {
+          // 如果计时器到期，就保存referrer
+          const params = {
+            referrer,
+            referrerType
+          }
+          console.log('referrer记录', params)
+          referrerUtils.save(params)
+          // 删除计时器
+          delete referrerRecordTimerMap[md5Id]
+        },
+        1000 * 60 * 60
+      )
     }
   }
 }

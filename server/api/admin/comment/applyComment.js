@@ -95,7 +95,11 @@ module.exports = async function (req, res, next) {
           if (commentInfo.parent && commentInfo.needSendMailToParent) {
             // 发送回复邮件通知
             // 发送邮件通知
-            utils.sendReplyCommentNotice(null, commentInfo, null)
+            utils.sendReplyCommentNotice(null, commentInfo, null).catch(err => {
+              adminApiLog.error(
+                `reply comment notice send fail, ${logErrorToText(err)}`
+              )
+            })
             // 更新needSendMailToParent为false
             commentUtils.updateOne(
               { _id: commentInfo._id },

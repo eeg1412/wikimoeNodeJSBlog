@@ -429,8 +429,8 @@
         <div class="comment-list-body">
           <!-- 评论form -->
           <LazyCommentForm
-            v-if="sourcePostid"
-            :postid="sourcePostid"
+            v-if="sourceArticleId"
+            :postid="sourceArticleId"
             :allowRemark="postData.data.allowRemark"
             @refresh="refreshCommentList"
           />
@@ -633,9 +633,9 @@
                   <div class="mt-5" v-if="commentid === item._id">
                     <!-- 回复表单 -->
                     <LazyCommentForm
-                      v-if="sourcePostid"
+                      v-if="sourceArticleId"
                       :id="`${item._id}-reply`"
-                      :postid="sourcePostid"
+                      :postid="sourceArticleId"
                       :commentid="commentid"
                       :parentNickname="item.nickname || item.user?.nickname"
                       @refresh="refreshCommentList"
@@ -692,7 +692,7 @@
               v-else-if="
                 options.siteEnableComment &&
                 postData.data.allowRemark &&
-                sourcePostid &&
+                sourceArticleId &&
                 !commentLoading
               "
             >
@@ -818,8 +818,7 @@ const runCode = () => {
   newWindow.document.write(runCodeContent)
 }
 // const postid = postData.value.data._id
-const sourcePostid = postData.value?.data?.sourceId
-// 多语言接口只接受源文章 ID；译文详情页也要回到 sourceId 查询同一组语言状态。
+// 源站交互和多语言存在性都使用源文章 ID；主站文章没有 sourceId 时使用自身 _id。
 const sourceArticleId =
   postData.value?.data?.sourceId || postData.value?.data?._id
 // 语言切换属于增强信息，SSR 最多等 1 秒，避免拖慢文章主内容输出。
@@ -836,14 +835,23 @@ const languageConfigMap = LANGUAGE_CONFIG_LIST.reduce((map, item) => {
 const createUnavailablePostLanguageInfo = () => {
   return {
     sourceLanguageCode: '',
-    existenceMap: {}
+    existenceMap: {},
+    // 无可用接口数据时不生成任何语言切换链接。
+    languagePostMap: {}
   }
 }
 // 接口成功时直接使用上游给出的语言信息；前端不补齐或推断语言数据。
 const normalizePostLanguageInfo = data => {
+  // languagePostMap 由接口提供，保存每个语言的 alias、公开 id 和源文章 id。
+  let languagePostMap = {}
+  if (data.languagePostMap && typeof data.languagePostMap === 'object') {
+    languagePostMap = data.languagePostMap
+  }
+
   return {
     sourceLanguageCode: data.sourceLanguageCode,
-    existenceMap: data.existenceMap
+    existenceMap: data.existenceMap,
+    languagePostMap
   }
 }
 // 未配置多语言上游或缺少源文章 ID 时，SSR 阶段不发起这个辅助接口。
@@ -884,14 +892,83 @@ const fetchPostLanguageExistence = async () => {
   }
 }
 const postLanguageInfo = ref(await fetchPostLanguageExistence())
-// 只有请求成功并确认源语言存在时，才允许页面展示多语言块。
+/**
+ * 统一把接口返回的文章标识转成路由可用文本；空值表示不能生成链接。
+ * @param {any} value 输入的 alias、id 或 sourceId。
+ * @returns {string} 清理后的路由标识。
+ */
+const normalizePostIdentifier = value => {
+  if (value === undefined || value === null) {
+    return ''
+  }
+
+  return String(value).trim()
+}
+/**
+ * 获取指定语言的文章路由信息。
+ * @param {string} targetLanguageCode 目标语言码。
+ * @returns {{ alias: string, id: string, sourceId: string }|null} 当前语言的文章标识信息。
+ */
+const getPostLanguageRouteInfo = targetLanguageCode => {
+  const routeInfo =
+    postLanguageInfo.value?.languagePostMap?.[targetLanguageCode]
+  if (!routeInfo || typeof routeInfo !== 'object') {
+    return null
+  }
+
+  const alias = normalizePostIdentifier(routeInfo.alias)
+  const id = normalizePostIdentifier(routeInfo.id)
+  const sourceId = normalizePostIdentifier(routeInfo.sourceId)
+
+  return {
+    alias,
+    id,
+    sourceId
+  }
+}
+/**
+ * 按 alias > id 的优先级选择语言切换 URL 标识。
+ * 源语言的 id 已由接口处理为源文章 id，译文语言的 id 为译文文章 id。
+ * @param {string} targetLanguageCode 目标语言码。
+ * @returns {string} 可用于 /post 或 /page 路径的文章标识。
+ */
+const getPostLanguageIdentifier = targetLanguageCode => {
+  const routeInfo = getPostLanguageRouteInfo(targetLanguageCode)
+  if (!routeInfo) {
+    return ''
+  }
+
+  if (routeInfo.alias) {
+    return routeInfo.alias
+  }
+
+  return routeInfo.id
+}
+/**
+ * 判断指定语言是否具备生成语言切换链接所需的文章标识。
+ * @param {string} targetLanguageCode 目标语言码。
+ * @returns {boolean} 是否可以生成链接。
+ */
+const hasPostLanguageRoute = targetLanguageCode => {
+  return Boolean(getPostLanguageIdentifier(targetLanguageCode))
+}
+// 只有请求成功并确认当前页面语言可访问时，才允许页面展示多语言块。
 const hasPostLanguageInfo = computed(() => {
   const sourceLanguageCode = postLanguageInfo.value?.sourceLanguageCode
   if (!sourceLanguageCode) {
     return false
   }
 
-  return postLanguageInfo.value?.existenceMap?.[sourceLanguageCode] === true
+  let currentLanguageCode = sourceLanguageCode
+  if (isLocalizedRoute.value) {
+    currentLanguageCode = languageCode.value
+  }
+
+  if (postLanguageInfo.value?.existenceMap?.[currentLanguageCode] !== true) {
+    return false
+  }
+
+  return hasPostLanguageRoute(currentLanguageCode)
 })
 // 源文章 URL 不带语言 code；这种情况下当前语言来自接口返回的源语言。
 const currentPostLanguageCode = computed(() => {
@@ -926,7 +1003,11 @@ const availablePostLanguageList = computed(() => {
   }
 
   return LANGUAGE_CONFIG_LIST.filter(item => {
-    return postLanguageInfo.value?.existenceMap?.[item.code] === true
+    if (postLanguageInfo.value?.existenceMap?.[item.code] !== true) {
+      return false
+    }
+
+    return hasPostLanguageRoute(item.code)
   })
 })
 // 下拉列表只显示可切换的其他语言，当前语言不重复出现。
@@ -951,14 +1032,19 @@ const hasPostLanguageBlock = computed(() => {
 
   return Boolean(currentLanguageLabel.value)
 })
-// 源语言链接走无 code 的源文章地址；译文语言链接使用 code 前缀和源文章 ID。
+// 源语言链接走无 code 的源文章地址；译文语言链接使用 code 前缀，标识符统一使用 alias > id。
 const getPostLanguagePath = targetLanguageCode => {
+  const postIdentifier = getPostLanguageIdentifier(targetLanguageCode)
+  if (!postIdentifier) {
+    return ''
+  }
+
   let postTypePath = 'post'
   if (postData.value?.data?.type === 3) {
     postTypePath = 'page'
   }
 
-  const postPath = `/${postTypePath}/${sourceArticleId}`
+  const postPath = `/${postTypePath}/${postIdentifier}`
   if (targetLanguageCode === postLanguageInfo.value?.sourceLanguageCode) {
     return buildPlainPath(postPath)
   }
@@ -992,7 +1078,7 @@ const changeCommentSort = type => {
   getCommentList()
 }
 const getCommentList = async goToCommentListRef => {
-  if (!sourcePostid) {
+  if (!sourceArticleId) {
     commentData.value = {
       list: [],
       total: 0,
@@ -1004,7 +1090,7 @@ const getCommentList = async goToCommentListRef => {
 
   commentLoading.value = true
   await getCommentListApi({
-    id: sourcePostid,
+    id: sourceArticleId,
     sorttype: commentSortType.value,
     page: commentPage.value
   })
@@ -1147,12 +1233,12 @@ const likeComment = commentId => {
 
 // viewCount
 const putViewCount = () => {
-  if (!sourcePostid) {
+  if (!sourceArticleId) {
     return
   }
 
   putViewCountApi({
-    id: sourcePostid
+    id: sourceArticleId
   })
 }
 
@@ -1161,14 +1247,14 @@ const likeListInited = ref(false)
 const likeListLoading = ref(false)
 const likeList = ref([])
 const postLikeLogList = () => {
-  if (!sourcePostid) {
+  if (!sourceArticleId) {
     likeList.value = []
     likeListInited.value = true
     likeListLoading.value = false
     return
   }
 
-  const postIdList = [sourcePostid]
+  const postIdList = [sourceArticleId]
   likeListLoading.value = true
   postLikeLogListApi({ postIdList })
     .then(res => {
@@ -1181,7 +1267,7 @@ const postLikeLogList = () => {
     })
 }
 const checkIsLike = () => {
-  const likeData = likeList.value.find(item => item.post === sourcePostid)
+  const likeData = likeList.value.find(item => item.post === sourceArticleId)
   if (likeData) {
     postData.value.data.isLike = likeData.like
     if (likeData.like && postData.value.data.likes === 0) {
@@ -1191,7 +1277,7 @@ const checkIsLike = () => {
   }
 }
 const getLikeDataByPostId = () => {
-  const likeData = likeList.value.find(item => item.post === sourcePostid)
+  const likeData = likeList.value.find(item => item.post === sourceArticleId)
   if (likeData) {
     return likeData
   } else {
@@ -1201,7 +1287,7 @@ const getLikeDataByPostId = () => {
 
 const likePostIsLoading = ref(false)
 const likePost = () => {
-  if (!sourcePostid) {
+  if (!sourceArticleId) {
     return
   }
 
@@ -1213,10 +1299,12 @@ const likePost = () => {
   const __v = getLikeDataByPostId()?.__v
   likePostIsLoading.value = true
 
-  postLikeLogApi({ id: sourcePostid, like: !like, __v })
+  postLikeLogApi({ id: sourceArticleId, like: !like, __v })
     .then(res => {
       // 将对应的likeList里的postId替换为res.data
-      const index = likeList.value.findIndex(item => item.post === sourcePostid)
+      const index = likeList.value.findIndex(
+        item => item.post === sourceArticleId
+      )
       if (index > -1) {
         likeList.value[index] = res.data
       } else {

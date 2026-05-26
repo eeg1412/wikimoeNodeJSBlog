@@ -8,6 +8,9 @@ const globalConfigUtils = require('../../../config/globalConfig')
 const cacheDataUtils = require('../../../config/cacheData')
 const { isSupportedLanguageCode } = require('../../../config/languages')
 
+const EMAIL_SEND_TO_COMMENTER_TEMPLATE_MULTILINGUAL_LIST =
+  'emailSendToCommenterTemplateMultilingualList'
+
 function sendOptionValidateError(res, message) {
   res.status(400).json({
     errors: [
@@ -45,6 +48,86 @@ function validateOptionList(optionList, res) {
         return false
       }
     }
+
+    if (name === EMAIL_SEND_TO_COMMENTER_TEMPLATE_MULTILINGUAL_LIST) {
+      if (!validateEmailSendToCommenterTemplateMultilingualList(value, res)) {
+        return false
+      }
+    }
+  }
+
+  return true
+}
+
+function parseEmailSendToCommenterTemplateMultilingualList(value, res) {
+  if (Array.isArray(value)) {
+    return value
+  }
+
+  if (typeof value !== 'string') {
+    sendOptionValidateError(res, '多语言通知评论者模板配置必须是数组')
+    return null
+  }
+
+  try {
+    const parsedValue = JSON.parse(value)
+    if (!Array.isArray(parsedValue)) {
+      sendOptionValidateError(res, '多语言通知评论者模板配置必须是数组')
+      return null
+    }
+
+    return parsedValue
+  } catch (error) {
+    sendOptionValidateError(res, '多语言通知评论者模板配置格式无效')
+    return null
+  }
+}
+
+function validateEmailSendToCommenterTemplateMultilingualList(value, res) {
+  const templateList = parseEmailSendToCommenterTemplateMultilingualList(
+    value,
+    res
+  )
+  if (!templateList) {
+    return false
+  }
+
+  const siteLangCodeSet = new Set()
+  for (const item of templateList) {
+    const isValidObject = item && typeof item === 'object'
+    if (!isValidObject || Array.isArray(item)) {
+      sendOptionValidateError(res, '多语言通知评论者模板配置项格式无效')
+      return false
+    }
+
+    if (
+      typeof item.siteLangCode !== 'string' ||
+      !isSupportedLanguageCode(item.siteLangCode)
+    ) {
+      sendOptionValidateError(res, '多语言通知评论者模板语言 code 无效')
+      return false
+    }
+
+    if (siteLangCodeSet.has(item.siteLangCode)) {
+      sendOptionValidateError(res, '多语言通知评论者模板语言 code 重复')
+      return false
+    }
+    siteLangCodeSet.add(item.siteLangCode)
+
+    if (typeof item.template !== 'string') {
+      sendOptionValidateError(res, '多语言通知评论者模板内容格式无效')
+      return false
+    }
+
+    if (typeof item.title !== 'string') {
+      sendOptionValidateError(res, '多语言通知评论者标题格式无效')
+      return false
+    }
+
+    if (typeof item.templateIsRichMode !== 'boolean') {
+      sendOptionValidateError(res, '多语言通知评论者模板编辑模式格式无效')
+      return false
+    }
   }
 
   return true
@@ -63,6 +146,12 @@ module.exports = async function (req, res, next) {
     let { name, value } = item
     // 如果name不存在,则跳过
     if (!name) continue
+    if (
+      name === EMAIL_SEND_TO_COMMENTER_TEMPLATE_MULTILINGUAL_LIST &&
+      Array.isArray(value)
+    ) {
+      value = JSON.stringify(value)
+    }
     const base64Reg = /^data:image\/\w+;base64,/
     switch (name) {
       case 'siteLogo':
