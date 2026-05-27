@@ -79,8 +79,13 @@ languageCode.value
 
 const showChildren = ref(false)
 const getItemUrl = item => {
-  // localePath 会过滤脚本协议，避免接口下发的导航链接进入 href。
-  return localePath(item.url) + (item.query || '')
+  const isDefaultTop = item.isDefaultTop || false
+  if (isDefaultTop) {
+    // localePath 会过滤脚本协议，避免接口下发的导航链接进入 href。只有 默认首页的导航才使用 localePath 处理链接，其他导航链接直接使用 url 字段，允许接口下发的导航链接进入 href
+    return localePath(item.url) + (item.query || '')
+  } else {
+    return item.url + (item.query || '')
+  }
 }
 
 const checkActive = item => {

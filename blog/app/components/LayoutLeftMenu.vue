@@ -80,7 +80,8 @@ const naviList = computed(() => {
     {
       naviname: t('common.navigation.home'),
       url: '/',
-      isdefault: true
+      isdefault: true,
+      isDefaultTop: true
     },
     ...naviSourceList.value
   ]
