@@ -857,9 +857,12 @@ const normalizePostLanguageInfo = data => {
   if (data.languagePostMap && typeof data.languagePostMap === 'object') {
     languagePostMap = data.languagePostMap
   }
-
+  if (data.sourceLanguageStatus === 1) {
+    data.existenceMap[data.sourceLanguageCode] = true
+  }
   return {
     sourceLanguageCode: data.sourceLanguageCode,
+    sourceLanguageStatus: data.sourceLanguageStatus,
     existenceMap: data.existenceMap,
     languagePostMap
   }
@@ -1013,11 +1016,19 @@ const availablePostLanguageList = computed(() => {
   }
 
   return LANGUAGE_CONFIG_LIST.filter(item => {
-    if (postLanguageInfo.value?.existenceMap?.[item.code] !== true) {
+    const itemCode = item.code
+    if (
+      itemCode === postLanguageInfo.value?.sourceLanguageCode &&
+      postLanguageInfo.value?.sourceLanguageStatus === 1
+    ) {
+      // 源语言发布中，必须显示。
+      return true
+    }
+    if (postLanguageInfo.value?.existenceMap?.[itemCode] !== true) {
       return false
     }
 
-    return hasPostLanguageRoute(item.code)
+    return hasPostLanguageRoute(itemCode)
   })
 })
 // 下拉列表只显示可切换的其他语言，当前语言不重复出现。
