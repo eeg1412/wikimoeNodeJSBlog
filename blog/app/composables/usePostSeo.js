@@ -1,3 +1,5 @@
+import { resolveSiteResourceUrl } from '@/utils/site-resource-url'
+
 /**
  * SEO 数据处理公共函数
  * 为文章生成标题、描述、关键词、图片等SEO数据
@@ -5,6 +7,7 @@
  */
 export function usePostSeo() {
   const { options } = useOptions()
+  const { siteDefaultCover, siteDefaultCoverUrl } = useSiteDefaultCover()
 
   /**
    * 获取当前页面完整URL
@@ -39,7 +42,7 @@ export function usePostSeo() {
     if (!post || !options.value) return ''
 
     const siteUrl = options.value.siteUrl || ''
-    let imageUrl = options.value.siteDefaultCover || ''
+    let imageUrl = siteDefaultCover.value
 
     if (post.coverImages && post.coverImages.length > 0) {
       const coverImage = post.coverImages[0]
@@ -50,11 +53,7 @@ export function usePostSeo() {
       }
     }
 
-    // 确保返回完整URL
-    if (imageUrl && !imageUrl.startsWith('http')) {
-      return siteUrl + imageUrl
-    }
-    return imageUrl
+    return resolveSiteResourceUrl(imageUrl, siteUrl)
   }
 
   /**
@@ -163,10 +162,7 @@ export function usePostSeo() {
         imageUrl = coverImage.thumfor
       }
 
-      // 确保URL完整
-      if (imageUrl && !imageUrl.startsWith('http')) {
-        imageUrl = siteUrl + imageUrl
-      }
+      imageUrl = resolveSiteResourceUrl(imageUrl, siteUrl)
 
       const width = coverImage.thumWidth || coverImage.width || undefined
       const height = coverImage.thumHeight || coverImage.height || undefined
@@ -179,13 +175,9 @@ export function usePostSeo() {
     }
 
     // 使用默认封面
-    if (options.value.siteDefaultCover) {
-      const defaultUrl = options.value.siteDefaultCover.startsWith('http')
-        ? options.value.siteDefaultCover
-        : siteUrl + options.value.siteDefaultCover
-
+    if (siteDefaultCoverUrl.value) {
       return {
-        url: defaultUrl,
+        url: siteDefaultCoverUrl.value,
         width: undefined,
         height: undefined
       }

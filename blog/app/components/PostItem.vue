@@ -10,10 +10,10 @@
         loading="lazy"
         v-if="post.coverImages[0]"
       />
-      <!-- 默认封面图 defaultCover -->
+      <!-- 默认封面图 siteDefaultCover -->
       <WikimoeImage
         class="post-list-blog-cover-img border-t border-l border-r border-gray-200 dark:border-gray-700 border-solid group-hover:border-primary-500/60 transition-border-color duration-500"
-        :src="defaultCover"
+        :src="siteDefaultCover"
         :alt="post.title || ''"
         :width="1344"
         :height="648"
@@ -39,8 +39,7 @@ const props = defineProps({
     required: true
   }
 })
-const { options } = useOptions()
-const defaultCover = options.value.siteDefaultCover || ''
+const { siteDefaultCover } = useSiteDefaultCover()
 </script>
 <style scoped>
 .post-list-blog-panel {

@@ -426,7 +426,6 @@
 import { getPostsApi, postLikeLogListApi, postLikeLogApi } from '@/api/post'
 
 const { options } = useOptions()
-const defaultCover = options.value.siteDefaultCover || ''
 const sitePageSize = computed(() => options.value.sitePageSize || 1)
 const route = useRoute()
 const router = useRouter()

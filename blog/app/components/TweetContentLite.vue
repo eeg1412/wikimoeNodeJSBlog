@@ -38,7 +38,7 @@ const props = defineProps({
   }
 })
 
-const { options } = useOptions()
+const { siteDefaultCover } = useSiteDefaultCover()
 const { t } = useLang()
 
 const coverImages = computed(() => {
@@ -63,7 +63,11 @@ const image = computed(() => {
       }
     })
   }
-  return imageList.length ? imageList[0] : options.value.siteDefaultCover
+  if (imageList.length) {
+    return imageList[0]
+  }
+
+  return siteDefaultCover.value
 })
 </script>
 <style scoped>

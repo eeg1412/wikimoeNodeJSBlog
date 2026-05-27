@@ -64,7 +64,7 @@ defineProps({
   }
 })
 
-const { options } = useOptions()
+const { siteDefaultCover } = useSiteDefaultCover()
 const { t } = useLang()
 const { formatNumberText } = useLocalizedText()
 
@@ -148,7 +148,7 @@ const getTrendCategory = item => {
   return category
 }
 const getBackgroundImage = item => {
-  let backgroundImage = options.value.siteDefaultCover
+  let backgroundImage = siteDefaultCover.value
   const target = item.target
   const detail = getTrendDetail(item, target)
   if (detail.coverImage) {

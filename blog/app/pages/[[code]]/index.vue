@@ -41,6 +41,7 @@ const shouldRequireMultilingualSite = computed(() => {
 const isSiteMultilingualEnabled = computed(() => {
   return options.value?.siteEnableMultilingual === true
 })
+const { siteDefaultCoverUrl } = useSiteDefaultCover()
 
 if (shouldRequireMultilingualSite.value && !isSiteMultilingualEnabled.value) {
   throw createLanguageNotFoundError(SITE_MULTILINGUAL_DISABLED_REASON)
@@ -95,7 +96,6 @@ const panoramaEnterModeTip = computed(() => {
   )
 })
 useHead(() => {
-  const siteDefaultCover = options.value.siteDefaultCover || ''
   const siteFavicon = options.value.siteFavicon || ''
   const htmlStyle = `--w-panorama-enter-mode-tip: ${JSON.stringify(
     panoramaEnterModeTip.value
@@ -123,15 +123,9 @@ useHead(() => {
   ]
   const link = [...rssHead()]
 
-  if (siteDefaultCover) {
-    let siteDefaultCoverUrl = siteDefaultCover
-
-    if (!siteDefaultCover.startsWith('http')) {
-      siteDefaultCoverUrl = options.value.siteUrl + siteDefaultCover
-    }
-
-    meta.push({ property: 'og:image', content: siteDefaultCoverUrl })
-    meta.push({ name: 'twitter:image', content: siteDefaultCoverUrl })
+  if (siteDefaultCoverUrl.value) {
+    meta.push({ property: 'og:image', content: siteDefaultCoverUrl.value })
+    meta.push({ name: 'twitter:image', content: siteDefaultCoverUrl.value })
   }
 
   if (siteFavicon) {

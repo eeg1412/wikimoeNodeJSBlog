@@ -47,7 +47,7 @@ const props = defineProps({
   }
 })
 
-const { options } = useOptions()
+const { siteDefaultCover } = useSiteDefaultCover()
 const { languageCode, t } = useLang()
 
 const getLinkObj = item => {
@@ -115,7 +115,7 @@ const getRandomPostCategory = item => {
 }
 
 const getBackgroundImage = item => {
-  let backgroundImage = options.value.siteDefaultCover
+  let backgroundImage = siteDefaultCover.value
   const detail = item
   if (detail.coverImage) {
     const mimetype = detail.coverImage.mimetype
