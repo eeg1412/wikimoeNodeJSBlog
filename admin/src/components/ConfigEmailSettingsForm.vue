@@ -279,7 +279,7 @@ export default {
       }
     })
     const getCommenterTemplateTabLabel = item => {
-      return `${item.languageLabel} ${item.siteLangCode}`
+      return `${item.languageLabel}`
     }
     const parseMultilingualCommenterTemplateList = value => {
       if (!value) {
@@ -480,14 +480,6 @@ export default {
 
 .config-email-commenter-template-tabs :deep(.el-tabs__nav-wrap) {
   max-width: 100%;
-}
-
-.config-email-commenter-template-tabs :deep(.el-tabs__item) {
-  max-width: 180px;
-  padding: 0 14px;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
 }
 
 .config-email-commenter-title-field {
