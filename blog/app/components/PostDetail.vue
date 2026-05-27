@@ -872,12 +872,16 @@ const normalizePostLanguageInfo = data => {
   if (data.languagePostMap && typeof data.languagePostMap === 'object') {
     languagePostMap = data.languagePostMap
   }
-  if (data.sourceLanguageStatus === 1) {
+  if (data.sourceLanguageData) {
     data.existenceMap[data.sourceLanguageCode] = true
+    data.languagePostMap[data.sourceLanguageCode] = {
+      alias: data.sourceLanguageData.alias || '',
+      id: data.sourceLanguageData._id,
+      sourceId: data.sourceLanguageData._id
+    }
   }
   return {
     sourceLanguageCode: data.sourceLanguageCode,
-    sourceLanguageStatus: data.sourceLanguageStatus,
     existenceMap: data.existenceMap,
     languagePostMap
   }
@@ -1032,13 +1036,6 @@ const availablePostLanguageList = computed(() => {
 
   return LANGUAGE_CONFIG_LIST.filter(item => {
     const itemCode = item.code
-    if (
-      itemCode === postLanguageInfo.value?.sourceLanguageCode &&
-      postLanguageInfo.value?.sourceLanguageStatus === 1
-    ) {
-      // 源语言发布中，必须显示。
-      return true
-    }
     if (postLanguageInfo.value?.existenceMap?.[itemCode] !== true) {
       return false
     }
@@ -1168,10 +1165,6 @@ const postHreflangXDefaultPath = computed(() => {
 
   const sourceLanguageCode = postLanguageInfo.value?.sourceLanguageCode
   if (!sourceLanguageCode) {
-    return ''
-  }
-
-  if (postLanguageInfo.value?.sourceLanguageStatus !== 1) {
     return ''
   }
 
