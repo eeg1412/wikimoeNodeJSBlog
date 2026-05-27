@@ -22,7 +22,7 @@
           {{ t('common.post.tweetTitle') }}
         </h2>
         <div class="post-extra cGray94 leading-[1.5]">
-          <div class="inline-flex items-center align-middle gap-1 mr-2.5">
+          <div class="inline-flex items-center align-middle gap-1 mr-3">
             <WUIIcon
               name="i-heroicons-user"
               size="17"
@@ -33,9 +33,9 @@
 
           <!-- <span class="tenten align-middle"></span> -->
 
-          <div class="inline-flex items-center align-middle gap-1 mr-2.5">
+          <div class="inline-flex items-center align-middle gap-1 mr-3">
             <WUIIcon
-              name="i-heroicons-clock"
+              name="i-heroicons-calendar"
               size="17"
               class="size-[1em] shrink-0 post-extra-icon"
             />
@@ -44,7 +44,7 @@
 
           <div
             v-if="postData.data.sort"
-            class="post_sort_link_span inline-flex items-center align-middle gap-1 mr-2.5"
+            class="post_sort_link_span inline-flex items-center align-middle gap-1 mr-3"
           >
             <!-- <span class="tenten align-middle"></span> -->
             <WUIIcon
@@ -65,7 +65,7 @@
           </div>
           <!-- 多语言信息接口有效时才显示语言块；失败、超时或未配置时整块不渲染。 -->
           <div
-            class="post-language-switcher inline-flex items-center align-middle gap-1 mr-2.5"
+            class="post-language-switcher inline-flex items-center align-middle gap-1 mr-3"
             v-if="hasPostLanguageBlock"
           >
             <!-- 存在其他可选语言时才显示 WUIPopover 和下拉箭头。 -->
@@ -1727,11 +1727,13 @@ onUnmounted(() => {
 }
 .post-author-avatar-body {
   margin-right: 10px;
-  width: 50px;
-  height: 50px;
+  width: 64px;
+  height: 64px;
 }
 .post-author-avatar {
   border-radius: 8px;
+  width: 100%;
+  aspect-ratio: 1 / 1;
 }
 .post-right-info {
   flex: 1;
@@ -1742,7 +1744,7 @@ onUnmounted(() => {
 }
 .post-extra {
   font-size: 14px;
-  line-height: 1.5;
+  line-height: 1.6;
 }
 /* 推文 */
 .post-tweet-detail-content-body {
