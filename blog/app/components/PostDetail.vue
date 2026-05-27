@@ -772,7 +772,7 @@ import {
 } from '@/api/comment'
 import { LANGUAGE_CONFIG_LIST } from '#shared/languages'
 
-const { options } = useOptions()
+const { options, sourceOptions } = useOptions()
 
 const route = useRoute()
 const id = route.params.id
@@ -835,6 +835,21 @@ const sourceArticleId =
 const POST_LANGUAGE_EXISTENCE_TIMEOUT = 1000
 const isSiteMultilingualEnabled = computed(() => {
   return options.value?.siteEnableMultilingual === true
+})
+const sourceSiteOptions = computed(() => {
+  if (sourceOptions.value) {
+    return sourceOptions.value
+  }
+
+  return options.value
+})
+const sourceSiteUrl = computed(() => {
+  const siteOptions = sourceSiteOptions.value
+  if (!siteOptions) {
+    return ''
+  }
+
+  return siteOptions.siteUrl || ''
 })
 // 语言配置转为 map，便于根据 code 显示当前语言名称。
 const languageConfigMap = LANGUAGE_CONFIG_LIST.reduce((map, item) => {
@@ -1069,6 +1084,17 @@ const hasPostLanguageBlock = computed(() => {
 
   return Boolean(currentLanguageLabel.value)
 })
+const getPostDetailTypePath = () => {
+  if (postData.value?.data?.type === 3) {
+    return 'page'
+  }
+
+  return 'post'
+}
+const buildPostDetailPath = postIdentifier => {
+  const postTypePath = getPostDetailTypePath()
+  return `/${postTypePath}/${postIdentifier}`
+}
 // 源语言链接走无 code 的源文章地址；译文语言链接使用 code 前缀，标识符统一使用 alias > id。
 const getPostLanguagePath = targetLanguageCode => {
   const postIdentifier = getPostLanguageIdentifier(targetLanguageCode)
@@ -1076,18 +1102,90 @@ const getPostLanguagePath = targetLanguageCode => {
     return ''
   }
 
-  let postTypePath = 'post'
-  if (postData.value?.data?.type === 3) {
-    postTypePath = 'page'
-  }
-
-  const postPath = `/${postTypePath}/${postIdentifier}`
+  const postPath = buildPostDetailPath(postIdentifier)
   if (targetLanguageCode === postLanguageInfo.value?.sourceLanguageCode) {
     return buildPlainPath(postPath)
   }
 
   return buildLanguagePath(targetLanguageCode, postPath)
 }
+// 文章页的无 code 源站地址代表源文章本身，hreflang 必须使用接口返回的源文章语言。
+const getPostHreflang = targetLanguageCode => {
+  if (targetLanguageCode === postLanguageInfo.value?.sourceLanguageCode) {
+    return postLanguageInfo.value.sourceLanguageCode
+  }
+
+  return targetLanguageCode
+}
+const postHreflangEntries = computed(() => {
+  if (!isSiteMultilingualEnabled.value) {
+    return []
+  }
+
+  if (!hasPostLanguageInfo.value) {
+    return []
+  }
+
+  const entries = []
+  const sourceLanguageCode = postLanguageInfo.value?.sourceLanguageCode
+  const addPostHreflangEntry = item => {
+    const postLanguagePath = getPostLanguagePath(item.code)
+    if (!postLanguagePath) {
+      return
+    }
+
+    entries.push({
+      hreflang: getPostHreflang(item.code),
+      path: postLanguagePath
+    })
+  }
+
+  const sourceLanguageItem = availablePostLanguageList.value.find(item => {
+    return item.code === sourceLanguageCode
+  })
+  if (sourceLanguageItem) {
+    addPostHreflangEntry(sourceLanguageItem)
+  }
+
+  availablePostLanguageList.value.forEach(item => {
+    if (item.code === sourceLanguageCode) {
+      return
+    }
+
+    addPostHreflangEntry(item)
+  })
+
+  return entries
+})
+const postHreflangXDefaultPath = computed(() => {
+  if (!isSiteMultilingualEnabled.value) {
+    return ''
+  }
+
+  if (!hasPostLanguageInfo.value) {
+    return ''
+  }
+
+  const sourceLanguageCode = postLanguageInfo.value?.sourceLanguageCode
+  if (!sourceLanguageCode) {
+    return ''
+  }
+
+  if (postLanguageInfo.value?.sourceLanguageStatus !== 1) {
+    return ''
+  }
+
+  return getPostLanguagePath(sourceLanguageCode)
+})
+const { createHreflangLinks, setHreflangLinks } = useHreflangSeo()
+const postHreflangLinks = computed(() => {
+  return createHreflangLinks({
+    siteUrl: sourceSiteUrl.value,
+    entries: postHreflangEntries.value,
+    xDefaultPath: postHreflangXDefaultPath.value
+  })
+})
+setHreflangLinks(postHreflangLinks)
 const postSortRouteParams = computed(() => {
   const sort = postData.value?.data?.sort
   const routeParams = {
