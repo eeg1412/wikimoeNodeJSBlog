@@ -1,5 +1,5 @@
 export default {
-  languageName: '한국어',
+  languageName: '한국어(대한민국)',
   actions: {
     create: '생성',
     edit: '편집',

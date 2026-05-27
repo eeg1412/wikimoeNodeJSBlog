@@ -1,5 +1,5 @@
 export default {
-  languageName: '日本語',
+  languageName: '日本語 (日本)',
   actions: {
     create: '作成',
     edit: '編集',

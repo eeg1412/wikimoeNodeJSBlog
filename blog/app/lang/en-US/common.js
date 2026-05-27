@@ -1,5 +1,5 @@
 export default {
-  languageName: 'English',
+  languageName: 'English (United States)',
   actions: {
     create: 'Create',
     edit: 'Edit',

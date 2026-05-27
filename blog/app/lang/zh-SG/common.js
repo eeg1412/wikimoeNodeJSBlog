@@ -1,5 +1,5 @@
 export default {
-  languageName: '新加坡简体中文',
+  languageName: '简体中文（新加坡）',
   actions: {
     create: '创建',
     edit: '编辑',

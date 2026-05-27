@@ -1,33 +1,33 @@
 const LANGUAGE_CONFIG_LIST = [
   {
     code: 'zh-CN',
-    label: '中国大陆简体中文',
+    label: '简体中文（中国）',
     isDefault: true
   },
   {
     code: 'zh-SG',
-    label: '新加坡简体中文'
+    label: '简体中文（新加坡）'
   },
   {
     code: 'zh-HK',
-    label: '香港繁體中文'
+    label: '繁體中文（香港特別行政區）'
   },
   {
     code: 'zh-TW',
-    label: '臺灣正體中文'
+    label: '繁體中文（台灣）'
   },
 
   {
     code: 'ja-JP',
-    label: '日本語'
+    label: '日本語 (日本)'
   },
   {
     code: 'en-US',
-    label: 'English'
+    label: 'English (United States)'
   },
   {
     code: 'ko-KR',
-    label: '한국어'
+    label: '한국어(대한민국)'
   }
 ]
 
