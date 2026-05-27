@@ -22,50 +22,50 @@
           {{ t('common.post.tweetTitle') }}
         </h2>
         <div class="post-extra cGray94 leading-[1.5]">
-          <span class="inline-flex items-center align-middle gap-1 mr-2.5">
+          <div class="inline-flex items-center align-middle gap-1 mr-2.5">
             <WUIIcon
               name="i-heroicons-user"
+              size="17"
               class="size-[1em] shrink-0 post-extra-icon"
             />
             <span>{{ postAuthor.nickname }}</span>
-          </span>
+          </div>
 
           <!-- <span class="tenten align-middle"></span> -->
 
-          <span class="inline-flex items-center align-middle gap-1 mr-2.5">
+          <div class="inline-flex items-center align-middle gap-1 mr-2.5">
             <WUIIcon
               name="i-heroicons-clock"
+              size="17"
               class="size-[1em] shrink-0 post-extra-icon"
             />
             <span>{{ formatDate(postData.data.date) }}</span>
-          </span>
+          </div>
 
-          <span
+          <div
             v-if="postData.data.sort"
-            class="post_sort_link_span align-middle"
+            class="post_sort_link_span inline-flex items-center align-middle gap-1 mr-2.5"
           >
             <!-- <span class="tenten align-middle"></span> -->
+            <WUIIcon
+              name="i-heroicons-folder"
+              size="17"
+              class="size-[1em] shrink-0 post-extra-icon"
+            />
 
-            <span class="inline-flex items-center align-middle gap-1 mr-2.5">
-              <WUIIcon
-                name="i-heroicons-folder"
-                class="size-[1em] shrink-0 post-extra-icon"
-              />
-
-              <NuxtLink
-                class="common-a"
-                :to="{
-                  name: 'postListSort',
-                  params: postSortRouteParams
-                }"
-              >
-                {{ postData.data.sort.sortname }}
-              </NuxtLink>
-            </span>
-          </span>
+            <NuxtLink
+              class="common-a"
+              :to="{
+                name: 'postListSort',
+                params: postSortRouteParams
+              }"
+            >
+              {{ postData.data.sort.sortname }}
+            </NuxtLink>
+          </div>
           <!-- 多语言信息接口有效时才显示语言块；失败、超时或未配置时整块不渲染。 -->
-          <span
-            class="post-language-switcher align-middle mr-2.5"
+          <div
+            class="post-language-switcher inline-flex items-center align-middle gap-1 mr-2.5"
             v-if="hasPostLanguageBlock"
           >
             <!-- 存在其他可选语言时才显示 WUIPopover 和下拉箭头。 -->
@@ -84,6 +84,7 @@
               >
                 <WUIIcon
                   name="i-heroicons-language"
+                  size="17"
                   class="size-[1em] shrink-0 post-extra-icon"
                 />
                 <span>{{ currentLanguageLabel }}</span>
@@ -117,11 +118,12 @@
             <span class="post-language-static" v-else>
               <WUIIcon
                 name="i-heroicons-language"
+                size="17"
                 class="size-[1em] shrink-0 post-extra-icon"
               />
               <span>{{ currentLanguageLabel }}</span>
             </span>
-          </span>
+          </div>
         </div>
       </div>
     </div>
@@ -1748,7 +1750,6 @@ onUnmounted(() => {
 .comment-list-item-avatar-link:focus-visible {
   @apply ring-0 block outline-2 outline-primary-500 outline rounded;
 }
-.post-language-switcher,
 .post-language-static,
 .post-language-trigger {
   display: inline-flex;
