@@ -58,7 +58,12 @@ const {
 const { lockLanguageDisplay, unlockLanguageDisplay } = useLanguageDisplayState()
 const { t } = useLang()
 const toast = useWToast()
+const { refreshSiteLanguageAvailability } = useSiteLanguageAvailability()
 await getOptions()
+/**
+ * 多语言站语言启用状态是页脚增强信息，进入页面时在 options 就绪后静默融合。
+ */
+await refreshSiteLanguageAvailability(options.value)
 await ensureLayoutLanguageSnapshot(route, options.value)
 const currentOptionsLanguageCode = ref(getOptionsRouteLanguageCode(route))
 let pendingLanguageSwitchCommit = null
@@ -107,6 +112,10 @@ function commitPendingLanguageSwitch() {
   }
 
   commitPreparedOptions(pendingCommit.preparedOptions)
+  /**
+   * 语言切换提交新 options 后强制重新读取启用表，确保它和刚获取的 options 同步。
+   */
+  refreshSiteLanguageAvailability(options.value, { force: true })
   commitLayoutLanguageSnapshot(pendingCommit.layoutLanguageSnapshot)
   currentOptionsLanguageCode.value = pendingCommit.toLanguageCode
   clearPendingLanguageSwitch(pendingCommit.switchSequence)

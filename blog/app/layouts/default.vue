@@ -96,6 +96,7 @@
             ></template
           >
         </div>
+        <SiteLanguageSwitcher />
         <div v-if="options.siteEnableRss && options.siteShowRssInFooter">
           <span>{{ t('common.footer.rssSubscribe') }}</span
           ><a :href="seoResourceUrl(options.siteUrl, '/rss')" target="_blank">{{
