@@ -1,6 +1,6 @@
 <template>
   <div
-    class="site-language-switcher mt-1 inline-flex items-center justify-center align-middle gap-1"
+    class="site-language-switcher inline-flex items-center justify-center align-middle gap-1"
     v-if="hasSiteLanguageSwitcher"
   >
     <WUIPopover :popper="{ arrow: true }" class="site-language-popover">
