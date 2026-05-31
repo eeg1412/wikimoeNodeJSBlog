@@ -103,6 +103,16 @@ function close() {
   isOpen.value = false
 }
 
+function focusElement(target) {
+  if (!target || typeof target.focus !== 'function') {
+    return
+  }
+
+  target.focus({
+    preventScroll: true
+  })
+}
+
 // 过渡结束后销毁容器
 function onAfterLeave() {
   shouldRender.value = false
@@ -159,11 +169,11 @@ watch(isOpen, async val => {
     addListeners()
     // 聚焦到内容区域
     await nextTick()
-    contentRef.value?.focus()
+    focusElement(contentRef.value)
   } else {
     // 关闭时仅移除监听，shouldRender 留到 @after-leave 再置 false
     removeListeners()
-    previouslyFocusedElement.value?.focus()
+    focusElement(previouslyFocusedElement.value)
   }
 })
 
@@ -208,7 +218,7 @@ onMounted(() => {
       syncReference()
       addListeners()
       nextTick(() => {
-        contentRef.value?.focus()
+        focusElement(contentRef.value)
       })
     })
   }
