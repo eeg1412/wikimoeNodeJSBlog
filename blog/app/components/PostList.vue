@@ -30,8 +30,10 @@
           <!-- 作者 时间 分类名 -->
           <div class="clearfix">
             <div class="post-list-info-body fl">
-              <span class="fb">{{ item.author?.nickname }}</span
-              ><span class="tenten"></span>
+              <PostAuthorPopover :author="item.author">
+                <span class="fb">{{ item.author?.nickname }}</span>
+              </PostAuthorPopover>
+              <span class="tenten"></span>
               <ClientOnly
                 ><span class="cGray94" :title="formatDate(item.date)">{{
                   fromNowText(item.date, 'yyyy-MM-dd')
@@ -916,6 +918,8 @@ onMounted(() => {
 }
 .post-list-info-body {
   margin-bottom: 5px;
+  display: flex;
+  flex-wrap: wrap;
 }
 .post-list-excerpt-body {
   margin-bottom: 0.75rem;

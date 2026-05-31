@@ -201,7 +201,14 @@ exports.findPage = async function (
   // document查询
   let query = postsModel
     .find(parmas, projection)
-    .populate('author', options.authorFilter || 'nickname _id photo')
+    .populate({
+      path: 'author',
+      select: options.authorFilter || 'nickname _id photo',
+      populate: {
+        path: 'cover',
+        select: '_id filepath height mimetype width'
+      }
+    })
     .populate('sort')
     .populate('tags')
     .populate('coverImages')

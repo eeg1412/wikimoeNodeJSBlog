@@ -49,6 +49,7 @@
 <script setup>
 import { LANGUAGE_CONFIG_LIST } from '#shared/languages'
 import { resolveDefaultLanguageCode } from '@/utils/default-language'
+import { useSiteLanguageAvailability } from '~/composables/useSiteLanguageAvailability'
 
 const { options } = useOptions()
 const { isLocalizedRoute, languageCode } = useLang()

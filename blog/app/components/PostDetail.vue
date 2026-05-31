@@ -22,13 +22,17 @@
           {{ t('common.post.tweetTitle') }}
         </h2>
         <div class="post-extra cGray94 leading-[1.5]">
-          <div class="inline-flex items-center align-middle gap-1 mr-3">
-            <WUIIcon
-              name="i-heroicons-user"
-              size="17"
-              class="size-[1em] shrink-0 post-extra-icon"
-            />
-            <span>{{ postAuthor.nickname }}</span>
+          <div class="inline-flex items-center align-middle mr-3">
+            <PostAuthorPopover :author="postAuthor">
+              <span class="inline-flex items-center align-middle gap-1">
+                <WUIIcon
+                  name="i-heroicons-user"
+                  size="17"
+                  class="size-[1em] shrink-0 post-extra-icon"
+                />
+                <span>{{ postAuthor.nickname }}</span>
+              </span>
+            </PostAuthorPopover>
           </div>
 
           <!-- <span class="tenten align-middle"></span> -->
@@ -42,9 +46,13 @@
             <span>{{ formatDate(postData.data.date) }}</span>
           </div>
 
-          <div
+          <NuxtLink
             v-if="postData.data.sort"
-            class="post_sort_link_span inline-flex items-center align-middle gap-1 mr-3"
+            :to="{
+              name: 'postListSort',
+              params: postSortRouteParams
+            }"
+            class="common-a post_sort_link_span inline-flex items-center align-middle gap-1 mr-3"
           >
             <!-- <span class="tenten align-middle"></span> -->
             <WUIIcon
@@ -53,16 +61,10 @@
               class="size-[1em] shrink-0 post-extra-icon"
             />
 
-            <NuxtLink
-              class="common-a"
-              :to="{
-                name: 'postListSort',
-                params: postSortRouteParams
-              }"
-            >
+            <span>
               {{ postData.data.sort.sortname }}
-            </NuxtLink>
-          </div>
+            </span>
+          </NuxtLink>
           <!-- 多语言信息接口有效时才显示语言块；失败、超时或未配置时整块不渲染。 -->
           <div
             class="post-language-switcher inline-flex items-center align-middle gap-1 mr-3"

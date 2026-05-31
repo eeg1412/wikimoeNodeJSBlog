@@ -438,6 +438,7 @@ module.exports = async function (req, res, next) {
     '-voteList -content -bangumiList -movieList -bookList -eventList -gameList -postList -seriesSortList -code -editorVersion'
   postUtils
     .findPage(params, postSorting, page, size, filter, {
+      authorFilter: 'nickname _id photo description cover',
       voteFliter:
         '_id endTime maxSelect showResultAfter title options.title options._id'
     })
