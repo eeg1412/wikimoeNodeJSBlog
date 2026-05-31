@@ -6,13 +6,15 @@
       v-if="postData.data.type === 1 || postData.data.type === 2"
     >
       <div class="post-author-avatar-body">
-        <img
-          class="post-author-avatar"
-          :src="postAuthor.photo"
-          :alt="postAuthor.nickname"
-          width="50"
-          height="50"
-        />
+        <PostAuthorPopover :author="postAuthor">
+          <img
+            class="post-author-avatar"
+            :src="postAuthor.photo"
+            :alt="postAuthor.nickname"
+            width="50"
+            height="50"
+          />
+        </PostAuthorPopover>
       </div>
       <div class="post-right-info">
         <h2 class="post-title mb-1" v-if="postData.data.type === 1">
