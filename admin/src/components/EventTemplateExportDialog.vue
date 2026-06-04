@@ -97,8 +97,8 @@
             ></el-input>
             <div class="event-template-export-tips">
               <p>
-                AI 填写活动的 eventtype 字段时，请使用上方列表中对应活动类型的
-                _id 值，确保活动类型能够正确匹配。
+                填写活动的 eventtype 字段时，请使用上方列表中对应活动类型的 _id
+                值，确保活动类型能够正确匹配。
               </p>
             </div>
           </div>
