@@ -65,6 +65,10 @@
       </div>
       <div class="fr">
         <!-- 按钮用 -->
+        <!-- 导出JSON模板 -->
+        <el-button @click="handleExportTemplate">导出JSON模板</el-button>
+        <!-- 导入JSON模板 -->
+        <el-button @click="handleImportTemplate">导入JSON模板</el-button>
         <!-- 追加 -->
         <el-button type="primary" @click="handleAdd">追加</el-button>
       </div>
@@ -164,6 +168,13 @@
         v-model:page-size="params.size"
       />
     </div>
+    <!-- 导出JSON模板弹窗 -->
+    <EventTemplateExportDialog ref="exportDialogRef" />
+    <!-- 导入JSON模板弹窗 -->
+    <EventTemplateImportDialog
+      ref="importDialogRef"
+      @success="getEventList()"
+    />
   </div>
 </template>
 <script>
@@ -173,8 +184,14 @@ import { ElMessage, ElMessageBox } from 'element-plus'
 import { onMounted, reactive, ref, watch } from 'vue'
 import { setSessionParams, getSessionParams, escapeHtml } from '@/utils/utils'
 import CheckDialogService from '@/services/CheckDialogService'
+import EventTemplateExportDialog from '@/components/EventTemplateExportDialog.vue'
+import EventTemplateImportDialog from '@/components/EventTemplateImportDialog.vue'
 
 export default {
+  components: {
+    EventTemplateExportDialog,
+    EventTemplateImportDialog
+  },
   setup() {
     const route = useRoute()
     const router = useRouter()
@@ -207,6 +224,16 @@ export default {
       router.push({
         name: 'EventAdd'
       })
+    }
+    // 导出JSON模板
+    const exportDialogRef = ref(null)
+    const handleExportTemplate = () => {
+      exportDialogRef.value.open()
+    }
+    // 导入JSON模板
+    const importDialogRef = ref(null)
+    const handleImportTemplate = () => {
+      importDialogRef.value.open()
     }
     // 监听 params.page 的变化
     watch(
@@ -302,7 +329,11 @@ export default {
       deleteEvent,
       eventtypeList,
       eventtypeListIsLoading,
-      queryEventtypeList
+      queryEventtypeList,
+      exportDialogRef,
+      handleExportTemplate,
+      importDialogRef,
+      handleImportTemplate
     }
   }
 }

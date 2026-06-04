@@ -1179,6 +1179,15 @@ const adminRouteSetting = [
     roleType: null,
     role: null
   },
+  // batchCreateEvent
+  {
+    path: '/event/batchCreate',
+    method: 'post',
+    middleware: [checkAuth],
+    controller: require('../api/admin/event/batchCreateEvent'),
+    roleType: null,
+    role: null
+  },
   // deleteEvent
   {
     path: '/event/delete',

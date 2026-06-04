@@ -136,7 +136,7 @@
         <el-checkbox
           v-for="item in sharePlatforms"
           :key="item.key"
-          :label="item.key"
+          :value="item.key"
           class="mr-4 mb-2 flex items-center"
         >
           <span>{{ item.alt }}</span>

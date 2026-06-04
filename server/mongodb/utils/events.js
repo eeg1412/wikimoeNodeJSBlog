@@ -7,6 +7,12 @@ exports.save = async function (parmas) {
   return await events.save()
 }
 
+// 批量插入
+exports.insertMany = async function (list) {
+  // document批量作成
+  return await eventsModel.insertMany(list)
+}
+
 exports.findOne = async function (parmas, projection) {
   // document查询
   return await eventsModel

@@ -777,6 +777,12 @@ export default function (api) {
         shouldAdminJWT: true
       })
     },
+    // post /event/batchCreate
+    batchCreateEvent(data) {
+      return api.post('/event/batchCreate', data, {
+        shouldAdminJWT: true
+      })
+    },
     // put /event/update
     updateEvent(data) {
       return api.put('/event/update', data, {
