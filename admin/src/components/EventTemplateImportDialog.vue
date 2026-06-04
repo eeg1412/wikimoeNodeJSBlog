@@ -7,7 +7,6 @@
     :lock-scroll="false"
     :align-center="true"
     @closed="closeDialog"
-    class="common-max-dialog"
   >
     <div class="event-template-import-body">
       <!-- 步骤条 -->
@@ -49,8 +48,11 @@
           <el-tag type="success" class="mr10"
             >可导入 {{ validCount }} 条</el-tag
           >
-          <el-tag type="danger" v-if="invalidCount > 0"
+          <el-tag type="danger" v-if="invalidCount > 0" class="mr10"
             >存在问题 {{ invalidCount }} 条</el-tag
+          >
+          <el-tag type="warning" v-if="duplicateCount > 0"
+            >疑似重复 {{ duplicateCount }} 条</el-tag
           >
         </div>
         <div class="event-template-import-option mb10">
@@ -67,6 +69,7 @@
             border
             row-key="rowKey"
             scrollbar-always-on
+            :row-class-name="getRowClassName"
           >
             <!-- 选择 -->
             <ResponsiveTableColumn label="" width="60px">
@@ -118,6 +121,23 @@
                   >{{ row.startTimeText }} ~ {{ row.endTimeText }}</span
                 >
                 <span v-else class="cRed">未填写</span>
+              </template>
+            </ResponsiveTableColumn>
+            <!-- 重复检测 -->
+            <ResponsiveTableColumn label="重复" width="160px">
+              <template #default="{ row }">
+                <div v-if="row.isDuplicate" class="event-template-import-dup">
+                  <el-tag type="warning" size="small" effect="dark"
+                    >疑似重复 {{ row.duplicateList.length }} 个</el-tag
+                  >
+                  <el-link
+                    type="warning"
+                    underline="never"
+                    @click="openDuplicatePreview(row)"
+                    >查看重合活动</el-link
+                  >
+                </div>
+                <span v-else>-</span>
               </template>
             </ResponsiveTableColumn>
             <!-- 正文预览 -->
@@ -173,7 +193,9 @@
         <!-- 步骤一按钮 -->
         <template v-if="currentStep === 0">
           <el-button @click="dialogOpen = false">取消</el-button>
-          <el-button type="primary" @click="parseJson">解析预览</el-button>
+          <el-button type="primary" :loading="parsing" @click="parseJson"
+            >解析预览</el-button
+          >
         </template>
         <!-- 步骤二按钮 -->
         <template v-else>
@@ -205,6 +227,107 @@
         v-html="contentPreviewHtml"
       ></div>
     </el-dialog>
+
+    <!-- 重合活动弹窗 -->
+    <el-dialog
+      v-model="duplicateDialogVisible"
+      :title="duplicateDialogTitle"
+      width="80%"
+      append-to-body
+      :lock-scroll="false"
+      :align-center="true"
+      class="common-max-dialog"
+    >
+      <el-alert type="warning" :closable="false" show-icon class="mb10">
+        <template #title>
+          左侧为本次「待导入」活动，右侧为数据库中「类型相同、开始与结束日期完全一致」的已有活动，请对比确认是否重复后再决定是否导入。
+        </template>
+      </el-alert>
+      <div class="event-template-import-compare">
+        <div
+          v-for="(col, colIndex) in duplicateCompareList"
+          :key="colIndex"
+          class="event-template-import-compare-col"
+          :class="{ 'is-current': col.isCurrent }"
+        >
+          <div class="event-template-import-compare-head">
+            <span class="event-template-import-compare-head-label">{{
+              col.headLabel
+            }}</span>
+            <el-tag v-if="col.status === 1" type="success" size="small"
+              >显示中</el-tag
+            >
+            <el-tag v-else-if="col.status === 0" type="info" size="small"
+              >未显示</el-tag
+            >
+          </div>
+          <div class="event-template-import-compare-row">
+            <div class="event-template-import-compare-row-label">活动类型</div>
+            <div class="event-template-import-compare-row-value">
+              <span
+                v-if="col.eventtypeName"
+                :style="{ backgroundColor: col.eventtypeColor }"
+                class="event-template-import-block"
+                >{{ col.eventtypeName }}</span
+              >
+              <span v-else class="event-template-import-compare-empty">-</span>
+            </div>
+          </div>
+          <div class="event-template-import-compare-row">
+            <div class="event-template-import-compare-row-label">标题</div>
+            <div class="event-template-import-compare-row-value">
+              {{ col.title }}
+            </div>
+          </div>
+          <div class="event-template-import-compare-row">
+            <div class="event-template-import-compare-row-label">开始时间</div>
+            <div class="event-template-import-compare-row-value">
+              {{ col.startText }}
+            </div>
+          </div>
+          <div class="event-template-import-compare-row">
+            <div class="event-template-import-compare-row-label">结束时间</div>
+            <div class="event-template-import-compare-row-value">
+              {{ col.endText }}
+            </div>
+          </div>
+          <div class="event-template-import-compare-row">
+            <div class="event-template-import-compare-row-label">正文</div>
+            <div class="event-template-import-compare-row-value">
+              <div
+                v-if="col.content"
+                class="event-template-import-compare-content"
+                v-html="col.content"
+              ></div>
+              <span v-else class="event-template-import-compare-empty"
+                >（空）</span
+              >
+            </div>
+          </div>
+          <div class="event-template-import-compare-row">
+            <div class="event-template-import-compare-row-label">相关链接</div>
+            <div class="event-template-import-compare-row-value">
+              <template v-if="col.urlList && col.urlList.length > 0">
+                <div
+                  v-for="(link, linkIndex) in col.urlList"
+                  :key="linkIndex"
+                  class="event-template-import-compare-link"
+                >
+                  <el-link
+                    :href="link.url"
+                    target="_blank"
+                    type="primary"
+                    underline="never"
+                    >{{ link.text }}</el-link
+                  >
+                </div>
+              </template>
+              <span v-else class="event-template-import-compare-empty">-</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </el-dialog>
   </el-dialog>
 </template>
 <script>
@@ -223,6 +346,7 @@ export default {
     const previewList = ref([])
     const importStatus = ref(1)
     const submitting = ref(false)
+    const parsing = ref(false)
 
     // 正文预览弹窗
     const contentPreviewVisible = ref(false)
@@ -234,6 +358,51 @@ export default {
         : '正文预览'
       contentPreviewHtml.value = row.contentHtml
       contentPreviewVisible.value = true
+    }
+
+    // 重合活动弹窗
+    const duplicateDialogVisible = ref(false)
+    const duplicateDialogTitle = ref('重合活动对比')
+    const duplicateCompareList = ref([])
+    const openDuplicatePreview = row => {
+      duplicateDialogTitle.value = row.title
+        ? `重合活动对比：${row.title}`
+        : '重合活动对比'
+      const current = {
+        isCurrent: true,
+        headLabel: '本次待导入',
+        status: null,
+        eventtypeName: row.matchedEventtype ? row.matchedEventtype.name : '',
+        eventtypeColor: row.matchedEventtype ? row.matchedEventtype.color : '',
+        title: row.title,
+        startText: row.startTimeText,
+        endText: row.endTimeText,
+        content: row.contentHtml,
+        urlList: row.urlList
+      }
+      const existCols = (row.duplicateList || []).map(item => {
+        return {
+          isCurrent: false,
+          headLabel: '数据库已有',
+          status: item.status,
+          eventtypeName: item.eventtypeName,
+          eventtypeColor: item.eventtypeColor,
+          title: item.title,
+          startText: formatExistTime(item.startTime),
+          endText: formatExistTime(item.endTime),
+          content: item.content,
+          urlList: item.urlList
+        }
+      })
+      duplicateCompareList.value = [current, ...existCols]
+      duplicateDialogVisible.value = true
+    }
+    // 重复行高亮
+    const getRowClassName = ({ row }) => {
+      if (row.isDuplicate) {
+        return 'event-template-import-row-duplicate'
+      }
+      return ''
     }
 
     // 活动类型映射：_id => { _id, name, color }
@@ -343,13 +512,25 @@ export default {
         })
     }
 
+    // 格式化已有活动时间展示
+    const formatExistTime = value => {
+      const date = parseDateValue(value)
+      if (!date) {
+        return ''
+      }
+      return formatDateText(date)
+    }
+
     // 构建单条预览数据
     const buildPreviewRow = (item, index) => {
       const errors = []
       const row = {
         rowKey: `row_${index}`,
+        index,
         valid: true,
         selected: false,
+        isDuplicate: false,
+        duplicateList: [],
         rawEventtype: '',
         matchedEventtype: null,
         title: '',
@@ -467,11 +648,53 @@ export default {
         return
       }
 
-      await loadEventtypeMap()
-      previewList.value = list.map((item, index) => {
-        return buildPreviewRow(item, index)
+      parsing.value = true
+      try {
+        await loadEventtypeMap()
+        previewList.value = list.map((item, index) => {
+          return buildPreviewRow(item, index)
+        })
+        await checkDuplicates()
+        currentStep.value = 1
+      } finally {
+        parsing.value = false
+      }
+    }
+
+    // 与数据库已有活动进行「日完全重合」预检
+    const checkDuplicates = async () => {
+      const validRows = previewList.value.filter(row => row.valid)
+      if (validRows.length === 0) {
+        return
+      }
+      const checkList = validRows.map(row => {
+        return {
+          index: row.index,
+          eventtype: row.matchedEventtype._id,
+          startTime: row.startTimeISO,
+          endTime: row.endTimeISO
+        }
       })
-      currentStep.value = 1
+      const timezoneOffsetMinutes = -new Date().getTimezoneOffset()
+      try {
+        const res = await authApi.checkDuplicateEvent({
+          list: checkList,
+          timezoneOffsetMinutes
+        })
+        const duplicates = res.data.data.duplicates || {}
+        previewList.value.forEach(row => {
+          const matched = duplicates[row.index]
+          if (matched && matched.length > 0) {
+            row.isDuplicate = true
+            row.duplicateList = matched
+          } else {
+            row.isDuplicate = false
+            row.duplicateList = []
+          }
+        })
+      } catch (err) {
+        // 预检失败不阻断导入流程，仅不展示重复提示
+      }
     }
 
     // 返回上一步
@@ -485,6 +708,9 @@ export default {
     })
     const invalidCount = computed(() => {
       return previewList.value.filter(row => !row.valid).length
+    })
+    const duplicateCount = computed(() => {
+      return previewList.value.filter(row => row.isDuplicate).length
     })
     const selectedValidCount = computed(() => {
       return previewList.value.filter(row => row.valid && row.selected).length
@@ -557,8 +783,11 @@ export default {
       previewList.value = []
       importStatus.value = 1
       submitting.value = false
+      parsing.value = false
       contentPreviewVisible.value = false
       contentPreviewHtml.value = ''
+      duplicateDialogVisible.value = false
+      duplicateCompareList.value = []
     }
 
     return {
@@ -568,12 +797,20 @@ export default {
       previewList,
       importStatus,
       submitting,
+      parsing,
       contentPreviewVisible,
       contentPreviewTitle,
       contentPreviewHtml,
       openContentPreview,
+      duplicateDialogVisible,
+      duplicateDialogTitle,
+      duplicateCompareList,
+      openDuplicatePreview,
+      getRowClassName,
+      formatExistTime,
       validCount,
       invalidCount,
+      duplicateCount,
       selectedValidCount,
       isAllValidSelected,
       isIndeterminate,
@@ -626,6 +863,107 @@ export default {
 .event-template-import-error {
   font-size: 12px;
   line-height: 1.6;
+}
+.event-template-import-dup {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
+}
+.event-template-import-table :deep(.event-template-import-row-duplicate) {
+  --el-table-tr-bg-color: rgba(230, 162, 60, 0.16);
+  --el-table-row-hover-bg-color: rgba(230, 162, 60, 0.28);
+}
+.event-template-import-dup-list {
+  max-height: 60vh;
+  overflow-y: auto;
+}
+.event-template-import-compare {
+  display: flex;
+  gap: 12px;
+  max-height: 60vh;
+  overflow: auto;
+  padding: 0 2px 6px;
+  scrollbar-width: thin;
+}
+.event-template-import-compare::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+.event-template-import-compare::-webkit-scrollbar-thumb {
+  background-color: var(--el-border-color-darker);
+  border-radius: 4px;
+}
+.event-template-import-compare::-webkit-scrollbar-track {
+  background-color: transparent;
+}
+.event-template-import-compare-col {
+  flex: 1 0 280px;
+  align-self: flex-start;
+  border: 1px solid var(--el-border-color-light);
+  border-radius: 6px;
+  background-color: var(--el-bg-color);
+}
+.event-template-import-compare-col.is-current {
+  border-color: var(--el-color-primary);
+}
+.event-template-import-compare-head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  font-weight: 600;
+  background-color: var(--el-fill-color-light);
+  border-bottom: 1px solid var(--el-border-color-lighter);
+  border-radius: 6px 6px 0 0;
+}
+.event-template-import-compare-col.is-current
+  .event-template-import-compare-head {
+  color: var(--el-color-primary);
+  background-color: var(--el-color-primary-light-9);
+}
+.event-template-import-compare-row {
+  padding: 8px 12px;
+  border-bottom: 1px solid var(--el-border-color-lighter);
+}
+.event-template-import-compare-row:last-child {
+  border-bottom: none;
+}
+.event-template-import-compare-row-label {
+  font-size: 12px;
+  color: var(--el-text-color-secondary);
+  margin-bottom: 4px;
+}
+.event-template-import-compare-row-value {
+  font-size: 13px;
+  color: var(--el-text-color-primary);
+  word-break: break-word;
+  line-height: 1.7;
+}
+.event-template-import-compare-content :deep(p) {
+  margin: 0 0 6px;
+}
+.event-template-import-compare-content :deep(p:last-child) {
+  margin-bottom: 0;
+}
+.event-template-import-compare-link {
+  margin-bottom: 2px;
+}
+.event-template-import-compare-empty {
+  color: var(--el-text-color-secondary);
+}
+@media (max-width: 767px) {
+  .event-template-import-compare {
+    flex-direction: column;
+    flex-wrap: nowrap;
+    overflow-x: hidden;
+    overflow-y: auto;
+  }
+  .event-template-import-compare-col {
+    flex: none;
+    width: 100%;
+    align-self: stretch;
+  }
 }
 @media (max-width: 767px) {
   .event-template-import-summary {

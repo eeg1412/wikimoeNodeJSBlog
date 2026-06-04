@@ -783,6 +783,13 @@ export default function (api) {
         shouldAdminJWT: true
       })
     },
+    // post /event/checkDuplicate
+    checkDuplicateEvent(data) {
+      return api.post('/event/checkDuplicate', data, {
+        shouldAdminJWT: true,
+        noLoading: true
+      })
+    },
     // put /event/update
     updateEvent(data) {
       return api.put('/event/update', data, {

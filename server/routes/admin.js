@@ -1188,6 +1188,15 @@ const adminRouteSetting = [
     roleType: null,
     role: null
   },
+  // checkDuplicateEvent
+  {
+    path: '/event/checkDuplicate',
+    method: 'post',
+    middleware: [checkAuth],
+    controller: require('../api/admin/event/checkDuplicateEvent'),
+    roleType: null,
+    role: null
+  },
   // deleteEvent
   {
     path: '/event/delete',
