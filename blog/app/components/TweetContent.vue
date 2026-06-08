@@ -222,7 +222,7 @@ const contentJson = computed(() => {
         const p = url.searchParams.get('p') || ''
 
         return {
-          text: `哔哩哔哩视频-${videoId}`,
+          text: t('common.link.bilibiliVideo', { videoId }),
           id: videoId,
           ext: { p }
         }

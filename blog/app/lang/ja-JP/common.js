@@ -226,6 +226,7 @@ export default {
     vote: '関連投票：'
   },
   link: {
+    bilibiliVideo: 'Bilibili動画-{videoId}',
     noDescription: '説明はありません'
   },
   pageAbout: {

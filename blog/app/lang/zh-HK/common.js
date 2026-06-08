@@ -221,6 +221,7 @@ export default {
     vote: '相關投票：'
   },
   link: {
+    bilibiliVideo: '嗶哩嗶哩影片-{videoId}',
     noDescription: '暫無描述'
   },
   pageAbout: {

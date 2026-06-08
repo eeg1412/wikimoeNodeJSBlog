@@ -225,6 +225,7 @@ export default {
     vote: '관련 투표:'
   },
   link: {
+    bilibiliVideo: 'Bilibili 동영상-{videoId}',
     noDescription: '설명이 없습니다'
   },
   pageAbout: {

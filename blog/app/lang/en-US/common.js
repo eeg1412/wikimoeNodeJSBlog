@@ -223,6 +223,7 @@ export default {
     vote: 'Related votes:'
   },
   link: {
+    bilibiliVideo: 'Bilibili video-{videoId}',
     noDescription: 'No description'
   },
   pageAbout: {

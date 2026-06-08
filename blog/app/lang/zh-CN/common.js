@@ -221,6 +221,7 @@ export default {
     vote: '相关投票：'
   },
   link: {
+    bilibiliVideo: '哔哩哔哩视频-{videoId}',
     noDescription: '暂无描述'
   },
   pageAbout: {
