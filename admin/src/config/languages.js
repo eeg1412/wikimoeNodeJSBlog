@@ -28,6 +28,30 @@ export const LANGUAGE_CONFIG_LIST = [
   {
     code: 'ko-KR',
     label: '한국어(대한민국)'
+  },
+  {
+    code: 'th-TH',
+    label: 'ไทย (ประเทศไทย)'
+  },
+  {
+    code: 'vi-VN',
+    label: 'Tiếng Việt (Việt Nam)'
+  },
+  {
+    code: 'fr-FR',
+    label: 'Français (France)'
+  },
+  {
+    code: 'de-DE',
+    label: 'Deutsch (Deutschland)'
+  },
+  {
+    code: 'es-ES',
+    label: 'Español (España)'
+  },
+  {
+    code: 'pt-PT',
+    label: 'Português (Portugal)'
   }
 ]
 

@@ -63,7 +63,7 @@ export default {
       terrible: 'Bad',
       awful: 'Awful',
       confused: '???',
-      none: 'Not rated'
+      none: 'Unrated'
     }
   },
   media: {

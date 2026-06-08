@@ -26,15 +26,19 @@ export function useLocalizedText() {
   const { languageCode, t } = useLang()
 
   /**
-   * @description 介绍：去掉紧凑数字中的无意义小数位。
-   * @param {number} value 输入：需要紧凑显示的数字。
-   * @returns {string} 输出：去掉无意义小数位后的字符串。
+   * @description 介绍：按当前语言环境格式化 Intl 紧凑数字。
+   * @param {number} value 输入：需要格式化的数字。
+   * @returns {string|number} 输出：本地化紧凑数字；小数字保持原数值。
    */
-  const formatCompactValue = value => {
-    const compactValue = value.toFixed(1)
-    return compactValue.endsWith('.0')
-      ? compactValue.slice(0, compactValue.length - 2)
-      : compactValue
+  const formatIntlCompactNumberText = value => {
+    if (value < 1000) {
+      return value
+    }
+
+    return new Intl.NumberFormat(languageCode.value, {
+      maximumFractionDigits: 1,
+      notation: 'compact'
+    }).format(value)
   }
 
   /**
@@ -104,37 +108,7 @@ export function useLocalizedText() {
       return num
     }
 
-    if (languageCode.value === 'en-US') {
-      if (value < 1000) {
-        return value
-      }
-      if (value < 1000000) {
-        return `${formatCompactValue(value / 1000)}K`
-      }
-      if (value < 1000000000) {
-        return `${formatCompactValue(value / 1000000)}M`
-      }
-      return `${formatCompactValue(value / 1000000000)}B`
-    }
-
-    const tenThousandUnit =
-      languageCode.value === 'zh-HK' || languageCode.value === 'zh-TW'
-        ? '萬'
-        : '万'
-    const hundredMillionUnit =
-      languageCode.value === 'zh-HK' ||
-      languageCode.value === 'zh-TW' ||
-      languageCode.value === 'ja-JP'
-        ? '億'
-        : '亿'
-
-    if (value < 10000) {
-      return value
-    }
-    if (value < 100000000) {
-      return `${formatCompactValue(value / 10000)}${tenThousandUnit}`
-    }
-    return `${formatCompactValue(value / 100000000)}${hundredMillionUnit}`
+    return formatIntlCompactNumberText(value)
   }
 
   /**
