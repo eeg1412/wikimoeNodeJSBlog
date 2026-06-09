@@ -1883,5 +1883,8 @@ onUnmounted(() => {
 }
 .post-language-panel {
   min-width: 150px;
+  max-height: 60svh;
+  overflow: auto;
+  scrollbar-width: thin;
 }
 </style>
