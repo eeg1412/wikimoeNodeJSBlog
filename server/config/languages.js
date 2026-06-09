@@ -38,6 +38,10 @@ const LANGUAGE_CONFIG_LIST = [
     label: 'Tiếng Việt (Việt Nam)'
   },
   {
+    code: 'id-ID',
+    label: 'Bahasa Indonesia (Indonesia)'
+  },
+  {
     code: 'fr-FR',
     label: 'Français (France)'
   },
