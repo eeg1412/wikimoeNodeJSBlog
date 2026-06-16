@@ -6,8 +6,10 @@
         <NuxtPage></NuxtPage>
       </NuxtLayout>
     </div>
+    <ClientOnly>
+      <WUINotifications />
+    </ClientOnly>
 
-    <WUINotifications />
     <ClientOnly>
       <PhotoSwipe />
     </ClientOnly>
