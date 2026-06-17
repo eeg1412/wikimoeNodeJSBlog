@@ -434,10 +434,7 @@
     </div>
     <!-- 评论 -->
     <!-- 评论列表 commentList -->
-    <div
-      class="relative pt-4 header-scroll-margin-top"
-      id="commentlist-container"
-    >
+    <div class="relative header-scroll-margin-top" id="commentlist-container">
       <ClientOnly>
         <div class="comment-list-body">
           <!-- 评论form -->
@@ -453,7 +450,7 @@
           />
           <!-- 评论 -->
           <div
-            class="pt-3 border-t border-solid border-gray-200 dark:border-gray-700"
+            class="pt-3 mt-4 border-t border-solid border-gray-200 dark:border-gray-700"
             ref="commentListRef"
             v-if="commentTotal > 0"
           >
