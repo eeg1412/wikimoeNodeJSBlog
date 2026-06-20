@@ -33,7 +33,8 @@ export default {
     forbidden: 'Sie haben keine Berechtigung für diese Seite.',
     maintenanceUpdating:
       'Der Server wird aktualisiert. Bitte versuchen Sie es später erneut.',
-    maintenance: 'Der Server wird gewartet. Bitte versuchen Sie es später erneut.',
+    maintenance:
+      'Der Server wird gewartet. Bitte versuchen Sie es später erneut.',
     languageSwitchFailed:
       'Sprachwechsel fehlgeschlagen. Bitte versuchen Sie es später erneut.'
   },
@@ -64,7 +65,8 @@ export default {
       bad: 'Schlecht',
       terrible: 'Schwach',
       awful: 'Übel',
-      confused: '???',
+      confused: 'Bizarr',
+      what: '???',
       none: 'Unbew.'
     }
   },
@@ -354,8 +356,7 @@ export default {
     success: 'Kommentar gesendet',
     retractButton: 'Zurückziehen ({seconds}s übrig)',
     retractTitle: 'Kommentar zurückziehen',
-    retractConfirmText:
-      'Möchten Sie diesen Kommentar wirklich zurückziehen?',
+    retractConfirmText: 'Möchten Sie diesen Kommentar wirklich zurückziehen?',
     cancel: 'Abbrechen',
     confirmRetract: 'Zurückziehen',
     retractExpired: 'Das Zeitfenster zum Zurückziehen ist abgelaufen',

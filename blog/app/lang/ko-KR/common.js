@@ -64,7 +64,8 @@ export default {
       bad: '아쉬움',
       terrible: '나쁨',
       awful: '최악',
-      confused: '???',
+      confused: '의문',
+      what: '???',
       none: '평가 없음'
     }
   },

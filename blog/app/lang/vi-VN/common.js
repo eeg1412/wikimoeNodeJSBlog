@@ -31,8 +31,7 @@ export default {
     backHome: 'Về trang chủ',
     notFound: 'Trang bạn đang tìm không tồn tại.',
     forbidden: 'Bạn không có quyền truy cập trang này.',
-    maintenanceUpdating:
-      'Máy chủ đang được cập nhật. Vui lòng thử lại sau.',
+    maintenanceUpdating: 'Máy chủ đang được cập nhật. Vui lòng thử lại sau.',
     maintenance: 'Máy chủ đang bảo trì. Vui lòng thử lại sau.',
     languageSwitchFailed: 'Chuyển ngôn ngữ thất bại. Vui lòng thử lại sau.'
   },
@@ -63,7 +62,8 @@ export default {
       bad: 'Kém',
       terrible: 'Rất kém',
       awful: 'Tệ hại',
-      confused: '???',
+      confused: 'Bí ẩn',
+      what: '???',
       none: 'Chưa có'
     }
   },

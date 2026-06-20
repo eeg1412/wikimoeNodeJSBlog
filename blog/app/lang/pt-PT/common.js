@@ -64,7 +64,8 @@ export default {
       bad: 'Fraco',
       terrible: 'Mau',
       awful: 'Terrível',
-      confused: '???',
+      confused: 'Bizarro',
+      what: '???',
       none: 'Sem nota'
     }
   },
@@ -349,12 +350,12 @@ export default {
     urlInvalid: 'Formato de URL inválido',
     emailMax: 'O email deve ter no máximo 100 caracteres',
     emailInvalid: 'Formato de email inválido',
-    successPending:
-      'Comentário enviado e ficará público após revisão',
+    successPending: 'Comentário enviado e ficará público após revisão',
     success: 'Comentário enviado',
     retractButton: 'Retirar ({seconds}s restantes)',
     retractTitle: 'Retirar comentário',
-    retractConfirmText: 'Tem a certeza de que pretende retirar este comentário?',
+    retractConfirmText:
+      'Tem a certeza de que pretende retirar este comentário?',
     cancel: 'Cancelar',
     confirmRetract: 'Retirar',
     retractExpired: 'O período de retirada expirou',

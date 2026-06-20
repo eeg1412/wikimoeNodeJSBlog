@@ -31,11 +31,9 @@ export default {
     backHome: 'Kembali ke beranda',
     notFound: 'Halaman yang Anda cari tidak ada.',
     forbidden: 'Anda tidak memiliki izin untuk mengakses halaman ini.',
-    maintenanceUpdating:
-      'Server sedang diperbarui. Silakan coba lagi nanti.',
+    maintenanceUpdating: 'Server sedang diperbarui. Silakan coba lagi nanti.',
     maintenance: 'Server sedang dalam pemeliharaan. Silakan coba lagi nanti.',
-    languageSwitchFailed:
-      'Gagal mengganti bahasa. Silakan coba lagi nanti.'
+    languageSwitchFailed: 'Gagal mengganti bahasa. Silakan coba lagi nanti.'
   },
   calendar: {
     weekdaysShort: ['Min', 'Sen', 'Sel', 'Rab', 'Kam', 'Jum', 'Sab'],
@@ -64,7 +62,8 @@ export default {
       bad: 'Kurang',
       terrible: 'Buruk',
       awful: 'Parah',
-      confused: '???',
+      confused: 'Aneh',
+      what: '???',
       none: 'Nihil'
     }
   },
@@ -338,8 +337,7 @@ export default {
     website: 'Situs web (opsional)',
     submit: 'Kirim',
     closed: 'Komentar ditutup',
-    validatorLoadFailed:
-      'Gagal memuat validasi. Silakan coba lagi nanti',
+    validatorLoadFailed: 'Gagal memuat validasi. Silakan coba lagi nanti',
     nicknameRequired: 'Nama panggilan wajib diisi',
     nicknameMax: 'Nama panggilan maksimal 20 karakter',
     contentRequired: 'Isi komentar wajib diisi',
@@ -349,13 +347,11 @@ export default {
     urlInvalid: 'Format URL tidak valid',
     emailMax: 'Email maksimal 100 karakter',
     emailInvalid: 'Format email tidak valid',
-    successPending:
-      'Komentar dikirim dan akan tampil setelah ditinjau',
+    successPending: 'Komentar dikirim dan akan tampil setelah ditinjau',
     success: 'Komentar dikirim',
     retractButton: 'Batalkan ({seconds} dtk tersisa)',
     retractTitle: 'Batalkan komentar',
-    retractConfirmText:
-      'Apakah Anda yakin ingin membatalkan komentar ini?',
+    retractConfirmText: 'Apakah Anda yakin ingin membatalkan komentar ini?',
     cancel: 'Batal',
     confirmRetract: 'Batalkan',
     retractExpired: 'Waktu pembatalan telah berakhir',

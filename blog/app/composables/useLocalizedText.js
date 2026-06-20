@@ -15,6 +15,7 @@ function resolveRatingLevel(rating) {
   if (rating >= 30) return 'terrible'
   if (rating >= 20) return 'awful'
   if (rating >= 10) return 'confused'
+  if (rating >= 1) return 'what'
   return 'none'
 }
 

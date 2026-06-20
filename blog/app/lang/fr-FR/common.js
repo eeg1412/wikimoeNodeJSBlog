@@ -64,7 +64,8 @@ export default {
       bad: 'Mauvais',
       terrible: 'Très mal',
       awful: 'Affreux',
-      confused: '???',
+      confused: 'Bizarre',
+      what: '???',
       none: 'Non noté'
     }
   },
@@ -349,8 +350,7 @@ export default {
     urlInvalid: 'Le format de l’URL est invalide',
     emailMax: 'L’e-mail doit contenir au plus 100 caractères',
     emailInvalid: 'Le format de l’e-mail est invalide',
-    successPending:
-      'Commentaire envoyé. Il sera visible après validation',
+    successPending: 'Commentaire envoyé. Il sera visible après validation',
     success: 'Commentaire envoyé',
     retractButton: 'Retirer ({seconds}s restantes)',
     retractTitle: 'Retirer le commentaire',

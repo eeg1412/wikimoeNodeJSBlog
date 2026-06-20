@@ -62,7 +62,8 @@ export default {
       bad: 'Poor',
       terrible: 'Bad',
       awful: 'Awful',
-      confused: '???',
+      confused: 'Weird',
+      what: '???',
       none: 'Unrated'
     }
   },

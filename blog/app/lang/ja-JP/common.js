@@ -114,7 +114,8 @@ export default {
       bad: '低評価',
       terrible: '駄作',
       awful: '酷評',
-      confused: '???',
+      confused: '謎',
+      what: '???',
       none: '未評価'
     }
   },

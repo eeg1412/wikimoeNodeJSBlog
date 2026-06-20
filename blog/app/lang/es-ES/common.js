@@ -33,7 +33,8 @@ export default {
     forbidden: 'No tienes permiso para acceder a esta página.',
     maintenanceUpdating:
       'El servidor se está actualizando. Inténtalo de nuevo más tarde.',
-    maintenance: 'El servidor está en mantenimiento. Inténtalo de nuevo más tarde.',
+    maintenance:
+      'El servidor está en mantenimiento. Inténtalo de nuevo más tarde.',
     languageSwitchFailed:
       'No se pudo cambiar el idioma. Inténtalo de nuevo más tarde.'
   },
@@ -64,7 +65,8 @@ export default {
       bad: 'Malo',
       terrible: 'Muy malo',
       awful: 'Horrible',
-      confused: '???',
+      confused: 'Raro',
+      what: '???',
       none: 'Sin nota'
     }
   },
@@ -349,8 +351,7 @@ export default {
     urlInvalid: 'El formato de la URL no es válido',
     emailMax: 'El email debe tener 100 caracteres como máximo',
     emailInvalid: 'El formato del email no es válido',
-    successPending:
-      'Comentario enviado; será público después de la revisión',
+    successPending: 'Comentario enviado; será público después de la revisión',
     success: 'Comentario enviado',
     retractButton: 'Retirar ({seconds}s restantes)',
     retractTitle: 'Retirar comentario',

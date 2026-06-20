@@ -110,6 +110,7 @@ export default {
       terrible: '爛作',
       awful: '爛差',
       confused: '迷',
+      what: '???',
       none: '暫無評分'
     }
   },

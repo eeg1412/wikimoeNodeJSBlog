@@ -62,7 +62,8 @@ export default {
       bad: 'แย่',
       terrible: 'แย่มาก',
       awful: 'เลว',
-      confused: '???',
+      confused: 'ชวนงง',
+      what: '???',
       none: 'ยังไม่มี'
     }
   },
