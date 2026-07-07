@@ -3,7 +3,7 @@
     :model="mediaForm"
     :rules="mediaRules"
     ref="mediaFormRef"
-    label-width="150px"
+    label-width="200px"
     v-if="inited"
   >
     <el-form-item label="开启图片压缩" prop="imgSettingEnableImgCompress">
@@ -44,6 +44,77 @@
           :step="1"
           :precision="0"
         ></el-input-number>
+      </el-form-item>
+    </div>
+    <el-form-item label="保留HDR" prop="imgSettingKeepHDR">
+      <el-switch v-model="mediaForm.imgSettingKeepHDR"></el-switch>
+    </el-form-item>
+    <div class="config-border-item">
+      <div class="config-border-item-title mb5">
+        HDR设置<span class="config-border-item-tip"
+          >※需开启「保留HDR」与「开启图片压缩」，且上传的是含gainmap的JPG图片时生效，将主图转换为HDR
+          AVIF。当前仅支持将JPG gainmap转换为AVIF
+          gainmap，其他格式会被忽略</span
+        >
+      </div>
+      <el-form-item label="主图HDR质量" prop="imgSettingHDRQuality">
+        <!-- 数字 1-100 -->
+        <el-input-number
+          v-model="mediaForm.imgSettingHDRQuality"
+          controls-position="right"
+          :min="1"
+          :max="100"
+          :step="1"
+          :precision="0"
+        ></el-input-number>
+      </el-form-item>
+      <el-form-item
+        label="主图HDR GainMap质量"
+        prop="imgSettingHDRGainMapQuality"
+      >
+        <!-- 数字 1-100 -->
+        <el-input-number
+          v-model="mediaForm.imgSettingHDRGainMapQuality"
+          controls-position="right"
+          :min="1"
+          :max="100"
+          :step="1"
+          :precision="0"
+        ></el-input-number>
+      </el-form-item>
+      <el-form-item label="缩略图HDR质量" prop="imgSettingThumbnailHDRQuality">
+        <!-- 数字 1-100 -->
+        <el-input-number
+          v-model="mediaForm.imgSettingThumbnailHDRQuality"
+          controls-position="right"
+          :min="1"
+          :max="100"
+          :step="1"
+          :precision="0"
+        ></el-input-number>
+      </el-form-item>
+      <el-form-item
+        label="缩略图HDR GainMap质量"
+        prop="imgSettingThumbnailHDRGainMapQuality"
+      >
+        <!-- 数字 1-100 -->
+        <el-input-number
+          v-model="mediaForm.imgSettingThumbnailHDRGainMapQuality"
+          controls-position="right"
+          :min="1"
+          :max="100"
+          :step="1"
+          :precision="0"
+        ></el-input-number>
+      </el-form-item>
+      <el-form-item label="缩略图保留HDR" prop="imgSettingThumbnailKeepHDR">
+        <div class="w_10">
+          <el-switch v-model="mediaForm.imgSettingThumbnailKeepHDR"></el-switch>
+          <div class="config-border-item-tip mt5">
+            仅当「保留HDR」开启时生效。开启后缩略图也保留为HDR
+            AVIF；关闭时对HDR图片生成普通SDR缩略图（含gainmap的HDR图片会强制生成一张SDR缩略图，除非在上传时选择不生成缩略图）。
+          </div>
+        </div>
       </el-form-item>
     </div>
     <el-form-item label="开启图片缩略图" prop="imgSettingEnableImgThumbnail">
@@ -195,6 +266,18 @@ export default {
       imgSettingEnableImgThumbnail: false,
       imgSettingThumbnailQuality: 40,
       imgSettingThumbnailMaxSize: 680,
+      // 保留HDR
+      imgSettingKeepHDR: false,
+      // 缩略图保留HDR
+      imgSettingThumbnailKeepHDR: false,
+      // 主图HDR图片质量
+      imgSettingHDRQuality: 80,
+      // 主图HDR GainMap质量
+      imgSettingHDRGainMapQuality: 70,
+      // 缩略图HDR图片质量
+      imgSettingThumbnailHDRQuality: 40,
+      // 缩略图HDR GainMap质量
+      imgSettingThumbnailHDRGainMapQuality: 70,
       // 视频最长边
       videoSettingCompressMaxSize: 480,
       // 视频压缩码率
@@ -208,6 +291,26 @@ export default {
       ],
       imgSettingCompressMaxSize: [
         { required: true, message: '请输入图片压缩最长边', trigger: 'blur' }
+      ],
+      imgSettingHDRQuality: [
+        { required: true, message: '请输入主图HDR质量', trigger: 'blur' }
+      ],
+      imgSettingHDRGainMapQuality: [
+        {
+          required: true,
+          message: '请输入主图HDR GainMap质量',
+          trigger: 'blur'
+        }
+      ],
+      imgSettingThumbnailHDRQuality: [
+        { required: true, message: '请输入缩略图HDR质量', trigger: 'blur' }
+      ],
+      imgSettingThumbnailHDRGainMapQuality: [
+        {
+          required: true,
+          message: '请输入缩略图HDR GainMap质量',
+          trigger: 'blur'
+        }
       ],
       imgSettingThumbnailQuality: [
         {

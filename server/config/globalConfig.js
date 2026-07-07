@@ -39,6 +39,18 @@ const initGlobalConfig = async () => {
     imgSettingThumbnailQuality: 40,
     // 图片缩略图最长边
     imgSettingThumbnailMaxSize: 680,
+    // 保留HDR（JPG gainmap图片转换为HDR AVIF，需开启图片压缩）
+    imgSettingKeepHDR: false,
+    // 缩略图保留HDR（仅当保留HDR开启时生效）
+    imgSettingThumbnailKeepHDR: false,
+    // 主图HDR图片质量
+    imgSettingHDRQuality: 80,
+    // 主图HDR GainMap质量
+    imgSettingHDRGainMapQuality: 70,
+    // 缩略图HDR图片质量
+    imgSettingThumbnailHDRQuality: 40,
+    // 缩略图HDR GainMap质量
+    imgSettingThumbnailHDRGainMapQuality: 70,
     // 视频最长边
     videoSettingCompressMaxSize: 480,
     // 视频压缩码率

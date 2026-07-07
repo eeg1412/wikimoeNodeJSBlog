@@ -59,6 +59,11 @@ var attachments = new Schema(
       type: Boolean,
       default: false
     },
+    // 是否是HDR图像
+    isHDR: {
+      type: Boolean,
+      default: false
+    },
     // 0还没压缩，1压缩成功
     status: {
       type: Number,

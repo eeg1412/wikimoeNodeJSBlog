@@ -35,7 +35,7 @@
     >
       <span
         >{{ item.is360Panorama ? '【360°全景】' : ''
-        }}{{ item.name || '未命名' }}</span
+        }}{{ item.isHDR ? '【HDR】' : '' }}{{ item.name || '未命名' }}</span
       >
       <div class="attachment-filename-edit-icon">
         <el-icon><Tools /></el-icon>
@@ -116,6 +116,12 @@
           <div class="attachment-image-size">
             <!-- size -->
             <span>{{ formatSize(item.filesize) }}</span>
+          </div>
+        </el-form-item>
+        <!-- 是否HDR（仅展示） -->
+        <el-form-item label="HDR" v-if="isImage">
+          <div class="attachment-image-size">
+            <span>{{ item.isHDR ? '是' : '否' }}</span>
           </div>
         </el-form-item>
       </el-form>

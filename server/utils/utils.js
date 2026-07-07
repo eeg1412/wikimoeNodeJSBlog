@@ -18,6 +18,7 @@ const crawlerUserAgents = require('./crawler-user-agents.json')
 const { Worker } = require('worker_threads')
 const moment = require('moment-timezone')
 const { isSupportedLanguageCode } = require('../config/languages')
+const { probeJpegGainMap, convertJpegGainMap } = require('libavif-with-gainmap')
 
 const MULTILINGUAL_DOMAIN_ENV_NAME = 'MULTILINGUAL_DOMAIN'
 
@@ -1387,6 +1388,26 @@ exports.imageMetadata = async fileData => {
     })
   })
   return promise
+}
+
+/**
+ * 检测JPG文件是否包含可解析的gain map（HDR信息）
+ * @param {string} inputPath - JPG文件路径
+ * @returns {Promise<Object>} probe结果，包含hasGainMap等字段
+ */
+exports.probeJpegGainMap = async inputPath => {
+  return await probeJpegGainMap(inputPath)
+}
+
+/**
+ * 将带gain map的JPG转换为带gain map的HDR AVIF
+ * @param {string} inputPath - 输入JPG文件路径
+ * @param {string} outputPath - 输出AVIF文件路径
+ * @param {Object} options - 转换选项（quality、gainMapQuality、width、height等）
+ * @returns {Promise<*>} 转换结果
+ */
+exports.convertJpegGainMap = async (inputPath, outputPath, options = {}) => {
+  return await convertJpegGainMap(inputPath, outputPath, options)
 }
 
 exports.logErrorToText = error => {
