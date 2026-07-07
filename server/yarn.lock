@@ -945,10 +945,10 @@ lazystream@^1.0.0:
   dependencies:
     readable-stream "^2.0.5"
 
-libavif-with-gainmap@^0.1.8:
-  version "0.1.8"
-  resolved "https://registry.yarnpkg.com/libavif-with-gainmap/-/libavif-with-gainmap-0.1.8.tgz#4893dedfc8b3ffb9ecaa5a0aab0214466cfce4cb"
-  integrity sha512-jY8rcm8ozCD8FYVh7IVCBXlIxmTAnNGGY0gMJ8rOJZ8fXTwSdBUNNWI2JO7hr3LVXZyoe+KVMPQ1KDecLSj5Vw==
+libavif-with-gainmap@^0.1.9:
+  version "0.1.9"
+  resolved "https://registry.yarnpkg.com/libavif-with-gainmap/-/libavif-with-gainmap-0.1.9.tgz#bdda70c6a64878a6b985ce581b9f5b101f74995f"
+  integrity sha512-yPqttB7dLbIP1F3n8nn/ESzu8GP/AuLy3GJUVwaBFdT66eb/zDdS9NatsZ/65uVV8rsvqT2967AIJ+6iCXUGpw==
 
 lodash.includes@^4.3.0:
   version "4.3.0"
