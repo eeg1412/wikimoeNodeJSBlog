@@ -254,7 +254,8 @@ module.exports = async function (req, res, next) {
               quality: imgSettingThumbnailHDRQuality,
               gainMapQuality: imgSettingThumbnailHDRGainMapQuality,
               width: newWidth,
-              height: newHeight
+              height: newHeight,
+              jobs: 'all'
             })
             updateAttachment.thumfor = thumbnailPath
           }
@@ -341,7 +342,8 @@ module.exports = async function (req, res, next) {
 
         const convertOptions = {
           quality: imgSettingHDRQuality,
-          gainMapQuality: imgSettingHDRGainMapQuality
+          gainMapQuality: imgSettingHDRGainMapQuality,
+          jobs: 'all'
         }
         const max = Math.max(width, height)
         if (max > imgSettingCompressMaxSize) {
