@@ -34,7 +34,7 @@
     "fs-extra": "^11.2.0",
     "ip2location-nodejs": "9.7.0",
     "jsonwebtoken": "^9.0.3",
-    "libavif-with-gainmap": "^0.1.11",
+    "libavif-with-gainmap": "^0.1.12",
     "log4js": "^6.9.1",
     "mint-filter": "^4.0.3",
     "moment-timezone": "^0.5.43",
