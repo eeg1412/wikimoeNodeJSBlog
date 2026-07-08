@@ -232,6 +232,7 @@ import {
   execFFmpeg,
   dataURLtoBlob
 } from '@/utils/utils'
+import { requestScreenWakeLock, releaseScreenWakeLock } from '@/utils/wakeLock'
 import { authApi } from '@/api'
 import { ElMessage } from 'element-plus'
 export default {
@@ -452,77 +453,84 @@ export default {
 
     const tryCompressVideo = async () => {
       videoLoading.value = true
-      // 初始化ffmpeg
-      if (!ffmpeg) {
-        await tryInitFFmpeg()
+      // 视频编码期间保持屏幕常亮
+      await requestScreenWakeLock()
+      try {
+        // 初始化ffmpeg
+        if (!ffmpeg) {
+          await tryInitFFmpeg()
+        }
+        // log
+        log.value = ''
+        ffmpeg.on('log', msg => {
+          log.value = msg.message
+          console.log(msg.message)
+        })
+        // 开始压缩
+        const arg = []
+        // 获取视频宽高
+        const videoWidth = videoRef.value.videoWidth
+        const videoHeight = videoRef.value.videoHeight
+        // 根据最长边 计算宽高
+        const maxSize = videoForm.videoSettingCompressMaxSize
+        let width =
+          videoWidth > videoHeight
+            ? maxSize
+            : (maxSize * videoWidth) / videoHeight
+        let height =
+          videoWidth > videoHeight
+            ? (maxSize * videoHeight) / videoWidth
+            : maxSize
+        // 大小取整
+        width = Math.floor(width)
+        height = Math.floor(height)
+        // 确保宽度和高度是 2 的倍数
+        width = width % 2 === 0 ? width : width - 1
+        height = height % 2 === 0 ? height : height - 1
+        // 开始时间
+        const startTime = videoForm.startTime
+        // 结束时间
+        const endTime = videoForm.endTime
+        // 压缩码率
+        const bitrate = videoForm.videoSettingCompressBitrate
+        // 压缩帧率
+        const fps = videoForm.videoSettingCompressFps
+        // 输出文件名
+        const outputFileName = 'output.mp4'
+        // 压缩视频
+        arg.push('-i', 'input')
+        arg.push('-ss', formatTime(startTime))
+        arg.push('-t', formatTime(endTime - startTime))
+        arg.push('-s', `${width}x${height}`)
+        arg.push('-b:v', `${bitrate}k`)
+        arg.push('-r', `${fps}`)
+        arg.push('-c:v', 'libx264')
+        // 是否有声音
+        if (!videoForm.videoSettingCompressAudio) {
+          arg.push('-an')
+        } else {
+          arg.push('-c:a', 'aac')
+          // 声音码率
+          arg.push('-b:a', '128k')
+        }
+        arg.push('-preset', videoForm.videoSettingCompressPreset)
+        arg.push('-f', 'mp4')
+        arg.push(outputFileName)
+        step.value = 2
+        // 执行
+        const result = await execFFmpeg(ffmpeg, file, arg, outputFileName)
+        // 输出视频
+        outputVideoUrl.value = URL.createObjectURL(result)
+        outputVideoSize.value = result.size
+        step.value = 3
+        nextTick(() => {
+          tryGetVideoCover()
+        })
+      } finally {
+        videoLoading.value = false
+        // 编码结束解除屏幕常亮
+        await releaseScreenWakeLock()
       }
-      // log
-      log.value = ''
-      ffmpeg.on('log', msg => {
-        log.value = msg.message
-        console.log(msg.message)
-      })
-      // 开始压缩
-      const arg = []
-      // 获取视频宽高
-      const videoWidth = videoRef.value.videoWidth
-      const videoHeight = videoRef.value.videoHeight
-      // 根据最长边 计算宽高
-      const maxSize = videoForm.videoSettingCompressMaxSize
-      let width =
-        videoWidth > videoHeight
-          ? maxSize
-          : (maxSize * videoWidth) / videoHeight
-      let height =
-        videoWidth > videoHeight
-          ? (maxSize * videoHeight) / videoWidth
-          : maxSize
-      // 大小取整
-      width = Math.floor(width)
-      height = Math.floor(height)
-      // 确保宽度和高度是 2 的倍数
-      width = width % 2 === 0 ? width : width - 1
-      height = height % 2 === 0 ? height : height - 1
-      // 开始时间
-      const startTime = videoForm.startTime
-      // 结束时间
-      const endTime = videoForm.endTime
-      // 压缩码率
-      const bitrate = videoForm.videoSettingCompressBitrate
-      // 压缩帧率
-      const fps = videoForm.videoSettingCompressFps
-      // 输出文件名
-      const outputFileName = 'output.mp4'
-      // 压缩视频
-      arg.push('-i', 'input')
-      arg.push('-ss', formatTime(startTime))
-      arg.push('-t', formatTime(endTime - startTime))
-      arg.push('-s', `${width}x${height}`)
-      arg.push('-b:v', `${bitrate}k`)
-      arg.push('-r', `${fps}`)
-      arg.push('-c:v', 'libx264')
-      // 是否有声音
-      if (!videoForm.videoSettingCompressAudio) {
-        arg.push('-an')
-      } else {
-        arg.push('-c:a', 'aac')
-        // 声音码率
-        arg.push('-b:a', '128k')
-      }
-      arg.push('-preset', videoForm.videoSettingCompressPreset)
-      arg.push('-f', 'mp4')
-      arg.push(outputFileName)
-      step.value = 2
-      // 执行
-      const result = await execFFmpeg(ffmpeg, file, arg, outputFileName)
-      // 输出视频
-      outputVideoUrl.value = URL.createObjectURL(result)
-      outputVideoSize.value = result.size
-      step.value = 3
-      nextTick(() => {
-        tryGetVideoCover()
-      })
-      videoLoading.value = false
     }
     const onClosed = () => {
       videoUrl.value = ''
@@ -540,6 +548,8 @@ export default {
 
     const tryUploadVideo = async () => {
       videoLoading.value = true
+      // 视频上传期间保持屏幕常亮
+      await requestScreenWakeLock()
       const formData = new FormData()
       // 将 outputVideoUrl.value 上传
       const response = await fetch(outputVideoUrl.value)
@@ -569,6 +579,8 @@ export default {
         })
         .finally(() => {
           videoLoading.value = false
+          // 上传完毕解除屏幕常亮
+          releaseScreenWakeLock()
         })
     }
     const tryDownloadVideo = () => {

@@ -447,6 +447,7 @@ import {
 } from '@element-plus/icons-vue'
 import axios from 'axios'
 import { showLoading, hideLoading } from '@/utils/utils'
+import { requestScreenWakeLock, releaseScreenWakeLock } from '@/utils/wakeLock'
 import draggable from 'vuedraggable'
 import CheckDialogService from '@/services/CheckDialogService'
 
@@ -1052,6 +1053,8 @@ export default {
 
     const uploadFile = file => {
       return new Promise((resolve, reject) => {
+        // 图片上传期间保持屏幕常亮（全部上传完毕后释放）
+        requestScreenWakeLock()
         uploadQueue.value.push({ file, resolve, reject })
 
         if (uploading.value < maxUploads) {
@@ -1094,11 +1097,13 @@ export default {
           .then(response => {
             uploading.value--
             processQueue()
+            releaseScreenWakeLock()
             resolve(response)
           })
           .catch(error => {
             uploading.value--
             processQueue()
+            releaseScreenWakeLock()
             reject(error)
           })
       }
