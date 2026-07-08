@@ -181,7 +181,7 @@
               请选择相册后上传
             </div>
             <div class="mt5">
-              <el-popover placement="bottom" :width="200" trigger="click">
+              <el-popover placement="bottom" :width="220" trigger="click">
                 <div>
                   <!-- 不压缩图片checkbox -->
                   <el-checkbox
@@ -195,6 +195,7 @@
                     @click.stop
                     size="small"
                     v-model="options.noThumbnail"
+                    :disabled="hdrActive"
                     label="不生成缩略图"
                   />
                   <!-- 是360°全景图片 -->
@@ -202,6 +203,7 @@
                     @click.stop
                     size="small"
                     v-model="options.is360Panorama"
+                    :disabled="hdrActive"
                     label="是360°全景图片"
                   />
                   <!-- 设置最长边 -->
@@ -218,6 +220,46 @@
                         clearable
                       />
                     </div>
+                  </div>
+                  <!-- HDR相关设置：与360°全景/不生成缩略图互斥 -->
+                  <div class="accactment-options-hdr">
+                    <div class="accactment-options-field-col">
+                      <div class="accactment-options-col-label">保留HDR</div>
+                      <el-radio-group
+                        v-model="options.keepHDR"
+                        size="small"
+                        :disabled="hdrConflict"
+                        class="accactment-options-radio"
+                      >
+                        <el-radio value="default">按照后台设置</el-radio>
+                        <el-radio value="keep">保留HDR</el-radio>
+                        <el-radio value="notKeep" :disabled="options.markAsHDR"
+                          >不保留HDR</el-radio
+                        >
+                      </el-radio-group>
+                    </div>
+                    <div class="accactment-options-field-col">
+                      <div class="accactment-options-col-label">
+                        缩略图保留HDR
+                      </div>
+                      <el-radio-group
+                        v-model="options.thumbnailKeepHDR"
+                        size="small"
+                        :disabled="thumbnailKeepHDRDisabled"
+                        class="accactment-options-radio"
+                      >
+                        <el-radio value="default">按照后台设置</el-radio>
+                        <el-radio value="keep">保留HDR</el-radio>
+                        <el-radio value="notKeep">不保留HDR</el-radio>
+                      </el-radio-group>
+                    </div>
+                    <el-checkbox
+                      @click.stop
+                      size="small"
+                      v-model="options.markAsHDR"
+                      :disabled="markAsHDRDisabled"
+                      label="标记为HDR"
+                    />
                   </div>
                 </div>
                 <template #reference>
@@ -464,6 +506,9 @@ export default {
       options.noCompress = false
       options.noThumbnail = false
       options.imgSettingCompressMaxSize = null
+      options.keepHDR = 'default'
+      options.thumbnailKeepHDR = 'default'
+      options.markAsHDR = false
 
       albumId.value = props.albumIdProp
       if (props.is360Panorama) {
@@ -579,19 +624,88 @@ export default {
         'x-compress-max-size': options.imgSettingCompressMaxSize
           ? String(options.imgSettingCompressMaxSize)
           : '',
-        'x-is-360-panorama': options.is360Panorama ? '1' : '0'
+        'x-is-360-panorama': options.is360Panorama ? '1' : '0',
+        'x-keep-hdr': options.keepHDR,
+        'x-thumbnail-keep-hdr': options.thumbnailKeepHDR,
+        'x-mark-as-hdr': options.markAsHDR ? '1' : '0'
       }
     }
     const options = reactive({
       noCompress: false,
       noThumbnail: false,
       is360Panorama: false,
-      imgSettingCompressMaxSize: null
+      imgSettingCompressMaxSize: null,
+      // HDR单独设置：'default' 按照后台设置 | 'keep' 保留HDR | 'notKeep' 不保留HDR
+      keepHDR: 'default',
+      thumbnailKeepHDR: 'default',
+      // 手动标记为HDR（仅展示徽章，不影响转换流程）
+      markAsHDR: false
     })
+    // 360°全景或不生成缩略图时，与所有HDR配置冲突
+    const hdrConflict = computed(() => {
+      return options.is360Panorama || options.noThumbnail
+    })
+    // 是否已启用任意HDR配置（用于禁用360°全景与不生成缩略图）
+    const hdrActive = computed(() => {
+      return (
+        options.keepHDR !== 'default' ||
+        options.thumbnailKeepHDR !== 'default' ||
+        options.markAsHDR
+      )
+    })
+    // 缩略图保留HDR仅当保留HDR明确为「保留」时可选
+    const thumbnailKeepHDRDisabled = computed(() => {
+      return hdrConflict.value || options.keepHDR !== 'keep'
+    })
+    // 「标记为HDR」与「不保留HDR」互斥；与360°/不生成缩略图也冲突
+    const markAsHDRDisabled = computed(() => {
+      return hdrConflict.value || options.keepHDR === 'notKeep'
+    })
+    watch(
+      () => hdrConflict.value,
+      isConflict => {
+        if (isConflict) {
+          options.keepHDR = 'default'
+          options.thumbnailKeepHDR = 'default'
+          options.markAsHDR = false
+        }
+      }
+    )
+    watch(
+      () => options.keepHDR,
+      value => {
+        if (value !== 'keep') {
+          options.thumbnailKeepHDR = 'default'
+        }
+        if (value === 'notKeep') {
+          options.markAsHDR = false
+        }
+      }
+    )
     const optionsCount = computed(() => {
-      return Object.keys(options).filter(key => {
-        return options[key] !== null && options[key] !== false
-      }).length
+      let count = 0
+      if (options.noCompress) {
+        count++
+      }
+      if (options.noThumbnail) {
+        count++
+      }
+      if (options.is360Panorama) {
+        count++
+      }
+      if (options.imgSettingCompressMaxSize) {
+        count++
+      }
+      if (options.keepHDR !== 'default') {
+        count++
+      }
+      if (options.thumbnailKeepHDR !== 'default') {
+        count++
+      }
+      if (options.markAsHDR) {
+        count++
+      }
+      return count
     })
     watch(
       () => options,
@@ -1069,6 +1183,10 @@ export default {
       updateHeaders,
       options,
       optionsCount,
+      hdrConflict,
+      hdrActive,
+      thumbnailKeepHDRDisabled,
+      markAsHDRDisabled,
       handleSuccess,
       handleError,
       preChangeAlbum,
@@ -1155,6 +1273,28 @@ export default {
 
 .accactment-options-value {
   flex-grow: 1; /* 元素将占用剩余的空间 */
+}
+.accactment-options-hdr {
+  margin-top: 6px;
+  padding-top: 6px;
+  border-top: 1px solid var(--el-border-color-lighter);
+}
+.accactment-options-field-col {
+  margin-bottom: 6px;
+}
+.accactment-options-col-label {
+  margin-bottom: 2px;
+  font-size: 12px;
+  color: var(--el-text-color-regular);
+}
+.accactment-options-radio.el-radio-group {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+.accactment-options-radio :deep(.el-radio) {
+  margin-right: 0;
+  height: 24px;
 }
 .attachments-dialog-header {
   display: flex;

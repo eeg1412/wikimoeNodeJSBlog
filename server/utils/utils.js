@@ -1407,7 +1407,11 @@ exports.probeJpegGainMap = async inputPath => {
  * @returns {Promise<*>} 转换结果
  */
 exports.convertJpegGainMap = async (inputPath, outputPath, options = {}) => {
-  return await convertJpegGainMap(inputPath, outputPath, options)
+  // stripMetadata 固定为 true，转换时统一移除元数据
+  return await convertJpegGainMap(inputPath, outputPath, {
+    ...options,
+    stripMetadata: true
+  })
 }
 
 exports.logErrorToText = error => {

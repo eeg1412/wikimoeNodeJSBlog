@@ -5,6 +5,17 @@ const utils = require('../../../utils/utils')
 const albumUtils = require('../../../mongodb/utils/albums')
 const attachmentsUtils = require('../../../mongodb/utils/attachments')
 
+// 解析HDR单独设置选项，仅接受 keep / notKeep，其余一律归一为 default（按照后台设置）
+function normalizeHDROption(value) {
+  if (value === 'keep') {
+    return 'keep'
+  }
+  if (value === 'notKeep') {
+    return 'notKeep'
+  }
+  return 'default'
+}
+
 module.exports = async function (req, res, next) {
   let { file } = req
   const headers = req.headers
@@ -12,6 +23,12 @@ module.exports = async function (req, res, next) {
   const noCompress = headers['x-no-compress'] === '1' ? true : false
   const noThumbnail = headers['x-no-thumbnail'] === '1' ? true : false
   const is360Panorama = headers['x-is-360-panorama'] === '1' ? true : false
+  // HDR单独设置：保留HDR、缩略图保留HDR（default/keep/notKeep），以及手动标记为HDR
+  const keepHDROption = normalizeHDROption(headers['x-keep-hdr'])
+  const thumbnailKeepHDROption = normalizeHDROption(
+    headers['x-thumbnail-keep-hdr']
+  )
+  const markAsHDR = headers['x-mark-as-hdr'] === '1'
 
   let imgSettingCompressMaxSizeHeader = headers['x-compress-max-size']
   // 判断 imgSettingCompressMaxSizeHeader 是否是正整数
@@ -194,24 +211,34 @@ module.exports = async function (req, res, next) {
       imgSettingEnableImgCompressWebp,
       imgSettingThumbnailQuality,
       imgSettingEnableImgCompress,
+      imgSettingEnableImgThumbnail,
       imgSettingKeepHDR,
       imgSettingThumbnailKeepHDR,
       imgSettingHDRQuality,
       imgSettingHDRGainMapQuality,
       imgSettingThumbnailHDRQuality,
-      imgSettingThumbnailHDRGainMapQuality
+      imgSettingThumbnailHDRGainMapQuality,
+      imgSettingHDRAvifSpeed
     } = config
 
-    // 判断是否为HDR图片：仅当开启保留HDR、开启图片压缩、非跳过压缩、且为JPG时检测
+    // 判断是否需要进行HDR转换：
+    // keepHDROption='keep' 显式保留，忽略是否开启图片压缩；'notKeep' 强制不保留；'default' 按后台设置
     let isHDR = false
     const isJpegImage =
       file.mimetype === 'image/jpeg' || /\.jpe?g$/i.test(extname)
-    if (
-      imgSettingKeepHDR &&
-      imgSettingEnableImgCompress &&
-      !noCompress &&
-      isJpegImage
-    ) {
+    let shouldDetectHDR = false
+    if (keepHDROption === 'keep') {
+      shouldDetectHDR = isJpegImage
+    } else if (keepHDROption === 'notKeep') {
+      shouldDetectHDR = false
+    } else {
+      shouldDetectHDR =
+        imgSettingKeepHDR &&
+        imgSettingEnableImgCompress &&
+        !noCompress &&
+        isJpegImage
+    }
+    if (shouldDetectHDR) {
       // memoryStorage下没有磁盘文件，需先写入临时文件供probe/convert使用
       const hdrTempDir = path.join('./cache/hdrtemp')
       if (!fs.existsSync(hdrTempDir)) {
@@ -228,11 +255,26 @@ module.exports = async function (req, res, next) {
       }
     }
 
+    // 解析缩略图是否保留HDR：keep 强制保留（忽略后台缩略图开关），notKeep 强制不保留，default 按后台设置
+    let thumbnailKeepHDR = false
+    if (thumbnailKeepHDROption === 'keep') {
+      thumbnailKeepHDR = true
+    } else if (thumbnailKeepHDROption === 'notKeep') {
+      thumbnailKeepHDR = false
+    } else {
+      thumbnailKeepHDR = imgSettingThumbnailKeepHDR
+    }
+    // HDR缩略图是否启用：显式保留时忽略后台「开启图片缩略图」开关
+    let thumbnailEnabledForHDR = imgSettingEnableImgThumbnail
+    if (thumbnailKeepHDROption === 'keep') {
+      thumbnailEnabledForHDR = true
+    }
+
     // ===== 缩略图处理 =====
     if (isHDR) {
-      if (imgSettingThumbnailKeepHDR) {
+      if (thumbnailKeepHDR) {
         // 缩略图保留HDR：使用libavif-with-gainmap生成缩小的HDR AVIF缩略图
-        if (config.imgSettingEnableImgThumbnail && !noThumbnail) {
+        if (thumbnailEnabledForHDR && !noThumbnail) {
           const { imgSettingThumbnailMaxSize } = config
           const max = Math.max(width, height)
           if (
@@ -256,7 +298,7 @@ module.exports = async function (req, res, next) {
               width: newWidth,
               height: newHeight,
               jobs: 'all',
-              speed: 9
+              speed: imgSettingHDRAvifSpeed
             })
             updateAttachment.thumfor = thumbnailPath
           }
@@ -335,75 +377,73 @@ module.exports = async function (req, res, next) {
     }
 
     // ===== 主图处理 =====
-    if (imgSettingEnableImgCompress && !noCompress) {
-      if (isHDR) {
-        // HDR图片：转换为HDR AVIF，尺寸与既存压缩逻辑保持一致
-        filePath = path.join(yearMonthPath, attachmentId + '.avif')
-        attachment.mimetype = 'image/avif'
+    if (isHDR) {
+      // HDR图片：转换为HDR AVIF，忽略是否开启压缩，尺寸与既存压缩逻辑保持一致
+      filePath = path.join(yearMonthPath, attachmentId + '.avif')
+      attachment.mimetype = 'image/avif'
 
-        const convertOptions = {
-          quality: imgSettingHDRQuality,
-          gainMapQuality: imgSettingHDRGainMapQuality,
-          jobs: 'all',
-          speed: 9
-        }
-        const max = Math.max(width, height)
-        if (max > imgSettingCompressMaxSize) {
-          const scale = imgSettingCompressMaxSize / max
-          const newWidth = Math.round(width * scale)
-          const newHeight = Math.round(height * scale)
-
-          updateAttachment.width = newWidth
-          updateAttachment.height = newHeight
-          convertOptions.width = newWidth
-          convertOptions.height = newHeight
-        }
-        await utils.convertJpegGainMap(tempJpgPath, filePath, convertOptions)
-        updateAttachment.filepath = filePath
-      } else {
-        // 开启压缩
-        if (imgSettingEnableImgCompressWebp) {
-          filePath = path.join(yearMonthPath, attachmentId + '.webp')
-          attachment.mimetype = 'image/webp'
-        } else {
-          filePath = path.join(yearMonthPath, attachmentId + extname)
-        }
-
-        // 如果图片尺寸大于最长边
-        const max = Math.max(width, height)
-        if (max > imgSettingCompressMaxSize) {
-          // 计算压缩比例
-          const scale = imgSettingCompressMaxSize / max
-          // 计算压缩后的宽高
-          const newWidth = Math.round(width * scale)
-          const newHeight = Math.round(height * scale)
-
-          updateAttachment.width = newWidth
-          updateAttachment.height = newHeight
-          // 压缩图片为webp 保存到 filePath 路径下
-          await utils.imageCompress(
-            imgSettingEnableImgCompressWebp ? '.webp' : extname,
-            fileData,
-            animated,
-            newWidth,
-            newHeight,
-            imgSettingCompressQuality,
-            filePath
-          )
-        } else {
-          // 原尺寸压缩
-          await utils.imageCompress(
-            imgSettingEnableImgCompressWebp ? '.webp' : extname,
-            fileData,
-            animated,
-            null,
-            null,
-            imgSettingCompressQuality,
-            filePath
-          )
-        }
-        updateAttachment.filepath = filePath
+      const convertOptions = {
+        quality: imgSettingHDRQuality,
+        gainMapQuality: imgSettingHDRGainMapQuality,
+        jobs: 'all',
+        speed: imgSettingHDRAvifSpeed
       }
+      const max = Math.max(width, height)
+      if (max > imgSettingCompressMaxSize) {
+        const scale = imgSettingCompressMaxSize / max
+        const newWidth = Math.round(width * scale)
+        const newHeight = Math.round(height * scale)
+
+        updateAttachment.width = newWidth
+        updateAttachment.height = newHeight
+        convertOptions.width = newWidth
+        convertOptions.height = newHeight
+      }
+      await utils.convertJpegGainMap(tempJpgPath, filePath, convertOptions)
+      updateAttachment.filepath = filePath
+    } else if (imgSettingEnableImgCompress && !noCompress) {
+      // 开启压缩
+      if (imgSettingEnableImgCompressWebp) {
+        filePath = path.join(yearMonthPath, attachmentId + '.webp')
+        attachment.mimetype = 'image/webp'
+      } else {
+        filePath = path.join(yearMonthPath, attachmentId + extname)
+      }
+
+      // 如果图片尺寸大于最长边
+      const max = Math.max(width, height)
+      if (max > imgSettingCompressMaxSize) {
+        // 计算压缩比例
+        const scale = imgSettingCompressMaxSize / max
+        // 计算压缩后的宽高
+        const newWidth = Math.round(width * scale)
+        const newHeight = Math.round(height * scale)
+
+        updateAttachment.width = newWidth
+        updateAttachment.height = newHeight
+        // 压缩图片为webp 保存到 filePath 路径下
+        await utils.imageCompress(
+          imgSettingEnableImgCompressWebp ? '.webp' : extname,
+          fileData,
+          animated,
+          newWidth,
+          newHeight,
+          imgSettingCompressQuality,
+          filePath
+        )
+      } else {
+        // 原尺寸压缩
+        await utils.imageCompress(
+          imgSettingEnableImgCompressWebp ? '.webp' : extname,
+          fileData,
+          animated,
+          null,
+          null,
+          imgSettingCompressQuality,
+          filePath
+        )
+      }
+      updateAttachment.filepath = filePath
     } else {
       filePath = path.join(yearMonthPath, attachmentId + extname)
       // 不压缩，直接将fileData保存到filePath
@@ -411,8 +451,8 @@ module.exports = async function (req, res, next) {
       updateAttachment.filepath = filePath
     }
 
-    // 记录是否为HDR图片
-    updateAttachment.isHDR = isHDR
+    // 记录是否为HDR图片（转换为HDR AVIF 或 手动标记为HDR）
+    updateAttachment.isHDR = isHDR || markAsHDR
     // 更新数据库
     // 获取文件的filesize
     const stats = fs.statSync(filePath)

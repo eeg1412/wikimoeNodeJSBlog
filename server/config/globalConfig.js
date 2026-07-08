@@ -51,6 +51,8 @@ const initGlobalConfig = async () => {
     imgSettingThumbnailHDRQuality: 40,
     // 缩略图HDR GainMap质量
     imgSettingThumbnailHDRGainMapQuality: 70,
+    // HDR AVIF 编码速度（0最慢、质量最好，10最快、质量最低）
+    imgSettingHDRAvifSpeed: 6,
     // 视频最长边
     videoSettingCompressMaxSize: 480,
     // 视频压缩码率

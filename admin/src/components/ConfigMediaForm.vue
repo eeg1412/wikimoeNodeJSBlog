@@ -116,6 +116,22 @@
           </div>
         </div>
       </el-form-item>
+      <el-form-item label="HDR AVIF 编码速度" prop="imgSettingHDRAvifSpeed">
+        <div class="w_10">
+          <el-input-number
+            v-model="mediaForm.imgSettingHDRAvifSpeed"
+            controls-position="right"
+            :min="0"
+            :max="10"
+            :step="1"
+            :precision="0"
+          ></el-input-number>
+          <div class="config-border-item-tip mt5">
+            取值 0-10，数值越小编码越慢、质量越好，越大越快、质量越低。默认
+            6。主图与缩略图HDR AVIF转换均使用该速度。
+          </div>
+        </div>
+      </el-form-item>
     </div>
     <el-form-item label="开启图片缩略图" prop="imgSettingEnableImgThumbnail">
       <el-switch v-model="mediaForm.imgSettingEnableImgThumbnail"></el-switch>
@@ -278,6 +294,8 @@ export default {
       imgSettingThumbnailHDRQuality: 40,
       // 缩略图HDR GainMap质量
       imgSettingThumbnailHDRGainMapQuality: 70,
+      // HDR AVIF 编码速度
+      imgSettingHDRAvifSpeed: 6,
       // 视频最长边
       videoSettingCompressMaxSize: 480,
       // 视频压缩码率
@@ -311,6 +329,9 @@ export default {
           message: '请输入缩略图HDR GainMap质量',
           trigger: 'blur'
         }
+      ],
+      imgSettingHDRAvifSpeed: [
+        { required: true, message: '请输入HDR AVIF 编码速度', trigger: 'blur' }
       ],
       imgSettingThumbnailQuality: [
         {
