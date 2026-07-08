@@ -91,6 +91,7 @@ export default {
     yearMonth: '{years} năm {months} tháng'
   },
   image: {
+    containsHDR: 'Chứa HDR',
     loading: 'Đang tải ảnh...',
     loadFailed: 'Không thể tải ảnh'
   },

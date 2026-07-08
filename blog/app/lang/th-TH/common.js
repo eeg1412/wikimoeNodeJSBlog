@@ -91,6 +91,7 @@ export default {
     yearMonth: '{years} ปี {months} เดือน'
   },
   image: {
+    containsHDR: 'มี HDR',
     loading: 'กำลังโหลดรูปภาพ...',
     loadFailed: 'โหลดรูปภาพไม่สำเร็จ'
   },

@@ -93,6 +93,7 @@ export default {
     yearMonth: '{years}년 {months}개월'
   },
   image: {
+    containsHDR: 'HDR 포함',
     loading: '이미지를 불러오는 중...',
     loadFailed: '이미지를 불러오지 못했습니다'
   },

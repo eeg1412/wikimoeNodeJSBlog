@@ -91,6 +91,7 @@ export default {
     yearMonth: '{years} yr {months} mo'
   },
   image: {
+    containsHDR: 'Contains HDR',
     loading: 'Image loading...',
     loadFailed: 'Image failed to load'
   },

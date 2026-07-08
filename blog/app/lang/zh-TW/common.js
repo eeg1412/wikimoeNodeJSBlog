@@ -52,6 +52,7 @@ export default {
     frequent: '常用'
   },
   image: {
+    containsHDR: '包含HDR',
     loading: '圖片載入中...',
     loadFailed: '圖片載入失敗'
   },

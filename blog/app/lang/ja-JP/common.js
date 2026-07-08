@@ -55,6 +55,7 @@ export default {
     frequent: '🕒'
   },
   image: {
+    containsHDR: 'HDRを含む',
     loading: '画像を読み込み中...',
     loadFailed: '画像の読み込みに失敗しました'
   },

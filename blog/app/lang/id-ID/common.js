@@ -91,6 +91,7 @@ export default {
     yearMonth: '{years} tahun {months} bulan'
   },
   image: {
+    containsHDR: 'Berisi HDR',
     loading: 'Gambar sedang dimuat...',
     loadFailed: 'Gagal memuat gambar'
   },

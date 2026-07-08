@@ -93,6 +93,7 @@ export default {
     yearMonth: '{years} anos {months} meses'
   },
   image: {
+    containsHDR: 'Contém HDR',
     loading: 'A carregar imagem...',
     loadFailed: 'Falha ao carregar imagem'
   },
