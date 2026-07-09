@@ -945,10 +945,41 @@ lazystream@^1.0.0:
   dependencies:
     readable-stream "^2.0.5"
 
-libavif-with-gainmap@^0.1.12:
-  version "0.1.12"
-  resolved "https://registry.yarnpkg.com/libavif-with-gainmap/-/libavif-with-gainmap-0.1.12.tgz#68046b5500bf4a8b3d4a1bbf057bad161721608b"
-  integrity sha512-1NeinhY2gdf0mmaAKGs1ilESrYz+pCkzno9NW0uDTtq5eeO+NkdvbXeGmWzd1xPKtVk9udw5TNTlZA/2qXT2dA==
+libavif-with-gainmap-darwin-arm64@0.1.15:
+  version "0.1.15"
+  resolved "https://registry.yarnpkg.com/libavif-with-gainmap-darwin-arm64/-/libavif-with-gainmap-darwin-arm64-0.1.15.tgz#f62f3b87052829fd2f25e0909ecaded93eeaac54"
+  integrity sha512-dvIAYr49P4ac+F9adUQDAaaXmae/52WqyrirEHNCJepoBtDI3zQVqHl5tXkGj9lcPBaz6SY9Ok3Ee/6lBUHuow==
+
+libavif-with-gainmap-darwin-x64@0.1.15:
+  version "0.1.15"
+  resolved "https://registry.yarnpkg.com/libavif-with-gainmap-darwin-x64/-/libavif-with-gainmap-darwin-x64-0.1.15.tgz#cdec1b50067c75f48b3e7f0535265fc833e270d8"
+  integrity sha512-+5WqJ3vs0/857NqEJhjAhHxVydeIZIHSzGhXYVcfEgxDRhfVNSpDTAysROhBAnOe+Mcuo1yHx09qdxJUBcwnJA==
+
+libavif-with-gainmap-linux-arm64@0.1.15:
+  version "0.1.15"
+  resolved "https://registry.yarnpkg.com/libavif-with-gainmap-linux-arm64/-/libavif-with-gainmap-linux-arm64-0.1.15.tgz#94f16c8f1afeea8e4a9434cd4b9bc26337e134e4"
+  integrity sha512-nFbL2J6Y/ZLC2bKBwHg56gA+ZQCtjHDyrnKGIBoLElynXDtOofDemCfLjlp8VAPYthakysU7iqKB1CxecOiT7Q==
+
+libavif-with-gainmap-linux-x64@0.1.15:
+  version "0.1.15"
+  resolved "https://registry.yarnpkg.com/libavif-with-gainmap-linux-x64/-/libavif-with-gainmap-linux-x64-0.1.15.tgz#2068d29a7eb8f602c813f1e4bd5ea726d9f40717"
+  integrity sha512-46wLa1vwlnkEYohCgU48CoAYcgyhn2zYK0LgF0gLKpkWnbd0HLwu4GRc1plhrmKqKzAP3MaUKrW1ipfzhYXIJA==
+
+libavif-with-gainmap-win32-x64@0.1.15:
+  version "0.1.15"
+  resolved "https://registry.yarnpkg.com/libavif-with-gainmap-win32-x64/-/libavif-with-gainmap-win32-x64-0.1.15.tgz#00e2f139ed7f4ad2d1a40e71bca963d0cb2d807e"
+  integrity sha512-XTKxw2nmTN8mOozy5USAyrfzCXUWudX3XTJ2gfP4nnfeSxqeiEtmEhLMZXTakGBPnfmH3nq54AvoTq+vI8VD7g==
+
+libavif-with-gainmap@^0.1.15:
+  version "0.1.15"
+  resolved "https://registry.yarnpkg.com/libavif-with-gainmap/-/libavif-with-gainmap-0.1.15.tgz#c12e8a659850733ceb91cd7d60e7e97057c3a67a"
+  integrity sha512-n/pXEP6pmPyhSMNZzxE/mDbaeHtRha4acajcZcAvJW0ti3CazIWoo2aJBiyDIjj00eIK0MuSde9De/6rJDvqqA==
+  optionalDependencies:
+    libavif-with-gainmap-darwin-arm64 "0.1.15"
+    libavif-with-gainmap-darwin-x64 "0.1.15"
+    libavif-with-gainmap-linux-arm64 "0.1.15"
+    libavif-with-gainmap-linux-x64 "0.1.15"
+    libavif-with-gainmap-win32-x64 "0.1.15"
 
 lodash.includes@^4.3.0:
   version "4.3.0"
